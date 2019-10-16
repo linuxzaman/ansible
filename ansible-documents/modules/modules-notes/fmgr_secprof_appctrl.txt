@@ -1,0 +1,266 @@
+> FMGR_SECPROF_APPCTRL    (/usr/lib/python2.7/dist-packages/ansible/modules/network/fortimanager/fmgr_secprof_appctrl.py)
+
+        Manage application control security profiles within FortiManager
+
+  * This module is maintained by The Ansible Community
+OPTIONS (= is mandatory):
+
+- adom
+        The ADOM the configuration should belong to.
+        [Default: root]
+
+- app_replacemsg
+        Enable/disable replacement messages for blocked applications.
+        choice | disable | Disable replacement messages for blocked applications.
+        choice | enable | Enable replacement messages for blocked applications.
+        (Choices: disable, enable)[Default: (null)]
+
+- comment
+        comments
+        [Default: (null)]
+
+- deep_app_inspection
+        Enable/disable deep application inspection.
+        choice | disable | Disable deep application inspection.
+        choice | enable | Enable deep application inspection.
+        (Choices: disable, enable)[Default: (null)]
+
+- entries
+        EXPERTS ONLY! KNOWLEDGE OF FMGR JSON API IS REQUIRED!
+        List of multiple child objects to be added. Expects a list of dictionaries.
+        Dictionaries must use FortiManager API parameters, not the ansible ones listed below.
+        If submitted, all other prefixed sub-parameters ARE IGNORED. This object is MUTUALLY EXCLUSIVE with its options.
+        We expect that you know what you are doing with these list parameters, and are leveraging the JSON API Guide.
+        WHEN IN DOUBT, OMIT THE USE OF THIS PARAMETER
+        AND USE THE SUB OPTIONS BELOW INSTEAD TO CREATE OBJECTS WITH MULTIPLE TASKS
+        [Default: (null)]
+
+- entries_action
+        Pass or block traffic, or reset connection for traffic from this application.
+        choice | pass | Pass or allow matching traffic.
+        choice | block | Block or drop matching traffic.
+        choice | reset | Reset sessions for matching traffic.
+        (Choices: pass, block, reset)[Default: (null)]
+
+- entries_application
+        ID of allowed applications.
+        [Default: (null)]
+
+- entries_behavior
+        Application behavior filter.
+        [Default: (null)]
+
+- entries_category
+        Category ID list.
+        [Default: (null)]
+
+- entries_log
+        Enable/disable logging for this application list.
+        choice | disable | Disable logging.
+        choice | enable | Enable logging.
+        (Choices: disable, enable)[Default: (null)]
+
+- entries_log_packet
+        Enable/disable packet logging.
+        choice | disable | Disable packet logging.
+        choice | enable | Enable packet logging.
+        (Choices: disable, enable)[Default: (null)]
+
+- entries_parameters_value
+        Parameter value.
+        [Default: (null)]
+
+- entries_per_ip_shaper
+        Per-IP traffic shaper.
+        [Default: (null)]
+
+- entries_popularity
+        Application popularity filter (1 - 5, from least to most popular).
+        FLAG Based Options. Specify multiple in list form.
+        flag | 1 | Popularity level 1.
+        flag | 2 | Popularity level 2.
+        flag | 3 | Popularity level 3.
+        flag | 4 | Popularity level 4.
+        flag | 5 | Popularity level 5.
+        (Choices: 1, 2, 3, 4, 5)[Default: (null)]
+
+- entries_protocols
+        Application protocol filter.
+        [Default: (null)]
+
+- entries_quarantine
+        Quarantine method.
+        choice | none | Quarantine is disabled.
+        choice | attacker | Block all traffic sent from attacker's IP address.
+        The attacker's IP address is also added to the banned user list. The target's address is not affected.
+        (Choices: none, attacker)[Default: (null)]
+
+- entries_quarantine_expiry
+        Duration of quarantine. (Format
+        Requires quarantine set to attacker.
+        [Default: (null)]
+
+- entries_quarantine_log
+        Enable/disable quarantine logging.
+        choice | disable | Disable quarantine logging.
+        choice | enable | Enable quarantine logging.
+        (Choices: disable, enable)[Default: (null)]
+
+- entries_rate_count
+        Count of the rate.
+        [Default: (null)]
+
+- entries_rate_duration
+        Duration (sec) of the rate.
+        [Default: (null)]
+
+- entries_rate_mode
+        Rate limit mode.
+        choice | periodical | Allow configured number of packets every rate-duration.
+        choice | continuous | Block packets once the rate is reached.
+        (Choices: periodical, continuous)[Default: (null)]
+
+- entries_rate_track
+        Track the packet protocol field.
+        choice | none |
+        choice | src-ip | Source IP.
+        choice | dest-ip | Destination IP.
+        choice | dhcp-client-mac | DHCP client.
+        choice | dns-domain | DNS domain.
+        (Choices: none, src-ip, dest-ip, dhcp-client-mac, dns-domain)[Default: (null)]
+
+- entries_risk
+        Risk, or impact, of allowing traffic from this application to occur 1 - 5;
+        (Low, Elevated, Medium, High, and Critical).
+        [Default: (null)]
+
+- entries_session_ttl
+        Session TTL (0 = default).
+        [Default: (null)]
+
+- entries_shaper
+        Traffic shaper.
+        [Default: (null)]
+
+- entries_shaper_reverse
+        Reverse traffic shaper.
+        [Default: (null)]
+
+- entries_sub_category
+        Application Sub-category ID list.
+        [Default: (null)]
+
+- entries_technology
+        Application technology filter.
+        [Default: (null)]
+
+- entries_vendor
+        Application vendor filter.
+        [Default: (null)]
+
+- extended_log
+        Enable/disable extended logging.
+        choice | disable | Disable setting.
+        choice | enable | Enable setting.
+        (Choices: disable, enable)[Default: (null)]
+
+- mode
+        Sets one of three modes for managing the object.
+        Allows use of soft-adds instead of overwriting existing values
+        (Choices: add, set, delete, update)[Default: add]
+
+- name
+        List name.
+        [Default: (null)]
+
+- options
+        NO DESCRIPTION PARSED ENTER MANUALLY
+        FLAG Based Options. Specify multiple in list form.
+        flag | allow-dns | Allow DNS.
+        flag | allow-icmp | Allow ICMP.
+        flag | allow-http | Allow generic HTTP web browsing.
+        flag | allow-ssl | Allow generic SSL communication.
+        flag | allow-quic | Allow QUIC.
+        (Choices: allow-dns, allow-icmp, allow-http, allow-ssl, allow-quic)[Default: (null)]
+
+- other_application_action
+        Action for other applications.
+        choice | pass | Allow sessions matching an application in this application list.
+        choice | block | Block sessions matching an application in this application list.
+        (Choices: pass, block)[Default: (null)]
+
+- other_application_log
+        Enable/disable logging for other applications.
+        choice | disable | Disable logging for other applications.
+        choice | enable | Enable logging for other applications.
+        (Choices: disable, enable)[Default: (null)]
+
+- p2p_black_list
+        NO DESCRIPTION PARSED ENTER MANUALLY
+        FLAG Based Options. Specify multiple in list form.
+        flag | skype | Skype.
+        flag | edonkey | Edonkey.
+        flag | bittorrent | Bit torrent.
+        (Choices: skype, edonkey, bittorrent)[Default: (null)]
+
+- replacemsg_group
+        Replacement message group.
+        [Default: (null)]
+
+- unknown_application_action
+        Pass or block traffic from unknown applications.
+        choice | pass | Pass or allow unknown applications.
+        choice | block | Drop or block unknown applications.
+        (Choices: pass, block)[Default: (null)]
+
+- unknown_application_log
+        Enable/disable logging for unknown applications.
+        choice | disable | Disable logging for unknown applications.
+        choice | enable | Enable logging for unknown applications.
+        (Choices: disable, enable)[Default: (null)]
+
+
+NOTES:
+      * Full Documentation at https://ftnt-ansible-docs.readthedocs.io/en/latest/.
+
+
+AUTHOR: Luke Weighall (@lweighall), Andrew Welsh (@Ghilli3), Jim Huber (@p4r4n0y1ng)
+        METADATA:
+          status:
+          - preview
+          supported_by: community
+        
+
+EXAMPLES:
+
+- name: DELETE Profile
+    fmgr_secprof_appctrl:
+      name: "Ansible_Application_Control_Profile"
+      comment: "Created by Ansible Module TEST"
+      mode: "delete"
+
+  - name: CREATE Profile
+    fmgr_secprof_appctrl:
+      name: "Ansible_Application_Control_Profile"
+      comment: "Created by Ansible Module TEST"
+      mode: "set"
+      entries: [{
+                action: "block",
+                log: "enable",
+                log-packet: "enable",
+                protocols: ["1"],
+                quarantine: "attacker",
+                quarantine-log: "enable",
+                },
+                {action: "pass",
+                category: ["2","3","4"]},
+              ]
+
+
+RETURN VALUES:
+
+api_result:
+  description: full API response, includes status code and message
+  returned: always
+  type: str
+

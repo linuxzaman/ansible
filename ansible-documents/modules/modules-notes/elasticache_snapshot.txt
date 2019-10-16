@@ -1,0 +1,167 @@
+> ELASTICACHE_SNAPSHOT    (/usr/lib/python2.7/dist-packages/ansible/modules/cloud/amazon/elasticache_snapshot.py)
+
+        Manage cache snapshots in Amazon Elasticache. Returns information about the specified snapshot.
+
+  * This module is maintained by The Ansible Community
+OPTIONS (= is mandatory):
+
+- aws_access_key
+        AWS access key. If not set then the value of the AWS_ACCESS_KEY_ID, AWS_ACCESS_KEY or EC2_ACCESS_KEY environment variable is
+        used.
+        (Aliases: ec2_access_key, access_key)[Default: (null)]
+        type: str
+
+- aws_secret_key
+        AWS secret key. If not set then the value of the AWS_SECRET_ACCESS_KEY, AWS_SECRET_KEY, or EC2_SECRET_KEY environment variable is
+        used.
+        (Aliases: ec2_secret_key, secret_key)[Default: (null)]
+        type: str
+
+- bucket
+        The s3 bucket to which the snapshot is exported
+        [Default: (null)]
+
+- cluster_id
+        The name of an existing cache cluster in the replication group to make the snapshot.
+        [Default: (null)]
+
+- debug_botocore_endpoint_logs
+        Use a botocore.endpoint logger to parse the unique (rather than total) "resource:action" API calls made during a task, outputing
+        the set to the resource_actions key in the task results. Use the aws_resource_action callback to output to total list made during
+        a playbook. The ANSIBLE_DEBUG_BOTOCORE_LOGS environment variable may also be used.
+        [Default: no]
+        type: bool
+        version_added: 2.8
+
+- ec2_url
+        Url to use to connect to EC2 or your Eucalyptus cloud (by default the module will use EC2 endpoints). Ignored for modules where
+        region is required. Must be specified for all other modules if region is not used. If not set then the value of the EC2_URL
+        environment variable, if any, is used.
+        [Default: (null)]
+        type: str
+
+= name
+        The name of the snapshot we want to create, copy, delete
+
+
+- profile
+        Uses a boto profile. Only works with boto >= 2.24.0.
+        [Default: (null)]
+        type: str
+        version_added: 1.6
+
+- region
+        The AWS region to use. If not specified then the value of the AWS_REGION or EC2_REGION environment variable, if any, is used. See
+        http://docs.aws.amazon.com/general/latest/gr/rande.html#ec2_region
+        (Aliases: aws_region, ec2_region)[Default: (null)]
+        type: str
+
+- replication_id
+        The name of the existing replication group to make the snapshot.
+        [Default: (null)]
+
+- security_token
+        AWS STS security token. If not set then the value of the AWS_SECURITY_TOKEN or EC2_SECURITY_TOKEN environment variable is used.
+        (Aliases: access_token)[Default: (null)]
+        type: str
+        version_added: 1.6
+
+- state
+        Actions that will create, destroy, or copy a snapshot.
+        (Choices: present, absent, copy)[Default: (null)]
+
+- target
+        The name of a snapshot copy
+        [Default: (null)]
+
+- validate_certs
+        When set to "no", SSL certificates will not be validated for boto versions >= 2.6.0.
+        [Default: True]
+        type: bool
+        version_added: 1.5
+
+
+NOTES:
+      * If parameters are not set within the module, the following environment variables can be used in decreasing order of
+        precedence `AWS_URL' or `EC2_URL', `AWS_ACCESS_KEY_ID' or `AWS_ACCESS_KEY' or `EC2_ACCESS_KEY', `AWS_SECRET_ACCESS_KEY' or
+        `AWS_SECRET_KEY' or `EC2_SECRET_KEY', `AWS_SECURITY_TOKEN' or `EC2_SECURITY_TOKEN', `AWS_REGION' or `EC2_REGION'
+      * Ansible uses the boto configuration file (typically ~/.boto) if no credentials are provided. See
+        https://boto.readthedocs.io/en/latest/boto_config_tut.html
+      * `AWS_REGION' or `EC2_REGION' can be typically be used to specify the AWS region, when required, but this can also be
+        configured in the boto config file
+
+
+REQUIREMENTS:  boto, boto3, botocore, python >= 2.6
+
+AUTHOR: Sloane Hertel (@s-hertel)
+        METADATA:
+          status:
+          - preview
+          supported_by: community
+        
+
+EXAMPLES:
+
+# Note: None of these examples set aws_access_key, aws_secret_key, or region.
+# It is assumed that their matching environment variables are set.
+---
+- hosts: localhost
+  connection: local
+  tasks:
+    - name: 'Create a snapshot'
+      elasticache_snapshot:
+        name: 'test-snapshot'
+        state: 'present'
+        cluster_id: '{{ cluster }}'
+        replication_id: '{{ replication }}'
+
+
+RETURN VALUES:
+
+response_metadata:
+  description: response metadata about the snapshot
+  returned: always
+  type: dict
+  sample:
+    http_headers:
+      content-length: 1490
+      content-type: text/xml
+      date: Tue, 07 Feb 2017 16:43:04 GMT
+      x-amzn-requestid: 7f436dea-ed54-11e6-a04c-ab2372a1f14d
+    http_status_code: 200
+    request_id: 7f436dea-ed54-11e6-a04c-ab2372a1f14d
+    retry_attempts: 0
+snapshot:
+  description: snapshot data
+  returned: always
+  type: dict
+  sample:
+    auto_minor_version_upgrade: true
+    cache_cluster_create_time: 2017-02-01T17:43:58.261000+00:00
+    cache_cluster_id: test-please-delete
+    cache_node_type: cache.m1.small
+    cache_parameter_group_name: default.redis3.2
+    cache_subnet_group_name: default
+    engine: redis
+    engine_version: 3.2.4
+    node_snapshots:
+      cache_node_create_time: 2017-02-01T17:43:58.261000+00:00
+      cache_node_id: 0001
+      cache_size:
+    num_cache_nodes: 1
+    port: 11211
+    preferred_availability_zone: us-east-1d
+    preferred_maintenance_window: wed:03:00-wed:04:00
+    snapshot_name: deletesnapshot
+    snapshot_retention_limit: 0
+    snapshot_source: manual
+    snapshot_status: creating
+    snapshot_window: 10:00-11:00
+    vpc_id: vpc-c248fda4
+changed:
+  description: if a snapshot has been created, deleted, or copied
+  returned: always
+  type: bool
+  sample:
+    changed: true
+

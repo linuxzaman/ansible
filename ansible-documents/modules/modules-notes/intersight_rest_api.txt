@@ -1,0 +1,139 @@
+> INTERSIGHT_REST_API    (/usr/lib/python2.7/dist-packages/ansible/modules/remote_management/intersight/intersight_rest_api.py)
+
+        Direct REST API configuration for Cisco Intersight. All REST API resources and properties must be specified. For more information
+        see L(Cisco Intersight,https://intersight.com/apidocs).
+
+  * This module is maintained by The Ansible Community
+OPTIONS (= is mandatory):
+
+- api_body
+        The paylod for API requests used to modify resources.
+        [Default: (null)]
+        type: dict
+
+= api_key_id
+        Public API Key ID associated with the private key.
+
+        type: str
+
+= api_private_key
+        Filename (absolute path) of a PEM formatted file that contains your private key to be used for Intersight API authentication.
+
+        type: path
+
+- api_uri
+        URI used to access the Intersight API.
+        [Default: https://intersight.com/api/v1]
+        type: str
+
+- query_params
+        Query parameters for the Intersight API query languange.
+        [Default: (null)]
+        type: dict
+
+= resource_path
+        Resource URI being configured related to api_uri.
+
+        type: str
+
+- state
+        If `present', will verify the resource is present and will create if needed.
+        If `absent', will verify the resource is absent and will delete if needed.
+        (Choices: present, absent)[Default: present]
+
+- update_method
+        The HTTP method used for update operations.
+        Some Intersight resources require POST operations for modifications.
+        (Choices: patch, post)[Default: patch]
+        type: str
+
+- use_proxy
+        If `no', it will not use a proxy, even if one is defined in an environment variable on the target hosts.
+        [Default: True]
+        type: bool
+
+- validate_certs
+        Boolean control for verifying the api_uri TLS certificate
+        [Default: True]
+        type: bool
+
+
+AUTHOR: David Soper (@dsoper2), CiscoUcs (@CiscoUcs)
+        METADATA:
+          status:
+          - preview
+          supported_by: community
+        
+
+EXAMPLES:
+
+- name: Configure Boot Policy
+  intersight_rest_api:
+    api_private_key: "{{ api_private_key }}"
+    api_key_id: "{{ api_key_id }}"
+    api_key_uri: "{{ api_key_uri }}"
+    validate_certs: "{{ validate_certs }}"
+    resource_path: /boot/PrecisionPolicies
+    query_params:
+      $filter: "Name eq 'vmedia-localdisk'"
+    api_body: {
+      "Name": "vmedia-hdd",
+      "ConfiguredBootMode": "Legacy",
+      "BootDevices": [
+        {
+          "ObjectType": "boot.VirtualMedia",
+          "Enabled": true,
+          "Name": "remote-vmedia",
+          "Subtype": "cimc-mapped-dvd"
+        },
+        {
+          "ObjectType": "boot.LocalDisk",
+          "Enabled": true,
+          "Name": "localdisk",
+          "Slot": "MRAID",
+          "Bootloader": null
+        }
+      ],
+    }
+    state: present
+
+- name: Delete Boot Policy
+  intersight_rest_api:
+    api_private_key: "{{ api_private_key }}"
+    api_key_id: "{{ api_key_id }}"
+    api_key_uri: "{{ api_key_uri }}"
+    validate_certs: "{{ validate_certs }}"
+    resource_path: /boot/PrecisionPolicies
+    query_params:
+      $filter: "Name eq 'vmedia-localdisk'"
+    state: absent
+
+
+RETURN VALUES:
+
+api_repsonse:
+  description: The API response output returned by the specified resource.
+  returned: always
+  type: dict
+  sample:
+    "api_response": {
+      "BootDevices": [
+        {
+          "Enabled": true,
+          "Name": "remote-vmedia",
+          "ObjectType": "boot.VirtualMedia",
+          "Subtype": "cimc-mapped-dvd"
+        },
+        {
+          "Bootloader": null,
+          "Enabled": true,
+          "Name": "boot-lun",
+          "ObjectType": "boot.LocalDisk",
+          "Slot": "MRAID"
+        }
+      ],
+      "ConfiguredBootMode": "Legacy",
+      "Name": "vmedia-localdisk",
+      "ObjectType": "boot.PrecisionPolicy",
+    }
+

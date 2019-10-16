@@ -1,0 +1,24 @@
+EXAMPLES:
+
+- name: Default igmp global params (all params except restart)
+  nxos_igmp:
+    state: default
+
+- name: Ensure the following igmp global config exists on the device
+  nxos_igmp:
+    flush_routes: true
+    enforce_rtr_alert: true
+
+- name: Restart the igmp process
+  nxos_igmp:
+    restart: true
+
+
+RETURN VALUES:
+
+updates:
+    description: commands sent to the device
+    returned: always
+    type: list
+    sample: ["ip igmp flush-routes"]
+

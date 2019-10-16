@@ -1,0 +1,58 @@
+EXAMPLES:
+
+# Note: None of these examples set aws_access_key, aws_secret_key, or region.
+# It is assumed that their matching environment variables are set.
+---
+- hosts: localhost
+  connection: local
+  tasks:
+    - name: 'Create a test parameter group'
+      elasticache_parameter_group:
+        name: 'test-param-group'
+        group_family: 'redis3.2'
+        description: 'This is a cache parameter group'
+        state: 'present'
+    - name: 'Modify a test parameter group'
+      elasticache_parameter_group:
+        name: 'test-param-group'
+        values:
+          activerehashing: yes
+          client-output-buffer-limit-normal-hard-limit: 4
+        state: 'present'
+    - name: 'Reset all modifiable parameters for the test parameter group'
+      elasticache_parameter_group:
+        name: 'test-param-group'
+        state: reset
+    - name: 'Delete a test parameter group'
+      elasticache_parameter_group:
+        name: 'test-param-group'
+        state: 'absent'
+
+
+RETURN VALUES:
+
+elasticache:
+  description: cache parameter group information and response metadata
+  returned: always
+  type: dict
+  sample:
+    cache_parameter_group:
+      cache_parameter_group_family: redis3.2
+      cache_parameter_group_name: test-please-delete
+      description: "initial description"
+    response_metadata:
+      http_headers:
+        content-length: "562"
+        content-type: text/xml
+        date: "Mon, 06 Feb 2017 22:14:08 GMT"
+        x-amzn-requestid: 947291f9-ecb9-11e6-85bd-3baa4eca2cc1
+      http_status_code: 200
+      request_id: 947291f9-ecb9-11e6-85bd-3baa4eca2cc1
+      retry_attempts: 0
+changed:
+  description: if the cache parameter group has changed
+  returned: always
+  type: bool
+  sample:
+    changed: true
+

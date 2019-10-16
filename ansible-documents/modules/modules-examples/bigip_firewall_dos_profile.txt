@@ -1,0 +1,31 @@
+EXAMPLES:
+
+- name: Create a new DoS profile
+  bigip_firewall_dos_profile:
+    name: profile1
+    description: DoS profile 1
+    provider:
+      password: secret
+      server: lb.mydomain.com
+      user: admin
+  delegate_to: localhost
+
+
+RETURN VALUES:
+
+threshold_sensitivity:
+  description: The new threshold sensitivity of the profile.
+  returned: changed
+  type: str
+  sample: low
+default_whitelist:
+  description: The new whitelist attached to the profile.
+  returned: changed
+  type: str
+  sample: /Common/whitelist1
+description:
+  description: The description of the profile.
+  returned: changed
+  type: str
+  sample: New description
+

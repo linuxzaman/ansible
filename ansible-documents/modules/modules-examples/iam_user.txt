@@ -1,0 +1,59 @@
+EXAMPLES:
+
+# Note: These examples do not set authentication details, see the AWS Guide for details.
+# Note: This module does not allow management of groups that users belong to.
+#       Groups should manage their membership directly using `iam_group`,
+#       as users belong to them.
+
+# Create a user
+- iam_user:
+    name: testuser1
+    state: present
+
+# Create a user and attach a managed policy using its ARN
+- iam_user:
+    name: testuser1
+    managed_policy:
+      - arn:aws:iam::aws:policy/AmazonSNSFullAccess
+    state: present
+
+# Remove all managed policies from an existing user with an empty list
+- iam_user:
+    name: testuser1
+    state: present
+    purge_policy: true
+
+# Delete the user
+- iam_user:
+    name: testuser1
+    state: absent
+
+
+RETURN VALUES:
+
+user:
+    description: dictionary containing all the user information
+    returned: success
+    type: complex
+    contains:
+        arn:
+            description: the Amazon Resource Name (ARN) specifying the user
+            type: str
+            sample: "arn:aws:iam::1234567890:user/testuser1"
+        create_date:
+            description: the date and time, in ISO 8601 date-time format, when the user was created
+            type: str
+            sample: "2017-02-08T04:36:28+00:00"
+        user_id:
+            description: the stable and unique string identifying the user
+            type: str
+            sample: AGPAIDBWE12NSFINE55TM
+        user_name:
+            description: the friendly name that identifies the user
+            type: str
+            sample: testuser1
+        path:
+            description: the path to the user
+            type: str
+            sample: /
+

@@ -1,0 +1,37 @@
+EXAMPLES:
+
+- name: Add vrouter interface nic to ospf6
+  pn_vrouter_ospf6:
+    pn_cliswitch: "sw01"
+    state: "present"
+    pn_vrouter_name: "foo-vrouter"
+    pn_nic: "eth0.4092"
+    pn_ospf6_area: "0.0.0.0"
+
+- name: Remove vrouter interface nic to ospf6
+  pn_vrouter_ospf6:
+    pn_cliswitch: "sw01"
+    state: "absent"
+    pn_vrouter_name: "foo-vrouter"
+    pn_nic: "eth0.4092"
+
+
+RETURN VALUES:
+
+command:
+  description: the CLI command run on the target node.
+  returned: always
+  type: str
+stdout:
+  description: set of responses from the vrouter-ospf6 command.
+  returned: always
+  type: list
+stderr:
+  description: set of error responses from the vrouter-ospf6 command.
+  returned: on error
+  type: list
+changed:
+  description: indicates whether the CLI caused changes on the target.
+  returned: always
+  type: bool
+

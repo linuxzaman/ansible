@@ -1,0 +1,22 @@
+EXAMPLES:
+
+- name: Get hostgroup info
+  local_action:
+    module: zabbix_group_facts
+    server_url: http://monitor.example.com
+    login_user: username
+    login_password: password
+    hostgroup_name:
+      - ExampleHostgroup
+    timeout: 10
+
+
+RETURN VALUES:
+
+---
+host_groups:
+  description: List of Zabbix groups.
+  returned: success
+  type: dict
+  sample: [ { "flags": "0", "groupid": "33", "internal": "0", "name": "Hostgruup A" } ]
+

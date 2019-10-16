@@ -1,0 +1,82 @@
+EXAMPLES:
+
+# Ensure dns record is present
+- ipa_dnsrecord:
+    ipa_host: spider.example.com
+    ipa_pass: Passw0rd!
+    state: present
+    zone_name: example.com
+    record_name: vm-001
+    record_type: 'AAAA'
+    record_value: '::1'
+
+# Ensure that dns record exists with a TTL
+- ipa_dnsrecord:
+    name: host02
+    zone_name: example.com
+    record_type: 'AAAA'
+    record_value: '::1'
+    record_ttl: 300
+    ipa_host: ipa.example.com
+    ipa_pass: topsecret
+    state: present
+
+# Ensure a PTR record is present
+- ipa_dnsrecord:
+    ipa_host: spider.example.com
+    ipa_pass: Passw0rd!
+    state: present
+    zone_name: 2.168.192.in-addr.arpa
+    record_name: 5
+    record_type: 'PTR'
+    record_value: 'internal.ipa.example.com'
+
+# Ensure a TXT record is present
+- ipa_dnsrecord:
+    ipa_host: spider.example.com
+    ipa_pass: Passw0rd!
+    state: present
+    zone_name: example.com
+    record_name: _kerberos
+    record_type: 'TXT'
+    record_value: 'EXAMPLE.COM'
+
+# Ensure an SRV record is present
+- ipa_dnsrecord:
+    ipa_host: spider.example.com
+    ipa_pass: Passw0rd!
+    state: present
+    zone_name: example.com
+    record_name: _kerberos._udp.example.com
+    record_type: 'SRV'
+    record_value: '10 50 88 ipa.example.com'
+
+# Ensure an MX record is present
+- ipa_dnsrecord:
+    ipa_host: spider.example.com
+    ipa_pass: Passw0rd!
+    state: present
+    zone_name: example.com
+    record_name: '@'
+    record_type: 'MX'
+    record_value: '1 mailserver.example.com'
+
+# Ensure that dns record is removed
+- ipa_dnsrecord:
+    name: host01
+    zone_name: example.com
+    record_type: 'AAAA'
+    record_value: '::1'
+    ipa_host: ipa.example.com
+    ipa_user: admin
+    ipa_pass: topsecret
+    state: absent
+
+
+RETURN VALUES:
+
+dnsrecord:
+  description: DNS record as returned by IPA API.
+  returned: always
+  type: dict
+

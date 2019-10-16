@@ -1,0 +1,175 @@
+> BIGIP_WAIT    (/usr/lib/python2.7/dist-packages/ansible/modules/network/f5/bigip_wait.py)
+
+        You can wait for BIG-IP to be "ready". By "ready", we mean that BIG-IP is ready to accept configuration. This module can take
+        into account situations where the device is in the middle of rebooting due to a configuration change.
+
+  * This module is maintained by an Ansible Partner
+OPTIONS (= is mandatory):
+
+- delay
+        Number of seconds to wait before starting to poll.
+        [Default: 0]
+        type: int
+
+- msg
+        This overrides the normal error message from a failure to meet the required conditions.
+        [Default: (null)]
+        type: str
+
+= password
+        The password for the user account used to connect to the BIG-IP.
+        You may omit this option by setting the environment variable `F5_PASSWORD'.
+        (Aliases: pass, pwd)
+        type: str
+
+- provider
+        A dict object containing connection details.
+        [Default: (null)]
+        suboptions:
+          password:
+            aliases:
+            - pass
+            - pwd
+            description:
+            - The password for the user account used to connect to the BIG-IP.
+            - You may omit this option by setting the environment variable `F5_PASSWORD'.
+            required: true
+            type: str
+          server:
+            description:
+            - The BIG-IP host.
+            - You may omit this option by setting the environment variable `F5_SERVER'.
+            required: true
+            type: str
+          server_port:
+            default: 443
+            description:
+            - The BIG-IP server port.
+            - You may omit this option by setting the environment variable `F5_SERVER_PORT'.
+            type: int
+          ssh_keyfile:
+            description:
+            - Specifies the SSH keyfile to use to authenticate the connection to the remote
+              device.  This argument is only used for `cli' transports.
+            - You may omit this option by setting the environment variable `ANSIBLE_NET_SSH_KEYFILE'.
+            type: path
+          timeout:
+            default: 10
+            description:
+            - Specifies the timeout in seconds for communicating with the network device for
+              either connecting or sending commands.  If the timeout is exceeded before the
+              operation is completed, the module will error.
+            type: int
+          transport:
+            choices:
+            - cli
+            - rest
+            default: rest
+            description:
+            - Configures the transport connection to use when connecting to the remote device.
+            type: str
+          user:
+            description:
+            - The username to connect to the BIG-IP with. This user must have administrative
+              privileges on the device.
+            - You may omit this option by setting the environment variable `F5_USER'.
+            required: true
+            type: str
+          validate_certs:
+            default: true
+            description:
+            - If `no', SSL certificates are not validated. Use this only on personally controlled
+              sites using self-signed certificates.
+            - You may omit this option by setting the environment variable `F5_VALIDATE_CERTS'.
+            type: bool
+        
+        type: dict
+        version_added: 2.5
+
+= server
+        The BIG-IP host.
+        You may omit this option by setting the environment variable `F5_SERVER'.
+
+        type: str
+
+- server_port
+        The BIG-IP server port.
+        You may omit this option by setting the environment variable `F5_SERVER_PORT'.
+        [Default: 443]
+        type: int
+        version_added: 2.2
+
+- sleep
+        Number of seconds to sleep between checks, before 2.3 this was hardcoded to 1 second.
+        [Default: 1]
+        type: int
+
+- timeout
+        Maximum number of seconds to wait for.
+        When used without other conditions it is equivalent of just sleeping.
+        The default timeout is deliberately set to 2 hours because no individual REST API.
+        [Default: 7200]
+        type: int
+
+= user
+        The username to connect to the BIG-IP with. This user must have administrative privileges on the device.
+        You may omit this option by setting the environment variable `F5_USER'.
+
+        type: str
+
+- validate_certs
+        If `no', SSL certificates are not validated. Use this only on personally controlled sites using self-signed certificates.
+        You may omit this option by setting the environment variable `F5_VALIDATE_CERTS'.
+        [Default: True]
+        type: bool
+        version_added: 2.0
+
+
+NOTES:
+      * For more information on using Ansible to manage F5 Networks devices see https://www.ansible.com/integrations/networks/f5.
+      * Requires BIG-IP software version >= 12.
+      * The F5 modules only manipulate the running configuration of the F5 product. To ensure that BIG-IP specific configuration
+        persists to disk, be sure to include at least one task that uses the [bigip_config] module to save the running
+        configuration. Refer to the module's documentation for the correct usage of the module to save your running configuration.
+
+
+AUTHOR: Tim Rupp (@caphrim007)
+        METADATA:
+          status:
+          - stableinterface
+          supported_by: certified
+        
+
+EXAMPLES:
+
+- name: Wait for BIG-IP to be ready to take configuration
+  bigip_wait:
+    provider:
+      password: secret
+      server: lb.mydomain.com
+      user: admin
+  delegate_to: localhost
+
+- name: Wait a maximum of 300 seconds for BIG-IP to be ready to take configuration
+  bigip_wait:
+    timeout: 300
+    provider:
+      password: secret
+      server: lb.mydomain.com
+      user: admin
+  delegate_to: localhost
+
+- name: Wait for BIG-IP to be ready, don't start checking for 10 seconds
+  bigip_wait:
+    delay: 10
+    provider:
+      password: secret
+      server: lb.mydomain.com
+      user: admin
+  delegate_to: localhost
+
+
+RETURN VALUES:
+
+# only common fields returned
+

@@ -1,0 +1,129 @@
+> WIN_WAIT_FOR_PROCESS    (/usr/lib/python2.7/dist-packages/ansible/modules/windows/win_wait_for_process.py)
+
+        Waiting for a process to start or stop. This is useful when Windows services behave poorly and do not enumerate external
+        dependencies in their manifest.
+
+  * This module is maintained by The Ansible Community
+OPTIONS (= is mandatory):
+
+- owner
+        The owner of the process.
+        Requires PowerShell version 4.0 or newer.
+        [Default: (null)]
+        type: str
+
+- pid
+        The PID of the process.
+        [Default: (null)]
+        type: int
+
+- post_wait_delay
+        Seconds to wait after checking for processes.
+        [Default: 0]
+        type: int
+
+- pre_wait_delay
+        Seconds to wait before checking processes.
+        [Default: 0]
+        type: int
+
+- process_min_count
+        Minimum number of process matching the supplied pattern to satisfy `present' condition.
+        Only applies to `present'.
+        [Default: 1]
+        type: int
+
+- process_name_exact
+        The name of the process(es) for which to wait.
+        [Default: (null)]
+        type: list
+
+- process_name_pattern
+        RegEx pattern matching desired process(es).
+        [Default: (null)]
+        type: str
+
+- sleep
+        Number of seconds to sleep between checks.
+        Only applies when waiting for a process to start.  Waiting for a process to start does not have a native non-polling mechanism.
+        Waiting for a stop uses native PowerShell and does not require polling.
+        [Default: 1]
+        type: int
+
+- state
+        When checking for a running process `present' will block execution until the process exists, or until the timeout has been
+        reached. `absent' will block execution untile the processs no longer exists, or until the timeout has been reached.
+        When waiting for `present', the module will return changed only if the process was not present on the initial check but became
+        present on subsequent checks.
+        If, while waiting for `absent', new processes matching the supplied pattern are started, these new processes will not be included
+        in the action.
+        (Choices: absent, present)[Default: present]
+        type: str
+
+- timeout
+        The maximum number of seconds to wait for a for a process to start or stop before erroring out.
+        [Default: 300]
+        type: int
+
+
+SEE ALSO:
+      * Module wait_for
+           The official documentation on the wait_for module.
+           https://docs.ansible.com/ansible/latest/modules/wait_for_module.html
+      * Module win_wait_for
+           The official documentation on the win_wait_for module.
+           https://docs.ansible.com/ansible/latest/modules/win_wait_for_module.html
+
+
+AUTHOR: Charles Crossan (@crossan007)
+        METADATA:
+          status:
+          - preview
+          supported_by: community
+        
+
+EXAMPLES:
+
+- name: Wait 300 seconds for all Oracle VirtualBox processes to stop. (VBoxHeadless, VirtualBox, VBoxSVC)
+  win_wait_for_process:
+    process_name_pattern: 'v(irtual)?box(headless|svc)?'
+    state: absent
+    timeout: 500
+
+- name: Wait 300 seconds for 3 instances of cmd to start, waiting 5 seconds between each check
+  win_wait_for_process:
+    process_name_exact: cmd
+    state: present
+    timeout: 500
+    sleep: 5
+    process_min_count: 3
+
+
+RETURN VALUES:
+
+elapsed:
+  description: The elapsed seconds between the start of poll and the end of the module.
+  returned: always
+  type: float
+  sample: 3.14159265
+matched_processes:
+  description: List of matched processes (either stopped or started).
+  returned: always
+  type: complex
+  contains:
+    name:
+      description: The name of the matched process.
+      returned: always
+      type: str
+      sample: svchost
+    owner:
+      description: The owner of the matched process.
+      returned: when supported by PowerShell
+      type: str
+      sample: NT AUTHORITY\SYSTEM
+    pid:
+      description: The PID of the matched process.
+      returned: always
+      type: int
+      sample: 7908
+

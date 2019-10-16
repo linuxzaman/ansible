@@ -1,0 +1,287 @@
+> UTM_PROXY_AUTH_PROFILE    (/usr/lib/python2.7/dist-packages/ansible/modules/web_infrastructure/sophos_utm/utm_proxy_auth_profile.py)
+
+        Create, update or destroy a reverse_proxy auth_profile entry in SOPHOS UTM. This module needs to have the REST Ability of the UTM
+        to be activated.
+
+  * This module is maintained by The Ansible Community
+OPTIONS (= is mandatory):
+
+= aaa
+        List of references to utm_aaa objects (allowed users or groups)
+
+
+- backend_mode
+        Specifies if the backend server needs authentication ([Basic|None])
+        (Choices: Basic, None)[Default: None]
+
+- backend_strip_basic_auth
+        Should the login data be stripped when proxying the request to the backend host
+        (Choices: True, False)[Default: True]
+        type: bool
+
+- backend_user_prefix
+        Prefix string to prepend to the username for backend authentication
+        [Default: ]
+
+- backend_user_suffix
+        Suffix string to append to the username for backend authentication
+        [Default: ]
+
+= basic_prompt
+        The message in the basic authentication prompt
+
+
+- comment
+        Optional comment string
+        [Default: ]
+
+- frontend_cookie
+        Frontend cookie name
+        [Default: (null)]
+
+- frontend_cookie_secret
+        Frontend cookie secret
+        [Default: (null)]
+
+- frontend_form
+        Frontend authentication form name
+        [Default: (null)]
+
+- frontend_form_template
+        Frontend authentication form template
+        [Default: ]
+
+- frontend_login
+        Frontend login name
+        [Default: (null)]
+
+- frontend_logout
+        Frontend logout name
+        [Default: (null)]
+
+- frontend_mode
+        Frontend authentication mode (Form|Basic)
+        (Choices: Basic, Form)[Default: Basic]
+
+- frontend_realm
+        Frontend authentication realm
+        [Default: (null)]
+
+- frontend_session_allow_persistency
+        Allow session persistency
+        (Choices: True, False)[Default: False]
+        type: bool
+
+= frontend_session_lifetime
+        session lifetime
+
+
+- frontend_session_lifetime_limited
+        Specifies if limitation of session lifetime is active
+        (Choices: True, False)[Default: True]
+        type: bool
+
+- frontend_session_lifetime_scope
+        scope for frontend_session_lifetime (days|hours|minutes)
+        (Choices: days, hours, minutes)[Default: hours]
+
+= frontend_session_timeout
+        session timeout
+
+
+- frontend_session_timeout_enabled
+        Specifies if session timeout is active
+        (Choices: True, False)[Default: True]
+        type: bool
+
+- frontend_session_timeout_scope
+        scope for frontend_session_timeout (days|hours|minutes)
+        (Choices: days, hours, minutes)[Default: minutes]
+
+- headers
+        A dictionary of additional headers to be sent to POST and PUT requests.
+        Is needed for some modules
+        [Default: (null)]
+        type: dict
+
+- logout_delegation_urls
+        List of logout URLs that logouts are delegated to
+        [Default: []]
+
+- logout_mode
+        Mode of logout (None|Delegation)
+        (Choices: None, Delegation)[Default: None]
+
+= name
+        The name of the object. Will be used to identify the entry
+
+
+- redirect_to_requested_url
+        Should a redirect to the requested URL be made
+        (Choices: True, False)[Default: False]
+        type: bool
+
+- state
+        The desired state of the object.
+        `present' will create or update an object
+        `absent' will delete an object if it was present
+        (Choices: absent, present)[Default: present]
+        type: str
+
+= utm_host
+        The REST Endpoint of the Sophos UTM.
+
+        type: str
+
+- utm_port
+        The port of the REST interface.
+        [Default: 4444]
+        type: int
+
+- utm_protocol
+        The protocol of the REST Endpoint.
+        (Choices: http, https)[Default: https]
+        type: str
+
+= utm_token
+        The token used to identify at the REST-API. See https://www.sophos.com/en-us/medialibrary/PDFs/documentation/UTMonAWS/Sophos-UTM-
+        RESTful-API.pdf?la=en, Chapter 2.4.2.
+
+        type: str
+
+- validate_certs
+        Whether the REST interface's ssl certificate should be verified or not.
+        [Default: True]
+        type: bool
+
+
+AUTHOR: Stephan Schwarz (@stearz)
+        METADATA:
+          status:
+          - preview
+          supported_by: community
+        
+
+EXAMPLES:
+
+- name: Create UTM proxy_auth_profile
+  utm_proxy_auth_profile:
+    utm_host: sophos.host.name
+    utm_token: abcdefghijklmno1234
+    name: TestAuthProfileEntry
+    aaa: [REF_OBJECT_STRING,REF_ANOTHEROBJECT_STRING]
+    basic_prompt: "Authentication required: Please login"
+    frontend_session_lifetime: 1
+    frontend_session_timeout: 1
+    state: present
+
+- name: Remove UTM proxy_auth_profile
+  utm_proxy_auth_profile:
+    utm_host: sophos.host.name
+    utm_token: abcdefghijklmno1234
+    name: TestAuthProfileEntry
+    state: absent
+
+- name: Read UTM proxy_auth_profile
+  utm_proxy_auth_profile:
+    utm_host: sophos.host.name
+    utm_token: abcdefghijklmno1234
+    name: TestAuthProfileEntry
+    state: info
+
+
+RETURN VALUES:
+
+result:
+    description: The utm object that was created
+    returned: success
+    type: complex
+    contains:
+        _ref:
+            description: The reference name of the object
+            type: string
+        _locked:
+            description: Whether or not the object is currently locked
+            type: boolean
+        _type:
+            description: The type of the object
+            type: string
+        name:
+            description: The name of the object
+            type: string
+        aaa:
+            description: List of references to utm_aaa objects (allowed users or groups)
+            type: list
+        basic_prompt:
+            description: The message in the basic authentication prompt
+            type: string
+        backend_mode:
+            description: Specifies if the backend server needs authentication ([Basic|None])
+            type: string
+        backend_strip_basic_auth:
+            description: Should the login data be stripped when proxying the request to the backend host
+            type: boolean
+        backend_user_prefix:
+            description: Prefix string to prepend to the username for backend authentication
+            type: string
+        backend_user_suffix:
+            description: Suffix string to append to the username for backend authentication
+            type: string
+        comment:
+            description: Optional comment string
+            type: string
+        frontend_cookie:
+            description: Frontend cookie name
+            type: string
+        frontend_cookie_secret:
+            description: Frontend cookie secret
+            type: string
+        frontend_form:
+            description: Frontend authentication form name
+            type: string
+        frontend_form_template:
+            description: Frontend authentication form template
+            type: string
+        frontend_login:
+            description: Frontend login name
+            type: string
+        frontend_logout:
+            description: Frontend logout name
+            type: string
+        frontend_mode:
+            description: Frontend authentication mode (Form|Basic)
+            type: string
+        frontend_realm:
+            description: Frontend authentication realm
+            type: string
+        frontend_session_allow_persistency:
+            description: Allow session persistency
+            type: boolean
+        frontend_session_lifetime:
+            description: session lifetime
+            type: integer
+        frontend_session_lifetime_limited:
+            description: Specifies if limitation of session lifetime is active
+            type: boolean
+        frontend_session_lifetime_scope:
+            description: scope for frontend_session_lifetime (days|hours|minutes)
+            type: string
+        frontend_session_timeout:
+            description: session timeout
+            type: integer
+        frontend_session_timeout_enabled:
+            description: Specifies if session timeout is active
+            type: boolean
+        frontend_session_timeout_scope:
+            description: scope for frontend_session_timeout (days|hours|minutes)
+            type: string
+        logout_delegation_urls:
+            description: List of logout URLs that logouts are delegated to
+            type: list
+        logout_mode:
+            description: Mode of logout (None|Delegation)
+            type: string
+        redirect_to_requested_url:
+            description: Should a redirect to the requested URL be made
+            type: boolean
+

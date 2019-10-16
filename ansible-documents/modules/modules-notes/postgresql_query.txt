@@ -1,0 +1,167 @@
+> POSTGRESQL_QUERY    (/usr/lib/python2.7/dist-packages/ansible/modules/database/postgresql/postgresql_query.py)
+
+        Runs arbitraty PostgreSQL queries. Can run queries from SQL script files.
+
+  * This module is maintained by The Ansible Community
+OPTIONS (= is mandatory):
+
+- ca_cert
+        Specifies the name of a file containing SSL certificate authority (CA) certificate(s).
+        If the file exists, the server's certificate will be verified to be signed by one of these authorities.
+        (Aliases: ssl_rootcert)[Default: (null)]
+        type: str
+
+- db
+        Name of database to connect to and run queries against.
+        (Aliases: login_db)[Default: (null)]
+        type: str
+
+- login_host
+        Host running the database.
+        [Default: (null)]
+        type: str
+
+- login_password
+        The password used to authenticate with.
+        [Default: (null)]
+        type: str
+
+- login_unix_socket
+        Path to a Unix domain socket for local connections.
+        [Default: (null)]
+        type: str
+
+- login_user
+        The username used to authenticate with.
+        [Default: postgres]
+        type: str
+
+- named_args
+        Dictionary of key-value arguments to pass to the query.
+        Mutually exclusive with `positional_args'.
+        [Default: (null)]
+        type: dict
+
+- path_to_script
+        Path to SQL script on the remote host.
+        Returns result of the last query in the script.
+        Mutually exclusive with `query'.
+        [Default: (null)]
+        type: path
+
+- port
+        Database port to connect to.
+        (Aliases: login_port)[Default: 5432]
+        type: int
+
+- positional_args
+        List of values to be passed as positional arguments to the query.
+        Mutually exclusive with `named_args'.
+        [Default: (null)]
+        type: list
+
+- query
+        SQL query to run. Variables can be escaped with psycopg2 syntax http://initd.org/psycopg/docs/usage.html.
+        [Default: (null)]
+        type: str
+
+- session_role
+        Switch to session_role after connecting. The specified session_role must be a role that the current login_user is a member of.
+        Permissions checking for SQL commands is carried out as though the session_role were the one that had logged in originally.
+        [Default: (null)]
+        type: str
+
+- ssl_mode
+        Determines whether or with what priority a secure SSL TCP/IP connection will be negotiated with the server.
+        See https://www.postgresql.org/docs/current/static/libpq-ssl.html for more information on the modes.
+        Default of `prefer' matches libpq default.
+        (Choices: allow, disable, prefer, require, verify-ca, verify-full)[Default: prefer]
+        type: str
+
+
+NOTES:
+      * The default authentication assumes that you are either logging in as or sudo'ing to the postgres account on the host.
+      * To avoid "Peer authentication failed for user postgres" error, use postgres user as a `become_user'.
+      * This module uses psycopg2, a Python PostgreSQL database adapter. You must ensure that psycopg2 is installed on the host
+        before using this module. If the remote host is the PostgreSQL server (which is the default case), then PostgreSQL must
+        also be installed on the remote host. For Ubuntu-based systems, install the postgresql, libpq-dev, and python-psycopg2
+        packages on the remote host before using this module.
+      * The default authentication assumes that you are either logging in as or sudo'ing to the `postgres' account on the host.
+      * This module uses `psycopg2', a Python PostgreSQL database adapter. You must ensure that psycopg2 is installed on the host
+        before using this module. If the remote host is the PostgreSQL server (which is the default case), then PostgreSQL must
+        also be installed on the remote host. For Ubuntu-based systems, install the `postgresql', `libpq-dev', and `python-
+        psycopg2' packages on the remote host before using this module.
+      * The ca_cert parameter requires at least Postgres version 8.4 and `psycopg2' version 2.4.3.
+
+
+REQUIREMENTS:  psycopg2
+
+AUTHOR: Felix Archambault (@archf), Andrew Klychkov (@Andersson007), Will Rouesnel (@wrouesnel)
+        METADATA:
+          status:
+          - preview
+          supported_by: community
+        
+
+EXAMPLES:
+
+- name: Simple select query to acme db
+  postgresql_query:
+    db: acme
+    query: SELECT version()
+
+- name: Select query to db acme with positional arguments and non-default credentials
+  postgresql_query:
+    db: acme
+    login_user: django
+    login_password: mysecretpass
+    query: SELECT * FROM acme WHERE id = %s AND story = %s
+    positional_args:
+    - 1
+    - test
+
+- name: Select query to test_db with named_args
+  postgresql_query:
+    db: test_db
+    query: SELECT * FROM test WHERE id = %(id_val)s AND story = %(story_val)s
+    named_args:
+      id_val: 1
+      story_val: test
+
+- name: Insert query to db test_db
+  postgresql_query:
+    db: test_db
+    query: INSERT INTO test_db (id, story) VALUES (2, 'my_long_story')
+
+- name: Run queries from SQL script
+  postgresql_query:
+    db: test_db
+    path_to_script: /var/lib/pgsql/test.sql
+    positional_args:
+    - 1
+
+
+RETURN VALUES:
+
+query:
+    description: Query that was tried to be executed.
+    returned: always
+    type: str
+    sample: 'SELECT * FROM bar'
+statusmessage:
+    description: Attribute containing the message returned by the command.
+    returned: always
+    type: str
+    sample: 'INSERT 0 1'
+query_result:
+    description:
+    - List of dictionaries in column:value form representing returned rows.
+    returned: changed
+    type: list
+    sample: [{"Column": "Value1"},{"Column": "Value2"}]
+rowcount:
+    description: Number of affected rows.
+    returned: changed
+    type: int
+    sample: 5
+

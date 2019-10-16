@@ -1,0 +1,72 @@
+EXAMPLES:
+
+- name: configure interface
+  eos_interface:
+      name: ethernet1
+      description: test-interface
+      speed: 100full
+      mtu: 512
+
+- name: remove interface
+  eos_interface:
+    name: ethernet1
+    state: absent
+
+- name: make interface up
+  eos_interface:
+    name: ethernet1
+    enabled: True
+
+- name: make interface down
+  eos_interface:
+    name: ethernet1
+    enabled: False
+
+- name: Check intent arguments
+  eos_interface:
+    name: ethernet1
+    state: up
+    tx_rate: ge(0)
+    rx_rate: le(0)
+
+- name: Check neighbors intent arguments
+  eos_interface:
+    name: ethernet1
+    neighbors:
+    - port: eth0
+      host: netdev
+
+- name: Configure interface in disabled state and check if the operational state is disabled or not
+  eos_interface:
+    name: ethernet1
+    enabled: False
+    state: down
+
+- name: Add interface using aggregate
+  eos_interface:
+    aggregate:
+    - { name: ethernet1, mtu: 256, description: test-interface-1 }
+    - { name: ethernet2, mtu: 516, description: test-interface-2 }
+    speed: 100full
+    state: present
+
+- name: Delete interface using aggregate
+  eos_interface:
+    aggregate:
+    - name: loopback9
+    - name: loopback10
+    state: absent
+
+
+RETURN VALUES:
+
+commands:
+  description: The list of configuration mode commands to send to the device.
+  returned: always, except for the platforms that use Netconf transport to manage the device.
+  type: list
+  sample:
+  - interface ethernet1
+  - description test-interface
+  - speed 100full
+  - mtu 512
+

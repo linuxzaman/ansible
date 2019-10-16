@@ -1,0 +1,311 @@
+> CS_ISO    (/usr/lib/python2.7/dist-packages/ansible/modules/cloud/cloudstack/cs_iso.py)
+
+        Register and remove ISO images.
+
+  * This module is maintained by The Ansible Community
+OPTIONS (= is mandatory):
+
+- account
+        Account the ISO is related to.
+        [Default: (null)]
+        type: str
+
+- api_http_method
+        HTTP method used to query the API endpoint.
+        If not given, the `CLOUDSTACK_METHOD' env variable is considered.
+        As the last option, the value is taken from the ini config file, also see the notes.
+        Fallback value is `get' if not specified.
+        (Choices: get, post)[Default: (null)]
+        type: str
+
+- api_key
+        API key of the CloudStack API.
+        If not given, the `CLOUDSTACK_KEY' env variable is considered.
+        As the last option, the value is taken from the ini config file, also see the notes.
+        [Default: (null)]
+        type: str
+
+- api_region
+        Name of the ini section in the `cloustack.ini' file.
+        If not given, the `CLOUDSTACK_REGION' env variable is considered.
+        [Default: cloudstack]
+        type: str
+
+- api_secret
+        Secret key of the CloudStack API.
+        If not set, the `CLOUDSTACK_SECRET' env variable is considered.
+        As the last option, the value is taken from the ini config file, also see the notes.
+        [Default: (null)]
+        type: str
+
+- api_timeout
+        HTTP timeout in seconds.
+        If not given, the `CLOUDSTACK_TIMEOUT' env variable is considered.
+        As the last option, the value is taken from the ini config file, also see the notes.
+        Fallback value is 10 seconds if not specified.
+        [Default: (null)]
+        type: int
+
+- api_url
+        URL of the CloudStack API e.g. https://cloud.example.com/client/api.
+        If not given, the `CLOUDSTACK_ENDPOINT' env variable is considered.
+        As the last option, the value is taken from the ini config file, also see the notes.
+        [Default: (null)]
+        type: str
+
+- bootable
+        Register the ISO to be bootable. Only used if `state' is present.
+        [Default: (null)]
+        type: bool
+
+- checksum
+        The MD5 checksum value of this ISO. If set, we search by checksum instead of name.
+        [Default: (null)]
+        type: str
+
+- cross_zones
+        Whether the ISO should be synced or removed across zones.
+        Mutually exclusive with `zone'.
+        [Default: False]
+        type: bool
+        version_added: 2.4
+
+- display_text
+        Display text of the ISO.
+        If not specified, `name' will be used.
+        [Default: (null)]
+        type: str
+        version_added: 2.4
+
+- domain
+        Domain the ISO is related to.
+        [Default: (null)]
+        type: str
+
+- is_dynamically_scalable
+        Register the ISO having XS/VMWare tools installed inorder to support dynamic scaling of VM cpu/memory. Only used if `state' is
+        present.
+        [Default: (null)]
+        type: bool
+
+- is_featured
+        Register the ISO to be featured. Only used if `state' is present.
+        [Default: (null)]
+        type: bool
+
+- is_public
+        Register the ISO to be publicly available to all users. Only used if `state' is present.
+        [Default: (null)]
+        type: bool
+
+- is_ready
+        This flag is used for searching existing ISOs. If set to `yes', it will only list ISO ready for deployment e.g. successfully
+        downloaded and installed. Recommended to set it to `no'.
+        [Default: False]
+        type: bool
+
+- iso_filter
+        Name of the filter used to search for the ISO.
+        (Choices: featured, self, selfexecutable, sharedexecutable, executable, community)[Default: self]
+        type: str
+
+= name
+        Name of the ISO.
+
+        type: str
+
+- os_type
+        Name of the OS that best represents the OS of this ISO. If the iso is bootable this parameter needs to be passed. Required if
+        `state' is present.
+        [Default: (null)]
+        type: str
+
+- poll_async
+        Poll async jobs until job has finished.
+        [Default: True]
+        type: bool
+        version_added: 2.3
+
+- project
+        Name of the project the ISO to be registered in.
+        [Default: (null)]
+        type: str
+
+- state
+        State of the ISO.
+        (Choices: present, absent)[Default: present]
+        type: str
+
+- tags
+        List of tags. Tags are a list of dictionaries having keys `key' and `value'.
+        To delete all tags, set a empty list e.g. `tags: []'.
+        (Aliases: tag)[Default: (null)]
+        type: list
+        version_added: 2.4
+
+- url
+        URL where the ISO can be downloaded from. Required if `state' is present.
+        [Default: (null)]
+        type: str
+
+- zone
+        Name of the zone you wish the ISO to be registered or deleted from.
+        If not specified, first zone found will be used.
+        [Default: (null)]
+        type: str
+
+
+NOTES:
+      * Ansible uses the `cs' library's configuration method if credentials are not provided by the arguments `api_url', `api_key',
+        `api_secret'. Configuration is read from several locations, in the following order. The `CLOUDSTACK_ENDPOINT',
+        `CLOUDSTACK_KEY', `CLOUDSTACK_SECRET' and `CLOUDSTACK_METHOD'. `CLOUDSTACK_TIMEOUT' environment variables. A
+        `CLOUDSTACK_CONFIG' environment variable pointing to an `.ini' file. A `cloudstack.ini' file in the current working
+        directory. A `.cloudstack.ini' file in the users home directory. Optionally multiple credentials and endpoints can be
+        specified using ini sections in `cloudstack.ini'. Use the argument `api_region' to select the section name, default section
+        is `cloudstack'. See https://github.com/exoscale/cs for more information.
+      * A detailed guide about cloudstack modules can be found in the L(CloudStack Cloud
+        Guide,../scenario_guides/guide_cloudstack.html).
+      * This module supports check mode.
+
+
+REQUIREMENTS:  python >= 2.6, cs >= 0.6.10
+
+AUTHOR: René Moser (@resmo)
+        METADATA:
+          status:
+          - stableinterface
+          supported_by: community
+        
+
+EXAMPLES:
+
+- name: Register an ISO if ISO name does not already exist
+  cs_iso:
+    name: Debian 7 64-bit
+    url: http://mirror.switch.ch/ftp/mirror/debian-cd/current/amd64/iso-cd/debian-7.7.0-amd64-netinst.iso
+    os_type: Debian GNU/Linux 7(64-bit)
+  delegate_to: localhost
+
+- name: Register an ISO with given name if ISO md5 checksum does not already exist
+  cs_iso:
+    name: Debian 7 64-bit
+    url: http://mirror.switch.ch/ftp/mirror/debian-cd/current/amd64/iso-cd/debian-7.7.0-amd64-netinst.iso
+    os_type: Debian GNU/Linux 7(64-bit)
+    checksum: 0b31bccccb048d20b551f70830bb7ad0
+  delegate_to: localhost
+
+- name: Remove an ISO by name
+  cs_iso:
+    name: Debian 7 64-bit
+    state: absent
+  delegate_to: localhost
+
+- name: Remove an ISO by checksum
+  cs_iso:
+    name: Debian 7 64-bit
+    checksum: 0b31bccccb048d20b551f70830bb7ad0
+    state: absent
+  delegate_to: localhost
+
+
+RETURN VALUES:
+
+---
+id:
+  description: UUID of the ISO.
+  returned: success
+  type: str
+  sample: a6f7a5fc-43f8-11e5-a151-feff819cdc9f
+name:
+  description: Name of the ISO.
+  returned: success
+  type: str
+  sample: Debian 7 64-bit
+display_text:
+  description: Text to be displayed of the ISO.
+  returned: success
+  type: str
+  sample: Debian 7.7 64-bit minimal 2015-03-19
+zone:
+  description: Name of zone the ISO is registered in.
+  returned: success
+  type: str
+  sample: zuerich
+status:
+  description: Status of the ISO.
+  returned: success
+  type: str
+  sample: Successfully Installed
+is_ready:
+  description: True if the ISO is ready to be deployed from.
+  returned: success
+  type: bool
+  sample: true
+is_public:
+  description: True if the ISO is public.
+  returned: success
+  type: bool
+  sample: true
+  version_added: '2.4'
+bootable:
+  description: True if the ISO is bootable.
+  returned: success
+  type: bool
+  sample: true
+  version_added: '2.4'
+is_featured:
+  description: True if the ISO is featured.
+  returned: success
+  type: bool
+  sample: true
+  version_added: '2.4'
+format:
+  description: Format of the ISO.
+  returned: success
+  type: str
+  sample: ISO
+  version_added: '2.4'
+os_type:
+  description: Typo of the OS.
+  returned: success
+  type: str
+  sample: CentOS 6.5 (64-bit)
+  version_added: '2.4'
+checksum:
+  description: MD5 checksum of the ISO.
+  returned: success
+  type: str
+  sample: 0b31bccccb048d20b551f70830bb7ad0
+created:
+  description: Date of registering.
+  returned: success
+  type: str
+  sample: 2015-03-29T14:57:06+0200
+cross_zones:
+  description: true if the ISO is managed across all zones, false otherwise.
+  returned: success
+  type: bool
+  sample: false
+  version_added: '2.4'
+domain:
+  description: Domain the ISO is related to.
+  returned: success
+  type: str
+  sample: example domain
+account:
+  description: Account the ISO is related to.
+  returned: success
+  type: str
+  sample: example account
+project:
+  description: Project the ISO is related to.
+  returned: success
+  type: str
+  sample: example project
+tags:
+  description: List of resource tags associated with the ISO.
+  returned: success
+  type: dict
+  sample: '[ { "key": "foo", "value": "bar" } ]'
+  version_added: '2.4'
+

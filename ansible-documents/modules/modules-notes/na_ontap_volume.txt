@@ -1,0 +1,326 @@
+> NA_ONTAP_VOLUME    (/usr/lib/python2.7/dist-packages/ansible/modules/storage/netapp/na_ontap_volume.py)
+
+        Create or destroy or modify volumes on NetApp ONTAP.
+
+  * This module is maintained by an Ansible Partner
+OPTIONS (= is mandatory):
+
+- aggr_list
+        an array of names of aggregates to be used for FlexGroup constituents.
+        [Default: (null)]
+        version_added: 2.8
+
+- aggr_list_multiplier
+        The number of times to iterate over the aggregates listed with the aggr_list parameter when creating a FlexGroup.
+        [Default: (null)]
+        version_added: 2.8
+
+- aggregate_name
+        The name of the aggregate the flexvol should exist on.
+        Required when `state=present'.
+        [Default: (null)]
+
+- atime_update
+        This is an advanced option, the default is True.
+        If false, prevent the update of inode access times when a file is read.
+        This value is useful for volumes with extremely high read traffic, since it prevents writes to the inode file for the volume from
+        contending with reads from other files.
+        This field should be used carefully.
+        That is, use this field when you know in advance that the correct access time for inodes will not be needed for files on that
+        volume.
+        [Default: (null)]
+        type: bool
+        version_added: 2.8
+
+- auto_provision_as
+        Automatically provision a FlexGroup volume.
+        (Choices: flexgroup)[Default: (null)]
+        version_added: 2.8
+
+- efficiency_policy
+        Allows a storage efficiency policy to be set on volume creation.
+        [Default: (null)]
+        version_added: 2.7
+
+- encrypt
+        Whether or not to enable Volume Encryption.
+        [Default: False]
+        type: bool
+        version_added: 2.7
+
+- from_name
+        Name of the existing volume to be renamed to name.
+        [Default: (null)]
+        version_added: 2.7
+
+= hostname
+        The hostname or IP address of the ONTAP instance.
+
+        type: str
+
+- http_port
+        Override the default port (80 or 443) with this port
+        [Default: (null)]
+        type: int
+
+- https
+        Enable and disable https
+        [Default: False]
+        type: bool
+
+- is_infinite
+        Set True if the volume is an Infinite Volume. Deleting an infinite volume is asynchronous.
+        [Default: (null)]
+        type: bool
+
+- is_online
+        Whether the specified volume is online, or not.
+        [Default: True]
+        type: bool
+
+- junction_path
+        Junction path of the volume.
+        To unmount, use junction path `'''.
+        [Default: (null)]
+
+- language
+        Language to use for Volume
+        Default uses SVM language
+        Possible values   Language
+        c                 POSIX
+        ar                Arabic
+        cs                Czech
+        da                Danish
+        de                German
+        en                English
+        en_us             English (US)
+        es                Spanish
+        fi                Finnish
+        fr                French
+        he                Hebrew
+        hr                Croatian
+        hu                Hungarian
+        it                Italian
+        ja                Japanese euc-j
+        ja_v1             Japanese euc-j
+        ja_jp.pck         Japanese PCK (sjis)
+        ja_jp.932         Japanese cp932
+        ja_jp.pck_v2      Japanese PCK (sjis)
+        ko                Korean
+        no                Norwegian
+        nl                Dutch
+        pl                Polish
+        pt                Portuguese
+        ro                Romanian
+        ru                Russian
+        sk                Slovak
+        sl                Slovenian
+        sv                Swedish
+        tr                Turkish
+        zh                Simplified Chinese
+        zh.gbk            Simplified Chinese (GBK)
+        zh_tw             Traditional Chinese euc-tw
+        zh_tw.big5        Traditional Chinese Big 5
+        To use UTF-8 as the NFS character set, append '.UTF-8' to the language code
+        [Default: (null)]
+        version_added: 2.8
+
+= name
+        The name of the volume to manage.
+
+
+- ontapi
+        The ontap api version to use
+        [Default: (null)]
+        type: int
+
+= password
+        Password for the specified user.
+        (Aliases: pass)
+        type: str
+
+- percent_snapshot_space
+        Amount of space reserved for snapshot copies of the volume.
+        [Default: (null)]
+
+- policy
+        Name of the export policy.
+        [Default: (null)]
+
+- size
+        The size of the volume in (size_unit). Required when `state=present'.
+        [Default: (null)]
+
+- size_unit
+        The unit used to interpret the size parameter.
+        (Choices: bytes, b, kb, mb, gb, tb, pb, eb, zb, yb)[Default: gb]
+
+- snapdir_access
+        This is an advanced option, the default is False.
+        Enable the visible '.snapshot' directory that is normally present at system internal mount points.
+        This value also turns on access to all other '.snapshot' directories in the volume.
+        [Default: (null)]
+        type: bool
+        version_added: 2.8
+
+- snapshot_policy
+        The name of the snapshot policy.
+        the default policy name is 'default'.
+        [Default: (null)]
+        version_added: 2.8
+
+- space_guarantee
+        Space guarantee style for the volume.
+        (Choices: none, file, volume)[Default: (null)]
+
+- state
+        Whether the specified volume should exist or not.
+        (Choices: present, absent)[Default: present]
+
+- time_out
+        time to wait for flexGroup creation, modification, or deletion in seconds.
+        Error out if task is not completed in defined time.
+        if 0, the request is asynchronous.
+        default is set to 3 minutes.
+        [Default: 180]
+        version_added: 2.8
+
+- type
+        The volume type, either read-write (RW) or data-protection (DP).
+        [Default: (null)]
+
+- unix_permissions
+        Unix permission bits in octal or symbolic format.
+        For example, 0 is equivalent to ------------, 777 is equivalent to ---rwxrwxrwx,both formats are accepted.
+        The valid octal value ranges between 0 and 777 inclusive.
+        [Default: (null)]
+        version_added: 2.8
+
+= username
+        This can be a Cluster-scoped or SVM-scoped account, depending on whether a Cluster-level or SVM-level API is required. For more
+        information, please read the documentation https://mysupport.netapp.com/NOW/download/software/nmsdk/9.4/.
+        (Aliases: user)
+        type: str
+
+- validate_certs
+        If set to `no', the SSL certificates will not be validated.
+        This should only set to `False' used on personally controlled sites using self-signed certificates.
+        [Default: True]
+        type: bool
+
+- volume_security_style
+        The security style associated with this volume.
+        (Choices: mixed, ntfs, unified, unix)[Default: mixed]
+
+= vserver
+        Name of the vserver to use.
+
+
+- wait_for_completion
+        Set this parameter to 'true' for synchronous execution during create (wait until volume status is online)
+        Set this parameter to 'false' for asynchronous execution
+        For asynchronous, execution exits as soon as the request is sent, without checking volume status
+        [Default: False]
+        type: bool
+        version_added: 2.8
+
+
+NOTES:
+      * The modules prefixed with na\\_ontap are built to support the ONTAP storage platform.
+
+
+REQUIREMENTS:  A physical or virtual clustered Data ONTAP system. The modules support Data ONTAP 9.1 and onward, Ansible 2.6, Python2
+        netapp-lib (2017.10.30) or later. Install using 'pip install netapp-lib', Python3 netapp-lib (2018.11.13) or
+        later. Install using 'pip install netapp-lib', To enable http on the cluster you must run the following commands
+        'set -privilege advanced;' 'system services web modify -http-enabled true;'
+
+AUTHOR: NetApp Ansible Team (@carchi8py) <ng-ansibleteam@netapp.com>
+        METADATA:
+          status:
+          - preview
+          supported_by: certified
+        
+
+EXAMPLES:
+
+- name: Create FlexVol
+      na_ontap_volume:
+        state: present
+        name: ansibleVolume12
+        is_infinite: False
+        aggregate_name: ansible_aggr
+        size: 100
+        size_unit: mb
+        space_guarantee: none
+        policy: default
+        percent_snapshot_space: 60
+        vserver: ansibleVServer
+        wait_for_completion: True
+        hostname: "{{ netapp_hostname }}"
+        username: "{{ netapp_username }}"
+        password: "{{ netapp_password }}"
+
+    - name: Volume Delete
+      na_ontap_volume:
+        state: absent
+        name: ansibleVolume12
+        aggregate_name: ansible_aggr
+        vserver: ansibleVServer
+        hostname: "{{ netapp_hostname }}"
+        username: "{{ netapp_username }}"
+        password: "{{ netapp_password }}"
+
+    - name: Make FlexVol offline
+      na_ontap_volume:
+        state: present
+        name: ansibleVolume
+        is_infinite: False
+        is_online: False
+        vserver: ansibleVServer
+        hostname: "{{ netapp_hostname }}"
+        username: "{{ netapp_username }}"
+        password: "{{ netapp_password }}"
+
+    - name: Create flexGroup volume manually
+      na_ontap_volume:
+        state: present
+        name: ansibleVolume
+        is_infinite: False
+        aggr_list: "{{ aggr_list }}"
+        aggr_list_multiplier: 2
+        size: 200
+        size_unit: mb
+        space_guarantee: none
+        policy: default
+        vserver: "{{ vserver }}"
+        hostname: "{{ netapp_hostname }}"
+        username: "{{ netapp_username }}"
+        password: "{{ netapp_password }}"
+        https: False
+        unix_permissions: 777
+        snapshot_policy: default
+        time_out: 0
+
+    - name: Create flexGroup volume auto provsion as flex group
+      na_ontap_volume:
+        state: present
+        name: ansibleVolume
+        is_infinite: False
+        auto_provision_as: flexgroup
+        size: 200
+        size_unit: mb
+        space_guarantee: none
+        policy: default
+        vserver: "{{ vserver }}"
+        hostname: "{{ netapp_hostname }}"
+        username: "{{ netapp_username }}"
+        password: "{{ netapp_password }}"
+        https: False
+        unix_permissions: 777
+        snapshot_policy: default
+        time_out: 0
+
+
+RETURN VALUES:
+
+

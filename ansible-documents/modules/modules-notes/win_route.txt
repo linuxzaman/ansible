@@ -1,0 +1,65 @@
+> WIN_ROUTE    (/usr/lib/python2.7/dist-packages/ansible/modules/windows/win_route.py)
+
+        Add or remove a static route.
+
+  * This module is maintained by The Ansible Community
+OPTIONS (= is mandatory):
+
+= destination
+        Destination IP address in CIDR format (ip address/prefix length).
+
+        type: str
+
+- gateway
+        The gateway used by the static route.
+        If `gateway' is not provided it will be set to `0.0.0.0'.
+        [Default: (null)]
+        type: str
+
+- metric
+        Metric used by the static route.
+        [Default: 1]
+        type: int
+
+- state
+        If `absent', it removes a network static route.
+        If `present', it adds a network static route.
+        (Choices: absent, present)[Default: present]
+        type: str
+
+
+NOTES:
+      * Works only with Windows 2012 R2 and newer.
+
+
+AUTHOR: Daniele Lazzari (@dlazz)
+        METADATA:
+          status:
+          - preview
+          supported_by: community
+        
+
+EXAMPLES:
+
+---
+- name: Add a network static route
+  win_route:
+    destination: 192.168.2.10/32
+    gateway: 192.168.1.1
+    metric: 1
+    state: present
+
+- name: Remove a network static route
+  win_route:
+    destination: 192.168.2.10/32
+    state: absent
+
+
+RETURN VALUES:
+
+output:
+    description: A message describing the task result.
+    returned: always
+    type: str
+    sample: "Route added"
+

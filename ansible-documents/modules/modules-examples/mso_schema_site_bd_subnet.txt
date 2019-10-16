@@ -1,0 +1,59 @@
+EXAMPLES:
+
+- name: Add a new site BD subnet
+  mso_schema_site_bd_subnet:
+    host: mso_host
+    username: admin
+    password: SomeSecretPassword
+    schema: Schema1
+    site: Site1
+    template: Template1
+    bd: BD1
+    subnet: 11.11.11.0/24
+    state: present
+  delegate_to: localhost
+
+- name: Remove a site BD subnet
+  mso_schema_site_bd_subnet:
+    host: mso_host
+    username: admin
+    password: SomeSecretPassword
+    schema: Schema1
+    site: Site1
+    template: Template1
+    bd: BD1
+    subnet: 11.11.11.0/24
+    state: absent
+  delegate_to: localhost
+
+- name: Query a specific site BD subnet
+  mso_schema_site_bd_subnet:
+    host: mso_host
+    username: admin
+    password: SomeSecretPassword
+    schema: Schema1
+    site: Site1
+    template: Template1
+    bd: BD1
+    subnet: 11.11.11.0/24
+    state: query
+  delegate_to: localhost
+  register: query_result
+
+- name: Query all site BD subnets
+  mso_schema_site_bd_subnet:
+    host: mso_host
+    username: admin
+    password: SomeSecretPassword
+    schema: Schema1
+    site: Site1
+    template: Template1
+    bd: BD1
+    state: query
+  delegate_to: localhost
+  register: query_result
+
+
+RETURN VALUES:
+
+

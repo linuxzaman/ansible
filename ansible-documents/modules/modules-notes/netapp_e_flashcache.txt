@@ -1,0 +1,81 @@
+> NETAPP_E_FLASHCACHE    (/usr/lib/python2.7/dist-packages/ansible/modules/storage/netapp/netapp_e_flashcache.py)
+
+        Create or remove SSD caches on a NetApp E-Series storage array.
+
+  * This module is maintained by The Ansible Community
+OPTIONS (= is mandatory):
+
+= api_password
+        The password to authenticate with the SANtricity WebServices Proxy or embedded REST API.
+
+
+= api_url
+        The url to the SANtricity WebServices Proxy or embedded REST API.
+
+
+= api_username
+        The username to authenticate with the SANtricity WebServices Proxy or embedded REST API.
+
+
+- cache_size_min
+        The minimum size (in size_units) of the ssd cache. The cache will be expanded if this exceeds the current size of the cache.
+        [Default: (null)]
+
+- disk_count
+        The minimum number of disks to use for building the cache. The cache will be expanded if this number exceeds the number of disks
+        already in place
+        [Default: (null)]
+
+- io_type
+        The type of workload to optimize the cache for.
+        (Choices: filesystem, database, media)[Default: filesystem]
+
+= name
+        The name of the SSD cache to manage
+
+
+- size_unit
+        The unit to be applied to size arguments
+        (Choices: bytes, b, kb, mb, gb, tb, pb, eb, zb, yb)[Default: gb]
+
+= ssid
+        The ID of the array to manage (as configured on the web services proxy).
+
+
+= state
+        Whether the specified SSD cache should exist or not.
+        (Choices: present, absent)[Default: present]
+
+- validate_certs
+        Should https certificates be validated?
+        [Default: True]
+        type: bool
+
+
+AUTHOR: Kevin Hulquest (@hulquest)
+        METADATA:
+          status:
+          - preview
+          supported_by: community
+        
+
+EXAMPLES:
+
+- name: Flash Cache
+      netapp_e_flashcache:
+        ssid: "{{ ssid }}"
+        api_url: "{{ netapp_api_url }}"
+        api_username: "{{ netapp_api_username }}"
+        api_password: "{{ netapp_api_password }}"
+        validate_certs: "{{ netapp_api_validate_certs }}"
+        name: SSDCacheBuiltByAnsible
+
+
+RETURN VALUES:
+
+msg:
+    description: Success message
+    returned: success
+    type: str
+    sample: json for newly created flash cache
+

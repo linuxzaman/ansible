@@ -1,0 +1,96 @@
+> REBOOT    (/usr/lib/python2.7/dist-packages/ansible/modules/system/reboot.py)
+
+        Reboot a machine, wait for it to go down, come back up, and respond to commands. For Windows targets, use the [win_reboot] module
+        instead.
+
+  * This module is maintained by The Ansible Core Team
+  * note: This module has a corresponding action plugin.
+
+OPTIONS (= is mandatory):
+
+- connect_timeout
+        Maximum seconds to wait for a successful connection to the managed hosts before trying again.
+        If unspecified, the default setting for the underlying connection plugin is used.
+        [Default: (null)]
+        type: int
+
+- msg
+        Message to display to users before reboot.
+        [Default: Reboot initiated by Ansible]
+        type: str
+
+- post_reboot_delay
+        Seconds to wait after the reboot command was successful before attempting to validate the system rebooted successfully.
+        This is useful if you want wait for something to settle despite your connection already working.
+        [Default: 0]
+        type: int
+
+- pre_reboot_delay
+        Seconds to wait before reboot. Passed as a parameter to the reboot command.
+        On Linux, macOS and OpenBSD, this is converted to minutes and rounded down. If less than 60, it will be set to 0.
+        On Solaris and FreeBSD, this will be seconds.
+        [Default: 0]
+        type: int
+
+- reboot_timeout
+        Maximum seconds to wait for machine to reboot and respond to a test command.
+        This timeout is evaluated separately for both reboot verification and test command success so the maximum execution time for the
+        module is twice this amount.
+        [Default: 600]
+        type: int
+
+- search_paths
+        Paths to search on the remote machine for the `shutdown' command.
+        `Only' these paths will be searched for the `shutdown' command. `PATH' is ignored in the remote node when searching for the
+        `shutdown' command.
+        [Default: [u'/sbin', u'/usr/sbin', u'/usr/local/sbin']]
+        type: list
+        version_added: 2.8
+
+- test_command
+        Command to run on the rebooted host and expect success from to determine the machine is ready for further tasks.
+        [Default: whoami]
+        type: str
+
+
+NOTES:
+      * `PATH' is ignored on the remote node when searching for the `shutdown' command. Use `search_paths' to specify locations to
+        search if the default paths do not work.
+
+
+SEE ALSO:
+      * Module win_reboot
+           The official documentation on the win_reboot module.
+           https://docs.ansible.com/ansible/latest/modules/win_reboot_module.html
+
+
+AUTHOR: Matt Davis (@nitzmahone), Sam Doran (@samdoran)
+        METADATA:
+          status:
+          - preview
+          supported_by: core
+        
+
+EXAMPLES:
+
+- name: Unconditionally reboot the machine with all defaults
+  reboot:
+
+- name: Reboot a slow machine that might have lots of updates to apply
+  reboot:
+    reboot_timeout: 3600
+
+
+RETURN VALUES:
+
+rebooted:
+  description: true if the machine was rebooted
+  returned: always
+  type: bool
+  sample: true
+elapsed:
+  description: The number of seconds that elapsed waiting for the system to be rebooted.
+  returned: always
+  type: int
+  sample: 23
+

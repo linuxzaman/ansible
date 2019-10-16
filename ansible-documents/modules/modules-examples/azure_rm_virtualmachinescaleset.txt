@@ -1,0 +1,148 @@
+EXAMPLES:
+
+- name: Create VMSS
+  azure_rm_virtualmachinescaleset:
+    resource_group: myResourceGroup
+    name: testvmss
+    vm_size: Standard_DS1_v2
+    capacity: 2
+    virtual_network_name: testvnet
+    subnet_name: testsubnet
+    admin_username: adminUser
+    ssh_password_enabled: false
+    ssh_public_keys:
+      - path: /home/adminUser/.ssh/authorized_keys
+        key_data: < insert yor ssh public key here... >
+    managed_disk_type: Standard_LRS
+    image:
+      offer: CoreOS
+      publisher: CoreOS
+      sku: Stable
+      version: latest
+    data_disks:
+      - lun: 0
+        disk_size_gb: 64
+        caching: ReadWrite
+        managed_disk_type: Standard_LRS
+
+- name: Create a VMSS with a custom image
+  azure_rm_virtualmachinescaleset:
+    resource_group: myResourceGroup
+    name: testvmss
+    vm_size: Standard_DS1_v2
+    capacity: 2
+    virtual_network_name: testvnet
+    subnet_name: testsubnet
+    admin_username: adminUser
+    admin_password: password01
+    managed_disk_type: Standard_LRS
+    image: customimage001
+
+- name: Create a VMSS with a custom image from a particular resource group
+  azure_rm_virtualmachinescaleset:
+    resource_group: myResourceGroup
+    name: testvmss
+    vm_size: Standard_DS1_v2
+    capacity: 2
+    virtual_network_name: testvnet
+    subnet_name: testsubnet
+    admin_username: adminUser
+    admin_password: password01
+    managed_disk_type: Standard_LRS
+    image:
+      name: customimage001
+      resource_group: myResourceGroup
+
+
+RETURN VALUES:
+
+azure_vmss:
+    description: Facts about the current state of the object. Note that facts are not part of the registered output but available directly.
+    returned: always
+    type: complex
+    contains: {
+        "properties": {
+            "overprovision": true,
+            "singlePlacementGroup": true,
+            "upgradePolicy": {
+                "mode": "Manual"
+            },
+            "virtualMachineProfile": {
+                "networkProfile": {
+                    "networkInterfaceConfigurations": [
+                        {
+                            "name": "testvmss",
+                            "properties": {
+                                "dnsSettings": {
+                                    "dnsServers": []
+                                },
+                                "enableAcceleratedNetworking": false,
+                                "ipConfigurations": [
+                                    {
+                                        "name": "default",
+                                        "properties": {
+                                            "privateIPAddressVersion": "IPv4",
+                                            "subnet": {
+                                                "id": "/subscriptions/xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx/resourceGroup/myResourceGroup/providers/Microsoft.Network/virtualNetworks/testvnet/subnets/testsubnet"
+                                            }
+                                        }
+                                    }
+                                ],
+                                "primary": true
+                            }
+                        }
+                    ]
+                },
+                "osProfile": {
+                    "adminUsername": "testuser",
+                    "computerNamePrefix": "testvmss",
+                    "linuxConfiguration": {
+                        "disablePasswordAuthentication": true,
+                        "ssh": {
+                            "publicKeys": [
+                                {
+                                    "keyData": "",
+                                    "path": "/home/testuser/.ssh/authorized_keys"
+                                }
+                            ]
+                        }
+                    },
+                    "secrets": []
+                },
+                "storageProfile": {
+                    "dataDisks": [
+                        {
+                            "caching": "ReadWrite",
+                            "createOption": "empty",
+                            "diskSizeGB": 64,
+                            "lun": 0,
+                            "managedDisk": {
+                                "storageAccountType": "Standard_LRS"
+                            }
+                        }
+                    ],
+                    "imageReference": {
+                        "offer": "CoreOS",
+                        "publisher": "CoreOS",
+                        "sku": "Stable",
+                        "version": "899.17.0"
+                    },
+                    "osDisk": {
+                        "caching": "ReadWrite",
+                        "createOption": "fromImage",
+                        "managedDisk": {
+                            "storageAccountType": "Standard_LRS"
+                        }
+                    }
+                }
+            }
+        },
+        "sku": {
+            "capacity": 2,
+            "name": "Standard_DS1_v2",
+            "tier": "Standard"
+        },
+        "tags": null,
+        "type": "Microsoft.Compute/virtualMachineScaleSets"
+    }
+

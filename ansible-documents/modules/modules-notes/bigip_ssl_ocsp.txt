@@ -1,0 +1,323 @@
+> BIGIP_SSL_OCSP    (/usr/lib/python2.7/dist-packages/ansible/modules/network/f5/bigip_ssl_ocsp.py)
+
+        Manage OCSP configurations on BIG-IP.
+
+  * This module is maintained by an Ansible Partner
+OPTIONS (= is mandatory):
+
+- cache_error_timeout
+        Specifies the lifetime of an error response in the cache, in seconds.
+        [Default: (null)]
+        type: int
+
+- cache_timeout
+        Specifies the lifetime of the OCSP response in the cache, in seconds.
+        [Default: (null)]
+        type: str
+
+- certificate
+        Specifies a certificate used to sign an OCSP request.
+        [Default: (null)]
+        type: str
+
+- clock_skew
+        Specifies the tolerable absolute difference in the clocks of the responder and the BIG-IP system, in seconds.
+        [Default: (null)]
+        type: int
+
+- connection_timeout
+        Specifies the time interval that the BIG-IP system waits for before ending the connection to the OCSP responder, in seconds.
+        [Default: (null)]
+        type: int
+
+- connections_limit
+        Specifies the maximum number of connections per second allowed for the OCSP certificate validator.
+        [Default: (null)]
+        type: int
+
+- dns_resolver
+        Specifies the internal DNS resolver the BIG-IP system uses to fetch the OCSP response.
+        This involves specifying one or more DNS servers in the DNS resolver configuration.
+        Use this option when either there is a DNS server that can do the name-resolution of the OCSP responders or the OCSP responder
+        can be reached on one of BIG-IP system's interfaces.
+        [Default: (null)]
+        type: str
+
+- hash_algorithm
+        Specifies a hash algorithm used to sign an OCSP request.
+        (Choices: sha256, sha1)[Default: (null)]
+        type: str
+
+- key
+        Specifies a key used to sign an OCSP request.
+        [Default: (null)]
+        type: str
+
+= name
+        Specifies the name of the OCSP certificate validator.
+
+        type: str
+
+- partition
+        Device partition to manage resources on.
+        [Default: Common]
+        type: str
+        version_added: 2.5
+        
+
+- passphrase
+        Specifies a passphrase used to sign an OCSP request.
+        [Default: (null)]
+        type: str
+
+= password
+        The password for the user account used to connect to the BIG-IP.
+        You may omit this option by setting the environment variable `F5_PASSWORD'.
+        (Aliases: pass, pwd)
+        type: str
+
+- provider
+        A dict object containing connection details.
+        [Default: (null)]
+        suboptions:
+          password:
+            aliases:
+            - pass
+            - pwd
+            description:
+            - The password for the user account used to connect to the BIG-IP.
+            - You may omit this option by setting the environment variable `F5_PASSWORD'.
+            required: true
+            type: str
+          server:
+            description:
+            - The BIG-IP host.
+            - You may omit this option by setting the environment variable `F5_SERVER'.
+            required: true
+            type: str
+          server_port:
+            default: 443
+            description:
+            - The BIG-IP server port.
+            - You may omit this option by setting the environment variable `F5_SERVER_PORT'.
+            type: int
+          ssh_keyfile:
+            description:
+            - Specifies the SSH keyfile to use to authenticate the connection to the remote
+              device.  This argument is only used for `cli' transports.
+            - You may omit this option by setting the environment variable `ANSIBLE_NET_SSH_KEYFILE'.
+            type: path
+          timeout:
+            default: 10
+            description:
+            - Specifies the timeout in seconds for communicating with the network device for
+              either connecting or sending commands.  If the timeout is exceeded before the
+              operation is completed, the module will error.
+            type: int
+          transport:
+            choices:
+            - cli
+            - rest
+            default: rest
+            description:
+            - Configures the transport connection to use when connecting to the remote device.
+            type: str
+          user:
+            description:
+            - The username to connect to the BIG-IP with. This user must have administrative
+              privileges on the device.
+            - You may omit this option by setting the environment variable `F5_USER'.
+            required: true
+            type: str
+          validate_certs:
+            default: true
+            description:
+            - If `no', SSL certificates are not validated. Use this only on personally controlled
+              sites using self-signed certificates.
+            - You may omit this option by setting the environment variable `F5_VALIDATE_CERTS'.
+            type: bool
+        
+        type: dict
+        version_added: 2.5
+
+- proxy_server_pool
+        Specifies the proxy server pool the BIG-IP system uses to fetch the OCSP response.
+        This involves creating a pool with proxy-servers.
+        Use this option when either the OCSP responder cannot be reached on any of BIG-IP system's interfaces or one or more servers can
+        proxy an HTTP request to an external server and fetch the response.
+        [Default: (null)]
+        type: str
+
+- responder_url
+        Specifies the absolute URL that overrides the OCSP responder URL obtained from the certificate's AIA extensions. This should be
+        an HTTP-based URL.
+        [Default: (null)]
+        type: str
+
+- route_domain
+        Specifies the route domain for fetching an OCSP response using HTTP forward proxy.
+        [Default: (null)]
+        type: str
+
+= server
+        The BIG-IP host.
+        You may omit this option by setting the environment variable `F5_SERVER'.
+
+        type: str
+
+- server_port
+        The BIG-IP server port.
+        You may omit this option by setting the environment variable `F5_SERVER_PORT'.
+        [Default: 443]
+        type: int
+        version_added: 2.2
+
+- state
+        When `present', ensures that the resource exists.
+        When `absent', ensures that the resource does not exist.
+        (Choices: present, absent)[Default: present]
+        type: str
+
+- status_age
+        Specifies the maximum allowed lag time that the BIG-IP system accepts for the 'thisUpdate' time in the OCSP response.
+        [Default: (null)]
+        type: int
+
+- strict_responder_checking
+        Specifies whether the responder's certificate is checked for an OCSP signing extension.
+        [Default: (null)]
+        type: bool
+
+- trusted_responders
+        Specifies the certificates used for validating the OCSP response when the responder's certificate has been omitted from the
+        response.
+        [Default: (null)]
+        type: str
+
+- update_password
+        `always' will allow to update passwords if the user chooses to do so. `on_create' will only set the password for newly created
+        OCSP validators.
+        (Choices: always, on_create)[Default: always]
+        type: str
+
+= user
+        The username to connect to the BIG-IP with. This user must have administrative privileges on the device.
+        You may omit this option by setting the environment variable `F5_USER'.
+
+        type: str
+
+- validate_certs
+        If `no', SSL certificates are not validated. Use this only on personally controlled sites using self-signed certificates.
+        You may omit this option by setting the environment variable `F5_VALIDATE_CERTS'.
+        [Default: True]
+        type: bool
+        version_added: 2.0
+
+
+NOTES:
+      * Requires BIG-IP >= 13.x.
+      * For more information on using Ansible to manage F5 Networks devices see https://www.ansible.com/integrations/networks/f5.
+      * Requires BIG-IP software version >= 12.
+      * The F5 modules only manipulate the running configuration of the F5 product. To ensure that BIG-IP specific configuration
+        persists to disk, be sure to include at least one task that uses the [bigip_config] module to save the running
+        configuration. Refer to the module's documentation for the correct usage of the module to save your running configuration.
+
+
+AUTHOR: Tim Rupp (@caphrim007)
+        METADATA:
+          status:
+          - preview
+          supported_by: certified
+        
+
+EXAMPLES:
+
+- name: Create a OCSP validator
+  bigip_ssl_ocsp:
+    name: foo
+    proxy_server_pool: validators-pool
+    provider:
+      password: secret
+      server: lb.mydomain.com
+      user: admin
+  delegate_to: localhost
+
+
+RETURN VALUES:
+
+cache_error_timeout:
+  description: The new Response Caching Error Timeout value.
+  returned: changed
+  type: int
+  sample: 3600
+cache_timeout:
+  description: The new Response Caching Timeout value.
+  returned: changed
+  type: str
+  sample: indefinite
+clock_skew:
+  description: The new Response Validation Clock Skew value.
+  returned: changed
+  type: int
+  sample: 300
+connections_limit:
+  description: The new Concurrent Connections Limit value.
+  returned: changed
+  type: int
+  sample: 50
+dns_resolver:
+  description: The new DNS Resolver value.
+  returned: changed
+  type: str
+  sample: /Common/resolver1
+route_domain:
+  description: The new Route Domain value.
+  returned: changed
+  type: str
+  sample: /Common/0
+hash_algorithm:
+  description: The new Request Signing Hash Algorithm value.
+  returned: changed
+  type: str
+  sample: sha256
+certificate:
+  description: The new Request Signing Certificate value.
+  returned: changed
+  type: str
+  sample: /Common/cert1
+key:
+  description: The new Request Signing Key value.
+  returned: changed
+  type: str
+  sample: /Common/key1
+proxy_server_pool:
+  description: The new Proxy Server Pool value.
+  returned: changed
+  type: str
+  sample: /Common/pool1
+responder_url:
+  description: The new Connection Responder URL value.
+  returned: changed
+  type: str
+  sample: "http://responder.site.com"
+status_age:
+  description: The new Response Validation Status Age value.
+  returned: changed
+  type: int
+  sample: 0
+strict_responder_checking:
+  description: The new Response Validation Strict Responder Certificate Checking value.
+  returned: changed
+  type: bool
+  sample: yes
+connection_timeout:
+  description: The new Connection Timeout value.
+  returned: changed
+  type: int
+  sample: 8
+trusted_responders:
+  description: The new Response Validation Trusted Responders value.
+  returned: changed
+  type: int
+  sample: /Common/default
+

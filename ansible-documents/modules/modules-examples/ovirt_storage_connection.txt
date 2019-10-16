@@ -1,0 +1,37 @@
+EXAMPLES:
+
+# Examples don't contain auth parameter for simplicity,
+# look at ovirt_auth module to see how to reuse authentication:
+
+# Add new storage connection:
+- ovirt_storage_connection:
+    storage: myiscsi
+    address: 10.34.63.199
+    target: iqn.2016-08-09.domain-01:nickname
+    port: 3260
+    type: iscsi
+
+# Update the existing storage connection address:
+- ovirt_storage_connection:
+    id: 26915c96-92ff-47e5-9e77-b581db2f2d36
+    address: 10.34.63.204
+    force: true
+
+# Remove storage connection:
+- ovirt_storage_connection:
+    id: 26915c96-92ff-47e5-9e77-b581db2f2d36
+
+
+RETURN VALUES:
+
+id:
+    description: ID of the storage connection which is managed
+    returned: On success if storage connection is found.
+    type: str
+    sample: 7de90f31-222c-436c-a1ca-7e655bd5b60c
+storage_connection:
+    description: "Dictionary of all the storage connection attributes. Storage connection attributes can be found on your oVirt instance
+                  at following url: https://ovirt.example.com/ovirt-engine/api/model#types/storage_connection."
+    returned: On success if storage connection is found.
+    type: dict
+

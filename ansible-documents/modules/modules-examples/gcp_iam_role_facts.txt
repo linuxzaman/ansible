@@ -1,0 +1,49 @@
+EXAMPLES:
+
+- name: " a role facts"
+  gcp_iam_role_facts:
+    project: test_project
+    auth_kind: serviceaccount
+    service_account_file: "/tmp/auth.pem"
+    state: facts
+
+
+RETURN VALUES:
+
+items:
+  description: List of items
+  returned: always
+  type: complex
+  contains:
+    name:
+      description:
+      - The name of the role.
+      returned: success
+      type: str
+    title:
+      description:
+      - A human-readable title for the role. Typically this is limited to 100 UTF-8
+        bytes.
+      returned: success
+      type: str
+    description:
+      description:
+      - Human-readable description for the role.
+      returned: success
+      type: str
+    includedPermissions:
+      description:
+      - Names of permissions this role grants when bound in an IAM policy.
+      returned: success
+      type: list
+    stage:
+      description:
+      - The current launch stage of the role.
+      returned: success
+      type: str
+    deleted:
+      description:
+      - The current deleted state of the role.
+      returned: success
+      type: bool
+

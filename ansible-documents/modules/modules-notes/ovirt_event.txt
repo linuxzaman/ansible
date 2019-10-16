@@ -1,0 +1,221 @@
+> OVIRT_EVENT    (/usr/lib/python2.7/dist-packages/ansible/modules/cloud/ovirt/ovirt_event.py)
+
+        This module can be used to create or delete an event in oVirt/RHV.
+
+  * This module is maintained by The Ansible Community
+OPTIONS (= is mandatory):
+
+= auth
+        Dictionary with values needed to create HTTP/HTTPS connection to oVirt:
+
+        suboptions:
+          ca_file:
+            description:
+            - A PEM file containing the trusted CA certificates.
+            - The certificate presented by the server will be verified using these CA certificates.
+            - If `ca_file' parameter is not set, system wide CA certificate store is used.
+            - Default value is set by `OVIRT_CAFILE' environment variable.
+            type: str
+          headers:
+            description:
+            - Dictionary of HTTP headers to be added to each API call.
+            type: dict
+          hostname:
+            description:
+            - A string containing the hostname of the server, usually something like ``server.example.com'`.
+            - Default value is set by `OVIRT_HOSTNAME' environment variable.
+            - Either `url' or `hostname' is required.
+            type: str
+          insecure:
+            description:
+            - A boolean flag that indicates if the server TLS certificate and host name should
+              be checked.
+            type: bool
+          kerberos:
+            description:
+            - A boolean flag indicating if Kerberos authentication should be used instead
+              of the default basic authentication.
+            type: bool
+          password:
+            description:
+            - The password of the user.
+            - Default value is set by `OVIRT_PASSWORD' environment variable.
+            required: true
+            type: str
+          token:
+            description:
+            - Token to be used instead of login with username/password.
+            - Default value is set by `OVIRT_TOKEN' environment variable.
+            type: str
+          url:
+            description:
+            - A string containing the API URL of the server, usually something like ``https://server.example.com/ovirt-engine/api'`.
+            - Default value is set by `OVIRT_URL' environment variable.
+            - Either `url' or `hostname' is required.
+            type: str
+          username:
+            description:
+            - The name of the user, something like `admin@internal'.
+            - Default value is set by `OVIRT_USERNAME' environment variable.
+            required: true
+            type: str
+        
+        type: dict
+
+- cluster
+        The id of the cluster associated with this event.
+        [Default: (null)]
+        type: str
+
+- custom_id
+        Custom ID for the event. This ID must be unique for each event.
+        Required when state is present.
+        [Default: (null)]
+        type: int
+
+- data_center
+        The id of the data center associated with this event.
+        [Default: (null)]
+        type: str
+
+- description
+        Message for the event.
+        Required when state is present.
+        [Default: (null)]
+        type: str
+
+- fetch_nested
+        If `True' the module will fetch additional data from the API.
+        It will fetch IDs of the VMs disks, snapshots, etc. User can configure to fetch other attributes of the nested entities by
+        specifying `nested_attributes'.
+        [Default: (null)]
+        type: bool
+        version_added: 2.3
+
+- host
+        The id of the host associated with this event.
+        [Default: (null)]
+        type: str
+
+- id
+        The event ID in the oVirt/RHV audit_log table. This ID is not the same as custom_id and is only used when state is absent.
+        Required when state is absent.
+        [Default: (null)]
+        type: str
+
+- nested_attributes
+        Specifies list of the attributes which should be fetched from the API.
+        This parameter apply only when `fetch_nested' is `true'.
+        [Default: (null)]
+        type: list
+        version_added: 2.3
+
+- origin
+        Originator of the event.
+        Required when state is present.
+        [Default: (null)]
+        type: str
+
+- poll_interval
+        Number of the seconds the module waits until another poll request on entity status is sent.
+        [Default: 3]
+        type: int
+
+- severity
+        Severity of the event.
+        Required when state is present.
+        (Choices: error, normal, warning)[Default: normal]
+        type: str
+
+- state
+        Should the event be present/absent.
+        The `wait' option must be set to false when state is absent.
+        (Choices: present, absent)[Default: present]
+        type: str
+
+- storage_domain
+        The id of the storage domain associated with this event.
+        [Default: (null)]
+        type: str
+
+- template
+        The id of the template associated with this event.
+        [Default: (null)]
+        type: str
+
+- timeout
+        The amount of time in seconds the module should wait for the instance to get into desired state.
+        [Default: 180]
+        type: int
+
+- user
+        The id of the user associated with this event.
+        [Default: (null)]
+        type: str
+
+- vm
+        The id of the VM associated with this event.
+        [Default: (null)]
+        type: str
+
+- wait
+        `yes' if the module should wait for the entity to get into desired state.
+        [Default: True]
+        type: bool
+
+
+NOTES:
+      * In order to use this module you have to install oVirt Python SDK. To ensure it's installed with correct version you can
+        create the following task: `pip: name=ovirt-engine-sdk-python version=4.3.0'
+
+
+REQUIREMENTS:  python >= 2.7, ovirt-engine-sdk-python >= 4.3.0
+
+AUTHOR: Chris Keller (@nasx)
+        METADATA:
+          status:
+          - preview
+          supported_by: community
+        
+
+EXAMPLES:
+
+# Examples don't contain the auth parameter for simplicity,
+# look at the ovirt_auth module to see how to reuse authentication.
+
+- name: Create an event
+  ovirt_event:
+    state: present
+    description: "The file system /home on host xyz is almost full!"
+    origin: "mymonitor"
+    custom_id: 123456789
+    severity: warning
+
+- name: Create an event and link it to a specific object
+  ovirt_event:
+    state: present
+    description: "The file system /home is almost full!"
+    origin: "mymonitor"
+    custom_id: 123456789
+    severity: warning
+    vm: "c79db183-46ef-44d1-95f9-1a368c516c19"
+
+- name: Remove an event
+  ovirt_event:
+    state: absent
+    id: 123456789
+    wait: false
+
+
+RETURN VALUES:
+
+id:
+    description: "ID of the event that was created."
+    returned: "On success."
+    type: str
+event:
+    description: "Dictionary of all the Event attributes. All event attributes can be found at the following url:
+                  http://ovirt.github.io/ovirt-engine-api-model/master/#types/event"
+    returned: "On success."
+    type: dict
+

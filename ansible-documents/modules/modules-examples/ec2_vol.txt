@@ -1,0 +1,127 @@
+EXAMPLES:
+
+# Simple attachment action
+- ec2_vol:
+    instance: XXXXXX
+    volume_size: 5
+    device_name: sdd
+
+# Example using custom iops params
+- ec2_vol:
+    instance: XXXXXX
+    volume_size: 5
+    iops: 100
+    device_name: sdd
+
+# Example using snapshot id
+- ec2_vol:
+    instance: XXXXXX
+    snapshot: "{{ snapshot }}"
+
+# Playbook example combined with instance launch
+- ec2:
+    keypair: "{{ keypair }}"
+    image: "{{ image }}"
+    wait: yes
+    count: 3
+  register: ec2
+- ec2_vol:
+    instance: "{{ item.id }}"
+    volume_size: 5
+  loop: "{{ ec2.instances }}"
+  register: ec2_vol
+
+# Example: Launch an instance and then add a volume if not already attached
+#   * Volume will be created with the given name if not already created.
+#   * Nothing will happen if the volume is already attached.
+#   * Requires Ansible 2.0
+
+- ec2:
+    keypair: "{{ keypair }}"
+    image: "{{ image }}"
+    zone: YYYYYY
+    id: my_instance
+    wait: yes
+    count: 1
+  register: ec2
+
+- ec2_vol:
+    instance: "{{ item.id }}"
+    name: my_existing_volume_Name_tag
+    device_name: /dev/xvdf
+  loop: "{{ ec2.instances }}"
+  register: ec2_vol
+
+# Remove a volume
+- ec2_vol:
+    id: vol-XXXXXXXX
+    state: absent
+
+# Detach a volume (since 1.9)
+- ec2_vol:
+    id: vol-XXXXXXXX
+    instance: None
+
+# List volumes for an instance
+- ec2_vol:
+    instance: i-XXXXXX
+    state: list
+
+# Create new volume using SSD storage
+- ec2_vol:
+    instance: XXXXXX
+    volume_size: 50
+    volume_type: gp2
+    device_name: /dev/xvdf
+
+# Attach an existing volume to instance. The volume will be deleted upon instance termination.
+- ec2_vol:
+    instance: XXXXXX
+    id: XXXXXX
+    device_name: /dev/sdf
+    delete_on_termination: yes
+
+
+RETURN VALUES:
+
+device:
+    description: device name of attached volume
+    returned: when success
+    type: str
+    sample: "/def/sdf"
+volume_id:
+    description: the id of volume
+    returned: when success
+    type: str
+    sample: "vol-35b333d9"
+volume_type:
+    description: the volume type
+    returned: when success
+    type: str
+    sample: "standard"
+volume:
+    description: a dictionary containing detailed attributes of the volume
+    returned: when success
+    type: str
+    sample: {
+        "attachment_set": {
+            "attach_time": "2015-10-23T00:22:29.000Z",
+            "deleteOnTermination": "false",
+            "device": "/dev/sdf",
+            "instance_id": "i-8356263c",
+            "status": "attached"
+        },
+        "create_time": "2015-10-21T14:36:08.870Z",
+        "encrypted": false,
+        "id": "vol-35b333d9",
+        "iops": null,
+        "size": 1,
+        "snapshot_id": "",
+        "status": "in-use",
+        "tags": {
+            "env": "dev"
+        },
+        "type": "standard",
+        "zone": "us-east-1b"
+    }
+

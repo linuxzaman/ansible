@@ -1,0 +1,117 @@
+EXAMPLES:
+
+# List a Project Quota
+- os_quota:
+    cloud: mycloud
+    name: demoproject
+
+# Set a Project back to the defaults
+- os_quota:
+    cloud: mycloud
+    name: demoproject
+    state: absent
+
+# Update a Project Quota for cores
+- os_quota:
+    cloud: mycloud
+    name: demoproject
+    cores: 100
+
+# Update a Project Quota
+- os_quota:
+    name: demoproject
+    cores: 1000
+    volumes: 20
+    volumes_type:
+      - volume_lvm: 10
+
+# Complete example based on list of projects
+- name: Update quotas
+  os_quota:
+    name: "{{ item.name }}"
+    backup_gigabytes: "{{ item.backup_gigabytes }}"
+    backups: "{{ item.backups }}"
+    cores: "{{ item.cores }}"
+    fixed_ips: "{{ item.fixed_ips }}"
+    floating_ips: "{{ item.floating_ips }}"
+    floatingip: "{{ item.floatingip }}"
+    gigabytes: "{{ item.gigabytes }}"
+    injected_file_size: "{{ item.injected_file_size }}"
+    injected_files: "{{ item.injected_files }}"
+    injected_path_size: "{{ item.injected_path_size }}"
+    instances: "{{ item.instances }}"
+    key_pairs: "{{ item.key_pairs }}"
+    loadbalancer: "{{ item.loadbalancer }}"
+    per_volume_gigabytes: "{{ item.per_volume_gigabytes }}"
+    pool: "{{ item.pool }}"
+    port: "{{ item.port }}"
+    properties: "{{ item.properties }}"
+    ram: "{{ item.ram }}"
+    security_group_rule: "{{ item.security_group_rule }}"
+    security_group: "{{ item.security_group }}"
+    server_group_members: "{{ item.server_group_members }}"
+    server_groups: "{{ item.server_groups }}"
+    snapshots: "{{ item.snapshots }}"
+    volumes: "{{ item.volumes }}"
+    volumes_types:
+      volumes_lvm: "{{ item.volumes_lvm }}"
+    snapshots_types:
+      snapshots_lvm: "{{ item.snapshots_lvm }}"
+    gigabytes_types:
+      gigabytes_lvm: "{{ item.gigabytes_lvm }}"
+  with_items:
+    - "{{ projects }}"
+  when: item.state == "present"
+
+
+RETURN VALUES:
+
+openstack_quotas:
+    description: Dictionary describing the project quota.
+    returned: Regardless if changes where made or not
+    type: complex
+    contains:
+        openstack_quotas: {
+            compute: {
+                cores: 150,
+                fixed_ips: -1,
+                floating_ips: 10,
+                injected_file_content_bytes: 10240,
+                injected_file_path_bytes: 255,
+                injected_files: 5,
+                instances: 100,
+                key_pairs: 100,
+                metadata_items: 128,
+                ram: 153600,
+                security_group_rules: 20,
+                security_groups: 10,
+                server_group_members: 10,
+                server_groups: 10
+            },
+            network: {
+                floatingip: 50,
+                loadbalancer: 10,
+                network: 10,
+                pool: 10,
+                port: 160,
+                rbac_policy: 10,
+                router: 10,
+                security_group: 10,
+                security_group_rule: 100,
+                subnet: 10,
+                subnetpool: -1
+            },
+            volume: {
+                backup_gigabytes: 1000,
+                backups: 10,
+                gigabytes: 1000,
+                gigabytes_lvm: -1,
+                per_volume_gigabytes: -1,
+                snapshots: 10,
+                snapshots_lvm: -1,
+                volumes: 10,
+                volumes_lvm: -1
+            }
+        }
+
+

@@ -1,0 +1,203 @@
+> AZURE_RM_VIRTUALMACHINESCALESETEXTENSION_FACTS    (/usr/lib/python2.7/dist-packages/ansible/modules/cloud/azure/azure_rm_virtualmachinescalesetextension_facts.py)
+
+        Get facts of Azure Virtual Machine Scale Set Extension.
+
+  * This module is maintained by The Ansible Community
+OPTIONS (= is mandatory):
+
+- ad_user
+        Active Directory username. Use when authenticating with an Active Directory user rather than service principal.
+        [Default: (null)]
+        type: str
+
+- adfs_authority_url
+        Azure AD authority url. Use when authenticating with Username/password, and has your own ADFS authority.
+        [Default: (null)]
+        type: str
+        version_added: 2.6
+
+- api_profile
+        Selects an API profile to use when communicating with Azure services. Default value of `latest' is appropriate for public clouds;
+        future values will allow use with Azure Stack.
+        [Default: latest]
+        type: str
+        version_added: 2.5
+
+- auth_source
+        Controls the source of the credentials to use for authentication.
+        If not specified, ANSIBLE_AZURE_AUTH_SOURCE environment variable will be used and default to `auto' if variable is not defined.
+        `auto' will follow the default precedence of module parameters -> environment variables -> default profile in credential file
+        `~/.azure/credentials'.
+        When set to `cli', the credentials will be sources from the default Azure CLI profile.
+        Can also be set via the `ANSIBLE_AZURE_AUTH_SOURCE' environment variable.
+        When set to `msi', the host machine must be an azure resource with an enabled MSI extension. `subscription_id' or the environment
+        variable `AZURE_SUBSCRIPTION_ID' can be used to identify the subscription ID if the resource is granted access to more than one
+        subscription, otherwise the first subscription is chosen.
+        The `msi' was added in Ansible 2.6.
+        (Choices: auto, cli, credential_file, env, msi)[Default: (null)]
+        type: str
+        version_added: 2.5
+
+- cert_validation_mode
+        Controls the certificate validation behavior for Azure endpoints. By default, all modules will validate the server certificate,
+        but when an HTTPS proxy is in use, or against Azure Stack, it may be necessary to disable this behavior by passing `ignore'. Can
+        also be set via credential file profile or the `AZURE_CERT_VALIDATION' environment variable.
+        (Choices: ignore, validate)[Default: (null)]
+        type: str
+        version_added: 2.5
+
+- client_id
+        Azure client ID. Use when authenticating with a Service Principal.
+        [Default: (null)]
+        type: str
+
+- cloud_environment
+        For cloud environments other than the US public cloud, the environment name (as defined by Azure Python SDK, eg,
+        `AzureChinaCloud', `AzureUSGovernment'), or a metadata discovery endpoint URL (required for Azure Stack). Can also be set via
+        credential file profile or the `AZURE_CLOUD_ENVIRONMENT' environment variable.
+        [Default: AzureCloud]
+        type: str
+        version_added: 2.4
+
+- name
+        The name of the virtual machine extension.
+        [Default: (null)]
+
+- password
+        Active Directory user password. Use when authenticating with an Active Directory user rather than service principal.
+        [Default: (null)]
+
+- profile
+        Security profile found in ~/.azure/credentials file.
+        [Default: (null)]
+        type: str
+
+= resource_group
+        The name of the resource group.
+
+
+- secret
+        Azure client secret. Use when authenticating with a Service Principal.
+        [Default: (null)]
+        type: str
+
+- subscription_id
+        Your Azure subscription Id.
+        [Default: (null)]
+        type: str
+
+- tenant
+        Azure tenant ID. Use when authenticating with a Service Principal.
+        [Default: (null)]
+        type: str
+
+= vmss_name
+        The name of VMSS containing the extension.
+
+
+
+NOTES:
+      * For authentication with Azure you can pass parameters, set environment variables, use a profile stored in
+        ~/.azure/credentials, or log in before you run your tasks or playbook with `az login'.
+      * Authentication is also possible using a service principal or Active Directory user.
+      * To authenticate via service principal, pass subscription_id, client_id, secret and tenant or set environment variables
+        AZURE_SUBSCRIPTION_ID, AZURE_CLIENT_ID, AZURE_SECRET and AZURE_TENANT.
+      * To authenticate via Active Directory user, pass ad_user and password, or set AZURE_AD_USER and AZURE_PASSWORD in the
+        environment.
+      * Alternatively, credentials can be stored in ~/.azure/credentials. This is an ini file containing a [default] section and
+        the following keys: subscription_id, client_id, secret and tenant or subscription_id, ad_user and password. It is also
+        possible to add additional profiles. Specify the profile by passing profile or setting AZURE_PROFILE in the environment.
+
+
+SEE ALSO:
+      * Sign in with Azure CLI
+           How to authenticate using the `az login' command.
+           https://docs.microsoft.com/en-us/cli/azure/authenticate-azure-cli?view=azure-cli-latest
+
+
+REQUIREMENTS:  python >= 2.7, azure >= 2.0.0
+
+AUTHOR: Zim Kalinowski (@zikalino)
+        METADATA:
+          status:
+          - preview
+          supported_by: community
+        
+
+EXAMPLES:
+
+- name: Get information on specific Virtual Machine Scale Set Extension
+    azure_rm_virtualmachineextension_facts:
+      resource_group: myResourceGroup
+      vmss_name: myvmss
+      name: myextension
+
+  - name: List installed Virtual Machine Scale Set Extensions
+    azure_rm_virtualmachineextension_facts:
+      resource_group: myrg
+      vmss_name: myvmss
+
+
+RETURN VALUES:
+
+extensions:
+    description: A list of dictionaries containing facts for Virtual Machine Extension.
+    returned: always
+    type: complex
+    contains:
+        id:
+            description:
+                - Resource Id
+            returned: always
+            type: str
+            sample: "/subscriptions/xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx/resourceGroups/myResourceGroup/providers/Microsoft.Compute/virtualMachineScaleSets/
+                     myvmss/extensions/myextension"
+        resource_group:
+            description:
+                - Resource group name
+            returned: always
+            type: str
+            sample: myrg
+        vmss_name:
+            description:
+                - Virtual machine name
+            returned: always
+            type: str
+            sample: myvmss
+        name:
+            description:
+                - Virtual machine name
+            returned: always
+            type: str
+            sample: myextension
+        publisher:
+            description:
+                - Extension publisher
+            returned: always
+            type: str
+            sample: Microsoft.Azure.Extensions
+        type:
+            description:
+                - Extension type
+            returned: always
+            type: str
+            sample: CustomScript
+        settings:
+            description:
+                - Extension specific settings dictionary
+            returned: always
+            type: complex
+            sample: "{'commandToExecute': 'hostname'}"
+        auto_upgrade_minor_version:
+            description:
+                - Autoupgrade minor version flag
+            returned: always
+            type: bool
+            sample: true
+        provisioning_state:
+            description:
+                - Provisioning state of the extension
+            returned: always
+            type: str
+            sample: Succeeded
+

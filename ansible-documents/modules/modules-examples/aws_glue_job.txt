@@ -1,0 +1,104 @@
+EXAMPLES:
+
+# Note: These examples do not set authentication details, see the AWS Guide for details.
+
+# Create an AWS Glue job
+- aws_glue_job:
+    command_script_location: s3bucket/script.py
+    name: my-glue-job
+    role: my-iam-role
+    state: present
+
+# Delete an AWS Glue job
+- aws_glue_job:
+    name: my-glue-job
+    state: absent
+
+
+RETURN VALUES:
+
+allocated_capacity:
+    description: The number of AWS Glue data processing units (DPUs) allocated to runs of this job. From 2 to
+                 100 DPUs can be allocated; the default is 10. A DPU is a relative measure of processing power
+                 that consists of 4 vCPUs of compute capacity and 16 GB of memory.
+    returned: when state is present
+    type: int
+    sample: 10
+command:
+    description: The JobCommand that executes this job.
+    returned: when state is present
+    type: complex
+    contains:
+        name:
+            description: The name of the job command.
+            returned: when state is present
+            type: str
+            sample: glueetl
+        script_location:
+            description: Specifies the S3 path to a script that executes a job.
+            returned: when state is present
+            type: str
+            sample: mybucket/myscript.py
+connections:
+    description: The connections used for this job.
+    returned: when state is present
+    type: dict
+    sample: "{ Connections: [ 'list', 'of', 'connections' ] }"
+created_on:
+    description: The time and date that this job definition was created.
+    returned: when state is present
+    type: str
+    sample: "2018-04-21T05:19:58.326000+00:00"
+default_arguments:
+    description: The default arguments for this job, specified as name-value pairs.
+    returned: when state is present
+    type: dict
+    sample: "{ 'mykey1': 'myvalue1' }"
+description:
+    description: Description of the job being defined.
+    returned: when state is present
+    type: str
+    sample: My first Glue job
+job_name:
+    description: The name of the AWS Glue job.
+    returned: always
+    type: str
+    sample: my-glue-job
+execution_property:
+    description: An ExecutionProperty specifying the maximum number of concurrent runs allowed for this job.
+    returned: always
+    type: complex
+    contains:
+        max_concurrent_runs:
+            description: The maximum number of concurrent runs allowed for the job. The default is 1. An error is
+                         returned when this threshold is reached. The maximum value you can specify is controlled by
+                         a service limit.
+            returned: when state is present
+            type: int
+            sample: 1
+last_modified_on:
+    description: The last point in time when this job definition was modified.
+    returned: when state is present
+    type: str
+    sample: "2018-04-21T05:19:58.326000+00:00"
+max_retries:
+    description: The maximum number of times to retry this job after a JobRun fails.
+    returned: when state is present
+    type: int
+    sample: 5
+name:
+    description: The name assigned to this job definition.
+    returned: when state is present
+    type: str
+    sample: my-glue-job
+role:
+    description: The name or ARN of the IAM role associated with this job.
+    returned: when state is present
+    type: str
+    sample: my-iam-role
+timeout:
+    description: The job timeout in minutes.
+    returned: when state is present
+    type: int
+    sample: 300
+

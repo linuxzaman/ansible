@@ -1,0 +1,330 @@
+> CE_BGP_NEIGHBOR_AF    (/usr/lib/python2.7/dist-packages/ansible/modules/network/cloudengine/ce_bgp_neighbor_af.py)
+
+        Manages BGP neighbor Address-family configurations on HUAWEI CloudEngine switches.
+
+  * This module is maintained by The Ansible Community
+OPTIONS (= is mandatory):
+
+- add_path_mode
+        null, Null. receive, Support receiving Add-Path routes. send, Support sending Add-Path routes. both, Support receiving and
+        sending Add-Path routes.
+        (Choices: null, receive, send, both)[Default: (null)]
+
+- adv_add_path_num
+        The number of addPath advertise route. The value is an integer ranging from 2 to 64.
+        [Default: (null)]
+
+- advertise_arp
+        If the value is true, advertised ARP routes are distinguished. If the value is false, advertised ARP routes are not
+        distinguished.
+        (Choices: no_use, true, false)[Default: no_use]
+
+- advertise_community
+        If the value is true, the community attribute is advertised to peers. If the value is false, the community attribute is not
+        advertised to peers.
+        (Choices: no_use, true, false)[Default: no_use]
+
+- advertise_ext_community
+        If the value is true, the extended community attribute is advertised to peers. If the value is false, the extended community
+        attribute is not advertised to peers.
+        (Choices: no_use, true, false)[Default: no_use]
+
+- advertise_irb
+        If the value is true, advertised IRB routes are distinguished. If the value is false, advertised IRB routes are not
+        distinguished.
+        (Choices: no_use, true, false)[Default: no_use]
+
+- advertise_remote_nexthop
+        If the value is true, the remote next-hop attribute is advertised to peers. If the value is false, the remote next-hop attribute
+        is not advertised to any peers.
+        (Choices: no_use, true, false)[Default: no_use]
+
+= af_type
+        Address family type of a BGP instance.
+        (Choices: ipv4uni, ipv4multi, ipv4vpn, ipv6uni, ipv6vpn, evpn)
+
+- allow_as_loop_enable
+        If the value is true, repetitive local AS numbers are allowed. If the value is false, repetitive local AS numbers are not
+        allowed.
+        (Choices: no_use, true, false)[Default: no_use]
+
+- allow_as_loop_limit
+        Set the maximum number of repetitive local AS number. The value is an integer ranging from 1 to 10.
+        [Default: (null)]
+
+- default_rt_adv_enable
+        If the value is true, the function to advertise default routes to peers is enabled. If the value is false, the function to
+        advertise default routes to peers is disabled.
+        (Choices: no_use, true, false)[Default: no_use]
+
+- default_rt_adv_policy
+        Specify the name of a used policy. The value is a string. The value is a string of 1 to 40 characters.
+        [Default: (null)]
+
+- default_rt_match_mode
+        null, Null. matchall, Advertise the default route if all matching conditions are met. matchany, Advertise the default route if
+        any matching condition is met.
+        (Choices: null, matchall, matchany)[Default: (null)]
+
+- discard_ext_community
+        If the value is true, the extended community attribute in the peer route information is discarded. If the value is false, the
+        extended community attribute in the peer route information is not discarded.
+        (Choices: no_use, true, false)[Default: no_use]
+
+- export_acl_name_or_num
+        Apply an IPv4 ACL-based filtering policy to the routes to be advertised to a specified peer. The value is a string of 1 to 32
+        characters.
+        [Default: (null)]
+
+- export_as_path_filter
+        Apply an AS_Path-based filtering policy to the routes to be advertised to a specified peer. The value is an integer ranging from
+        1 to 256.
+        [Default: (null)]
+
+- export_as_path_name_or_num
+        Application of a AS path list based filtering policy to the routing of a specified peer.
+        [Default: (null)]
+
+- export_pref_filt_name
+        Specify the IPv4 filtering policy applied to the routes to be advertised to a specified peer. The value is a string of 1 to 169
+        characters.
+        [Default: (null)]
+
+- export_rt_policy_name
+        Specify the filtering policy applied to the routes to be advertised to a peer. The value is a string of 1 to 40 characters.
+        [Default: (null)]
+
+- import_acl_name_or_num
+        Apply an IPv4 ACL-based filtering policy to the routes received from a specified peer. The value is a string of 1 to 32
+        characters.
+        [Default: (null)]
+
+- import_as_path_filter
+        Apply an AS_Path-based filtering policy to the routes received from a specified peer. The value is an integer ranging from 1 to
+        256.
+        [Default: (null)]
+
+- import_as_path_name_or_num
+        A routing strategy based on the AS path list for routing received by a designated peer.
+        [Default: (null)]
+
+- import_pref_filt_name
+        Specify the IPv4 filtering policy applied to the routes received from a specified peer. The value is a string of 1 to 169
+        characters.
+        [Default: (null)]
+
+- import_rt_policy_name
+        Specify the filtering policy applied to the routes learned from a peer. The value is a string of 1 to 40 characters.
+        [Default: (null)]
+
+- ipprefix_orf_enable
+        If the value is true, the address prefix-based Outbound Route Filter (ORF) capability is enabled for peers. If the value is
+        false, the address prefix-based Outbound Route Filter (ORF) capability is disabled for peers.
+        (Choices: no_use, true, false)[Default: no_use]
+
+- is_nonstd_ipprefix_mod
+        If the value is true, Non-standard capability codes are used during capability negotiation. If the value is false, RFC-defined
+        standard ORF capability codes are used during capability negotiation.
+        (Choices: no_use, true, false)[Default: no_use]
+
+- keep_all_routes
+        If the value is true, the system stores all route update messages received from all peers (groups) after BGP connection setup. If
+        the value is false, the system stores only BGP update messages that are received from peers and pass the configured import
+        policy.
+        (Choices: no_use, true, false)[Default: no_use]
+
+- nexthop_configure
+        null, The next hop is not changed. local, The next hop is changed to the local IP address. invariable, Prevent the device from
+        changing the next hop of each imported IGP route when advertising it to its BGP peers.
+        (Choices: null, local, invariable)[Default: (null)]
+
+- orf_mode
+        ORF mode. null, Default value. receive, ORF for incoming packets. send, ORF for outgoing packets. both, ORF for incoming and
+        outgoing packets.
+        (Choices: null, receive, send, both)[Default: (null)]
+
+- orftype
+        ORF Type. The value is an integer ranging from 0 to 65535.
+        [Default: (null)]
+
+- origin_as_valid
+        If the value is true, Application results of route announcement. If the value is false, Routing application results are not
+        notified.
+        (Choices: no_use, true, false)[Default: no_use]
+
+- preferred_value
+        Assign a preferred value for the routes learned from a specified peer. The value is an integer ranging from 0 to 65535.
+        [Default: (null)]
+
+- public_as_only
+        If the value is true, sent BGP update messages carry only the public AS number but do not carry private AS numbers. If the value
+        is false, sent BGP update messages can carry private AS numbers.
+        (Choices: no_use, true, false)[Default: no_use]
+
+- public_as_only_force
+        If the value is true, sent BGP update messages carry only the public AS number but do not carry private AS numbers. If the value
+        is false, sent BGP update messages can carry private AS numbers.
+        (Choices: no_use, true, false)[Default: no_use]
+
+- public_as_only_limited
+        Limited use public as number.
+        (Choices: no_use, true, false)[Default: no_use]
+
+- public_as_only_replace
+        Private as replaced by public as number.
+        (Choices: no_use, true, false)[Default: no_use]
+
+- public_as_only_skip_peer_as
+        Public as only skip peer as.
+        (Choices: no_use, true, false)[Default: no_use]
+
+- redirect_ip
+        Redirect ip.
+        (Choices: no_use, true, false)[Default: no_use]
+
+- redirect_ip_vaildation
+        Redirect ip vaildation.
+        (Choices: no_use, true, false)[Default: no_use]
+
+- reflect_client
+        If the value is true, the local device functions as the route reflector and a peer functions as a client of the route reflector.
+        If the value is false, the route reflector and client functions are not configured.
+        (Choices: no_use, true, false)[Default: no_use]
+
+= remote_address
+        IPv4 or IPv6 peer connection address.
+
+
+- route_limit
+        Configure the maximum number of routes that can be accepted from a peer. The value is an integer ranging from 1 to 4294967295.
+        [Default: (null)]
+
+- route_limit_idle_timeout
+        Specify the value of the idle-timeout timer to automatically reestablish the connections after they are cut off when the number
+        of routes exceeds the set threshold. The value is an integer ranging from 1 to 1200.
+        [Default: (null)]
+
+- route_limit_percent
+        Specify the percentage of routes when a router starts to generate an alarm. The value is an integer ranging from 1 to 100.
+        [Default: (null)]
+
+- route_limit_type
+        Noparameter, After the number of received routes exceeds the threshold and the timeout timer expires,no action. AlertOnly, An
+        alarm is generated and no additional routes will be accepted if the maximum number of routes allowed have been received.
+        IdleForever, The connection that is interrupted is not automatically re-established if the maximum number of routes allowed have
+        been received. IdleTimeout, After the number of received routes exceeds the threshold and the timeout timer expires, the
+        connection that is interrupted is automatically re-established.
+        (Choices: noparameter, alertOnly, idleForever, idleTimeout)[Default: (null)]
+
+- rt_updt_interval
+        Specify the minimum interval at which Update packets are sent. The value is an integer, in seconds. The value is an integer
+        ranging from 0 to 600.
+        [Default: (null)]
+
+- soostring
+        Configure the Site-of-Origin (SoO) extended community attribute. The value is a string of 3 to 21 characters.
+        [Default: (null)]
+
+- substitute_as_enable
+        If the value is true, the function to replace a specified peer's AS number in the AS-Path attribute with the local AS number is
+        enabled. If the value is false, the function to replace a specified peer's AS number in the AS-Path attribute with the local AS
+        number is disabled.
+        (Choices: no_use, true, false)[Default: no_use]
+
+- update_pkt_standard_compatible
+        If the value is true, When the vpnv4 multicast neighbor receives and updates the message, the message has no label. If the value
+        is false, When the vpnv4 multicast neighbor receives and updates the message, the message has label.
+        (Choices: no_use, true, false)[Default: no_use]
+
+- vpls_ad_disable
+        If the value is true, enable vpls-ad. If the value is false, disable vpls-ad.
+        (Choices: no_use, true, false)[Default: no_use]
+
+- vpls_enable
+        If the value is true, vpls enable. If the value is false, vpls disable.
+        (Choices: no_use, true, false)[Default: no_use]
+
+= vrf_name
+        Name of a BGP instance. The name is a case-sensitive string of characters. The BGP instance can be used only after the
+        corresponding VPN instance is created.
+
+
+
+AUTHOR: wangdezhuang (@QijunPan)
+        METADATA:
+          status:
+          - preview
+          supported_by: community
+        
+
+EXAMPLES:
+
+- name: CloudEngine BGP neighbor address family test
+  hosts: cloudengine
+  connection: local
+  gather_facts: no
+  vars:
+    cli:
+      host: "{{ inventory_hostname }}"
+      port: "{{ ansible_ssh_port }}"
+      username: "{{ username }}"
+      password: "{{ password }}"
+      transport: cli
+
+  tasks:
+
+  - name: "Config BGP peer Address_Family"
+    ce_bgp_neighbor_af:
+      state: present
+      vrf_name: js
+      af_type: ipv4uni
+      remote_address: 192.168.10.10
+      nexthop_configure: local
+      provider: "{{ cli }}"
+
+  - name: "Undo BGP peer Address_Family"
+    ce_bgp_neighbor_af:
+      state: absent
+      vrf_name: js
+      af_type: ipv4uni
+      remote_address: 192.168.10.10
+      nexthop_configure: local
+      provider: "{{ cli }}"
+
+
+RETURN VALUES:
+
+changed:
+    description: check to see if a change was made on the device
+    returned: always
+    type: bool
+    sample: true
+proposed:
+    description: k/v pairs of parameters passed into module
+    returned: always
+    type: dict
+    sample: {"af_type": "ipv4uni", "nexthop_configure": "local",
+             "remote_address": "192.168.10.10",
+             "state": "present", "vrf_name": "js"}
+existing:
+    description: k/v pairs of existing aaa server
+    returned: always
+    type: dict
+    sample: {"bgp neighbor af": {"af_type": "ipv4uni", "remote_address": "192.168.10.10",
+                                 "vrf_name": "js"},
+             "bgp neighbor af other": {"af_type": "ipv4uni", "nexthop_configure": "null",
+                                  "vrf_name": "js"}}
+end_state:
+    description: k/v pairs of aaa params after module execution
+    returned: always
+    type: dict
+    sample: {"bgp neighbor af": {"af_type": "ipv4uni", "remote_address": "192.168.10.10",
+                                 "vrf_name": "js"},
+             "bgp neighbor af other": {"af_type": "ipv4uni", "nexthop_configure": "local",
+                                  "vrf_name": "js"}}
+updates:
+    description: command sent to the device
+    returned: always
+    type: list
+    sample: ["peer 192.168.10.10 next-hop-local"]
+

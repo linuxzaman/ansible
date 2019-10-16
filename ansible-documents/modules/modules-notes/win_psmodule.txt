@@ -1,0 +1,151 @@
+> WIN_PSMODULE    (/usr/lib/python2.7/dist-packages/ansible/modules/windows/win_psmodule.py)
+
+        This module helps to install Windows PowerShell modules and register custom modules repository on Windows-based systems.
+
+  * This module is maintained by The Ansible Community
+OPTIONS (= is mandatory):
+
+- allow_clobber
+        If `yes' allows install modules that contains commands those have the same names as commands that already exists.
+        [Default: False]
+        type: bool
+
+- allow_prerelease
+        If `yes' installs modules marked as prereleases.
+        It doesn't work with the parameters `minimum_version' and/or `maximum_version'.
+        It doesn't work with the `state' set to absent.
+        [Default: False]
+        type: bool
+        version_added: 2.8
+
+- maximum_version
+        The maximum version of the PowerShell module that has to be installed.
+        [Default: (null)]
+        type: str
+        version_added: 2.8
+
+- minimum_version
+        The minimum version of the PowerShell module that has to be installed.
+        [Default: (null)]
+        type: str
+        version_added: 2.8
+
+= name
+        Name of the Windows PowerShell module that has to be installed.
+
+        type: str
+
+- repository
+        Name of the custom repository to use.
+        [Default: (null)]
+        type: str
+
+- required_version
+        The exact version of the PowerShell module that has to be installed.
+        [Default: (null)]
+        type: str
+        version_added: 2.8
+
+- skip_publisher_check
+        If `yes', allows you to install a different version of a module that already exists on your computer in the case when a different
+        one is not digitally signed by a trusted publisher and the newest existing module is digitally signed by a trusted publisher.
+        [Default: False]
+        type: bool
+        version_added: 2.8
+
+- state
+        If `present' a new module is installed.
+        If `absent' a module is removed.
+        If `latest' a module is updated to the newest version. This option was added in version 2.8.
+        (Choices: absent, latest, present)[Default: present]
+        type: str
+
+- url
+        URL of the custom repository to register.
+        This option is deprecated and will be removed in Ansible 2.12. Use the [win_psrepository] module instead.
+        [Default: (null)]
+        type: str
+
+
+NOTES:
+      * PowerShell modules needed - PowerShellGet >= 1.6.0 - PackageManagement >= 1.1.7
+      * PowerShell package provider needed - NuGet >= 2.8.5.201
+      * On PowerShell 5.x required modules and a package provider will be updated under the first run of the win_psmodule module.
+      * On PowerShell 3.x and 4.x you have to install them before using the win_psmodule.
+
+
+SEE ALSO:
+      * Module win_psrepository
+           The official documentation on the win_psrepository module.
+           https://docs.ansible.com/ansible/latest/modules/win_psrepository_module.html
+
+
+AUTHOR: Wojciech Sciesinski (@it-praktyk), Daniele Lazzari (@dlazz)
+        METADATA:
+          status:
+          - preview
+          supported_by: community
+        
+
+EXAMPLES:
+
+---
+- name: Add a PowerShell module
+  win_psmodule:
+    name: PowerShellModule
+    state: present
+
+- name: Add an exact version of PowerShell module
+  win_psmodule:
+    name: PowerShellModule
+    required_version: "4.0.2"
+    state: present
+
+- name: Install or update an existing PowerShell module to the newest version
+  win_psmodule:
+    name: PowerShellModule
+    state: latest
+
+- name: Install newer version of built-in Windows module
+  win_psmodule:
+    name: Pester
+    skip_publisher_check: yes
+    state: present
+
+- name: Add a PowerShell module and register a repository
+  win_psmodule:
+    name: MyCustomModule
+    repository: MyRepository
+    state: present
+
+- name: Add a PowerShell module from a specific repository
+  win_psmodule:
+    name: PowerShellModule
+    repository: MyRepository
+    state: present
+
+- name: Remove a PowerShell module
+  win_psmodule:
+    name: PowerShellModule
+    state: absent
+
+
+RETURN VALUES:
+
+---
+output:
+  description: A message describing the task result.
+  returned: always
+  sample: "Module PowerShellCookbook installed"
+  type: str
+nuget_changed:
+  description: True when Nuget package provider is installed.
+  returned: always
+  type: bool
+  sample: true
+repository_changed:
+  description: True when a custom repository is installed or removed.
+  returned: always
+  type: bool
+  sample: true
+

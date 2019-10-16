@@ -1,0 +1,119 @@
+> VMWARE_GUEST_CUSTOMIZATION_FACTS    (/usr/lib/python2.7/dist-packages/ansible/modules/cloud/vmware/vmware_guest_customization_facts.py)
+
+        This module can be used to gather facts about customization specifications. All parameters and VMware object names are case
+        sensitive.
+
+  * This module is maintained by The Ansible Community
+OPTIONS (= is mandatory):
+
+- hostname
+        The hostname or IP address of the vSphere vCenter or ESXi server.
+        If the value is not specified in the task, the value of environment variable `VMWARE_HOST' will be used instead.
+        Environment variable support added in Ansible 2.6.
+        [Default: (null)]
+        type: str
+
+- password
+        The password of the vSphere vCenter or ESXi server.
+        If the value is not specified in the task, the value of environment variable `VMWARE_PASSWORD' will be used instead.
+        Environment variable support added in Ansible 2.6.
+        (Aliases: pass, pwd)[Default: (null)]
+        type: str
+
+- port
+        The port number of the vSphere vCenter or ESXi server.
+        If the value is not specified in the task, the value of environment variable `VMWARE_PORT' will be used instead.
+        Environment variable support added in Ansible 2.6.
+        [Default: 443]
+        type: int
+        version_added: 2.5
+
+- spec_name
+        Name of customization specification to find.
+        [Default: (null)]
+
+- username
+        The username of the vSphere vCenter or ESXi server.
+        If the value is not specified in the task, the value of environment variable `VMWARE_USER' will be used instead.
+        Environment variable support added in Ansible 2.6.
+        (Aliases: admin, user)[Default: (null)]
+        type: str
+
+- validate_certs
+        Allows connection when SSL certificates are not valid. Set to `false' when certificates are not trusted.
+        If the value is not specified in the task, the value of environment variable `VMWARE_VALIDATE_CERTS' will be used instead.
+        Environment variable support added in Ansible 2.6.
+        If set to `yes', please make sure Python >= 2.7.9 is installed on the given machine.
+        [Default: True]
+        type: bool
+
+
+NOTES:
+      * Tested on vSphere 6.0 and 6.5
+
+
+REQUIREMENTS:  python >= 2.6, PyVmomi
+
+AUTHOR: Abhijeet Kasurde (@Akasurde)
+        METADATA:
+          status:
+          - preview
+          supported_by: community
+        
+
+EXAMPLES:
+
+- name: Gather facts about all customization specification
+  vmware_guest_customization_facts:
+    hostname: "{{ vcenter_hostname }}"
+    username: "{{ vcenter_username }}"
+    password: "{{ vcenter_password }}"
+    validate_certs: no
+  delegate_to: localhost
+  register: all_custom_spec_facts
+
+- name: Gather facts about customization specification with the given name
+  vmware_guest_customization_facts:
+    hostname: "{{ vcenter_hostname }}"
+    username: "{{ vcenter_username }}"
+    password: "{{ vcenter_password }}"
+    validate_certs: no
+    spec_name: custom_linux_spec
+  delegate_to: localhost
+  register: custom_spec_facts
+
+
+RETURN VALUES:
+
+custom_spec_facts:
+    description: metadata about the customization specification
+    returned: always
+    type: dict
+    sample: {
+        "assignip-eee0d684-44b7-457c-8c55-2585590b0d99": {
+            "change_version": "1523438001",
+            "description": "sample description",
+            "dns_server_list": [],
+            "dns_suffix_list": [],
+            "domain": "None",
+            "hostname": "sample1",
+            "hw_clock_utc": null,
+            "last_updated_time": "2018-04-11T09:13:21+00:00",
+            "name": "sample",
+            "nic_setting_map": [
+                {
+                    "dns_domain": null,
+                    "gateway": [],
+                    "ip_address": "192.168.10.10",
+                    "net_bios": null,
+                    "nic_dns_server_list": [],
+                    "primary_wins": null,
+                    "secondry_wins": null,
+                    "subnet_mask": "255.255.255.0"
+                }
+            ],
+            "time_zone": null,
+            "type": "Linux"
+        },
+    }
+

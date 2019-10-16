@@ -1,0 +1,77 @@
+EXAMPLES:
+
+- name: Set the banner for the SSHD service from a string
+  bigip_device_sshd:
+    banner: enabled
+    banner_text: banner text goes here
+    provider:
+      password: secret
+      server: lb.mydomain.com
+      user: admin
+  delegate_to: localhost
+
+- name: Set the banner for the SSHD service from a file
+  bigip_device_sshd:
+    banner: enabled
+    banner_text: "{{ lookup('file', '/path/to/file') }}"
+    provider:
+      password: secret
+      server: lb.mydomain.com
+      user: admin
+  delegate_to: localhost
+
+- name: Set the SSHD service to run on port 2222
+  bigip_device_sshd:
+    port: 2222
+    provider:
+      user: admin
+      password: secret
+      server: lb.mydomain.com
+  delegate_to: localhost
+
+
+RETURN VALUES:
+
+allow:
+  description:
+    - Specifies, if you have enabled SSH access, the IP address or address
+      range for other systems that can use SSH to communicate with this
+      system.
+  returned: changed
+  type: list
+  sample: 192.0.2.*
+banner:
+  description: Whether the banner is enabled or not.
+  returned: changed
+  type: str
+  sample: true
+banner_text:
+  description:
+    - Specifies the text included on the pre-login banner that
+      displays when a user attempts to login to the system using SSH.
+  returned: changed and success
+  type: str
+  sample: This is a corporate device. Connecting to it without...
+inactivity_timeout:
+  description:
+    - The number of seconds before inactivity causes an SSH
+      session to log out.
+  returned: changed
+  type: int
+  sample: 10
+log_level:
+  description: The minimum SSHD message level to include in the system log.
+  returned: changed
+  type: str
+  sample: debug
+login:
+  description: Specifies that the system accepts SSH communications or not.
+  returned: changed
+  type: bool
+  sample: true
+port:
+  description: Port that you want the SSH daemon to run on.
+  returned: changed
+  type: int
+  sample: 22
+

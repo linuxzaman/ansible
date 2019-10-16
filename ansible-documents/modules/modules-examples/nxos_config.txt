@@ -1,0 +1,93 @@
+EXAMPLES:
+
+---
+- name: configure top level configuration and save it
+  nxos_config:
+    lines: hostname {{ inventory_hostname }}
+    save_when: modified
+
+- name: diff the running-config against a provided config
+  nxos_config:
+    diff_against: intended
+    intended_config: "{{ lookup('file', 'master.cfg') }}"
+
+- nxos_config:
+    lines:
+      - 10 permit ip 192.0.2.1/32 any log
+      - 20 permit ip 192.0.2.2/32 any log
+      - 30 permit ip 192.0.2.3/32 any log
+      - 40 permit ip 192.0.2.4/32 any log
+      - 50 permit ip 192.0.2.5/32 any log
+    parents: ip access-list test
+    before: no ip access-list test
+    match: exact
+
+- nxos_config:
+    lines:
+      - 10 permit ip 192.0.2.1/32 any log
+      - 20 permit ip 192.0.2.2/32 any log
+      - 30 permit ip 192.0.2.3/32 any log
+      - 40 permit ip 192.0.2.4/32 any log
+    parents: ip access-list test
+    before: no ip access-list test
+    replace: block
+
+- name: replace config with flat file
+  nxos_config:
+    replace_src: config.txt
+    replace: config
+
+- name: for idempotency, use full-form commands
+  nxos_config:
+    lines:
+      # - shut
+      - shutdown
+    # parents: int eth1/1
+    parents: interface Ethernet1/1
+
+- name: configurable backup path
+  nxos_config:
+    backup: yes
+    backup_options:
+      filename: backup.cfg
+      dir_path: /home/user
+
+
+RETURN VALUES:
+
+commands:
+  description: The set of commands that will be pushed to the remote device
+  returned: always
+  type: list
+  sample: ['hostname foo', 'vlan 1', 'name default']
+updates:
+  description: The set of commands that will be pushed to the remote device
+  returned: always
+  type: list
+  sample: ['hostname foo', 'vlan 1', 'name default']
+backup_path:
+  description: The full path to the backup file
+  returned: when backup is yes
+  type: str
+  sample: /playbooks/ansible/backup/nxos_config.2016-07-16@22:28:34
+filename:
+  description: The name of the backup file
+  returned: when backup is yes and filename is not specified in backup options
+  type: str
+  sample: nxos_config.2016-07-16@22:28:34
+shortname:
+  description: The full path to the backup file excluding the timestamp
+  returned: when backup is yes and filename is not specified in backup options
+  type: str
+  sample: /playbooks/ansible/backup/nxos_config
+date:
+  description: The date extracted from the backup file name
+  returned: when backup is yes
+  type: str
+  sample: "2016-07-16"
+time:
+  description: The time extracted from the backup file name
+  returned: when backup is yes
+  type: str
+  sample: "22:28:34"
+

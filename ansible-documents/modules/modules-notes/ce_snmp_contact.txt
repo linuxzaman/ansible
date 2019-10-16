@@ -1,0 +1,81 @@
+> CE_SNMP_CONTACT    (/usr/lib/python2.7/dist-packages/ansible/modules/network/cloudengine/ce_snmp_contact.py)
+
+        Manages SNMP contact configurations on HUAWEI CloudEngine switches.
+
+  * This module is maintained by The Ansible Community
+OPTIONS (= is mandatory):
+
+= contact
+        Contact information.
+
+
+- state
+        Manage the state of the resource.
+        (Choices: present, absent)[Default: present]
+
+
+AUTHOR: wangdezhuang (@QijunPan)
+        METADATA:
+          status:
+          - preview
+          supported_by: community
+        
+
+EXAMPLES:
+
+- name: CloudEngine snmp contact test
+  hosts: cloudengine
+  connection: local
+  gather_facts: no
+  vars:
+    cli:
+      host: "{{ inventory_hostname }}"
+      port: "{{ ansible_ssh_port }}"
+      username: "{{ username }}"
+      password: "{{ password }}"
+      transport: cli
+
+  tasks:
+
+  - name: "Config SNMP contact"
+    ce_snmp_contact:
+      state: present
+      contact: call Operator at 010-99999999
+      provider: "{{ cli }}"
+
+  - name: "Undo SNMP contact"
+    ce_snmp_contact:
+      state: absent
+      contact: call Operator at 010-99999999
+      provider: "{{ cli }}"
+
+
+RETURN VALUES:
+
+changed:
+    description: check to see if a change was made on the device
+    returned: always
+    type: bool
+    sample: true
+proposed:
+    description: k/v pairs of parameters passed into module
+    returned: always
+    type: dict
+    sample: {"contact": "call Operator at 010-99999999",
+             "state": "present"}
+existing:
+    description: k/v pairs of existing aaa server
+    returned: always
+    type: dict
+    sample: {}
+end_state:
+    description: k/v pairs of aaa params after module execution
+    returned: always
+    type: dict
+    sample: {"contact": "call Operator at 010-99999999"}
+updates:
+    description: command sent to the device
+    returned: always
+    type: list
+    sample: ["snmp-agent sys-info contact call Operator at 010-99999999"]
+

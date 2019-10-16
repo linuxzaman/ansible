@@ -1,0 +1,55 @@
+> AIRBRAKE_DEPLOYMENT    (/usr/lib/python2.7/dist-packages/ansible/modules/monitoring/airbrake_deployment.py)
+
+        Notify airbrake about app deployments (see http://help.airbrake.io/kb/api-2/deploy-tracking)
+
+  * This module is maintained by The Ansible Community
+OPTIONS (= is mandatory):
+
+= environment
+        The airbrake environment name, typically 'production', 'staging', etc.
+
+
+- repo
+        URL of the project repository
+        [Default: (null)]
+
+- revision
+        A hash, number, tag, or other identifier showing what revision was deployed
+        [Default: (null)]
+
+= token
+        API token.
+
+
+- url
+        Optional URL to submit the notification to. Use to send notifications to Airbrake-compliant tools like Errbit.
+        [Default: https://airbrake.io/deploys.txt]
+        version_added: 1.5
+
+- user
+        The username of the person doing the deployment
+        [Default: (null)]
+
+- validate_certs
+        If `no', SSL certificates for the target url will not be validated. This should only be used on personally controlled sites using
+        self-signed certificates.
+        [Default: yes]
+        type: bool
+
+
+AUTHOR: Bruce Pennypacker (@bpennypacker)
+        METADATA:
+          status:
+          - preview
+          supported_by: community
+        
+
+EXAMPLES:
+
+- airbrake_deployment:
+    token: AAAAAA
+    environment: staging
+    user: ansible
+    revision: '4.2'
+
+

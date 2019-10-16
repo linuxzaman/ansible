@@ -1,0 +1,345 @@
+> FORTIOS_WEBFILTER    (/usr/lib/python2.7/dist-packages/ansible/modules/network/fortios/fortios_webfilter.py)
+
+        This module is able to configure a FortiGate or FortiOS by allowing the user to configure webfilter feature. For now it is able
+        to handle url and content filtering capabilities. The module uses FortiGate REST API internally to configure the device.
+
+  * This module is maintained by The Ansible Community
+OPTIONS (= is mandatory):
+
+= host
+        FortiOS or FortiGate ip address.
+
+
+- password
+        FortiOS or FortiGate password.
+        [Default: ]
+
+= username
+        FortiOS or FortiGate username.
+
+
+- vdom
+        Virtual domain, among those defined previously. A vdom is a virtual instance of the FortiGate that can be configured and used as
+        a different unit.
+        [Default: root]
+
+- webfilter_content
+        Container for a group of content-filtering entries that the FortiGate must act upon
+        [Default: (null)]
+        suboptions:
+          comment:
+            description:
+            - Optional comments.
+          entries:
+            default: []
+            description:
+            - Content filter entries.
+            suboptions:
+              action:
+                choices:
+                - block
+                - exempt
+                description:
+                - Block or exempt word when a match is found.
+                required: true
+              lang:
+                choices:
+                - western
+                - simch
+                - trach
+                - japanese
+                - korean
+                - french
+                - thai
+                - spanish
+                - cyrillic
+                description:
+                - Language of banned word.
+                required: true
+              name:
+                description:
+                - Banned word.
+                required: true
+              pattern-type:
+                choices:
+                - wildcard
+                - regexp
+                description:
+                - Banned word pattern type. It can be a wildcard pattern or Perl regular expression.
+                required: true
+              score:
+                description:
+                - Score, to be applied every time the word appears on a web page.
+                required: true
+              status:
+                choices:
+                - enable
+                - disable
+                description:
+                - Enable/disable banned word.
+                required: true
+          id:
+            description:
+            - Id of content-filter list.
+            required: true
+          name:
+            description:
+            - Name of content-filter list.
+          state:
+            choices:
+            - absent
+            - present
+            description:
+            - Configures the intended state of this object on the FortiGate. When this value
+              is set to `present', the object is configured on the device and when this value
+              is set to `absent' the object is removed from the device.
+            required: true
+        
+
+- webfilter_url
+        Container for a group of url entries that the FortiGate must act upon
+        [Default: (null)]
+        suboptions:
+          comment:
+            description:
+            - Optional comments.
+          entries:
+            default: []
+            description:
+            - URL filter entries.
+            suboptions:
+              action:
+                choices:
+                - exempt
+                - block
+                - allow
+                - monitor
+                description:
+                - Action to take for URL filter matches.
+                required: true
+              exempt:
+                choices:
+                - av
+                - web-content
+                - activex-java-cookie
+                - dlp
+                - fortiguard
+                - range-block
+                - pass
+                - all
+                description:
+                - If action is set to exempt, select the security profile operations that
+                  exempt URLs skip. Separate multiple options with a space.
+                required: true
+              id:
+                description:
+                - Id of URL.
+                required: true
+              referrer-host:
+                description:
+                - Referrer host name.
+                required: true
+              status:
+                choices:
+                - enable
+                - disable
+                description:
+                - Enable/disable this URL filter.
+                required: true
+              type:
+                choices:
+                - simple
+                - regex
+                - wildcard
+                description:
+                - Filter type (simple, regex, or wildcard).
+                required: true
+              url:
+                description:
+                - URL to be filtered.
+                required: true
+              web-proxy-profile:
+                description:
+                - Web proxy profile.
+                required: true
+          id:
+            description:
+            - Id of URL filter list.
+            required: true
+          ip-addr-block:
+            choices:
+            - enable
+            - disable
+            default: disable
+            description:
+            - Enable/disable blocking URLs when the hostname appears as an IP address.
+          name:
+            description:
+            - Name of URL filter list.
+            required: true
+          one-arm-ips-urlfilter:
+            choices:
+            - enable
+            - disable
+            default: disable
+            description:
+            - Enable/disable DNS resolver for one-arm IPS URL filter operation.
+          state:
+            choices:
+            - absent
+            - present
+            description:
+            - Configures the intended state of this object on the FortiGate. When this value
+              is set to `present', the object is configured on the device and when this value
+              is set to `absent' the object is removed from the device.
+            required: true
+        
+
+
+NOTES:
+      * Requires fortiosapi library developed by Fortinet
+      * Run as a local_action in your playbook
+
+
+REQUIREMENTS:  fortiosapi>=0.9.8
+
+AUTHOR: Miguel Angel Munoz (@mamunozgonzalez), Nicolas Thomas (@thomnico)
+        METADATA:
+          status:
+          - preview
+          supported_by: community
+        
+
+EXAMPLES:
+
+- hosts: localhost
+  vars:
+   host: "192.168.122.40"
+   username: "admin"
+   password: ""
+   vdom: "root"
+  tasks:
+  - name: Configure url to be filtered by fortigate
+    fortios_webfilter:
+      host:  "{{  host }}"
+      username: "{{  username}}"
+      password: "{{ password }}"
+      vdom:  "{{  vdom }}"
+      webfilter_url:
+        state: "present"
+        id: "1"
+        name: "default"
+        comment: "mycomment"
+        one-arm-ips-url-filter: "disable"
+        ip-addr-block: "disable"
+        entries:
+          - id: "1"
+            url: "www.test1.com"
+            type: "simple"
+            action: "exempt"
+            status: "enable"
+            exempt: "pass"
+            web-proxy-profile: ""
+            referrrer-host: ""
+          - id: "2"
+            url: "www.test2.com"
+            type: "simple"
+            action: "exempt"
+            status: "enable"
+            exempt: "pass"
+            web-proxy-profile: ""
+            referrrer-host: ""
+
+
+- hosts: localhost
+  vars:
+   host: "192.168.122.40"
+   username: "admin"
+   password: ""
+   vdom: "root"
+  tasks:
+  - name: Configure web content filtering in fortigate
+    fortios_webfilter:
+      host:  "{{  host }}"
+      username: "{{  username}}"
+      password: "{{ password }}"
+      vdom:  "{{  vdom }}"
+      webfilter_content:
+        id: "1"
+        name: "default"
+        comment: ""
+        entries:
+          - name: "1"
+            pattern-type: "www.test45.com"
+            status: "enable"
+            lang: "western"
+            score: 40
+            action: "block"
+          - name: "2"
+            pattern-type: "www.test46.com"
+            status: "enable"
+            lang: "western"
+            score: 42
+            action: "block"
+        state: "present"
+
+
+RETURN VALUES:
+
+build:
+  description: Build number of the fortigate image
+  returned: always
+  type: str
+  sample: '1547'
+http_method:
+  description: Last method used to provision the content into FortiGate
+  returned: always
+  type: str
+  sample: 'PUT'
+http_status:
+  description: Last result given by FortiGate on last operation applied
+  returned: always
+  type: str
+  sample: "200"
+mkey:
+  description: Master key (id) used in the last call to FortiGate
+  returned: success
+  type: str
+  sample: "key1"
+name:
+  description: Name of the table used to fulfill the request
+  returned: always
+  type: str
+  sample: "urlfilter"
+path:
+  description: Path of the table used to fulfill the request
+  returned: always
+  type: str
+  sample: "webfilter"
+revision:
+  description: Internal revision number
+  returned: always
+  type: str
+  sample: "17.0.2.10658"
+serial:
+  description: Serial number of the unit
+  returned: always
+  type: str
+  sample: "FGVMEVYYQT3AB5352"
+status:
+  description: Indication of the operation's result
+  returned: always
+  type: str
+  sample: "success"
+vdom:
+  description: Virtual domain used
+  returned: always
+  type: str
+  sample: "root"
+version:
+  description: Version of the FortiGate
+  returned: always
+  type: str
+  sample: "v5.6.3"
+
+

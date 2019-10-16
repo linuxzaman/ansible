@@ -1,0 +1,180 @@
+> FORTIOS_SWITCH_CONTROLLER_GLOBAL    (/usr/lib/python2.7/dist-packages/ansible/modules/network/fortios/fortios_switch_controller_global.py)
+
+        This module is able to configure a FortiGate or FortiOS by allowing the user to set and modify switch_controller feature and
+        global category. Examples include all parameters and values need to be adjusted to datasources before usage. Tested with FOS
+        v6.0.2
+
+  * This module is maintained by The Ansible Community
+OPTIONS (= is mandatory):
+
+= host
+        FortiOS or FortiGate ip address.
+
+
+- https
+        Indicates if the requests towards FortiGate must use HTTPS protocol
+        [Default: True]
+        type: bool
+
+- password
+        FortiOS or FortiGate password.
+        [Default: ]
+
+- switch_controller_global
+        Configure FortiSwitch global settings.
+        [Default: None]
+        suboptions:
+          allow-multiple-interfaces:
+            choices:
+            - enable
+            - disable
+            description:
+            - Enable/disable multiple FortiLink interfaces for redundant connections between
+              a managed FortiSwitch and FortiGate.
+          default-virtual-switch-vlan:
+            description:
+            - Default VLAN for ports when added to the virtual-switch. Source system.interface.name.
+          disable-discovery:
+            description:
+            - Prevent this FortiSwitch from discovering.
+            suboptions:
+              name:
+                description:
+                - Managed device ID.
+                required: true
+          https-image-push:
+            choices:
+            - enable
+            - disable
+            description:
+            - Enable/disable image push to FortiSwitch using HTTPS.
+          log-mac-limit-violations:
+            choices:
+            - enable
+            - disable
+            description:
+            - Enable/disable logs for Learning Limit Violations.
+          mac-aging-interval:
+            description:
+            - Time after which an inactive MAC is aged out (10 - 1000000 sec, default = 300,
+              0 = disable).
+          mac-retention-period:
+            description:
+            - Time in hours after which an inactive MAC is removed from client DB.
+          mac-violation-timer:
+            description:
+            - Set timeout for Learning Limit Violations (0 = disabled).
+        
+
+= username
+        FortiOS or FortiGate username.
+
+
+- vdom
+        Virtual domain, among those defined previously. A vdom is a virtual instance of the FortiGate that can be configured and used as
+        a different unit.
+        [Default: root]
+
+
+NOTES:
+      * Requires fortiosapi library developed by Fortinet
+      * Run as a local_action in your playbook
+
+
+REQUIREMENTS:  fortiosapi>=0.9.8
+
+AUTHOR: Miguel Angel Munoz (@mamunozgonzalez), Nicolas Thomas (@thomnico)
+        METADATA:
+          status:
+          - preview
+          supported_by: community
+        
+
+EXAMPLES:
+
+- hosts: localhost
+  vars:
+   host: "192.168.122.40"
+   username: "admin"
+   password: ""
+   vdom: "root"
+  tasks:
+  - name: Configure FortiSwitch global settings.
+    fortios_switch_controller_global:
+      host:  "{{ host }}"
+      username: "{{ username }}"
+      password: "{{ password }}"
+      vdom:  "{{ vdom }}"
+      https: "False"
+      switch_controller_global:
+        allow-multiple-interfaces: "enable"
+        default-virtual-switch-vlan: "<your_own_value> (source system.interface.name)"
+        disable-discovery:
+         -
+            name: "default_name_6"
+        https-image-push: "enable"
+        log-mac-limit-violations: "enable"
+        mac-aging-interval: "9"
+        mac-retention-period: "10"
+        mac-violation-timer: "11"
+
+
+RETURN VALUES:
+
+build:
+  description: Build number of the fortigate image
+  returned: always
+  type: str
+  sample: '1547'
+http_method:
+  description: Last method used to provision the content into FortiGate
+  returned: always
+  type: str
+  sample: 'PUT'
+http_status:
+  description: Last result given by FortiGate on last operation applied
+  returned: always
+  type: str
+  sample: "200"
+mkey:
+  description: Master key (id) used in the last call to FortiGate
+  returned: success
+  type: str
+  sample: "id"
+name:
+  description: Name of the table used to fulfill the request
+  returned: always
+  type: str
+  sample: "urlfilter"
+path:
+  description: Path of the table used to fulfill the request
+  returned: always
+  type: str
+  sample: "webfilter"
+revision:
+  description: Internal revision number
+  returned: always
+  type: str
+  sample: "17.0.2.10658"
+serial:
+  description: Serial number of the unit
+  returned: always
+  type: str
+  sample: "FGVMEVYYQT3AB5352"
+status:
+  description: Indication of the operation's result
+  returned: always
+  type: str
+  sample: "success"
+vdom:
+  description: Virtual domain used
+  returned: always
+  type: str
+  sample: "root"
+version:
+  description: Version of the FortiGate
+  returned: always
+  type: str
+  sample: "v5.6.3"
+
+

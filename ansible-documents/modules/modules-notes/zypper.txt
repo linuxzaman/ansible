@@ -1,0 +1,156 @@
+> ZYPPER    (/usr/lib/python2.7/dist-packages/ansible/modules/packaging/os/zypper.py)
+
+        Manage packages on SUSE and openSUSE using the zypper and rpm tools.
+
+  * This module is maintained by The Ansible Community
+OPTIONS (= is mandatory):
+
+- disable_gpg_check
+        Whether to disable to GPG signature checking of the package signature being installed. Has an effect only if state is `present'
+        or `latest'.
+        [Default: no]
+        type: bool
+
+- disable_recommends
+        Corresponds to the `--no-recommends' option for `zypper'. Default behavior (`yes') modifies zypper's default behavior; `no' does
+        install recommended packages.
+        [Default: yes]
+        type: bool
+        version_added: 1.8
+
+- extra_args
+        Add additional options to `zypper' command.
+        Options should be supplied in a single line as if given in the command line.
+        [Default: (null)]
+        version_added: 2.4
+
+- extra_args_precommand
+        Add additional global target options to `zypper'.
+        Options should be supplied in a single line as if given in the command line.
+        [Default: (null)]
+        version_added: 2.6
+
+- force
+        Adds `--force' option to `zypper'. Allows to downgrade packages and change vendor or architecture.
+        [Default: no]
+        type: bool
+        version_added: 2.2
+
+= name
+        Package name `name' or package specifier or a list of either.
+        Can include a version like `name=1.0', `name>3.4' or `name<=2.7'. If a version is given, `oldpackage' is implied and zypper is
+        allowed to update the package within the version range given.
+        You can also pass a url or a local path to a rpm file.
+        When using state=latest, this can be '*', which updates all installed packages.
+        (Aliases: pkg)
+
+- oldpackage
+        Adds `--oldpackage' option to `zypper'. Allows to downgrade packages with less side-effects than force. This is implied as soon
+        as a version is specified as part of the package name.
+        [Default: no]
+        type: bool
+        version_added: 2.2
+
+- state
+        `present' will make sure the package is installed. `latest'  will make sure the latest version of the package is installed.
+        `absent'  will make sure the specified package is not installed. `dist-upgrade' will make sure the latest version of all
+        installed packages from all enabled repositories is installed.
+        When using `dist-upgrade', `name' should be `'*''.
+        (Choices: present, latest, absent, dist-upgrade)[Default: present]
+
+- type
+        The type of package to be operated on.
+        (Choices: package, patch, pattern, product, srcpackage, application)[Default: package]
+        version_added: 2.0
+
+- update_cache
+        Run the equivalent of `zypper refresh' before the operation. Disabled in check mode.
+        (Aliases: refresh)[Default: no]
+        type: bool
+        version_added: 2.2
+
+
+NOTES:
+      * When used with a `loop:` each package will be processed individually, it is much more efficient to pass the list directly
+        to the `name` option.
+
+
+REQUIREMENTS:  zypper >= 1.0  # included in openSuSE >= 11.1 or SuSE Linux Enterprise Server/Desktop >= 11.0, python-xml, rpm
+
+AUTHOR: Patrick Callahan (@dirtyharrycallahan), Alexander Gubin (@alxgu), Thomas O'Donnell (@andytom), Robin Roth (@robinro), Andrii Radyk (@AnderEnder)
+        METADATA:
+          status:
+          - preview
+          supported_by: community
+        
+
+EXAMPLES:
+
+# Install "nmap"
+- zypper:
+    name: nmap
+    state: present
+
+# Install apache2 with recommended packages
+- zypper:
+    name: apache2
+    state: present
+    disable_recommends: no
+
+# Apply a given patch
+- zypper:
+    name: openSUSE-2016-128
+    state: present
+    type: patch
+
+# Remove the "nmap" package
+- zypper:
+    name: nmap
+    state: absent
+
+# Install the nginx rpm from a remote repo
+- zypper:
+    name: 'http://nginx.org/packages/sles/12/x86_64/RPMS/nginx-1.8.0-1.sles12.ngx.x86_64.rpm'
+    state: present
+
+# Install local rpm file
+- zypper:
+    name: /tmp/fancy-software.rpm
+    state: present
+
+# Update all packages
+- zypper:
+    name: '*'
+    state: latest
+
+# Apply all available patches
+- zypper:
+    name: '*'
+    state: latest
+    type: patch
+
+# Perform a dist-upgrade with additional arguments
+- zypper:
+    name: '*'
+    state: dist-upgrade
+    extra_args: '--no-allow-vendor-change --allow-arch-change'
+
+# Refresh repositories and update package "openssl"
+- zypper:
+    name: openssl
+    state: present
+    update_cache: yes
+
+# Install specific version (possible comparisons: <, >, <=, >=, =)
+- zypper:
+    name: 'docker>=1.10'
+    state: present
+
+# Wait 20 seconds to acquire the lock before failing
+- zypper:
+    name: mosh
+    state: present
+  environment:
+    ZYPP_LOCK_TIMEOUT: 20
+
+

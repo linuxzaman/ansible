@@ -1,0 +1,59 @@
+> ONYX_VLAN    (/usr/lib/python2.7/dist-packages/ansible/modules/network/onyx/onyx_vlan.py)
+
+        This module provides declarative management of VLANs on Mellanox ONYX network devices.
+
+  * This module is maintained by The Ansible Community
+OPTIONS (= is mandatory):
+
+- aggregate
+        List of VLANs definitions.
+        [Default: (null)]
+
+- name
+        Name of the VLAN.
+        [Default: (null)]
+
+- purge
+        Purge VLANs not defined in the `aggregate' parameter.
+        [Default: False]
+        type: bool
+
+- state
+        State of the VLAN configuration.
+        (Choices: present, absent)[Default: present]
+
+- vlan_id
+        ID of the VLAN.
+        [Default: (null)]
+
+
+AUTHOR: Samer Deeb (@samerd) Alex Tabachnik (@atabachnik)
+        METADATA:
+          status:
+          - preview
+          supported_by: community
+        
+
+EXAMPLES:
+
+- name: configure VLAN ID and name
+  onyx_vlan:
+    vlan_id: 20
+    name: test-vlan
+
+- name: remove configuration
+  onyx_vlan:
+    state: absent
+
+
+RETURN VALUES:
+
+commands:
+  description: The list of configuration mode commands to send to the device
+  returned: always.
+  type: list
+  sample:
+    - vlan 20
+    - name test-vlan
+    - exit
+

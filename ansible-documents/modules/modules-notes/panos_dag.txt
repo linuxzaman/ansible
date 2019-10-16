@@ -1,0 +1,66 @@
+> PANOS_DAG    (/usr/lib/python2.7/dist-packages/ansible/modules/network/panos/_panos_dag.py)
+
+        Create a dynamic address group object in the firewall used for policy rules
+
+DEPRECATED: 
+
+	Reason: Consolidating code base.
+	Will be removed in: Ansible 2.12
+	Alternatives: Use U(https://galaxy.ansible.com/PaloAltoNetworks/paloaltonetworks) instead.
+
+
+  * This module is maintained by The Ansible Community
+OPTIONS (= is mandatory):
+
+- commit
+        commit if changed
+        [Default: yes]
+        type: bool
+
+= dag_filter
+        dynamic filter user by the dynamic address group
+
+
+= dag_name
+        name of the dynamic address group
+
+
+= ip_address
+        IP address (or hostname) of PAN-OS device.
+
+        type: str
+
+= password
+        Password for authentication.
+
+        type: str
+
+- username
+        Username for authentication.
+        [Default: admin]
+        type: str
+
+
+REQUIREMENTS:  pan-python
+
+AUTHOR: Luigi Mori (@jtschichold), Ivan Bojer (@ivanbojer)
+        METADATA:
+          status:
+          - deprecated
+          supported_by: community
+        
+
+EXAMPLES:
+
+- name: dag
+  panos_dag:
+    ip_address: "192.168.1.1"
+    password: "admin"
+    dag_name: "dag-1"
+    dag_filter: "'aws-tag.aws:cloudformation:logical-id.ServerInstance' and 'instanceState.running'"
+
+
+RETURN VALUES:
+
+# Default return values
+

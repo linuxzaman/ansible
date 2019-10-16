@@ -1,0 +1,70 @@
+> WIN_ACL_INHERITANCE    (/usr/lib/python2.7/dist-packages/ansible/modules/windows/win_acl_inheritance.py)
+
+        Change ACL (Access Control List) inheritance and optionally copy inherited ACE's (Access Control Entry) to dedicated ACE's or
+        vice versa.
+
+  * This module is maintained by The Ansible Core Team
+OPTIONS (= is mandatory):
+
+= path
+        Path to be used for changing inheritance
+
+        type: path
+
+- reorganize
+        For P(state) = `absent', indicates if the inherited ACE's should be copied from the parent directory. This is necessary (in
+        combination with removal) for a simple ACL instead of using multiple ACE deny entries.
+        For P(state) = `present', indicates if the inherited ACE's should be deduplicated compared to the parent directory. This removes
+        complexity of the ACL structure.
+        [Default: False]
+        type: bool
+
+- state
+        Specify whether to enable `present' or disable `absent' ACL inheritance.
+        (Choices: absent, present)[Default: absent]
+        type: str
+
+
+SEE ALSO:
+      * Module win_acl
+           The official documentation on the win_acl module.
+           https://docs.ansible.com/ansible/latest/modules/win_acl_module.html
+      * Module win_file
+           The official documentation on the win_file module.
+           https://docs.ansible.com/ansible/latest/modules/win_file_module.html
+      * Module win_stat
+           The official documentation on the win_stat module.
+           https://docs.ansible.com/ansible/latest/modules/win_stat_module.html
+
+
+AUTHOR: Hans-Joachim Kliemeck (@h0nIg)
+        METADATA:
+          status:
+          - preview
+          supported_by: core
+        
+
+EXAMPLES:
+
+- name: Disable inherited ACE's
+  win_acl_inheritance:
+    path: C:\apache
+    state: absent
+
+- name: Disable and copy inherited ACE's
+  win_acl_inheritance:
+    path: C:\apache
+    state: absent
+    reorganize: yes
+
+- name: Enable and remove dedicated ACE's
+  win_acl_inheritance:
+    path: C:\apache
+    state: present
+    reorganize: yes
+
+
+RETURN VALUES:
+
+
+

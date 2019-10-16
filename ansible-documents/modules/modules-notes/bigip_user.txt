@@ -1,0 +1,283 @@
+> BIGIP_USER    (/usr/lib/python2.7/dist-packages/ansible/modules/network/f5/bigip_user.py)
+
+        Manage user accounts and user attributes on a BIG-IP. Typically this module operates only on the REST API users and not the CLI
+        users. When specifying `root', you may only change the password. Your other parameters will be ignored in this case. Changing the
+        `root' password is not an idempotent operation. Therefore, it will change it every time this module attempts to change it.
+
+  * This module is maintained by an Ansible Partner
+OPTIONS (= is mandatory):
+
+- full_name
+        Full name of the user.
+        [Default: (null)]
+        type: str
+
+- partition
+        Device partition to manage resources on.
+        [Default: Common]
+        type: str
+        version_added: 2.5
+        
+
+- partition_access
+        Specifies the administrative partition to which the user has access. `partition_access' is required when creating a new account.
+        Should be in the form "partition:role".
+        Valid roles include `acceleration-policy-editor', `admin', `application-editor', `auditor', `certificate-manager', `guest',
+        `irule-manager', `manager', `no-access', `operator', `resource-admin', `user-manager', `web-application-security-administrator',
+        and `web-application-security-editor'.
+        Partition portion of tuple should be an existing partition or the value 'all'.
+        [Default: (null)]
+        type: list
+
+= password
+        The password for the user account used to connect to the BIG-IP.
+        You may omit this option by setting the environment variable `F5_PASSWORD'.
+        (Aliases: pass, pwd)
+        type: str
+
+- password_credential
+        Set the users password to this unencrypted value. `password_credential' is required when creating a new account.
+        [Default: (null)]
+        type: str
+
+- provider
+        A dict object containing connection details.
+        [Default: (null)]
+        suboptions:
+          password:
+            aliases:
+            - pass
+            - pwd
+            description:
+            - The password for the user account used to connect to the BIG-IP.
+            - You may omit this option by setting the environment variable `F5_PASSWORD'.
+            required: true
+            type: str
+          server:
+            description:
+            - The BIG-IP host.
+            - You may omit this option by setting the environment variable `F5_SERVER'.
+            required: true
+            type: str
+          server_port:
+            default: 443
+            description:
+            - The BIG-IP server port.
+            - You may omit this option by setting the environment variable `F5_SERVER_PORT'.
+            type: int
+          ssh_keyfile:
+            description:
+            - Specifies the SSH keyfile to use to authenticate the connection to the remote
+              device.  This argument is only used for `cli' transports.
+            - You may omit this option by setting the environment variable `ANSIBLE_NET_SSH_KEYFILE'.
+            type: path
+          timeout:
+            default: 10
+            description:
+            - Specifies the timeout in seconds for communicating with the network device for
+              either connecting or sending commands.  If the timeout is exceeded before the
+              operation is completed, the module will error.
+            type: int
+          transport:
+            choices:
+            - cli
+            - rest
+            default: rest
+            description:
+            - Configures the transport connection to use when connecting to the remote device.
+            type: str
+          user:
+            description:
+            - The username to connect to the BIG-IP with. This user must have administrative
+              privileges on the device.
+            - You may omit this option by setting the environment variable `F5_USER'.
+            required: true
+            type: str
+          validate_certs:
+            default: true
+            description:
+            - If `no', SSL certificates are not validated. Use this only on personally controlled
+              sites using self-signed certificates.
+            - You may omit this option by setting the environment variable `F5_VALIDATE_CERTS'.
+            type: bool
+        
+        type: dict
+        version_added: 2.5
+
+= server
+        The BIG-IP host.
+        You may omit this option by setting the environment variable `F5_SERVER'.
+
+        type: str
+
+- server_port
+        The BIG-IP server port.
+        You may omit this option by setting the environment variable `F5_SERVER_PORT'.
+        [Default: 443]
+        type: int
+        version_added: 2.2
+
+- shell
+        Optionally set the users shell.
+        (Choices: bash, none, tmsh)[Default: (null)]
+        type: str
+
+- state
+        Whether the account should exist or not, taking action if the state is different from what is stated.
+        (Choices: present, absent)[Default: present]
+        type: str
+
+- update_password
+        `always' will allow to update passwords if the user chooses to do so. `on_create' will only set the password for newly created
+        users.
+        When `username_credential' is `root', this value will be forced to `always'.
+        (Choices: always, on_create)[Default: always]
+        type: str
+
+= user
+        The username to connect to the BIG-IP with. This user must have administrative privileges on the device.
+        You may omit this option by setting the environment variable `F5_USER'.
+
+        type: str
+
+= username_credential
+        Name of the user to create, remove or modify.
+        The `root' user may not be removed.
+        (Aliases: name)
+        type: str
+
+- validate_certs
+        If `no', SSL certificates are not validated. Use this only on personally controlled sites using self-signed certificates.
+        You may omit this option by setting the environment variable `F5_VALIDATE_CERTS'.
+        [Default: True]
+        type: bool
+        version_added: 2.0
+
+
+NOTES:
+      * Requires BIG-IP versions >= 12.0.0
+      * For more information on using Ansible to manage F5 Networks devices see https://www.ansible.com/integrations/networks/f5.
+      * Requires BIG-IP software version >= 12.
+      * The F5 modules only manipulate the running configuration of the F5 product. To ensure that BIG-IP specific configuration
+        persists to disk, be sure to include at least one task that uses the [bigip_config] module to save the running
+        configuration. Refer to the module's documentation for the correct usage of the module to save your running configuration.
+
+
+AUTHOR: Tim Rupp (@caphrim007), Wojciech Wypior (@wojtek0806)
+        METADATA:
+          status:
+          - preview
+          supported_by: certified
+        
+
+EXAMPLES:
+
+- name: Add the user 'johnd' as an admin
+  bigip_user:
+    username_credential: johnd
+    password_credential: password
+    full_name: John Doe
+    partition_access: all:admin
+    update_password: on_create
+    state: present
+    provider:
+      server: lb.mydomain.com
+      user: admin
+      password: secret
+  delegate_to: localhost
+
+- name: Change the user "johnd's" role and shell
+  bigip_user:
+    username_credential: johnd
+    partition_access: NewPartition:manager
+    shell: tmsh
+    state: present
+    provider:
+      server: lb.mydomain.com
+      user: admin
+      password: secret
+  delegate_to: localhost
+
+- name: Make the user 'johnd' an admin and set to advanced shell
+  bigip_user:
+    name: johnd
+    partition_access: all:admin
+    shell: bash
+    state: present
+    provider:
+      server: lb.mydomain.com
+      user: admin
+      password: secret
+  delegate_to: localhost
+
+- name: Remove the user 'johnd'
+  bigip_user:
+    name: johnd
+    state: absent
+    provider:
+      server: lb.mydomain.com
+      user: admin
+      password: secret
+  delegate_to: localhost
+
+- name: Update password
+  bigip_user:
+    state: present
+    username_credential: johnd
+    password_credential: newsupersecretpassword
+    provider:
+      server: lb.mydomain.com
+      user: admin
+      password: secret
+  delegate_to: localhost
+
+# Note that the second time this task runs, it would fail because
+# The password has been changed. Therefore, it is recommended that
+# you either,
+#
+#   * Put this in its own playbook that you run when you need to
+#   * Put this task in a `block`
+#   * Include `ignore_errors` on this task
+- name: Change the Admin password
+  bigip_user:
+    state: present
+    username_credential: admin
+    password_credential: NewSecretPassword
+    provider:
+      server: lb.mydomain.com
+      user: admin
+      password: secret
+  delegate_to: localhost
+
+- name: Change the root user's password
+  bigip_user:
+    username_credential: root
+    password_credential: secret
+    state: present
+    provider:
+      server: lb.mydomain.com
+      user: admin
+      password: secret
+  delegate_to: localhost
+
+
+RETURN VALUES:
+
+full_name:
+  description: Full name of the user
+  returned: changed and success
+  type: str
+  sample: John Doe
+partition_access:
+  description:
+    - List of strings containing the user's roles and which partitions they
+      are applied to. They are specified in the form "partition:role".
+  returned: changed and success
+  type: list
+  sample: ['all:admin']
+shell:
+  description: The shell assigned to the user account
+  returned: changed and success
+  type: str
+  sample: tmsh
+

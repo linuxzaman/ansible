@@ -1,0 +1,276 @@
+> OS_COE_CLUSTER    (/usr/lib/python2.7/dist-packages/ansible/modules/cloud/openstack/os_coe_cluster.py)
+
+        Add or Remove COE cluster from the OpenStack Container Infra service.
+
+  * This module is maintained by The Ansible Community
+OPTIONS (= is mandatory):
+
+- api_timeout
+        How long should the socket layer wait before timing out for API calls. If this is omitted, nothing will be passed to the requests
+        library.
+        [Default: (null)]
+        type: int
+
+- auth
+        Dictionary containing auth information as needed by the cloud's auth plugin strategy. For the default `password' plugin, this
+        would contain `auth_url', `username', `password', `project_name' and any information about domains (for example,
+        `os_user_domain_name' or `os_project_domain_name') if the cloud supports them. For other plugins, this param will need to contain
+        whatever parameters that auth plugin requires. This parameter is not needed if a named cloud is provided or OpenStack OS_*
+        environment variables are present.
+        [Default: (null)]
+        type: dict
+
+- auth_type
+        Name of the auth plugin to use. If the cloud uses something other than password authentication, the name of the plugin should be
+        indicated here and the contents of the `auth' parameter should be updated accordingly.
+        [Default: (null)]
+        type: str
+
+- availability_zone
+        Ignored. Present for backwards compatibility
+        [Default: (null)]
+
+- ca_cert
+        A path to a CA Cert bundle that can be used as part of verifying SSL API requests.
+        (Aliases: cacert)[Default: (null)]
+        type: str
+
+- client_cert
+        A path to a client certificate to use as part of the SSL transaction.
+        (Aliases: cert)[Default: (null)]
+        type: str
+
+- client_key
+        A path to a client key to use as part of the SSL transaction.
+        (Aliases: key)[Default: (null)]
+        type: str
+
+- cloud
+        Named cloud or cloud config to operate against. If `cloud' is a string, it references a named cloud config as defined in an
+        OpenStack clouds.yaml file. Provides default values for `auth' and `auth_type'. This parameter is not needed if `auth' is
+        provided or if OpenStack OS_* environment variables are present. If `cloud' is a dict, it contains a complete cloud configuration
+        like would be in a section of clouds.yaml.
+        [Default: (null)]
+        type: raw
+
+= cluster_template_id
+        The template ID of cluster template.
+
+
+- discovery_url
+        Url used for cluster node discovery
+        [Default: (null)]
+
+- docker_volume_size
+        The size in GB of the docker volume
+        [Default: (null)]
+
+- flavor_id
+        The flavor of the minion node for this ClusterTemplate
+        [Default: (null)]
+
+- interface
+        Endpoint URL type to fetch from the service catalog.
+        (Aliases: endpoint_type)(Choices: admin, internal, public)[Default: public]
+        type: str
+        version_added: 2.3
+
+- keypair
+        Name of the keypair to use.
+        [Default: (null)]
+
+- labels
+        One or more key/value pairs
+        [Default: (null)]
+
+- master_count
+        The number of master nodes for this cluster
+        [Default: 1]
+
+- master_flavor_id
+        The flavor of the master node for this ClusterTemplate
+        [Default: (null)]
+
+= name
+        Name that has to be given to the cluster template
+
+
+- node_count
+        The number of nodes for this cluster
+        [Default: 1]
+
+- region_name
+        Name of the region.
+        [Default: (null)]
+        type: str
+
+- state
+        Indicate desired state of the resource.
+        (Choices: present, absent)[Default: present]
+
+- timeout
+        Timeout for creating the cluster in minutes. Default to 60 mins if not set
+        [Default: 60]
+        type: int
+
+- validate_certs
+        Whether or not SSL API requests should be verified.
+        Before Ansible 2.3 this defaulted to `yes'.
+        (Aliases: verify)[Default: False]
+        type: bool
+
+- wait
+        Should ansible wait until the requested resource is complete.
+        [Default: True]
+        type: bool
+
+
+NOTES:
+      * The standard OpenStack environment variables, such as `OS_USERNAME' may be used instead of providing explicit values.
+      * Auth information is driven by openstacksdk, which means that values can come from a yaml config file in
+        /etc/ansible/openstack.yaml, /etc/openstack/clouds.yaml or ~/.config/openstack/clouds.yaml, then from standard environment
+        variables, then finally by explicit parameters in plays. More information can be found at
+        https://docs.openstack.org/openstacksdk/
+
+
+REQUIREMENTS:  openstacksdk, python >= 2.7
+
+AUTHOR: Feilong Wang (@flwang)
+        METADATA:
+          status:
+          - preview
+          supported_by: community
+        
+
+EXAMPLES:
+
+# Create a new Kubernetes cluster
+- os_coe_cluster:
+    name: k8s
+    cluster_template_id: k8s-ha
+    keypair: mykey
+    master_count: 3
+    node_count: 5
+
+
+RETURN VALUES:
+
+id:
+    description: The cluster UUID.
+    returned: On success when I(state) is 'present'
+    type: str
+    sample: "39007a7e-ee4f-4d13-8283-b4da2e037c69"
+cluster:
+    description: Dictionary describing the cluster.
+    returned: On success when I(state) is 'present'
+    type: complex
+    contains:
+      api_address:
+          description:
+            - Api address of cluster master node
+          type: string
+          sample: https://172.24.4.30:6443
+      cluster_template_id:
+          description: The cluster_template UUID
+          type: string
+          sample: '7b1418c8-cea8-48fc-995d-52b66af9a9aa'
+      coe_version:
+          description:
+            - Version of the COE software currently running in this cluster
+          type: string
+          sample: v1.11.1
+      container_version:
+          description:
+            - Version of the container software. Example: docker version.
+          type: string
+          sample: 1.12.6
+      created_at:
+          description:
+            - The time in UTC at which the cluster is created
+          type: datetime
+          sample: 2018-08-16T10:29:45+00:00
+      create_timeout:
+          description:
+            - Timeout for creating the cluster in minutes. Default to 60 if
+              not set.
+          type: int
+          sample: 60
+      discovery_url:
+          description:
+            - Url used for cluster node discovery
+          type: string
+          sample: https://discovery.etcd.io/a42ee38e7113f31f4d6324f24367aae5
+      faults:
+          description:
+            - Fault info collected from the Heat resources of this cluster
+          type: dict
+          sample: {'0': 'ResourceInError: resources[0].resources...'}
+      flavor_id:
+          description:
+            - The flavor of the minion node for this cluster
+          type: string
+          sample: c1.c1r1
+      keypair:
+          description:
+            - Name of the keypair to use.
+          type: string
+          sample: mykey
+      labels:
+          description: One or more key/value pairs
+          type: dict
+          sample: {'key1': 'value1', 'key2': 'value2'}
+      master_addresses:
+          description:
+            - IP addresses of cluster master nodes
+          type: list
+          sample: ['172.24.4.5']
+      master_count:
+          description:
+            - The number of master nodes for this cluster.
+          type: int
+          sample: 1
+      master_flavor_id:
+          description:
+            - The flavor of the master node for this cluster
+          type: string
+          sample: c1.c1r1
+      name:
+          description:
+            - Name that has to be given to the cluster
+          type: string
+          sample: k8scluster
+      node_addresses:
+          description:
+            - IP addresses of cluster slave nodes
+          type: list
+          sample: ['172.24.4.8']
+      node_count:
+          description:
+            - The number of master nodes for this cluster.
+          type: int
+          sample: 1
+      stack_id:
+          description:
+            - Stack id of the Heat stack
+          type: string
+          sample: '07767ec6-85f5-44cb-bd63-242a8e7f0d9d'
+      status:
+          description: Status of the cluster from the heat stack
+          type: string
+          sample: 'CREATE_COMLETE'
+      status_reason:
+          description:
+            - Status reason of the cluster from the heat stack
+          type: string
+          sample: 'Stack CREATE completed successfully'
+      updated_at:
+          description:
+            - The time in UTC at which the cluster is updated
+          type: datetime
+          sample: '2018-08-16T10:39:25+00:00'
+      uuid:
+          description:
+            - Unique UUID for this cluster
+          type: string
+          sample: '86246a4d-a16c-4a58-9e96ad7719fe0f9d'
+

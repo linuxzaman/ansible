@@ -1,0 +1,133 @@
+EXAMPLES:
+
+- name: Start virtual machine 'myvm'
+  kubevirt_vm:
+      state: running
+      name: myvm
+      namespace: vms
+
+- name: Create virtual machine 'myvm' and start it
+  kubevirt_vm:
+      state: running
+      name: myvm
+      namespace: vms
+      memory: 64Mi
+      cpu_cores: 1
+      bootloader: efi
+      smbios_uuid: 5d307ca9-b3ef-428c-8861-06e72d69f223
+      cpu_model: Conroe
+      headless: true
+      hugepage_size: 2Mi
+      tablets:
+        - bus: virtio
+          name: tablet1
+      cpu_limit: 3
+      cpu_shares: 2
+      disks:
+        - name: containerdisk
+          volume:
+            containerDisk:
+              image: kubevirt/cirros-container-disk-demo:latest
+              path: /custom-disk/cirros.img
+          disk:
+            bus: virtio
+
+- name: Create virtual machine 'myvm' with multus network interface
+  kubevirt_vm:
+      name: myvm
+      namespace: vms
+      memory: 512M
+      interfaces:
+        - name: default
+          bridge: {}
+          network:
+            pod: {}
+        - name: mynet
+          bridge: {}
+          network:
+            multus:
+              networkName: mynetconf
+
+- name: Combine inline definition with Ansible parameters
+  kubevirt_vm:
+      # Kubernetes specification:
+      definition:
+        metadata:
+          labels:
+            app: galaxy
+            service: web
+            origin: vmware
+
+      # Ansible parameters:
+      state: running
+      name: myvm
+      namespace: vms
+      memory: 64M
+      disks:
+        - name: containerdisk
+          volume:
+            containerDisk:
+              image: kubevirt/cirros-container-disk-demo:latest
+              path: /custom-disk/cirros.img
+          disk:
+            bus: virtio
+
+- name: Start ephemeral virtual machine 'myvm' and wait to be running
+  kubevirt_vm:
+      ephemeral: true
+      state: running
+      wait: true
+      wait_timeout: 180
+      name: myvm
+      namespace: vms
+      memory: 64M
+      labels:
+        kubevirt.io/vm: myvm
+      disks:
+        - name: containerdisk
+          volume:
+            containerDisk:
+              image: kubevirt/cirros-container-disk-demo:latest
+              path: /custom-disk/cirros.img
+          disk:
+            bus: virtio
+
+- name: Start fedora vm with cloud init
+  kubevirt_vm:
+      state: running
+      wait: true
+      name: myvm
+      namespace: vms
+      memory: 1024M
+      cloud_init_nocloud:
+        userData: |-
+          #cloud-config
+          password: fedora
+          chpasswd: { expire: False }
+      disks:
+        - name: containerdisk
+          volume:
+            containerDisk:
+              image: kubevirt/fedora-cloud-container-disk-demo:latest
+              path: /disk/fedora.qcow2
+          disk:
+            bus: virtio
+
+- name: Remove virtual machine 'myvm'
+  kubevirt_vm:
+      state: absent
+      name: myvm
+      namespace: vms
+
+
+RETURN VALUES:
+
+kubevirt_vm:
+  description:
+      - The virtual machine dictionary specification returned by the API.
+      - "This dictionary contains all values returned by the KubeVirt API all options
+         are described here U(https://kubevirt.io/api-reference/master/definitions.html#_v1_virtualmachine)"
+  returned: success
+  type: complex
+  contains: {}
+

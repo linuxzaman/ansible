@@ -1,0 +1,87 @@
+> SNAP    (/usr/lib/python2.7/dist-packages/ansible/modules/packaging/os/snap.py)
+
+        Manages snaps packages.
+
+  * This module is maintained by The Ansible Community
+OPTIONS (= is mandatory):
+
+- channel
+        Define which release of a snap is installed and tracked for updates. This option can only be specified if there is a single snap
+        in the task.
+        [Default: stable]
+        type: str
+
+- classic
+        Confinement policy. The classic confinment allows a snap to have the same level of access to the system as "classic" packages,
+        like those managed by APT. This option corresponds to the --classic argument. This option can only be specified if there is a
+        single snap in the task.
+        [Default: False]
+        type: bool
+
+= name
+        Name of the snap to install or remove. Can be a list of snaps.
+
+
+- state
+        Desired state of the package.
+        (Choices: absent, present)[Default: present]
+
+
+AUTHOR: Victor Carceler (@vcarceler) <vcarceler@iespuigcastellar.xeill.net>, Stanislas Lange (@angristan) <angristan@pm.me>
+        METADATA:
+          status:
+          - preview
+          supported_by: community
+        
+
+EXAMPLES:
+
+# Install "foo" and "bar" snap
+- name: Install foo
+  snap:
+    name:
+      - foo
+      - bar
+
+# Remove "foo" snap
+- name: Remove foo
+  snap:
+    name: foo
+    state: absent
+
+# Install a snap with classic confinement
+- name: Install "foo" with option --classic
+  snap:
+    name: foo
+    classic: yes
+
+# Install a snap with from a specific channel
+- name: Install "foo" with option --channel=latest/edge
+  snap:
+    name: foo
+    channel: latest/edge
+
+
+RETURN VALUES:
+
+classic:
+    description: Whether or not the snaps were installed with the classic confinement
+    type: bool
+    returned: When snaps are installed
+channel:
+    description: The channel the snaps were installed from
+    type: str
+    returned: When snaps are installed
+cmd:
+    description: The command that was executed on the host
+    type: str
+    returned: When changed is true
+snaps_installed:
+    description: The list of actually installed snaps
+    type: list
+    returned: When any snaps have been installed
+snaps_removed:
+    description: The list of actually removed snaps
+    type: list
+    returned: When any snaps have been removed
+

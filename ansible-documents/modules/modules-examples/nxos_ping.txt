@@ -1,0 +1,47 @@
+EXAMPLES:
+
+- name: Test reachability to 8.8.8.8 using mgmt vrf
+  nxos_ping:
+    dest: 8.8.8.8
+    vrf: management
+    host: 68.170.147.165
+
+- name: Test reachability to a few different public IPs using mgmt vrf
+  nxos_ping:
+    dest: nxos_ping
+    vrf: management
+    host: 68.170.147.165
+  with_items:
+    - 8.8.8.8
+    - 4.4.4.4
+    - 198.6.1.4
+
+
+RETURN VALUES:
+
+commands:
+    description: Show the command sent
+    returned: always
+    type: list
+    sample: ["ping 8.8.8.8 count 2 vrf management"]
+rtt:
+    description: Show RTT stats
+    returned: always
+    type: dict
+    sample: {"avg": 6.264, "max": 6.564, "min": 5.978}
+packets_rx:
+    description: Packets successfully received
+    returned: always
+    type: int
+    sample: 2
+packets_tx:
+    description: Packets successfully transmitted
+    returned: always
+    type: int
+    sample: 2
+packet_loss:
+    description: Percentage of packets lost
+    returned: always
+    type: str
+    sample: "0.00%"
+

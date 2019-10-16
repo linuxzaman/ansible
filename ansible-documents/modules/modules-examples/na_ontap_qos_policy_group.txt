@@ -1,0 +1,37 @@
+EXAMPLES:
+
+- name: create qos policy group
+      na_ontap_qos_policy_group:
+        state: present
+        name: policy_1
+        vserver: policy_vserver
+        max_throughput: 800KB/s,800iops
+        min_throughput: 100iops
+        hostname: 10.193.78.30
+        username: admin
+        password: netapp1!
+
+    - name: modify qos policy group max throughput
+      na_ontap_qos_policy_group:
+        state: present
+        name: policy_1
+        vserver: policy_vserver
+        max_throughput: 900KB/s,800iops
+        min_throughput: 100iops
+        hostname: 10.193.78.30
+        username: admin
+        password: netapp1!
+
+    - name: delete qos policy group
+      na_ontap_qos_policy_group:
+        state: absent
+        name: policy_1
+        vserver: policy_vserver
+        hostname: 10.193.78.30
+        username: admin
+        password: netapp1!
+
+
+RETURN VALUES:
+
+

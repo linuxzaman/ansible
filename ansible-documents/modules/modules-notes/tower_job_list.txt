@@ -1,0 +1,102 @@
+> TOWER_JOB_LIST    (/usr/lib/python2.7/dist-packages/ansible/modules/web_infrastructure/ansible_tower/tower_job_list.py)
+
+        List Ansible Tower jobs. See https://www.ansible.com/tower for an overview.
+
+  * This module is maintained by The Ansible Community
+OPTIONS (= is mandatory):
+
+- all_pages
+        Fetch all the pages and return a single result.
+        [Default: no]
+        type: bool
+
+- page
+        Page number of the results to fetch.
+        [Default: (null)]
+
+- query
+        Query used to further filter the list of jobs. `{"foo":"bar"}' will be passed at `?foo=bar'
+        [Default: (null)]
+
+- status
+        Only list jobs with this status.
+        (Choices: pending, waiting, running, error, failed, canceled, successful)[Default: (null)]
+
+- tower_config_file
+        Path to the Tower config file.
+        [Default: (null)]
+        type: path
+
+- tower_host
+        URL to your Tower instance.
+        [Default: (null)]
+        type: str
+
+- tower_password
+        Password for your Tower instance.
+        [Default: (null)]
+        type: str
+
+- tower_username
+        Username for your Tower instance.
+        [Default: (null)]
+        type: str
+
+- validate_certs
+        Whether to allow insecure connections to Tower.
+        If `no', SSL certificates will not be validated.
+        This should only be used on personally controlled sites using self-signed certificates.
+        (Aliases: tower_verify_ssl)[Default: (null)]
+        type: bool
+
+
+NOTES:
+      * If no `config_file' is provided we will attempt to use the tower-cli library defaults to find your Tower host information.
+      * `config_file' should contain Tower configuration in the following format host=hostname username=username password=password
+
+
+REQUIREMENTS:  ansible-tower-cli >= 3.0.2
+
+AUTHOR: Wayne Witzel III (@wwitzel3)
+        METADATA:
+          status:
+          - preview
+          supported_by: community
+        
+
+EXAMPLES:
+
+- name: List running jobs for the testing.yml playbook
+  tower_job_list:
+    status: running
+    query: {"playbook": "testing.yml"}
+    tower_config_file: "~/tower_cli.cfg"
+  register: testing_jobs
+
+
+RETURN VALUES:
+
+count:
+    description: Total count of objects return
+    returned: success
+    type: int
+    sample: 51
+next:
+    description: next page available for the listing
+    returned: success
+    type: int
+    sample: 3
+previous:
+    description: previous page available for the listing
+    returned: success
+    type: int
+    sample: 1
+results:
+    description: a list of job objects represented as dictionaries
+    returned: success
+    type: list
+    sample: [{"allow_simultaneous": false, "artifacts": {}, "ask_credential_on_launch": false,
+              "ask_inventory_on_launch": false, "ask_job_type_on_launch": false, "failed": false,
+              "finished": "2017-02-22T15:09:05.633942Z", "force_handlers": false, "forks": 0, "id": 2,
+              "inventory": 1, "job_explanation": "", "job_tags": "", "job_template": 5, "job_type": "run"}, ...]
+

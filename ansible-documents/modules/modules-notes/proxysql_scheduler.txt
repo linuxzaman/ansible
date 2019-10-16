@@ -1,0 +1,155 @@
+> PROXYSQL_SCHEDULER    (/usr/lib/python2.7/dist-packages/ansible/modules/database/proxysql/proxysql_scheduler.py)
+
+        The [proxysql_scheduler] module adds or removes schedules using the proxysql admin interface.
+
+  * This module is maintained by The Ansible Community
+OPTIONS (= is mandatory):
+
+- active
+        A schedule with `active' set to `False' will be tracked in the database, but will be never loaded in the in-memory data
+        structures.
+        [Default: True]
+        type: bool
+
+- arg1
+        Argument that can be passed to the job.
+        [Default: (null)]
+
+- arg2
+        Argument that can be passed to the job.
+        [Default: (null)]
+
+- arg3
+        Argument that can be passed to the job.
+        [Default: (null)]
+
+- arg4
+        Argument that can be passed to the job.
+        [Default: (null)]
+
+- arg5
+        Argument that can be passed to the job.
+        [Default: (null)]
+
+- comment
+        Text field that can be used for any purposed defined by the user.
+        [Default: (null)]
+
+- config_file
+        Specify a config file from which `login_user' and `login_password' are to be read.
+        [Default: ]
+        type: path
+
+= filename
+        Full path of the executable to be executed.
+
+
+- force_delete
+        By default we avoid deleting more than one schedule in a single batch, however if you need this behaviour and you're not
+        concerned about the schedules deleted, you can set `force_delete' to `True'.
+        [Default: False]
+        type: bool
+
+- interval_ms
+        How often (in millisecond) the job will be started. The minimum value for `interval_ms' is 100 milliseconds.
+        [Default: 10000]
+
+- load_to_runtime
+        Dynamically load config to runtime memory.
+        [Default: yes]
+        type: bool
+
+- login_host
+        The host used to connect to ProxySQL admin interface.
+        [Default: 127.0.0.1]
+        type: str
+
+- login_password
+        The password used to authenticate to ProxySQL admin interface.
+        [Default: (null)]
+        type: str
+
+- login_port
+        The port used to connect to ProxySQL admin interface.
+        [Default: 6032]
+        type: int
+
+- login_user
+        The username used to authenticate to ProxySQL admin interface.
+        [Default: (null)]
+        type: str
+
+- save_to_disk
+        Save config to sqlite db on disk to persist the configuration.
+        [Default: yes]
+        type: bool
+
+- state
+        When `present' - adds the schedule, when `absent' - removes the schedule.
+        (Choices: present, absent)[Default: present]
+
+
+REQUIREMENTS:  PyMySQL (Python 2.7 and Python 3.X), or, MySQLdb (Python 2.x)
+
+AUTHOR: Ben Mildren (@bmildren)
+        METADATA:
+          status:
+          - stableinterface
+          supported_by: community
+        
+
+EXAMPLES:
+
+---
+# This example adds a schedule, it saves the scheduler config to disk, but
+# avoids loading the scheduler config to runtime (this might be because
+# several servers are being added and the user wants to push the config to
+# runtime in a single batch using the M(proxysql_manage_config) module).  It
+# uses supplied credentials to connect to the proxysql admin interface.
+
+- proxysql_scheduler:
+    login_user: 'admin'
+    login_password: 'admin'
+    interval_ms: 1000
+    filename: "/opt/maintenance.py"
+    state: present
+    load_to_runtime: False
+
+# This example removes a schedule, saves the scheduler config to disk, and
+# dynamically loads the scheduler config to runtime.  It uses credentials
+# in a supplied config file to connect to the proxysql admin interface.
+
+- proxysql_scheduler:
+    config_file: '~/proxysql.cnf'
+    filename: "/opt/old_script.py"
+    state: absent
+
+
+RETURN VALUES:
+
+stdout:
+    description: The schedule modified or removed from proxysql
+    returned: On create/update will return the newly modified schedule, on
+              delete it will return the deleted record.
+    type: dict
+    "sample": {
+        "changed": true,
+        "filename": "/opt/test.py",
+        "msg": "Added schedule to scheduler",
+        "schedules": [
+            {
+                "active": "1",
+                "arg1": null,
+                "arg2": null,
+                "arg3": null,
+                "arg4": null,
+                "arg5": null,
+                "comment": "",
+                "filename": "/opt/test.py",
+                "id": "1",
+                "interval_ms": "10000"
+            }
+        ],
+        "state": "present"
+    }
+

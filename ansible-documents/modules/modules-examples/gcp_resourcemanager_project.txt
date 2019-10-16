@@ -1,0 +1,74 @@
+EXAMPLES:
+
+- name: create a project
+  gcp_resourcemanager_project:
+    name: My Sample Project
+    id: alextest-{{ 10000000000 | random }}
+    auth_kind: serviceaccount
+    service_account_file: "/tmp/auth.pem"
+    parent:
+      type: organization
+      id: 636173955921
+    state: present
+
+
+RETURN VALUES:
+
+number:
+  description:
+  - Number uniquely identifying the project.
+  returned: success
+  type: int
+lifecycleState:
+  description:
+  - The Project lifecycle state.
+  returned: success
+  type: str
+name:
+  description:
+  - 'The user-assigned display name of the Project. It must be 4 to 30 characters.
+    Allowed characters are: lowercase and uppercase letters, numbers, hyphen, single-quote,
+    double-quote, space, and exclamation point.'
+  returned: success
+  type: str
+createTime:
+  description:
+  - Time of creation.
+  returned: success
+  type: str
+labels:
+  description:
+  - The labels associated with this Project.
+  - 'Label keys must be between 1 and 63 characters long and must conform to the following
+    regular expression: `[a-z]([-a-z0-9]*[a-z0-9])?`.'
+  - Label values must be between 0 and 63 characters long and must conform to the
+    regular expression `([a-z]([-a-z0-9]*[a-z0-9])?)?`.
+  - No more than 256 labels can be associated with a given resource.
+  - Clients should store labels in a representation such as JSON that does not depend
+    on specific characters being disallowed .
+  returned: success
+  type: dict
+parent:
+  description:
+  - A parent organization.
+  returned: success
+  type: complex
+  contains:
+    type:
+      description:
+      - Must be organization.
+      returned: success
+      type: str
+    id:
+      description:
+      - Id of the organization.
+      returned: success
+      type: str
+id:
+  description:
+  - The unique, user-assigned ID of the Project. It must be 6 to 30 lowercase letters,
+    digits, or hyphens. It must start with a letter.
+  - Trailing hyphens are prohibited.
+  returned: success
+  type: str
+

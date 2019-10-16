@@ -1,0 +1,57 @@
+> AOS_LOGIN    (/usr/lib/python2.7/dist-packages/ansible/modules/network/aos/_aos_login.py)
+
+        Obtain the AOS server session token by providing the required username and password credentials.  Upon successful authentication,
+        this module will return the session-token that is required by all subsequent AOS module usage. On success the module will
+        automatically populate ansible facts with the variable `aos_session' This module is not idempotent and do not support check mode.
+
+DEPRECATED: 
+
+	Reason: This module does not support AOS 2.1 or later
+	Will be removed in: Ansible 2.9
+	Alternatives: See new modules at U(https://www.ansible.com/ansible-apstra).
+
+
+  * This module is maintained by The Ansible Community
+OPTIONS (= is mandatory):
+
+- passwd
+        Password to use when connecting to the AOS server.
+        [Default: admin]
+
+- port
+        Port number to use when connecting to the AOS server.
+        [Default: 443]
+
+= server
+        Address of the AOS Server on which you want to open a connection.
+
+
+- user
+        Login username to use when connecting to the AOS server.
+        [Default: admin]
+
+
+REQUIREMENTS:  aos-pyez >= 0.6.1
+
+AUTHOR: jeremy@apstra.com (@jeremyschulman)
+        METADATA:
+          status:
+          - deprecated
+          supported_by: community
+        
+
+EXAMPLES:
+
+- name: Create a session with the AOS-server
+  aos_login:
+    server: "{{ inventory_hostname }}"
+    user: admin
+    passwd: admin
+
+- name: Use the newly created session (register is not mandatory)
+  aos_ip_pool:
+    session: "{{ aos_session }}"
+    name: my_ip_pool
+    state: present
+
+

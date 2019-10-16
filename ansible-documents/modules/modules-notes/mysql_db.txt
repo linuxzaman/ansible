@@ -1,0 +1,157 @@
+> MYSQL_DB    (/usr/lib/python2.7/dist-packages/ansible/modules/database/mysql/mysql_db.py)
+
+        Add or remove MySQL databases from a remote host.
+
+  * This module is maintained by The Ansible Community
+OPTIONS (= is mandatory):
+
+- ca_cert
+        The path to a Certificate Authority (CA) certificate. This option, if used, must specify the same certificate as used by the
+        server.
+        (Aliases: ssl_ca)[Default: (null)]
+        type: path
+        version_added: 2.0
+
+- client_cert
+        The path to a client public key certificate.
+        (Aliases: ssl_cert)[Default: (null)]
+        type: path
+        version_added: 2.0
+
+- client_key
+        The path to the client private key.
+        (Aliases: ssl_key)[Default: (null)]
+        type: path
+        version_added: 2.0
+
+- collation
+        Collation mode (sorting). This only applies to new table/databases and does not update existing ones, this is a limitation of
+        MySQL.
+        [Default: (null)]
+
+- config_file
+        Specify a config file from which user and password are to be read.
+        [Default: ~/.my.cnf]
+        type: path
+        version_added: 2.0
+
+- connect_timeout
+        The connection timeout when connecting to the MySQL server.
+        [Default: 30]
+        type: int
+        version_added: 2.1
+
+- encoding
+        Encoding mode to use, examples include `utf8' or `latin1_swedish_ci'
+        [Default: (null)]
+
+- ignore_tables
+        A list of table names that will be ignored in the dump of the form database_name.table_name
+        [Default: []]
+        version_added: 2.7
+
+- login_host
+        Host running the database.
+        [Default: localhost]
+        type: str
+
+- login_password
+        The password used to authenticate with.
+        [Default: (null)]
+        type: str
+
+- login_port
+        Port of the MySQL server. Requires `login_host' be defined as other than localhost if login_port is used.
+        [Default: 3306]
+        type: int
+
+- login_unix_socket
+        The path to a Unix domain socket for local connections.
+        [Default: (null)]
+        type: str
+
+- login_user
+        The username used to authenticate with.
+        [Default: (null)]
+        type: str
+
+= name
+        name of the database to add or remove
+        name=all May only be provided if `state' is `dump' or `import'.
+        if name=all Works like --all-databases option for mysqldump (Added in 2.0)
+        (Aliases: db)
+
+- quick
+        Option used for dumping large tables
+        [Default: yes]
+        type: bool
+        version_added: 2.1
+
+- single_transaction
+        Execute the dump in a single transaction
+        [Default: no]
+        type: bool
+        version_added: 2.1
+
+- state
+        The database state
+        (Choices: present, absent, dump, import)[Default: present]
+
+- target
+        Location, on the remote host, of the dump file to read from or write to. Uncompressed SQL files (`.sql') as well as bzip2
+        (`.bz2'), gzip (`.gz') and xz (Added in 2.0) compressed files are supported.
+        [Default: (null)]
+
+
+NOTES:
+      * Requires the mysql and mysqldump binaries on the remote host.
+      * This module is *not idempotent* when `state' is `import', and will import the dump file each time if run more than once.
+      * Requires the PyMySQL (Python 2.7 and Python 3.X) or MySQL-python (Python 2.X) package on the remote host. The Python
+        package may be installed with apt-get install python-pymysql (Ubuntu; see [apt]) or yum install python2-PyMySQL
+        (RHEL/CentOS/Fedora; see [yum]). You can also use dnf install python2-PyMySQL for newer versions of Fedora; see [dnf].
+      * Both `login_password' and `login_user' are required when you are passing credentials. If none are present, the module will
+        attempt to read the credentials from `~/.my.cnf', and finally fall back to using the MySQL default login of 'root' with no
+        password.
+
+
+REQUIREMENTS:  MySQLdb (Python 2.x), PyMySQL (Python 2.7 and Python 3.X), or, mysql (command line binary), mysqldump (command line
+        binary)
+
+AUTHOR: Ansible Core Team
+        METADATA:
+          status:
+          - preview
+          supported_by: community
+        
+
+EXAMPLES:
+
+- name: Create a new database with name 'bobdata'
+  mysql_db:
+    name: bobdata
+    state: present
+
+# Copy database dump file to remote host and restore it to database 'my_db'
+- name: Copy database dump file
+  copy:
+    src: dump.sql.bz2
+    dest: /tmp
+- name: Restore database
+  mysql_db:
+    name: my_db
+    state: import
+    target: /tmp/dump.sql.bz2
+
+- name: Dump all databases to hostname.sql
+  mysql_db:
+    state: dump
+    name: all
+    target: /tmp/{{ inventory_hostname }}.sql
+
+- name: Import file.sql similar to mysql -u <username> -p <password> < hostname.sql
+  mysql_db:
+    state: import
+    name: all
+    target: /tmp/{{ inventory_hostname }}.sql
+
+

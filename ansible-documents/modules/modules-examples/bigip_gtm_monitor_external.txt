@@ -1,0 +1,65 @@
+EXAMPLES:
+
+- name: Create an external monitor
+  bigip_gtm_monitor_external:
+    name: foo
+    state: present
+    provider:
+      user: admin
+      password: secret
+      server: lb.mydomain.com
+  delegate_to: localhost
+
+- name: Create an external monitor with variables
+  bigip_gtm_monitor_external:
+    name: foo
+    timeout: 10
+    variables:
+      var1: foo
+      var2: bar
+    state: present
+    provider:
+      user: admin
+      password: secret
+      server: lb.mydomain.com
+  delegate_to: localhost
+
+- name: Add a variable to an existing set
+  bigip_gtm_monitor_external:
+    name: foo
+    timeout: 10
+    variables:
+      var1: foo
+      var2: bar
+      cat: dog
+    state: present
+    provider:
+      user: admin
+      password: secret
+      server: lb.mydomain.com
+  delegate_to: localhost
+
+
+RETURN VALUES:
+
+parent:
+  description: New parent template of the monitor.
+  returned: changed
+  type: str
+  sample: external
+ip:
+  description: The new IP of IP/port definition.
+  returned: changed
+  type: str
+  sample: 10.12.13.14
+interval:
+  description: The new interval in which to run the monitor check.
+  returned: changed
+  type: int
+  sample: 2
+timeout:
+  description: The new timeout in which the remote system must respond to the monitor.
+  returned: changed
+  type: int
+  sample: 10
+

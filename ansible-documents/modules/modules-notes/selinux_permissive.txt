@@ -1,0 +1,51 @@
+> SELINUX_PERMISSIVE    (/usr/lib/python2.7/dist-packages/ansible/modules/system/selinux_permissive.py)
+
+        Add and remove a domain from the list of permissive domains.
+
+  * This module is maintained by The Ansible Community
+OPTIONS (= is mandatory):
+
+= domain
+        The domain that will be added or removed from the list of permissive domains.
+        (Aliases: name)[Default: ]
+        type: str
+
+- no_reload
+        Disable reloading of the SELinux policy after making change to a domain's permissive setting.
+        The default is `no', which causes policy to be reloaded when a domain changes state.
+        Reloading the policy does not work on older versions of the `policycoreutils-python' library, for example in EL 6."
+        [Default: False]
+        type: bool
+
+= permissive
+        Indicate if the domain should or should not be set as permissive.
+
+        type: bool
+
+- store
+        Name of the SELinux policy store to use.
+        [Default: (null)]
+        type: str
+
+
+NOTES:
+      * Requires a recent version of SELinux and `policycoreutils-python' (EL 6 or newer).
+
+
+REQUIREMENTS:  policycoreutils-python
+
+AUTHOR: Michael Scherer (@mscherer) <misc@zarb.org>
+        METADATA:
+          status:
+          - preview
+          supported_by: community
+        
+
+EXAMPLES:
+
+- name: Change the httpd_t domain to permissive
+  selinux_permissive:
+    name: httpd_t
+    permissive: true
+
+

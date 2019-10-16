@@ -1,0 +1,65 @@
+EXAMPLES:
+
+- name: Define or update an existing host named 'Host1'
+      netapp_e_host:
+        ssid: "1"
+        api_url: "10.113.1.101:8443"
+        api_username: "admin"
+        api_password: "myPassword"
+        name: "Host1"
+        state: present
+        host_type_index: 28
+        ports:
+          - type: 'iscsi'
+            label: 'PORT_1'
+            port: 'iqn.1996-04.de.suse:01:56f86f9bd1fe'
+          - type: 'fc'
+            label: 'FC_1'
+            port: '10:00:FF:7C:FF:FF:FF:01'
+          - type: 'fc'
+            label: 'FC_2'
+            port: '10:00:FF:7C:FF:FF:FF:00'
+
+    - name: Ensure a host named 'Host2' doesn't exist
+      netapp_e_host:
+        ssid: "1"
+        api_url: "10.113.1.101:8443"
+        api_username: "admin"
+        api_password: "myPassword"
+        name: "Host2"
+        state: absent
+
+
+RETURN VALUES:
+
+msg:
+    description:
+        - A user-readable description of the actions performed.
+    returned: on success
+    type: str
+    sample: The host has been created.
+id:
+    description:
+        - the unique identifier of the host on the E-Series storage-system
+    returned: on success when state=present
+    type: str
+    sample: 00000000600A098000AAC0C3003004700AD86A52
+    version_added: "2.6"
+
+ssid:
+    description:
+        - the unique identifer of the E-Series storage-system with the current api
+    returned: on success
+    type: str
+    sample: 1
+    version_added: "2.6"
+
+api_url:
+    description:
+        - the url of the API that this request was proccessed by
+    returned: on success
+    type: str
+    sample: https://webservices.example.com:8443
+    version_added: "2.6"
+
+

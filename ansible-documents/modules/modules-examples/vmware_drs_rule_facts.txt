@@ -1,0 +1,65 @@
+EXAMPLES:
+
+- name: Gather DRS facts about given Cluster
+  vmware_drs_rule_facts:
+    hostname: '{{ vcenter_hostname }}'
+    username: '{{ vcenter_username }}'
+    password: '{{ vcenter_password }}'
+    cluster_name: '{{ cluster_name }}'
+  delegate_to: localhost
+  register: cluster_drs_facts
+
+- name: Gather DRS facts about all Clusters in given datacenter
+  vmware_drs_rule_facts:
+    hostname: '{{ vcenter_hostname }}'
+    username: '{{ vcenter_username }}'
+    password: '{{ vcenter_password }}'
+    datacenter: '{{ datacenter_name }}'
+  delegate_to: localhost
+  register: datacenter_drs_facts
+
+
+RETURN VALUES:
+
+drs_rule_facts:
+    description: metadata about DRS rule from given cluster / datacenter
+    returned: always
+    type: dict
+    sample: {
+            "DC0_C0": [
+                {
+                    "rule_enabled": true,
+                    "rule_key": 1,
+                    "rule_mandatory": true,
+                    "rule_name": "drs_rule_0001",
+                    "rule_type": "vm_vm_rule",
+                    "rule_uuid": "52be5061-665a-68dc-3d25-85cd2d37e114",
+                    "rule_vms": [
+                        "VM_65",
+                        "VM_146"
+                    ]
+                },
+            ],
+            "DC1_C1": [
+                {
+                    "rule_affine_host_group_name": "host_group_1",
+                    "rule_affine_hosts": [
+                        "10.76.33.204"
+                    ],
+                    "rule_anti_affine_host_group_name": null,
+                    "rule_anti_affine_hosts": [],
+                    "rule_enabled": true,
+                    "rule_key": 1,
+                    "rule_mandatory": false,
+                    "rule_name": "vm_host_rule_0001",
+                    "rule_type": "vm_host_rule",
+                    "rule_uuid": "52687108-4d3a-76f2-d29c-b708c40dbe40",
+                    "rule_vm_group_name": "test_vm_group_1",
+                    "rule_vms": [
+                        "VM_8916",
+                        "VM_4010"
+                    ]
+                }
+            ],
+            }
+

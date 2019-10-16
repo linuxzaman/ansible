@@ -1,0 +1,86 @@
+> XATTR    (/usr/lib/python2.7/dist-packages/ansible/modules/files/xattr.py)
+
+        Manages filesystem user defined extended attributes. Requires that extended attributes are enabled on the target filesystem and
+        that the setfattr/getfattr utilities are present.
+
+  * This module is maintained by The Ansible Community
+OPTIONS (= is mandatory):
+
+- follow
+        If `yes', dereferences symlinks and sets/gets attributes on symlink target, otherwise acts on symlink itself.
+        [Default: True]
+        type: bool
+
+- key
+        The name of a specific Extended attribute key to set/retrieve.
+        [Default: (null)]
+        type: str
+
+- namespace
+        Namespace of the named name/key.
+        [Default: user]
+        type: str
+        version_added: 2.7
+
+= path
+        The full path of the file/object to get the facts of.
+        Before 2.3 this option was only usable as `name'.
+        (Aliases: name)
+        type: path
+
+- state
+        defines which state you want to do. `read' retrieves the current value for a `key' (default) `present' sets `name' to `value',
+        default if value is set `all' dumps all data `keys' retrieves all keys `absent' deletes the key
+        (Choices: absent, all, keys, present, read)[Default: read]
+        type: str
+
+- value
+        The value to set the named name/key to, it automatically sets the `state' to 'set'.
+        [Default: (null)]
+        type: str
+
+
+NOTES:
+      * As of Ansible 2.3, the `name' option has been changed to `path' as default, but `name' still works as well.
+
+
+AUTHOR: Brian Coca (@bcoca)
+        METADATA:
+          status:
+          - stableinterface
+          supported_by: community
+        
+
+EXAMPLES:
+
+- name: Obtain the extended attributes  of /etc/foo.conf
+  xattr:
+    path: /etc/foo.conf
+
+- name: Set the key 'user.foo' to value 'bar'
+  xattr:
+    path: /etc/foo.conf
+    key: foo
+    value: bar
+
+- name: Set the key 'trusted.glusterfs.volume-id' to value '0x817b94343f164f199e5b573b4ea1f914'
+  xattr:
+    path: /mnt/bricks/brick1
+    namespace: trusted
+    key: glusterfs.volume-id
+    value: "0x817b94343f164f199e5b573b4ea1f914"
+
+- name: Remove the key 'user.foo'
+  xattr:
+    path: /etc/foo.conf
+    key: foo
+    state: absent
+
+- name: Remove the key 'trusted.glusterfs.volume-id'
+  xattr:
+    path: /mnt/bricks/brick1
+    namespace: trusted
+    key: glusterfs.volume-id
+    state: absent
+
+

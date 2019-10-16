@@ -1,0 +1,62 @@
+EXAMPLES:
+
+# Provisioning example. Creates three servers and enumerate their names.
+
+- oneandone_server:
+    auth_token: oneandone_private_api_key
+    hostname: node%02d
+    fixed_instance_size: XL
+    datacenter: US
+    appliance: C5A349786169F140BCBC335675014C08
+    auto_increment: true
+    count: 3
+
+# Create three servers, passing in an ssh_key.
+
+- oneandone_server:
+    auth_token: oneandone_private_api_key
+    hostname: node%02d
+    vcore: 2
+    cores_per_processor: 4
+    ram: 8.0
+    hdds:
+      - size: 50
+        is_main: false
+    datacenter: ES
+    appliance: C5A349786169F140BCBC335675014C08
+    count: 3
+    wait: yes
+    wait_timeout: 600
+    wait_interval: 10
+    ssh_key: SSH_PUBLIC_KEY
+
+# Removing server
+
+- oneandone_server:
+    auth_token: oneandone_private_api_key
+    state: absent
+    server: 'node01'
+
+# Starting server.
+
+- oneandone_server:
+    auth_token: oneandone_private_api_key
+    state: running
+    server: 'node01'
+
+# Stopping server
+
+- oneandone_server:
+    auth_token: oneandone_private_api_key
+    state: stopped
+    server: 'node01'
+
+
+RETURN VALUES:
+
+servers:
+    description: Information about each server that was processed
+    type: list
+    sample: '[{"hostname": "my-server", "id": "server-id"}]'
+    returned: always
+

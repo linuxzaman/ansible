@@ -1,0 +1,39 @@
+EXAMPLES:
+
+# Launch a job template
+- name: Launch a job
+  tower_job_launch:
+    job_template: "My Job Template"
+  register: job
+
+- name: Wait for job max 120s
+  tower_job_wait:
+    job_id: "{{ job.id }}"
+    timeout: 120
+
+# Launch job template with inventory and credential for prompt on launch
+- name: Launch a job with inventory and credential
+  tower_job_launch:
+    job_template: "My Job Template"
+    inventory: "My Inventory"
+    credential: "My Credential"
+  register: job
+- name: Wait for job max 120s
+  tower_job_wait:
+    job_id: "{{ job.id }}"
+    timeout: 120
+
+
+RETURN VALUES:
+
+id:
+    description: job id of the newly launched job
+    returned: success
+    type: int
+    sample: 86
+status:
+    description: status of newly launched job
+    returned: success
+    type: str
+    sample: pending
+

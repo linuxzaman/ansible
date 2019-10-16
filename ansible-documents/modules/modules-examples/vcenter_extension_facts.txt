@@ -1,0 +1,40 @@
+EXAMPLES:
+
+- name: Gather facts about vCenter Extensions
+  vcenter_extension_facts:
+    hostname: '{{ vcenter_hostname }}'
+    username: '{{ vcenter_username }}'
+    password: '{{ vcenter_password }}'
+  register: ext_facts
+  delegate_to: localhost
+
+
+RETURN VALUES:
+
+extension_facts:
+    description: List of extensions
+    returned: success
+    type: list
+    sample: [
+        {
+            "extension_company": "VMware, Inc.",
+            "extension_key": "com.vmware.vim.ls",
+            "extension_label": "License Services",
+            "extension_last_heartbeat_time": "2018-09-03T09:36:18.003768+00:00",
+            "extension_subject_name": "",
+            "extension_summary": "Provides various license services",
+            "extension_type": "",
+            "extension_version": "5.0"
+        },
+        {
+            "extension_company": "VMware Inc.",
+            "extension_key": "com.vmware.vim.sms",
+            "extension_label": "VMware vCenter Storage Monitoring Service",
+            "extension_last_heartbeat_time": "2018-09-03T09:36:18.005730+00:00",
+            "extension_subject_name": "",
+            "extension_summary": "Storage Monitoring and Reporting",
+            "extension_type": "",
+            "extension_version": "5.5"
+        }
+    ]
+

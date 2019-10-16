@@ -1,0 +1,209 @@
+> UTM_PROXY_EXCEPTION    (/usr/lib/python2.7/dist-packages/ansible/modules/web_infrastructure/sophos_utm/utm_proxy_exception.py)
+
+        Create, update or destroy a reverse_proxy exception entry in SOPHOS UTM. This module needs to have the REST Ability of the UTM to
+        be activated.
+
+  * This module is maintained by The Ansible Community
+OPTIONS (= is mandatory):
+
+- headers
+        A dictionary of additional headers to be sent to POST and PUT requests.
+        Is needed for some modules
+        [Default: (null)]
+        type: dict
+
+= name
+        The name of the object. Will be used to identify the entry
+
+        type: str
+
+- op
+        The operand to be used with the entries of the path parameter
+        (Choices: AND, OR)[Default: AND]
+        type: str
+
+- path
+        The paths the exception in the reverse proxy is defined for
+        [Default: []]
+        type: list
+
+- skip_custom_threats_filters
+        A list of threats to be skipped
+        [Default: []]
+        type: list
+
+- skip_threats_filter_categories
+        Define which categories of threats are skipped
+        [Default: []]
+        type: list
+
+- skipav
+        Skip the Antivirus Scanning
+        [Default: False]
+        type: bool
+
+- skipbadclients
+        Block clients with bad reputation
+        [Default: False]
+        type: bool
+
+- skipcookie
+        Skip the Cookie Signing check
+        [Default: False]
+        type: bool
+
+- skipform
+        Enable form hardening
+        [Default: False]
+        type: bool
+
+- skipform_missingtoken
+        Enable form hardening with missing tokens
+        [Default: False]
+        type: bool
+
+- skiphtmlrewrite
+        Protection against SQL
+        [Default: False]
+        type: bool
+
+- skiptft
+        Enable true file type control
+        [Default: False]
+        type: bool
+
+- skipurl
+        Enable static URL hardening
+        [Default: False]
+        type: bool
+
+- source
+        Define which categories of threats are skipped
+        [Default: []]
+        type: list
+
+- state
+        The desired state of the object.
+        `present' will create or update an object
+        `absent' will delete an object if it was present
+        (Choices: absent, present)[Default: present]
+        type: str
+
+- status
+        Status of the exception rule set
+        [Default: True]
+        type: bool
+
+= utm_host
+        The REST Endpoint of the Sophos UTM.
+
+        type: str
+
+- utm_port
+        The port of the REST interface.
+        [Default: 4444]
+        type: int
+
+- utm_protocol
+        The protocol of the REST Endpoint.
+        (Choices: http, https)[Default: https]
+        type: str
+
+= utm_token
+        The token used to identify at the REST-API. See https://www.sophos.com/en-us/medialibrary/PDFs/documentation/UTMonAWS/Sophos-UTM-
+        RESTful-API.pdf?la=en, Chapter 2.4.2.
+
+        type: str
+
+- validate_certs
+        Whether the REST interface's ssl certificate should be verified or not.
+        [Default: True]
+        type: bool
+
+
+AUTHOR: Sebastian Schenzel (@RickS-C137)
+        METADATA:
+          status:
+          - preview
+          supported_by: community
+        
+
+EXAMPLES:
+
+- name: Create UTM proxy_exception
+  utm_proxy_exception:
+    utm_host: sophos.host.name
+    utm_token: abcdefghijklmno1234
+    name: TestExceptionEntry
+    backend: REF_OBJECT_STRING
+    state: present
+
+- name: Remove UTM proxy_exception
+  utm_proxy_exception:
+    utm_host: sophos.host.name
+    utm_token: abcdefghijklmno1234
+    name: TestExceptionEntry
+    state: absent
+
+
+RETURN VALUES:
+
+result:
+    description: The utm object that was created
+    returned: success
+    type: complex
+    contains:
+        _ref:
+            description: The reference name of the object
+            type: string
+        _locked:
+            description: Whether or not the object is currently locked
+            type: boolean
+        _type:
+            description: The type of the object
+            type: string
+        name:
+            description: The name of the object
+            type: string
+        comment:
+            description: The optional comment string
+        op:
+            description: The operand to be used with the entries of the path parameter
+            type: string
+        path:
+            description: The paths the exception in the reverse proxy is defined for
+            type: array
+        skip_custom_threats_filters:
+            description: A list of threats to be skipped
+            type: array
+        skip_threats_filter_categories:
+            description: Define which categories of threats are skipped
+            type: array
+        skipav:
+            description: Skip the Antivirus Scanning
+            type: bool
+        skipbadclients:
+            description: Block clients with bad reputation
+            type: bool
+        skipcookie:
+            description: Skip the Cookie Signing check
+            type: bool
+        skipform:
+            description: Enable form hardening
+            type: bool
+        skipform_missingtoken:
+            description: Enable form hardening with missing tokens
+            type: bool
+        skiphtmlrewrite:
+            description: Protection against SQL
+            type: bool
+        skiptft:
+            description: Enable true file type control
+            type: bool
+        skipurl:
+            description: Enable static URL hardening
+            type: bool
+        source:
+            description: Define which categories of threats are skipped
+            type: array
+

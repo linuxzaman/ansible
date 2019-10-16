@@ -1,0 +1,46 @@
+EXAMPLES:
+
+- name: Create distributed mirroring session.
+  vmware_vspan_session:
+    hostname: '{{ vcenter_hostname }}'
+    username: '{{ vcenter_username }}'
+    password: '{{ vcenter_password }}'
+    switch_name: dvSwitch
+    state: present
+    name: Basic Session
+    enabled: True
+    description: "Example description"
+    source_port_transmitted: 817
+    source_port_received: 817
+    destination_port: 815
+  delegate_to: localhost
+
+- name: Create remote destination mirroring session.
+  vmware_vspan_session:
+    hostname: '{{ vcenter_hostname }}'
+    username: '{{ vcenter_username }}'
+    password: '{{ vcenter_password }}'
+    switch_name: dvSwitch
+    state: present
+    name: Remote Session
+    enabled: True
+    description: "Example description"
+    source_port_received: 105
+    destination_port: 815
+    session_type: "remoteMirrorDest"
+  delegate_to: localhost
+
+- name: Create remote destination mirroring session.
+  vmware_vspan_session:
+    hostname: '{{ vcenter_hostname }}'
+    username: '{{ vcenter_username }}'
+    password: '{{ vcenter_password }}'
+    switch_name: dvSwitch
+    state: absent
+    name: Remote Session
+  delegate_to: localhost
+
+
+RETURN VALUES:
+#
+

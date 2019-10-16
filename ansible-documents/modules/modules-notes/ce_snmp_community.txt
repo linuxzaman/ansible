@@ -1,0 +1,131 @@
+> CE_SNMP_COMMUNITY    (/usr/lib/python2.7/dist-packages/ansible/modules/network/cloudengine/ce_snmp_community.py)
+
+        Manages SNMP community configuration on HUAWEI CloudEngine switches.
+
+  * This module is maintained by The Ansible Community
+OPTIONS (= is mandatory):
+
+- access_right
+        Access right read or write.
+        (Choices: read, write)[Default: (null)]
+
+- acl_number
+        Access control list number.
+        [Default: (null)]
+
+- community_mib_view
+        Mib view name.
+        [Default: (null)]
+
+- community_name
+        Unique name to identify the community.
+        [Default: (null)]
+
+- group_name
+        Unique name to identify the SNMPv3 group.
+        [Default: (null)]
+
+- notify_view
+        Mib view name for notification.
+        [Default: (null)]
+
+- read_view
+        Mib view name for read.
+        [Default: (null)]
+
+- security_level
+        Security level indicating whether to use authentication and encryption.
+        (Choices: noAuthNoPriv, authentication, privacy)[Default: (null)]
+
+- state
+        Manage the state of the resource.
+        (Choices: present, absent)[Default: present]
+
+- write_view
+        Mib view name for write.
+        [Default: (null)]
+
+
+AUTHOR: wangdezhuang (@QijunPan)
+        METADATA:
+          status:
+          - preview
+          supported_by: community
+        
+
+EXAMPLES:
+
+- name: CloudEngine snmp community test
+  hosts: cloudengine
+  connection: local
+  gather_facts: no
+  vars:
+    cli:
+      host: "{{ inventory_hostname }}"
+      port: "{{ ansible_ssh_port }}"
+      username: "{{ username }}"
+      password: "{{ password }}"
+      transport: cli
+
+  tasks:
+
+  - name: "Config SNMP community"
+    ce_snmp_community:
+      state: present
+      community_name: Wdz123456789
+      access_right: write
+      provider: "{{ cli }}"
+
+  - name: "Undo SNMP community"
+    ce_snmp_community:
+      state: absent
+      community_name: Wdz123456789
+      access_right: write
+      provider: "{{ cli }}"
+
+  - name: "Config SNMP group"
+    ce_snmp_community:
+      state: present
+      group_name: wdz_group
+      security_level: noAuthNoPriv
+      acl_number: 2000
+      provider: "{{ cli }}"
+
+  - name: "Undo SNMP group"
+    ce_snmp_community:
+      state: absent
+      group_name: wdz_group
+      security_level: noAuthNoPriv
+      acl_number: 2000
+      provider: "{{ cli }}"
+
+
+RETURN VALUES:
+
+changed:
+    description: check to see if a change was made on the device
+    returned: always
+    type: bool
+    sample: true
+proposed:
+    description: k/v pairs of parameters passed into module
+    returned: always
+    type: dict
+    sample: {"acl_number": "2000", "group_name": "wdz_group",
+             "security_level": "noAuthNoPriv", "state": "present"}
+existing:
+    description: k/v pairs of existing aaa server
+    returned: always
+    type: dict
+    sample: {}
+end_state:
+    description: k/v pairs of aaa params after module execution
+    returned: always
+    type: dict
+    sample: {"snmp v3 group": {"snmp_group": ["wdz_group", "noAuthNoPriv", "2000"]}}
+updates:
+    description: command sent to the device
+    returned: always
+    type: list
+    sample: ["snmp-agent group v3 wdz_group noauthentication acl 2000"]
+

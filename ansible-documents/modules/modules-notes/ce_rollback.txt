@@ -1,0 +1,98 @@
+> CE_ROLLBACK    (/usr/lib/python2.7/dist-packages/ansible/modules/network/cloudengine/ce_rollback.py)
+
+        This module offers the ability to set a configuration checkpoint file or rollback to a configuration checkpoint file on HUAWEI
+        CloudEngine switches.
+
+  * This module is maintained by The Ansible Community
+OPTIONS (= is mandatory):
+
+= action
+        The operation of configuration rollback.
+        (Choices: rollback, clear, set, display, commit)
+
+- commit_id
+        Specifies the label of the configuration rollback point to which system configurations are expected to roll back. The value is an
+        integer that the system generates automatically.
+        [Default: (null)]
+
+- filename
+        Specifies a configuration file for configuration rollback. The value is a string of 5 to 64 case-sensitive characters in the
+        format of *.zip, *.cfg, or *.dat, spaces not supported.
+        [Default: (null)]
+
+- label
+        Specifies a user label for a configuration rollback point. The value is a string of 1 to 256 case-sensitive ASCII characters,
+        spaces not supported. The value must start with a letter and cannot be presented in a single hyphen (-).
+        [Default: (null)]
+
+- last
+        Specifies the number of configuration rollback points. The value is an integer that ranges from 1 to 80.
+        [Default: (null)]
+
+- oldest
+        Specifies the number of configuration rollback points. The value is an integer that ranges from 1 to 80.
+        [Default: (null)]
+
+
+AUTHOR: Li Yanfeng (@QijunPan)
+        METADATA:
+          status:
+          - preview
+          supported_by: community
+        
+
+EXAMPLES:
+
+- name: rollback module test
+  hosts: cloudengine
+  connection: local
+  gather_facts: no
+  vars:
+    cli:
+      host: "{{ inventory_hostname }}"
+      port: "{{ ansible_ssh_port }}"
+      username: "{{ username }}"
+      password: "{{ password }}"
+      transport: cli
+
+  tasks:
+
+- name: Ensure commit_id is exist, and specifies the label of the configuration rollback point to
+        which system configurations are expected to roll back.
+  ce_rollback:
+    commit_id: 1000000748
+    action: rollback
+    provider: "{{ cli }}"
+
+
+RETURN VALUES:
+
+proposed:
+    description: k/v pairs of parameters passed into module
+    returned: sometimes
+    type: dict
+    sample: {"commit_id": "1000000748", "action": "rollback"}
+existing:
+    description: k/v pairs of existing rollback
+    returned: sometimes
+    type: dict
+    sample: {"commitId": "1000000748", "userLabel": "abc"}
+updates:
+    description: command sent to the device
+    returned: always
+    type: list
+    sample: ["rollback configuration to file a.cfg",
+             "set configuration commit 1000000783 label ddd",
+             "clear configuration commit 1000000783 label",
+             "display configuration commit list"]
+changed:
+    description: check to see if a change was made on the device
+    returned: always
+    type: bool
+    sample: true
+end_state:
+    description: k/v pairs of configuration after module execution
+    returned: always
+    type: dict
+    sample: {"commitId": "1000000748", "userLabel": "abc"}
+

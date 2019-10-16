@@ -1,0 +1,269 @@
+> AWS_BATCH_JOB_DEFINITION    (/usr/lib/python2.7/dist-packages/ansible/modules/cloud/amazon/aws_batch_job_definition.py)
+
+        This module allows the management of AWS Batch Job Definitions. It is idempotent and supports "Check" mode.  Use module
+        [aws_batch_compute_environment] to manage the compute environment, [aws_batch_job_queue] to manage job queues,
+        [aws_batch_job_definition] to manage job definitions.
+
+  * This module is maintained by The Ansible Community
+OPTIONS (= is mandatory):
+
+- attempts
+        Retry strategy - The number of times to move a job to the RUNNABLE status. You may specify between 1 and 10 attempts. If attempts
+        is greater than one, the job is retried if it fails until it has moved to RUNNABLE that many times.
+        [Default: (null)]
+
+- aws_access_key
+        AWS access key. If not set then the value of the AWS_ACCESS_KEY_ID, AWS_ACCESS_KEY or EC2_ACCESS_KEY environment variable is
+        used.
+        (Aliases: ec2_access_key, access_key)[Default: (null)]
+        type: str
+
+- aws_secret_key
+        AWS secret key. If not set then the value of the AWS_SECRET_ACCESS_KEY, AWS_SECRET_KEY, or EC2_SECRET_KEY environment variable is
+        used.
+        (Aliases: ec2_secret_key, secret_key)[Default: (null)]
+        type: str
+
+- command
+        The command that is passed to the container. This parameter maps to Cmd in the Create a container section of the Docker Remote
+        API and the COMMAND parameter to docker run. For more information, see https://docs.docker.com/engine/reference/builder/#cmd.
+        [Default: (null)]
+
+- debug_botocore_endpoint_logs
+        Use a botocore.endpoint logger to parse the unique (rather than total) "resource:action" API calls made during a task, outputing
+        the set to the resource_actions key in the task results. Use the aws_resource_action callback to output to total list made during
+        a playbook. The ANSIBLE_DEBUG_BOTOCORE_LOGS environment variable may also be used.
+        [Default: no]
+        type: bool
+        version_added: 2.8
+
+- ec2_url
+        Url to use to connect to EC2 or your Eucalyptus cloud (by default the module will use EC2 endpoints). Ignored for modules where
+        region is required. Must be specified for all other modules if region is not used. If not set then the value of the EC2_URL
+        environment variable, if any, is used.
+        [Default: (null)]
+        type: str
+
+- environment
+        The environment variables to pass to a container. This parameter maps to Env in the Create a container section of the Docker
+        Remote API and the --env option to docker run. List of dictionaries.
+        [Default: (null)]
+        suboptions:
+          name:
+            description:
+            - The name of the key value pair. For environment variables, this is the name
+              of the environment variable.
+          value:
+            description:
+            - The value of the key value pair. For environment variables, this is the value
+              of the environment variable.
+        
+
+- image
+        The image used to start a container. This string is passed directly to the Docker daemon. Images in the Docker Hub registry are
+        available by default. Other repositories are specified with `` repository-url /image <colon>tag ``. Up to 255 letters (uppercase
+        and lowercase), numbers, hyphens, underscores, colons, periods, forward slashes, and number signs are allowed. This parameter
+        maps to Image in the Create a container section of the Docker Remote API and the IMAGE parameter of docker run.
+        [Default: (null)]
+
+- job_definition_arn
+        The arn for the job definition
+        [Default: (null)]
+
+= job_definition_name
+        The name for the job definition
+
+
+- job_role_arn
+        The Amazon Resource Name (ARN) of the IAM role that the container can assume for AWS permissions.
+        [Default: (null)]
+
+- memory
+        The hard limit (in MiB) of memory to present to the container. If your container attempts to exceed the memory specified here,
+        the container is killed. This parameter maps to Memory in the Create a container section of the Docker Remote API and the
+        --memory option to docker run.
+        [Default: (null)]
+
+- mount_points
+        The mount points for data volumes in your container. This parameter maps to Volumes in the Create a container section of the
+        Docker Remote API and the --volume option to docker run. List of dictionaries.
+        [Default: (null)]
+        suboptions:
+          containerPath:
+            description:
+            - The path on the container at which to mount the host volume.
+          readOnly:
+            description:
+            - If this value is true , the container has read-only access to the volume; otherwise,
+              the container can write to the volume. The default value is false.
+          sourceVolume:
+            description:
+            - The name of the volume to mount.
+        
+
+- parameters
+        Default parameter substitution placeholders to set in the job definition. Parameters are specified as a key-value pair mapping.
+        Parameters in a SubmitJob request override any corresponding parameter defaults from the job definition.
+        [Default: (null)]
+
+- privileged
+        When this parameter is true, the container is given elevated privileges on the host container instance (similar to the root
+        user). This parameter maps to Privileged in the Create a container section of the Docker Remote API and the --privileged option
+        to docker run.
+        [Default: (null)]
+
+- profile
+        Uses a boto profile. Only works with boto >= 2.24.0.
+        [Default: (null)]
+        type: str
+        version_added: 1.6
+
+- readonly_root_filesystem
+        When this parameter is true, the container is given read-only access to its root file system. This parameter maps to
+        ReadonlyRootfs in the Create a container section of the Docker Remote API and the --read-only option to docker run.
+        [Default: (null)]
+
+- region
+        The AWS region to use. If not specified then the value of the AWS_REGION or EC2_REGION environment variable, if any, is used. See
+        http://docs.aws.amazon.com/general/latest/gr/rande.html#ec2_region
+        (Aliases: aws_region, ec2_region)[Default: (null)]
+        type: str
+
+- security_token
+        AWS STS security token. If not set then the value of the AWS_SECURITY_TOKEN or EC2_SECURITY_TOKEN environment variable is used.
+        (Aliases: access_token)[Default: (null)]
+        type: str
+        version_added: 1.6
+
+= state
+        Describes the desired state.
+        (Choices: present, absent)[Default: present]
+
+= type
+        The type of job definition
+
+
+- ulimits
+        A list of ulimits to set in the container. This parameter maps to Ulimits in the Create a container section of the Docker Remote
+        API and the --ulimit option to docker run. List of dictionaries.
+        [Default: (null)]
+        suboptions:
+          hardLimit:
+            description:
+            - The hard limit for the ulimit type.
+          name:
+            description:
+            - The type of the ulimit.
+          softLimit:
+            description:
+            - The soft limit for the ulimit type.
+        
+
+- user
+        The user name to use inside the container. This parameter maps to User in the Create a container section of the Docker Remote API
+        and the --user option to docker run.
+        [Default: (null)]
+
+- validate_certs
+        When set to "no", SSL certificates will not be validated for boto versions >= 2.6.0.
+        [Default: True]
+        type: bool
+        version_added: 1.5
+
+- vcpus
+        The number of vCPUs reserved for the container. This parameter maps to CpuShares in the Create a container section of the Docker
+        Remote API and the --cpu-shares option to docker run. Each vCPU is equivalent to 1,024 CPU shares.
+        [Default: (null)]
+
+- volumes
+        A list of data volumes used in a job. List of dictionaries.
+        [Default: (null)]
+        suboptions:
+          host:
+            description:
+            - The contents of the host parameter determine whether your data volume persists
+              on the host container instance and where it is stored. If the host parameter
+              is empty, then the Docker daemon assigns a host path for your data volume, but
+              the data is not guaranteed to persist after the containers associated with it
+              stop running. This is a dictionary with one property, sourcePath - The path
+              on the host container instance that is presented to the container. If this parameter
+              is empty,then the Docker daemon has assigned a host path for you. If the host
+              parameter contains a sourcePath file location, then the data volume persists
+              at the specified location on the host container instance until you delete it
+              manually. If the sourcePath value does not exist on the host container instance,
+              the Docker daemon creates it. If the location does exist, the contents of the
+              source path folder are exported.
+          name:
+            description:
+            - The name of the volume. Up to 255 letters (uppercase and lowercase), numbers,
+              hyphens, and underscores are allowed. This name is referenced in the sourceVolume
+              parameter of container definition mountPoints.
+        
+
+
+NOTES:
+      * If parameters are not set within the module, the following environment variables can be used in decreasing order of
+        precedence `AWS_URL' or `EC2_URL', `AWS_ACCESS_KEY_ID' or `AWS_ACCESS_KEY' or `EC2_ACCESS_KEY', `AWS_SECRET_ACCESS_KEY' or
+        `AWS_SECRET_KEY' or `EC2_SECRET_KEY', `AWS_SECURITY_TOKEN' or `EC2_SECURITY_TOKEN', `AWS_REGION' or `EC2_REGION'
+      * Ansible uses the boto configuration file (typically ~/.boto) if no credentials are provided. See
+        https://boto.readthedocs.io/en/latest/boto_config_tut.html
+      * `AWS_REGION' or `EC2_REGION' can be typically be used to specify the AWS region, when required, but this can also be
+        configured in the boto config file
+
+
+REQUIREMENTS:  boto, boto3, python >= 2.6
+
+AUTHOR: Jon Meran (@jonmer85)
+        METADATA:
+          status:
+          - preview
+          supported_by: community
+        
+
+EXAMPLES:
+
+---
+- hosts: localhost
+  gather_facts: no
+  vars:
+    state: present
+  tasks:
+- name: My Batch Job Definition
+  batch_job_definition:
+    job_definition_name: My Batch Job Definition
+    state: present
+    type: container
+    parameters:
+      Param1: Val1
+      Param2: Val2
+    image: <Docker Image URL>
+    vcpus: 1
+    memory: 512
+    command:
+      - python
+      - run_my_script.py
+      - arg1
+    job_role_arn: <Job Role ARN>
+    attempts: 3
+  register: job_definition_create_result
+
+- name: show results
+  debug: var=job_definition_create_result
+
+
+RETURN VALUES:
+
+---
+output:
+  description: "returns what action was taken, whether something was changed, invocation and response"
+  returned: always
+  sample:
+    batch_job_definition_action: none
+    changed: false
+    response:
+      job_definition_arn: "arn:aws:batch:...."
+      job_definition_name: <name>
+      status: INACTIVE
+      type: container
+  type: dict
+

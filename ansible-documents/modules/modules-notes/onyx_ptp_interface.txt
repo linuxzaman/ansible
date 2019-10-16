@@ -1,0 +1,67 @@
+> ONYX_PTP_INTERFACE    (/usr/lib/python2.7/dist-packages/ansible/modules/network/onyx/onyx_ptp_interface.py)
+
+        This module provides declarative management of PTP interfaces configuration on Mellanox ONYX network devices.
+
+  * This module is maintained by The Ansible Community
+OPTIONS (= is mandatory):
+
+- announce_interval
+        configure PTP announce setting for interval, Range -3-1
+        [Default: (null)]
+
+- announce_timeout
+        configure PTP announce setting for timeout, Range 2-10
+        [Default: (null)]
+
+- delay_request
+        configure PTP delay request interval, Range 0-5
+        [Default: (null)]
+
+= name
+        ethernet or vlan interface name that we want to configure PTP on it
+
+
+- state
+        Enable/Disable PTP on Interface
+        (Choices: enabled, disabled)[Default: enabled]
+
+- sync_interval
+        configure PTP sync interval, Range -7--1
+        [Default: (null)]
+
+
+NOTES:
+      * Tested on ONYX 3.6.8130
+      * PTP Protocol must be enabled on switch.
+      * Interface must not be a switch port interface.
+
+
+AUTHOR: Anas Badaha (@anasb)
+        METADATA:
+          status:
+          - preview
+          supported_by: community
+        
+
+EXAMPLES:
+
+- name: configure PTP interface
+  onyx_ptp_interface:
+    state: enabled
+    name: Eth1/1
+    delay_request: 0
+    announce_interval: -2
+    announce_timeout: 3
+
+
+RETURN VALUES:
+
+commands:
+  description: The list of configuration mode commands to send to the device.
+  returned: always
+  type: list
+  sample:
+    - interface ethernet 1/16 ptp enable
+    - interface ethernet 1/16 ptp delay-req interval 0
+    - interface ethernet 1/16 ptp announce interval -1
+

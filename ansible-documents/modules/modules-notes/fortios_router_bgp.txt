@@ -1,0 +1,1507 @@
+> FORTIOS_ROUTER_BGP    (/usr/lib/python2.7/dist-packages/ansible/modules/network/fortios/fortios_router_bgp.py)
+
+        This module is able to configure a FortiGate or FortiOS by allowing the user to set and modify router feature and bgp category.
+        Examples include all parameters and values need to be adjusted to datasources before usage. Tested with FOS v6.0.2
+
+  * This module is maintained by The Ansible Community
+OPTIONS (= is mandatory):
+
+= host
+        FortiOS or FortiGate ip address.
+
+
+- https
+        Indicates if the requests towards FortiGate must use HTTPS protocol
+        [Default: True]
+        type: bool
+
+- password
+        FortiOS or FortiGate password.
+        [Default: ]
+
+- router_bgp
+        Configure BGP.
+        [Default: None]
+        suboptions:
+          admin-distance:
+            description:
+            - Administrative distance modifications.
+            suboptions:
+              distance:
+                description:
+                - Administrative distance to apply (1 - 255).
+              id:
+                description:
+                - ID.
+                required: true
+              neighbour-prefix:
+                description:
+                - Neighbor address prefix.
+              route-list:
+                description:
+                - Access list of routes to apply new distance to. Source router.access-list.name.
+          aggregate-address:
+            description:
+            - BGP aggregate address table.
+            suboptions:
+              as-set:
+                choices:
+                - enable
+                - disable
+                description:
+                - Enable/disable generate AS set path information.
+              id:
+                description:
+                - ID.
+                required: true
+              prefix:
+                description:
+                - Aggregate prefix.
+              summary-only:
+                choices:
+                - enable
+                - disable
+                description:
+                - Enable/disable filter more specific routes from updates.
+          aggregate-address6:
+            description:
+            - BGP IPv6 aggregate address table.
+            suboptions:
+              as-set:
+                choices:
+                - enable
+                - disable
+                description:
+                - Enable/disable generate AS set path information.
+              id:
+                description:
+                - ID.
+                required: true
+              prefix6:
+                description:
+                - Aggregate IPv6 prefix.
+              summary-only:
+                choices:
+                - enable
+                - disable
+                description:
+                - Enable/disable filter more specific routes from updates.
+          always-compare-med:
+            choices:
+            - enable
+            - disable
+            description:
+            - Enable/disable always compare MED.
+          as:
+            description:
+            - Router AS number, valid from 1 to 4294967295, 0 to disable BGP.
+          bestpath-as-path-ignore:
+            choices:
+            - enable
+            - disable
+            description:
+            - Enable/disable ignore AS path.
+          bestpath-cmp-confed-aspath:
+            choices:
+            - enable
+            - disable
+            description:
+            - Enable/disable compare federation AS path length.
+          bestpath-cmp-routerid:
+            choices:
+            - enable
+            - disable
+            description:
+            - Enable/disable compare router ID for identical EBGP paths.
+          bestpath-med-confed:
+            choices:
+            - enable
+            - disable
+            description:
+            - Enable/disable compare MED among confederation paths.
+          bestpath-med-missing-as-worst:
+            choices:
+            - enable
+            - disable
+            description:
+            - Enable/disable treat missing MED as least preferred.
+          client-to-client-reflection:
+            choices:
+            - enable
+            - disable
+            description:
+            - Enable/disable client-to-client route reflection.
+          cluster-id:
+            description:
+            - Route reflector cluster ID.
+          confederation-identifier:
+            description:
+            - Confederation identifier.
+          confederation-peers:
+            description:
+            - Confederation peers.
+            suboptions:
+              peer:
+                description:
+                - Peer ID.
+                required: true
+          dampening:
+            choices:
+            - enable
+            - disable
+            description:
+            - Enable/disable route-flap dampening.
+          dampening-max-suppress-time:
+            description:
+            - Maximum minutes a route can be suppressed.
+          dampening-reachability-half-life:
+            description:
+            - Reachability half-life time for penalty (min).
+          dampening-reuse:
+            description:
+            - Threshold to reuse routes.
+          dampening-route-map:
+            description:
+            - Criteria for dampening. Source router.route-map.name.
+          dampening-suppress:
+            description:
+            - Threshold to suppress routes.
+          dampening-unreachability-half-life:
+            description:
+            - Unreachability half-life time for penalty (min).
+          default-local-preference:
+            description:
+            - Default local preference.
+          deterministic-med:
+            choices:
+            - enable
+            - disable
+            description:
+            - Enable/disable enforce deterministic comparison of MED.
+          distance-external:
+            description:
+            - Distance for routes external to the AS.
+          distance-internal:
+            description:
+            - Distance for routes internal to the AS.
+          distance-local:
+            description:
+            - Distance for routes local to the AS.
+          ebgp-multipath:
+            choices:
+            - enable
+            - disable
+            description:
+            - Enable/disable EBGP multi-path.
+          enforce-first-as:
+            choices:
+            - enable
+            - disable
+            description:
+            - Enable/disable enforce first AS for EBGP routes.
+          fast-external-failover:
+            choices:
+            - enable
+            - disable
+            description:
+            - Enable/disable reset peer BGP session if link goes down.
+          graceful-end-on-timer:
+            choices:
+            - enable
+            - disable
+            description:
+            - Enable/disable to exit graceful restart on timer only.
+          graceful-restart:
+            choices:
+            - enable
+            - disable
+            description:
+            - Enable/disable BGP graceful restart capabilities.
+          graceful-restart-time:
+            description:
+            - Time needed for neighbors to restart (sec).
+          graceful-stalepath-time:
+            description:
+            - Time to hold stale paths of restarting neighbor (sec).
+          graceful-update-delay:
+            description:
+            - Route advertisement/selection delay after restart (sec).
+          holdtime-timer:
+            description:
+            - Number of seconds to mark peer as dead.
+          ibgp-multipath:
+            choices:
+            - enable
+            - disable
+            description:
+            - Enable/disable IBGP multi-path.
+          ignore-optional-capability:
+            choices:
+            - enable
+            - disable
+            description:
+            - Don't send unknown optional capability notification message
+          keepalive-timer:
+            description:
+            - Frequency to send keep alive requests.
+          log-neighbour-changes:
+            choices:
+            - enable
+            - disable
+            description:
+            - Enable logging of BGP neighbour's changes
+          neighbor:
+            description:
+            - BGP neighbor table.
+            suboptions:
+              activate:
+                choices:
+                - enable
+                - disable
+                description:
+                - Enable/disable address family IPv4 for this neighbor.
+              activate6:
+                choices:
+                - enable
+                - disable
+                description:
+                - Enable/disable address family IPv6 for this neighbor.
+              advertisement-interval:
+                description:
+                - Minimum interval (sec) between sending updates.
+              allowas-in:
+                description:
+                - IPv4 The maximum number of occurrence of my AS number allowed.
+              allowas-in-enable:
+                choices:
+                - enable
+                - disable
+                description:
+                - Enable/disable IPv4 Enable to allow my AS in AS path.
+              allowas-in-enable6:
+                choices:
+                - enable
+                - disable
+                description:
+                - Enable/disable IPv6 Enable to allow my AS in AS path.
+              allowas-in6:
+                description:
+                - IPv6 The maximum number of occurrence of my AS number allowed.
+              as-override:
+                choices:
+                - enable
+                - disable
+                description:
+                - Enable/disable replace peer AS with own AS for IPv4.
+              as-override6:
+                choices:
+                - enable
+                - disable
+                description:
+                - Enable/disable replace peer AS with own AS for IPv6.
+              attribute-unchanged:
+                choices:
+                - as-path
+                - med
+                - next-hop
+                description:
+                - IPv4 List of attributes that should be unchanged.
+              attribute-unchanged6:
+                choices:
+                - as-path
+                - med
+                - next-hop
+                description:
+                - IPv6 List of attributes that should be unchanged.
+              bfd:
+                choices:
+                - enable
+                - disable
+                description:
+                - Enable/disable BFD for this neighbor.
+              capability-default-originate:
+                choices:
+                - enable
+                - disable
+                description:
+                - Enable/disable advertise default IPv4 route to this neighbor.
+              capability-default-originate6:
+                choices:
+                - enable
+                - disable
+                description:
+                - Enable/disable advertise default IPv6 route to this neighbor.
+              capability-dynamic:
+                choices:
+                - enable
+                - disable
+                description:
+                - Enable/disable advertise dynamic capability to this neighbor.
+              capability-graceful-restart:
+                choices:
+                - enable
+                - disable
+                description:
+                - Enable/disable advertise IPv4 graceful restart capability to this neighbor.
+              capability-graceful-restart6:
+                choices:
+                - enable
+                - disable
+                description:
+                - Enable/disable advertise IPv6 graceful restart capability to this neighbor.
+              capability-orf:
+                choices:
+                - none
+                - receive
+                - send
+                - both
+                description:
+                - Accept/Send IPv4 ORF lists to/from this neighbor.
+              capability-orf6:
+                choices:
+                - none
+                - receive
+                - send
+                - both
+                description:
+                - Accept/Send IPv6 ORF lists to/from this neighbor.
+              capability-route-refresh:
+                choices:
+                - enable
+                - disable
+                description:
+                - Enable/disable advertise route refresh capability to this neighbor.
+              conditional-advertise:
+                description:
+                - Conditional advertisement.
+                suboptions:
+                  advertise-routemap:
+                    description:
+                    - Name of advertising route map. Source router.route-map.name.
+                    required: true
+                  condition-routemap:
+                    description:
+                    - Name of condition route map. Source router.route-map.name.
+                  condition-type:
+                    choices:
+                    - exist
+                    - non-exist
+                    description:
+                    - Type of condition.
+              connect-timer:
+                description:
+                - Interval (sec) for connect timer.
+              default-originate-routemap:
+                description:
+                - Route map to specify criteria to originate IPv4 default. Source router.route-map.name.
+              default-originate-routemap6:
+                description:
+                - Route map to specify criteria to originate IPv6 default. Source router.route-map.name.
+              description:
+                description:
+                - Description.
+              distribute-list-in:
+                description:
+                - Filter for IPv4 updates from this neighbor. Source router.access-list.name.
+              distribute-list-in6:
+                description:
+                - Filter for IPv6 updates from this neighbor. Source router.access-list6.name.
+              distribute-list-out:
+                description:
+                - Filter for IPv4 updates to this neighbor. Source router.access-list.name.
+              distribute-list-out6:
+                description:
+                - Filter for IPv6 updates to this neighbor. Source router.access-list6.name.
+              dont-capability-negotiate:
+                choices:
+                - enable
+                - disable
+                description:
+                - Don't negotiate capabilities with this neighbor
+              ebgp-enforce-multihop:
+                choices:
+                - enable
+                - disable
+                description:
+                - Enable/disable allow multi-hop EBGP neighbors.
+              ebgp-multihop-ttl:
+                description:
+                - EBGP multihop TTL for this peer.
+              filter-list-in:
+                description:
+                - BGP filter for IPv4 inbound routes. Source router.aspath-list.name.
+              filter-list-in6:
+                description:
+                - BGP filter for IPv6 inbound routes. Source router.aspath-list.name.
+              filter-list-out:
+                description:
+                - BGP filter for IPv4 outbound routes. Source router.aspath-list.name.
+              filter-list-out6:
+                description:
+                - BGP filter for IPv6 outbound routes. Source router.aspath-list.name.
+              holdtime-timer:
+                description:
+                - Interval (sec) before peer considered dead.
+              interface:
+                description:
+                - Interface Source system.interface.name.
+              ip:
+                description:
+                - IP/IPv6 address of neighbor.
+                required: true
+              keep-alive-timer:
+                description:
+                - Keep alive timer interval (sec).
+              link-down-failover:
+                choices:
+                - enable
+                - disable
+                description:
+                - Enable/disable failover upon link down.
+              local-as:
+                description:
+                - Local AS number of neighbor.
+              local-as-no-prepend:
+                choices:
+                - enable
+                - disable
+                description:
+                - Do not prepend local-as to incoming updates.
+              local-as-replace-as:
+                choices:
+                - enable
+                - disable
+                description:
+                - Replace real AS with local-as in outgoing updates.
+              maximum-prefix:
+                description:
+                - Maximum number of IPv4 prefixes to accept from this peer.
+              maximum-prefix-threshold:
+                description:
+                - Maximum IPv4 prefix threshold value (1 - 100 percent).
+              maximum-prefix-threshold6:
+                description:
+                - Maximum IPv6 prefix threshold value (1 - 100 percent).
+              maximum-prefix-warning-only:
+                choices:
+                - enable
+                - disable
+                description:
+                - Enable/disable IPv4 Only give warning message when limit is exceeded.
+              maximum-prefix-warning-only6:
+                choices:
+                - enable
+                - disable
+                description:
+                - Enable/disable IPv6 Only give warning message when limit is exceeded.
+              maximum-prefix6:
+                description:
+                - Maximum number of IPv6 prefixes to accept from this peer.
+              next-hop-self:
+                choices:
+                - enable
+                - disable
+                description:
+                - Enable/disable IPv4 next-hop calculation for this neighbor.
+              next-hop-self6:
+                choices:
+                - enable
+                - disable
+                description:
+                - Enable/disable IPv6 next-hop calculation for this neighbor.
+              override-capability:
+                choices:
+                - enable
+                - disable
+                description:
+                - Enable/disable override result of capability negotiation.
+              passive:
+                choices:
+                - enable
+                - disable
+                description:
+                - Enable/disable sending of open messages to this neighbor.
+              password:
+                description:
+                - Password used in MD5 authentication.
+              prefix-list-in:
+                description:
+                - IPv4 Inbound filter for updates from this neighbor. Source router.prefix-list.name.
+              prefix-list-in6:
+                description:
+                - IPv6 Inbound filter for updates from this neighbor. Source router.prefix-list6.name.
+              prefix-list-out:
+                description:
+                - IPv4 Outbound filter for updates to this neighbor. Source router.prefix-list.name.
+              prefix-list-out6:
+                description:
+                - IPv6 Outbound filter for updates to this neighbor. Source router.prefix-list6.name.
+              remote-as:
+                description:
+                - AS number of neighbor.
+              remove-private-as:
+                choices:
+                - enable
+                - disable
+                description:
+                - Enable/disable remove private AS number from IPv4 outbound updates.
+              remove-private-as6:
+                choices:
+                - enable
+                - disable
+                description:
+                - Enable/disable remove private AS number from IPv6 outbound updates.
+              restart-time:
+                description:
+                - Graceful restart delay time (sec, 0 = global default).
+              retain-stale-time:
+                description:
+                - Time to retain stale routes.
+              route-map-in:
+                description:
+                - IPv4 Inbound route map filter. Source router.route-map.name.
+              route-map-in6:
+                description:
+                - IPv6 Inbound route map filter. Source router.route-map.name.
+              route-map-out:
+                description:
+                - IPv4 Outbound route map filter. Source router.route-map.name.
+              route-map-out6:
+                description:
+                - IPv6 Outbound route map filter. Source router.route-map.name.
+              route-reflector-client:
+                choices:
+                - enable
+                - disable
+                description:
+                - Enable/disable IPv4 AS route reflector client.
+              route-reflector-client6:
+                choices:
+                - enable
+                - disable
+                description:
+                - Enable/disable IPv6 AS route reflector client.
+              route-server-client:
+                choices:
+                - enable
+                - disable
+                description:
+                - Enable/disable IPv4 AS route server client.
+              route-server-client6:
+                choices:
+                - enable
+                - disable
+                description:
+                - Enable/disable IPv6 AS route server client.
+              send-community:
+                choices:
+                - standard
+                - extended
+                - both
+                - disable
+                description:
+                - IPv4 Send community attribute to neighbor.
+              send-community6:
+                choices:
+                - standard
+                - extended
+                - both
+                - disable
+                description:
+                - IPv6 Send community attribute to neighbor.
+              shutdown:
+                choices:
+                - enable
+                - disable
+                description:
+                - Enable/disable shutdown this neighbor.
+              soft-reconfiguration:
+                choices:
+                - enable
+                - disable
+                description:
+                - Enable/disable allow IPv4 inbound soft reconfiguration.
+              soft-reconfiguration6:
+                choices:
+                - enable
+                - disable
+                description:
+                - Enable/disable allow IPv6 inbound soft reconfiguration.
+              stale-route:
+                choices:
+                - enable
+                - disable
+                description:
+                - Enable/disable stale route after neighbor down.
+              strict-capability-match:
+                choices:
+                - enable
+                - disable
+                description:
+                - Enable/disable strict capability matching.
+              unsuppress-map:
+                description:
+                - IPv4 Route map to selectively unsuppress suppressed routes. Source router.route-map.name.
+              unsuppress-map6:
+                description:
+                - IPv6 Route map to selectively unsuppress suppressed routes. Source router.route-map.name.
+              update-source:
+                description:
+                - Interface to use as source IP/IPv6 address of TCP connections. Source system.interface.name.
+              weight:
+                description:
+                - Neighbor weight.
+          neighbor-group:
+            description:
+            - BGP neighbor group table.
+            suboptions:
+              activate:
+                choices:
+                - enable
+                - disable
+                description:
+                - Enable/disable address family IPv4 for this neighbor.
+              activate6:
+                choices:
+                - enable
+                - disable
+                description:
+                - Enable/disable address family IPv6 for this neighbor.
+              advertisement-interval:
+                description:
+                - Minimum interval (sec) between sending updates.
+              allowas-in:
+                description:
+                - IPv4 The maximum number of occurrence of my AS number allowed.
+              allowas-in-enable:
+                choices:
+                - enable
+                - disable
+                description:
+                - Enable/disable IPv4 Enable to allow my AS in AS path.
+              allowas-in-enable6:
+                choices:
+                - enable
+                - disable
+                description:
+                - Enable/disable IPv6 Enable to allow my AS in AS path.
+              allowas-in6:
+                description:
+                - IPv6 The maximum number of occurrence of my AS number allowed.
+              as-override:
+                choices:
+                - enable
+                - disable
+                description:
+                - Enable/disable replace peer AS with own AS for IPv4.
+              as-override6:
+                choices:
+                - enable
+                - disable
+                description:
+                - Enable/disable replace peer AS with own AS for IPv6.
+              attribute-unchanged:
+                choices:
+                - as-path
+                - med
+                - next-hop
+                description:
+                - IPv4 List of attributes that should be unchanged.
+              attribute-unchanged6:
+                choices:
+                - as-path
+                - med
+                - next-hop
+                description:
+                - IPv6 List of attributes that should be unchanged.
+              bfd:
+                choices:
+                - enable
+                - disable
+                description:
+                - Enable/disable BFD for this neighbor.
+              capability-default-originate:
+                choices:
+                - enable
+                - disable
+                description:
+                - Enable/disable advertise default IPv4 route to this neighbor.
+              capability-default-originate6:
+                choices:
+                - enable
+                - disable
+                description:
+                - Enable/disable advertise default IPv6 route to this neighbor.
+              capability-dynamic:
+                choices:
+                - enable
+                - disable
+                description:
+                - Enable/disable advertise dynamic capability to this neighbor.
+              capability-graceful-restart:
+                choices:
+                - enable
+                - disable
+                description:
+                - Enable/disable advertise IPv4 graceful restart capability to this neighbor.
+              capability-graceful-restart6:
+                choices:
+                - enable
+                - disable
+                description:
+                - Enable/disable advertise IPv6 graceful restart capability to this neighbor.
+              capability-orf:
+                choices:
+                - none
+                - receive
+                - send
+                - both
+                description:
+                - Accept/Send IPv4 ORF lists to/from this neighbor.
+              capability-orf6:
+                choices:
+                - none
+                - receive
+                - send
+                - both
+                description:
+                - Accept/Send IPv6 ORF lists to/from this neighbor.
+              capability-route-refresh:
+                choices:
+                - enable
+                - disable
+                description:
+                - Enable/disable advertise route refresh capability to this neighbor.
+              connect-timer:
+                description:
+                - Interval (sec) for connect timer.
+              default-originate-routemap:
+                description:
+                - Route map to specify criteria to originate IPv4 default. Source router.route-map.name.
+              default-originate-routemap6:
+                description:
+                - Route map to specify criteria to originate IPv6 default. Source router.route-map.name.
+              description:
+                description:
+                - Description.
+              distribute-list-in:
+                description:
+                - Filter for IPv4 updates from this neighbor. Source router.access-list.name.
+              distribute-list-in6:
+                description:
+                - Filter for IPv6 updates from this neighbor. Source router.access-list6.name.
+              distribute-list-out:
+                description:
+                - Filter for IPv4 updates to this neighbor. Source router.access-list.name.
+              distribute-list-out6:
+                description:
+                - Filter for IPv6 updates to this neighbor. Source router.access-list6.name.
+              dont-capability-negotiate:
+                choices:
+                - enable
+                - disable
+                description:
+                - Don't negotiate capabilities with this neighbor
+              ebgp-enforce-multihop:
+                choices:
+                - enable
+                - disable
+                description:
+                - Enable/disable allow multi-hop EBGP neighbors.
+              ebgp-multihop-ttl:
+                description:
+                - EBGP multihop TTL for this peer.
+              filter-list-in:
+                description:
+                - BGP filter for IPv4 inbound routes. Source router.aspath-list.name.
+              filter-list-in6:
+                description:
+                - BGP filter for IPv6 inbound routes. Source router.aspath-list.name.
+              filter-list-out:
+                description:
+                - BGP filter for IPv4 outbound routes. Source router.aspath-list.name.
+              filter-list-out6:
+                description:
+                - BGP filter for IPv6 outbound routes. Source router.aspath-list.name.
+              holdtime-timer:
+                description:
+                - Interval (sec) before peer considered dead.
+              interface:
+                description:
+                - Interface Source system.interface.name.
+              keep-alive-timer:
+                description:
+                - Keep alive timer interval (sec).
+              link-down-failover:
+                choices:
+                - enable
+                - disable
+                description:
+                - Enable/disable failover upon link down.
+              local-as:
+                description:
+                - Local AS number of neighbor.
+              local-as-no-prepend:
+                choices:
+                - enable
+                - disable
+                description:
+                - Do not prepend local-as to incoming updates.
+              local-as-replace-as:
+                choices:
+                - enable
+                - disable
+                description:
+                - Replace real AS with local-as in outgoing updates.
+              maximum-prefix:
+                description:
+                - Maximum number of IPv4 prefixes to accept from this peer.
+              maximum-prefix-threshold:
+                description:
+                - Maximum IPv4 prefix threshold value (1 - 100 percent).
+              maximum-prefix-threshold6:
+                description:
+                - Maximum IPv6 prefix threshold value (1 - 100 percent).
+              maximum-prefix-warning-only:
+                choices:
+                - enable
+                - disable
+                description:
+                - Enable/disable IPv4 Only give warning message when limit is exceeded.
+              maximum-prefix-warning-only6:
+                choices:
+                - enable
+                - disable
+                description:
+                - Enable/disable IPv6 Only give warning message when limit is exceeded.
+              maximum-prefix6:
+                description:
+                - Maximum number of IPv6 prefixes to accept from this peer.
+              name:
+                description:
+                - Neighbor group name.
+                required: true
+              next-hop-self:
+                choices:
+                - enable
+                - disable
+                description:
+                - Enable/disable IPv4 next-hop calculation for this neighbor.
+              next-hop-self6:
+                choices:
+                - enable
+                - disable
+                description:
+                - Enable/disable IPv6 next-hop calculation for this neighbor.
+              override-capability:
+                choices:
+                - enable
+                - disable
+                description:
+                - Enable/disable override result of capability negotiation.
+              passive:
+                choices:
+                - enable
+                - disable
+                description:
+                - Enable/disable sending of open messages to this neighbor.
+              prefix-list-in:
+                description:
+                - IPv4 Inbound filter for updates from this neighbor. Source router.prefix-list.name.
+              prefix-list-in6:
+                description:
+                - IPv6 Inbound filter for updates from this neighbor. Source router.prefix-list6.name.
+              prefix-list-out:
+                description:
+                - IPv4 Outbound filter for updates to this neighbor. Source router.prefix-list.name.
+              prefix-list-out6:
+                description:
+                - IPv6 Outbound filter for updates to this neighbor. Source router.prefix-list6.name.
+              remote-as:
+                description:
+                - AS number of neighbor.
+              remove-private-as:
+                choices:
+                - enable
+                - disable
+                description:
+                - Enable/disable remove private AS number from IPv4 outbound updates.
+              remove-private-as6:
+                choices:
+                - enable
+                - disable
+                description:
+                - Enable/disable remove private AS number from IPv6 outbound updates.
+              restart-time:
+                description:
+                - Graceful restart delay time (sec, 0 = global default).
+              retain-stale-time:
+                description:
+                - Time to retain stale routes.
+              route-map-in:
+                description:
+                - IPv4 Inbound route map filter. Source router.route-map.name.
+              route-map-in6:
+                description:
+                - IPv6 Inbound route map filter. Source router.route-map.name.
+              route-map-out:
+                description:
+                - IPv4 Outbound route map filter. Source router.route-map.name.
+              route-map-out6:
+                description:
+                - IPv6 Outbound route map filter. Source router.route-map.name.
+              route-reflector-client:
+                choices:
+                - enable
+                - disable
+                description:
+                - Enable/disable IPv4 AS route reflector client.
+              route-reflector-client6:
+                choices:
+                - enable
+                - disable
+                description:
+                - Enable/disable IPv6 AS route reflector client.
+              route-server-client:
+                choices:
+                - enable
+                - disable
+                description:
+                - Enable/disable IPv4 AS route server client.
+              route-server-client6:
+                choices:
+                - enable
+                - disable
+                description:
+                - Enable/disable IPv6 AS route server client.
+              send-community:
+                choices:
+                - standard
+                - extended
+                - both
+                - disable
+                description:
+                - IPv4 Send community attribute to neighbor.
+              send-community6:
+                choices:
+                - standard
+                - extended
+                - both
+                - disable
+                description:
+                - IPv6 Send community attribute to neighbor.
+              shutdown:
+                choices:
+                - enable
+                - disable
+                description:
+                - Enable/disable shutdown this neighbor.
+              soft-reconfiguration:
+                choices:
+                - enable
+                - disable
+                description:
+                - Enable/disable allow IPv4 inbound soft reconfiguration.
+              soft-reconfiguration6:
+                choices:
+                - enable
+                - disable
+                description:
+                - Enable/disable allow IPv6 inbound soft reconfiguration.
+              stale-route:
+                choices:
+                - enable
+                - disable
+                description:
+                - Enable/disable stale route after neighbor down.
+              strict-capability-match:
+                choices:
+                - enable
+                - disable
+                description:
+                - Enable/disable strict capability matching.
+              unsuppress-map:
+                description:
+                - IPv4 Route map to selectively unsuppress suppressed routes. Source router.route-map.name.
+              unsuppress-map6:
+                description:
+                - IPv6 Route map to selectively unsuppress suppressed routes. Source router.route-map.name.
+              update-source:
+                description:
+                - Interface to use as source IP/IPv6 address of TCP connections. Source system.interface.name.
+              weight:
+                description:
+                - Neighbor weight.
+          neighbor-range:
+            description:
+            - BGP neighbor range table.
+            suboptions:
+              id:
+                description:
+                - Neighbor range ID.
+                required: true
+              max-neighbor-num:
+                description:
+                - Maximum number of neighbors.
+              neighbor-group:
+                description:
+                - Neighbor group name. Source router.bgp.neighbor-group.name.
+              prefix:
+                description:
+                - Neighbor range prefix.
+          network:
+            description:
+            - BGP network table.
+            suboptions:
+              backdoor:
+                choices:
+                - enable
+                - disable
+                description:
+                - Enable/disable route as backdoor.
+              id:
+                description:
+                - ID.
+                required: true
+              prefix:
+                description:
+                - Network prefix.
+              route-map:
+                description:
+                - Route map to modify generated route. Source router.route-map.name.
+          network-import-check:
+            choices:
+            - enable
+            - disable
+            description:
+            - Enable/disable ensure BGP network route exists in IGP.
+          network6:
+            description:
+            - BGP IPv6 network table.
+            suboptions:
+              backdoor:
+                choices:
+                - enable
+                - disable
+                description:
+                - Enable/disable route as backdoor.
+              id:
+                description:
+                - ID.
+                required: true
+              prefix6:
+                description:
+                - Network IPv6 prefix.
+              route-map:
+                description:
+                - Route map to modify generated route. Source router.route-map.name.
+          redistribute:
+            description:
+            - BGP IPv4 redistribute table.
+            suboptions:
+              name:
+                description:
+                - Distribute list entry name.
+                required: true
+              route-map:
+                description:
+                - Route map name. Source router.route-map.name.
+              status:
+                choices:
+                - enable
+                - disable
+                description:
+                - Status
+          redistribute6:
+            description:
+            - BGP IPv6 redistribute table.
+            suboptions:
+              name:
+                description:
+                - Distribute list entry name.
+                required: true
+              route-map:
+                description:
+                - Route map name. Source router.route-map.name.
+              status:
+                choices:
+                - enable
+                - disable
+                description:
+                - Status
+          router-id:
+            description:
+            - Router ID.
+          scan-time:
+            description:
+            - Background scanner interval (sec), 0 to disable it.
+          synchronization:
+            choices:
+            - enable
+            - disable
+            description:
+            - Enable/disable only advertise routes from iBGP if routes present in an IGP.
+        
+
+= username
+        FortiOS or FortiGate username.
+
+
+- vdom
+        Virtual domain, among those defined previously. A vdom is a virtual instance of the FortiGate that can be configured and used as
+        a different unit.
+        [Default: root]
+
+
+NOTES:
+      * Requires fortiosapi library developed by Fortinet
+      * Run as a local_action in your playbook
+
+
+REQUIREMENTS:  fortiosapi>=0.9.8
+
+AUTHOR: Miguel Angel Munoz (@mamunozgonzalez), Nicolas Thomas (@thomnico)
+        METADATA:
+          status:
+          - preview
+          supported_by: community
+        
+
+EXAMPLES:
+
+- hosts: localhost
+  vars:
+   host: "192.168.122.40"
+   username: "admin"
+   password: ""
+   vdom: "root"
+  tasks:
+  - name: Configure BGP.
+    fortios_router_bgp:
+      host:  "{{ host }}"
+      username: "{{ username }}"
+      password: "{{ password }}"
+      vdom:  "{{ vdom }}"
+      https: "False"
+      router_bgp:
+        admin-distance:
+         -
+            distance: "4"
+            id:  "5"
+            neighbour-prefix: "<your_own_value>"
+            route-list: "<your_own_value> (source router.access-list.name)"
+        aggregate-address:
+         -
+            as-set: "enable"
+            id:  "10"
+            prefix: "<your_own_value>"
+            summary-only: "enable"
+        aggregate-address6:
+         -
+            as-set: "enable"
+            id:  "15"
+            prefix6: "<your_own_value>"
+            summary-only: "enable"
+        always-compare-med: "enable"
+        as: "19"
+        bestpath-as-path-ignore: "enable"
+        bestpath-cmp-confed-aspath: "enable"
+        bestpath-cmp-routerid: "enable"
+        bestpath-med-confed: "enable"
+        bestpath-med-missing-as-worst: "enable"
+        client-to-client-reflection: "enable"
+        cluster-id: "<your_own_value>"
+        confederation-identifier: "27"
+        confederation-peers:
+         -
+            peer: "<your_own_value>"
+        dampening: "enable"
+        dampening-max-suppress-time: "31"
+        dampening-reachability-half-life: "32"
+        dampening-reuse: "33"
+        dampening-route-map: "<your_own_value> (source router.route-map.name)"
+        dampening-suppress: "35"
+        dampening-unreachability-half-life: "36"
+        default-local-preference: "37"
+        deterministic-med: "enable"
+        distance-external: "39"
+        distance-internal: "40"
+        distance-local: "41"
+        ebgp-multipath: "enable"
+        enforce-first-as: "enable"
+        fast-external-failover: "enable"
+        graceful-end-on-timer: "enable"
+        graceful-restart: "enable"
+        graceful-restart-time: "47"
+        graceful-stalepath-time: "48"
+        graceful-update-delay: "49"
+        holdtime-timer: "50"
+        ibgp-multipath: "enable"
+        ignore-optional-capability: "enable"
+        keepalive-timer: "53"
+        log-neighbour-changes: "enable"
+        neighbor:
+         -
+            activate: "enable"
+            activate6: "enable"
+            advertisement-interval: "58"
+            allowas-in: "59"
+            allowas-in-enable: "enable"
+            allowas-in-enable6: "enable"
+            allowas-in6: "62"
+            as-override: "enable"
+            as-override6: "enable"
+            attribute-unchanged: "as-path"
+            attribute-unchanged6: "as-path"
+            bfd: "enable"
+            capability-default-originate: "enable"
+            capability-default-originate6: "enable"
+            capability-dynamic: "enable"
+            capability-graceful-restart: "enable"
+            capability-graceful-restart6: "enable"
+            capability-orf: "none"
+            capability-orf6: "none"
+            capability-route-refresh: "enable"
+            conditional-advertise:
+             -
+                advertise-routemap: "<your_own_value> (source router.route-map.name)"
+                condition-routemap: "<your_own_value> (source router.route-map.name)"
+                condition-type: "exist"
+            connect-timer: "80"
+            default-originate-routemap: "<your_own_value> (source router.route-map.name)"
+            default-originate-routemap6: "<your_own_value> (source router.route-map.name)"
+            description: "<your_own_value>"
+            distribute-list-in: "<your_own_value> (source router.access-list.name)"
+            distribute-list-in6: "<your_own_value> (source router.access-list6.name)"
+            distribute-list-out: "<your_own_value> (source router.access-list.name)"
+            distribute-list-out6: "<your_own_value> (source router.access-list6.name)"
+            dont-capability-negotiate: "enable"
+            ebgp-enforce-multihop: "enable"
+            ebgp-multihop-ttl: "90"
+            filter-list-in: "<your_own_value> (source router.aspath-list.name)"
+            filter-list-in6: "<your_own_value> (source router.aspath-list.name)"
+            filter-list-out: "<your_own_value> (source router.aspath-list.name)"
+            filter-list-out6: "<your_own_value> (source router.aspath-list.name)"
+            holdtime-timer: "95"
+            interface: "<your_own_value> (source system.interface.name)"
+            ip: "<your_own_value>"
+            keep-alive-timer: "98"
+            link-down-failover: "enable"
+            local-as: "100"
+            local-as-no-prepend: "enable"
+            local-as-replace-as: "enable"
+            maximum-prefix: "103"
+            maximum-prefix-threshold: "104"
+            maximum-prefix-threshold6: "105"
+            maximum-prefix-warning-only: "enable"
+            maximum-prefix-warning-only6: "enable"
+            maximum-prefix6: "108"
+            next-hop-self: "enable"
+            next-hop-self6: "enable"
+            override-capability: "enable"
+            passive: "enable"
+            password: "<your_own_value>"
+            prefix-list-in: "<your_own_value> (source router.prefix-list.name)"
+            prefix-list-in6: "<your_own_value> (source router.prefix-list6.name)"
+            prefix-list-out: "<your_own_value> (source router.prefix-list.name)"
+            prefix-list-out6: "<your_own_value> (source router.prefix-list6.name)"
+            remote-as: "118"
+            remove-private-as: "enable"
+            remove-private-as6: "enable"
+            restart-time: "121"
+            retain-stale-time: "122"
+            route-map-in: "<your_own_value> (source router.route-map.name)"
+            route-map-in6: "<your_own_value> (source router.route-map.name)"
+            route-map-out: "<your_own_value> (source router.route-map.name)"
+            route-map-out6: "<your_own_value> (source router.route-map.name)"
+            route-reflector-client: "enable"
+            route-reflector-client6: "enable"
+            route-server-client: "enable"
+            route-server-client6: "enable"
+            send-community: "standard"
+            send-community6: "standard"
+            shutdown: "enable"
+            soft-reconfiguration: "enable"
+            soft-reconfiguration6: "enable"
+            stale-route: "enable"
+            strict-capability-match: "enable"
+            unsuppress-map: "<your_own_value> (source router.route-map.name)"
+            unsuppress-map6: "<your_own_value> (source router.route-map.name)"
+            update-source: "<your_own_value> (source system.interface.name)"
+            weight: "141"
+        neighbor-group:
+         -
+            activate: "enable"
+            activate6: "enable"
+            advertisement-interval: "145"
+            allowas-in: "146"
+            allowas-in-enable: "enable"
+            allowas-in-enable6: "enable"
+            allowas-in6: "149"
+            as-override: "enable"
+            as-override6: "enable"
+            attribute-unchanged: "as-path"
+            attribute-unchanged6: "as-path"
+            bfd: "enable"
+            capability-default-originate: "enable"
+            capability-default-originate6: "enable"
+            capability-dynamic: "enable"
+            capability-graceful-restart: "enable"
+            capability-graceful-restart6: "enable"
+            capability-orf: "none"
+            capability-orf6: "none"
+            capability-route-refresh: "enable"
+            connect-timer: "163"
+            default-originate-routemap: "<your_own_value> (source router.route-map.name)"
+            default-originate-routemap6: "<your_own_value> (source router.route-map.name)"
+            description: "<your_own_value>"
+            distribute-list-in: "<your_own_value> (source router.access-list.name)"
+            distribute-list-in6: "<your_own_value> (source router.access-list6.name)"
+            distribute-list-out: "<your_own_value> (source router.access-list.name)"
+            distribute-list-out6: "<your_own_value> (source router.access-list6.name)"
+            dont-capability-negotiate: "enable"
+            ebgp-enforce-multihop: "enable"
+            ebgp-multihop-ttl: "173"
+            filter-list-in: "<your_own_value> (source router.aspath-list.name)"
+            filter-list-in6: "<your_own_value> (source router.aspath-list.name)"
+            filter-list-out: "<your_own_value> (source router.aspath-list.name)"
+            filter-list-out6: "<your_own_value> (source router.aspath-list.name)"
+            holdtime-timer: "178"
+            interface: "<your_own_value> (source system.interface.name)"
+            keep-alive-timer: "180"
+            link-down-failover: "enable"
+            local-as: "182"
+            local-as-no-prepend: "enable"
+            local-as-replace-as: "enable"
+            maximum-prefix: "185"
+            maximum-prefix-threshold: "186"
+            maximum-prefix-threshold6: "187"
+            maximum-prefix-warning-only: "enable"
+            maximum-prefix-warning-only6: "enable"
+            maximum-prefix6: "190"
+            name: "default_name_191"
+            next-hop-self: "enable"
+            next-hop-self6: "enable"
+            override-capability: "enable"
+            passive: "enable"
+            prefix-list-in: "<your_own_value> (source router.prefix-list.name)"
+            prefix-list-in6: "<your_own_value> (source router.prefix-list6.name)"
+            prefix-list-out: "<your_own_value> (source router.prefix-list.name)"
+            prefix-list-out6: "<your_own_value> (source router.prefix-list6.name)"
+            remote-as: "200"
+            remove-private-as: "enable"
+            remove-private-as6: "enable"
+            restart-time: "203"
+            retain-stale-time: "204"
+            route-map-in: "<your_own_value> (source router.route-map.name)"
+            route-map-in6: "<your_own_value> (source router.route-map.name)"
+            route-map-out: "<your_own_value> (source router.route-map.name)"
+            route-map-out6: "<your_own_value> (source router.route-map.name)"
+            route-reflector-client: "enable"
+            route-reflector-client6: "enable"
+            route-server-client: "enable"
+            route-server-client6: "enable"
+            send-community: "standard"
+            send-community6: "standard"
+            shutdown: "enable"
+            soft-reconfiguration: "enable"
+            soft-reconfiguration6: "enable"
+            stale-route: "enable"
+            strict-capability-match: "enable"
+            unsuppress-map: "<your_own_value> (source router.route-map.name)"
+            unsuppress-map6: "<your_own_value> (source router.route-map.name)"
+            update-source: "<your_own_value> (source system.interface.name)"
+            weight: "223"
+        neighbor-range:
+         -
+            id:  "225"
+            max-neighbor-num: "226"
+            neighbor-group: "<your_own_value> (source router.bgp.neighbor-group.name)"
+            prefix: "<your_own_value>"
+        network:
+         -
+            backdoor: "enable"
+            id:  "231"
+            prefix: "<your_own_value>"
+            route-map: "<your_own_value> (source router.route-map.name)"
+        network-import-check: "enable"
+        network6:
+         -
+            backdoor: "enable"
+            id:  "237"
+            prefix6: "<your_own_value>"
+            route-map: "<your_own_value> (source router.route-map.name)"
+        redistribute:
+         -
+            name: "default_name_241"
+            route-map: "<your_own_value> (source router.route-map.name)"
+            status: "enable"
+        redistribute6:
+         -
+            name: "default_name_245"
+            route-map: "<your_own_value> (source router.route-map.name)"
+            status: "enable"
+        router-id: "<your_own_value>"
+        scan-time: "249"
+        synchronization: "enable"
+
+
+RETURN VALUES:
+
+build:
+  description: Build number of the fortigate image
+  returned: always
+  type: str
+  sample: '1547'
+http_method:
+  description: Last method used to provision the content into FortiGate
+  returned: always
+  type: str
+  sample: 'PUT'
+http_status:
+  description: Last result given by FortiGate on last operation applied
+  returned: always
+  type: str
+  sample: "200"
+mkey:
+  description: Master key (id) used in the last call to FortiGate
+  returned: success
+  type: str
+  sample: "id"
+name:
+  description: Name of the table used to fulfill the request
+  returned: always
+  type: str
+  sample: "urlfilter"
+path:
+  description: Path of the table used to fulfill the request
+  returned: always
+  type: str
+  sample: "webfilter"
+revision:
+  description: Internal revision number
+  returned: always
+  type: str
+  sample: "17.0.2.10658"
+serial:
+  description: Serial number of the unit
+  returned: always
+  type: str
+  sample: "FGVMEVYYQT3AB5352"
+status:
+  description: Indication of the operation's result
+  returned: always
+  type: str
+  sample: "success"
+vdom:
+  description: Virtual domain used
+  returned: always
+  type: str
+  sample: "root"
+version:
+  description: Version of the FortiGate
+  returned: always
+  type: str
+  sample: "v5.6.3"
+
+

@@ -1,0 +1,77 @@
+> FTD_CONFIGURATION    (/usr/lib/python2.7/dist-packages/ansible/modules/network/ftd/ftd_configuration.py)
+
+        Manages configuration on Cisco FTD devices including creating, updating, removing configuration objects, scheduling and staring
+        jobs, deploying pending changes, etc. All operations are performed over REST API.
+
+  * This module is maintained by The Ansible Community
+OPTIONS (= is mandatory):
+
+- data
+        Key-value pairs that should be sent as body parameters in a REST API call
+        [Default: (null)]
+        type: dict
+
+- filters
+        Key-value dict that represents equality filters. Every key is a property name and value is its desired value. If multiple filters
+        are present, they are combined with logical operator AND.
+        [Default: (null)]
+        type: dict
+
+= operation
+        The name of the operation to execute. Commonly, the operation starts with 'add', 'edit', 'get', 'upsert' or 'delete' verbs, but
+        can have an arbitrary name too.
+
+        type: str
+
+- path_params
+        Key-value pairs that should be sent as path parameters in a REST API call.
+        [Default: (null)]
+        type: dict
+
+- query_params
+        Key-value pairs that should be sent as query parameters in a REST API call.
+        [Default: (null)]
+        type: dict
+
+- register_as
+        Specifies Ansible fact name that is used to register received response from the FTD device.
+        [Default: (null)]
+        type: str
+
+
+AUTHOR: Cisco Systems, Inc. (@annikulin)
+        METADATA:
+          status:
+          - preview
+          supported_by: community
+        
+
+EXAMPLES:
+
+- name: Create a network object
+  ftd_configuration:
+    operation: "addNetworkObject"
+    data:
+      name: "Ansible-network-host"
+      description: "From Ansible with love"
+      subType: "HOST"
+      value: "192.168.2.0"
+      dnsResolution: "IPV4_AND_IPV6"
+      type: "networkobject"
+      isSystemDefined: false
+    register_as: "hostNetwork"
+
+- name: Delete the network object
+  ftd_configuration:
+    operation: "deleteNetworkObject"
+    path_params:
+      objId: "{{ hostNetwork['id'] }}"
+
+
+RETURN VALUES:
+
+response:
+  description: HTTP response returned from the API call.
+  returned: success
+  type: dict
+

@@ -1,0 +1,24 @@
+EXAMPLES:
+
+- name: apply egress acl to ethernet1/41
+  nxos_acl_interface:
+    name: ANSIBLE
+    interface: ethernet1/41
+    direction: egress
+    state: present
+
+
+RETURN VALUES:
+
+acl_applied_to:
+    description: list of interfaces the ACL is applied to
+    returned: always
+    type: list
+    sample: [{"acl_type": "Router ACL", "direction": "egress",
+            "interface": "Ethernet1/41", "name": "ANSIBLE"}]
+commands:
+    description: commands sent to the device
+    returned: always
+    type: list
+    sample: ["interface ethernet1/41", "ip access-group ANSIBLE out"]
+

@@ -1,0 +1,110 @@
+> MONGODB_SHARD    (/usr/lib/python2.7/dist-packages/ansible/modules/database/mongodb/mongodb_shard.py)
+
+        Add and remove shards from a MongoDB Cluster.
+
+  * This module is maintained by The Ansible Community
+OPTIONS (= is mandatory):
+
+- login_database
+        The database where login credentials are stored.
+        [Default: admin]
+
+- login_host
+        The host to login to.
+        This must be a mongos.
+        [Default: localhost]
+
+- login_password
+        The password used to authenticate with.
+        [Default: (null)]
+
+- login_port
+        The port to login to.
+        [Default: 27017]
+
+- login_user
+        The user to login with.
+        [Default: (null)]
+
+= shard
+        The shard connection string.
+        Should be supplied in the form <replicaset>/host:port as detailed in https://docs.mongodb.com/manual/tutorial/add-shards-to-
+        shard-cluster/.
+        For example rs0/example1.mongodb.com:27017.
+        [Default: None]
+
+- ssl
+        Whether to use an SSL connection when connecting to the database.
+        [Default: False]
+        type: bool
+
+- ssl_cert_reqs
+        Specifies whether a certificate is required from the other side of the connection, and whether it will be validated if provided.
+        (Choices: CERT_REQUIRED, CERT_OPTIONAL, CERT_NONE)[Default: CERT_REQUIRED]
+
+- state
+        Whether the shard should be present or absent from the Cluster.
+        (Choices: present, absent)[Default: present]
+
+
+NOTES:
+      * Requires the pymongo Python package on the remote host, version 2.4.2+.
+      * This can be installed using pip or the OS package manager. @see http://api.mongodb.org/python/current/installation.html.
+
+
+REQUIREMENTS:  pymongo
+
+AUTHOR: Rhys Campbell (@rhysmeister)
+        METADATA:
+          status:
+          - preview
+          supported_by: community
+        
+
+EXAMPLES:
+
+# add a replicaset shard named rs1 with a member running on port 27018 on mongodb0.example.net
+- mongodb_shard:
+    login_user: admin
+    login_password: admin
+    shard: "rs1/mongodb0.example.net:27018"
+    state: present
+
+# add a standalone mongod shard running on port 27018 of mongodb0.example.net
+- mongodb_shard:
+    login_user: admin
+    login_password: admin
+    shard: "mongodb0.example.net:27018"
+    state: present
+
+# To remove a shard called 'rs1'
+- mongodb_shard:
+    login_user: admin
+    login_password: admin
+    shard: rs1
+    state: absent
+
+# Single node shard running on localhost
+- name: Ensure shard rs0 exists
+  mongodb_shard:
+    login_user: admin
+    login_password: secret
+    shard: "rs0/localhost:3001"
+    state: present
+
+# Single node shard running on localhost
+- name: Ensure shard rs1 exists
+  mongodb_shard:
+    login_user: admin
+    login_password: secret
+    shard: "rs1/localhost:3002"
+    state: present
+
+
+RETURN VALUES:
+
+mongodb_shard:
+    description: The name of the shard to create.
+    returned: success
+    type: str
+

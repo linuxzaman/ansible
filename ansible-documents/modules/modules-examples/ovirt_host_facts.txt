@@ -1,0 +1,27 @@
+EXAMPLES:
+
+# Examples don't contain auth parameter for simplicity,
+# look at ovirt_auth module to see how to reuse authentication:
+
+# Gather facts about all hosts which names start with C(host) and
+# belong to data center C(west):
+- ovirt_host_facts:
+    pattern: name=host* and datacenter=west
+- debug:
+    var: ovirt_hosts
+# All hosts with cluster version 4.2:
+- ovirt_host_facts:
+    pattern: name=host*
+    cluster_version: "4.2"
+- debug:
+    var: ovirt_hosts
+
+
+RETURN VALUES:
+
+ovirt_hosts:
+    description: "List of dictionaries describing the hosts. Host attributes are mapped to dictionary keys,
+                  all hosts attributes can be found at following url: http://ovirt.github.io/ovirt-engine-api-model/master/#types/host."
+    returned: On success.
+    type: list
+

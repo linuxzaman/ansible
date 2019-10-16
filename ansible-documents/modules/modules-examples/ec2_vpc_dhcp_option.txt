@@ -1,0 +1,87 @@
+EXAMPLES:
+
+# Completely overrides the VPC DHCP options associated with VPC vpc-123456 and deletes any existing
+# DHCP option set that may have been attached to that VPC.
+- ec2_vpc_dhcp_option:
+    domain_name: "foo.example.com"
+    region: us-east-1
+    dns_servers:
+        - 10.0.0.1
+        - 10.0.1.1
+    ntp_servers:
+        - 10.0.0.2
+        - 10.0.1.2
+    netbios_name_servers:
+        - 10.0.0.1
+        - 10.0.1.1
+    netbios_node_type: 2
+    vpc_id: vpc-123456
+    delete_old: True
+    inherit_existing: False
+
+
+# Ensure the DHCP option set for the VPC has 10.0.0.4 and 10.0.1.4 as the specified DNS servers, but
+# keep any other existing settings. Also, keep the old DHCP option set around.
+- ec2_vpc_dhcp_option:
+    region: us-east-1
+    dns_servers:
+      - "{{groups['dns-primary']}}"
+      - "{{groups['dns-secondary']}}"
+    vpc_id: vpc-123456
+    inherit_existing: True
+    delete_old: False
+
+
+## Create a DHCP option set with 4.4.4.4 and 8.8.8.8 as the specified DNS servers, with tags
+## but do not assign to a VPC
+- ec2_vpc_dhcp_option:
+    region: us-east-1
+    dns_servers:
+      - 4.4.4.4
+      - 8.8.8.8
+    tags:
+      Name: google servers
+      Environment: Test
+
+## Delete a DHCP options set that matches the tags and options specified
+- ec2_vpc_dhcp_option:
+    region: us-east-1
+    dns_servers:
+      - 4.4.4.4
+      - 8.8.8.8
+    tags:
+      Name: google servers
+      Environment: Test
+  state: absent
+
+## Associate a DHCP options set with a VPC by ID
+- ec2_vpc_dhcp_option:
+    region: us-east-1
+    dhcp_options_id: dopt-12345678
+    vpc_id: vpc-123456
+
+
+RETURN VALUES:
+
+new_options:
+    description: The DHCP options created, associated or found
+    returned: when appropriate
+    type: dict
+    sample:
+      domain-name-servers:
+        - 10.0.0.1
+        - 10.0.1.1
+      netbois-name-servers:
+        - 10.0.0.1
+        - 10.0.1.1
+      netbios-node-type: 2
+      domain-name: "my.example.com"
+dhcp_options_id:
+    description: The aws resource id of the primary DCHP options set created, found or removed
+    type: str
+    returned: when available
+changed:
+    description: Whether the dhcp options were changed
+    type: bool
+    returned: always
+

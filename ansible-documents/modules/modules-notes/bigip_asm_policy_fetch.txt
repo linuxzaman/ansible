@@ -1,0 +1,270 @@
+> BIGIP_ASM_POLICY_FETCH    (/usr/lib/python2.7/dist-packages/ansible/modules/network/f5/bigip_asm_policy_fetch.py)
+
+        Exports the asm policy from remote nodes.
+
+  * This module is maintained by an Ansible Partner
+OPTIONS (= is mandatory):
+
+- base64
+        If `yes', the returned `inline' ASM policy content will be Base64 encoded.
+        Only applies to `inline' ASM policy exports.
+        [Default: (null)]
+        type: bool
+
+- binary
+        If `yes', the exported ASM policy will be in binary format.
+        Only applies to `file' ASM policy exports.
+        [Default: (null)]
+        type: bool
+
+- compact
+        If `yes', only the ASM policy custom settings will be exported.
+        Only applies to XML type ASM policy exports.
+        [Default: (null)]
+        type: bool
+
+- dest
+        A directory to save the policy file into.
+        This option is ignored when `inline' is set to c(yes).
+        [Default: (null)]
+        type: path
+
+- file
+        The name of the file to be create on the remote device for downloading.
+        When `binary' is set to `no' the ASM policy will be in XML format.
+        [Default: (null)]
+        type: str
+
+- force
+        If `no', the file will only be transferred if it does not exist in the the destination.
+        [Default: True]
+        type: bool
+
+- inline
+        If `yes', the ASM policy will be exported `inline' as a string instead of a file.
+        The policy can be be retrieved in playbook `result' dictionary under `inline_policy' key.
+        [Default: (null)]
+        type: bool
+
+= name
+        The name of the policy exported to create a file on the remote device for downloading.
+
+        type: str
+
+- partition
+        Device partition which contains ASM policy to export.
+        [Default: Common]
+        type: str
+
+= password
+        The password for the user account used to connect to the BIG-IP.
+        You may omit this option by setting the environment variable `F5_PASSWORD'.
+        (Aliases: pass, pwd)
+        type: str
+
+- provider
+        A dict object containing connection details.
+        [Default: (null)]
+        suboptions:
+          password:
+            aliases:
+            - pass
+            - pwd
+            description:
+            - The password for the user account used to connect to the BIG-IP.
+            - You may omit this option by setting the environment variable `F5_PASSWORD'.
+            required: true
+            type: str
+          server:
+            description:
+            - The BIG-IP host.
+            - You may omit this option by setting the environment variable `F5_SERVER'.
+            required: true
+            type: str
+          server_port:
+            default: 443
+            description:
+            - The BIG-IP server port.
+            - You may omit this option by setting the environment variable `F5_SERVER_PORT'.
+            type: int
+          ssh_keyfile:
+            description:
+            - Specifies the SSH keyfile to use to authenticate the connection to the remote
+              device.  This argument is only used for `cli' transports.
+            - You may omit this option by setting the environment variable `ANSIBLE_NET_SSH_KEYFILE'.
+            type: path
+          timeout:
+            default: 10
+            description:
+            - Specifies the timeout in seconds for communicating with the network device for
+              either connecting or sending commands.  If the timeout is exceeded before the
+              operation is completed, the module will error.
+            type: int
+          transport:
+            choices:
+            - cli
+            - rest
+            default: rest
+            description:
+            - Configures the transport connection to use when connecting to the remote device.
+            type: str
+          user:
+            description:
+            - The username to connect to the BIG-IP with. This user must have administrative
+              privileges on the device.
+            - You may omit this option by setting the environment variable `F5_USER'.
+            required: true
+            type: str
+          validate_certs:
+            default: true
+            description:
+            - If `no', SSL certificates are not validated. Use this only on personally controlled
+              sites using self-signed certificates.
+            - You may omit this option by setting the environment variable `F5_VALIDATE_CERTS'.
+            type: bool
+        
+        type: dict
+        version_added: 2.5
+
+= server
+        The BIG-IP host.
+        You may omit this option by setting the environment variable `F5_SERVER'.
+
+        type: str
+
+- server_port
+        The BIG-IP server port.
+        You may omit this option by setting the environment variable `F5_SERVER_PORT'.
+        [Default: 443]
+        type: int
+        version_added: 2.2
+
+= user
+        The username to connect to the BIG-IP with. This user must have administrative privileges on the device.
+        You may omit this option by setting the environment variable `F5_USER'.
+
+        type: str
+
+- validate_certs
+        If `no', SSL certificates are not validated. Use this only on personally controlled sites using self-signed certificates.
+        You may omit this option by setting the environment variable `F5_VALIDATE_CERTS'.
+        [Default: True]
+        type: bool
+        version_added: 2.0
+
+
+NOTES:
+      * For more information on using Ansible to manage F5 Networks devices see https://www.ansible.com/integrations/networks/f5.
+      * Requires BIG-IP software version >= 12.
+      * The F5 modules only manipulate the running configuration of the F5 product. To ensure that BIG-IP specific configuration
+        persists to disk, be sure to include at least one task that uses the [bigip_config] module to save the running
+        configuration. Refer to the module's documentation for the correct usage of the module to save your running configuration.
+
+
+AUTHOR: Wojciech Wypior (@wojtek0806)
+        METADATA:
+          status:
+          - preview
+          supported_by: certified
+        
+
+EXAMPLES:
+
+- name: Export policy in binary format
+  bigip_asm_policy_fetch:
+    name: foobar
+    file: export_foo
+    dest: /root/download
+    binary: yes
+    provider:
+      password: secret
+      server: lb.mydomain.com
+      user: admin
+  delegate_to: localhost
+
+- name: Export policy inline base64 encoded format
+  bigip_asm_policy_fetch:
+    name: foobar
+    inline: yes
+    base64: yes
+    provider:
+      password: secret
+      server: lb.mydomain.com
+      user: admin
+  delegate_to: localhost
+
+- name: Export policy in XML format
+  bigip_asm_policy_fetch:
+    name: foobar
+    file: export_foo
+    dest: /root/download
+    provider:
+      password: secret
+      server: lb.mydomain.com
+      user: admin
+  delegate_to: localhost
+
+- name: Export compact policy in XML format
+  bigip_asm_policy_fetch:
+    name: foobar
+    file: export_foo.xml
+    dest: /root/download/
+    compact: yes
+    provider:
+      password: secret
+      server: lb.mydomain.com
+      user: admin
+  delegate_to: localhost
+
+- name: Export policy in binary format, autogenerate name
+  bigip_asm_policy_fetch:
+    name: foobar
+    dest: /root/download/
+    binary: yes
+    provider:
+      password: secret
+      server: lb.mydomain.com
+      user: admin
+  delegate_to: localhost
+
+
+RETURN VALUES:
+
+name:
+  description: Name of the ASM policy to be exported.
+  returned: changed
+  type: str
+  sample: Asm_APP1_Transparent
+dest:
+  description: Local path to download exported ASM policy.
+  returned: changed
+  type: str
+  sample: /root/downloads/foobar.xml
+file:
+  description:
+    - Name of the policy file on the remote BIG-IP to download. If not
+      specified, then this will be a randomly generated filename.
+  returned: changed
+  type: str
+  sample: foobar.xml
+inline:
+  description: Set when ASM policy to be exported inline
+  returned: changed
+  type: bool
+  sample: yes
+compact:
+  description: Set only to export custom ASM policy settings.
+  returned: changed
+  type: bool
+  sample: no
+base64:
+  description: Set to encode inline export in base64 format.
+  returned: changed
+  type: bool
+  sample: no
+binary:
+  description: Set to export ASM policy in binary format.
+  returned: changed
+  type: bool
+  sample: yes
+

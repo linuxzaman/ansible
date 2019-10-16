@@ -1,0 +1,29 @@
+EXAMPLES:
+
+- name: Create a log publisher for use in high speed loggins
+  bigip_log_publisher:
+    name: publisher1
+    destinations:
+      - hsl1
+      - security-log-servers-logging
+    state: present
+    provider:
+      user: admin
+      password: secret
+      server: lb.mydomain.com
+  delegate_to: localhost
+
+
+RETURN VALUES:
+
+description:
+  description: The new description of the resource.
+  returned: changed
+  type: str
+  sample: "Security log publisher"
+destinations:
+  description: The new list of destinations for the resource.
+  returned: changed
+  type: list
+  sample: ['/Common/destination1', '/Common/destination2']
+

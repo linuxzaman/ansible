@@ -1,0 +1,53 @@
+EXAMPLES:
+
+- name: Add a host using OMAPI
+  omapi_host:
+    key_name: defomapi
+    key: +bFQtBCta6j2vWkjPkNFtgA==
+    host: 10.98.4.55
+    macaddr: 44:dd:ab:dd:11:44
+    name: server01
+    ip: 192.168.88.99
+    ddns: yes
+    statements:
+    - filename "pxelinux.0"
+    - next-server 1.1.1.1
+    state: present
+
+- name: Remove a host using OMAPI
+  omapi_host:
+    key_name: defomapi
+    key: +bFQtBCta6j2vWkjPkNFtgA==
+    host: 10.1.1.1
+    macaddr: 00:66:ab:dd:11:44
+    state: absent
+
+
+RETURN VALUES:
+
+lease:
+    description: dictionary containing host information
+    returned: success
+    type: complex
+    contains:
+        ip-address:
+            description: IP address, if there is.
+            returned: success
+            type: str
+            sample: '192.168.1.5'
+        hardware-address:
+            description: MAC address
+            returned: success
+            type: str
+            sample: '00:11:22:33:44:55'
+        hardware-type:
+            description: hardware type, generally '1'
+            returned: success
+            type: int
+            sample: 1
+        name:
+            description: hostname
+            returned: success
+            type: str
+            sample: 'mydesktop'
+

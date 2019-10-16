@@ -1,0 +1,197 @@
+> WIN_USER    (/usr/lib/python2.7/dist-packages/ansible/modules/windows/win_user.py)
+
+        Manages local Windows user accounts. For non-Windows targets, use the [user] module instead.
+
+  * This module is maintained by The Ansible Core Team
+OPTIONS (= is mandatory):
+
+- account_disabled
+        `yes' will disable the user account.
+        `no' will clear the disabled flag.
+        [Default: (null)]
+        type: bool
+        version_added: 1.9
+
+- account_locked
+        `no' will unlock the user account if locked.
+        (Choices: no)[Default: (null)]
+        version_added: 1.9
+
+- description
+        Description of the user.
+        [Default: (null)]
+        type: str
+        version_added: 1.9
+
+- fullname
+        Full name of the user.
+        [Default: (null)]
+        type: str
+        version_added: 1.9
+
+- groups
+        Adds or removes the user from this comma-separated lis of groups, depending on the value of `groups_action'.
+        When `groups_action' is `replace' and `groups' is set to the empty string ('groups='), the user is removed from all groups.
+        [Default: (null)]
+        version_added: 1.9
+
+- groups_action
+        If `add', the user is added to each group in `groups' where not already a member.
+        If `replace', the user is added as a member of each group in `groups' and removed from any other groups.
+        If `remove', the user is removed from each group in `groups'.
+        (Choices: add, replace, remove)[Default: replace]
+        type: str
+        version_added: 1.9
+
+= name
+        Name of the user to create, remove or modify.
+
+        type: str
+
+- password
+        Optionally set the user's password to this (plain text) value.
+        [Default: (null)]
+        type: str
+
+- password_expired
+        `yes' will require the user to change their password at next login.
+        `no' will clear the expired password flag.
+        [Default: (null)]
+        type: bool
+        version_added: 1.9
+
+- password_never_expires
+        `yes' will set the password to never expire.
+        `no' will allow the password to expire.
+        [Default: (null)]
+        type: bool
+        version_added: 1.9
+
+- state
+        When `absent', removes the user account if it exists.
+        When `present', creates or updates the user account.
+        When `query' (new in 1.9), retrieves the user account details without making any changes.
+        (Choices: absent, present, query)[Default: present]
+        type: str
+
+- update_password
+        `always' will update passwords if they differ.  `on_create' will only set the password for newly created users.
+        (Choices: always, on_create)[Default: always]
+        type: str
+        version_added: 1.9
+
+- user_cannot_change_password
+        `yes' will prevent the user from changing their password.
+        `no' will allow the user to change their password.
+        [Default: (null)]
+        type: bool
+        version_added: 1.9
+
+
+SEE ALSO:
+      * Module user
+           The official documentation on the user module.
+           https://docs.ansible.com/ansible/latest/modules/user_module.html
+      * Module win_domain_membership
+           The official documentation on the win_domain_membership module.
+           https://docs.ansible.com/ansible/latest/modules/win_domain_membership_module.html
+      * Module win_domain_user
+           The official documentation on the win_domain_user module.
+           https://docs.ansible.com/ansible/latest/modules/win_domain_user_module.html
+      * Module win_group
+           The official documentation on the win_group module.
+           https://docs.ansible.com/ansible/latest/modules/win_group_module.html
+      * Module win_group_membership
+           The official documentation on the win_group_membership module.
+           https://docs.ansible.com/ansible/latest/modules/win_group_membership_module.html
+      * Module win_user_profile
+           The official documentation on the win_user_profile module.
+           https://docs.ansible.com/ansible/latest/modules/win_user_profile_module.html
+
+
+AUTHOR: Paul Durivage (@angstwad), Chris Church (@cchurch)
+        METADATA:
+          status:
+          - stableinterface
+          supported_by: core
+        
+
+EXAMPLES:
+
+- name: Ensure user bob is present
+  win_user:
+    name: bob
+    password: B0bP4ssw0rd
+    state: present
+    groups:
+      - Users
+
+- name: Ensure user bob is absent
+  win_user:
+    name: bob
+    state: absent
+
+
+RETURN VALUES:
+
+account_disabled:
+  description: Whether the user is disabled.
+  returned: user exists
+  type: bool
+  sample: false
+account_locked:
+  description: Whether the user is locked.
+  returned: user exists
+  type: bool
+  sample: false
+description:
+  description: The description set for the user.
+  returned: user exists
+  type: str
+  sample: Username for test
+fullname:
+  description: The full name set for the user.
+  returned: user exists
+  type: str
+  sample: Test Username
+groups:
+  description: A list of groups and their ADSI path the user is a member of.
+  returned: user exists
+  type: list
+  sample: [
+    {
+      "name": "Administrators",
+      "path": "WinNT://WORKGROUP/USER-PC/Administrators"
+    }
+  ]
+name:
+  description: The name of the user
+  returned: always
+  type: str
+  sample: username
+password_expired:
+  description: Whether the password is expired.
+  returned: user exists
+  type: bool
+  sample: false
+password_never_expires:
+  description: Whether the password is set to never expire.
+  returned: user exists
+  type: bool
+  sample: true
+path:
+  description: The ADSI path for the user.
+  returned: user exists
+  type: str
+  sample: "WinNT://WORKGROUP/USER-PC/username"
+sid:
+  description: The SID for the user.
+  returned: user exists
+  type: str
+  sample: S-1-5-21-3322259488-2828151810-3939402796-1001
+user_cannot_change_password:
+  description: Whether the user can change their own password.
+  returned: user exists
+  type: bool
+  sample: false
+

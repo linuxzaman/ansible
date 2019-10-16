@@ -1,0 +1,68 @@
+EXAMPLES:
+
+- name: CloudEngine snmp target host test
+  hosts: cloudengine
+  connection: local
+  gather_facts: no
+  vars:
+    cli:
+      host: "{{ inventory_hostname }}"
+      port: "{{ ansible_ssh_port }}"
+      username: "{{ username }}"
+      password: "{{ password }}"
+      transport: cli
+
+  tasks:
+
+  - name: "Config SNMP version"
+    ce_snmp_target_host:
+      state: present
+      version: v2cv3
+      provider: "{{ cli }}"
+
+  - name: "Config SNMP target host"
+    ce_snmp_target_host:
+      state: present
+      host_name: test1
+      address: 1.1.1.1
+      notify_type: trap
+      vpn_name: js
+      security_model: v2c
+      security_name: wdz
+      provider: "{{ cli }}"
+
+
+RETURN VALUES:
+
+changed:
+    description: check to see if a change was made on the device
+    returned: always
+    type: bool
+    sample: true
+proposed:
+    description: k/v pairs of parameters passed into module
+    returned: always
+    type: dict
+    sample: {"address": "10.135.182.158", "host_name": "test2",
+             "notify_type": "trap", "security_level": "authentication",
+             "security_model": "v3", "security_name_v3": "wdz",
+             "state": "present", "vpn_name": "js"}
+existing:
+    description: k/v pairs of existing aaa server
+    returned: always
+    type: dict
+    sample: {}
+end_state:
+    description: k/v pairs of aaa params after module execution
+    returned: always
+    type: dict
+    sample: {"target host info": [{"address": "10.135.182.158", "domain": "snmpUDPDomain",
+                                   "nmsName": "test2", "notifyType": "trap",
+                                   "securityLevel": "authentication", "securityModel": "v3",
+                                   "securityNameV3": "wdz", "vpnInstanceName": "js"}]}
+updates:
+    description: command sent to the device
+    returned: always
+    type: list
+    sample: ["snmp-agent target-host host-name test2 trap address udp-domain 10.135.182.158 vpn-instance js params securityname wdz v3 authentication"]
+

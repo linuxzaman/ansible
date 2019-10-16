@@ -1,0 +1,139 @@
+> READ_CSV    (/usr/lib/python2.7/dist-packages/ansible/modules/files/read_csv.py)
+
+        Read a CSV file and return a list or a dictionary, containing one dictionary per row.
+
+  * This module is maintained by The Ansible Community
+OPTIONS (= is mandatory):
+
+- delimiter
+        A one-character string used to separate fields.
+        When using this parameter, you change the default value used by `dialect'.
+        The default value depends on the dialect used.
+        [Default: (null)]
+        type: str
+
+- dialect
+        The CSV dialect to use when parsing the CSV file.
+        Possible values include `excel', `excel-tab' or `unix'.
+        [Default: excel]
+        type: str
+
+- fieldnames
+        A list of field names for every column.
+        This is needed if the CSV does not have a header.
+        [Default: (null)]
+        type: list
+
+- key
+        The column name used as a key for the resulting dictionary.
+        If `key' is unset, the module returns a list of dictionaries, where each dictionary is a row in the CSV file.
+        [Default: (null)]
+        type: str
+
+= path
+        The CSV filename to read data from.
+        (Aliases: filename)
+        type: path
+
+- skipinitialspace
+        Whether to ignore any whitespaces immediately following the delimiter.
+        When using this parameter, you change the default value used by `dialect'.
+        The default value depends on the dialect used.
+        [Default: (null)]
+        type: bool
+
+- strict
+        Whether to raise an exception on bad CSV input.
+        When using this parameter, you change the default value used by `dialect'.
+        The default value depends on the dialect used.
+        [Default: (null)]
+        type: bool
+
+- unique
+        Whether the `key' used is expected to be unique.
+        [Default: True]
+        type: bool
+
+
+NOTES:
+      * Ansible also ships with the `csvfile' lookup plugin, which can be used to do selective lookups in CSV files from Jinja.
+
+
+AUTHOR: Dag Wieers (@dagwieers)
+        METADATA:
+          status:
+          - preview
+          supported_by: community
+        
+
+EXAMPLES:
+
+# Example CSV file with header
+#
+#   name,uid,gid
+#   dag,500,500
+#   jeroen,501,500
+
+# Read a CSV file and access user 'dag'
+- name: Read users from CSV file and return a dictionary
+  read_csv:
+    path: users.csv
+    key: name
+  register: users
+  delegate_to: localhost
+
+- debug:
+    msg: 'User {{ users.dict.dag.name }} has UID {{ users.dict.dag.uid }} and GID {{ users.dict.dag.gid }}'
+
+# Read a CSV file and access the first item
+- name: Read users from CSV file and return a list
+  read_csv:
+    path: users.csv
+  register: users
+  delegate_to: localhost
+
+- debug:
+    msg: 'User {{ users.list.1.name }} has UID {{ users.list.1.uid }} and GID {{ users.list.1.gid }}'
+
+# Example CSV file without header and semi-colon delimiter
+#
+#   dag;500;500
+#   jeroen;501;500
+
+# Read a CSV file without headers
+- name: Read users from CSV file and return a list
+  read_csv:
+    path: users.csv
+    fieldnames: name,uid,gid
+    delimiter: ';'
+  register: users
+  delegate_to: localhost
+
+
+RETURN VALUES:
+
+dict:
+  description: The CSV content as a dictionary.
+  returned: success
+  type: dict
+  sample:
+    dag:
+      name: dag
+      uid: 500
+      gid: 500
+    jeroen:
+      name: jeroen
+      uid: 501
+      gid: 500
+list:
+  description: The CSV content as a list.
+  returned: success
+  type: list
+  sample:
+  - name: dag
+    uid: 500
+    gid: 500
+  - name: jeroen
+    uid: 501
+    gid: 500
+

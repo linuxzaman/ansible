@@ -1,0 +1,92 @@
+> FMGR_SCRIPT    (/usr/lib/python2.7/dist-packages/ansible/modules/network/fortimanager/fmgr_script.py)
+
+        Create/edit/delete scripts and execute the scripts on the FortiManager using jsonrpc API
+
+  * This module is maintained by The Ansible Community
+OPTIONS (= is mandatory):
+
+= adom
+        The administrative domain (admon) the configuration belongs to
+
+
+- mode
+        The desired mode of the specified object. Execute will run the script.
+        (Choices: add, delete, execute, set)[Default: add]
+        version_added: 2.8
+
+- script_content
+        The script content that will be executed.
+        [Default: (null)]
+
+- script_description
+        The description of the script.
+        [Default: (null)]
+
+= script_name
+        The name of the script.
+
+
+- script_package
+        (datasource) Policy package object to run the script against
+        [Default: (null)]
+
+- script_scope
+        (datasource) The devices that the script will run on, can have both device member and device group member.
+        [Default: (null)]
+
+- script_target
+        The target of the script to be run.
+        [Default: (null)]
+
+- script_type
+        The type of script (CLI or TCL).
+        [Default: (null)]
+
+- vdom
+        The virtual domain (vdom) the configuration belongs to
+        [Default: (null)]
+
+
+NOTES:
+      * Full Documentation at https://ftnt-ansible-docs.readthedocs.io/en/latest/.
+
+
+AUTHOR: Andrew Welsh (@Ghilli3)
+        METADATA:
+          status:
+          - preview
+          supported_by: community
+        
+
+EXAMPLES:
+
+- name: CREATE SCRIPT
+  fmgr_script:
+    adom: "root"
+    script_name: "TestScript"
+    script_type: "cli"
+    script_target: "remote_device"
+    script_description: "Create by Ansible"
+    script_content: "get system status"
+
+- name: EXECUTE SCRIPT
+  fmgr_script:
+    adom: "root"
+    script_name: "TestScript"
+    mode: "execute"
+    script_scope: "FGT1,FGT2"
+
+- name: DELETE SCRIPT
+  fmgr_script:
+    adom: "root"
+    script_name: "TestScript"
+    mode: "delete"
+
+
+RETURN VALUES:
+
+api_result:
+  description: full API response, includes status code and message
+  returned: always
+  type: str
+

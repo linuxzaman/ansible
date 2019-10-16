@@ -1,0 +1,75 @@
+EXAMPLES:
+
+- name: add a traffic type
+  cs_traffic_type:
+    physical_network: public-network
+    traffic_type: Guest
+    zone: test-zone
+  delegate_to: localhost
+
+- name: update traffic type
+  cs_traffic_type:
+    physical_network: public-network
+    traffic_type: Guest
+    kvm_networklabel: cloudbr0
+    zone: test-zone
+  delegate_to: localhost
+
+- name: remove traffic type
+  cs_traffic_type:
+    physical_network: public-network
+    traffic_type: Public
+    state: absent
+    zone: test-zone
+  delegate_to: localhost
+
+
+RETURN VALUES:
+
+---
+id:
+  description: ID of the network provider
+  returned: success
+  type: str
+  sample: 659c1840-9374-440d-a412-55ca360c9d3c
+traffic_type:
+  description: the trafficType that was added to the physical network
+  returned: success
+  type: str
+  sample: Public
+hyperv_networklabel:
+  description: The network name label of the physical device dedicated to this traffic on a HyperV host
+  returned: success
+  type: str
+  sample: HyperV Internal Switch
+kvm_networklabel:
+  description: The network name label of the physical device dedicated to this traffic on a KVM host
+  returned: success
+  type: str
+  sample: cloudbr0
+ovm3_networklabel:
+  description: The network name of the physical device dedicated to this traffic on an OVM3 host
+  returned: success
+  type: str
+  sample: cloudbr0
+physical_network:
+  description: the physical network this belongs to
+  returned: success
+  type: str
+  sample: 28ed70b7-9a1f-41bf-94c3-53a9f22da8b6
+vmware_networklabel:
+  description: The network name label of the physical device dedicated to this traffic on a VMware host
+  returned: success
+  type: str
+  sample: Management Network
+xen_networklabel:
+  description: The network name label of the physical device dedicated to this traffic on a XenServer host
+  returned: success
+  type: str
+  sample: xenbr0
+zone:
+  description: Name of zone the physical network is in.
+  returned: success
+  type: str
+  sample: ch-gva-2
+

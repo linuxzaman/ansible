@@ -1,0 +1,33 @@
+EXAMPLES:
+
+- name: DELETE Profile
+    fmgr_secprof_appctrl:
+      name: "Ansible_Application_Control_Profile"
+      comment: "Created by Ansible Module TEST"
+      mode: "delete"
+
+  - name: CREATE Profile
+    fmgr_secprof_appctrl:
+      name: "Ansible_Application_Control_Profile"
+      comment: "Created by Ansible Module TEST"
+      mode: "set"
+      entries: [{
+                action: "block",
+                log: "enable",
+                log-packet: "enable",
+                protocols: ["1"],
+                quarantine: "attacker",
+                quarantine-log: "enable",
+                },
+                {action: "pass",
+                category: ["2","3","4"]},
+              ]
+
+
+RETURN VALUES:
+
+api_result:
+  description: full API response, includes status code and message
+  returned: always
+  type: str
+

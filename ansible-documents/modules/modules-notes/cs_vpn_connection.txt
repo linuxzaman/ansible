@@ -1,0 +1,238 @@
+> CS_VPN_CONNECTION    (/usr/lib/python2.7/dist-packages/ansible/modules/cloud/cloudstack/cs_vpn_connection.py)
+
+        Create and remove VPN connections.
+
+  * This module is maintained by The Ansible Community
+OPTIONS (= is mandatory):
+
+- account
+        Account the VPN connection is related to.
+        [Default: (null)]
+        type: str
+
+- api_http_method
+        HTTP method used to query the API endpoint.
+        If not given, the `CLOUDSTACK_METHOD' env variable is considered.
+        As the last option, the value is taken from the ini config file, also see the notes.
+        Fallback value is `get' if not specified.
+        (Choices: get, post)[Default: (null)]
+        type: str
+
+- api_key
+        API key of the CloudStack API.
+        If not given, the `CLOUDSTACK_KEY' env variable is considered.
+        As the last option, the value is taken from the ini config file, also see the notes.
+        [Default: (null)]
+        type: str
+
+- api_region
+        Name of the ini section in the `cloustack.ini' file.
+        If not given, the `CLOUDSTACK_REGION' env variable is considered.
+        [Default: cloudstack]
+        type: str
+
+- api_secret
+        Secret key of the CloudStack API.
+        If not set, the `CLOUDSTACK_SECRET' env variable is considered.
+        As the last option, the value is taken from the ini config file, also see the notes.
+        [Default: (null)]
+        type: str
+
+- api_timeout
+        HTTP timeout in seconds.
+        If not given, the `CLOUDSTACK_TIMEOUT' env variable is considered.
+        As the last option, the value is taken from the ini config file, also see the notes.
+        Fallback value is 10 seconds if not specified.
+        [Default: (null)]
+        type: int
+
+- api_url
+        URL of the CloudStack API e.g. https://cloud.example.com/client/api.
+        If not given, the `CLOUDSTACK_ENDPOINT' env variable is considered.
+        As the last option, the value is taken from the ini config file, also see the notes.
+        [Default: (null)]
+        type: str
+
+- domain
+        Domain the VPN connection is related to.
+        [Default: (null)]
+        type: str
+
+- force
+        Activate the VPN gateway if not already activated on `state=present'.
+        Also see [cs_vpn_gateway].
+        [Default: False]
+        type: bool
+
+- passive
+        State of the VPN connection.
+        Only considered when `state=present'.
+        [Default: False]
+        type: bool
+
+- poll_async
+        Poll async jobs until job has finished.
+        [Default: True]
+        type: bool
+
+- project
+        Name of the project the VPN connection is related to.
+        [Default: (null)]
+        type: str
+
+- state
+        State of the VPN connection.
+        (Choices: present, absent)[Default: present]
+        type: str
+
+= vpc
+        Name of the VPC the VPN connection is related to.
+
+        type: str
+
+= vpn_customer_gateway
+        Name of the VPN customer gateway.
+
+        type: str
+
+- zone
+        Name of the zone the VPC is related to.
+        If not set, default zone is used.
+        [Default: (null)]
+        type: str
+
+
+NOTES:
+      * Ansible uses the `cs' library's configuration method if credentials are not provided by the arguments `api_url', `api_key',
+        `api_secret'. Configuration is read from several locations, in the following order. The `CLOUDSTACK_ENDPOINT',
+        `CLOUDSTACK_KEY', `CLOUDSTACK_SECRET' and `CLOUDSTACK_METHOD'. `CLOUDSTACK_TIMEOUT' environment variables. A
+        `CLOUDSTACK_CONFIG' environment variable pointing to an `.ini' file. A `cloudstack.ini' file in the current working
+        directory. A `.cloudstack.ini' file in the users home directory. Optionally multiple credentials and endpoints can be
+        specified using ini sections in `cloudstack.ini'. Use the argument `api_region' to select the section name, default section
+        is `cloudstack'. See https://github.com/exoscale/cs for more information.
+      * A detailed guide about cloudstack modules can be found in the L(CloudStack Cloud
+        Guide,../scenario_guides/guide_cloudstack.html).
+      * This module supports check mode.
+
+
+REQUIREMENTS:  python >= 2.6, cs >= 0.6.10
+
+AUTHOR: René Moser (@resmo)
+        METADATA:
+          status:
+          - preview
+          supported_by: community
+        
+
+EXAMPLES:
+
+- name: Create a VPN connection with activated VPN gateway
+  cs_vpn_connection:
+    vpn_customer_gateway: my vpn connection
+    vpc: my vpc
+  delegate_to: localhost
+
+- name: Create a VPN connection and force VPN gateway activation
+  cs_vpn_connection:
+    vpn_customer_gateway: my vpn connection
+    vpc: my vpc
+    force: yes
+  delegate_to: localhost
+
+- name: Remove a vpn connection
+  cs_vpn_connection:
+    vpn_customer_gateway: my vpn connection
+    vpc: my vpc
+    state: absent
+  delegate_to: localhost
+
+
+RETURN VALUES:
+
+---
+id:
+  description: UUID of the VPN connection.
+  returned: success
+  type: str
+  sample: 04589590-ac63-4ffc-93f5-b698b8ac38b6
+vpn_gateway_id:
+  description: UUID of the VPN gateway.
+  returned: success
+  type: str
+  sample: 04589590-ac63-93f5-4ffc-b698b8ac38b6
+domain:
+  description: Domain the VPN connection is related to.
+  returned: success
+  type: str
+  sample: example domain
+account:
+  description: Account the VPN connection is related to.
+  returned: success
+  type: str
+  sample: example account
+project:
+  description: Name of project the VPN connection is related to.
+  returned: success
+  type: str
+  sample: Production
+created:
+  description: Date the connection was created.
+  returned: success
+  type: str
+  sample: 2014-12-01T14:57:57+0100
+dpd:
+  description: Whether dead pear detection is enabled or not.
+  returned: success
+  type: bool
+  sample: true
+esp_lifetime:
+  description: Lifetime in seconds of phase 2 VPN connection.
+  returned: success
+  type: int
+  sample: 86400
+esp_policy:
+  description: IKE policy of the VPN connection.
+  returned: success
+  type: str
+  sample: aes256-sha1;modp1536
+force_encap:
+  description: Whether encapsulation for NAT traversal is enforced or not.
+  returned: success
+  type: bool
+  sample: true
+ike_lifetime:
+  description: Lifetime in seconds of phase 1 VPN connection.
+  returned: success
+  type: int
+  sample: 86400
+ike_policy:
+  description: ESP policy of the VPN connection.
+  returned: success
+  type: str
+  sample: aes256-sha1;modp1536
+cidrs:
+  description: List of CIDRs of the customer gateway.
+  returned: success
+  type: list
+  sample: [ 10.10.10.0/24 ]
+passive:
+  description: Whether the connection is passive or not.
+  returned: success
+  type: bool
+  sample: false
+public_ip:
+  description: IP address of the VPN gateway.
+  returned: success
+  type: str
+  sample: 10.100.212.10
+gateway:
+  description: IP address of the VPN customer gateway.
+  returned: success
+  type: str
+  sample: 10.101.214.10
+state:
+  description: State of the VPN connection.
+  returned: success
+  type: str
+  sample: Connected
+

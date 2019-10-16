@@ -1,0 +1,568 @@
+> AZURE_RM_APPGATEWAY    (/usr/lib/python2.7/dist-packages/ansible/modules/cloud/azure/azure_rm_appgateway.py)
+
+        Create, update and delete instance of Application Gateway.
+
+  * This module is maintained by The Ansible Community
+OPTIONS (= is mandatory):
+
+- ad_user
+        Active Directory username. Use when authenticating with an Active Directory user rather than service principal.
+        [Default: (null)]
+        type: str
+
+- adfs_authority_url
+        Azure AD authority url. Use when authenticating with Username/password, and has your own ADFS authority.
+        [Default: (null)]
+        type: str
+        version_added: 2.6
+
+- api_profile
+        Selects an API profile to use when communicating with Azure services. Default value of `latest' is appropriate for public clouds;
+        future values will allow use with Azure Stack.
+        [Default: latest]
+        type: str
+        version_added: 2.5
+
+- append_tags
+        Use to control if tags field is canonical or just appends to existing tags.
+        When canonical, any tags not found in the tags parameter will be removed from the object's metadata.
+        [Default: True]
+        type: bool
+
+- auth_source
+        Controls the source of the credentials to use for authentication.
+        If not specified, ANSIBLE_AZURE_AUTH_SOURCE environment variable will be used and default to `auto' if variable is not defined.
+        `auto' will follow the default precedence of module parameters -> environment variables -> default profile in credential file
+        `~/.azure/credentials'.
+        When set to `cli', the credentials will be sources from the default Azure CLI profile.
+        Can also be set via the `ANSIBLE_AZURE_AUTH_SOURCE' environment variable.
+        When set to `msi', the host machine must be an azure resource with an enabled MSI extension. `subscription_id' or the environment
+        variable `AZURE_SUBSCRIPTION_ID' can be used to identify the subscription ID if the resource is granted access to more than one
+        subscription, otherwise the first subscription is chosen.
+        The `msi' was added in Ansible 2.6.
+        (Choices: auto, cli, credential_file, env, msi)[Default: (null)]
+        type: str
+        version_added: 2.5
+
+- authentication_certificates
+        Authentication certificates of the application gateway resource.
+        [Default: (null)]
+        suboptions:
+          data:
+            description:
+            - Certificate public data - base64 encoded pfx.
+          name:
+            description:
+            - Name of the resource that is unique within a resource group. This name can be
+              used to access the resource.
+        
+
+- backend_address_pools
+        List of backend address pool of the application gateway resource.
+        [Default: (null)]
+        suboptions:
+          backend_addresses:
+            description:
+            - List of backend addresses.
+            suboptions:
+              fqdn:
+                description:
+                - Fully qualified domain name (FQDN).
+              ip_address:
+                description:
+                - IP address.
+          name:
+            description:
+            - Resource that is unique within a resource group. This name can be used to access
+              the resource.
+        
+
+- backend_http_settings_collection
+        Backend http settings of the application gateway resource.
+        [Default: (null)]
+        suboptions:
+          affinity_cookie_name:
+            description:
+            - Cookie name to use for the affinity cookie.
+          authentication_certificates:
+            description:
+            - List of references to application gateway authentication certificates.
+            suboptions:
+              id:
+                description:
+                - Resource ID.
+          cookie_based_affinity:
+            choices:
+            - enabled
+            - disabled
+            description:
+            - Cookie based affinity.
+          host_name:
+            description:
+            - Host header to be sent to the backend servers.
+          name:
+            description:
+            - Name of the resource that is unique within a resource group. This name can be
+              used to access the resource.
+          path:
+            description:
+            - Path which should be used as a prefix for all `http' requests.
+            - Null means no path will be prefixed. Default value is null.
+          pick_host_name_from_backend_address:
+            description:
+            - Whether to pick host header should be picked from the host name of the backend
+              server. Default value is false.
+          port:
+            description:
+            - The destination port on the backend.
+          probe:
+            description:
+            - Probe resource of an application gateway.
+          protocol:
+            choices:
+            - http
+            - https
+            description:
+            - The protocol used to communicate with the backend.
+          request_timeout:
+            description:
+            - Request timeout in seconds.
+            - Application Gateway will fail the request if response is not received within
+              RequestTimeout.
+            - Acceptable values are from 1 second to 86400 seconds.
+        
+
+- cert_validation_mode
+        Controls the certificate validation behavior for Azure endpoints. By default, all modules will validate the server certificate,
+        but when an HTTPS proxy is in use, or against Azure Stack, it may be necessary to disable this behavior by passing `ignore'. Can
+        also be set via credential file profile or the `AZURE_CERT_VALIDATION' environment variable.
+        (Choices: ignore, validate)[Default: (null)]
+        type: str
+        version_added: 2.5
+
+- client_id
+        Azure client ID. Use when authenticating with a Service Principal.
+        [Default: (null)]
+        type: str
+
+- cloud_environment
+        For cloud environments other than the US public cloud, the environment name (as defined by Azure Python SDK, eg,
+        `AzureChinaCloud', `AzureUSGovernment'), or a metadata discovery endpoint URL (required for Azure Stack). Can also be set via
+        credential file profile or the `AZURE_CLOUD_ENVIRONMENT' environment variable.
+        [Default: AzureCloud]
+        type: str
+        version_added: 2.4
+
+- frontend_ip_configurations
+        Frontend IP addresses of the application gateway resource.
+        [Default: (null)]
+        suboptions:
+          name:
+            description:
+            - Name of the resource that is unique within a resource group. This name can be
+              used to access the resource.
+          private_ip_address:
+            description:
+            - PrivateIPAddress of the network interface IP Configuration.
+          private_ip_allocation_method:
+            choices:
+            - static
+            - dynamic
+            description:
+            - PrivateIP allocation method.
+          public_ip_address:
+            description:
+            - Reference of the PublicIP resource.
+          subnet:
+            description:
+            - Reference of the subnet resource.
+        
+
+- frontend_ports
+        List of frontend ports of the application gateway resource.
+        [Default: (null)]
+        suboptions:
+          name:
+            description:
+            - Name of the resource that is unique within a resource group. This name can be
+              used to access the resource.
+          port:
+            description:
+            - Frontend port.
+        
+
+- gateway_ip_configurations
+        List of subnets used by the application gateway.
+        [Default: (null)]
+        suboptions:
+          name:
+            description:
+            - Name of the resource that is unique within a resource group. This name can be
+              used to access the resource.
+          subnet:
+            description:
+            - Reference of the subnet resource. A subnet from where application gateway gets
+              its private address.
+        
+
+- http_listeners
+        List of HTTP listeners of the application gateway resource.
+        [Default: (null)]
+        suboptions:
+          frontend_ip_configuration:
+            description:
+            - Frontend IP configuration resource of an application gateway.
+          frontend_port:
+            description:
+            - Frontend port resource of an application gateway.
+          host_name:
+            description:
+            - Host name of `http' listener.
+          name:
+            description:
+            - Name of the resource that is unique within a resource group. This name can be
+              used to access the resource.
+          protocol:
+            choices:
+            - http
+            - https
+            description:
+            - Protocol of the c(http) listener.
+          require_server_name_indication:
+            description:
+            - Applicable only if `protocol' is `https'. Enables SNI for multi-hosting.
+          ssl_certificate:
+            description:
+            - SSL certificate resource of an application gateway.
+        
+
+- location
+        Resource location. If not set, location from the resource group will be used as default.
+        [Default: (null)]
+
+= name
+        The name of the application gateway.
+
+
+- password
+        Active Directory user password. Use when authenticating with an Active Directory user rather than service principal.
+        [Default: (null)]
+
+- probes
+        Probes available to the application gateway resource.
+        [Default: (null)]
+        suboptions:
+          host:
+            description:
+            - Host name to send the `probe' to.
+          interval:
+            description:
+            - The probing interval in seconds.
+            - This is the time interval between two consecutive probes.
+            - Acceptable values are from 1 second to 86400 seconds.
+          name:
+            description:
+            - Name of the `probe' that is unique within an Application Gateway.
+          path:
+            description:
+            - Relative path of `probe'.
+            - Valid path starts from '/'.
+            - Probe is sent to <Protocol>://<host>:<port><path>.
+          protocol:
+            choices:
+            - http
+            - https
+            description:
+            - The protocol used for the `probe'.
+          timeout:
+            description:
+            - The probe timeout in seconds.
+            - Probe marked as failed if valid response is not received with this timeout period.
+            - Acceptable values are from 1 second to 86400 seconds.
+          unhealthy_threshold:
+            description:
+            - The `probe' retry count.
+            - Backend server is marked down after consecutive probe failure count reaches
+              UnhealthyThreshold.
+            - Acceptable values are from 1 second to 20.
+        
+        version_added: 2.8
+
+- profile
+        Security profile found in ~/.azure/credentials file.
+        [Default: (null)]
+        type: str
+
+- redirect_configurations
+        Redirect configurations of the application gateway resource.
+        [Default: (null)]
+        suboptions:
+          include_path:
+            description:
+            - Include path in the redirected url.
+          include_query_string:
+            description:
+            - Include query string in the redirected url.
+          name:
+            description:
+            - Name of the resource that is unique within a resource group.
+          redirect_type:
+            choices:
+            - permanent
+            - found
+            - see_other
+            - temporary
+            description:
+            - Redirection type.
+          target_listener:
+            description:
+            - Reference to a listener to redirect the request to.
+        
+        version_added: 2.8
+
+- request_routing_rules
+        List of request routing rules of the application gateway resource.
+        [Default: (null)]
+        suboptions:
+          backend_address_pool:
+            description:
+            - Backend address pool resource of the application gateway.
+          backend_http_settings:
+            description:
+            - Backend `http' settings resource of the application gateway.
+          http_listener:
+            description:
+            - Http listener resource of the application gateway.
+          name:
+            description:
+            - Name of the resource that is unique within a resource group. This name can be
+              used to access the resource.
+          redirect_configuration:
+            description:
+            - Redirect configuration resource of the application gateway.
+          rule_type:
+            choices:
+            - basic
+            - path_based_routing
+            description:
+            - Rule type.
+        
+
+= resource_group
+        The name of the resource group.
+
+
+- secret
+        Azure client secret. Use when authenticating with a Service Principal.
+        [Default: (null)]
+        type: str
+
+- sku
+        SKU of the application gateway resource.
+        [Default: (null)]
+        suboptions:
+          capacity:
+            description:
+            - Capacity (instance count) of an application gateway.
+          name:
+            choices:
+            - standard_small
+            - standard_medium
+            - standard_large
+            - waf_medium
+            - waf_large
+            description:
+            - Name of an application gateway SKU.
+          tier:
+            choices:
+            - standard
+            - waf
+            description:
+            - Tier of an application gateway.
+        
+
+- ssl_certificates
+        SSL certificates of the application gateway resource.
+        [Default: (null)]
+        suboptions:
+          data:
+            description:
+            - Base-64 encoded pfx certificate.
+            - Only applicable in PUT Request.
+          name:
+            description:
+            - Name of the resource that is unique within a resource group. This name can be
+              used to access the resource.
+          password:
+            description:
+            - Password for the pfx file specified in `data'.
+            - Only applicable in PUT request.
+        
+
+- ssl_policy
+        SSL policy of the application gateway resource.
+        [Default: (null)]
+        suboptions:
+          cipher_suites:
+            choices:
+            - tls_ecdhe_rsa_with_aes_256_gcm_sha384
+            - tls_ecdhe_rsa_with_aes_128_gcm_sha256
+            - tls_ecdhe_rsa_with_aes_256_cbc_sha384
+            - tls_ecdhe_rsa_with_aes_128_cbc_sha256
+            - tls_ecdhe_rsa_with_aes_256_cbc_sha
+            - tls_ecdhe_rsa_with_aes_128_cbc_sha
+            - tls_dhe_rsa_with_aes_256_gcm_sha384
+            - tls_dhe_rsa_with_aes_128_gcm_sha256
+            - tls_dhe_rsa_with_aes_256_cbc_sha
+            - tls_dhe_rsa_with_aes_128_cbc_sha
+            - tls_rsa_with_aes_256_gcm_sha384
+            - tls_rsa_with_aes_128_gcm_sha256
+            - tls_rsa_with_aes_256_cbc_sha256
+            - tls_rsa_with_aes_128_cbc_sha256
+            - tls_rsa_with_aes_256_cbc_sha
+            - tls_rsa_with_aes_128_cbc_sha
+            - tls_ecdhe_ecdsa_with_aes_256_gcm_sha384
+            - tls_ecdhe_ecdsa_with_aes_128_gcm_sha256
+            - tls_ecdhe_ecdsa_with_aes_256_cbc_sha384
+            - tls_ecdhe_ecdsa_with_aes_128_cbc_sha256
+            - tls_ecdhe_ecdsa_with_aes_256_cbc_sha
+            - tls_ecdhe_ecdsa_with_aes_128_cbc_sha
+            - tls_dhe_dss_with_aes_256_cbc_sha256
+            - tls_dhe_dss_with_aes_128_cbc_sha256
+            - tls_dhe_dss_with_aes_256_cbc_sha
+            - tls_dhe_dss_with_aes_128_cbc_sha
+            - tls_rsa_with_3des_ede_cbc_sha
+            - tls_dhe_dss_with_3des_ede_cbc_sha
+            description:
+            - List of SSL cipher suites to be enabled in the specified order to application
+              gateway.
+          disabled_ssl_protocols:
+            choices:
+            - tls_v1_0
+            - tls_v1_1
+            - tls_v1_2
+            description:
+            - List of SSL protocols to be disabled on application gateway.
+          min_protocol_version:
+            choices:
+            - tls_v1_0
+            - tls_v1_1
+            - tls_v1_2
+            description:
+            - Minimum version of Ssl protocol to be supported on application gateway.
+          policy_name:
+            choices:
+            - ssl_policy20150501
+            - ssl_policy20170401
+            - ssl_policy20170401_s
+            description:
+            - Name of Ssl `predefined' policy.
+          policy_type:
+            choices:
+            - predefined
+            - custom
+            description:
+            - Type of SSL Policy.
+        
+
+- state
+        Assert the state of the Public IP. Use `present' to create or update a and `absent' to delete.
+        (Choices: absent, present)[Default: present]
+
+- subscription_id
+        Your Azure subscription Id.
+        [Default: (null)]
+        type: str
+
+- tags
+        Dictionary of string:string pairs to assign as metadata to the object.
+        Metadata tags on the object will be updated with any provided values.
+        To remove tags set append_tags option to false.
+        [Default: (null)]
+        type: dict
+
+- tenant
+        Azure tenant ID. Use when authenticating with a Service Principal.
+        [Default: (null)]
+        type: str
+
+
+NOTES:
+      * For authentication with Azure you can pass parameters, set environment variables, use a profile stored in
+        ~/.azure/credentials, or log in before you run your tasks or playbook with `az login'.
+      * Authentication is also possible using a service principal or Active Directory user.
+      * To authenticate via service principal, pass subscription_id, client_id, secret and tenant or set environment variables
+        AZURE_SUBSCRIPTION_ID, AZURE_CLIENT_ID, AZURE_SECRET and AZURE_TENANT.
+      * To authenticate via Active Directory user, pass ad_user and password, or set AZURE_AD_USER and AZURE_PASSWORD in the
+        environment.
+      * Alternatively, credentials can be stored in ~/.azure/credentials. This is an ini file containing a [default] section and
+        the following keys: subscription_id, client_id, secret and tenant or subscription_id, ad_user and password. It is also
+        possible to add additional profiles. Specify the profile by passing profile or setting AZURE_PROFILE in the environment.
+
+
+SEE ALSO:
+      * Sign in with Azure CLI
+           How to authenticate using the `az login' command.
+           https://docs.microsoft.com/en-us/cli/azure/authenticate-azure-cli?view=azure-cli-latest
+
+
+REQUIREMENTS:  python >= 2.7, azure >= 2.0.0
+
+AUTHOR: Zim Kalinowski (@zikalino)
+        METADATA:
+          status:
+          - preview
+          supported_by: community
+        
+
+EXAMPLES:
+
+- name: Create instance of Application Gateway
+  azure_rm_appgateway:
+    resource_group: myResourceGroup
+    name: myappgateway
+    sku:
+      name: standard_small
+      tier: standard
+      capacity: 2
+    gateway_ip_configurations:
+      - subnet:
+          id: "{{ subnet_id }}"
+        name: app_gateway_ip_config
+    frontend_ip_configurations:
+      - subnet:
+          id: "{{ subnet_id }}"
+        name: sample_gateway_frontend_ip_config
+    frontend_ports:
+      - port: 90
+        name: ag_frontend_port
+    backend_address_pools:
+      - backend_addresses:
+          - ip_address: 10.0.0.4
+        name: test_backend_address_pool
+    backend_http_settings_collection:
+      - port: 80
+        protocol: http
+        cookie_based_affinity: enabled
+        name: sample_appgateway_http_settings
+    http_listeners:
+      - frontend_ip_configuration: sample_gateway_frontend_ip_config
+        frontend_port: ag_frontend_port
+        name: sample_http_listener
+    request_routing_rules:
+      - rule_type: Basic
+        backend_address_pool: test_backend_address_pool
+        backend_http_settings: sample_appgateway_http_settings
+        http_listener: sample_http_listener
+        name: rule1
+
+
+RETURN VALUES:
+
+id:
+    description:
+        - Resource ID.
+    returned: always
+    type: str
+    sample: id
+

@@ -1,0 +1,176 @@
+> MSO_SCHEMA_TEMPLATE_BD_SUBNET    (/usr/lib/python2.7/dist-packages/ansible/modules/network/aci/mso_schema_template_bd_subnet.py)
+
+        Manage BD subnets in schema templates on Cisco ACI Multi-Site.
+
+  * This module is maintained by The Ansible Community
+OPTIONS (= is mandatory):
+
+= bd
+        The name of the BD to manage.
+
+        type: str
+
+- description
+        The description of this subnet.
+        [Default: (null)]
+        type: str
+
+= host
+        IP Address or hostname of the ACI Multi Site Orchestrator host.
+        (Aliases: hostname)
+        type: str
+
+- no_default_gateway
+        Whether this subnet has a default gateway.
+        [Default: (null)]
+        type: bool
+
+- output_level
+        Influence the output of this ACI module.
+        `normal' means the standard output, incl. `current' dict
+        `info' adds informational output, incl. `previous', `proposed' and `sent' dicts
+        `debug' adds debugging output, incl. `filter_string', `method', `response', `status' and `url' information
+        (Choices: debug, info, normal)[Default: normal]
+        type: str
+
+= password
+        The password to use for authentication.
+        This option is mutual exclusive with `private_key'. If `private_key' is provided too, it will be used instead.
+
+        type: str
+
+- port
+        Port number to be used for the REST connection.
+        The default value depends on parameter `use_ssl`.
+        [Default: (null)]
+        type: int
+
+= schema
+        The name of the schema.
+
+        type: str
+
+- scope
+        The scope of the subnet.
+        (Choices: private, public)[Default: (null)]
+        type: str
+
+- shared
+        Whether this subnet is shared between VRFs.
+        [Default: (null)]
+        type: bool
+
+- state
+        Use `present' or `absent' for adding or removing.
+        Use `query' for listing an object or multiple objects.
+        (Choices: absent, present, query)[Default: present]
+        type: str
+
+= subnet
+        The IP range in CIDR notation.
+        (Aliases: ip)
+        type: str
+
+= template
+        The name of the template to change.
+
+        type: str
+
+- timeout
+        The socket level timeout in seconds.
+        [Default: 30]
+        type: int
+
+- use_proxy
+        If `no', it will not use a proxy, even if one is defined in an environment variable on the target hosts.
+        [Default: True]
+        type: bool
+
+- use_ssl
+        If `no', an HTTP connection will be used instead of the default HTTPS connection.
+        [Default: True]
+        type: bool
+
+- username
+        The username to use for authentication.
+        [Default: admin]
+        type: str
+
+- validate_certs
+        If `no', SSL certificates will not be validated.
+        This should only set to `no' when used on personally controlled sites using self-signed certificates.
+        [Default: True]
+        type: bool
+
+
+NOTES:
+      * Due to restrictions of the MSO REST API concurrent modifications to BD subnets can be dangerous and corrupt data.
+      * Please read the :ref:`aci_guide` for more detailed information on how to manage your ACI infrastructure using Ansible.
+      * This module was written to support ACI Multi Site Orchestrator v2.1 or newer. Some or all functionality may not work on
+        earlier versions.
+
+
+REQUIREMENTS:  Multi Site Orchestrator v2.1 or newer
+
+AUTHOR: Dag Wieers (@dagwieers)
+        METADATA:
+          status:
+          - preview
+          supported_by: community
+        
+
+EXAMPLES:
+
+- name: Add a new subnet to a BD
+  mso_schema_template_bd_subnet:
+    host: mso_host
+    username: admin
+    password: SomeSecretPassword
+    schema: Schema 1
+    template: Template 1
+    bd: BD 1
+    subnet: 10.0.0.0/24
+    state: present
+  delegate_to: localhost
+
+- name: Remove a subset from a BD
+  mso_schema_template_bd_subnet:
+    host: mso_host
+    username: admin
+    password: SomeSecretPassword
+    schema: Schema 1
+    template: Template 1
+    bd: BD 1
+    subnet: 10.0.0.0/24
+    state: absent
+  delegate_to: localhost
+
+- name: Query a specific BD subnet
+  mso_schema_template_bd_subnet:
+    host: mso_host
+    username: admin
+    password: SomeSecretPassword
+    schema: Schema 1
+    template: Template 1
+    bd: BD 1
+    subnet: 10.0.0.0/24
+    state: query
+  delegate_to: localhost
+  register: query_result
+
+- name: Query all BD subnets
+  mso_schema_template_bd_subnet:
+    host: mso_host
+    username: admin
+    password: SomeSecretPassword
+    schema: Schema 1
+    template: Template 1
+    bd: BD 1
+    state: query
+  delegate_to: localhost
+  register: query_result
+
+
+RETURN VALUES:
+
+

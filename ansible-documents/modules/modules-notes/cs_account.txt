@@ -1,0 +1,256 @@
+> CS_ACCOUNT    (/usr/lib/python2.7/dist-packages/ansible/modules/cloud/cloudstack/cs_account.py)
+
+        Create, disable, lock, enable and remove accounts.
+
+  * This module is maintained by The Ansible Community
+OPTIONS (= is mandatory):
+
+- account_type
+        Type of the account.
+        (Choices: user, root_admin, domain_admin)[Default: user]
+        type: str
+
+- api_http_method
+        HTTP method used to query the API endpoint.
+        If not given, the `CLOUDSTACK_METHOD' env variable is considered.
+        As the last option, the value is taken from the ini config file, also see the notes.
+        Fallback value is `get' if not specified.
+        (Choices: get, post)[Default: (null)]
+        type: str
+
+- api_key
+        API key of the CloudStack API.
+        If not given, the `CLOUDSTACK_KEY' env variable is considered.
+        As the last option, the value is taken from the ini config file, also see the notes.
+        [Default: (null)]
+        type: str
+
+- api_region
+        Name of the ini section in the `cloustack.ini' file.
+        If not given, the `CLOUDSTACK_REGION' env variable is considered.
+        [Default: cloudstack]
+        type: str
+
+- api_secret
+        Secret key of the CloudStack API.
+        If not set, the `CLOUDSTACK_SECRET' env variable is considered.
+        As the last option, the value is taken from the ini config file, also see the notes.
+        [Default: (null)]
+        type: str
+
+- api_timeout
+        HTTP timeout in seconds.
+        If not given, the `CLOUDSTACK_TIMEOUT' env variable is considered.
+        As the last option, the value is taken from the ini config file, also see the notes.
+        Fallback value is 10 seconds if not specified.
+        [Default: (null)]
+        type: int
+
+- api_url
+        URL of the CloudStack API e.g. https://cloud.example.com/client/api.
+        If not given, the `CLOUDSTACK_ENDPOINT' env variable is considered.
+        As the last option, the value is taken from the ini config file, also see the notes.
+        [Default: (null)]
+        type: str
+
+- domain
+        Domain the account is related to.
+        [Default: ROOT]
+        type: str
+
+- email
+        Email of the user to be created if account did not exist.
+        Required on `state=present' if `ldap_domain' is not set.
+        [Default: (null)]
+        type: str
+
+- first_name
+        First name of the user to be created if account did not exist.
+        Required on `state=present' if `ldap_domain' is not set.
+        [Default: (null)]
+        type: str
+
+- last_name
+        Last name of the user to be created if account did not exist.
+        Required on `state=present' if `ldap_domain' is not set.
+        [Default: (null)]
+        type: str
+
+- ldap_domain
+        Name of the LDAP group or OU to bind.
+        If set, account will be linked to LDAP.
+        [Default: (null)]
+        type: str
+        version_added: 2.8
+
+- ldap_type
+        Type of the ldap name. GROUP or OU, defaults to GROUP.
+        (Choices: GROUP, OU)[Default: GROUP]
+        type: str
+        version_added: 2.8
+
+= name
+        Name of account.
+
+        type: str
+
+- network_domain
+        Network domain of the account.
+        [Default: (null)]
+        type: str
+
+- password
+        Password of the user to be created if account did not exist.
+        Required on `state=present' if `ldap_domain' is not set.
+        [Default: (null)]
+        type: str
+
+- poll_async
+        Poll async jobs until job has finished.
+        [Default: True]
+        type: bool
+
+- role
+        Creates the account under the specified role name or id.
+        [Default: (null)]
+        type: str
+        version_added: 2.8
+
+- state
+        State of the account.
+        `unlocked' is an alias for `enabled'.
+        (Choices: present, absent, enabled, disabled, locked, unlocked)[Default: present]
+        type: str
+
+- timezone
+        Timezone of the user to be created if account did not exist.
+        [Default: (null)]
+        type: str
+
+- username
+        Username of the user to be created if account did not exist.
+        Required on `state=present'.
+        [Default: (null)]
+        type: str
+
+
+NOTES:
+      * Ansible uses the `cs' library's configuration method if credentials are not provided by the arguments `api_url', `api_key',
+        `api_secret'. Configuration is read from several locations, in the following order. The `CLOUDSTACK_ENDPOINT',
+        `CLOUDSTACK_KEY', `CLOUDSTACK_SECRET' and `CLOUDSTACK_METHOD'. `CLOUDSTACK_TIMEOUT' environment variables. A
+        `CLOUDSTACK_CONFIG' environment variable pointing to an `.ini' file. A `cloudstack.ini' file in the current working
+        directory. A `.cloudstack.ini' file in the users home directory. Optionally multiple credentials and endpoints can be
+        specified using ini sections in `cloudstack.ini'. Use the argument `api_region' to select the section name, default section
+        is `cloudstack'. See https://github.com/exoscale/cs for more information.
+      * A detailed guide about cloudstack modules can be found in the L(CloudStack Cloud
+        Guide,../scenario_guides/guide_cloudstack.html).
+      * This module supports check mode.
+
+
+REQUIREMENTS:  python >= 2.6, cs >= 0.6.10
+
+AUTHOR: René Moser (@resmo)
+        METADATA:
+          status:
+          - stableinterface
+          supported_by: community
+        
+
+EXAMPLES:
+
+- name: create an account in domain 'CUSTOMERS'
+  cs_account:
+    name: customer_xy
+    username: customer_xy
+    password: S3Cur3
+    last_name: Doe
+    first_name: John
+    email: john.doe@example.com
+    domain: CUSTOMERS
+    role: Domain Admin
+  delegate_to: localhost
+
+- name: Lock an existing account in domain 'CUSTOMERS'
+  cs_account:
+    name: customer_xy
+    domain: CUSTOMERS
+    state: locked
+  delegate_to: localhost
+
+- name: Disable an existing account in domain 'CUSTOMERS'
+  cs_account:
+    name: customer_xy
+    domain: CUSTOMERS
+    state: disabled
+  delegate_to: localhost
+
+- name: Enable an existing account in domain 'CUSTOMERS'
+  cs_account:
+    name: customer_xy
+    domain: CUSTOMERS
+    state: enabled
+  delegate_to: localhost
+
+- name: Remove an account in domain 'CUSTOMERS'
+  cs_account:
+    name: customer_xy
+    domain: CUSTOMERS
+    state: absent
+  delegate_to: localhost
+
+- name: Create a single user LDAP account in domain 'CUSTOMERS'
+  cs_account:
+    name: customer_xy
+    username: customer_xy
+    domain: CUSTOMERS
+    ldap_domain: cn=customer_xy,cn=team_xy,ou=People,dc=domain,dc=local
+  delegate_to: localhost
+
+- name: Create a LDAP account in domain 'CUSTOMERS' and bind it to a LDAP group
+  cs_account:
+    name: team_xy
+    username: customer_xy
+    domain: CUSTOMERS
+    ldap_domain: cn=team_xy,ou=People,dc=domain,dc=local
+  delegate_to: localhost
+
+
+RETURN VALUES:
+
+---
+id:
+  description: UUID of the account.
+  returned: success
+  type: str
+  sample: 87b1e0ce-4e01-11e4-bb66-0050569e64b8
+name:
+  description: Name of the account.
+  returned: success
+  type: str
+  sample: linus@example.com
+account_type:
+  description: Type of the account.
+  returned: success
+  type: str
+  sample: user
+state:
+  description: State of the account.
+  returned: success
+  type: str
+  sample: enabled
+network_domain:
+  description: Network domain of the account.
+  returned: success
+  type: str
+  sample: example.local
+domain:
+  description: Domain the account is related.
+  returned: success
+  type: str
+  sample: ROOT
+role:
+  description: The role name of the account
+  returned: success
+  type: str
+  sample: Domain Admin
+

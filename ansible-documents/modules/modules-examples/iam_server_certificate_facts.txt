@@ -1,0 +1,54 @@
+EXAMPLES:
+
+# Retrieve server certificate
+- iam_server_certificate_facts:
+    name: production-cert
+  register: server_cert
+
+# Fail if the server certificate name was not found
+- iam_server_certificate_facts:
+    name: production-cert
+  register: server_cert
+  failed_when: "{{ server_cert.results | length == 0 }}"
+
+
+RETURN VALUES:
+
+server_certificate_id:
+    description: The 21 character certificate id
+    returned: success
+    type: str
+    sample: "ADWAJXWTZAXIPIMQHMJPO"
+certificate_body:
+    description: The asn1der encoded PEM string
+    returned: success
+    type: str
+    sample: "-----BEGIN CERTIFICATE-----
+bunch of random data
+-----END CERTIFICATE-----"
+server_certificate_name:
+    description: The name of the server certificate
+    returned: success
+    type: str
+    sample: "server-cert-name"
+arn:
+    description: The Amazon resource name of the server certificate
+    returned: success
+    type: str
+    sample: "arn:aws:iam::911277865346:server-certificate/server-cert-name"
+path:
+    description: The path of the server certificate
+    returned: success
+    type: str
+    sample: "/"
+expiration:
+    description: The date and time this server certificate will expire, in ISO 8601 format.
+    returned: success
+    type: str
+    sample: "2017-06-15T12:00:00+00:00"
+upload_date:
+    description: The date and time this server certificate was uploaded, in ISO 8601 format.
+    returned: success
+    type: str
+    sample: "2015-04-25T00:36:40+00:00"
+

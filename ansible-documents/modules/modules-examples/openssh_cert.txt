@@ -1,0 +1,74 @@
+EXAMPLES:
+
+# Generate an OpenSSH user certificate that is valid forever and for all users
+- openssh_cert:
+    type: user
+    signing_key: /path/to/private_key
+    public_key: /path/to/public_key.pub
+    path: /path/to/certificate
+    valid_from: always
+    valid_to: forever
+
+# Generate an OpenSSH host certificate that is valid for 32 weeks from now and will be regenerated
+# if it is valid for less than 2 weeks from the time the module is being run
+- openssh_cert:
+    type: host
+    signing_key: /path/to/private_key
+    public_key: /path/to/public_key.pub
+    path: /path/to/certificate
+    valid_from: +0s
+    valid_to: +32w
+    valid_at: +2w
+
+# Generate an OpenSSH host certificate that is valid forever and only for example.com and examplehost
+- openssh_cert:
+    type: host
+    signing_key: /path/to/private_key
+    public_key: /path/to/public_key.pub
+    path: /path/to/certificate
+    valid_from: always
+    valid_to: forever
+    principals:
+        - example.com
+        - examplehost
+
+# Generate an OpenSSH host Certificate that is valid from 21.1.2001 to 21.1.2019
+- openssh_cert:
+    type: host
+    signing_key: /path/to/private_key
+    public_key: /path/to/public_key.pub
+    path: /path/to/certificate
+    valid_from: "2001-01-21"
+    valid_to: "2019-01-21"
+
+# Generate an OpenSSH user Certificate with clear and force-command option:
+- openssh_cert:
+    type: user
+    signing_key: /path/to/private_key
+    public_key: /path/to/public_key.pub
+    path: /path/to/certificate
+    valid_from: always
+    valid_to: forever
+    options:
+        - "clear"
+        - "force-command=/tmp/bla/foo"
+
+
+RETURN VALUES:
+
+type:
+    description: type of the certificate (host or user)
+    returned: changed or success
+    type: str
+    sample: host
+filename:
+    description: path to the certificate
+    returned: changed or success
+    type: str
+    sample: /tmp/certifivate-cert.pub
+info:
+    description: Information about the certificate. Output of C(ssh-keygen -L -f).
+    returned: change or success
+    type: list
+
+

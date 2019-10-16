@@ -1,0 +1,54 @@
+EXAMPLES:
+
+- name: Add a new schema
+  mso_schema:
+    host: mso_host
+    username: admin
+    password: SomeSecretPassword
+    schema: Schema 1
+    state: present
+    templates:
+    - name: Template1
+      displayName: Template 1
+      tenantId: north_europe
+      anps:
+        <...>
+    - name: Template2
+      displayName: Template 2
+      tenantId: nort_europe
+      anps:
+        <...>
+  delegate_to: localhost
+
+- name: Remove schemas
+  mso_schema:
+    host: mso_host
+    username: admin
+    password: SomeSecretPassword
+    schema: Schema 1
+    state: absent
+  delegate_to: localhost
+
+- name: Query a schema
+  mso_schema:
+    host: mso_host
+    username: admin
+    password: SomeSecretPassword
+    schema: Schema 1
+    state: query
+  delegate_to: localhost
+  register: query_result
+
+- name: Query all schemas
+  mso_schema:
+    host: mso_host
+    username: admin
+    password: SomeSecretPassword
+    state: query
+  delegate_to: localhost
+  register: query_result
+
+
+RETURN VALUES:
+
+

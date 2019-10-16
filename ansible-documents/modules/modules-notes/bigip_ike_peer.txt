@@ -1,0 +1,346 @@
+> BIGIP_IKE_PEER    (/usr/lib/python2.7/dist-packages/ansible/modules/network/f5/bigip_ike_peer.py)
+
+        Manage IPSec IKE Peer configuration on BIG-IP.
+
+  * This module is maintained by an Ansible Partner
+OPTIONS (= is mandatory):
+
+- description
+        Description of the IKE peer.
+        [Default: (null)]
+        type: str
+
+= name
+        Specifies the name of the IKE peer.
+
+        type: str
+
+- partition
+        Device partition to manage resources on.
+        [Default: Common]
+        type: str
+
+= password
+        The password for the user account used to connect to the BIG-IP.
+        You may omit this option by setting the environment variable `F5_PASSWORD'.
+        (Aliases: pass, pwd)
+        type: str
+
+- phase1_auth_method
+        Specifies the authentication method for phase 1 negotiation.
+        When creating a new IKE peer, if this value is not specified, the default is `rsa-signature'.
+        (Choices: pre-shared-key, rsa-signature)[Default: (null)]
+        type: str
+
+- phase1_cert
+        Specifies the digital certificate to use for the RSA signature.
+        When creating a new IKE peer, if this value is not specified, and `phase1_auth_method' is `rsa-signature', the default is
+        `default.crt'.
+        This parameter is invalid when `phase1_auth_method' is `pre-shared-key'.
+        [Default: (null)]
+        type: str
+
+- phase1_encryption_algorithm
+        Specifies the algorithm to use for IKE encryption.
+        IKE `version' `v2' does not support `blowfish', `camellia', or `cast128'.
+        (Choices: 3des, des, blowfish, cast128, aes128, aes192, aes256, camellia)[Default: (null)]
+        type: str
+
+- phase1_hash_algorithm
+        Specifies the algorithm to use for IKE authentication.
+        (Choices: sha1, md5, sha256, sha384, sha512)[Default: (null)]
+        type: str
+
+- phase1_key
+        Specifies the public key that the digital certificate contains.
+        When creating a new IKE peer, if this value is not specified, and `phase1_auth_method' is `rsa-signature', the default is
+        `default.key'.
+        This parameter is invalid when `phase1_auth_method' is `pre-shared-key'.
+        [Default: (null)]
+        type: str
+
+- phase1_perfect_forward_secrecy
+        Specifies the Diffie-Hellman group to use for IKE Phase 1 and Phase 2 negotiations.
+        (Choices: ecp256, ecp384, ecp521, modp768, modp1024, modp1536, modp2048, modp3072, modp4096, modp6144, modp8192)[Default: (null)]
+        type: str
+
+- phase1_verify_peer_cert
+        In IKEv2, specifies whether the certificate sent by the IKE peer is verified using the Trusted Certificate Authorities, a CRL,
+        and/or a peer certificate.
+        In IKEv1, specifies whether the identifier sent by the peer is verified with the credentials in the certificate, in the following
+        manner - ASN1DN; specifies that the entire certificate subject name is compared with the identifier. Address, FQDN, or User FQDN;
+        specifies that the certificate's subjectAltName is compared with the identifier. If the two do not match, the negotiation fails.
+        When creating a new IKE peer, if this value is not specified, and `phase1_auth_method' is `rsa-signature', the default is `no'.
+        This parameter is invalid when `phase1_auth_method' is `pre-shared-key'.
+        [Default: (null)]
+        type: bool
+
+- presented_id_type
+        Specifies the identifier type that the local system uses to identify itself to the peer during IKE Phase 1 negotiations.
+        (Choices: address, asn1dn, fqdn, keyid-tag, user-fqdn, override)[Default: (null)]
+        type: str
+
+- presented_id_value
+        This is a required value when `version' includes (Cv2).
+        Specifies a value for the identity when using a `presented_id_type' of `override'.
+        [Default: (null)]
+        type: str
+
+- preshared_key
+        Specifies a string that the IKE peers share for authenticating each other.
+        This parameter is only relevant when `phase1_auth_method' is `pre-shared-key'.
+        This parameter is invalid when `phase1_auth_method' is `rsa-signature'.
+        [Default: (null)]
+        type: str
+
+- provider
+        A dict object containing connection details.
+        [Default: (null)]
+        suboptions:
+          password:
+            aliases:
+            - pass
+            - pwd
+            description:
+            - The password for the user account used to connect to the BIG-IP.
+            - You may omit this option by setting the environment variable `F5_PASSWORD'.
+            required: true
+            type: str
+          server:
+            description:
+            - The BIG-IP host.
+            - You may omit this option by setting the environment variable `F5_SERVER'.
+            required: true
+            type: str
+          server_port:
+            default: 443
+            description:
+            - The BIG-IP server port.
+            - You may omit this option by setting the environment variable `F5_SERVER_PORT'.
+            type: int
+          ssh_keyfile:
+            description:
+            - Specifies the SSH keyfile to use to authenticate the connection to the remote
+              device.  This argument is only used for `cli' transports.
+            - You may omit this option by setting the environment variable `ANSIBLE_NET_SSH_KEYFILE'.
+            type: path
+          timeout:
+            default: 10
+            description:
+            - Specifies the timeout in seconds for communicating with the network device for
+              either connecting or sending commands.  If the timeout is exceeded before the
+              operation is completed, the module will error.
+            type: int
+          transport:
+            choices:
+            - cli
+            - rest
+            default: rest
+            description:
+            - Configures the transport connection to use when connecting to the remote device.
+            type: str
+          user:
+            description:
+            - The username to connect to the BIG-IP with. This user must have administrative
+              privileges on the device.
+            - You may omit this option by setting the environment variable `F5_USER'.
+            required: true
+            type: str
+          validate_certs:
+            default: true
+            description:
+            - If `no', SSL certificates are not validated. Use this only on personally controlled
+              sites using self-signed certificates.
+            - You may omit this option by setting the environment variable `F5_VALIDATE_CERTS'.
+            type: bool
+        
+        type: dict
+        version_added: 2.5
+
+- remote_address
+        Displays the IP address of the BIG-IP system that is remote to the system you are configuring.
+        [Default: (null)]
+        type: str
+
+= server
+        The BIG-IP host.
+        You may omit this option by setting the environment variable `F5_SERVER'.
+
+        type: str
+
+- server_port
+        The BIG-IP server port.
+        You may omit this option by setting the environment variable `F5_SERVER_PORT'.
+        [Default: 443]
+        type: int
+        version_added: 2.2
+
+- state
+        When `present', ensures that the resource exists.
+        When `absent', ensures the resource is removed.
+        (Choices: present, absent)[Default: present]
+        type: str
+
+- update_password
+        `always' will allow to update passwords if the user chooses to do so. `on_create' will only set the password for newly created
+        IKE peers.
+        (Choices: always, on_create)[Default: always]
+        type: str
+
+= user
+        The username to connect to the BIG-IP with. This user must have administrative privileges on the device.
+        You may omit this option by setting the environment variable `F5_USER'.
+
+        type: str
+
+- validate_certs
+        If `no', SSL certificates are not validated. Use this only on personally controlled sites using self-signed certificates.
+        You may omit this option by setting the environment variable `F5_VALIDATE_CERTS'.
+        [Default: True]
+        type: bool
+        version_added: 2.0
+
+- verified_id_type
+        Specifies the identifier type that the local system uses to identify the peer during IKE Phase 1 negotiation.
+        This is a required value when `version' includes (Cv2).
+        When `user-fqdn', value of `verified_id_value' must be in the form of User @ DNS domain string.
+        (Choices: address, asn1dn, fqdn, keyid-tag, user-fqdn, override)[Default: (null)]
+        type: str
+
+- verified_id_value
+        This is a required value when `version' includes (Cv2).
+        Specifies a value for the identity when using a `verified_id_type' of `override'.
+        [Default: (null)]
+        type: str
+
+- version
+        Specifies which version of IKE is used.
+        If the system you are configuring is the IPsec initiator, and you select both versions, the system tries using IKEv2 for
+        negotiation. If the remote peer does not support IKEv2, the IPsec tunnel fails. To use IKEv1 in this case, you must deselect
+        Version 2 and try again.
+        If the system you are configuring is the IPsec responder, and you select both versions, the IPsec initiator system determines
+        which IKE version to use.
+        When creating a new IKE peer, this value is required.
+        (Choices: v1, v2)[Default: (null)]
+        type: list
+
+
+NOTES:
+      * For more information on using Ansible to manage F5 Networks devices see https://www.ansible.com/integrations/networks/f5.
+      * Requires BIG-IP software version >= 12.
+      * The F5 modules only manipulate the running configuration of the F5 product. To ensure that BIG-IP specific configuration
+        persists to disk, be sure to include at least one task that uses the [bigip_config] module to save the running
+        configuration. Refer to the module's documentation for the correct usage of the module to save your running configuration.
+
+
+AUTHOR: Tim Rupp (@caphrim007), Wojciech Wypior (@wojtek0806)
+        METADATA:
+          status:
+          - preview
+          supported_by: certified
+        
+
+EXAMPLES:
+
+- name: Create new IKE peer
+  bigip_ike_peer:
+    name: ike1
+    remote_address: 1.2.3.4
+    version:
+      - v1
+    provider:
+      password: secret
+      server: lb.mydomain.com
+      user: admin
+  delegate_to: localhost
+
+- name: Change presented id type - keyid-tag
+  bigip_ike_peer:
+    name: ike1
+    presented_id_type: keyid-tag
+    presented_id_value: key1
+    provider:
+      password: secret
+      server: lb.mydomain.com
+      user: admin
+  delegate_to: localhost
+
+- name: Remove IKE peer
+  bigip_ike_peer:
+    name: ike1
+    state: absent
+    provider:
+      password: secret
+      server: lb.mydomain.com
+      user: admin
+  delegate_to: localhost
+
+
+RETURN VALUES:
+
+presented_id_type:
+  description: The new Presented ID Type value of the resource.
+  returned: changed
+  type: str
+  sample: address
+verified_id_type:
+  description: The new Verified ID Type value of the resource.
+  returned: changed
+  type: str
+  sample: address
+phase1_auth_method:
+  description: The new IKE Phase 1 Credentials Authentication Method value of the resource.
+  returned: changed
+  type: str
+  sample: rsa-signature
+remote_address:
+  description: The new Remote Address value of the resource.
+  returned: changed
+  type: str
+  sample: 1.2.2.1
+version:
+  description: The new list of IKE versions.
+  returned: changed
+  type: list
+  sample: ['v1', 'v2']
+phase1_encryption_algorithm:
+  description: The new IKE Phase 1 Encryption Algorithm.
+  returned: changed
+  type: str
+  sample: 3des
+phase1_hash_algorithm:
+  description: The new IKE Phase 1 Authentication Algorithm.
+  returned: changed
+  type: str
+  sample: sha256
+phase1_perfect_forward_secrecy:
+  description: The new IKE Phase 1 Perfect Forward Secrecy.
+  returned: changed
+  type: str
+  sample: modp1024
+phase1_cert:
+  description: The new IKE Phase 1 Certificate Credentials.
+  returned: changed
+  type: str
+  sample: /Common/cert1.crt
+phase1_key:
+  description: The new IKE Phase 1 Key Credentials.
+  returned: changed
+  type: str
+  sample: /Common/cert1.key
+phase1_verify_peer_cert:
+  description: The new IKE Phase 1 Key Verify Peer Certificate setting.
+  returned: changed
+  type: bool
+  sample: yes
+verified_id_value:
+  description: The new Verified ID Value setting for the Verified ID Type.
+  returned: changed
+  type: str
+  sample: 1.2.3.1
+presented_id_value:
+  description: The new Presented ID Value setting for the Presented ID Type.
+  returned: changed
+  type: str
+  sample: 1.2.3.1
+

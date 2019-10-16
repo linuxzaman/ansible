@@ -1,0 +1,33 @@
+EXAMPLES:
+
+- name: Configure synchronization settings
+  bigip_gtm_global:
+    synchronization: yes
+    synchronization_group_name: my-group
+    synchronize_zone_files: yes
+    state: present
+    provider:
+      user: admin
+      password: secret
+      server: lb.mydomain.com
+  delegate_to: localhost
+
+
+RETURN VALUES:
+
+synchronization:
+  description: The synchronization setting on the system.
+  returned: changed
+  type: bool
+  sample: true
+synchronization_group_name:
+  description: The synchronization group name.
+  returned: changed
+  type: str
+  sample: my-group
+synchronize_zone_files:
+  description: Whether or not the system will sync zone files.
+  returned: changed
+  type: str
+  sample: my-group
+

@@ -1,0 +1,280 @@
+> AVI_CLOUD    (/usr/lib/python2.7/dist-packages/ansible/modules/network/avi/avi_cloud.py)
+
+        This module is used to configure Cloud object more examples at https://github.com/avinetworks/devops
+
+  * This module is maintained by The Ansible Community
+OPTIONS (= is mandatory):
+
+- api_context
+        Avi API context that includes current session ID and CSRF Token.
+        This allows user to perform single login and re-use the session.
+        [Default: (null)]
+        type: dict
+        version_added: 2.5
+
+- api_version
+        Avi API version of to use for Avi API and objects.
+        [Default: 16.4.4]
+        type: str
+
+- apic_configuration
+        Apicconfiguration settings for cloud.
+        [Default: (null)]
+
+- apic_mode
+        Boolean flag to set apic_mode.
+        Default value when not specified in API or module is interpreted by Avi Controller as False.
+        [Default: (null)]
+        type: bool
+
+- avi_api_patch_op
+        Patch operation to use when using avi_api_update_method as patch.
+        (Choices: add, replace, delete)[Default: (null)]
+        version_added: 2.5
+
+- avi_api_update_method
+        Default method for object update is HTTP PUT.
+        Setting to patch will override that behavior to use HTTP PATCH.
+        (Choices: put, patch)[Default: put]
+        version_added: 2.5
+
+- avi_credentials
+        Avi Credentials dictionary which can be used in lieu of enumerating Avi Controller login details.
+        [Default: (null)]
+        type: dict
+        version_added: 2.5
+
+- aws_configuration
+        Awsconfiguration settings for cloud.
+        [Default: (null)]
+
+- azure_configuration
+        Field introduced in 17.2.1.
+        [Default: (null)]
+        version_added: 2.5
+
+- cloudstack_configuration
+        Cloudstackconfiguration settings for cloud.
+        [Default: (null)]
+
+- controller
+        IP address or hostname of the controller. The default value is the environment variable `AVI_CONTROLLER'.
+        [Default: ]
+        type: str
+
+- custom_tags
+        Custom tags for all avi created resources in the cloud infrastructure.
+        Field introduced in 17.1.5.
+        [Default: (null)]
+        version_added: 2.5
+
+- dhcp_enabled
+        Select the ip address management scheme.
+        Default value when not specified in API or module is interpreted by Avi Controller as False.
+        [Default: (null)]
+        type: bool
+
+- dns_provider_ref
+        Dns profile for the cloud.
+        It is a reference to an object of type ipamdnsproviderprofile.
+        [Default: (null)]
+
+- docker_configuration
+        Dockerconfiguration settings for cloud.
+        [Default: (null)]
+
+- east_west_dns_provider_ref
+        Dns profile for east-west services.
+        It is a reference to an object of type ipamdnsproviderprofile.
+        [Default: (null)]
+
+- east_west_ipam_provider_ref
+        Ipam profile for east-west services.
+        Warning - please use virtual subnets in this ipam profile that do not conflict with the underlay networks or any overlay networks
+        in the cluster.
+        For example in aws and gcp, 169.254.0.0/16 is used for storing instance metadata.
+        Hence, it should not be used in this profile.
+        It is a reference to an object of type ipamdnsproviderprofile.
+        [Default: (null)]
+
+- enable_vip_static_routes
+        Use static routes for vip side network resolution during virtualservice placement.
+        Default value when not specified in API or module is interpreted by Avi Controller as False.
+        [Default: (null)]
+        type: bool
+
+- ipam_provider_ref
+        Ipam profile for the cloud.
+        It is a reference to an object of type ipamdnsproviderprofile.
+        [Default: (null)]
+
+- license_tier
+        Specifies the default license tier which would be used by new se groups.
+        This field by default inherits the value from system configuration.
+        Enum options - ENTERPRISE_16, ENTERPRISE_18.
+        Field introduced in 17.2.5.
+        [Default: (null)]
+        version_added: 2.5
+
+- license_type
+        If no license type is specified then default license enforcement for the cloud type is chosen.
+        The default mappings are container cloud is max ses, openstack and vmware is cores and linux it is sockets.
+        Enum options - LIC_BACKEND_SERVERS, LIC_SOCKETS, LIC_CORES, LIC_HOSTS, LIC_SE_BANDWIDTH.
+        [Default: (null)]
+
+- linuxserver_configuration
+        Linuxserverconfiguration settings for cloud.
+        [Default: (null)]
+
+- mesos_configuration
+        Mesosconfiguration settings for cloud.
+        [Default: (null)]
+
+- mtu
+        Mtu setting for the cloud.
+        Default value when not specified in API or module is interpreted by Avi Controller as 1500.
+        Units(BYTES).
+        [Default: (null)]
+
+= name
+        Name of the object.
+
+
+- nsx_configuration
+        Configuration parameters for nsx manager.
+        Field introduced in 17.1.1.
+        [Default: (null)]
+
+- obj_name_prefix
+        Default prefix for all automatically created objects in this cloud.
+        This prefix can be overridden by the se-group template.
+        [Default: (null)]
+
+- openstack_configuration
+        Openstackconfiguration settings for cloud.
+        [Default: (null)]
+
+- oshiftk8s_configuration
+        Oshiftk8sconfiguration settings for cloud.
+        [Default: (null)]
+
+- password
+        Password of Avi user in Avi controller. The default value is the environment variable `AVI_PASSWORD'.
+        [Default: ]
+        type: str
+
+- prefer_static_routes
+        Prefer static routes over interface routes during virtualservice placement.
+        Default value when not specified in API or module is interpreted by Avi Controller as False.
+        [Default: (null)]
+        type: bool
+
+- proxy_configuration
+        Proxyconfiguration settings for cloud.
+        [Default: (null)]
+
+- rancher_configuration
+        Rancherconfiguration settings for cloud.
+        [Default: (null)]
+
+- state
+        The state that should be applied on the entity.
+        (Choices: absent, present)[Default: present]
+
+- state_based_dns_registration
+        Dns records for vips are added/deleted based on the operational state of the vips.
+        Field introduced in 17.1.12.
+        Default value when not specified in API or module is interpreted by Avi Controller as True.
+        [Default: (null)]
+        type: bool
+        version_added: 2.5
+
+- tenant
+        Name of tenant used for all Avi API calls and context of object.
+        [Default: admin]
+        type: str
+
+- tenant_ref
+        It is a reference to an object of type tenant.
+        [Default: (null)]
+
+- tenant_uuid
+        UUID of tenant used for all Avi API calls and context of object.
+        [Default: ]
+        type: str
+
+- url
+        Avi controller URL of the object.
+        [Default: (null)]
+
+- username
+        Username used for accessing Avi controller. The default value is the environment variable `AVI_USERNAME'.
+        [Default: ]
+        type: str
+
+- uuid
+        Unique object identifier of the object.
+        [Default: (null)]
+
+- vca_configuration
+        Vcloudairconfiguration settings for cloud.
+        [Default: (null)]
+
+- vcenter_configuration
+        Vcenterconfiguration settings for cloud.
+        [Default: (null)]
+
+= vtype
+        Cloud type.
+        Enum options - CLOUD_NONE, CLOUD_VCENTER, CLOUD_OPENSTACK, CLOUD_AWS, CLOUD_VCA, CLOUD_APIC, CLOUD_MESOS, CLOUD_LINUXSERVER,
+        CLOUD_DOCKER_UCP,
+        CLOUD_RANCHER, CLOUD_OSHIFT_K8S, CLOUD_AZURE.
+        Default value when not specified in API or module is interpreted by Avi Controller as CLOUD_NONE.
+
+
+
+NOTES:
+      * For more information on using Ansible to manage Avi Network devices see https://www.ansible.com/ansible-avi-networks.
+
+
+REQUIREMENTS:  avisdk
+
+AUTHOR: Gaurav Rastogi (@grastogi23) <grastogi@avinetworks.com>
+        METADATA:
+          status:
+          - preview
+          supported_by: community
+        
+
+EXAMPLES:
+
+- name: Create a VMWare cloud with write access mode
+    avi_cloud:
+      username: '{{ username }}'
+      controller: '{{ controller }}'
+      password: '{{ password }}'
+      apic_mode: false
+      dhcp_enabled: true
+      enable_vip_static_routes: false
+      license_type: LIC_CORES
+      mtu: 1500
+      name: VCenter Cloud
+      prefer_static_routes: false
+      tenant_ref: admin
+      vcenter_configuration:
+        datacenter_ref: /api/vimgrdcruntime/datacenter-2-10.10.20.100
+        management_network: /api/vimgrnwruntime/dvportgroup-103-10.10.20.100
+        password: password
+        privilege: WRITE_ACCESS
+        username: user
+        vcenter_url: 10.10.20.100
+      vtype: CLOUD_VCENTER
+
+
+RETURN VALUES:
+
+obj:
+    description: Cloud (api/cloud) object
+    returned: success, changed
+    type: dict
+

@@ -1,0 +1,45 @@
+> CNOS_LLDP    (/usr/lib/python2.7/dist-packages/ansible/modules/network/cnos/cnos_lldp.py)
+
+        This module provides declarative management of LLDP service on Lenovc CNOS network devices.
+
+  * This module is maintained by The Ansible Community
+OPTIONS (= is mandatory):
+
+- state
+        State of the LLDP configuration. If value is `present' lldp will be enabled else if it is `absent' it will be disabled.
+        (Choices: present, absent)[Default: present]
+
+
+NOTES:
+      * Tested against CNOS 10.9.1
+
+
+AUTHOR: Anil Kumar Muraleedharan (@amuraleedhar)
+        METADATA:
+          status:
+          - preview
+          supported_by: community
+        
+
+EXAMPLES:
+
+- name: Enable LLDP service
+  cnos_lldp:
+    state: present
+
+- name: Disable LLDP service
+  cnos_lldp:
+    state: absent
+
+
+RETURN VALUES:
+
+commands:
+  description: The list of configuration mode commands to send to the device
+  returned: always, except for the platforms that use Netconf transport to
+            manage the device.
+  type: list
+  sample:
+    - lldp timer 1024
+    - lldp trap-interval 330
+

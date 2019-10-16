@@ -1,0 +1,358 @@
+> BIGIQ_DEVICE_DISCOVERY    (/usr/lib/python2.7/dist-packages/ansible/modules/network/f5/bigiq_device_discovery.py)
+
+        Discovers and imports BIG-IP device configuration on the BIG-IQ.
+
+  * This module is maintained by an Ansible Partner
+OPTIONS (= is mandatory):
+
+- access_conflict_policy
+        Sets the conflict resolution policy for Access module `apm' objects, only used when `apm' module is specified.
+        (Choices: use_bigiq, use_bigip, keep_version)[Default: (null)]
+        type: str
+
+- access_group_first_device
+        Specifies if the imported device is the first device in the access group to import shared configuration for that access group.
+        [Default: True]
+        type: bool
+
+- access_group_name
+        Access group name to import Access configuration for devices, once set it cannot be changed.
+        [Default: (null)]
+        type: str
+
+- conflict_policy
+        Sets the conflict resolution policy for shared objects across BIG-IP devices, except LTM profiles and monitors.
+        (Choices: use_bigiq, use_bigip)[Default: use_bigiq]
+        type: str
+
+= device_address
+        The IP address of the BIG-IP device to be imported/managed.
+
+        type: str
+
+- device_conflict_policy
+        Sets the conflict resolution policy for objects that are specific to a particular to a BIG-IP device and not shared among BIG-IP
+        devices.
+        (Choices: use_bigiq, use_bigip)[Default: use_bigiq]
+        type: str
+
+- device_password
+        The administrator password for the BIG-IP device.
+        This parameter is only required when adding a new BIG-IP device to be managed.
+        [Default: (null)]
+        type: str
+
+- device_port
+        The port on which a device trust setup between BIG-IQ and BIG-IP should happen.
+        [Default: 443]
+        type: int
+
+- device_username
+        The administrator username for the BIG-IP device.
+        This parameter is only required when adding a new BIG-IP device to be managed.
+        [Default: (null)]
+        type: str
+
+- force
+        Forces rediscovery and import of existing modules on the managed BIG-IP
+        [Default: False]
+        type: bool
+
+- ha_name
+        DSC cluster name of the BIG-IP device to be managed.
+        This is optional if the managed device is not a part of a cluster group.
+        When `use_bigiq_sync' is set to `yes' then this parameter becomes mandatory.
+        [Default: (null)]
+        type: str
+
+- modules
+        List of modules to be discovered and imported into the device.
+        These modules must be provisioned on the target device otherwise operation will fail.
+        The `ltm' module must always be specified when performing discovery or re-discovery of the the device.
+        When `asm' or `afm' are specified `shared_security' module needs to also be declared.
+        (Choices: ltm, asm, apm, afm, dns, websafe, security_shared)[Default: (null)]
+        type: list
+
+= password
+        The password for the user account used to connect to the BIG-IP.
+        You may omit this option by setting the environment variable `F5_PASSWORD'.
+        (Aliases: pass, pwd)
+        type: str
+
+- provider
+        A dict object containing connection details.
+        [Default: (null)]
+        suboptions:
+          password:
+            aliases:
+            - pass
+            - pwd
+            description:
+            - The password for the user account used to connect to the BIG-IP.
+            - You may omit this option by setting the environment variable `F5_PASSWORD'.
+            required: true
+            type: str
+          server:
+            description:
+            - The BIG-IP host.
+            - You may omit this option by setting the environment variable `F5_SERVER'.
+            required: true
+            type: str
+          server_port:
+            default: 443
+            description:
+            - The BIG-IP server port.
+            - You may omit this option by setting the environment variable `F5_SERVER_PORT'.
+            type: int
+          ssh_keyfile:
+            description:
+            - Specifies the SSH keyfile to use to authenticate the connection to the remote
+              device.  This argument is only used for `cli' transports.
+            - You may omit this option by setting the environment variable `ANSIBLE_NET_SSH_KEYFILE'.
+            type: path
+          timeout:
+            default: 10
+            description:
+            - Specifies the timeout in seconds for communicating with the network device for
+              either connecting or sending commands.  If the timeout is exceeded before the
+              operation is completed, the module will error.
+            type: int
+          transport:
+            choices:
+            - cli
+            - rest
+            default: rest
+            description:
+            - Configures the transport connection to use when connecting to the remote device.
+            type: str
+          user:
+            description:
+            - The username to connect to the BIG-IP with. This user must have administrative
+              privileges on the device.
+            - You may omit this option by setting the environment variable `F5_USER'.
+            required: true
+            type: str
+          validate_certs:
+            default: true
+            description:
+            - If `no', SSL certificates are not validated. Use this only on personally controlled
+              sites using self-signed certificates.
+            - You may omit this option by setting the environment variable `F5_VALIDATE_CERTS'.
+            type: bool
+        
+        type: dict
+        version_added: 2.5
+
+= server
+        The BIG-IP host.
+        You may omit this option by setting the environment variable `F5_SERVER'.
+
+        type: str
+
+- server_port
+        The BIG-IP server port.
+        You may omit this option by setting the environment variable `F5_SERVER_PORT'.
+        [Default: 443]
+        type: int
+        version_added: 2.2
+
+- state
+        The state of the managed device on the system.
+        When `present', enables new device addition as well as device rediscovery/import.
+        When `absent', completely removes the device from the system.
+        (Choices: absent, present)[Default: present]
+        type: str
+
+- statistics
+        Specify the statistics collection for discovered device.
+        [Default: (null)]
+        suboptions:
+          enable:
+            default: false
+            description:
+            - Enables statistics collection on a device
+            type: bool
+          interval:
+            choices:
+            - 30
+            - 60
+            - 120
+            - 500
+            default: 60
+            description:
+            - Specify the interval in seconds the data is collected from the discovered device.
+            type: int
+          stat_modules:
+            choices:
+            - device
+            - ltm
+            - dns
+            default:
+            - device
+            - ltm
+            description:
+            - Specifies for which modules the data is being collected.
+            type: list
+          zone:
+            default: default
+            description:
+            - Specify in which DCD zone is collecting the data from device.
+            type: str
+        
+
+- use_bigiq_sync
+        When set to true, BIG-IQ will manually synchronize configuration changes between members in a DSC cluster.
+        [Default: False]
+        type: bool
+
+= user
+        The username to connect to the BIG-IP with. This user must have administrative privileges on the device.
+        You may omit this option by setting the environment variable `F5_USER'.
+
+        type: str
+
+- validate_certs
+        If `no', SSL certificates are not validated. Use this only on personally controlled sites using self-signed certificates.
+        You may omit this option by setting the environment variable `F5_VALIDATE_CERTS'.
+        [Default: True]
+        type: bool
+        version_added: 2.0
+
+- versioned_conflict_policy
+        Sets the conflict resolution policy for LTM profile and monitor objects that are specific to a BIG-IP software version.
+        (Choices: use_bigiq, use_bigip, keep_version)[Default: (null)]
+        type: str
+
+
+NOTES:
+      * BIG-IQ >= 6.1.0.
+      * This module does not support atomic removal of discovered modules on the device.
+      * For more information on using Ansible to manage F5 Networks devices see https://www.ansible.com/integrations/networks/f5.
+      * Requires BIG-IP software version >= 12.
+      * The F5 modules only manipulate the running configuration of the F5 product. To ensure that BIG-IP specific configuration
+        persists to disk, be sure to include at least one task that uses the [bigip_config] module to save the running
+        configuration. Refer to the module's documentation for the correct usage of the module to save your running configuration.
+
+
+AUTHOR: Wojciech Wypior (@wojtek0806)
+        METADATA:
+          status:
+          - preview
+          supported_by: certified
+        
+
+EXAMPLES:
+
+- name: Discover a new device and import config, use default conflict policy.
+  bigiq_device_discovery:
+    device_address: 192.168.1.1
+    device_username: bigipadmin
+    device_password: bigipsecret
+    modules:
+      - ltm
+      - afm
+      - shared_security
+    provider:
+      password: secret
+      server: lb.mydomain.com
+      user: admin
+  delegate_to: localhost
+
+- name: Discover a new device and import config, use non- default conflict policy.
+  bigiq_device_discovery:
+    device_address: 192.168.1.1
+    modules:
+      - ltm
+      - dns
+    conflict_policy: use_bigip
+    provider:
+      password: secret
+      server: lb.mydomain.com
+      user: admin
+  delegate_to: localhost
+
+- name: Force full device rediscovery
+  bigiq_device_discovery:
+    device_address: 192.168.1.1
+    modules:
+      - ltm
+      - afm
+      - dns
+      - shared_security
+    force: yes
+    provider:
+      password: secret
+      server: lb.mydomain.com
+      user: admin
+  delegate_to: localhost
+
+- name: Remove discovered device and its config
+  bigiq_device_discovery:
+    device_address: 192.168.1.1
+    state: absent
+    provider:
+      password: secret
+      server: lb.mydomain.com
+      user: admin
+  delegate_to: localhost
+
+
+RETURN VALUES:
+
+device_address:
+  description: The IP address of the BIG-IP device to be imported/managed.
+  returned: changed
+  type: str
+  sample: 192.168.1.1
+device_port:
+  description: The port on which a device trust setup between BIG-IQ and BIG-IP should happen.
+  returned: changed
+  type: int
+  sample: 10443
+ha_name:
+  description: DSC cluster name of the BIG-IP device to be managed.
+  returned: changed
+  type: str
+  sample: GROUP_1
+use_bigiq_sync:
+  description: Indicate if BIG-IQ should manually synchronise DSC configuration.
+  returned: changed
+  type: bool
+  sample: yes
+conflict_policy:
+  description: Sets the conflict resolution policy for shared objects across BIG-IP devices.
+  returned: changed
+  type: str
+  sample: use_bigip
+device_conflict_policy:
+  description: Sets the conflict resolution policy for objects that are specific to a particular to a BIG-IP device.
+  returned: changed
+  type: str
+  sample: use_bigip
+versioned_conflict_policy:
+  description: Sets the conflict resolution policy for LTM profile and monitor objects.
+  returned: changed
+  type: str
+  sample: keep_version
+access_conflict_policy:
+  description: Sets the conflict resolution policy for Access module C(apm) objects.
+  returned: changed
+  type: str
+  sample: keep_version
+access_group_name:
+  description: Access group name to import Access configuration for devices.
+  returned: changed
+  type: str
+  sample: foo_group
+access_group_first_device:
+  description: First device in the access group to import shared configuration for that access group.
+  returned: changed
+  type: bool
+  sample: yes
+modules:
+  description: List of modules to be discovered and imported into the device.
+  returned: changed
+  type: list
+  sample: ['ltm', 'dns']
+
+

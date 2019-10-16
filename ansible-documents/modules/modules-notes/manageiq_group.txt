@@ -1,0 +1,220 @@
+> MANAGEIQ_GROUP    (/usr/lib/python2.7/dist-packages/ansible/modules/remote_management/manageiq/manageiq_group.py)
+
+        The manageiq_group module supports adding, updating and deleting groups in ManageIQ.
+
+  * This module is maintained by The Ansible Community
+OPTIONS (= is mandatory):
+
+- belongsto_filters
+        A list of strings with a reference to the allowed host, cluster or folder
+        [Default: None]
+        type: list
+
+- belongsto_filters_merge_mode
+        In merge mode existing settings are merged with the supplied `belongsto_filters'.
+        In replace mode current values are replaced with the supplied `belongsto_filters'.
+        (Choices: merge, replace)[Default: replace]
+
+= description
+        The group description.
+        [Default: None]
+
+- managed_filters
+        The tag values per category
+        [Default: None]
+        type: dict
+
+- managed_filters_merge_mode
+        In merge mode existing categories are kept or updated, new categories are added.
+        In replace mode all categories will be replaced with the supplied `managed_filters'.
+        (Choices: merge, replace)[Default: replace]
+
+= manageiq_connection
+        ManageIQ connection configuration information.
+
+        suboptions:
+          ca_cert:
+            aliases:
+            - ca_bundle_path
+            description:
+            - The path to a CA bundle file or directory with certificates. defaults to None.
+            type: path
+          password:
+            description:
+            - ManageIQ password. `MIQ_PASSWORD' env var if set. otherwise, required if no
+              token is passed in.
+            type: str
+          token:
+            description:
+            - ManageIQ token. `MIQ_TOKEN' env var if set. otherwise, required if no username
+              or password is passed in.
+            type: str
+          url:
+            description:
+            - ManageIQ environment url. `MIQ_URL' env var if set. otherwise, it is required
+              to pass it.
+            required: true
+            type: str
+          username:
+            description:
+            - ManageIQ username. `MIQ_USERNAME' env var if set. otherwise, required if no
+              token is passed in.
+            type: str
+          validate_certs:
+            aliases:
+            - verify_ssl
+            default: true
+            description:
+            - Whether SSL certificates should be verified for HTTPS requests. defaults to
+              True.
+            type: bool
+        
+        type: dict
+
+- role
+        The the group role name
+        The `role_id' has precedence over the `role' when supplied.
+        [Default: None]
+
+- role_id
+        The the group role id
+        [Default: None]
+
+- state
+        absent - group should not exist, present - group should be.
+        (Choices: absent, present)[Default: present]
+
+- tenant
+        The tenant for the group identified by the tenant name.
+        The `tenant_id' has precedence over the `tenant' when supplied.
+        Tenant names are case sensitive.
+        [Default: None]
+
+- tenant_id
+        The tenant for the group identified by the tenant id.
+        [Default: None]
+
+
+REQUIREMENTS:  manageiq-client https://github.com/ManageIQ/manageiq-api-client-python/
+
+AUTHOR: Evert Mulder (@evertmulder)
+        METADATA:
+          status:
+          - preview
+          supported_by: community
+        
+
+EXAMPLES:
+
+- name: Create a group in ManageIQ with the role EvmRole-user and tenant 'my_tenant'
+  manageiq_group:
+    description: 'MyGroup-user'
+    role: 'EvmRole-user'
+    tenant: 'my_tenant'
+    manageiq_connection:
+      url: 'https://manageiq_server'
+      username: 'admin'
+      password: 'smartvm'
+      validate_certs: False
+
+- name: Create a group in ManageIQ with the role EvmRole-user and tenant with tenant_id 4
+  manageiq_group:
+    description: 'MyGroup-user'
+    role: 'EvmRole-user'
+    tenant_id: 4
+    manageiq_connection:
+      url: 'https://manageiq_server'
+      username: 'admin'
+      password: 'smartvm'
+      validate_certs: False
+
+- name:
+  - Create or update a group in ManageIQ with the role EvmRole-user and tenant my_tenant.
+  - Apply 3 prov_max_cpu and 2 department tags to the group.
+  - Limit access to a cluster for the group.
+  manageiq_group:
+    description: 'MyGroup-user'
+    role: 'EvmRole-user'
+    tenant: my_tenant
+    managed_filters:
+      prov_max_cpu:
+      - '1'
+      - '2'
+      - '4'
+      department:
+      - defense
+      - engineering
+    managed_filters_merge_mode: replace
+    belongsto_filters:
+    - "/belongsto/ExtManagementSystem|ProviderName/EmsFolder|Datacenters/EmsFolder|dc_name/EmsFolder|host/EmsCluster|Cluster name"
+    belongsto_filters_merge_mode: merge
+    manageiq_connection:
+      url: 'https://manageiq_server'
+      username: 'admin'
+      password: 'smartvm'
+      validate_certs: False
+
+- name: Delete a group in ManageIQ
+  manageiq_group:
+    state: 'absent'
+    description: 'MyGroup-user'
+    manageiq_connection:
+      url: 'http://127.0.0.1:3000'
+      username: 'admin'
+      password: 'smartvm'
+
+- name: Delete a group in ManageIQ using a token
+  manageiq_group:
+    state: 'absent'
+    description: 'MyGroup-user'
+    manageiq_connection:
+      url: 'http://127.0.0.1:3000'
+      token: 'sometoken'
+
+
+RETURN VALUES:
+
+group:
+  description: The group.
+  returned: success
+  type: complex
+  contains:
+    description:
+      description: The group description
+      returned: success
+      type: str
+    id:
+      description: The group id
+      returned: success
+      type: int
+    group_type:
+      description: The group type, system or user
+      returned: success
+      type: str
+    role:
+      description: The group role name
+      returned: success
+      type: str
+    tenant:
+      description: The group tenant name
+      returned: success
+      type: str
+    managed_filters:
+      description: The tag values per category
+      returned: success
+      type: dict
+    belongsto_filters:
+      description: A list of strings with a reference to the allowed host, cluster or folder
+      returned: success
+      type: list
+    created_on:
+      description: Group creation date
+      returned: success
+      type: str
+      example: 2018-08-12T08:37:55+00:00
+    updated_on:
+      description: Group update date
+      returned: success
+      type: int
+      example: 2018-08-12T08:37:55+00:00
+

@@ -1,0 +1,248 @@
+> CS_USER    (/usr/lib/python2.7/dist-packages/ansible/modules/cloud/cloudstack/cs_user.py)
+
+        Create, update, disable, lock, enable and remove users.
+
+  * This module is maintained by The Ansible Community
+OPTIONS (= is mandatory):
+
+- account
+        Account the user will be created under.
+        Required on `state=present'.
+        [Default: (null)]
+        type: str
+
+- api_http_method
+        HTTP method used to query the API endpoint.
+        If not given, the `CLOUDSTACK_METHOD' env variable is considered.
+        As the last option, the value is taken from the ini config file, also see the notes.
+        Fallback value is `get' if not specified.
+        (Choices: get, post)[Default: (null)]
+        type: str
+
+- api_key
+        API key of the CloudStack API.
+        If not given, the `CLOUDSTACK_KEY' env variable is considered.
+        As the last option, the value is taken from the ini config file, also see the notes.
+        [Default: (null)]
+        type: str
+
+- api_region
+        Name of the ini section in the `cloustack.ini' file.
+        If not given, the `CLOUDSTACK_REGION' env variable is considered.
+        [Default: cloudstack]
+        type: str
+
+- api_secret
+        Secret key of the CloudStack API.
+        If not set, the `CLOUDSTACK_SECRET' env variable is considered.
+        As the last option, the value is taken from the ini config file, also see the notes.
+        [Default: (null)]
+        type: str
+
+- api_timeout
+        HTTP timeout in seconds.
+        If not given, the `CLOUDSTACK_TIMEOUT' env variable is considered.
+        As the last option, the value is taken from the ini config file, also see the notes.
+        Fallback value is 10 seconds if not specified.
+        [Default: (null)]
+        type: int
+
+- api_url
+        URL of the CloudStack API e.g. https://cloud.example.com/client/api.
+        If not given, the `CLOUDSTACK_ENDPOINT' env variable is considered.
+        As the last option, the value is taken from the ini config file, also see the notes.
+        [Default: (null)]
+        type: str
+
+- domain
+        Domain the user is related to.
+        [Default: ROOT]
+        type: str
+
+- email
+        Email of the user.
+        Required on `state=present'.
+        [Default: (null)]
+        type: str
+
+- first_name
+        First name of the user.
+        Required on `state=present'.
+        [Default: (null)]
+        type: str
+
+- keys_registered
+        If API keys of the user should be generated.
+        Note: Keys can not be removed by the API again.
+        [Default: False]
+        type: bool
+        version_added: 2.4
+
+- last_name
+        Last name of the user.
+        Required on `state=present'.
+        [Default: (null)]
+        type: str
+
+- password
+        Password of the user to be created.
+        Required on `state=present'.
+        Only considered on creation and will not be updated if user exists.
+        [Default: (null)]
+        type: str
+
+- poll_async
+        Poll async jobs until job has finished.
+        [Default: True]
+        type: bool
+
+- state
+        State of the user.
+        `unlocked' is an alias for `enabled'.
+        (Choices: present, absent, enabled, disabled, locked, unlocked)[Default: present]
+        type: str
+
+- timezone
+        Timezone of the user.
+        [Default: (null)]
+        type: str
+
+= username
+        Username of the user.
+
+        type: str
+
+
+NOTES:
+      * Ansible uses the `cs' library's configuration method if credentials are not provided by the arguments `api_url', `api_key',
+        `api_secret'. Configuration is read from several locations, in the following order. The `CLOUDSTACK_ENDPOINT',
+        `CLOUDSTACK_KEY', `CLOUDSTACK_SECRET' and `CLOUDSTACK_METHOD'. `CLOUDSTACK_TIMEOUT' environment variables. A
+        `CLOUDSTACK_CONFIG' environment variable pointing to an `.ini' file. A `cloudstack.ini' file in the current working
+        directory. A `.cloudstack.ini' file in the users home directory. Optionally multiple credentials and endpoints can be
+        specified using ini sections in `cloudstack.ini'. Use the argument `api_region' to select the section name, default section
+        is `cloudstack'. See https://github.com/exoscale/cs for more information.
+      * A detailed guide about cloudstack modules can be found in the L(CloudStack Cloud
+        Guide,../scenario_guides/guide_cloudstack.html).
+      * This module supports check mode.
+
+
+REQUIREMENTS:  python >= 2.6, cs >= 0.6.10
+
+AUTHOR: René Moser (@resmo)
+        METADATA:
+          status:
+          - stableinterface
+          supported_by: community
+        
+
+EXAMPLES:
+
+- name: Create an user in domain 'CUSTOMERS'
+  cs_user:
+    account: developers
+    username: johndoe
+    password: S3Cur3
+    last_name: Doe
+    first_name: John
+    email: john.doe@example.com
+    domain: CUSTOMERS
+  delegate_to: localhost
+
+- name: Lock an existing user in domain 'CUSTOMERS'
+  cs_user:
+    username: johndoe
+    domain: CUSTOMERS
+    state: locked
+  delegate_to: localhost
+
+- name: Disable an existing user in domain 'CUSTOMERS'
+  cs_user:
+    username: johndoe
+    domain: CUSTOMERS
+    state: disabled
+  delegate_to: localhost
+
+- name: Enable/unlock an existing user in domain 'CUSTOMERS'
+  cs_user:
+    username: johndoe
+    domain: CUSTOMERS
+    state: enabled
+  delegate_to: localhost
+
+- name: Remove an user in domain 'CUSTOMERS'
+  cs_user:
+    name: customer_xy
+    domain: CUSTOMERS
+    state: absent
+  delegate_to: localhost
+
+
+RETURN VALUES:
+
+---
+id:
+  description: UUID of the user.
+  returned: success
+  type: str
+  sample: 87b1e0ce-4e01-11e4-bb66-0050569e64b8
+username:
+  description: Username of the user.
+  returned: success
+  type: str
+  sample: johndoe
+fist_name:
+  description: First name of the user.
+  returned: success
+  type: str
+  sample: John
+last_name:
+  description: Last name of the user.
+  returned: success
+  type: str
+  sample: Doe
+email:
+  description: Emailof the user.
+  returned: success
+  type: str
+  sample: john.doe@example.com
+user_api_key:
+  description: API key of the user.
+  returned: success
+  type: str
+  sample: JLhcg8VWi8DoFqL2sSLZMXmGojcLnFrOBTipvBHJjySODcV4mCOo29W2duzPv5cALaZnXj5QxDx3xQfaQt3DKg
+user_api_secret:
+  description: API secret of the user.
+  returned: success
+  type: str
+  sample: FUELo3LB9fa1UopjTLPdqLv_6OXQMJZv9g9N4B_Ao3HFz8d6IGFCV9MbPFNM8mwz00wbMevja1DoUNDvI8C9-g
+account:
+  description: Account name of the user.
+  returned: success
+  type: str
+  sample: developers
+account_type:
+  description: Type of the account.
+  returned: success
+  type: str
+  sample: user
+timezone:
+  description: Timezone of the user.
+  returned: success
+  type: str
+  sample: enabled
+created:
+  description: Date the user was created.
+  returned: success
+  type: str
+  sample: Doe
+state:
+  description: State of the user.
+  returned: success
+  type: str
+  sample: enabled
+domain:
+  description: Domain the user is related.
+  returned: success
+  type: str
+  sample: ROOT
+

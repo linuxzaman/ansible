@@ -1,0 +1,55 @@
+> NETAPP_E_FACTS    (/usr/lib/python2.7/dist-packages/ansible/modules/storage/netapp/netapp_e_facts.py)
+
+        Return various information about NetApp E-Series storage arrays (eg, configuration, disks)
+
+  * This module is maintained by The Ansible Community
+OPTIONS (= is mandatory):
+
+= api_password
+        The password to authenticate with the SANtricity WebServices Proxy or embedded REST API.
+
+
+= api_url
+        The url to the SANtricity WebServices Proxy or embedded REST API.
+
+
+= api_username
+        The username to authenticate with the SANtricity WebServices Proxy or embedded REST API.
+
+
+= ssid
+        The ID of the array to manage. This value must be unique for each array.
+
+
+- validate_certs
+        Should https certificates be validated?
+        [Default: True]
+        type: bool
+
+
+AUTHOR: Kevin Hulquest (@hulquest)
+        METADATA:
+          status:
+          - preview
+          supported_by: community
+        
+
+EXAMPLES:
+
+---
+    - name: Get array facts
+      netapp_e_facts:
+        array_id: "{{ netapp_array_id }}"
+        api_url: "{{ netapp_api_url }}"
+        api_username: "{{ netapp_api_username }}"
+        api_password: "{{ netapp_api_password }}"
+        validate_certs: "{{ netapp_api_validate_certs }}"
+
+
+RETURN VALUES:
+
+msg:
+    description: Gathered facts for <StorageArrayId>.
+    returned: always
+    type: str
+

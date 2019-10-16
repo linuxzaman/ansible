@@ -1,0 +1,95 @@
+> DLADM_VNIC    (/usr/lib/python2.7/dist-packages/ansible/modules/network/illumos/dladm_vnic.py)
+
+        Create or delete VNICs on Solaris/illumos systems.
+
+  * This module is maintained by The Ansible Community
+OPTIONS (= is mandatory):
+
+= link
+        VNIC underlying link name.
+
+
+- mac
+        Sets the VNIC's MAC address. Must be valid unicast MAC address.
+        (Aliases: macaddr)[Default: False]
+
+= name
+        VNIC name.
+
+
+- state
+        Create or delete Solaris/illumos VNIC.
+        (Choices: present, absent)[Default: present]
+
+- temporary
+        Specifies that the VNIC is temporary. Temporary VNICs do not persist across reboots.
+        [Default: False]
+        type: bool
+
+- vlan
+        Enable VLAN tagging for this VNIC. The VLAN tag will have id `vlan'.
+        (Aliases: vlan_id)[Default: False]
+
+
+AUTHOR: Adam Števko (@xen0l)
+        METADATA:
+          status:
+          - preview
+          supported_by: community
+        
+
+EXAMPLES:
+
+# Create 'vnic0' VNIC over 'bnx0' link
+- dladm_vnic:
+    name: vnic0
+    link: bnx0
+    state: present
+
+# Create VNIC with specified MAC and VLAN tag over 'aggr0'
+- dladm_vnic:
+    name: vnic1
+    link: aggr0
+    mac: '00:00:5E:00:53:23'
+    vlan: 4
+
+# Remove 'vnic0' VNIC
+- dladm_vnic:
+    name: vnic0
+    link: bnx0
+    state: absent
+
+
+RETURN VALUES:
+
+name:
+    description: VNIC name
+    returned: always
+    type: str
+    sample: "vnic0"
+link:
+    description: VNIC underlying link name
+    returned: always
+    type: str
+    sample: "igb0"
+state:
+    description: state of the target
+    returned: always
+    type: str
+    sample: "present"
+temporary:
+    description: VNIC's persistence
+    returned: always
+    type: bool
+    sample: "True"
+mac:
+    description: MAC address to use for VNIC
+    returned: if mac is specified
+    type: str
+    sample: "00:00:5E:00:53:42"
+vlan:
+    description: VLAN to use for VNIC
+    returned: success
+    type: int
+    sample: 42
+

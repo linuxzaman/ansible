@@ -1,0 +1,54 @@
+EXAMPLES:
+
+- name: ospf module test
+  hosts: cloudengine
+  connection: local
+  gather_facts: no
+  vars:
+    cli:
+      host: "{{ inventory_hostname }}"
+      port: "{{ ansible_ssh_port }}"
+      username: "{{ username }}"
+      password: "{{ password }}"
+      transport: cli
+
+  tasks:
+
+  - name: Configure ospf
+    ce_ospf:
+      process_id: 1
+      area: 100
+      state: present
+      provider: "{{ cli }}"
+
+
+RETURN VALUES:
+
+proposed:
+    description: k/v pairs of parameters passed into module
+    returned: verbose mode
+    type: dict
+    sample: {"process_id": "1", "area": "100"}
+existing:
+    description: k/v pairs of existing configuration
+    returned: verbose mode
+    type: dict
+    sample: {"process_id": "1", "areas": [], "nexthops":[], "max_load_balance": "32"}
+end_state:
+    description: k/v pairs of configuration after module execution
+    returned: verbose mode
+    type: dict
+    sample: {"process_id": "1",
+             "areas": [{"areaId": "0.0.0.100", "areaType": "Normal"}],
+             "nexthops":[], "max_load_balance": "32"}
+updates:
+    description: commands sent to the device
+    returned: always
+    type: list
+    sample: ["ospf 1", "area 0.0.0.100"]
+changed:
+    description: check to see if a change was made on the device
+    returned: always
+    type: bool
+    sample: true
+

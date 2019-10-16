@@ -1,0 +1,136 @@
+> AWS_CONFIG_RECORDER    (/usr/lib/python2.7/dist-packages/ansible/modules/cloud/amazon/aws_config_recorder.py)
+
+        Module manages AWS Config configuration recorder settings
+
+  * This module is maintained by The Ansible Community
+OPTIONS (= is mandatory):
+
+- aws_access_key
+        AWS access key. If not set then the value of the AWS_ACCESS_KEY_ID, AWS_ACCESS_KEY or EC2_ACCESS_KEY environment variable is
+        used.
+        (Aliases: ec2_access_key, access_key)[Default: (null)]
+        type: str
+
+- aws_secret_key
+        AWS secret key. If not set then the value of the AWS_SECRET_ACCESS_KEY, AWS_SECRET_KEY, or EC2_SECRET_KEY environment variable is
+        used.
+        (Aliases: ec2_secret_key, secret_key)[Default: (null)]
+        type: str
+
+- debug_botocore_endpoint_logs
+        Use a botocore.endpoint logger to parse the unique (rather than total) "resource:action" API calls made during a task, outputing
+        the set to the resource_actions key in the task results. Use the aws_resource_action callback to output to total list made during
+        a playbook. The ANSIBLE_DEBUG_BOTOCORE_LOGS environment variable may also be used.
+        [Default: no]
+        type: bool
+        version_added: 2.8
+
+- ec2_url
+        Url to use to connect to EC2 or your Eucalyptus cloud (by default the module will use EC2 endpoints). Ignored for modules where
+        region is required. Must be specified for all other modules if region is not used. If not set then the value of the EC2_URL
+        environment variable, if any, is used.
+        [Default: (null)]
+        type: str
+
+= name
+        The name of the AWS Config resource.
+
+
+- profile
+        Uses a boto profile. Only works with boto >= 2.24.0.
+        [Default: (null)]
+        type: str
+        version_added: 1.6
+
+- recording_group
+        Specifies the types of AWS resources for which AWS Config records configuration changes.
+        Required when state=present
+        [Default: (null)]
+        suboptions:
+          all_supported:
+            description:
+            - Specifies whether AWS Config records configuration changes for every supported
+              type of regional resource.
+            - If you set this option to `true`, when AWS Config adds support for a new type
+              of regional resource, it starts recording resources of that type automatically.
+            - If you set this option to `true`, you cannot enumerate a list of `resource_types`.
+          include_global_types:
+            description:
+            - Specifies whether AWS Config includes all supported types of global resources
+              (for example, IAM resources) with the resources that it records.
+            - Before you can set this option to `true`, you must set the allSupported option
+              to `true`.
+            - If you set this option to `true`, when AWS Config adds support for a new type
+              of global resource, it starts recording resources of that type automatically.
+            - The configuration details for any global resource are the same in all regions.
+              To prevent duplicate configuration items, you should consider customizing AWS
+              Config in only one region to record global resources.
+          resource_types:
+            description:
+            - A list that specifies the types of AWS resources for which AWS Config records
+              configuration changes (for example, `AWS::EC2::Instance` or `AWS::CloudTrail::Trail`).
+            - Before you can set this option to `true`, you must set the `all_supported` option
+              to `false`.
+        
+
+- region
+        The AWS region to use. If not specified then the value of the AWS_REGION or EC2_REGION environment variable, if any, is used. See
+        http://docs.aws.amazon.com/general/latest/gr/rande.html#ec2_region
+        (Aliases: aws_region, ec2_region)[Default: (null)]
+        type: str
+
+- role_arn
+        Amazon Resource Name (ARN) of the IAM role used to describe the AWS resources associated with the account.
+        Required when state=present
+        [Default: (null)]
+
+- security_token
+        AWS STS security token. If not set then the value of the AWS_SECURITY_TOKEN or EC2_SECURITY_TOKEN environment variable is used.
+        (Aliases: access_token)[Default: (null)]
+        type: str
+        version_added: 1.6
+
+- state
+        Whether the Config rule should be present or absent.
+        (Choices: present, absent)[Default: present]
+
+- validate_certs
+        When set to "no", SSL certificates will not be validated for boto versions >= 2.6.0.
+        [Default: True]
+        type: bool
+        version_added: 1.5
+
+
+NOTES:
+      * If parameters are not set within the module, the following environment variables can be used in decreasing order of
+        precedence `AWS_URL' or `EC2_URL', `AWS_ACCESS_KEY_ID' or `AWS_ACCESS_KEY' or `EC2_ACCESS_KEY', `AWS_SECRET_ACCESS_KEY' or
+        `AWS_SECRET_KEY' or `EC2_SECRET_KEY', `AWS_SECURITY_TOKEN' or `EC2_SECURITY_TOKEN', `AWS_REGION' or `EC2_REGION'
+      * Ansible uses the boto configuration file (typically ~/.boto) if no credentials are provided. See
+        https://boto.readthedocs.io/en/latest/boto_config_tut.html
+      * `AWS_REGION' or `EC2_REGION' can be typically be used to specify the AWS region, when required, but this can also be
+        configured in the boto config file
+
+
+REQUIREMENTS:  boto, boto3, botocore, python >= 2.6
+
+AUTHOR: Aaron Smith (@slapula)
+        METADATA:
+          status:
+          - preview
+          supported_by: community
+        
+
+EXAMPLES:
+
+- name: Create Configuration Recorder for AWS Config
+  aws_config_recorder:
+    name: test_configuration_recorder
+    state: present
+    role_arn: 'arn:aws:iam::123456789012:role/AwsConfigRecorder'
+    recording_group:
+        all_supported: true
+        include_global_types: true
+
+
+RETURN VALUES:
+#

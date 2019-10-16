@@ -1,0 +1,22 @@
+EXAMPLES:
+
+# Set the global parameter 'cluster_name' to a value of 'mq-cluster' (in quotes)
+- rabbitmq_global_parameter:
+    name: cluster_name
+    value: "{{ 'mq-cluster' | to_json }}"
+    state: present
+
+
+RETURN VALUES:
+
+name:
+    description: name of the global parameter being set
+    returned: success
+    type: str
+    sample: "cluster_name"
+value:
+    description: value of the global parameter, as a JSON term
+    returned: changed
+    type: str
+    sample: "the-cluster-name"
+

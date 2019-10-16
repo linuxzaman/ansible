@@ -1,0 +1,101 @@
+> VCA_FW    (/usr/lib/python2.7/dist-packages/ansible/modules/cloud/vmware/vca_fw.py)
+
+        Adds or removes firewall rules from a gateway in a vca environment
+
+  * This module is maintained by The Ansible Community
+OPTIONS (= is mandatory):
+
+- api_version
+        The API version to be used with the vca.
+        [Default: 5.7]
+        type: str
+
+= fw_rules
+        A list of firewall rules to be added to the gateway, Please see examples on valid entries
+        [Default: False]
+
+- gateway_name
+        The name of the gateway of the vdc where the rule should be added.
+        [Default: gateway]
+        type: str
+
+- host
+        The authentication host to be used when service type is vcd.
+        [Default: (null)]
+        type: str
+
+- instance_id
+        The instance ID in a vchs environment to be used for creating the vapp.
+        [Default: (null)]
+        type: str
+
+- org
+        The org to login to for creating vapp.
+        This option is required when the `service_type' is `vdc'.
+        [Default: (null)]
+        type: str
+
+- password
+        The vca password, if not set the environment variable `VCA_PASS' is checked for the password.
+        (Aliases: pass, passwd)[Default: (null)]
+        type: str
+
+- service_type
+        The type of service we are authenticating against.
+        (Choices: vca, vcd, vchs)[Default: vca]
+        type: str
+
+- state
+        Whether the object should be added or removed.
+        (Choices: absent, present)[Default: present]
+        type: str
+
+- username
+        The vca username or email address, if not set the environment variable `VCA_USER' is checked for the username.
+        (Aliases: user)[Default: (null)]
+        type: str
+
+- validate_certs
+        If the certificates of the authentication is to be verified.
+        (Aliases: verify_certs)[Default: True]
+        type: bool
+
+- vdc_name
+        The name of the vdc where the gateway is located.
+        [Default: (null)]
+        type: str
+
+
+AUTHOR: Peter Sprygada (@privateip)
+        METADATA:
+          status:
+          - preview
+          supported_by: community
+        
+
+EXAMPLES:
+
+#Add a set of firewall rules
+
+- hosts: localhost
+  connection: local
+  tasks:
+   - vca_fw:
+       instance_id: 'b15ff1e5-1024-4f55-889f-ea0209726282'
+       vdc_name: 'benz_ansible'
+       state: 'absent'
+       fw_rules:
+         - description: "ben testing"
+           source_ip: "Any"
+           dest_ip: 192.0.2.23
+         - description: "ben testing 2"
+           source_ip: 192.0.2.50
+           source_port: "Any"
+           dest_port: "22"
+           dest_ip: 192.0.2.101
+           is_enable: "true"
+           enable_logging: "false"
+           protocol: "Tcp"
+           policy: "allow"
+
+

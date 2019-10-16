@@ -1,0 +1,55 @@
+EXAMPLES:
+
+- name: rollback module test
+  hosts: cloudengine
+  connection: local
+  gather_facts: no
+  vars:
+    cli:
+      host: "{{ inventory_hostname }}"
+      port: "{{ ansible_ssh_port }}"
+      username: "{{ username }}"
+      password: "{{ password }}"
+      transport: cli
+
+  tasks:
+
+- name: Ensure commit_id is exist, and specifies the label of the configuration rollback point to
+        which system configurations are expected to roll back.
+  ce_rollback:
+    commit_id: 1000000748
+    action: rollback
+    provider: "{{ cli }}"
+
+
+RETURN VALUES:
+
+proposed:
+    description: k/v pairs of parameters passed into module
+    returned: sometimes
+    type: dict
+    sample: {"commit_id": "1000000748", "action": "rollback"}
+existing:
+    description: k/v pairs of existing rollback
+    returned: sometimes
+    type: dict
+    sample: {"commitId": "1000000748", "userLabel": "abc"}
+updates:
+    description: command sent to the device
+    returned: always
+    type: list
+    sample: ["rollback configuration to file a.cfg",
+             "set configuration commit 1000000783 label ddd",
+             "clear configuration commit 1000000783 label",
+             "display configuration commit list"]
+changed:
+    description: check to see if a change was made on the device
+    returned: always
+    type: bool
+    sample: true
+end_state:
+    description: k/v pairs of configuration after module execution
+    returned: always
+    type: dict
+    sample: {"commitId": "1000000748", "userLabel": "abc"}
+

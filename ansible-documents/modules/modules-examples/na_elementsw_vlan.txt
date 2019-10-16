@@ -1,0 +1,31 @@
+EXAMPLES:
+
+- name: Create vlan
+  na_elementsw_vlan:
+    state: present
+    name: test
+    vlan_tag: 1
+    svip: "{{ ip address }}"
+    netmask: "{{ netmask }}"
+    address_blocks:
+      - start: "{{ starting ip_address }}"
+        size: 5
+      - start: "{{ starting ip_address }}"
+        size: 5
+    hostname: "{{ netapp_hostname }}"
+    username: "{{ netapp_username }}"
+    password: "{{ netapp_password }}"
+
+- name: Delete Lun
+  na_elementsw_vlan:
+    state: present
+    vlan_tag: 1
+    hostname: "{{ netapp_hostname }}"
+    username: "{{ netapp_username }}"
+    password: "{{ netapp_password }}"
+
+
+RETURN VALUES:
+
+
+

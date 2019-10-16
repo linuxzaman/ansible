@@ -1,0 +1,60 @@
+> ONYX_MLAG_IPL    (/usr/lib/python2.7/dist-packages/ansible/modules/network/onyx/onyx_mlag_ipl.py)
+
+        This module provides declarative management of IPL (inter-peer link) management on Mellanox ONYX network devices.
+
+  * This module is maintained by The Ansible Community
+OPTIONS (= is mandatory):
+
+= name
+        Name of the interface (port-channel) IPL should be configured on.
+
+
+- peer_address
+        IPL peer IP address.
+        [Default: (null)]
+
+- state
+        IPL state.
+        (Choices: present, absent)[Default: present]
+
+- vlan_interface
+        Name of the IPL vlan interface.
+        [Default: (null)]
+
+
+NOTES:
+      * Tested on ONYX 3.6.4000
+
+
+AUTHOR: Samer Deeb (@samerd)
+        METADATA:
+          status:
+          - preview
+          supported_by: community
+        
+
+EXAMPLES:
+
+- name: run configure ipl
+  onyx_mlag_ipl:
+    name: Po1
+    vlan_interface: Vlan 322
+    state: present
+    peer_address: 192.168.7.1
+
+- name: run remove ipl
+  onyx_mlag_ipl:
+    name: Po1
+    state: absent
+
+
+RETURN VALUES:
+
+commands:
+  description: The list of configuration mode commands to send to the device.
+  returned: always
+  type: list
+  sample:
+    - interface port-channel 1 ipl 1
+    - interface vlan 1024 ipl 1 peer-address 10.10.10.10
+

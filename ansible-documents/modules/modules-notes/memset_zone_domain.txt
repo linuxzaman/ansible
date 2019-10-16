@@ -1,0 +1,68 @@
+> MEMSET_ZONE_DOMAIN    (/usr/lib/python2.7/dist-packages/ansible/modules/cloud/memset/memset_zone_domain.py)
+
+        Manage DNS zone domains in a Memset account.
+
+  * This module is maintained by The Ansible Community
+OPTIONS (= is mandatory):
+
+= api_key
+        The API key obtained from the Memset control panel.
+
+
+= domain
+        The zone domain name. Ensure this value has at most 250 characters.
+        (Aliases: name)
+
+- state
+        Indicates desired state of resource.
+        (Choices: absent, present)[Default: present]
+
+= zone
+        The zone to add the domain to (this must already exist).
+
+
+
+NOTES:
+      * Zone domains can be thought of as a collection of domains, all of which share the same DNS records (i.e. they point to the
+        same IP). An API key generated via the Memset customer control panel is needed with the following minimum scope -
+        `dns.zone_domain_create', `dns.zone_domain_delete', `dns.zone_domain_list'.
+      * Currently this module can only create one domain at a time. Multiple domains should be created using `with_items'.
+
+
+AUTHOR: Simon Weald (@glitchcrab)
+        METADATA:
+          status:
+          - preview
+          supported_by: community
+        
+
+EXAMPLES:
+
+# Create the zone domain 'test.com'
+- name: create zone domain
+  memset_zone_domain:
+    domain: test.com
+    zone: testzone
+    state: present
+    api_key: 5eb86c9196ab03919abcf03857163741
+  delegate_to: localhost
+
+
+RETURN VALUES:
+
+memset_api:
+  description: Domain info from the Memset API
+  returned: when changed or state == present
+  type: complex
+  contains:
+    domain:
+      description: Domain name
+      returned: always
+      type: str
+      sample: "example.com"
+    id:
+      description: Domain ID
+      returned: always
+      type: str
+      sample: "b0bb1ce851aeea6feeb2dc32fe83bf9c"
+

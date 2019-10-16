@@ -1,0 +1,179 @@
+> VMWARE_HOST_VMNIC_FACTS    (/usr/lib/python2.7/dist-packages/ansible/modules/cloud/vmware/vmware_host_vmnic_facts.py)
+
+        This module can be used to gather facts about vmnics available on the given ESXi host. If `cluster_name' is provided, then vmnic
+        facts about all hosts from given cluster will be returned. If `esxi_hostname' is provided, then vmnic facts about given host
+        system will be returned. Additional details about vswitch and dvswitch with respective vmnic is also provided which is added in
+        2.7 version.
+
+  * This module is maintained by The Ansible Community
+OPTIONS (= is mandatory):
+
+- capabilities
+        Gather facts about general capabilities (Auto negotioation, Wake On LAN, and Network I/O Control).
+        [Default: False]
+        type: bool
+        version_added: 2.8
+        
+
+- cluster_name
+        Name of the cluster from which all host systems will be used.
+        Vmnic facts about each ESXi server will be returned for the given cluster.
+        This parameter is required if `esxi_hostname' is not specified.
+        [Default: (null)]
+        type: str
+
+- directpath_io
+        Gather facts about DirectPath I/O capabilites and configuration.
+        [Default: False]
+        type: bool
+        version_added: 2.8
+        
+
+- esxi_hostname
+        Name of the host system to work with.
+        Vmnic facts about this ESXi server will be returned.
+        This parameter is required if `cluster_name' is not specified.
+        [Default: (null)]
+        type: str
+
+- hostname
+        The hostname or IP address of the vSphere vCenter or ESXi server.
+        If the value is not specified in the task, the value of environment variable `VMWARE_HOST' will be used instead.
+        Environment variable support added in Ansible 2.6.
+        [Default: (null)]
+        type: str
+
+- password
+        The password of the vSphere vCenter or ESXi server.
+        If the value is not specified in the task, the value of environment variable `VMWARE_PASSWORD' will be used instead.
+        Environment variable support added in Ansible 2.6.
+        (Aliases: pass, pwd)[Default: (null)]
+        type: str
+
+- port
+        The port number of the vSphere vCenter or ESXi server.
+        If the value is not specified in the task, the value of environment variable `VMWARE_PORT' will be used instead.
+        Environment variable support added in Ansible 2.6.
+        [Default: 443]
+        type: int
+        version_added: 2.5
+
+- sriov
+        Gather facts about SR-IOV capabilites and configuration.
+        [Default: False]
+        type: bool
+        version_added: 2.8
+        
+
+- username
+        The username of the vSphere vCenter or ESXi server.
+        If the value is not specified in the task, the value of environment variable `VMWARE_USER' will be used instead.
+        Environment variable support added in Ansible 2.6.
+        (Aliases: admin, user)[Default: (null)]
+        type: str
+
+- validate_certs
+        Allows connection when SSL certificates are not valid. Set to `false' when certificates are not trusted.
+        If the value is not specified in the task, the value of environment variable `VMWARE_VALIDATE_CERTS' will be used instead.
+        Environment variable support added in Ansible 2.6.
+        If set to `yes', please make sure Python >= 2.7.9 is installed on the given machine.
+        [Default: True]
+        type: bool
+
+
+NOTES:
+      * Tested on vSphere 6.5
+
+
+REQUIREMENTS:  python >= 2.6, PyVmomi
+
+AUTHOR: Abhijeet Kasurde (@Akasurde), Christian Kotte (@ckotte)
+        METADATA:
+          status:
+          - preview
+          supported_by: community
+        
+
+EXAMPLES:
+
+- name: Gather facts about vmnics of all ESXi Host in the given Cluster
+  vmware_host_vmnic_facts:
+    hostname: '{{ vcenter_hostname }}'
+    username: '{{ vcenter_username }}'
+    password: '{{ vcenter_password }}'
+    cluster_name: '{{ cluster_name }}'
+  delegate_to: localhost
+  register: cluster_host_vmnics
+
+- name: Gather facts about vmnics of an ESXi Host
+  vmware_host_vmnic_facts:
+    hostname: '{{ vcenter_hostname }}'
+    username: '{{ vcenter_username }}'
+    password: '{{ vcenter_password }}'
+    esxi_hostname: '{{ esxi_hostname }}'
+  delegate_to: localhost
+  register: host_vmnics
+
+
+RETURN VALUES:
+
+hosts_vmnics_facts:
+    description:
+    - dict with hostname as key and dict with vmnics facts as value.
+    - for C(num_vmnics), only NICs starting with vmnic are counted. NICs like vusb* are not counted.
+    - details about vswitch and dvswitch was added in version 2.7.
+    - details about vmnics was added in version 2.8.
+    returned: hosts_vmnics_facts
+    type: dict
+    sample:
+        {
+            "10.76.33.204": {
+                "all": [
+                    "vmnic0",
+                    "vmnic1"
+                ],
+                "available": [],
+                "dvswitch": {
+                    "dvs_0002": [
+                        "vmnic1"
+                    ]
+                },
+                "num_vmnics": 2,
+                "used": [
+                    "vmnic1",
+                    "vmnic0"
+                ],
+                "vmnic_details": [
+                    {
+                        "actual_duplex": "Full Duplex",
+                        "actual_speed": 10000,
+                        "adapter": "Intel(R) 82599 10 Gigabit Dual Port Network Connection",
+                        "configured_duplex": "Auto negotiate",
+                        "configured_speed": "Auto negotiate",
+                        "device": "vmnic0",
+                        "driver": "ixgbe",
+                        "location": "0000:01:00.0",
+                        "mac": "aa:bb:cc:dd:ee:ff",
+                        "status": "Connected",
+                    },
+                    {
+                        "actual_duplex": "Full Duplex",
+                        "actual_speed": 10000,
+                        "adapter": "Intel(R) 82599 10 Gigabit Dual Port Network Connection",
+                        "configured_duplex": "Auto negotiate",
+                        "configured_speed": "Auto negotiate",
+                        "device": "vmnic1",
+                        "driver": "ixgbe",
+                        "location": "0000:01:00.1",
+                        "mac": "ab:ba:cc:dd:ee:ff",
+                        "status": "Connected",
+                    },
+                ],
+                "vswitch": {
+                    "vSwitch0": [
+                        "vmnic0"
+                    ]
+                }
+            }
+        }
+

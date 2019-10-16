@@ -1,0 +1,73 @@
+EXAMPLES:
+
+- name: Associate an IP address conditonally
+  cs_ip_address:
+    network: My Network
+  register: ip_address
+  when: instance.public_ip is undefined
+  delegate_to: localhost
+
+- name: Disassociate an IP address
+  cs_ip_address:
+    ip_address: 1.2.3.4
+    state: absent
+  delegate_to: localhost
+
+- name: Associate an IP address with tags
+  cs_ip_address:
+    network: My Network
+    tags:
+      - key: myCustomID
+      - value: 5510c31a-416e-11e8-9013-02000a6b00bf
+  register: ip_address
+  delegate_to: localhost
+
+- name: Disassociate an IP address with tags
+  cs_ip_address:
+    state: absent
+    tags:
+      - key: myCustomID
+      - value: 5510c31a-416e-11e8-9013-02000a6b00bf
+  delegate_to: localhost
+
+
+RETURN VALUES:
+
+---
+id:
+  description: UUID of the Public IP address.
+  returned: success
+  type: str
+  sample: a6f7a5fc-43f8-11e5-a151-feff819cdc9f
+ip_address:
+  description: Public IP address.
+  returned: success
+  type: str
+  sample: 1.2.3.4
+zone:
+  description: Name of zone the IP address is related to.
+  returned: success
+  type: str
+  sample: ch-gva-2
+project:
+  description: Name of project the IP address is related to.
+  returned: success
+  type: str
+  sample: Production
+account:
+  description: Account the IP address is related to.
+  returned: success
+  type: str
+  sample: example account
+domain:
+  description: Domain the IP address is related to.
+  returned: success
+  type: str
+  sample: example domain
+tags:
+  description: List of resource tags associated with the IP address.
+  returned: success
+  type: dict
+  sample: '[ { "key": "myCustomID", "value": "5510c31a-416e-11e8-9013-02000a6b00bf" } ]'
+  version_added: '2.6'
+

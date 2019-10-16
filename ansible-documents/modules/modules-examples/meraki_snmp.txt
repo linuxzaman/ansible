@@ -1,0 +1,92 @@
+EXAMPLES:
+
+- name: Query SNMP values
+  meraki_snmp:
+    auth_key: abc12345
+    org_name: YourOrg
+    state: query
+  delegate_to: localhost
+
+- name: Enable SNMPv2
+  meraki_snmp:
+    auth_key: abc12345
+    org_name: YourOrg
+    state: present
+    v2c_enabled: yes
+  delegate_to: localhost
+
+- name: Disable SNMPv2
+  meraki_snmp:
+    auth_key: abc12345
+    org_name: YourOrg
+    state: present
+    v2c_enabled: no
+  delegate_to: localhost
+
+- name: Enable SNMPv3
+  meraki_snmp:
+    auth_key: abc12345
+    org_name: YourOrg
+    state: present
+    v3_enabled: true
+    v3_auth_mode: SHA
+    v3_auth_pass: ansiblepass
+    v3_priv_mode: AES128
+    v3_priv_pass: ansiblepass
+    peer_ips: 192.0.1.1;192.0.1.2
+  delegate_to: localhost
+
+
+RETURN VALUES:
+
+data:
+    description: Information about SNMP settings.
+    type: complex
+    returned: always
+    contains:
+        hostname:
+            description: Hostname of SNMP server.
+            returned: success
+            type: str
+            sample: n1.meraki.com
+        peerIps:
+            description: Semi-colon delimited list of IPs which can poll SNMP information.
+            returned: success
+            type: str
+            sample: 192.0.1.1
+        port:
+            description: Port number of SNMP.
+            returned: success
+            type: str
+            sample: 16100
+        v2cEnabled:
+            description: Shows enabled state of SNMPv2c
+            returned: success
+            type: bool
+            sample: true
+        v3Enabled:
+            description: Shows enabled state of SNMPv3
+            returned: success
+            type: bool
+            sample: true
+        v3AuthMode:
+            description: The SNMP version 3 authentication mode either MD5 or SHA.
+            returned: success
+            type: str
+            sample: SHA
+        v3PrivMode:
+            description: The SNMP version 3 privacy mode DES or AES128.
+            returned: success
+            type: str
+            sample: AES128
+        v2CommunityString:
+            description: Automatically generated community string for SNMPv2c.
+            returned: When SNMPv2c is enabled.
+            type: str
+            sample: o/8zd-JaSb
+        v3User:
+            description: Automatically generated username for SNMPv3.
+            returned: When SNMPv3c is enabled.
+            type: str
+            sample: o/8zd-JaSb
+

@@ -1,0 +1,154 @@
+> VMWARE_DATASTORE_FACTS    (/usr/lib/python2.7/dist-packages/ansible/modules/cloud/vmware/vmware_datastore_facts.py)
+
+        This module can be used to gather facts about datastores in VMWare infrastructure. All values and VMware object names are case
+        sensitive.
+
+  * This module is maintained by The Ansible Community
+OPTIONS (= is mandatory):
+
+- cluster
+        Cluster to search for datastores.
+        If set, facts of datastores belonging this clusters will be returned.
+        This parameter is required, if `datacenter' is not supplied.
+        [Default: (null)]
+
+- datacenter
+        Datacenter to search for datastores.
+        This parameter is required, if `cluster' is not supplied.
+        (Aliases: datacenter_name)[Default: (null)]
+
+- gather_nfs_mount_info
+        Gather mount information of NFS datastores.
+        Disabled per default because this slows down the execution if you have a lot of datastores.
+        [Default: False]
+        type: bool
+        version_added: 2.8
+        
+
+- gather_vmfs_mount_info
+        Gather mount information of VMFS datastores.
+        Disabled per default because this slows down the execution if you have a lot of datastores.
+        [Default: False]
+        type: bool
+        version_added: 2.8
+        
+
+- hostname
+        The hostname or IP address of the vSphere vCenter or ESXi server.
+        If the value is not specified in the task, the value of environment variable `VMWARE_HOST' will be used instead.
+        Environment variable support added in Ansible 2.6.
+        [Default: (null)]
+        type: str
+
+- name
+        Name of the datastore to match.
+        If set, facts of specific datastores are returned.
+        [Default: (null)]
+
+- password
+        The password of the vSphere vCenter or ESXi server.
+        If the value is not specified in the task, the value of environment variable `VMWARE_PASSWORD' will be used instead.
+        Environment variable support added in Ansible 2.6.
+        (Aliases: pass, pwd)[Default: (null)]
+        type: str
+
+- port
+        The port number of the vSphere vCenter or ESXi server.
+        If the value is not specified in the task, the value of environment variable `VMWARE_PORT' will be used instead.
+        Environment variable support added in Ansible 2.6.
+        [Default: 443]
+        type: int
+        version_added: 2.5
+
+- username
+        The username of the vSphere vCenter or ESXi server.
+        If the value is not specified in the task, the value of environment variable `VMWARE_USER' will be used instead.
+        Environment variable support added in Ansible 2.6.
+        (Aliases: admin, user)[Default: (null)]
+        type: str
+
+- validate_certs
+        Allows connection when SSL certificates are not valid. Set to `false' when certificates are not trusted.
+        If the value is not specified in the task, the value of environment variable `VMWARE_VALIDATE_CERTS' will be used instead.
+        Environment variable support added in Ansible 2.6.
+        If set to `yes', please make sure Python >= 2.7.9 is installed on the given machine.
+        [Default: True]
+        type: bool
+
+
+NOTES:
+      * Tested on vSphere 5.5, 6.0 and 6.5
+
+
+REQUIREMENTS:  python >= 2.6, PyVmomi
+
+AUTHOR: Tim Rightnour (@garbled1)
+        METADATA:
+          status:
+          - preview
+          supported_by: community
+        
+
+EXAMPLES:
+
+- name: Gather facts from standalone ESXi server having datacenter as 'ha-datacenter'
+  vmware_datastore_facts:
+    hostname: '{{ vcenter_hostname }}'
+    username: '{{ vcenter_username }}'
+    password: '{{ vcenter_password }}'
+    datacenter_name: '{{ datacenter_name }}'
+    validate_certs: no
+  delegate_to: localhost
+  register: facts
+
+- name: Gather facts from datacenter about specific datastore
+  vmware_datastore_facts:
+    hostname: '{{ vcenter_hostname }}'
+    username: '{{ vcenter_username }}'
+    password: '{{ vcenter_password }}'
+    datacenter_name: '{{ datacenter_name }}'
+    name: datastore1
+  delegate_to: localhost
+  register: facts
+
+
+RETURN VALUES:
+
+datastores:
+    description: metadata about the available datastores
+    returned: always
+    type: list
+    sample: [
+        {
+            "accessible": false,
+            "capacity": 42681237504,
+            "datastore_cluster": "datacluster0",
+            "freeSpace": 39638269952,
+            "maintenanceMode": "normal",
+            "multipleHostAccess": false,
+            "name": "datastore2",
+            "provisioned": 12289211488,
+            "type": "VMFS",
+            "uncommitted": 9246243936,
+            "url": "ds:///vmfs/volumes/5a69b18a-c03cd88c-36ae-5254001249ce/",
+            "vmfs_blockSize": 1024,
+            "vmfs_uuid": "5a69b18a-c03cd88c-36ae-5254001249ce",
+            "vmfs_version": "6.81"
+        },
+        {
+            "accessible": true,
+            "capacity": 5497558138880,
+            "datastore_cluster": "datacluster0",
+            "freeSpace": 4279000641536,
+            "maintenanceMode": "normal",
+            "multipleHostAccess": true,
+            "name": "datastore3",
+            "nfs_path": "/vol/datastore3",
+            "nfs_server": "nfs_server1",
+            "provisioned": 1708109410304,
+            "type": "NFS",
+            "uncommitted": 489551912960,
+            "url": "ds:///vmfs/volumes/420b3e73-67070776/"
+        },
+    ]
+

@@ -1,0 +1,28 @@
+EXAMPLES:
+
+- name: Ensure sudo command group exists
+  ipa_sudocmdgroup:
+    name: group01
+    description: Group of important commands
+    sudocmd:
+    - su
+    ipa_host: ipa.example.com
+    ipa_user: admin
+    ipa_pass: topsecret
+
+- name: Ensure sudo command group does not exist
+  ipa_sudocmdgroup:
+    name: group01
+    state: absent
+    ipa_host: ipa.example.com
+    ipa_user: admin
+    ipa_pass: topsecret
+
+
+RETURN VALUES:
+
+sudocmdgroup:
+  description: Sudo command group as returned by IPA API
+  returned: always
+  type: dict
+

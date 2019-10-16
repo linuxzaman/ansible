@@ -1,0 +1,52 @@
+EXAMPLES:
+
+- name: create a instance
+  gcp_spanner_instance:
+    name: testinstance
+    display_name: My Spanner Instance
+    node_count: 2
+    labels:
+      cost_center: ti-1700004
+    config: regional-us-central1
+    project: test_project
+    auth_kind: serviceaccount
+    service_account_file: "/tmp/auth.pem"
+    state: present
+
+
+RETURN VALUES:
+
+name:
+  description:
+  - A unique identifier for the instance, which cannot be changed after the instance
+    is created. The name must be between 6 and 30 characters in length.
+  returned: success
+  type: str
+config:
+  description:
+  - The name of the instance's configuration (similar but not quite the same as a
+    region) which defines defines the geographic placement and replication of your
+    databases in this instance. It determines where your data is stored. Values are
+    typically of the form `regional-europe-west1` , `us-central` etc.
+  - In order to obtain a valid list please consult the [Configuration section of the
+    docs](U(https://cloud.google.com/spanner/docs/instances).)
+  returned: success
+  type: str
+displayName:
+  description:
+  - The descriptive name for this instance as it appears in UIs. Must be unique per
+    project and between 4 and 30 characters in length.
+  returned: success
+  type: str
+nodeCount:
+  description:
+  - The number of nodes allocated to this instance.
+  returned: success
+  type: int
+labels:
+  description:
+  - 'An object containing a list of "key": value pairs.'
+  - 'Example: { "name": "wrench", "mass": "1.3kg", "count": "3" }.'
+  returned: success
+  type: dict
+

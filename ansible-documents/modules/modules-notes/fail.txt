@@ -1,0 +1,48 @@
+> FAIL    (/usr/lib/python2.7/dist-packages/ansible/modules/utilities/logic/fail.py)
+
+        This module fails the progress with a custom message. It can be useful for bailing out when a certain condition is met using
+        `when'. This module is also supported for Windows targets.
+
+  * This module is maintained by The Ansible Core Team
+  * note: This module has a corresponding action plugin.
+
+OPTIONS (= is mandatory):
+
+- msg
+        The customized message used for failing execution.
+        If omitted, fail will simply bail out with a generic message.
+        [Default: Failed as requested from task]
+        type: str
+
+
+NOTES:
+      * This module is also supported for Windows targets.
+
+
+SEE ALSO:
+      * Module assert
+           The official documentation on the assert module.
+           https://docs.ansible.com/ansible/latest/modules/assert_module.html
+      * Module debug
+           The official documentation on the debug module.
+           https://docs.ansible.com/ansible/latest/modules/debug_module.html
+      * Module meta
+           The official documentation on the meta module.
+           https://docs.ansible.com/ansible/latest/modules/meta_module.html
+
+
+AUTHOR: Dag Wieers (@dagwieers)
+        METADATA:
+          status:
+          - stableinterface
+          supported_by: core
+        
+
+EXAMPLES:
+
+# Example playbook using fail and when together
+- fail:
+    msg: The system may not be provisioned according to the CMDB status.
+  when: cmdb_status != "to-be-staged"
+
+

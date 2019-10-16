@@ -1,0 +1,235 @@
+> NXOS_FILE_COPY    (/usr/lib/python2.7/dist-packages/ansible/modules/network/nxos/nxos_file_copy.py)
+
+        This module supports two different workflows for copying a file to flash (or bootflash) on NXOS devices.  Files can either be (1)
+        pushed from the Ansible controller to the device or (2) pulled from a remote SCP file server to the device.  File copies are
+        initiated from the NXOS device to the remote SCP server.  This module only supports the use of connection `network_cli' or `Cli'
+        transport with connection `local'.
+
+  * This module is maintained by The Ansible Network Team
+OPTIONS (= is mandatory):
+
+- connect_ssh_port
+        SSH port to connect to server during transfer of file
+        [Default: 22]
+        version_added: 2.5
+
+- file_pull
+        When (False) file is copied from the Ansible controller to the NXOS device.
+        When (True) file is copied from a remote SCP server to the NXOS device. In this mode, the file copy is initiated from the NXOS
+        device.
+        If the file is already present on the device it will be overwritten and therefore the operation is NOT idempotent.
+        [Default: False]
+        type: bool
+        version_added: 2.7
+
+- file_pull_timeout
+        Use this parameter to set timeout in seconds, when transferring large files or when the network is slow.
+        [Default: 300]
+        version_added: 2.7
+
+- file_system
+        The remote file system of the device. If omitted, devices that support a `file_system' parameter will use their default values.
+        [Default: bootflash:]
+
+- local_file
+        When (file_pull is False) this is the path to the local file on the Ansible controller. The local directory must exist.
+        When (file_pull is True) this is the file name used on the NXOS device.
+        [Default: (null)]
+
+- local_file_directory
+        When (file_pull is True) file is copied from a remote SCP server to the NXOS device, and written to this directory on the NXOS
+        device. If the directory does not exist, it will be created under the file_system. This is an optional parameter.
+        When (file_pull is False), this not used.
+        [Default: (null)]
+        version_added: 2.7
+
+- provider
+        *Deprecated*
+        Starting with Ansible 2.5 we recommend using `connection: network_cli'.
+        This option is only required if you are using NX-API.
+        For more information please see the L(NXOS Platform Options guide, ../network/user_guide/platform_nxos.html).
+        HORIZONTALLINE
+        A dict object containing connection details.
+        [Default: (null)]
+        suboptions:
+          auth_pass:
+            description:
+            - Specifies the password to use if required to enter privileged mode on the remote
+              device.  If `authorize' is false, then this argument does nothing. If the value
+              is not specified in the task, the value of environment variable `ANSIBLE_NET_AUTH_PASS'
+              will be used instead.
+            type: str
+            version_added: 2.5.3
+          authorize:
+            default: false
+            description:
+            - Instructs the module to enter privileged mode on the remote device before sending
+              any commands.  If not specified, the device will attempt to execute all commands
+              in non-privileged mode. If the value is not specified in the task, the value
+              of environment variable `ANSIBLE_NET_AUTHORIZE' will be used instead.
+            type: bool
+            version_added: 2.5.3
+          host:
+            description:
+            - Specifies the DNS host name or address for connecting to the remote device over
+              the specified transport.  The value of host is used as the destination address
+              for the transport.
+            required: true
+            type: str
+          password:
+            description:
+            - Specifies the password to use to authenticate the connection to the remote device.  This
+              is a common argument used for either `cli' or `nxapi' transports. If the value
+              is not specified in the task, the value of environment variable `ANSIBLE_NET_PASSWORD'
+              will be used instead.
+            type: str
+          port:
+            default: 0 (use common port)
+            description:
+            - Specifies the port to use when building the connection to the remote device.  This
+              value applies to either `cli' or `nxapi'.  The port value will default to
+              the appropriate transport common port if none is provided in the task.  (cli=22,
+              http=80, https=443).
+            type: int
+          ssh_keyfile:
+            description:
+            - Specifies the SSH key to use to authenticate the connection to the remote device.  This
+              argument is only used for the `cli' transport. If the value is not specified
+              in the task, the value of environment variable `ANSIBLE_NET_SSH_KEYFILE' will
+              be used instead.
+            type: str
+          timeout:
+            default: 10
+            description:
+            - Specifies the timeout in seconds for communicating with the network device for
+              either connecting or sending commands.  If the timeout is exceeded before the
+              operation is completed, the module will error. NX-API can be slow to return
+              on long-running commands (sh mac, sh bgp, etc).
+            type: int
+            version_added: '2.3'
+          transport:
+            choices:
+            - cli
+            - nxapi
+            default: cli
+            description:
+            - Configures the transport connection to use when connecting to the remote device.  The
+              transport argument supports connectivity to the device over cli (ssh) or nxapi.
+            required: true
+            type: str
+          use_proxy:
+            default: true
+            description:
+            - If `no', the environment variables `http_proxy' and `https_proxy' will be
+              ignored.
+            type: bool
+            version_added: '2.5'
+          use_ssl:
+            default: false
+            description:
+            - Configures the `transport' to use SSL if set to `yes' only when the `transport=nxapi',
+              otherwise this value is ignored.
+            type: bool
+          username:
+            description:
+            - Configures the username to use to authenticate the connection to the remote
+              device.  This value is used to authenticate either the CLI login or the nxapi
+              authentication depending on which transport is used. If the value is not specified
+              in the task, the value of environment variable `ANSIBLE_NET_USERNAME' will
+              be used instead.
+            type: str
+          validate_certs:
+            default: true
+            description:
+            - If `no', SSL certificates will not be validated. This should only be used on
+              personally controlled sites using self-signed certificates.  If the transport
+              argument is not nxapi, this value is ignored.
+            type: bool
+        
+        type: dict
+
+- remote_file
+        When (file_pull is False) this is the remote file path on the NXOS device. If omitted, the name of the local file will be used.
+        The remote directory must exist.
+        When (file_pull is True) this is the full path to the file on the remote SCP server to be copied to the NXOS device.
+        [Default: (null)]
+
+- remote_scp_server
+        The remote scp server address which is used to pull the file. This is required if file_pull is True.
+        [Default: (null)]
+        version_added: 2.7
+
+- remote_scp_server_password
+        The remote scp server password which is used to pull the file. This is required if file_pull is True.
+        [Default: (null)]
+        version_added: 2.7
+
+- remote_scp_server_user
+        The remote scp server username which is used to pull the file. This is required if file_pull is True.
+        [Default: (null)]
+        version_added: 2.7
+
+
+NOTES:
+      * Tested against NXOS 7.0(3)I2(5), 7.0(3)I4(6), 7.0(3)I5(3), 7.0(3)I6(1), 7.0(3)I7(3), 6.0(2)A8(8), 7.0(3)F3(4), 7.3(0)D1(1),
+        8.3(0)
+      * When pushing files (file_pull is False) to the NXOS device, feature scp-server must be enabled.
+      * When pulling files (file_pull is True) to the NXOS device, feature scp-server is not required.
+      * When pulling files (file_pull is True) to the NXOS device, no transfer will take place if the file is already present.
+      * Check mode will tell you if the file would be copied.
+      * For information on using CLI and NX-API see the :ref:`NXOS Platform Options guide <nxos_platform_options>`
+      * For more information on using Ansible to manage network devices see the :ref:`Ansible Network Guide <network_guide>`
+      * For more information on using Ansible to manage Cisco devices see the `Cisco integration page
+        <https://www.ansible.com/integrations/networks/cisco>`_.
+
+
+REQUIREMENTS:  paramiko (required when file_pull is False), SCPClient (required when file_pull is False), pexpect (required when
+        file_pull is True)
+
+AUTHOR: Jason Edelman (@jedelman8), Gabriele Gerbino (@GGabriele)
+        METADATA:
+          status:
+          - preview
+          supported_by: network
+        
+
+EXAMPLES:
+
+# File copy from ansible controller to nxos device
+  - name: "copy from server to device"
+    nxos_file_copy:
+      local_file: "./test_file.txt"
+      remote_file: "test_file.txt"
+
+# Initiate file copy from the nxos device to transfer file from an SCP server back to the nxos device
+  - name: "initiate file copy from device"
+    nxos_file_copy:
+      nxos_file_copy:
+      file_pull: True
+      local_file: "xyz"
+      local_filr_directory: "dir1/dir2/dir3"
+      remote_file: "/mydir/abc"
+      remote_scp_server: "192.168.0.1"
+      remote_scp_server_user: "myUser"
+      remote_scp_server_password: "myPassword"
+
+
+RETURN VALUES:
+
+transfer_status:
+    description: Whether a file was transferred. "No Transfer" or "Sent".
+                 If file_pull is successful, it is set to "Received".
+    returned: success
+    type: str
+    sample: 'Sent'
+local_file:
+    description: The path of the local file.
+    returned: success
+    type: str
+    sample: '/path/to/local/file'
+remote_file:
+    description: The path of the remote file.
+    returned: success
+    type: str
+    sample: '/path/to/remote/file'
+

@@ -1,0 +1,56 @@
+> JBOSS    (/usr/lib/python2.7/dist-packages/ansible/modules/web_infrastructure/jboss.py)
+
+        Deploy applications to JBoss standalone using the filesystem
+
+  * This module is maintained by The Ansible Community
+OPTIONS (= is mandatory):
+
+- deploy_path
+        The location in the filesystem where the deployment scanner listens
+        [Default: /var/lib/jbossas/standalone/deployments]
+
+= deployment
+        The name of the deployment
+
+
+- src
+        The remote path of the application ear or war to deploy
+        [Default: (null)]
+
+- state
+        Whether the application should be deployed or undeployed
+        (Choices: present, absent)[Default: present]
+
+
+NOTES:
+      * The JBoss standalone deployment-scanner has to be enabled in standalone.xml
+      * Ensure no identically named application is deployed through the JBoss CLI
+
+
+AUTHOR: Jeroen Hoekx (@jhoekx)
+        METADATA:
+          status:
+          - preview
+          supported_by: community
+        
+
+EXAMPLES:
+
+# Deploy a hello world application
+- jboss:
+    src: /tmp/hello-1.0-SNAPSHOT.war
+    deployment: hello.war
+    state: present
+
+# Update the hello world application
+- jboss:
+    src: /tmp/hello-1.1-SNAPSHOT.war
+    deployment: hello.war
+    state: present
+
+# Undeploy the hello world application
+- jboss:
+    deployment: hello.war
+    state: absent
+
+

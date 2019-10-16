@@ -1,0 +1,46 @@
+> PORTINSTALL    (/usr/lib/python2.7/dist-packages/ansible/modules/packaging/os/portinstall.py)
+
+        Manage packages for FreeBSD using 'portinstall'.
+
+  * This module is maintained by The Ansible Community
+OPTIONS (= is mandatory):
+
+= name
+        name of package to install/remove
+
+
+- state
+        state of the package
+        (Choices: present, absent)[Default: present]
+
+- use_packages
+        use packages instead of ports whenever available
+        [Default: True]
+        type: bool
+
+
+AUTHOR: berenddeboer (@berenddeboer)
+        METADATA:
+          status:
+          - preview
+          supported_by: community
+        
+
+EXAMPLES:
+
+# Install package foo
+- portinstall:
+    name: foo
+    state: present
+
+# Install package security/cyrus-sasl2-saslauthd
+- portinstall:
+    name: security/cyrus-sasl2-saslauthd
+    state: present
+
+# Remove packages foo and bar
+- portinstall:
+    name: foo,bar
+    state: absent
+
+

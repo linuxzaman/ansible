@@ -1,0 +1,76 @@
+EXAMPLES:
+
+- name: create a new user
+  iosxr_user:
+    name: ansible
+    configured_password: mypassword
+    state: present
+- name: create a new user in admin configuration mode
+  iosxr_user:
+    name: ansible
+    configured_password: mypassword
+    admin: True
+    state: present
+- name: remove all users except admin
+  iosxr_user:
+    purge: True
+- name: set multiple users to group sys-admin
+  iosxr_user:
+    aggregate:
+      - name: netop
+      - name: netend
+    group: sysadmin
+    state: present
+- name: set multiple users to multiple groups
+  iosxr_user:
+    aggregate:
+      - name: netop
+      - name: netend
+    groups:
+      - sysadmin
+      - root-system
+    state: present
+- name: Change Password for User netop
+  iosxr_user:
+    name: netop
+    configured_password: "{{ new_password }}"
+    update_password: always
+    state: present
+- name: Add private key authentication for user netop
+  iosxr_user:
+    name: netop
+    state: present
+    public_key_contents: "{{ lookup('file', '/home/netop/.ssh/id_rsa.pub' }}"
+
+
+RETURN VALUES:
+
+commands:
+  description: The list of configuration mode commands to send to the device
+  returned: always
+  type: list
+  sample:
+    - username ansible secret password group sysadmin
+    - username admin secret admin
+xml:
+  description: NetConf rpc xml sent to device with transport C(netconf)
+  returned: always (empty list when no xml rpc to send)
+  type: list
+  version_added: 2.5
+  sample:
+    - '<config xmlns:xc="urn:ietf:params:xml:ns:netconf:base:1.0">
+    <aaa xmlns="http://cisco.com/ns/yang/Cisco-IOS-XR-aaa-lib-cfg">
+    <usernames xmlns="http://cisco.com/ns/yang/Cisco-IOS-XR-aaa-locald-cfg">
+    <username xc:operation="merge">
+    <name>test7</name>
+    <usergroup-under-usernames>
+    <usergroup-under-username>
+    <name>sysadmin</name>
+    </usergroup-under-username>
+    </usergroup-under-usernames>
+    <secret>$1$ZsXC$zZ50wqhDC543ZWQkkAHLW0</secret>
+    </username>
+    </usernames>
+    </aaa>
+    </config>'
+

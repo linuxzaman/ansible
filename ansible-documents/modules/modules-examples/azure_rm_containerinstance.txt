@@ -1,0 +1,38 @@
+EXAMPLES:
+
+- name: Create sample container group
+    azure_rm_containerinstance:
+      resource_group: myResourceGroup
+      name: mynewcontainergroup
+      os_type: linux
+      ip_address: public
+      containers:
+        - name: mycontainer1
+          image: httpd
+          memory: 1.5
+          ports:
+            - 80
+            - 81
+
+
+RETURN VALUES:
+
+id:
+    description:
+        - Resource ID
+    returned: always
+    type: str
+    sample: /subscriptions/xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx/resourceGroups/myResourceGroup/providers/Microsoft.ContainerInstance/containerGroups/aci1b6dd89
+provisioning_state:
+    description:
+        - Provisioning state of the container.
+    returned: always
+    type: str
+    sample: Creating
+ip_address:
+    description:
+        - Public IP Address of created container group.
+    returned: if address is public
+    type: str
+    sample: 175.12.233.11
+

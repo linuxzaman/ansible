@@ -1,0 +1,59 @@
+EXAMPLES:
+
+- name: Configure the first port on the A controller with a static IPv4 address
+      netapp_e_iscsi_interface:
+        name: "1"
+        controller: "A"
+        config_method: static
+        address: "192.168.1.100"
+        subnet_mask: "255.255.255.0"
+        gateway: "192.168.1.1"
+        ssid: "1"
+        api_url: "10.1.1.1:8443"
+        api_username: "admin"
+        api_password: "myPass"
+
+    - name: Disable ipv4 connectivity for the second port on the B controller
+      netapp_e_iscsi_interface:
+        name: "2"
+        controller: "B"
+        state: disabled
+        ssid: "{{ ssid }}"
+        api_url: "{{ netapp_api_url }}"
+        api_username: "{{ netapp_api_username }}"
+        api_password: "{{ netapp_api_password }}"
+
+    - name: Enable jumbo frames for the first 4 ports on controller A
+      netapp_e_iscsi_interface:
+        name: "{{ item | int }}"
+        controller: "A"
+        state: enabled
+        mtu: 9000
+        config_method: dhcp
+        ssid: "{{ ssid }}"
+        api_url: "{{ netapp_api_url }}"
+        api_username: "{{ netapp_api_username }}"
+        api_password: "{{ netapp_api_password }}"
+      loop:
+        - 1
+        - 2
+        - 3
+        - 4
+
+
+RETURN VALUES:
+
+msg:
+    description: Success message
+    returned: on success
+    type: str
+    sample: The interface settings have been updated.
+enabled:
+    description:
+        - Indicates whether IPv4 connectivity has been enabled or disabled.
+        - This does not necessarily indicate connectivity. If dhcp was enabled without a dhcp server, for instance,
+          it is unlikely that the configuration will actually be valid.
+    returned: on success
+    sample: True
+    type: bool
+

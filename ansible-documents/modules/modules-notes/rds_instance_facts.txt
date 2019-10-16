@@ -1,0 +1,391 @@
+> RDS_INSTANCE_FACTS    (/usr/lib/python2.7/dist-packages/ansible/modules/cloud/amazon/rds_instance_facts.py)
+
+        obtain facts about one or more RDS instances
+
+  * This module is maintained by The Ansible Community
+OPTIONS (= is mandatory):
+
+- aws_access_key
+        AWS access key. If not set then the value of the AWS_ACCESS_KEY_ID, AWS_ACCESS_KEY or EC2_ACCESS_KEY environment variable is
+        used.
+        (Aliases: ec2_access_key, access_key)[Default: (null)]
+        type: str
+
+- aws_secret_key
+        AWS secret key. If not set then the value of the AWS_SECRET_ACCESS_KEY, AWS_SECRET_KEY, or EC2_SECRET_KEY environment variable is
+        used.
+        (Aliases: ec2_secret_key, secret_key)[Default: (null)]
+        type: str
+
+- db_instance_identifier
+        The RDS instance's unique identifier.
+        (Aliases: id)[Default: (null)]
+
+- debug_botocore_endpoint_logs
+        Use a botocore.endpoint logger to parse the unique (rather than total) "resource:action" API calls made during a task, outputing
+        the set to the resource_actions key in the task results. Use the aws_resource_action callback to output to total list made during
+        a playbook. The ANSIBLE_DEBUG_BOTOCORE_LOGS environment variable may also be used.
+        [Default: no]
+        type: bool
+        version_added: 2.8
+
+- ec2_url
+        Url to use to connect to EC2 or your Eucalyptus cloud (by default the module will use EC2 endpoints). Ignored for modules where
+        region is required. Must be specified for all other modules if region is not used. If not set then the value of the EC2_URL
+        environment variable, if any, is used.
+        [Default: (null)]
+        type: str
+
+- filters
+        A filter that specifies one or more DB instances to describe. See
+        https://docs.aws.amazon.com/AmazonRDS/latest/APIReference/API_DescribeDBInstances.html
+        [Default: (null)]
+
+- profile
+        Uses a boto profile. Only works with boto >= 2.24.0.
+        [Default: (null)]
+        type: str
+        version_added: 1.6
+
+- region
+        The AWS region to use. If not specified then the value of the AWS_REGION or EC2_REGION environment variable, if any, is used. See
+        http://docs.aws.amazon.com/general/latest/gr/rande.html#ec2_region
+        (Aliases: aws_region, ec2_region)[Default: (null)]
+        type: str
+
+- security_token
+        AWS STS security token. If not set then the value of the AWS_SECURITY_TOKEN or EC2_SECURITY_TOKEN environment variable is used.
+        (Aliases: access_token)[Default: (null)]
+        type: str
+        version_added: 1.6
+
+- validate_certs
+        When set to "no", SSL certificates will not be validated for boto versions >= 2.6.0.
+        [Default: True]
+        type: bool
+        version_added: 1.5
+
+
+NOTES:
+      * If parameters are not set within the module, the following environment variables can be used in decreasing order of
+        precedence `AWS_URL' or `EC2_URL', `AWS_ACCESS_KEY_ID' or `AWS_ACCESS_KEY' or `EC2_ACCESS_KEY', `AWS_SECRET_ACCESS_KEY' or
+        `AWS_SECRET_KEY' or `EC2_SECRET_KEY', `AWS_SECURITY_TOKEN' or `EC2_SECURITY_TOKEN', `AWS_REGION' or `EC2_REGION'
+      * Ansible uses the boto configuration file (typically ~/.boto) if no credentials are provided. See
+        https://boto.readthedocs.io/en/latest/boto_config_tut.html
+      * `AWS_REGION' or `EC2_REGION' can be typically be used to specify the AWS region, when required, but this can also be
+        configured in the boto config file
+
+
+REQUIREMENTS:  boto, boto3, python >= 2.6, python >= 2.7
+
+AUTHOR: Will Thames (@willthames), Michael De La Rue (@mikedlr)
+        METADATA:
+          status:
+          - preview
+          supported_by: community
+        
+
+EXAMPLES:
+
+# Get facts about an instance
+- rds_instance_facts:
+    db_instance_identifier: new-database
+  register: new_database_facts
+
+# Get all RDS instances
+- rds_instance_facts:
+
+
+RETURN VALUES:
+
+instances:
+  description: List of RDS instances
+  returned: always
+  type: complex
+  contains:
+    allocated_storage:
+      description: Gigabytes of storage allocated to the database
+      returned: always
+      type: int
+      sample: 10
+    auto_minor_version_upgrade:
+      description: Whether minor version upgrades happen automatically
+      returned: always
+      type: bool
+      sample: true
+    availability_zone:
+      description: Availability Zone in which the database resides
+      returned: always
+      type: str
+      sample: us-west-2b
+    backup_retention_period:
+      description: Days for which backups are retained
+      returned: always
+      type: int
+      sample: 7
+    ca_certificate_identifier:
+      description: ID for the CA certificate
+      returned: always
+      type: str
+      sample: rds-ca-2015
+    copy_tags_to_snapshot:
+      description: Whether DB tags should be copied to the snapshot
+      returned: always
+      type: bool
+      sample: false
+    db_instance_arn:
+      description: ARN of the database instance
+      returned: always
+      type: str
+      sample: arn:aws:rds:us-west-2:111111111111:db:helloworld-rds
+    db_instance_class:
+      description: Instance class of the database instance
+      returned: always
+      type: str
+      sample: db.t2.small
+    db_instance_identifier:
+      description: Database instance identifier
+      returned: always
+      type: str
+      sample: helloworld-rds
+    db_instance_port:
+      description: Port used by the database instance
+      returned: always
+      type: int
+      sample: 0
+    db_instance_status:
+      description: Status of the database instance
+      returned: always
+      type: str
+      sample: available
+    db_name:
+      description: Name of the database
+      returned: always
+      type: str
+      sample: management
+    db_parameter_groups:
+      description: List of database parameter groups
+      returned: always
+      type: complex
+      contains:
+        db_parameter_group_name:
+          description: Name of the database parameter group
+          returned: always
+          type: str
+          sample: psql-pg-helloworld
+        parameter_apply_status:
+          description: Whether the parameter group has been applied
+          returned: always
+          type: str
+          sample: in-sync
+    db_security_groups:
+      description: List of security groups used by the database instance
+      returned: always
+      type: list
+      sample: []
+    db_subnet_group:
+      description: list of subnet groups
+      returned: always
+      type: complex
+      contains:
+        db_subnet_group_description:
+          description: Description of the DB subnet group
+          returned: always
+          type: str
+          sample: My database subnet group
+        db_subnet_group_name:
+          description: Name of the database subnet group
+          returned: always
+          type: str
+          sample: my-subnet-group
+        subnet_group_status:
+          description: Subnet group status
+          returned: always
+          type: str
+          sample: Complete
+        subnets:
+          description: List of subnets in the subnet group
+          returned: always
+          type: complex
+          contains:
+            subnet_availability_zone:
+              description: Availability zone of the subnet
+              returned: always
+              type: complex
+              contains:
+                name:
+                  description: Name of the availability zone
+                  returned: always
+                  type: str
+                  sample: us-west-2c
+            subnet_identifier:
+              description: Subnet ID
+              returned: always
+              type: str
+              sample: subnet-abcd1234
+            subnet_status:
+              description: Subnet status
+              returned: always
+              type: str
+              sample: Active
+        vpc_id:
+          description: VPC id of the subnet group
+          returned: always
+          type: str
+          sample: vpc-abcd1234
+    dbi_resource_id:
+      description: AWS Region-unique, immutable identifier for the DB instance
+      returned: always
+      type: str
+      sample: db-AAAAAAAAAAAAAAAAAAAAAAAAAA
+    domain_memberships:
+      description: List of domain memberships
+      returned: always
+      type: list
+      sample: []
+    endpoint:
+      description: Database endpoint
+      returned: always
+      type: complex
+      contains:
+        address:
+          description: Database endpoint address
+          returned: always
+          type: str
+          sample: helloworld-rds.ctrqpe3so1sf.us-west-2.rds.amazonaws.com
+        hosted_zone_id:
+          description: Route53 hosted zone ID
+          returned: always
+          type: str
+          sample: Z1PABCD0000000
+        port:
+          description: Database endpoint port
+          returned: always
+          type: int
+          sample: 5432
+    engine:
+      description: Database engine
+      returned: always
+      type: str
+      sample: postgres
+    engine_version:
+      description: Database engine version
+      returned: always
+      type: str
+      sample: 9.5.10
+    iam_database_authentication_enabled:
+      description: Whether database authentication through IAM is enabled
+      returned: always
+      type: bool
+      sample: false
+    instance_create_time:
+      description: Date and time the instance was created
+      returned: always
+      type: str
+      sample: '2017-10-10T04:00:07.434000+00:00'
+    kms_key_id:
+      description: KMS Key ID
+      returned: always
+      type: str
+      sample: arn:aws:kms:us-west-2:111111111111:key/abcd1234-0000-abcd-1111-0123456789ab
+    latest_restorable_time:
+      description: Latest time to which a database can be restored with point-in-time restore
+      returned: always
+      type: str
+      sample: '2018-05-17T00:03:56+00:00'
+    license_model:
+      description: License model
+      returned: always
+      type: str
+      sample: postgresql-license
+    master_username:
+      description: Database master username
+      returned: always
+      type: str
+      sample: dbadmin
+    monitoring_interval:
+      description: Interval, in seconds, between points when Enhanced Monitoring metrics are collected for the DB instance
+      returned: always
+      type: int
+      sample: 0
+    multi_az:
+      description: Whether Multi-AZ is on
+      returned: always
+      type: bool
+      sample: false
+    option_group_memberships:
+      description: List of option groups
+      returned: always
+      type: complex
+      contains:
+        option_group_name:
+          description: Option group name
+          returned: always
+          type: str
+          sample: default:postgres-9-5
+        status:
+          description: Status of option group
+          returned: always
+          type: str
+          sample: in-sync
+    pending_modified_values:
+      description: Modified values pending application
+      returned: always
+      type: complex
+      contains: {}
+    performance_insights_enabled:
+      description: Whether performance insights are enabled
+      returned: always
+      type: bool
+      sample: false
+    preferred_backup_window:
+      description: Preferred backup window
+      returned: always
+      type: str
+      sample: 04:00-05:00
+    preferred_maintenance_window:
+      description: Preferred maintenance window
+      returned: always
+      type: str
+      sample: mon:05:00-mon:05:30
+    publicly_accessible:
+      description: Whether the DB is publicly accessible
+      returned: always
+      type: bool
+      sample: false
+    read_replica_db_instance_identifiers:
+      description: List of database instance read replicas
+      returned: always
+      type: list
+      sample: []
+    storage_encrypted:
+      description: Whether the storage is encrypted
+      returned: always
+      type: bool
+      sample: true
+    storage_type:
+      description: Storage type of the Database instance
+      returned: always
+      type: str
+      sample: gp2
+    tags:
+      description: Tags used by the database instance
+      returned: always
+      type: complex
+      contains: {}
+    vpc_security_groups:
+      description: List of VPC security groups
+      returned: always
+      type: complex
+      contains:
+        status:
+          description: Status of the VPC security group
+          returned: always
+          type: str
+          sample: active
+        vpc_security_group_id:
+          description: VPC Security Group ID
+          returned: always
+          type: str
+          sample: sg-abcd1234
+

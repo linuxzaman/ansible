@@ -1,0 +1,96 @@
+> NICTAGADM    (/usr/lib/python2.7/dist-packages/ansible/modules/cloud/smartos/nictagadm.py)
+
+        Create or delete nic tags on SmartOS systems.
+
+  * This module is maintained by The Ansible Community
+OPTIONS (= is mandatory):
+
+- etherstub
+        Specifies that the nic tag will be attached to a created `etherstub'.
+        Parameter `etherstub' is mutually exclusive with both `mtu', and `mac'.
+        [Default: False]
+        type: bool
+
+- force
+        When `state' is absent set this switch will use the `-f' parameter and delete the nic tag regardless of existing VMs.
+        [Default: False]
+        type: bool
+
+- mac
+        Specifies the `mac' address to attach the nic tag to when not creating an `etherstub'.
+        Parameters `mac' and `etherstub' are mutually exclusive.
+        [Default: (null)]
+        type: str
+
+- mtu
+        Specifies the size of the `mtu' of the desired nic tag.
+        Parameters `mtu' and `etherstub' are mutually exclusive.
+        [Default: (null)]
+        type: int
+
+= name
+        Name of the nic tag.
+
+        type: str
+
+- state
+        Create or delete a SmartOS nic tag.
+        (Choices: absent, present)[Default: present]
+        type: str
+
+
+AUTHOR: Bruce Smith (@SmithX10)
+        METADATA:
+          status:
+          - preview
+          supported_by: community
+        
+
+EXAMPLES:
+
+- name: Create 'storage0' on '00:1b:21:a3:f5:4d'
+  nictagadm:
+    name: storage0
+    mac: 00:1b:21:a3:f5:4d
+    mtu: 9000
+    state: present
+
+- name: Remove 'storage0' nic tag
+  nictagadm:
+    name: storage0
+    state: absent
+
+
+RETURN VALUES:
+
+name:
+  description: nic tag name
+  returned: always
+  type: str
+  sample: storage0
+mac:
+  description: MAC Address that the nic tag was attached to.
+  returned: always
+  type: str
+  sample: 00:1b:21:a3:f5:4d
+etherstub:
+  description: specifies if the nic tag will create and attach to an etherstub.
+  returned: always
+  type: bool
+  sample: False
+mtu:
+  description: specifies which MTU size was passed during the nictagadm add command. mtu and etherstub are mutually exclusive.
+  returned: always
+  type: int
+  sample: 1500
+force:
+  description: Shows if -f was used during the deletion of a nic tag
+  returned: always
+  type: bool
+  sample: False
+state:
+  description: state of the target
+  returned: always
+  type: str
+  sample: present
+

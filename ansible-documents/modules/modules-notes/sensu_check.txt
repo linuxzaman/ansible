@@ -1,0 +1,164 @@
+> SENSU_CHECK    (/usr/lib/python2.7/dist-packages/ansible/modules/monitoring/sensu_check.py)
+
+        Manage the checks that should be run on a machine by `Sensu'. Most options do not have a default and will not be added to the
+        check definition unless specified. All defaults except `path', `state', `backup' and `metric' are not managed by this module,
+        they are simply specified for your convenience.
+
+  * This module is maintained by The Ansible Community
+OPTIONS (= is mandatory):
+
+- aggregate
+        Classifies the check as an aggregate check,
+        making it available via the aggregate API
+        [Default: no]
+        type: bool
+
+- backup
+        Create a backup file (if yes), including the timestamp information so
+        you can get the original file back if you somehow clobbered it incorrectly.
+        [Default: no]
+        type: bool
+
+= command
+        Path to the sensu check to run (not required when `state=absent')
+
+
+- custom
+        A hash/dictionary of custom parameters for mixing to the configuration.
+        You can't rewrite others module parameters using this
+        [Default: {}]
+        version_added: 2.1
+
+- dependencies
+        Other checks this check depends on, if dependencies fail,
+        handling of this check will be disabled
+        [Default: []]
+
+- handle
+        Whether the check should be handled or not
+        [Default: yes]
+        type: bool
+
+- handlers
+        List of handlers to notify when the check fails
+        [Default: []]
+
+- high_flap_threshold
+        The high threshold for flap detection
+        [Default: (null)]
+
+- interval
+        Check interval in seconds
+        [Default: (null)]
+
+- low_flap_threshold
+        The low threshold for flap detection
+        [Default: (null)]
+
+- metric
+        Whether the check is a metric
+        [Default: no]
+        type: bool
+
+= name
+        The name of the check
+        This is the key that is used to determine whether a check exists
+
+
+- occurrences
+        Number of event occurrences before the handler should take action
+        [Default: 1]
+
+- path
+        Path to the json file of the check to be added/removed.
+        Will be created if it does not exist (unless `state=absent').
+        The parent folders need to exist when `state=present', otherwise an error will be thrown
+        [Default: /etc/sensu/conf.d/checks.json]
+
+- publish
+        Whether the check should be scheduled at all.
+        You can still issue it via the sensu api
+        [Default: yes]
+        type: bool
+
+- refresh
+        Number of seconds handlers should wait before taking second action
+        [Default: (null)]
+
+- source
+        The check source, used to create a JIT Sensu client for an external resource (e.g. a network switch).
+        [Default: (null)]
+        version_added: 2.1
+
+- standalone
+        Whether the check should be scheduled by the sensu client or server
+        This option obviates the need for specifying the `subscribers' option
+        [Default: no]
+        type: bool
+
+- state
+        Whether the check should be present or not
+        (Choices: present, absent)[Default: present]
+
+- subdue_begin
+        When to disable handling of check failures
+        [Default: (null)]
+
+- subdue_end
+        When to enable handling of check failures
+        [Default: (null)]
+
+- subscribers
+        List of subscribers/channels this check should run for
+        See sensu_subscribers to subscribe a machine to a channel
+        [Default: []]
+
+- timeout
+        Timeout for the check
+        [Default: 10]
+
+- ttl
+        Time to live in seconds until the check is considered stale
+        [Default: (null)]
+        version_added: 2.4
+        
+
+
+AUTHOR: Anders Ingemann (@andsens)
+        METADATA:
+          status:
+          - preview
+          supported_by: community
+        
+
+EXAMPLES:
+
+# Fetch metrics about the CPU load every 60 seconds,
+# the sensu server has a handler called 'relay' which forwards stats to graphite
+- name: get cpu metrics
+  sensu_check:
+    name: cpu_load
+    command: /etc/sensu/plugins/system/cpu-mpstat-metrics.rb
+    metric: yes
+    handlers: relay
+    subscribers: common
+    interval: 60
+
+# Check whether nginx is running
+- name: check nginx process
+  sensu_check:
+    name: nginx_running
+    command: /etc/sensu/plugins/processes/check-procs.rb -f /var/run/nginx.pid
+    handlers: default
+    subscribers: nginx
+    interval: 60
+
+# Stop monitoring the disk capacity.
+# Note that the check will still show up in the sensu dashboard,
+# to remove it completely you need to issue a DELETE request to the sensu api.
+- name: check disk
+  sensu_check:
+    name: check_disk_capacity
+    state: absent
+
+

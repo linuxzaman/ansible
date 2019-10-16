@@ -1,0 +1,190 @@
+> FIREWALLD    (/usr/lib/python2.7/dist-packages/ansible/modules/system/firewalld.py)
+
+        This module allows for addition or deletion of services and ports (either TCP or UDP) in either running or permanent firewalld
+        rules.
+
+  * This module is maintained by The Ansible Community
+OPTIONS (= is mandatory):
+
+- icmp_block
+        The ICMP block you would like to add/remove to/from a zone in firewalld.
+        [Default: (null)]
+        type: str
+        version_added: 2.8
+
+- icmp_block_inversion
+        Enable/Disable inversion of ICMP blocks for a zone in firewalld.
+        [Default: (null)]
+        type: str
+        version_added: 2.8
+
+- immediate
+        Should this configuration be applied immediately, if set as permanent.
+        [Default: False]
+        type: bool
+        version_added: 1.9
+
+- interface
+        The interface you would like to add/remove to/from a zone in firewalld.
+        [Default: (null)]
+        type: str
+        version_added: 2.1
+
+- masquerade
+        The masquerade setting you would like to enable/disable to/from zones within firewalld.
+        [Default: (null)]
+        type: str
+        version_added: 2.1
+
+- offline
+        Whether to run this module even when firewalld is offline.
+        [Default: (null)]
+        type: bool
+        version_added: 2.3
+
+- permanent
+        Should this configuration be in the running firewalld configuration or persist across reboots.
+        As of Ansible 2.3, permanent operations can operate on firewalld configs when it is not running (requires firewalld >= 3.0.9).
+        Note that if this is `no', immediate is assumed `yes'.
+        [Default: (null)]
+        type: bool
+
+- port
+        Name of a port or port range to add/remove to/from firewalld.
+        Must be in the form PORT/PROTOCOL or PORT-PORT/PROTOCOL for port ranges.
+        [Default: (null)]
+        type: str
+
+- rich_rule
+        Rich rule to add/remove to/from firewalld.
+        [Default: (null)]
+        type: str
+
+- service
+        Name of a service to add/remove to/from firewalld.
+        The service must be listed in output of firewall-cmd --get-services.
+        [Default: (null)]
+        type: str
+
+- source
+        The source/network you would like to add/remove to/from firewalld.
+        [Default: (null)]
+        type: str
+        version_added: 2.0
+
+= state
+        Enable or disable a setting.
+        For ports: Should this port accept (enabled) or reject (disabled) connections.
+        The states `present' and `absent' can only be used in zone level operations (i.e. when no other parameters but zone and state are
+        set).
+        (Choices: absent, disabled, enabled, present)
+        type: str
+
+- timeout
+        The amount of time the rule should be in effect for when non-permanent.
+        [Default: 0]
+        type: int
+
+- zone
+        The firewalld zone to add/remove to/from.
+        Note that the default zone can be configured per system but `public' is default from upstream.
+        Available choices can be extended based on per-system configs, listed here are "out of the box" defaults.
+        Possible values include `block', `dmz', `drop', `external', `home', `internal', `public', `trusted', `work'.
+        [Default: (null)]
+        type: str
+
+
+NOTES:
+      * Not tested on any Debian based system.
+      * Requires the python2 bindings of firewalld, which may not be installed by default.
+      * For distributions where the python2 firewalld bindings are unavailable (e.g Fedora 28 and later) you will have to set the
+        ansible_python_interpreter for these hosts to the python3 interpreter path and install the python3 bindings.
+      * Zone transactions (creating, deleting) can be performed by using only the zone and state parameters "present" or "absent".
+        Note that zone transactions must explicitly be permanent. This is a limitation in firewalld. This also means that you will
+        have to reload firewalld after adding a zone that you wish to perform immediate actions on. The module will not take care
+        of this for you implicitly because that would undo any previously performed immediate actions which were not permanent.
+        Therefore, if you require immediate access to a newly created zone it is recommended you reload firewalld immediately after
+        the zone creation returns with a changed state and before you perform any other immediate, non-permanent actions on that
+        zone.
+
+
+REQUIREMENTS:  firewalld >= 0.2.11
+
+AUTHOR: Adam Miller (@maxamillion)
+        METADATA:
+          status:
+          - preview
+          supported_by: community
+        
+
+EXAMPLES:
+
+- firewalld:
+    service: https
+    permanent: yes
+    state: enabled
+
+- firewalld:
+    port: 8081/tcp
+    permanent: yes
+    state: disabled
+
+- firewalld:
+    port: 161-162/udp
+    permanent: yes
+    state: enabled
+
+- firewalld:
+    zone: dmz
+    service: http
+    permanent: yes
+    state: enabled
+
+- firewalld:
+    rich_rule: rule service name="ftp" audit limit value="1/m" accept
+    permanent: yes
+    state: enabled
+
+- firewalld:
+    source: 192.0.2.0/24
+    zone: internal
+    state: enabled
+
+- firewalld:
+    zone: trusted
+    interface: eth2
+    permanent: yes
+    state: enabled
+
+- firewalld:
+    masquerade: yes
+    state: enabled
+    permanent: yes
+    zone: dmz
+
+- firewalld:
+    zone: custom
+    state: present
+    permanent: yes
+
+- firewalld:
+    zone: drop
+    state: present
+    permanent: yes
+    icmp_block_inversion: yes
+
+- firewalld:
+    zone: drop
+    state: present
+    permanent: yes
+    icmp_block: echo-request
+
+- name: Redirect port 443 to 8443 with Rich Rule
+  firewalld:
+    rich_rule: rule forward-port port=443 protocol=tcp to-port=8443
+    zone: public
+    permanent: yes
+    immediate: yes
+    state: enabled
+
+

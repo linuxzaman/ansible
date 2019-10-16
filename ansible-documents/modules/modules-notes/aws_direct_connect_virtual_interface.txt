@@ -1,0 +1,282 @@
+> AWS_DIRECT_CONNECT_VIRTUAL_INTERFACE    (/usr/lib/python2.7/dist-packages/ansible/modules/cloud/amazon/aws_direct_connect_virtual_interface.py)
+
+        Create, delete, or modify a Direct Connect public or private virtual interface.
+
+  * This module is maintained by The Ansible Community
+OPTIONS (= is mandatory):
+
+- address_type
+        The type of IP address for the BGP peer.
+        [Default: (null)]
+
+- amazon_address
+        The amazon address CIDR with which to create the virtual interface.
+        [Default: (null)]
+
+- authentication_key
+        The authentication key for BGP configuration.
+        [Default: (null)]
+
+- aws_access_key
+        AWS access key. If not set then the value of the AWS_ACCESS_KEY_ID, AWS_ACCESS_KEY or EC2_ACCESS_KEY environment variable is
+        used.
+        (Aliases: ec2_access_key, access_key)[Default: (null)]
+        type: str
+
+- aws_secret_key
+        AWS secret key. If not set then the value of the AWS_SECRET_ACCESS_KEY, AWS_SECRET_KEY, or EC2_SECRET_KEY environment variable is
+        used.
+        (Aliases: ec2_secret_key, secret_key)[Default: (null)]
+        type: str
+
+- bgp_asn
+        The autonomous system (AS) number for Border Gateway Protocol (BGP) configuration.
+        [Default: 65000]
+
+- cidr
+        A list of route filter prefix CIDRs with which to create the public virtual interface.
+        [Default: (null)]
+
+- customer_address
+        The customer address CIDR with which to create the virtual interface.
+        [Default: (null)]
+
+- debug_botocore_endpoint_logs
+        Use a botocore.endpoint logger to parse the unique (rather than total) "resource:action" API calls made during a task, outputing
+        the set to the resource_actions key in the task results. Use the aws_resource_action callback to output to total list made during
+        a playbook. The ANSIBLE_DEBUG_BOTOCORE_LOGS environment variable may also be used.
+        [Default: no]
+        type: bool
+        version_added: 2.8
+
+- ec2_url
+        Url to use to connect to EC2 or your Eucalyptus cloud (by default the module will use EC2 endpoints). Ignored for modules where
+        region is required. Must be specified for all other modules if region is not used. If not set then the value of the EC2_URL
+        environment variable, if any, is used.
+        [Default: (null)]
+        type: str
+
+- id_to_associate
+        The ID of the link aggrecation group or connection to associate with the virtual interface.
+        (Aliases: link_aggregation_group_id, connection_id)[Default: (null)]
+
+- name
+        The name of the virtual interface.
+        [Default: (null)]
+
+- profile
+        Uses a boto profile. Only works with boto >= 2.24.0.
+        [Default: (null)]
+        type: str
+        version_added: 1.6
+
+- public
+        The type of virtual interface.
+        [Default: (null)]
+        type: bool
+
+- region
+        The AWS region to use. If not specified then the value of the AWS_REGION or EC2_REGION environment variable, if any, is used. See
+        http://docs.aws.amazon.com/general/latest/gr/rande.html#ec2_region
+        (Aliases: aws_region, ec2_region)[Default: (null)]
+        type: str
+
+- security_token
+        AWS STS security token. If not set then the value of the AWS_SECURITY_TOKEN or EC2_SECURITY_TOKEN environment variable is used.
+        (Aliases: access_token)[Default: (null)]
+        type: str
+        version_added: 1.6
+
+- state
+        The desired state of the Direct Connect virtual interface.
+        (Choices: present, absent)[Default: (null)]
+
+- validate_certs
+        When set to "no", SSL certificates will not be validated for boto versions >= 2.6.0.
+        [Default: True]
+        type: bool
+        version_added: 1.5
+
+- virtual_gateway_id
+        The virtual gateway ID required for creating a private virtual interface.
+        [Default: (null)]
+
+- virtual_interface_id
+        The virtual interface ID.
+        [Default: (null)]
+
+- vlan
+        The VLAN ID.
+        [Default: 100]
+
+
+NOTES:
+      * If parameters are not set within the module, the following environment variables can be used in decreasing order of
+        precedence `AWS_URL' or `EC2_URL', `AWS_ACCESS_KEY_ID' or `AWS_ACCESS_KEY' or `EC2_ACCESS_KEY', `AWS_SECRET_ACCESS_KEY' or
+        `AWS_SECRET_KEY' or `EC2_SECRET_KEY', `AWS_SECURITY_TOKEN' or `EC2_SECURITY_TOKEN', `AWS_REGION' or `EC2_REGION'
+      * Ansible uses the boto configuration file (typically ~/.boto) if no credentials are provided. See
+        https://boto.readthedocs.io/en/latest/boto_config_tut.html
+      * `AWS_REGION' or `EC2_REGION' can be typically be used to specify the AWS region, when required, but this can also be
+        configured in the boto config file
+
+
+REQUIREMENTS:  boto, boto3, botocore, python >= 2.6
+
+AUTHOR: Sloane Hertel (@s-hertel)
+        METADATA:
+          status:
+          - preview
+          supported_by: community
+        
+
+EXAMPLES:
+
+---
+- name: create an association between a LAG and connection
+  aws_direct_connect_virtual_interface:
+    state: present
+    name: "{{ name }}"
+    link_aggregation_group_id: LAG-XXXXXXXX
+    connection_id: dxcon-XXXXXXXX
+
+- name: remove an association between a connection and virtual interface
+  aws_direct_connect_virtual_interface:
+    state: absent
+    connection_id: dxcon-XXXXXXXX
+    virtual_interface_id: dxv-XXXXXXXX
+
+
+RETURN VALUES:
+
+address_family:
+  description: The address family for the BGP peer.
+  returned: always
+  type: str
+  sample: ipv4
+amazon_address:
+  description: IP address assigned to the Amazon interface.
+  returned: always
+  type: str
+  sample: 169.254.255.1/30
+asn:
+  description: The autonomous system (AS) number for Border Gateway Protocol (BGP) configuration.
+  returned: always
+  type: int
+  sample: 65000
+auth_key:
+  description: The authentication key for BGP configuration.
+  returned: always
+  type: str
+  sample: 0xZ59Y1JZ2oDOSh6YriIlyRE
+bgp_peers:
+  description: A list of the BGP peers configured on this virtual interface.
+  returned: always
+  type: complex
+  contains:
+    address_family:
+      description: The address family for the BGP peer.
+      returned: always
+      type: str
+      sample: ipv4
+    amazon_address:
+      description: IP address assigned to the Amazon interface.
+      returned: always
+      type: str
+      sample: 169.254.255.1/30
+    asn:
+      description: The autonomous system (AS) number for Border Gateway Protocol (BGP) configuration.
+      returned: always
+      type: int
+      sample: 65000
+    auth_key:
+      description: The authentication key for BGP configuration.
+      returned: always
+      type: str
+      sample: 0xZ59Y1JZ2oDOSh6YriIlyRE
+    bgp_peer_state:
+      description: The state of the BGP peer (verifying, pending, available)
+      returned: always
+      type: str
+      sample: available
+    bgp_status:
+      description: The up/down state of the BGP peer.
+      returned: always
+      type: str
+      sample: up
+    customer_address:
+      description: IP address assigned to the customer interface.
+      returned: always
+      type: str
+      sample: 169.254.255.2/30
+changed:
+  description: Indicated if the virtual interface has been created/modified/deleted
+  returned: always
+  type: bool
+  sample: false
+connection_id:
+  description:
+    - The ID of the connection. This field is also used as the ID type for operations that
+      use multiple connection types (LAG, interconnect, and/or connection).
+  returned: always
+  type: str
+  sample: dxcon-fgb175av
+customer_address:
+  description: IP address assigned to the customer interface.
+  returned: always
+  type: str
+  sample: 169.254.255.2/30
+customer_router_config:
+  description: Information for generating the customer router configuration.
+  returned: always
+  type: str
+location:
+  description: Where the connection is located.
+  returned: always
+  type: str
+  sample: EqDC2
+owner_account:
+  description: The AWS account that will own the new virtual interface.
+  returned: always
+  type: str
+  sample: '123456789012'
+route_filter_prefixes:
+  description: A list of routes to be advertised to the AWS network in this region (public virtual interface).
+  returned: always
+  type: complex
+  contains:
+    cidr:
+      description: A routes to be advertised to the AWS network in this region.
+      returned: always
+      type: str
+      sample: 54.227.92.216/30
+virtual_gateway_id:
+  description: The ID of the virtual private gateway to a VPC. This only applies to private virtual interfaces.
+  returned: when I(public=False)
+  type: str
+  sample: vgw-f3ce259a
+virtual_interface_id:
+  description: The ID of the virtual interface.
+  returned: always
+  type: str
+  sample: dxvif-fh0w7cex
+virtual_interface_name:
+  description: The name of the virtual interface assigned by the customer.
+  returned: always
+  type: str
+  sample: test_virtual_interface
+virtual_interface_state:
+  description: State of the virtual interface (confirming, verifying, pending, available, down, rejected).
+  returned: always
+  type: str
+  sample: available
+virtual_interface_type:
+  description: The type of virtual interface (private, public).
+  returned: always
+  type: str
+  sample: private
+vlan:
+  description: The VLAN ID.
+  returned: always
+  type: int
+  sample: 100
+

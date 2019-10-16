@@ -1,0 +1,398 @@
+> BIGIP_GTM_POOL_MEMBER    (/usr/lib/python2.7/dist-packages/ansible/modules/network/f5/bigip_gtm_pool_member.py)
+
+        Manages a variety of settings on GTM pool members. The settings that can be adjusted with this module are much more broad that
+        what can be done in the `bigip_gtm_pool' module. The pool module is intended to allow you to adjust the member order in the pool,
+        not the various settings of the members. The `bigip_gtm_pool_member' module should be used to adjust all of the other settings.
+
+  * This module is maintained by an Ansible Partner
+OPTIONS (= is mandatory):
+
+- aggregate
+        List of GTM pool member definitions to be created, modified or removed.
+        (Aliases: members)[Default: (null)]
+        type: list
+        version_added: 2.8
+        
+
+- description
+        The description of the pool member.
+        [Default: (null)]
+        type: str
+
+- limits
+        Specifies resource thresholds or limit requirements at the pool member level.
+        When you enable one or more limit settings, the system then uses that data to take members in and out of service.
+        You can define limits for any or all of the limit settings. However, when a member does not meet the resource threshold limit
+        requirement, the system marks the member as unavailable and directs load-balancing traffic to another resource.
+        [Default: (null)]
+        suboptions:
+          bits_enabled:
+            description:
+            - Whether the bits limit it enabled or not.
+            - This parameter allows you to switch on or off the effect of the limit.
+            type: bool
+          bits_limit:
+            description:
+            - Specifies the maximum allowable data throughput rate, in bits per second, for
+              the member.
+            - If the network traffic volume exceeds this limit, the system marks the member
+              as unavailable.
+            type: int
+          connections_enabled:
+            description:
+            - Whether the current connections limit it enabled or not.
+            - This parameter allows you to switch on or off the effect of the limit.
+            type: bool
+          connections_limit:
+            description:
+            - Specifies the maximum number of concurrent connections, combined, for all of
+              the member.
+            - If the connections exceed this limit, the system marks the server as unavailable.
+            type: int
+          packets_enabled:
+            description:
+            - Whether the packets limit it enabled or not.
+            - This parameter allows you to switch on or off the effect of the limit.
+            type: bool
+          packets_limit:
+            description:
+            - Specifies the maximum allowable data transfer rate, in packets per second, for
+              the member.
+            - If the network traffic volume exceeds this limit, the system marks the member
+              as unavailable.
+            type: int
+        
+        type: dict
+
+- member_order
+        Specifies the order in which the member will appear in the pool.
+        The system uses this number with load balancing methods that involve prioritizing pool members, such as the Ratio load balancing
+        method.
+        When creating a new member using this module, if the `member_order' parameter is not specified, it will default to `0' (first
+        member in the pool).
+        [Default: (null)]
+        type: int
+
+- monitor
+        Specifies the monitor assigned to this pool member.
+        Pool members only support a single monitor.
+        If the `port' of the `gtm_virtual_server' is `*', the accepted values of this parameter will be affected.
+        When creating a new pool member, if this parameter is not specified, the default of `default' will be used.
+        To remove the monitor from the pool member, use the value `none'.
+        For pool members created on different partitions, you can also specify the full path to the Common monitor. For example,
+        `/Common/tcp'.
+        [Default: (null)]
+        type: str
+
+- partition
+        Device partition to manage resources on.
+        [Default: Common]
+        type: str
+
+= password
+        The password for the user account used to connect to the BIG-IP.
+        You may omit this option by setting the environment variable `F5_PASSWORD'.
+        (Aliases: pass, pwd)
+        type: str
+
+= pool
+        Name of the GTM pool.
+        For pools created on different partitions, you must specify partition of the pool in the full path format, for example,
+        `/FooBar/pool_name'.
+
+        type: str
+
+- provider
+        A dict object containing connection details.
+        [Default: (null)]
+        suboptions:
+          password:
+            aliases:
+            - pass
+            - pwd
+            description:
+            - The password for the user account used to connect to the BIG-IP.
+            - You may omit this option by setting the environment variable `F5_PASSWORD'.
+            required: true
+            type: str
+          server:
+            description:
+            - The BIG-IP host.
+            - You may omit this option by setting the environment variable `F5_SERVER'.
+            required: true
+            type: str
+          server_port:
+            default: 443
+            description:
+            - The BIG-IP server port.
+            - You may omit this option by setting the environment variable `F5_SERVER_PORT'.
+            type: int
+          ssh_keyfile:
+            description:
+            - Specifies the SSH keyfile to use to authenticate the connection to the remote
+              device.  This argument is only used for `cli' transports.
+            - You may omit this option by setting the environment variable `ANSIBLE_NET_SSH_KEYFILE'.
+            type: path
+          timeout:
+            default: 10
+            description:
+            - Specifies the timeout in seconds for communicating with the network device for
+              either connecting or sending commands.  If the timeout is exceeded before the
+              operation is completed, the module will error.
+            type: int
+          transport:
+            choices:
+            - cli
+            - rest
+            default: rest
+            description:
+            - Configures the transport connection to use when connecting to the remote device.
+            type: str
+          user:
+            description:
+            - The username to connect to the BIG-IP with. This user must have administrative
+              privileges on the device.
+            - You may omit this option by setting the environment variable `F5_USER'.
+            required: true
+            type: str
+          validate_certs:
+            default: true
+            description:
+            - If `no', SSL certificates are not validated. Use this only on personally controlled
+              sites using self-signed certificates.
+            - You may omit this option by setting the environment variable `F5_VALIDATE_CERTS'.
+            type: bool
+        
+        type: dict
+        version_added: 2.5
+
+- ratio
+        Specifies the weight of the pool member for load balancing purposes.
+        [Default: (null)]
+        type: int
+
+- replace_all_with
+        Remove members not defined in the `aggregate' parameter.
+        This operation is all or none, meaning that it will stop if there are some pool members that cannot be removed.
+        (Aliases: purge)[Default: False]
+        type: bool
+        version_added: 2.8
+        
+
+= server
+        The BIG-IP host.
+        You may omit this option by setting the environment variable `F5_SERVER'.
+
+        type: str
+
+= server_name
+        Specifies the GTM server which contains the `virtual_server'.
+
+        type: str
+
+- server_port
+        The BIG-IP server port.
+        You may omit this option by setting the environment variable `F5_SERVER_PORT'.
+        [Default: 443]
+        type: int
+        version_added: 2.2
+
+- state
+        Pool member state. When `present', ensures that the pool member is created and enabled. When `absent', ensures that the pool
+        member is removed from the system. When `enabled' or `disabled', ensures that the pool member is enabled or disabled
+        (respectively) on the remote device.
+        It is recommended that you use the `members' parameter of the `bigip_gtm_pool' module when adding and removing members and it
+        provides an easier way of specifying order. If this is not possible, then the `state' parameter here should be used.
+        Remember that the order of the members will be affected if you add or remove them using this method. To some extent, this can be
+        controlled using the `member_order' parameter.
+        (Choices: present, absent, enabled, disabled)[Default: present]
+        type: str
+
+= type
+        The type of GTM pool that the member is in.
+        (Choices: a, aaaa, cname, mx, naptr, srv)
+        type: str
+
+= user
+        The username to connect to the BIG-IP with. This user must have administrative privileges on the device.
+        You may omit this option by setting the environment variable `F5_USER'.
+
+        type: str
+
+- validate_certs
+        If `no', SSL certificates are not validated. Use this only on personally controlled sites using self-signed certificates.
+        You may omit this option by setting the environment variable `F5_VALIDATE_CERTS'.
+        [Default: True]
+        type: bool
+        version_added: 2.0
+
+= virtual_server
+        Specifies the name of the GTM virtual server which is assigned to the specified `server'.
+
+        type: str
+
+
+NOTES:
+      * For more information on using Ansible to manage F5 Networks devices see https://www.ansible.com/integrations/networks/f5.
+      * Requires BIG-IP software version >= 12.
+      * The F5 modules only manipulate the running configuration of the F5 product. To ensure that BIG-IP specific configuration
+        persists to disk, be sure to include at least one task that uses the [bigip_config] module to save the running
+        configuration. Refer to the module's documentation for the correct usage of the module to save your running configuration.
+
+
+AUTHOR: Tim Rupp (@caphrim007), Wojciech Wypior (@wojtek0806)
+        METADATA:
+          status:
+          - preview
+          supported_by: certified
+        
+
+EXAMPLES:
+
+- name: Create a GTM pool member
+  bigip_gtm_pool_member:
+    pool: pool1
+    server_name: server1
+    virtual_server: vs1
+    type: a
+    provider:
+      password: secret
+      server: lb.mydomain.com
+      user: admin
+  delegate_to: localhost
+
+- name: Create a GTM pool member different partition
+  bigip_gtm_pool_member:
+    server_name: /Common/foo_name
+    virtual_server: GTMVSName
+    type: a
+    pool: /FooBar/foo-pool
+    partition: Common
+    provider:
+      password: secret
+      server: lb.mydomain.com
+      user: admin
+  delegate_to: localhost
+
+- name: Add GTM pool members aggregate
+  bigip_gtm_pool_member:
+    pool: pool1
+    type: a
+    aggregate:
+      - server_name: server1
+        virtual_server: vs1
+        partition: Common
+        description: web server1
+        member_order: 0
+      - server_name: server2
+        virtual_server: vs2
+        partition: Common
+        description: web server2
+        member_order: 1
+      - server_name: server3
+        virtual_server: vs3
+        partition: Common
+        description: web server3
+        member_order: 2
+    provider:
+      server: lb.mydomain.com
+      user: admin
+      password: secret
+  delegate_to: localhost
+
+- name: Add GTM pool members aggregate, remove non aggregates
+  bigip_gtm_pool_member:
+    pool: pool1
+    type: a
+    aggregate:
+      - server_name: server1
+        virtual_server: vs1
+        partition: Common
+        description: web server1
+        member_order: 0
+      - server_name: server2
+        virtual_server: vs2
+        partition: Common
+        description: web server2
+        member_order: 1
+      - server_name: server3
+        virtual_server: vs3
+        partition: Common
+        description: web server3
+        member_order: 2
+    replace_all_with: yes
+    provider:
+      server: lb.mydomain.com
+      user: admin
+      password: secret
+  delegate_to: localhost
+
+
+RETURN VALUES:
+
+bits_enabled:
+  description: Whether the bits limit is enabled.
+  returned: changed
+  type: bool
+  sample: yes
+bits_limit:
+  description: The new bits_enabled limit.
+  returned: changed
+  type: int
+  sample: 100
+connections_enabled:
+  description: Whether the connections limit is enabled.
+  returned: changed
+  type: bool
+  sample: yes
+connections_limit:
+  description: The new connections_limit limit.
+  returned: changed
+  type: int
+  sample: 100
+disabled:
+  description: Whether the pool member is disabled or not.
+  returned: changed
+  type: bool
+  sample: yes
+enabled:
+  description: Whether the pool member is enabled or not.
+  returned: changed
+  type: bool
+  sample: yes
+member_order:
+  description: The new order in which the member appears in the pool.
+  returned: changed
+  type: int
+  sample: 2
+monitor:
+  description: The new monitor assigned to the pool member.
+  returned: changed
+  type: str
+  sample: /Common/monitor1
+packets_enabled:
+  description: Whether the packets limit is enabled.
+  returned: changed
+  type: bool
+  sample: yes
+packets_limit:
+  description: The new packets_limit limit.
+  returned: changed
+  type: int
+  sample: 100
+ratio:
+  description: The new weight of the member for load balancing.
+  returned: changed
+  type: int
+  sample: 10
+description:
+  description: The new description of the member.
+  returned: changed
+  type: str
+  sample: My description
+replace_all_with:
+  description: Purges all non-aggregate pool members from device
+  returned: changed
+  type: bool
+  sample: yes
+

@@ -1,0 +1,89 @@
+> INFINI_EXPORT_CLIENT    (/usr/lib/python2.7/dist-packages/ansible/modules/storage/infinidat/infini_export_client.py)
+
+        This module creates, deletes or modifys NFS client(s) for existing exports on Infinibox.
+
+  * This module is maintained by The Ansible Community
+OPTIONS (= is mandatory):
+
+- access_mode
+        Read Write or Read Only Access.
+        (Choices: RW, RO)[Default: RW]
+
+= client
+        Client IP or Range. Ranges can be defined as follows 192.168.0.1-192.168.0.254.
+        (Aliases: name)
+
+= export
+        Name of the export.
+
+
+- no_root_squash
+        Don't squash root user to anonymous. Will be set to "no" on creation if not specified explicitly.
+        [Default: False]
+        type: bool
+
+- password
+        Infinibox User password.
+        [Default: (null)]
+        type: str
+
+- state
+        Creates/Modifies client when present and removes when absent.
+        (Choices: present, absent)[Default: present]
+
+= system
+        Infinibox Hostname or IPv4 Address.
+
+        type: str
+
+- user
+        Infinibox User username with sufficient priveledges ( see notes ).
+        [Default: (null)]
+
+
+NOTES:
+      * This module requires infinisdk python library
+      * You must set INFINIBOX_USER and INFINIBOX_PASSWORD environment variables if user and password arguments are not passed to
+        the module directly
+      * Ansible uses the infinisdk configuration file `~/.infinidat/infinisdk.ini' if no credentials are provided. See
+        http://infinisdk.readthedocs.io/en/latest/getting_started.html
+
+
+REQUIREMENTS:  infinisdk, munch, python >= 2.7
+
+AUTHOR: Gregory Shulov (@GR360RY)
+        METADATA:
+          status:
+          - preview
+          supported_by: community
+        
+
+EXAMPLES:
+
+- name: Make sure nfs client 10.0.0.1 is configured for export. Allow root access
+  infini_export_client:
+    client: 10.0.0.1
+    access_mode: RW
+    no_root_squash: yes
+    export: /data
+    user: admin
+    password: secret
+    system: ibox001
+
+- name: Add multiple clients with RO access. Squash root privileges
+  infini_export_client:
+    client: "{{ item }}"
+    access_mode: RO
+    no_root_squash: no
+    export: /data
+    user: admin
+    password: secret
+    system: ibox001
+  with_items:
+    - 10.0.0.2
+    - 10.0.0.3
+
+
+RETURN VALUES:
+
+

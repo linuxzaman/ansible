@@ -1,0 +1,44 @@
+EXAMPLES:
+
+- name: Logon to CyberArk Vault using PAS Web Services SDK - use_shared_logon_authentication
+  cyberark_authentication:
+    api_base_url: "{{ web_services_base_url }}"
+    use_shared_logon_authentication: yes
+
+- name: Logon to CyberArk Vault using PAS Web Services SDK - Not use_shared_logon_authentication
+  cyberark_authentication:
+    api_base_url: "{{ web_services_base_url }}"
+    username: "{{ password_object.password }}"
+    password: "{{ password_object.passprops.username }}"
+    use_shared_logon_authentication: no
+
+- name: Logoff from CyberArk Vault
+  cyberark_authentication:
+    state: absent
+    cyberark_session: "{{ cyberark_session }}"
+
+
+RETURN VALUES:
+
+cyberark_session:
+    description: Authentication facts.
+    returned: success
+    type: dict
+    sample:
+        api_base_url:
+            description: Base URL for API calls. Returned in the cyberark_session, so it can be used in subsequent calls.
+            type: str
+            returned: always
+        token:
+            description: The token that identifies the session, encoded in BASE 64.
+            type: str
+            returned: always
+        use_shared_logon_authentication:
+            description: Whether or not Shared Logon Authentication was used to establish the session.
+            type: bool
+            returned: always
+        validate_certs:
+            description: Whether or not SSL certificates should be validated.
+            type: bool
+            returned: always
+

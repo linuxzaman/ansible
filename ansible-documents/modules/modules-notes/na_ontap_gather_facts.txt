@@ -1,0 +1,139 @@
+> NA_ONTAP_GATHER_FACTS    (/usr/lib/python2.7/dist-packages/ansible/modules/storage/netapp/na_ontap_gather_facts.py)
+
+        This module allows you to gather various information about ONTAP configuration
+
+  * This module is maintained by an Ansible Partner
+OPTIONS (= is mandatory):
+
+- gather_subset
+        When supplied, this argument will restrict the facts collected to a given subset.  Possible values for this argument include
+        "aggregate_info", "cluster_node_info", "lun_info", "net_ifgrp_info", "net_interface_info", "net_port_info", "nvme_info",
+        "nvme_interface_info", "nvme_namespace_info", "nvme_subsystem_info", "ontap_version", "security_key_manager_key_info",
+        "security_login_account_info", "storage_failover_info", "volume_info", "vserver_info", "vserver_login_banner_info",
+        "vserver_motd_info" Can specify a list of values to include a larger subset.  Values can also be used with an initial `[!]' to
+        specify that a specific subset should not be collected.
+        nvme is supported with ONTAP 9.4 onwards.
+        use "help" to get a list of supported facts for your system.
+        [Default: all]
+        version_added: 2.8
+        
+
+= hostname
+        The hostname or IP address of the ONTAP instance.
+
+        type: str
+
+- http_port
+        Override the default port (80 or 443) with this port
+        [Default: (null)]
+        type: int
+
+- https
+        Enable and disable https
+        [Default: False]
+        type: bool
+
+- ontapi
+        The ontap api version to use
+        [Default: (null)]
+        type: int
+
+= password
+        Password for the specified user.
+        (Aliases: pass)
+        type: str
+
+- state
+        Returns "info"
+        (Choices: info)[Default: info]
+
+= username
+        This can be a Cluster-scoped or SVM-scoped account, depending on whether a Cluster-level or SVM-level API is required. For more
+        information, please read the documentation https://mysupport.netapp.com/NOW/download/software/nmsdk/9.4/.
+        (Aliases: user)
+        type: str
+
+- validate_certs
+        If set to `no', the SSL certificates will not be validated.
+        This should only set to `False' used on personally controlled sites using self-signed certificates.
+        [Default: True]
+        type: bool
+
+
+NOTES:
+      * The modules prefixed with na\\_ontap are built to support the ONTAP storage platform.
+
+
+REQUIREMENTS:  A physical or virtual clustered Data ONTAP system. The modules support Data ONTAP 9.1 and onward, Ansible 2.6, Python2
+        netapp-lib (2017.10.30) or later. Install using 'pip install netapp-lib', Python3 netapp-lib (2018.11.13) or
+        later. Install using 'pip install netapp-lib', To enable http on the cluster you must run the following commands
+        'set -privilege advanced;' 'system services web modify -http-enabled true;', netapp_lib
+
+AUTHOR: Piotr Olczak (@dprts) <polczak@redhat.com>
+        METADATA:
+          status:
+          - preview
+          supported_by: certified
+        
+
+EXAMPLES:
+
+- name: Get NetApp info (Password Authentication)
+  na_ontap_gather_facts:
+    state: info
+    hostname: "na-vsim"
+    username: "admin"
+    password: "admins_password"
+- debug:
+    var: ontap_facts
+- name: Limit Fact Gathering to Aggregate Information
+  na_ontap_gather_facts:
+    state: info
+    hostname: "na-vsim"
+    username: "admin"
+    password: "admins_password"
+    gather_subset: "aggregate_info"
+- name: Limit Fact Gathering to Volume and Lun Information
+  na_ontap_gather_facts:
+    state: info
+    hostname: "na-vsim"
+    username: "admin"
+    password: "admins_password"
+    gather_subset:
+      - volume_info
+      - lun_info
+- name: Gather all facts except for volume and lun information
+  na_ontap_gather_facts:
+    state: info
+    hostname: "na-vsim"
+    username: "admin"
+    password: "admins_password"
+    gather_subset:
+      - "!volume_info"
+      - "!lun_info"
+
+
+RETURN VALUES:
+
+ontap_facts:
+    description: Returns various information about NetApp cluster configuration
+    returned: always
+    type: dict
+    sample: '{
+        "ontap_facts": {
+            "aggregate_info": {...},
+            "cluster_node_info": {...},
+            "net_ifgrp_info": {...},
+            "net_interface_info": {...},
+            "net_port_info": {...},
+            "security_key_manager_key_info": {...},
+            "security_login_account_info": {...},
+            "volume_info": {...},
+            "lun_info": {...},
+            "storage_failover_info": {...},
+            "vserver_login_banner_info": {...},
+            "vserver_motd_info": {...},
+            "vserver_info": {...},
+            "ontap_version": {...}
+    }'
+

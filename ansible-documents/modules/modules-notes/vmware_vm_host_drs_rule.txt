@@ -1,0 +1,126 @@
+> VMWARE_VM_HOST_DRS_RULE    (/usr/lib/python2.7/dist-packages/ansible/modules/cloud/vmware/vmware_vm_host_drs_rule.py)
+
+        This module can be used to create VM-Host rules in a given cluster.
+
+  * This module is maintained by The Ansible Community
+OPTIONS (= is mandatory):
+
+- affinity_rule
+        If set to `True', the DRS rule will be an Affinity rule.
+        If set to `False', the DRS rule will be an Anti-Affinity rule.
+        Effective only if `state' is set to `present'.
+        [Default: True]
+        type: bool
+
+= cluster_name
+        Cluster to create VM-Host rule.
+
+
+- datacenter
+        Datacenter to search for given cluster. If not set, we use first cluster we encounter with `cluster_name'.
+        (Aliases: datacenter_name)[Default: (null)]
+
+= drs_rule_name
+        Name of rule to create or remove.
+
+
+- enabled
+        If set to `True', the DRS rule will be enabled.
+        Effective only if `state' is set to `present'.
+        [Default: False]
+        type: bool
+
+= host_group_name
+        Name of Host group to use with rule.
+        Effective only if `state' is set to `present'.
+
+
+- hostname
+        The hostname or IP address of the vSphere vCenter or ESXi server.
+        If the value is not specified in the task, the value of environment variable `VMWARE_HOST' will be used instead.
+        Environment variable support added in Ansible 2.6.
+        [Default: (null)]
+        type: str
+
+- mandatory
+        If set to `True', the DRS rule will be mandatory.
+        Effective only if `state' is set to `present'.
+        [Default: False]
+        type: bool
+
+- password
+        The password of the vSphere vCenter or ESXi server.
+        If the value is not specified in the task, the value of environment variable `VMWARE_PASSWORD' will be used instead.
+        Environment variable support added in Ansible 2.6.
+        (Aliases: pass, pwd)[Default: (null)]
+        type: str
+
+- port
+        The port number of the vSphere vCenter or ESXi server.
+        If the value is not specified in the task, the value of environment variable `VMWARE_PORT' will be used instead.
+        Environment variable support added in Ansible 2.6.
+        [Default: 443]
+        type: int
+        version_added: 2.5
+
+= state
+        If set to `present' and the rule doesn't exists then the rule will be created.
+        If set to `absent' and the rule exists then the rule will be deleted.
+        (Choices: present, absent)[Default: present]
+
+- username
+        The username of the vSphere vCenter or ESXi server.
+        If the value is not specified in the task, the value of environment variable `VMWARE_USER' will be used instead.
+        Environment variable support added in Ansible 2.6.
+        (Aliases: admin, user)[Default: (null)]
+        type: str
+
+- validate_certs
+        Allows connection when SSL certificates are not valid. Set to `false' when certificates are not trusted.
+        If the value is not specified in the task, the value of environment variable `VMWARE_VALIDATE_CERTS' will be used instead.
+        Environment variable support added in Ansible 2.6.
+        If set to `yes', please make sure Python >= 2.7.9 is installed on the given machine.
+        [Default: True]
+        type: bool
+
+= vm_group_name
+        Name of VM group to use with rule.
+        Effective only if `state' is set to `present'.
+
+
+
+NOTES:
+      * Tested on vSphere 6.5 and 6.7
+
+
+REQUIREMENTS:  python >= 2.6, PyVmomi
+
+AUTHOR: Karsten Kaj Jakobsen (@karstenjakobsen)
+        METADATA:
+          status:
+          - preview
+          supported_by: community
+        
+
+EXAMPLES:
+
+---
+- name: "Create mandatory DRS Affinity rule for VM/Host"
+  vmware_vm_host_drs_rule:
+    hostname: "{{ vcenter_hostname }}"
+    password: "{{ vcenter_password }}"
+    username: "{{ vcenter_username }}"
+    validate_certs: False
+    cluster_name: DC0_C0
+    drs_rule_name: drs_rule_host_aff_0001
+    host_group_name: DC0_C0_HOST_GR1
+    vm_group_name: DC0_C0_VM_GR1
+    mandatory: True
+    enabled: True
+    affinity_rule: True
+
+
+RETURN VALUES:
+
+
+

@@ -1,0 +1,92 @@
+EXAMPLES:
+
+- hosts: localhost
+  vars:
+   host: "192.168.122.40"
+   username: "admin"
+   password: ""
+   vdom: "root"
+  tasks:
+  - name: Override filters for remote system server.
+    fortios_log_syslogd_override_filter:
+      host:  "{{ host }}"
+      username: "{{ username }}"
+      password: "{{ password }}"
+      vdom:  "{{ vdom }}"
+      https: "False"
+      log_syslogd_override_filter:
+        anomaly: "enable"
+        dns: "enable"
+        filter: "<your_own_value>"
+        filter-type: "include"
+        forward-traffic: "enable"
+        gtp: "enable"
+        local-traffic: "enable"
+        multicast-traffic: "enable"
+        netscan-discovery: "<your_own_value>"
+        netscan-vulnerability: "<your_own_value>"
+        severity: "emergency"
+        sniffer-traffic: "enable"
+        ssh: "enable"
+        voip: "enable"
+
+
+RETURN VALUES:
+
+build:
+  description: Build number of the fortigate image
+  returned: always
+  type: str
+  sample: '1547'
+http_method:
+  description: Last method used to provision the content into FortiGate
+  returned: always
+  type: str
+  sample: 'PUT'
+http_status:
+  description: Last result given by FortiGate on last operation applied
+  returned: always
+  type: str
+  sample: "200"
+mkey:
+  description: Master key (id) used in the last call to FortiGate
+  returned: success
+  type: str
+  sample: "id"
+name:
+  description: Name of the table used to fulfill the request
+  returned: always
+  type: str
+  sample: "urlfilter"
+path:
+  description: Path of the table used to fulfill the request
+  returned: always
+  type: str
+  sample: "webfilter"
+revision:
+  description: Internal revision number
+  returned: always
+  type: str
+  sample: "17.0.2.10658"
+serial:
+  description: Serial number of the unit
+  returned: always
+  type: str
+  sample: "FGVMEVYYQT3AB5352"
+status:
+  description: Indication of the operation's result
+  returned: always
+  type: str
+  sample: "success"
+vdom:
+  description: Virtual domain used
+  returned: always
+  type: str
+  sample: "root"
+version:
+  description: Version of the FortiGate
+  returned: always
+  type: str
+  sample: "v5.6.3"
+
+

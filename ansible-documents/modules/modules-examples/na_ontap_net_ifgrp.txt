@@ -1,0 +1,38 @@
+EXAMPLES:
+
+- name: create ifgrp
+      na_ontap_net_ifgrp:
+        state: present
+        username: "{{ netapp_username }}"
+        password: "{{ netapp_password }}"
+        hostname: "{{ netapp_hostname }}"
+        distribution_function: ip
+        name: a0c
+        ports: [e0a]
+        mode: multimode
+        node: "{{ Vsim node name }}"
+    - name: modify ports in an ifgrp
+      na_ontap_net_ifgrp:
+        state: present
+        username: "{{ netapp_username }}"
+        password: "{{ netapp_password }}"
+        hostname: "{{ netapp_hostname }}"
+        distribution_function: ip
+        name: a0c
+        port: [e0a, e0c]
+        mode: multimode
+        node: "{{ Vsim node name }}"
+    - name: delete ifgrp
+      na_ontap_net_ifgrp:
+        state: absent
+        username: "{{ netapp_username }}"
+        password: "{{ netapp_password }}"
+        hostname: "{{ netapp_hostname }}"
+        name: a0c
+        node: "{{ Vsim node name }}"
+
+
+RETURN VALUES:
+
+
+

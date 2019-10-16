@@ -1,0 +1,383 @@
+> CS_HOST    (/usr/lib/python2.7/dist-packages/ansible/modules/cloud/cloudstack/cs_host.py)
+
+        Create, update and remove hosts.
+
+  * This module is maintained by The Ansible Community
+OPTIONS (= is mandatory):
+
+- allocation_state
+        Allocation state of the host.
+        (Choices: enabled, disabled, maintenance)[Default: (null)]
+        type: str
+
+- api_http_method
+        HTTP method used to query the API endpoint.
+        If not given, the `CLOUDSTACK_METHOD' env variable is considered.
+        As the last option, the value is taken from the ini config file, also see the notes.
+        Fallback value is `get' if not specified.
+        (Choices: get, post)[Default: (null)]
+        type: str
+
+- api_key
+        API key of the CloudStack API.
+        If not given, the `CLOUDSTACK_KEY' env variable is considered.
+        As the last option, the value is taken from the ini config file, also see the notes.
+        [Default: (null)]
+        type: str
+
+- api_region
+        Name of the ini section in the `cloustack.ini' file.
+        If not given, the `CLOUDSTACK_REGION' env variable is considered.
+        [Default: cloudstack]
+        type: str
+
+- api_secret
+        Secret key of the CloudStack API.
+        If not set, the `CLOUDSTACK_SECRET' env variable is considered.
+        As the last option, the value is taken from the ini config file, also see the notes.
+        [Default: (null)]
+        type: str
+
+- api_timeout
+        HTTP timeout in seconds.
+        If not given, the `CLOUDSTACK_TIMEOUT' env variable is considered.
+        As the last option, the value is taken from the ini config file, also see the notes.
+        Fallback value is 10 seconds if not specified.
+        [Default: (null)]
+        type: int
+
+- api_url
+        URL of the CloudStack API e.g. https://cloud.example.com/client/api.
+        If not given, the `CLOUDSTACK_ENDPOINT' env variable is considered.
+        As the last option, the value is taken from the ini config file, also see the notes.
+        [Default: (null)]
+        type: str
+
+- cluster
+        Name of the cluster.
+        [Default: (null)]
+        type: str
+
+- host_tags
+        Tags of the host.
+        (Aliases: host_tag)[Default: (null)]
+        type: list
+
+- hypervisor
+        Name of the cluster.
+        Required if `state=present' and host does not yet exist.
+        Possible values are `KVM', `VMware', `BareMetal', `XenServer', `LXC', `HyperV', `UCS', `OVM', `Simulator'.
+        [Default: (null)]
+        type: str
+
+= name
+        Name of the host.
+        (Aliases: ip_address)
+        type: str
+
+- password
+        Password for the host.
+        Required if `state=present' and host does not yet exist.
+        [Default: (null)]
+        type: str
+
+- pod
+        Name of the pod.
+        Required if `state=present' and host does not yet exist.
+        [Default: (null)]
+        type: str
+
+- state
+        State of the host.
+        (Choices: present, absent)[Default: present]
+        type: str
+
+- url
+        Url of the host used to create a host.
+        If not provided, `http://' and param `name' is used as url.
+        Only considered if `state=present' and host does not yet exist.
+        [Default: (null)]
+        type: str
+
+- username
+        Username for the host.
+        Required if `state=present' and host does not yet exist.
+        [Default: (null)]
+        type: str
+
+- zone
+        Name of the zone in which the host should be deployed.
+        If not set, default zone is used.
+        [Default: (null)]
+        type: str
+
+
+NOTES:
+      * Ansible uses the `cs' library's configuration method if credentials are not provided by the arguments `api_url', `api_key',
+        `api_secret'. Configuration is read from several locations, in the following order. The `CLOUDSTACK_ENDPOINT',
+        `CLOUDSTACK_KEY', `CLOUDSTACK_SECRET' and `CLOUDSTACK_METHOD'. `CLOUDSTACK_TIMEOUT' environment variables. A
+        `CLOUDSTACK_CONFIG' environment variable pointing to an `.ini' file. A `cloudstack.ini' file in the current working
+        directory. A `.cloudstack.ini' file in the users home directory. Optionally multiple credentials and endpoints can be
+        specified using ini sections in `cloudstack.ini'. Use the argument `api_region' to select the section name, default section
+        is `cloudstack'. See https://github.com/exoscale/cs for more information.
+      * A detailed guide about cloudstack modules can be found in the L(CloudStack Cloud
+        Guide,../scenario_guides/guide_cloudstack.html).
+      * This module supports check mode.
+
+
+REQUIREMENTS:  python >= 2.6, cs >= 0.6.10
+
+AUTHOR: René Moser (@resmo)
+        METADATA:
+          status:
+          - preview
+          supported_by: community
+        
+
+EXAMPLES:
+
+- name: Ensure a host is present but disabled
+  cs_host:
+    name: pod01.zone01.example.com
+    cluster: vcenter.example.com/zone01/cluster01
+    pod: pod01
+    zone: zone01
+    hypervisor: VMware
+    allocation_state: disabled
+    host_tags:
+    - perf
+    - gpu
+  delegate_to: localhost
+
+- name: Ensure an existing host is disabled
+  cs_host:
+    name: pod01.zone01.example.com
+    zone: zone01
+    allocation_state: disabled
+  delegate_to: localhost
+
+- name: Ensure an existing host is enabled
+  cs_host:
+    name: pod01.zone01.example.com
+    zone: zone01
+    allocation_state: enabled
+  delegate_to: localhost
+
+- name: Ensure a host is absent
+  cs_host:
+    name: pod01.zone01.example.com
+    zone: zone01
+    state: absent
+  delegate_to: localhost
+
+
+RETURN VALUES:
+
+---
+capabilities:
+  description: Capabilities of the host.
+  returned: success
+  type: str
+  sample: hvm
+cluster:
+  description: Cluster of the host.
+  returned: success
+  type: str
+  sample: vcenter.example.com/zone/cluster01
+cluster_type:
+  description: Type of the cluster of the host.
+  returned: success
+  type: str
+  sample: ExternalManaged
+cpu_allocated:
+  description: Amount in percent of the host's CPU currently allocated.
+  returned: success
+  type: str
+  sample: 166.25%
+cpu_number:
+  description: Number of CPUs of the host.
+  returned: success
+  type: str
+  sample: 24
+cpu_sockets:
+  description: Number of CPU sockets of the host.
+  returned: success
+  type: int
+  sample: 2
+cpu_speed:
+  description: CPU speed in Mhz
+  returned: success
+  type: int
+  sample: 1999
+cpu_used:
+  description: Amount of the host's CPU currently used.
+  returned: success
+  type: str
+  sample: 33.6%
+cpu_with_overprovisioning:
+  description: Amount of the host's CPU after applying the cpu.overprovisioning.factor.
+  returned: success
+  type: str
+  sample: 959520.0
+created:
+  description: Date when the host was created.
+  returned: success
+  type: str
+  sample: 2015-05-03T15:05:51+0200
+disconnected:
+  description: Date when the host was disconnected.
+  returned: success
+  type: str
+  sample: 2015-05-03T15:05:51+0200
+disk_size_allocated:
+  description: Host's currently allocated disk size.
+  returned: success
+  type: int
+  sample: 2593
+disk_size_total:
+  description: Total disk size of the host
+  returned: success
+  type: int
+  sample: 259300
+events:
+  description: Events available for the host
+  returned: success
+  type: str
+  sample: "Ping; HostDown; AgentConnected; AgentDisconnected; PingTimeout; ShutdownRequested; Remove; StartAgentRebalance; ManagementServerDown"
+ha_host:
+  description: Whether the host is a HA host.
+  returned: success
+  type: bool
+  sample: false
+has_enough_capacity:
+  description: Whether the host has enough CPU and RAM capacity to migrate a VM to it.
+  returned: success
+  type: bool
+  sample: true
+host_tags:
+  description: Comma-separated list of tags for the host.
+  returned: success
+  type: str
+  sample: "perf"
+hypervisor:
+  description: Host's hypervisor.
+  returned: success
+  type: str
+  sample: VMware
+hypervisor_version:
+  description: Hypervisor version.
+  returned: success
+  type: str
+  sample: 5.1
+ip_address:
+  description: IP address of the host
+  returned: success
+  type: str
+  sample: 10.10.10.1
+is_local_storage_active:
+  description: Whether the local storage is available or not.
+  returned: success
+  type: bool
+  sample: false
+last_pinged:
+  description: Date and time the host was last pinged.
+  returned: success
+  type: str
+  sample: "1970-01-17T17:27:32+0100"
+management_server_id:
+  description: Management server ID of the host.
+  returned: success
+  type: int
+  sample: 345050593418
+memory_allocated:
+  description: Amount of the host's memory currently allocated.
+  returned: success
+  type: int
+  sample: 69793218560
+memory_total:
+  description: Total of memory of the host.
+  returned: success
+  type: int
+  sample: 206085263360
+memory_used:
+  description: Amount of the host's memory currently used.
+  returned: success
+  type: int
+  sample: 65504776192
+name:
+  description: Name of the host.
+  returned: success
+  type: str
+  sample: esx32.example.com
+network_kbs_read:
+  description: Incoming network traffic on the host.
+  returned: success
+  type: int
+  sample: 0
+network_kbs_write:
+  description: Outgoing network traffic on the host.
+  returned: success
+  type: int
+  sample: 0
+os_category:
+  description: OS category name of the host.
+  returned: success
+  type: str
+  sample: ...
+out_of_band_management:
+  description: Host out-of-band management information.
+  returned: success
+  type: str
+  sample: ...
+pod:
+  description: Pod name of the host.
+  returned: success
+  type: str
+  sample: Pod01
+removed:
+  description: Date and time the host was removed.
+  returned: success
+  type: str
+  sample: "1970-01-17T17:27:32+0100"
+resource_state:
+  description: Resource state of the host.
+  returned: success
+  type: str
+  sample: Enabled
+allocation_state::
+  description: Allocation state of the host.
+  returned: success
+  type: str
+  sample: enabled
+state:
+  description: State of the host.
+  returned: success
+  type: str
+  sample: Up
+suitable_for_migration:
+  description: Whether this host is suitable (has enough capacity and satisfies all conditions like hosttags, max guests VM limit, etc) to migrate a VM
+               to it or not.
+  returned: success
+  type: str
+  sample: true
+host_type:
+  description: Type of the host.
+  returned: success
+  type: str
+  sample: Routing
+host_version:
+  description: Version of the host.
+  returned: success
+  type: str
+  sample: 4.5.2
+gpu_group:
+  description: GPU cards present in the host.
+  returned: success
+  type: list
+  sample: []
+zone:
+  description: Zone of the host.
+  returned: success
+  type: str
+  sample: zone01
+

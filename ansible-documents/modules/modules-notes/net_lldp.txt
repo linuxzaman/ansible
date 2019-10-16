@@ -1,0 +1,46 @@
+> NET_LLDP    (/usr/lib/python2.7/dist-packages/ansible/modules/network/protocol/net_lldp.py)
+
+        This module provides declarative management of LLDP service configuration on network devices.
+
+  * This module is maintained by The Ansible Network Team
+  * note: This module has a corresponding action plugin.
+
+OPTIONS (= is mandatory):
+
+- state
+        State of the LLDP service configuration.
+        (Choices: present, absent)[Default: present]
+
+
+NOTES:
+      * This module is supported on `ansible_network_os' network platforms. See the :ref:`Network Platform Options
+        <platform_options>` for details.
+
+
+AUTHOR: Ricardo Carrillo Cruz (@rcarrillocruz)
+        METADATA:
+          status:
+          - preview
+          supported_by: network
+        
+
+EXAMPLES:
+
+- name: Enable LLDP service
+  net_lldp:
+    state: present
+
+- name: Disable LLDP service
+  net_lldp:
+    state: lldp
+
+
+RETURN VALUES:
+
+commands:
+  description: The list of configuration mode commands to send to the device
+  returned: always, except for the platforms that use Netconf transport to manage the device.
+  type: list
+  sample:
+    - set service lldp
+

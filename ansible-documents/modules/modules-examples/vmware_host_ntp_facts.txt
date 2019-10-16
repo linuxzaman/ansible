@@ -1,0 +1,40 @@
+EXAMPLES:
+
+- name: Gather NTP facts about all ESXi Host in the given Cluster
+  vmware_host_ntp_facts:
+    hostname: '{{ vcenter_hostname }}'
+    username: '{{ vcenter_username }}'
+    password: '{{ vcenter_password }}'
+    cluster_name: cluster_name
+  delegate_to: localhost
+  register: cluster_host_ntp
+
+- name: Gather NTP facts about ESXi Host
+  vmware_host_ntp_facts:
+    hostname: '{{ vcenter_hostname }}'
+    username: '{{ vcenter_username }}'
+    password: '{{ vcenter_password }}'
+    esxi_hostname: '{{ esxi_hostname }}'
+  delegate_to: localhost
+  register: host_ntp
+
+
+RETURN VALUES:
+
+hosts_ntp_facts:
+    description:
+    - dict with hostname as key and dict with NTP facts as value
+    returned: hosts_ntp_facts
+    type: dict
+    sample: {
+        "10.76.33.226": [
+            {
+                "ntp_servers": [],
+                "time_zone_description": "UTC",
+                "time_zone_gmt_offset": 0,
+                "time_zone_identifier": "UTC",
+                "time_zone_name": "UTC"
+            }
+        ]
+    }
+

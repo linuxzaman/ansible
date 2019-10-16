@@ -1,0 +1,233 @@
+> AWS_GLUE_JOB    (/usr/lib/python2.7/dist-packages/ansible/modules/cloud/amazon/aws_glue_job.py)
+
+        Manage an AWS Glue job. See https://aws.amazon.com/glue/ for details.
+
+  * This module is maintained by The Ansible Community
+OPTIONS (= is mandatory):
+
+- allocated_capacity
+        The number of AWS Glue data processing units (DPUs) to allocate to this Job. From 2 to 100 DPUs can be allocated; the default is
+        10. A DPU is a relative measure of processing power that consists of 4 vCPUs of compute capacity and 16 GB of memory.
+        [Default: (null)]
+
+- aws_access_key
+        AWS access key. If not set then the value of the AWS_ACCESS_KEY_ID, AWS_ACCESS_KEY or EC2_ACCESS_KEY environment variable is
+        used.
+        (Aliases: ec2_access_key, access_key)[Default: (null)]
+        type: str
+
+- aws_secret_key
+        AWS secret key. If not set then the value of the AWS_SECRET_ACCESS_KEY, AWS_SECRET_KEY, or EC2_SECRET_KEY environment variable is
+        used.
+        (Aliases: ec2_secret_key, secret_key)[Default: (null)]
+        type: str
+
+- command_name
+        The name of the job command. This must be 'glueetl'.
+        [Default: glueetl]
+
+= command_script_location
+        The S3 path to a script that executes a job.
+
+
+- connections
+        A list of Glue connections used for this job.
+        [Default: (null)]
+
+- debug_botocore_endpoint_logs
+        Use a botocore.endpoint logger to parse the unique (rather than total) "resource:action" API calls made during a task, outputing
+        the set to the resource_actions key in the task results. Use the aws_resource_action callback to output to total list made during
+        a playbook. The ANSIBLE_DEBUG_BOTOCORE_LOGS environment variable may also be used.
+        [Default: no]
+        type: bool
+        version_added: 2.8
+
+- default_arguments
+        A dict of default arguments for this job.  You can specify arguments here that your own job-execution script consumes, as well as
+        arguments that AWS Glue itself consumes.
+        [Default: (null)]
+
+- description
+        Description of the job being defined.
+        [Default: (null)]
+
+- ec2_url
+        Url to use to connect to EC2 or your Eucalyptus cloud (by default the module will use EC2 endpoints). Ignored for modules where
+        region is required. Must be specified for all other modules if region is not used. If not set then the value of the EC2_URL
+        environment variable, if any, is used.
+        [Default: (null)]
+        type: str
+
+- max_concurrent_runs
+        The maximum number of concurrent runs allowed for the job. The default is 1. An error is returned when this threshold is reached.
+        The maximum value you can specify is controlled by a service limit.
+        [Default: (null)]
+
+- max_retries
+        The maximum number of times to retry this job if it fails.
+        [Default: (null)]
+
+= name
+        The name you assign to this job definition. It must be unique in your account.
+
+
+- profile
+        Uses a boto profile. Only works with boto >= 2.24.0.
+        [Default: (null)]
+        type: str
+        version_added: 1.6
+
+- region
+        The AWS region to use. If not specified then the value of the AWS_REGION or EC2_REGION environment variable, if any, is used. See
+        http://docs.aws.amazon.com/general/latest/gr/rande.html#ec2_region
+        (Aliases: aws_region, ec2_region)[Default: (null)]
+        type: str
+
+= role
+        The name or ARN of the IAM role associated with this job.
+
+
+- security_token
+        AWS STS security token. If not set then the value of the AWS_SECURITY_TOKEN or EC2_SECURITY_TOKEN environment variable is used.
+        (Aliases: access_token)[Default: (null)]
+        type: str
+        version_added: 1.6
+
+= state
+        Create or delete the AWS Glue job.
+        (Choices: present, absent)
+
+- timeout
+        The job timeout in minutes.
+        [Default: (null)]
+
+- validate_certs
+        When set to "no", SSL certificates will not be validated for boto versions >= 2.6.0.
+        [Default: True]
+        type: bool
+        version_added: 1.5
+
+
+NOTES:
+      * If parameters are not set within the module, the following environment variables can be used in decreasing order of
+        precedence `AWS_URL' or `EC2_URL', `AWS_ACCESS_KEY_ID' or `AWS_ACCESS_KEY' or `EC2_ACCESS_KEY', `AWS_SECRET_ACCESS_KEY' or
+        `AWS_SECRET_KEY' or `EC2_SECRET_KEY', `AWS_SECURITY_TOKEN' or `EC2_SECURITY_TOKEN', `AWS_REGION' or `EC2_REGION'
+      * Ansible uses the boto configuration file (typically ~/.boto) if no credentials are provided. See
+        https://boto.readthedocs.io/en/latest/boto_config_tut.html
+      * `AWS_REGION' or `EC2_REGION' can be typically be used to specify the AWS region, when required, but this can also be
+        configured in the boto config file
+
+
+REQUIREMENTS:  boto, boto3, python >= 2.6
+
+AUTHOR: Rob White (@wimnat)
+        METADATA:
+          status:
+          - preview
+          supported_by: community
+        
+
+EXAMPLES:
+
+# Note: These examples do not set authentication details, see the AWS Guide for details.
+
+# Create an AWS Glue job
+- aws_glue_job:
+    command_script_location: s3bucket/script.py
+    name: my-glue-job
+    role: my-iam-role
+    state: present
+
+# Delete an AWS Glue job
+- aws_glue_job:
+    name: my-glue-job
+    state: absent
+
+
+RETURN VALUES:
+
+allocated_capacity:
+    description: The number of AWS Glue data processing units (DPUs) allocated to runs of this job. From 2 to
+                 100 DPUs can be allocated; the default is 10. A DPU is a relative measure of processing power
+                 that consists of 4 vCPUs of compute capacity and 16 GB of memory.
+    returned: when state is present
+    type: int
+    sample: 10
+command:
+    description: The JobCommand that executes this job.
+    returned: when state is present
+    type: complex
+    contains:
+        name:
+            description: The name of the job command.
+            returned: when state is present
+            type: str
+            sample: glueetl
+        script_location:
+            description: Specifies the S3 path to a script that executes a job.
+            returned: when state is present
+            type: str
+            sample: mybucket/myscript.py
+connections:
+    description: The connections used for this job.
+    returned: when state is present
+    type: dict
+    sample: "{ Connections: [ 'list', 'of', 'connections' ] }"
+created_on:
+    description: The time and date that this job definition was created.
+    returned: when state is present
+    type: str
+    sample: "2018-04-21T05:19:58.326000+00:00"
+default_arguments:
+    description: The default arguments for this job, specified as name-value pairs.
+    returned: when state is present
+    type: dict
+    sample: "{ 'mykey1': 'myvalue1' }"
+description:
+    description: Description of the job being defined.
+    returned: when state is present
+    type: str
+    sample: My first Glue job
+job_name:
+    description: The name of the AWS Glue job.
+    returned: always
+    type: str
+    sample: my-glue-job
+execution_property:
+    description: An ExecutionProperty specifying the maximum number of concurrent runs allowed for this job.
+    returned: always
+    type: complex
+    contains:
+        max_concurrent_runs:
+            description: The maximum number of concurrent runs allowed for the job. The default is 1. An error is
+                         returned when this threshold is reached. The maximum value you can specify is controlled by
+                         a service limit.
+            returned: when state is present
+            type: int
+            sample: 1
+last_modified_on:
+    description: The last point in time when this job definition was modified.
+    returned: when state is present
+    type: str
+    sample: "2018-04-21T05:19:58.326000+00:00"
+max_retries:
+    description: The maximum number of times to retry this job after a JobRun fails.
+    returned: when state is present
+    type: int
+    sample: 5
+name:
+    description: The name assigned to this job definition.
+    returned: when state is present
+    type: str
+    sample: my-glue-job
+role:
+    description: The name or ARN of the IAM role associated with this job.
+    returned: when state is present
+    type: str
+    sample: my-iam-role
+timeout:
+    description: The job timeout in minutes.
+    returned: when state is present
+    type: int
+    sample: 300
+

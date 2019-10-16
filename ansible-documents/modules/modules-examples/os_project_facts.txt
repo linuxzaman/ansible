@@ -1,0 +1,62 @@
+EXAMPLES:
+
+# Gather facts about previously created projects
+- os_project_facts:
+    cloud: awesomecloud
+- debug:
+    var: openstack_projects
+
+# Gather facts about a previously created project by name
+- os_project_facts:
+    cloud: awesomecloud
+    name: demoproject
+- debug:
+    var: openstack_projects
+
+# Gather facts about a previously created project in a specific domain
+- os_project_facts:
+    cloud: awesomecloud
+    name: demoproject
+    domain: admindomain
+- debug:
+    var: openstack_projects
+
+# Gather facts about a previously created project in a specific domain with filter
+- os_project_facts:
+    cloud: awesomecloud
+    name: demoproject
+    domain: admindomain
+    filters:
+      enabled: False
+- debug:
+    var: openstack_projects
+
+
+RETURN VALUES:
+
+openstack_projects:
+    description: has all the OpenStack facts about projects
+    returned: always, but can be null
+    type: complex
+    contains:
+        id:
+            description: Unique UUID.
+            returned: success
+            type: str
+        name:
+            description: Name given to the project.
+            returned: success
+            type: str
+        description:
+            description: Description of the project
+            returned: success
+            type: str
+        enabled:
+            description: Flag to indicate if the project is enabled
+            returned: success
+            type: bool
+        domain_id:
+            description: Domain ID containing the project (keystone v3 clouds only)
+            returned: success
+            type: bool
+

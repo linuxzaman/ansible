@@ -1,0 +1,59 @@
+EXAMPLES:
+
+# Create an MCP 1.0 network
+- dimensiondata_network:
+    region: na
+    location: NA5
+    name: mynet
+# Create an MCP 2.0 network
+- dimensiondata_network:
+    region: na
+    mcp_user: my_user
+    mcp_password: my_password
+    location: NA9
+    name: mynet
+    service_plan: ADVANCED
+# Delete a network
+- dimensiondata_network:
+    region: na
+    location: NA1
+    name: mynet
+    state: absent
+
+
+RETURN VALUES:
+
+network:
+    description: Dictionary describing the network.
+    returned: On success when I(state=present).
+    type: complex
+    contains:
+        id:
+            description: Network ID.
+            type: str
+            sample: "8c787000-a000-4050-a215-280893411a7d"
+        name:
+            description: Network name.
+            type: str
+            sample: "My network"
+        description:
+            description: Network description.
+            type: str
+            sample: "My network description"
+        location:
+            description: Datacenter location.
+            type: str
+            sample: NA3
+        status:
+            description: Network status. (MCP 2.0 only)
+            type: str
+            sample: NORMAL
+        private_net:
+            description: Private network subnet. (MCP 1.0 only)
+            type: str
+            sample: "10.2.3.0"
+        multicast:
+            description: Multicast enabled? (MCP 1.0 only)
+            type: bool
+            sample: false
+

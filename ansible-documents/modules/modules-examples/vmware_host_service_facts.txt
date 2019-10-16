@@ -1,0 +1,53 @@
+EXAMPLES:
+
+- name: Gather facts about all ESXi Host in given Cluster
+  vmware_host_service_facts:
+    hostname: '{{ vcenter_hostname }}'
+    username: '{{ vcenter_username }}'
+    password: '{{ vcenter_password }}'
+    cluster_name: cluster_name
+  delegate_to: localhost
+  register: cluster_host_services
+
+- name: Gather facts about ESXi Host
+  vmware_host_service_facts:
+    hostname: '{{ vcenter_hostname }}'
+    username: '{{ vcenter_username }}'
+    password: '{{ vcenter_password }}'
+    esxi_hostname: '{{ esxi_hostname }}'
+  delegate_to: localhost
+  register: host_services
+
+
+RETURN VALUES:
+
+host_service_facts:
+    description:
+    - dict with hostname as key and dict with host service config facts
+    returned: always
+    type: dict
+    sample: {
+        "10.76.33.226": [
+            {
+                "key": "DCUI",
+                "label": "Direct Console UI",
+                "policy": "on",
+                "required": false,
+                "running": true,
+                "uninstallable": false,
+                "source_package_name": "esx-base",
+                "source_package_desc": "This VIB contains all of the base functionality of vSphere ESXi."
+            },
+            {
+                "key": "TSM",
+                "label": "ESXi Shell",
+                "policy": "off",
+                "required": false,
+                "running": false,
+                "uninstallable": false,
+                "source_package_name": "esx-base",
+                "source_package_desc": "This VIB contains all of the base functionality of vSphere ESXi."
+            },
+        ]
+    }
+

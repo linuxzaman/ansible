@@ -1,0 +1,255 @@
+> OPENSSH_CERT    (/usr/lib/python2.7/dist-packages/ansible/modules/crypto/openssh_cert.py)
+
+        Generate and regenerate OpenSSH host or user certificates.
+
+  * This module is maintained by The Ansible Community
+OPTIONS (= is mandatory):
+
+- attributes
+        The attributes the resulting file or directory should have.
+        To get supported flags look at the man page for `chattr' on the target system.
+        This string should contain the attributes in the same order as the one displayed by `lsattr'.
+        The `=' operator is assumed as default, otherwise `+' or `-' operators need to be included in the string.
+        (Aliases: attr)[Default: (null)]
+        type: str
+        version_added: 2.3
+
+- force
+        Should the certificate be regenerated even if it already exists and is valid.
+        [Default: False]
+        type: bool
+
+- group
+        Name of the group that should own the file/directory, as would be fed to `chown'.
+        [Default: (null)]
+        type: str
+
+- identifier
+        Specify the key identity when signing a public key. The identifier that is logged by the server when the certificate is used for
+        authentication.
+        [Default: (null)]
+        type: str
+
+- mode
+        The permissions the resulting file or directory should have.
+        For those used to `/usr/bin/chmod' remember that modes are actually octal numbers. You must either add a leading zero so that
+        Ansible's YAML parser knows it is an octal number (like `0644' or `01777') or quote it (like `'644'' or `'1777'') so Ansible
+        receives a string and can do its own conversion from string into number.
+        Giving Ansible a number without following one of these rules will end up with a decimal number which will have unexpected
+        results.
+        As of Ansible 1.8, the mode may be specified as a symbolic mode (for example, `u+rwx' or `u=rw,g=r,o=r').
+        As of Ansible 2.6, the mode may also be the special string `preserve'.
+        When set to `preserve' the file will be given the same permissions as the source file.
+        [Default: (null)]
+        type: str
+
+- options
+        Specify certificate options when signing a key. The option that are valid for user certificates are:
+        `clear': Clear all enabled permissions.  This is useful for clearing the default set of permissions so permissions may be added
+        individually.
+        `force-command=command': Forces the execution of command instead of any shell or command specified by the user when the
+        certificate is used for authentication.
+        `no-agent-forwarding': Disable ssh-agent forwarding (permitted by default).
+        `no-port-forwarding': Disable port forwarding (permitted by default).
+        `no-pty Disable': PTY allocation (permitted by default).
+        `no-user-rc': Disable execution of `~/.ssh/rc' by sshd (permitted by default).
+        `no-x11-forwarding': Disable X11 forwarding (permitted by default)
+        `permit-agent-forwarding': Allows ssh-agent forwarding.
+        `permit-port-forwarding': Allows port forwarding.
+        `permit-pty': Allows PTY allocation.
+        `permit-user-rc': Allows execution of `~/.ssh/rc' by sshd.
+        `permit-x11-forwarding': Allows X11 forwarding.
+        `source-address=address_list': Restrict the source addresses from which the certificate is considered valid. The `address_list'
+        is a comma-separated list of one or more address/netmask pairs in CIDR format.
+        At present, no options are valid for host keys.
+        [Default: (null)]
+        type: list
+
+- owner
+        Name of the user that should own the file/directory, as would be fed to `chown'.
+        [Default: (null)]
+        type: str
+
+= path
+        Path of the file containing the certificate.
+
+        type: path
+
+- principals
+        Certificates may be limited to be valid for a set of principal (user/host) names. By default, generated certificates are valid
+        for all users or hosts.
+        [Default: (null)]
+        type: list
+
+= public_key
+        The path to the public key that will be signed with the signing key in order to generate the certificate.
+
+        type: path
+
+- selevel
+        The level part of the SELinux file context.
+        This is the MLS/MCS attribute, sometimes known as the `range'.
+        When set to `_default', it will use the `level' portion of the policy if available.
+        [Default: s0]
+        type: str
+
+- serial_number
+        Specify the certificate serial number. The serial number is logged by the server when the certificate is used for authentication.
+        The certificate serial number may be used in a KeyRevocationList. The serial number may be omitted for checks, but must be
+        specified again for a new certificate. Note: The default value set by ssh-keygen is 0.
+        [Default: (null)]
+        type: int
+
+- serole
+        The role part of the SELinux file context.
+        When set to `_default', it will use the `role' portion of the policy if available.
+        [Default: (null)]
+        type: str
+
+- setype
+        The type part of the SELinux file context.
+        When set to `_default', it will use the `type' portion of the policy if available.
+        [Default: (null)]
+        type: str
+
+- seuser
+        The user part of the SELinux file context.
+        By default it uses the `system' policy, where applicable.
+        When set to `_default', it will use the `user' portion of the policy if available.
+        [Default: (null)]
+        type: str
+
+= signing_key
+        The path to the private openssh key that is used for signing the public key in order to generate the certificate.
+
+        type: path
+
+- state
+        Whether the host or user certificate should exist or not, taking action if the state is different from what is stated.
+        (Choices: present, absent)[Default: present]
+        type: str
+
+= type
+        Whether the module should generate a host or a user certificate.
+        (Choices: host, user)
+        type: str
+
+- unsafe_writes
+        Influence when to use atomic operation to prevent data corruption or inconsistent reads from the target file.
+        By default this module uses atomic operations to prevent data corruption or inconsistent reads from the target files, but
+        sometimes systems are configured or just broken in ways that prevent this. One example is docker mounted files, which cannot be
+        updated atomically from inside the container and can only be written in an unsafe manner.
+        This option allows Ansible to fall back to unsafe methods of updating files when atomic operations fail (however, it doesn't
+        force Ansible to perform unsafe writes).
+        IMPORTANT! Unsafe writes are subject to race conditions and can lead to data corruption.
+        [Default: False]
+        type: bool
+        version_added: 2.2
+
+- valid_at
+        Check if the certificate is valid at a certain point in time. If it is not the certificate will be regenerated. Time will always
+        be interpreted as UTC. Mainly to be used with relative timespec for `valid_from' and / or `valid_to'. Note that if using relative
+        time this module is NOT idempotent.
+        [Default: (null)]
+        type: str
+
+= valid_from
+        The point in time the certificate is valid from. Time can be specified either as relative time or as absolute timestamp. Time
+        will always be interpreted as UTC. Valid formats are: `[+-]timespec | YYYY-MM-DD | YYYY-MM-DDTHH:MM:SS | YYYY-MM-DD HH:MM:SS |
+        always' where timespec can be an integer + `[w | d | h | m | s]' (e.g. `+32w1d2h'. Note that if using relative time this module
+        is NOT idempotent.
+
+        type: str
+
+= valid_to
+        The point in time the certificate is valid to. Time can be specified either as relative time or as absolute timestamp. Time will
+        always be interpreted as UTC. Valid formats are: `[+-]timespec | YYYY-MM-DD | YYYY-MM-DDTHH:MM:SS | YYYY-MM-DD HH:MM:SS |
+        forever' where timespec can be an integer + `[w | d | h | m | s]' (e.g. `+32w1d2h'. Note that if using relative time this module
+        is NOT idempotent.
+
+        type: str
+
+
+REQUIREMENTS:  ssh-keygen
+
+AUTHOR: David Kainz (@lolcube)
+        METADATA:
+          status:
+          - preview
+          supported_by: community
+        
+
+EXAMPLES:
+
+# Generate an OpenSSH user certificate that is valid forever and for all users
+- openssh_cert:
+    type: user
+    signing_key: /path/to/private_key
+    public_key: /path/to/public_key.pub
+    path: /path/to/certificate
+    valid_from: always
+    valid_to: forever
+
+# Generate an OpenSSH host certificate that is valid for 32 weeks from now and will be regenerated
+# if it is valid for less than 2 weeks from the time the module is being run
+- openssh_cert:
+    type: host
+    signing_key: /path/to/private_key
+    public_key: /path/to/public_key.pub
+    path: /path/to/certificate
+    valid_from: +0s
+    valid_to: +32w
+    valid_at: +2w
+
+# Generate an OpenSSH host certificate that is valid forever and only for example.com and examplehost
+- openssh_cert:
+    type: host
+    signing_key: /path/to/private_key
+    public_key: /path/to/public_key.pub
+    path: /path/to/certificate
+    valid_from: always
+    valid_to: forever
+    principals:
+        - example.com
+        - examplehost
+
+# Generate an OpenSSH host Certificate that is valid from 21.1.2001 to 21.1.2019
+- openssh_cert:
+    type: host
+    signing_key: /path/to/private_key
+    public_key: /path/to/public_key.pub
+    path: /path/to/certificate
+    valid_from: "2001-01-21"
+    valid_to: "2019-01-21"
+
+# Generate an OpenSSH user Certificate with clear and force-command option:
+- openssh_cert:
+    type: user
+    signing_key: /path/to/private_key
+    public_key: /path/to/public_key.pub
+    path: /path/to/certificate
+    valid_from: always
+    valid_to: forever
+    options:
+        - "clear"
+        - "force-command=/tmp/bla/foo"
+
+
+RETURN VALUES:
+
+type:
+    description: type of the certificate (host or user)
+    returned: changed or success
+    type: str
+    sample: host
+filename:
+    description: path to the certificate
+    returned: changed or success
+    type: str
+    sample: /tmp/certifivate-cert.pub
+info:
+    description: Information about the certificate. Output of C(ssh-keygen -L -f).
+    returned: change or success
+    type: list
+
+

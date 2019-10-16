@@ -1,0 +1,129 @@
+> WIN_CHOCOLATEY_SOURCE    (/usr/lib/python2.7/dist-packages/ansible/modules/windows/win_chocolatey_source.py)
+
+        Used to managed Chocolatey sources configured on the client. Requires Chocolatey to be already installed on the remote host.
+
+  * This module is maintained by The Ansible Community
+OPTIONS (= is mandatory):
+
+- admin_only
+        Makes the source visible to Administrators only.
+        Requires Chocolatey >= 0.10.8.
+        When creating a new source, this defaults to `no'.
+        [Default: (null)]
+        type: bool
+
+- allow_self_service
+        Allow the source to be used with self-service
+        Requires Chocolatey >= 0.10.4.
+        When creating a new source, this defaults to `no'.
+        [Default: (null)]
+        type: bool
+
+- bypass_proxy
+        Bypass the proxy when using this source.
+        Requires Chocolatey >= 0.10.4.
+        When creating a new source, this defaults to `no'.
+        [Default: (null)]
+        type: bool
+
+- certificate
+        The path to a .pfx file to use for X509 authenticated feeds.
+        Requires Chocolatey >= 0.9.10.
+        [Default: (null)]
+        type: str
+
+- certificate_password
+        The password for `certificate' if required.
+        Requires Chocolatey >= 0.9.10.
+        [Default: (null)]
+
+= name
+        The name of the source to configure.
+
+
+- priority
+        The priority order of this source compared to other sources, lower is better.
+        All priorities above `0' will be evaluated first, then zero-based values will be evaluated in config file order.
+        Requires Chocolatey >= 0.9.9.9.
+        When creating a new source, this defaults to `0'.
+        [Default: (null)]
+        type: int
+
+- source
+        The file/folder/url of the source.
+        Required when `state' is `present' or `disabled' and the source does not already exist.
+        [Default: (null)]
+
+- source_password
+        The password for `source_username'.
+        Required if `source_username' is set.
+        [Default: (null)]
+
+- source_username
+        The username used to access `source'.
+        [Default: (null)]
+
+- state
+        When `absent', will remove the source.
+        When `disabled', will ensure the source exists but is disabled.
+        When `present', will ensure the source exists and is enabled.
+        (Choices: absent, disabled, present)[Default: present]
+
+- update_password
+        When `always', the module will always set the password and report a change if `certificate_password' or `source_password' is set.
+        When `on_create', the module will only set the password if the source is being created.
+        (Choices: always, on_create)[Default: always]
+
+
+SEE ALSO:
+      * Module win_chocolatey
+           The official documentation on the win_chocolatey module.
+           https://docs.ansible.com/ansible/latest/modules/win_chocolatey_module.html
+      * Module win_chocolatey_config
+           The official documentation on the win_chocolatey_config module.
+           https://docs.ansible.com/ansible/latest/modules/win_chocolatey_config_module.html
+      * Module win_chocolatey_facts
+           The official documentation on the win_chocolatey_facts module.
+           https://docs.ansible.com/ansible/latest/modules/win_chocolatey_facts_module.html
+      * Module win_chocolatey_feature
+           The official documentation on the win_chocolatey_feature module.
+           https://docs.ansible.com/ansible/latest/modules/win_chocolatey_feature_module.html
+
+
+AUTHOR: Jordan Borean (@jborean93)
+        METADATA:
+          status:
+          - preview
+          supported_by: community
+        
+
+EXAMPLES:
+
+- name: Remove the default public source
+  win_chocolatey_source:
+    name: chocolatey
+    state: absent
+
+- name: Add new internal source
+  win_chocolatey_source:
+    name: internal repo
+    state: present
+    source: http://chocolatey-server/chocolatey
+
+- name: Create HTTP source with credentials
+  win_chocolatey_source:
+    name: internal repo
+    state: present
+    source: https://chocolatey-server/chocolatey
+    source_username: username
+    source_password: password
+
+- name: Disable Chocolatey source
+  win_chocolatey_source:
+    name: chocolatey
+    state: disabled
+
+
+RETURN VALUES:
+
+

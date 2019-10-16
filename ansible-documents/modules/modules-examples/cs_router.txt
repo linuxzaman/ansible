@@ -1,0 +1,102 @@
+EXAMPLES:
+
+# Ensure the router has the desired service offering, no matter if
+# the router is running or not.
+- name: Present router
+  cs_router:
+    name: r-40-VM
+    service_offering: System Offering for Software Router
+  delegate_to: localhost
+
+- name: Ensure started
+  cs_router:
+    name: r-40-VM
+    state: started
+  delegate_to: localhost
+
+# Ensure started with desired service offering.
+# If the service offerings changes, router will be rebooted.
+- name: Ensure started with desired service offering
+  cs_router:
+    name: r-40-VM
+    service_offering: System Offering for Software Router
+    state: started
+  delegate_to: localhost
+
+- name: Ensure stopped
+  cs_router:
+    name: r-40-VM
+    state: stopped
+  delegate_to: localhost
+
+- name: Remove a router
+  cs_router:
+    name: r-40-VM
+    state: absent
+  delegate_to: localhost
+
+
+RETURN VALUES:
+
+---
+id:
+  description: UUID of the router.
+  returned: success
+  type: str
+  sample: 04589590-ac63-4ffc-93f5-b698b8ac38b6
+name:
+  description: Name of the router.
+  returned: success
+  type: str
+  sample: r-40-VM
+created:
+  description: Date of the router was created.
+  returned: success
+  type: str
+  sample: 2014-12-01T14:57:57+0100
+template_version:
+  description: Version of the system VM template.
+  returned: success
+  type: str
+  sample: 4.5.1
+requires_upgrade:
+  description: Whether the router needs to be upgraded to the new template.
+  returned: success
+  type: bool
+  sample: false
+redundant_state:
+  description: Redundant state of the router.
+  returned: success
+  type: str
+  sample: UNKNOWN
+role:
+  description: Role of the router.
+  returned: success
+  type: str
+  sample: VIRTUAL_ROUTER
+zone:
+  description: Name of zone the router is in.
+  returned: success
+  type: str
+  sample: ch-gva-2
+service_offering:
+  description: Name of the service offering the router has.
+  returned: success
+  type: str
+  sample: System Offering For Software Router
+state:
+  description: State of the router.
+  returned: success
+  type: str
+  sample: Active
+domain:
+  description: Domain the router is related to.
+  returned: success
+  type: str
+  sample: ROOT
+account:
+  description: Account the router is related to.
+  returned: success
+  type: str
+  sample: admin
+

@@ -1,0 +1,29 @@
+EXAMPLES:
+
+- name: Create a basic policy with some rule stubs
+  bigip_firewall_policy:
+    name: foo
+    rules:
+      - rule1
+      - rule2
+      - rule3
+    provider:
+      password: secret
+      server: lb.mydomain.com
+      user: admin
+  delegate_to: localhost
+
+
+RETURN VALUES:
+
+description:
+  description: The new description of the policy.
+  returned: changed
+  type: str
+  sample: My firewall policy
+rules:
+  description: The list of rules, in the order that they are evaluated, on the device.
+  returned: changed
+  type: list
+  sample: ['rule1', 'rule2', 'rule3']
+

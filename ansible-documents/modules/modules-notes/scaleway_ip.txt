@@ -1,0 +1,109 @@
+> SCALEWAY_IP    (/usr/lib/python2.7/dist-packages/ansible/modules/cloud/scaleway/scaleway_ip.py)
+
+        This module manages IP on Scaleway account https://developer.scaleway.com
+
+  * This module is maintained by The Ansible Community
+OPTIONS (= is mandatory):
+
+- api_timeout
+        HTTP timeout to Scaleway API in seconds.
+        (Aliases: timeout)[Default: 30]
+        type: int
+
+- api_token
+        Scaleway OAuth token.
+        (Aliases: oauth_token)[Default: (null)]
+        type: str
+
+- api_url
+        Scaleway API URL.
+        (Aliases: base_url)[Default: https://api.scaleway.com]
+        type: str
+
+- id
+        id of the Scaleway IP (UUID)
+        [Default: (null)]
+
+= organization
+        Scaleway organization identifier
+
+
+- query_parameters
+        List of parameters passed to the query string.
+        [Default: {}]
+        type: dict
+
+= region
+        Scaleway region to use (for example par1).
+        (Choices: ams1, EMEA-NL-EVS, par1, EMEA-FR-PAR1)
+
+- reverse
+        Reverse to assign to the IP
+        [Default: (null)]
+
+- server
+        id of the server you want to attach an IP to.
+        To unattach an IP don't specify this option
+        [Default: (null)]
+
+- state
+        Indicate desired state of the IP.
+        (Choices: present, absent)[Default: present]
+
+- validate_certs
+        Validate SSL certs of the Scaleway API.
+        [Default: True]
+        type: bool
+
+
+NOTES:
+      * Also see the API documentation on https://developer.scaleway.com/
+      * If `api_token' is not set within the module, the following environment variables can be used in decreasing order of
+        precedence `SCW_TOKEN', `SCW_API_KEY', `SCW_OAUTH_TOKEN' or `SCW_API_TOKEN'.
+      * If one wants to use a different `api_url' one can also set the `SCW_API_URL' environment variable.
+
+
+AUTHOR: Remy Leone (@sieben)
+        METADATA:
+          status:
+          - preview
+          supported_by: community
+        
+
+EXAMPLES:
+
+- name: Create an IP
+    scaleway_ip:
+      organization: '{{ scw_org }}'
+      state: present
+      region: par1
+    register: ip_creation_task
+
+  - name: Make sure IP deleted
+    scaleway_ip:
+      id: '{{ ip_creation_task.scaleway_ip.id }}'
+      state: absent
+      region: par1
+
+
+RETURN VALUES:
+
+data:
+    description: This is only present when C(state=present)
+    returned: when C(state=present)
+    type: dict
+    sample: {
+      "ips": [
+        {
+            "organization": "951df375-e094-4d26-97c1-ba548eeb9c42",
+            "reverse": null,
+            "id": "dd9e8df6-6775-4863-b517-e0b0ee3d7477",
+            "server": {
+                "id": "3f1568ca-b1a2-4e98-b6f7-31a0588157f1",
+                "name": "ansible_tuto-1"
+            },
+            "address": "212.47.232.136"
+        }
+    ]
+    }
+

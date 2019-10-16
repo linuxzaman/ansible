@@ -1,0 +1,53 @@
+EXAMPLES:
+
+- name: Configure vCenter statistics
+  vmware_vcenter_statistics:
+    hostname: '{{ vcenter_hostname }}'
+    username: '{{ vcenter_username }}'
+    password: '{{ vcenter_password }}'
+    interval_past_day:
+      enabled: true
+      interval_minutes: 5
+      save_for_days: 1
+      level: 1
+    interval_past_week:
+      enabled: true
+      level: 1
+    interval_past_month:
+      enabled: true
+      level: 1
+    interval_past_year:
+      enabled: true
+      save_for_years: 1
+      level: 1
+    validate_certs: no
+  delegate_to: localhost
+
+
+RETURN VALUES:
+
+results:
+    description: metadata about vCenter statistics settings
+    returned: always
+    type: dict
+    sample: {
+        "changed": false,
+        "msg": "vCenter statistics already configured properly",
+        "past_day_enabled": true,
+        "past_day_interval": 5,
+        "past_day_level": 1,
+        "past_day_save_for": 1,
+        "past_month_enabled": true,
+        "past_month_interval": 2,
+        "past_month_level": 1,
+        "past_month_save_for": 1,
+        "past_week_enabled": true,
+        "past_week_interval": 30,
+        "past_week_level": 1,
+        "past_week_save_for": 1,
+        "past_year_enabled": true,
+        "past_year_interval": 1,
+        "past_year_level": 1,
+        "past_year_save_for": 1
+    }
+

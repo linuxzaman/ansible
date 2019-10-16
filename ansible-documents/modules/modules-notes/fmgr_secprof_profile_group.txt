@@ -1,0 +1,125 @@
+> FMGR_SECPROF_PROFILE_GROUP    (/usr/lib/python2.7/dist-packages/ansible/modules/network/fortimanager/fmgr_secprof_profile_group.py)
+
+        Manage security profile group which allows you to create a group of security profiles and apply that to a policy.
+
+  * This module is maintained by The Ansible Community
+OPTIONS (= is mandatory):
+
+- adom
+        The ADOM the configuration should belong to.
+        [Default: root]
+
+- application_list
+        Name of an existing Application list.
+        [Default: (null)]
+        type: str
+
+- av_profile
+        Name of an existing Antivirus profile.
+        [Default: (null)]
+        type: str
+
+- dlp_sensor
+        Name of an existing DLP sensor.
+        [Default: (null)]
+        type: str
+
+- dnsfilter_profile
+        Name of an existing DNS filter profile.
+        [Default: (null)]
+        type: str
+
+- icap_profile
+        Name of an existing ICAP profile.
+        [Default: (null)]
+        type: str
+
+- ips_sensor
+        Name of an existing IPS sensor.
+        [Default: (null)]
+        type: str
+
+- mms_profile
+        Name of an existing MMS profile.
+        [Default: (null)]
+        type: str
+
+- mode
+        Sets one of three modes for managing the object.
+        Allows use of soft-adds instead of overwriting existing values.
+        (Choices: add, set, delete, update)[Default: add]
+
+- name
+        Profile group name.
+        [Default: (null)]
+        type: str
+
+- profile_protocol_options
+        Name of an existing Protocol options profile.
+        [Default: (null)]
+        type: str
+
+- spamfilter_profile
+        Name of an existing Spam filter profile.
+        [Default: (null)]
+        type: str
+
+- ssh_filter_profile
+        Name of an existing SSH filter profile.
+        [Default: (null)]
+        type: str
+
+- ssl_ssh_profile
+        Name of an existing SSL SSH profile.
+        [Default: (null)]
+        type: str
+
+- voip_profile
+        Name of an existing VoIP profile.
+        [Default: (null)]
+        type: str
+
+- waf_profile
+        Name of an existing Web application firewall profile.
+        [Default: (null)]
+        type: str
+
+- webfilter_profile
+        Name of an existing Web filter profile.
+        [Default: (null)]
+        type: str
+
+
+NOTES:
+      * Full Documentation at https://ftnt-ansible-docs.readthedocs.io/en/latest/.
+
+
+AUTHOR: Luke Weighall (@lweighall), Andrew Welsh (@Ghilli3), Jim Huber (@p4r4n0y1ng)
+        METADATA:
+          status:
+          - preview
+          supported_by: community
+        
+
+EXAMPLES:
+
+- name: DELETE Profile
+    fmgr_secprof_profile_group:
+      name: "Ansible_TEST_Profile_Group"
+      mode: "delete"
+
+  - name: CREATE Profile
+    fmgr_secprof_profile_group:
+      name: "Ansible_TEST_Profile_Group"
+      mode: "set"
+      av_profile: "Ansible_AV_Profile"
+      profile_protocol_options: "default"
+
+
+RETURN VALUES:
+
+api_result:
+  description: full API response, includes status code and message
+  returned: always
+  type: str
+

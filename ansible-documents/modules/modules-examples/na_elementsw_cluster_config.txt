@@ -1,0 +1,31 @@
+EXAMPLES:
+
+- name: Configure cluster
+    tags:
+    - elementsw_cluster_config
+    na_elementsw_cluster_config:
+      hostname: "{{ elementsw_hostname }}"
+      username: "{{ elementsw_username }}"
+      password: "{{ elementsw_password }}"
+      modify_cluster_full_threshold:
+        stage2_aware_threshold: 2
+        stage3_block_threshold_percent: 10
+        max_metadata_over_provision_factor: 2
+      encryption_at_rest: absent
+      set_ntp_info:
+        broadcastclient: False
+        ntp_servers:
+        - 1.1.1.1
+        - 2.2.2.2
+      enable_virtual_volumes: True
+
+
+RETURN VALUES:
+
+
+msg:
+    description: Success message
+    returned: success
+    type: str
+
+

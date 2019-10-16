@@ -1,0 +1,121 @@
+> ONE_IMAGE_FACTS    (/usr/lib/python2.7/dist-packages/ansible/modules/cloud/opennebula/one_image_facts.py)
+
+        Gather facts about OpenNebula images
+
+  * This module is maintained by The Ansible Community
+OPTIONS (= is mandatory):
+
+- api_password
+        Password of the user to login into OpenNebula RPC server. If not set
+        then the value of the `ONE_PASSWORD' environment variable is used.
+        [Default: (null)]
+
+- api_url
+        URL of the OpenNebula RPC server.
+        It is recommended to use HTTPS so that the username/password are not
+        transferred over the network unencrypted.
+        If not set then the value of the `ONE_URL' environment variable is used.
+        [Default: (null)]
+
+- api_username
+        Name of the user to login into the OpenNebula RPC server. If not set
+        then the value of the `ONE_USERNAME' environment variable is used.
+        [Default: (null)]
+
+- ids
+        A list of images ids whose facts you want to gather.
+        (Aliases: id)[Default: (null)]
+
+- name
+        A `name' of the image whose facts will be gathered.
+        If the `name' begins with '~' the `name' will be used as regex pattern
+        which restricts the list of images (whose facts will be returned) whose names match specified regex.
+        Also, if the `name' begins with '~*' case-insensitive matching will be performed.
+        See examples for more details.
+        [Default: (null)]
+
+
+REQUIREMENTS:  python-oca
+
+AUTHOR: Milan Ilic (@ilicmilan)
+        METADATA:
+          status:
+          - preview
+          supported_by: community
+        
+
+EXAMPLES:
+
+# Gather facts about all images
+- one_image_facts:
+  register: result
+
+# Print all images facts
+- debug:
+    msg: result
+
+# Gather facts about an image using ID
+- one_image_facts:
+    ids:
+      - 123
+
+# Gather facts about an image using the name
+- one_image_facts:
+    name: 'foo-image'
+  register: foo_image
+
+# Gather facts about all IMAGEs whose name matches regex 'app-image-.*'
+- one_image_facts:
+    name: '~app-image-.*'
+  register: app_images
+
+# Gather facts about all IMAGEs whose name matches regex 'foo-image-.*' ignoring cases
+- one_image_facts:
+    name: '~*foo-image-.*'
+  register: foo_images
+
+
+RETURN VALUES:
+
+images:
+    description: A list of images info
+    type: complex
+    returned: success
+    contains:
+        id:
+            description: image id
+            type: int
+            sample: 153
+        name:
+            description: image name
+            type: str
+            sample: app1
+        group_id:
+            description: image's group id
+            type: int
+            sample: 1
+        group_name:
+            description: image's group name
+            type: str
+            sample: one-users
+        owner_id:
+            description: image's owner id
+            type: int
+            sample: 143
+        owner_name:
+            description: image's owner name
+            type: str
+            sample: ansible-test
+        state:
+            description: state of image instance
+            type: str
+            sample: READY
+        used:
+            description: is image in use
+            type: bool
+            sample: true
+        running_vms:
+            description: count of running vms that use this image
+            type: int
+            sample: 7
+

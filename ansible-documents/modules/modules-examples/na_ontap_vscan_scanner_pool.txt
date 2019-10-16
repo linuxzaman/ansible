@@ -1,0 +1,28 @@
+EXAMPLES:
+
+- name: Create and enable Scanner pool
+  na_ontap_vscan_scanner_pool:
+    state: present
+    username: '{{ netapp_username }}'
+    password: '{{ netapp_password }}'
+    hostname: '{{ netapp_hostname }}'
+    vserver: carchi-vsim2
+    hostnames: ['name', 'name2']
+    privileged_users: ['sim.rtp.openeng.netapp.com\admin', 'sim.rtp.openeng.netapp.com\carchi']
+    scanner_pool: Scanner1
+    scanner_policy: primary
+
+- name: Delete a scanner pool
+  na_ontap_vscan_scanner_pool:
+    state: absent
+    username: '{{ netapp_username }}'
+    password: '{{ netapp_password }}'
+    hostname: '{{ netapp_hostname }}'
+    vserver: carchi-vsim2
+    scanner_pool: Scanner1
+
+
+RETURN VALUES:
+
+
+

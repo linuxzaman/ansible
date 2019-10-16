@@ -1,0 +1,34 @@
+EXAMPLES:
+
+# Examples don't contain auth parameter for simplicity,
+# look at ovirt_auth module to see how to reuse authentication:
+
+# Create administrative role with two permits
+- ovirt_role:
+    name: role
+    administrative: true
+    permits:
+      - manipulate_permissions
+      - create_instance
+
+# Remove role
+- ovirt_role:
+    name: role
+    state: absent
+
+# Remove all permit
+- ovirt_role:
+    name: role
+    administrative: ture
+    permits:
+      - login
+
+
+RETURN VALUES:
+
+ovirt_role:
+    description: "List of dictionaries describing the Roles. Role attributes are mapped to dictionary keys,
+                  all Roles attributes can be found at following url: http://ovirt.github.io/ovirt-engine-api-model/master/#types/role."
+    returned: On success.
+    type: list
+

@@ -1,0 +1,33 @@
+> XENSERVER_FACTS    (/usr/lib/python2.7/dist-packages/ansible/modules/cloud/misc/xenserver_facts.py)
+
+        Reads data out of XenAPI, can be used instead of multiple xe commands.
+
+  * This module is maintained by The Ansible Community
+AUTHOR: Andy Hill (@andyhky), Tim Rupp (@caphrim007), Robin Lee (@cheese)
+        METADATA:
+          status:
+          - preview
+          supported_by: community
+        
+
+EXAMPLES:
+
+- name: Gather facts from xenserver
+  xenserver_facts:
+
+- name: Print running VMs
+  debug:
+    msg: "{{ item }}"
+  with_items: "{{ xs_vms.keys() }}"
+  when: xs_vms[item]['power_state'] == "Running"
+
+# Which will print:
+#
+# TASK: [Print running VMs] ***********************************************************
+# skipping: [10.13.0.22] => (item=CentOS 4.7 (32-bit))
+# ok: [10.13.0.22] => (item=Control domain on host: 10.0.13.22) => {
+#     "item": "Control domain on host: 10.0.13.22",
+#     "msg": "Control domain on host: 10.0.13.22"
+# }
+
+

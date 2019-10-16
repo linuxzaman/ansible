@@ -1,0 +1,80 @@
+> NA_CDOT_USER_ROLE    (/usr/lib/python2.7/dist-packages/ansible/modules/storage/netapp/_na_cdot_user_role.py)
+
+        Create or destroy user roles
+
+DEPRECATED: 
+
+	Reason: Updated modules released with increased functionality
+	Will be removed in: Ansible 2.11
+	Alternatives: Use M(na_ontap_user_role) instead.
+
+
+  * This module is maintained by The Ansible Community
+OPTIONS (= is mandatory):
+
+- access_level
+        The name of the role to manage.
+        (Choices: none, readonly, all)[Default: all]
+
+= command_directory_name
+        The command or command directory to which the role has an access.
+
+
+= hostname
+        The hostname or IP address of the ONTAP instance.
+
+
+= name
+        The name of the role to manage.
+
+
+= password
+        Password for the specified user.
+        (Aliases: pass)
+
+= state
+        Whether the specified user should exist or not.
+        (Choices: present, absent)
+
+= username
+        This can be a Cluster-scoped or SVM-scoped account, depending on whether a Cluster-level or SVM-level API is required. For more
+        information, please read the documentation https://mysupport.netapp.com/NOW/download/software/nmsdk/9.4/.
+        (Aliases: user)
+
+= vserver
+        The name of the vserver to use.
+
+
+
+NOTES:
+      * The modules prefixed with na\\_cdot are built to support the ONTAP storage platform.
+
+
+REQUIREMENTS:  A physical or virtual clustered Data ONTAP system. The modules were developed with Clustered Data ONTAP 8.3, Ansible
+        2.2, netapp-lib (2015.9.25). Install using 'pip install netapp-lib'
+
+AUTHOR: Sumit Kumar (@timuster) <sumit4@netapp.com>
+        METADATA:
+          status:
+          - deprecated
+          supported_by: community
+        
+
+EXAMPLES:
+
+- name: Create User Role
+      na_cdot_user_role:
+        state: present
+        name: ansibleRole
+        command_directory_name: DEFAULT
+        access_level: none
+        vserver: ansibleVServer
+        hostname: "{{ netapp_hostname }}"
+        username: "{{ netapp_username }}"
+        password: "{{ netapp_password }}"
+
+
+RETURN VALUES:
+
+
+

@@ -1,0 +1,69 @@
+> GITHUB_KEY    (/usr/lib/python2.7/dist-packages/ansible/modules/source_control/github_key.py)
+
+        Creates, removes, or updates GitHub access keys.
+
+  * This module is maintained by The Ansible Community
+OPTIONS (= is mandatory):
+
+- force
+        The default is `yes', which will replace the existing remote key if it's different than `pubkey'. If `no', the key will only be
+        set if no key with the given `name' exists.
+        [Default: yes]
+        type: bool
+
+= name
+        SSH key name
+
+
+- pubkey
+        SSH public key value. Required when `state=present'.
+        [Default: (null)]
+
+- state
+        Whether to remove a key, ensure that it exists, or update its value.
+        (Choices: present, absent)[Default: present]
+
+= token
+        GitHub Access Token with permission to list and create public keys.
+
+
+
+AUTHOR: Robert Estelle (@erydo)
+        METADATA:
+          status:
+          - preview
+          supported_by: community
+        
+
+EXAMPLES:
+
+- name: Read SSH public key to authorize
+  shell: cat /home/foo/.ssh/id_rsa.pub
+  register: ssh_pub_key
+
+- name: Authorize key with GitHub
+  local_action:
+    module: github_key
+    name: Access Key for Some Machine
+    token: '{{ github_access_token }}'
+    pubkey: '{{ ssh_pub_key.stdout }}'
+
+
+RETURN VALUES:
+
+deleted_keys:
+    description: An array of key objects that were deleted. Only present on state=absent
+    type: list
+    returned: When state=absent
+    sample: [{'id': 0, 'key': 'BASE64 encoded key', 'url': 'http://example.com/github key', 'created_at': 'YYYY-MM-DDTHH:MM:SZ', 'read_only': False}]
+matching_keys:
+    description: An array of keys matching the specified name. Only present on state=present
+    type: list
+    returned: When state=present
+    sample: [{'id': 0, 'key': 'BASE64 encoded key', 'url': 'http://example.com/github key', 'created_at': 'YYYY-MM-DDTHH:MM:SZ', 'read_only': False}]
+key:
+    description: Metadata about the key just created. Only present on state=present
+    type: dict
+    returned: success
+    sample: {'id': 0, 'key': 'BASE64 encoded key', 'url': 'http://example.com/github key', 'created_at': 'YYYY-MM-DDTHH:MM:SZ', 'read_only': False}
+

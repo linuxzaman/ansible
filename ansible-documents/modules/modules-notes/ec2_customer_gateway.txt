@@ -1,0 +1,161 @@
+> EC2_CUSTOMER_GATEWAY    (/usr/lib/python2.7/dist-packages/ansible/modules/cloud/amazon/ec2_customer_gateway.py)
+
+        Manage an AWS customer gateway
+
+  * This module is maintained by The Ansible Community
+OPTIONS (= is mandatory):
+
+- aws_access_key
+        AWS access key. If not set then the value of the AWS_ACCESS_KEY_ID, AWS_ACCESS_KEY or EC2_ACCESS_KEY environment variable is
+        used.
+        (Aliases: ec2_access_key, access_key)[Default: (null)]
+        type: str
+
+- aws_secret_key
+        AWS secret key. If not set then the value of the AWS_SECRET_ACCESS_KEY, AWS_SECRET_KEY, or EC2_SECRET_KEY environment variable is
+        used.
+        (Aliases: ec2_secret_key, secret_key)[Default: (null)]
+        type: str
+
+- bgp_asn
+        Border Gateway Protocol (BGP) Autonomous System Number (ASN), required when state=present.
+        [Default: (null)]
+
+- debug_botocore_endpoint_logs
+        Use a botocore.endpoint logger to parse the unique (rather than total) "resource:action" API calls made during a task, outputing
+        the set to the resource_actions key in the task results. Use the aws_resource_action callback to output to total list made during
+        a playbook. The ANSIBLE_DEBUG_BOTOCORE_LOGS environment variable may also be used.
+        [Default: no]
+        type: bool
+        version_added: 2.8
+
+- ec2_url
+        Url to use to connect to EC2 or your Eucalyptus cloud (by default the module will use EC2 endpoints). Ignored for modules where
+        region is required. Must be specified for all other modules if region is not used. If not set then the value of the EC2_URL
+        environment variable, if any, is used.
+        [Default: (null)]
+        type: str
+
+= ip_address
+        Internet-routable IP address for customers gateway, must be a static address.
+
+
+= name
+        Name of the customer gateway.
+
+
+- profile
+        Uses a boto profile. Only works with boto >= 2.24.0.
+        [Default: (null)]
+        type: str
+        version_added: 1.6
+
+- region
+        The AWS region to use. If not specified then the value of the AWS_REGION or EC2_REGION environment variable, if any, is used. See
+        http://docs.aws.amazon.com/general/latest/gr/rande.html#ec2_region
+        (Aliases: aws_region, ec2_region)[Default: (null)]
+        type: str
+
+- routing
+        The type of routing.
+        (Choices: static, dynamic)[Default: dynamic]
+        version_added: 2.4
+
+- security_token
+        AWS STS security token. If not set then the value of the AWS_SECURITY_TOKEN or EC2_SECURITY_TOKEN environment variable is used.
+        (Aliases: access_token)[Default: (null)]
+        type: str
+        version_added: 1.6
+
+- state
+        Create or terminate the Customer Gateway.
+        (Choices: present, absent)[Default: present]
+
+- validate_certs
+        When set to "no", SSL certificates will not be validated for boto versions >= 2.6.0.
+        [Default: True]
+        type: bool
+        version_added: 1.5
+
+
+NOTES:
+      * You cannot create more than one customer gateway with the same IP address. If you run an identical request more than one
+        time, the first request creates the customer gateway, and subsequent requests return information about the existing
+        customer gateway. The subsequent requests do not create new customer gateway resources.
+      * Return values contain customer_gateway and customer_gateways keys which are identical dicts. You should use
+        customer_gateway. See https://github.com/ansible/ansible-modules-extras/issues/2773 for details.
+      * If parameters are not set within the module, the following environment variables can be used in decreasing order of
+        precedence `AWS_URL' or `EC2_URL', `AWS_ACCESS_KEY_ID' or `AWS_ACCESS_KEY' or `EC2_ACCESS_KEY', `AWS_SECRET_ACCESS_KEY' or
+        `AWS_SECRET_KEY' or `EC2_SECRET_KEY', `AWS_SECURITY_TOKEN' or `EC2_SECURITY_TOKEN', `AWS_REGION' or `EC2_REGION'
+      * Ansible uses the boto configuration file (typically ~/.boto) if no credentials are provided. See
+        https://boto.readthedocs.io/en/latest/boto_config_tut.html
+      * `AWS_REGION' or `EC2_REGION' can be typically be used to specify the AWS region, when required, but this can also be
+        configured in the boto config file
+
+
+REQUIREMENTS:  boto, boto3, botocore, python >= 2.6
+
+AUTHOR: Michael Baydoun (@MichaelBaydoun)
+        METADATA:
+          status:
+          - preview
+          supported_by: community
+        
+
+EXAMPLES:
+
+# Create Customer Gateway
+- ec2_customer_gateway:
+    bgp_asn: 12345
+    ip_address: 1.2.3.4
+    name: IndianapolisOffice
+    region: us-east-1
+  register: cgw
+
+# Delete Customer Gateway
+- ec2_customer_gateway:
+    ip_address: 1.2.3.4
+    name: IndianapolisOffice
+    state: absent
+    region: us-east-1
+  register: cgw
+
+
+RETURN VALUES:
+
+gateway.customer_gateways:
+    description: details about the gateway that was created.
+    returned: success
+    type: complex
+    contains:
+        bgp_asn:
+            description: The Border Gateway Autonomous System Number.
+            returned: when exists and gateway is available.
+            sample: 65123
+            type: str
+        customer_gateway_id:
+            description: gateway id assigned by amazon.
+            returned: when exists and gateway is available.
+            sample: cgw-cb6386a2
+            type: str
+        ip_address:
+            description: ip address of your gateway device.
+            returned: when exists and gateway is available.
+            sample: 1.2.3.4
+            type: str
+        state:
+            description: state of gateway.
+            returned: when gateway exists and is available.
+            state: available
+            type: str
+        tags:
+            description: any tags on the gateway.
+            returned: when gateway exists and is available, and when tags exist.
+            state: available
+            type: str
+        type:
+            description: encryption type.
+            returned: when gateway exists and is available.
+            sample: ipsec.1
+            type: str
+

@@ -1,0 +1,76 @@
+EXAMPLES:
+
+- name: Assign a specific IP to the default NIC of the VM
+  cs_instance_nic_secondaryip:
+    vm: customer_xy
+    vm_guest_ip: 10.10.10.10
+  delegate_to: localhost
+
+# Note: If vm_guest_ip is not set, you will get a new IP address on every run.
+- name: Assign an IP to the default NIC of the VM
+  cs_instance_nic_secondaryip:
+    vm: customer_xy
+  delegate_to: localhost
+
+- name: Remove a specific IP from the default NIC
+  cs_instance_nic_secondaryip:
+    vm: customer_xy
+    vm_guest_ip: 10.10.10.10
+    state: absent
+  delegate_to: localhost
+
+
+RETURN VALUES:
+
+---
+id:
+  description: UUID of the NIC.
+  returned: success
+  type: str
+  sample: 87b1e0ce-4e01-11e4-bb66-0050569e64b8
+vm:
+  description: Name of the VM.
+  returned: success
+  type: str
+  sample: web-01
+ip_address:
+  description: Primary IP of the NIC.
+  returned: success
+  type: str
+  sample: 10.10.10.10
+netmask:
+  description: Netmask of the NIC.
+  returned: success
+  type: str
+  sample: 255.255.255.0
+mac_address:
+  description: MAC address of the NIC.
+  returned: success
+  type: str
+  sample: 02:00:33:31:00:e4
+vm_guest_ip:
+  description: Secondary IP of the NIC.
+  returned: success
+  type: str
+  sample: 10.10.10.10
+network:
+  description: Name of the network if not default.
+  returned: success
+  type: str
+  sample: sync network
+domain:
+  description: Domain the VM is related to.
+  returned: success
+  type: str
+  sample: example domain
+account:
+  description: Account the VM is related to.
+  returned: success
+  type: str
+  sample: example account
+project:
+  description: Name of project the VM is related to.
+  returned: success
+  type: str
+  sample: Production
+

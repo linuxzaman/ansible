@@ -1,0 +1,41 @@
+EXAMPLES:
+
+- name: Get infos on volume
+  docker_volume_info:
+    name: mydata
+  register: result
+
+- name: Does volume exist?
+  debug:
+    msg: "The volume {{ 'exists' if result.exists else 'does not exist' }}"
+
+- name: Print information about volume
+  debug:
+    var: result.volume
+  when: result.exists
+
+
+RETURN VALUES:
+
+exists:
+    description:
+      - Returns whether the volume exists.
+    type: bool
+    returned: always
+    sample: true
+volume:
+    description:
+      - Volume inspection results for the affected volume.
+      - Will be C(None) if volume does not exist.
+    returned: success
+    type: dict
+    sample: '{
+            "CreatedAt": "2018-12-09T17:43:44+01:00",
+            "Driver": "local",
+            "Labels": null,
+            "Mountpoint": "/var/lib/docker/volumes/ansible-test-bd3f6172/_data",
+            "Name": "ansible-test-bd3f6172",
+            "Options": {},
+            "Scope": "local"
+        }'
+

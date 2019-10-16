@@ -1,0 +1,65 @@
+> LOGSTASH_PLUGIN    (/usr/lib/python2.7/dist-packages/ansible/modules/monitoring/logstash_plugin.py)
+
+        Manages Logstash plugins.
+
+  * This module is maintained by The Ansible Community
+OPTIONS (= is mandatory):
+
+= name
+        Install plugin with that name.
+
+
+- plugin_bin
+        Specify logstash-plugin to use for plugin management.
+        [Default: /usr/share/logstash/bin/logstash-plugin]
+
+- proxy_host
+        Proxy host to use during plugin installation.
+        [Default: (null)]
+
+- proxy_port
+        Proxy port to use during plugin installation.
+        [Default: (null)]
+
+- state
+        Apply plugin state.
+        (Choices: present, absent)[Default: present]
+
+- version
+        Specify plugin Version of the plugin to install. If plugin exists with previous version, it will NOT be updated.
+        [Default: (null)]
+
+
+AUTHOR: Loic Blot (@nerzhul)
+        METADATA:
+          status:
+          - preview
+          supported_by: community
+        
+
+EXAMPLES:
+
+- name: Install Logstash beats input plugin
+  logstash_plugin:
+    state: present
+    name: logstash-input-beats
+
+- name: Install specific version of a plugin
+  logstash_plugin:
+    state: present
+    name: logstash-input-syslog
+    version: '3.2.0'
+
+- name: Uninstall Logstash plugin
+  logstash_plugin:
+    state: absent
+    name: logstash-filter-multiline
+
+- name: install Logstash plugin with alternate heap size
+  logstash_plugin:
+    state: present
+    name: logstash-input-beats
+  environment:
+    LS_JAVA_OPTS: "-Xms256m -Xmx256m"
+
+

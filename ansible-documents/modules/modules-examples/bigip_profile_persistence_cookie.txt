@@ -1,0 +1,118 @@
+EXAMPLES:
+
+- name: Create a persistence cookie profile
+  bigip_profile_persistence_cookie:
+    name: foo
+    provider:
+      password: secret
+      server: lb.mydomain.com
+      user: admin
+  delegate_to: localhost
+- name: Create a persistence cookie profile with expiration time
+  bigip_profile_persistence_cookie:
+    name: foo
+    expiration:
+      days: 7
+      hours: 12
+      minutes: 30
+    provider:
+      password: secret
+      server: lb.mydomain.com
+      user: admin
+  delegate_to: localhost
+
+
+RETURN VALUES:
+
+cookie_name:
+  description: The new Cookie Name value.
+  returned: changed
+  type: str
+  sample: cookie1
+cookie_method:
+  description: The new Cookie Method.
+  returned: changed
+  type: str
+  sample: insert
+parent:
+  description: The parent profile.
+  returned: changed
+  type: str
+  sample: /Common/cookie
+cookie_encryption:
+  description: The new Cookie Encryption type.
+  returned: changed
+  type: str
+  sample: preferred
+match_across_pools:
+  description: The new Match Across Pools value.
+  returned: changed
+  type: bool
+  sample: yes
+match_across_services:
+  description: The new Match Across Services value.
+  returned: changed
+  type: bool
+  sample: no
+match_across_virtuals:
+  description: The new Match Across Virtuals value.
+  returned: changed
+  type: bool
+  sample: yes
+override_connection_limit:
+  description: The new Override Connection Limit value.
+  returned: changed
+  type: bool
+  sample: no
+encrypt_cookie_pool_name:
+  description: The new Encrypt Cookie Pool Name value.
+  returned: changed
+  type: bool
+  sample: yes
+always_send:
+  description: The new Always Send value.
+  returned: changed
+  type: bool
+  sample: no
+http_only:
+  description: The new HTTP Only value.
+  returned: changed
+  type: bool
+  sample: yes
+description:
+  description: The new description.
+  returned: changed
+  type: str
+  sample: My description
+secure:
+  description: The new Secure Cookie value.
+  returned: changed
+  type: bool
+  sample: no
+expiration:
+  description: The expiration time of the cookie.
+  returned: changed
+  type: complex
+  contains:
+    days:
+      description: Cookie expiration time in days.
+      returned: changed
+      type: int
+      sample: 125
+    hours:
+      description: Cookie expiration time in hours.
+      returned: changed
+      type: int
+      sample: 22
+    minutes:
+      description: Cookie expiration time in minutes.
+      returned: changed
+      type: int
+      sample: 58
+    seconds:
+      description: Cookie expiration time in seconds.
+      returned: changed
+      type: int
+      sample: 20
+  sample: hash/dictionary of values
+

@@ -1,0 +1,117 @@
+> SENDGRID    (/usr/lib/python2.7/dist-packages/ansible/modules/notification/sendgrid.py)
+
+        Sends an email with a SendGrid account through their API, not through the SMTP service.
+
+  * This module is maintained by The Ansible Community
+OPTIONS (= is mandatory):
+
+- api_key
+        sendgrid API key to use instead of username/password
+        [Default: (null)]
+        version_added: 2.2
+        
+
+- attachments
+        a list of relative or explicit paths of files you want to attach (7MB limit as per SendGrid docs)
+        [Default: (null)]
+        version_added: 2.2
+        
+
+- bcc
+        a list of email addresses to bcc
+        [Default: (null)]
+        version_added: 2.2
+        
+
+- cc
+        a list of email addresses to cc
+        [Default: (null)]
+        version_added: 2.2
+        
+
+= from_address
+        the address in the "from" field for the email
+
+
+- from_name
+        the name you want to appear in the from field, i.e 'John Doe'
+        [Default: (null)]
+        version_added: 2.2
+        
+
+- headers
+        a dict to pass on as headers
+        [Default: (null)]
+        version_added: 2.2
+        
+
+- html_body
+        whether the body is html content that should be rendered
+        [Default: no]
+        type: bool
+        version_added: 2.2
+        
+
+- password
+        password that corresponds to the username
+        Since 2.2 it is only required if api_key is not supplied.
+        [Default: (null)]
+
+= subject
+        the desired subject for the email
+
+
+= to_addresses
+        a list with one or more recipient email addresses
+
+
+- username
+        username for logging into the SendGrid account.
+        Since 2.2 it is only required if api_key is not supplied.
+        [Default: (null)]
+
+
+NOTES:
+      * This module is non-idempotent because it sends an email through the external API. It is idempotent only in the case that
+        the module fails.
+      * Like the other notification modules, this one requires an external dependency to work. In this case, you'll need an active
+        SendGrid account.
+      * In order to use api_key, cc, bcc, attachments, from_name, html_body, headers you must pip install sendgrid
+      * since 2.2 username and password are not required if you supply an api_key
+
+
+REQUIREMENTS:  sendgrid python library
+
+AUTHOR: Matt Makai (@makaimc)
+        METADATA:
+          status:
+          - preview
+          supported_by: community
+        
+
+EXAMPLES:
+
+# send an email to a single recipient that the deployment was successful
+- sendgrid:
+    username: "{{ sendgrid_username }}"
+    password: "{{ sendgrid_password }}"
+    from_address: "ansible@mycompany.com"
+    to_addresses:
+      - "ops@mycompany.com"
+    subject: "Deployment success."
+    body: "The most recent Ansible deployment was successful."
+  delegate_to: localhost
+
+# send an email to more than one recipient that the build failed
+- sendgrid:
+      username: "{{ sendgrid_username }}"
+      password: "{{ sendgrid_password }}"
+      from_address: "build@mycompany.com"
+      to_addresses:
+        - "ops@mycompany.com"
+        - "devteam@mycompany.com"
+      subject: "Build failure!."
+      body: "Unable to pull source repository from Git server."
+  delegate_to: localhost
+
+

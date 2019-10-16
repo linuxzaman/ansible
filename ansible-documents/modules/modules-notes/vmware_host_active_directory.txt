@@ -1,0 +1,134 @@
+> VMWARE_HOST_ACTIVE_DIRECTORY    (/usr/lib/python2.7/dist-packages/ansible/modules/cloud/vmware/vmware_host_active_directory.py)
+
+        This module can be used to join or leave an ESXi host to or from an Active Directory domain.
+
+  * This module is maintained by The Ansible Community
+OPTIONS (= is mandatory):
+
+- ad_domain
+        AD Domain to join.
+        (Aliases: domain, domain_name)[Default: (null)]
+        type: str
+
+- ad_password
+        Password for AD domain join.
+        [Default: (null)]
+        type: str
+
+- ad_state
+        Wheter the ESXi host is joined to an AD domain or not.
+        (Aliases: state)(Choices: present, absent)[Default: absent]
+        type: str
+
+- ad_user
+        Username for AD domain join.
+        [Default: (null)]
+        type: str
+
+- cluster_name
+        Name of the cluster from which all host systems will be used.
+        This parameter is required if `esxi_hostname' is not specified.
+        [Default: (null)]
+        type: str
+
+- esxi_hostname
+        Name of the host system to work with.
+        This parameter is required if `cluster_name' is not specified.
+        [Default: (null)]
+        type: str
+
+- hostname
+        The hostname or IP address of the vSphere vCenter or ESXi server.
+        If the value is not specified in the task, the value of environment variable `VMWARE_HOST' will be used instead.
+        Environment variable support added in Ansible 2.6.
+        [Default: (null)]
+        type: str
+
+- password
+        The password of the vSphere vCenter or ESXi server.
+        If the value is not specified in the task, the value of environment variable `VMWARE_PASSWORD' will be used instead.
+        Environment variable support added in Ansible 2.6.
+        (Aliases: pass, pwd)[Default: (null)]
+        type: str
+
+- port
+        The port number of the vSphere vCenter or ESXi server.
+        If the value is not specified in the task, the value of environment variable `VMWARE_PORT' will be used instead.
+        Environment variable support added in Ansible 2.6.
+        [Default: 443]
+        type: int
+        version_added: 2.5
+
+- username
+        The username of the vSphere vCenter or ESXi server.
+        If the value is not specified in the task, the value of environment variable `VMWARE_USER' will be used instead.
+        Environment variable support added in Ansible 2.6.
+        (Aliases: admin, user)[Default: (null)]
+        type: str
+
+- validate_certs
+        Allows connection when SSL certificates are not valid. Set to `false' when certificates are not trusted.
+        If the value is not specified in the task, the value of environment variable `VMWARE_VALIDATE_CERTS' will be used instead.
+        Environment variable support added in Ansible 2.6.
+        If set to `yes', please make sure Python >= 2.7.9 is installed on the given machine.
+        [Default: True]
+        type: bool
+
+
+NOTES:
+      * Tested on vSphere 6.5
+
+
+REQUIREMENTS:  python >= 2.6, PyVmomi
+
+AUTHOR: Christian Kotte (@ckotte)
+        METADATA:
+          status:
+          - preview
+          supported_by: community
+        
+
+EXAMPLES:
+
+- name: Join an AD domain
+  vmware_host_active_directory:
+    hostname: '{{ vcenter_hostname }}'
+    username: '{{ vcenter_username }}'
+    password: '{{ vcenter_password }}'
+    esxi_hostname: '{{ esxi_hostname }}'
+    ad_domain: example.local
+    ad_user: adjoin
+    ad_password: Password123$
+    ad_state: present
+    validate_certs: no
+  delegate_to: localhost
+
+- name: Leave AD domain
+  vmware_host_active_directory:
+    hostname: '{{ vcenter_hostname }}'
+    username: '{{ vcenter_username }}'
+    password: '{{ vcenter_password }}'
+    esxi_hostname: '{{ esxi_hostname }}'
+    ad_state: absent
+    validate_certs: no
+  delegate_to: localhost
+
+
+RETURN VALUES:
+
+results:
+    description: metadata about host system's AD domain join state
+    returned: always
+    type: dict
+    sample: {
+        "esxi01": {
+            "changed": true,
+            "domain": "example.local",
+            "membership_state": "ok",
+            "msg": "Host joined to AD domain",
+            "ad_state": "present",
+            "ad_state_current": "present",
+            "ad_state_previous": "absent",
+        },
+    }
+

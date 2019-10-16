@@ -1,0 +1,60 @@
+EXAMPLES:
+
+- name: Enable and configure SNMP community
+  vmware_host_snmp:
+    hostname: '{{ esxi_hostname }}'
+    username: '{{ esxi_username }}'
+    password: '{{ esxi_password }}'
+    community: [ test ]
+    state: enabled
+    validate_certs: no
+  delegate_to: localhost
+
+- name: Configure SNMP traps and filters
+  vmware_host_snmp:
+    hostname: '{{ esxi_hostname }}'
+    username: '{{ esxi_username }}'
+    password: '{{ esxi_password }}'
+    community: [ test ]
+    trap_targets:
+      - hostname: 192.168.1.100
+        port: 162
+        community: test123
+      - hostname: 192.168.1.101
+        port: 162
+        community: test1234
+    trap_filter:
+      - 1.3.6.1.4.1.6876.4.1.1.0
+      - 1.3.6.1.4.1.6876.4.1.1.1
+    state: enabled
+    validate_certs: no
+  delegate_to: localhost
+
+- name: Disable SNMP
+  vmware_host_snmp:
+    hostname: '{{ esxi_hostname }}'
+    username: '{{ esxi_username }}'
+    password: '{{ esxi_password }}'
+    state: disabled
+    validate_certs: no
+  delegate_to: localhost
+
+
+RETURN VALUES:
+
+results:
+    description: metadata about host system's SNMP configuration
+    returned: always
+    type: dict
+    sample: {
+        "esxi01": {
+            "changed": false,
+            "community": ["test"],
+            "hw_source": "indications",
+            "msg": "SNMP already configured properly",
+            "port": 161,
+            "state": "enabled",
+            "trap_targets": []
+        },
+    }
+

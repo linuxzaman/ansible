@@ -1,0 +1,106 @@
+> FRR_FACTS    (/usr/lib/python2.7/dist-packages/ansible/modules/network/frr/frr_facts.py)
+
+        Collects a base set of device facts from a remote device that is running FRR.  This module prepends all of the base network fact
+        keys with `ansible_net_<fact>'.  The facts module will always collect a base set of facts from the device and can enable or
+        disable collection of additional facts.
+
+  * This module is maintained by The Ansible Network Team
+OPTIONS (= is mandatory):
+
+- gather_subset
+        When supplied, this argument restricts the facts collected to a given subset.
+        Possible values for this argument include `all', `hardware', `config', and `interfaces'.
+        Specify a list of values to include a larger subset.
+        Use a value with an initial `!' to collect all facts except that subset.
+        [Default: !config]
+
+
+NOTES:
+      * Tested against FRR 6.0.
+
+
+AUTHOR: Nilashish Chakraborty (@nilashishc)
+        METADATA:
+          status:
+          - preview
+          supported_by: network
+        
+
+EXAMPLES:
+
+- name: Collect all facts from the device
+  frr_facts:
+    gather_subset: all
+
+- name: Collect only the config and default facts
+  frr_facts:
+    gather_subset:
+      - config
+
+- name: Collect the config and hardware facts
+  frr_facts:
+    gather_subset:
+      - config
+      - hardware
+
+- name: Do not collect hardware facts
+  frr_facts:
+    gather_subset:
+      - "!hardware"
+
+
+RETURN VALUES:
+
+ansible_net_gather_subset:
+  description: The list of fact subsets collected from the device
+  returned: always
+  type: list
+
+# default
+ansible_net_hostname:
+  description: The configured hostname of the device
+  returned: always
+  type: str
+ansible_net_version:
+  description: The FRR version running on the remote device
+  returned: always
+  type: str
+ansible_net_api:
+  description: The name of the transport
+  returned: always
+  type: str
+ansible_net_python_version:
+  description: The Python version that the Ansible controller is using
+  returned: always
+  type: str
+
+# hardware
+ansible_net_mem_stats:
+  description: The memory statistics fetched from the device
+  returned: when hardware is configured
+  type: dict
+
+# config
+ansible_net_config:
+  description: The current active config from the device
+  returned: when config is configured
+  type: str
+
+# interfaces
+ansible_net_all_ipv4_addresses:
+  description: All IPv4 addresses configured on the device
+  returned: when interfaces is configured
+  type: list
+ansible_net_all_ipv6_addresses:
+  description: All IPv6 addresses configured on the device
+  returned: when interfaces is configured
+  type: list
+ansible_net_interfaces:
+  description: A hash of all interfaces running on the system
+  returned: when interfaces is configured
+  type: dict
+ansible_net_mpls_ldp_neighbors:
+  description: The list of MPLS LDP neighbors from the remote device
+  returned: when interfaces is configured and LDP daemon is running on the device
+  type: dict
+

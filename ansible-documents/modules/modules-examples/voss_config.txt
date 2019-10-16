@@ -1,0 +1,54 @@
+EXAMPLES:
+
+- name: configure system name
+  voss_config:
+    lines: prompt "{{ inventory_hostname }}"
+
+- name: configure interface settings
+  voss_config:
+    lines:
+      - name "ServerA"
+    backup: yes
+    parents: interface GigabitEthernet 1/1
+
+- name: check the running-config against master config
+  voss_config:
+    diff_against: intended
+    intended_config: "{{ lookup('file', 'master.cfg') }}"
+
+- name: check the startup-config against the running-config
+  voss_config:
+    diff_against: startup
+    diff_ignore_lines:
+      - qos queue-profile .*
+
+- name: save running to startup when modified
+  voss_config:
+    save_when: modified
+
+- name: configurable backup path
+  voss_config:
+    backup: yes
+    backup_options:
+      filename: backup.cfg
+      dir_path: /home/user
+
+
+RETURN VALUES:
+
+updates:
+  description: The set of commands that will be pushed to the remote device
+  returned: always
+  type: list
+  sample: ['prompt "VSP200"']
+commands:
+  description: The set of commands that will be pushed to the remote device
+  returned: always
+  type: list
+  sample: ['interface GigabitEthernet 1/1', 'name "ServerA"', 'exit']
+backup_path:
+  description: The full path to the backup file
+  returned: when backup is yes
+  type: str
+  sample: /playbooks/ansible/backup/vsp200_config.2018-08-21@15:00:21
+

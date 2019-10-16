@@ -1,0 +1,69 @@
+> PN_DSCP_MAP    (/usr/lib/python2.7/dist-packages/ansible/modules/network/netvisor/pn_dscp_map.py)
+
+        This module can be used to create a DSCP priority mapping table.
+
+  * This module is maintained by The Ansible Community
+OPTIONS (= is mandatory):
+
+- pn_cliswitch
+        Target switch to run the CLI on.
+        [Default: (null)]
+        type: str
+
+- pn_name
+        Name for the DSCP map.
+        [Default: (null)]
+        type: str
+
+- pn_scope
+        Scope for dscp map.
+        (Choices: local, fabric)[Default: (null)]
+
+= state
+        State the action to perform. Use `present' to create dscp-map and `absent' to delete.
+        (Choices: present, absent)
+        type: str
+
+
+AUTHOR: Pluribus Networks (@rajaspachipulusu17)
+        METADATA:
+          status:
+          - preview
+          supported_by: community
+        
+
+EXAMPLES:
+
+- name: dscp map create
+  pn_dscp_map:
+    pn_cliswitch: "sw01"
+    state: "present"
+    pn_name: "foo"
+    pn_scope: "local"
+
+- name: dscp map delete
+  pn_dscp_map:
+    pn_cliswitch: "sw01"
+    state: "absent"
+    pn_name: "foo"
+
+
+RETURN VALUES:
+
+command:
+  description: the CLI command run on the target node.
+  returned: always
+  type: str
+stdout:
+  description: set of responses from the dscp-map command.
+  returned: always
+  type: list
+stderr:
+  description: set of error responses from the dscp-map command.
+  returned: on error
+  type: list
+changed:
+  description: indicates whether the CLI caused changes on the target.
+  returned: always
+  type: bool
+

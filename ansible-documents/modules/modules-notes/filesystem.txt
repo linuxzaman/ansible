@@ -1,0 +1,70 @@
+> FILESYSTEM    (/usr/lib/python2.7/dist-packages/ansible/modules/system/filesystem.py)
+
+        This module creates a filesystem.
+
+  * This module is maintained by The Ansible Community
+OPTIONS (= is mandatory):
+
+= dev
+        Target path to device or image file.
+        (Aliases: device)
+
+- force
+        If `yes', allows to create new filesystem on devices that already has filesystem.
+        [Default: no]
+        type: bool
+
+= fstype
+        Filesystem type to be created.
+        reiserfs support was added in 2.2.
+        lvm support was added in 2.5.
+        since 2.5, `dev' can be an image file.
+        vfat support was added in 2.5
+        ocfs2 support was added in 2.6
+        f2fs support was added in 2.7
+        swap support was added in 2.8
+        (Aliases: type)(Choices: btrfs, ext2, ext3, ext4, ext4dev, f2fs, lvm, ocfs2, reiserfs, xfs, vfat, swap)
+
+- opts
+        List of options to be passed to mkfs command.
+        [Default: (null)]
+
+- resizefs
+        If `yes', if the block device and filesystem size differ, grow the filesystem into the space.
+        Supported for `ext2', `ext3', `ext4', `ext4dev', `f2fs', `lvm', `xfs', `vfat', `swap' filesystems.
+        XFS Will only grow if mounted.
+        vFAT will likely fail if fatresize < 1.04.
+        [Default: no]
+        type: bool
+        version_added: 2.0
+
+
+NOTES:
+      * Potential filesystem on `dev' are checked using `blkid', in case `blkid' isn't able to detect an existing filesystem, this
+        filesystem is overwritten even if `force' is `no'.
+
+
+REQUIREMENTS:  Uses tools related to the `fstype' (`mkfs') and `blkid' command. When `resizefs' is enabled, `blockdev' command is
+        required too.
+
+AUTHOR: Alexander Bulimov (@abulimov)
+        METADATA:
+          status:
+          - preview
+          supported_by: community
+        
+
+EXAMPLES:
+
+- name: Create a ext2 filesystem on /dev/sdb1
+  filesystem:
+    fstype: ext2
+    dev: /dev/sdb1
+
+- name: Create a ext4 filesystem on /dev/sdb1 and check disk blocks
+  filesystem:
+    fstype: ext4
+    dev: /dev/sdb1
+    opts: -cc
+
+

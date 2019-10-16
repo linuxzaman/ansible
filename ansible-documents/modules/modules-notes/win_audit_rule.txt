@@ -1,0 +1,134 @@
+> WIN_AUDIT_RULE    (/usr/lib/python2.7/dist-packages/ansible/modules/windows/win_audit_rule.py)
+
+        Used to apply audit rules to files, folders or registry keys. Once applied, it will begin recording the user who performed the
+        operation defined into the Security Log in the Event viewer. The behavior is designed to ignore inherited rules since those
+        cannot be adjusted without first disabling the inheritance behavior. It will still print inherited rules in the output though for
+        debugging purposes.
+
+  * This module is maintained by The Ansible Community
+OPTIONS (= is mandatory):
+
+= audit_flags
+        Defines whether to log on failure, success, or both.
+        To log both define as comma separated list "Success, Failure".
+        (Choices: Failure, Success)
+        type: list
+
+- inheritance_flags
+        Defines what objects inside of a folder or registry key will inherit the settings.
+        If you are setting a rule on a file, this value has to be changed to `none'.
+        For more information on the choices see MSDN PropagationFlags enumeration at https://msdn.microsoft.com/en-
+        us/library/system.security.accesscontrol.inheritanceflags.aspx.
+        (Choices: ContainerInherit, ObjectInherit)[Default: ContainerInherit,ObjectInherit]
+        type: list
+
+= path
+        Path to the file, folder, or registry key.
+        Registry paths should be in Powershell format, beginning with an abbreviation for the root such as, `HKLM:\Software'.
+        (Aliases: dest, destination)
+        type: path
+
+- propagation_flags
+        Propagation flag on the audit rules.
+        This value is ignored when the path type is a file.
+        For more information on the choices see MSDN PropagationFlags enumeration at https://msdn.microsoft.com/en-
+        us/library/system.security.accesscontrol.propagationflags.aspx.
+        (Choices: None, InherityOnly, NoPropagateInherit)[Default: None]
+
+= rights
+        Comma separated list of the rights desired. Only required for adding a rule.
+        If `path' is a file or directory, rights can be any right under MSDN FileSystemRights https://msdn.microsoft.com/en-
+        us/library/system.security.accesscontrol.filesystemrights.aspx.
+        If `path' is a registry key, rights can be any right under MSDN RegistryRights https://msdn.microsoft.com/en-
+        us/library/system.security.accesscontrol.registryrights.aspx.
+
+        type: list
+
+- state
+        Whether the rule should be `present' or `absent'.
+        For absent, only `path', `user', and `state' are required.
+        Specifying `absent' will remove all rules matching the defined `user'.
+        (Choices: absent, present)[Default: present]
+        type: str
+
+= user
+        The user or group to adjust rules for.
+
+        type: str
+
+
+SEE ALSO:
+      * Module win_audit_policy_system
+           The official documentation on the win_audit_policy_system module.
+           https://docs.ansible.com/ansible/latest/modules/win_audit_policy_system_module.html
+
+
+AUTHOR: Noah Sparks (@nwsparks)
+        METADATA:
+          status:
+          - preview
+          supported_by: community
+        
+
+EXAMPLES:
+
+- name: Add filesystem audit rule for a folder
+  win_audit_rule:
+    path: C:\inetpub\wwwroot\website
+    user: BUILTIN\Users
+    rights: write,delete,changepermissions
+    audit_flags: success,failure
+    inheritance_flags: ContainerInherit,ObjectInherit
+
+- name: Add filesystem audit rule for a file
+  win_audit_rule:
+    path: C:\inetpub\wwwroot\website\web.config
+    user: BUILTIN\Users
+    rights: write,delete,changepermissions
+    audit_flags: success,failure
+    inheritance_flags: None
+
+- name: Add registry audit rule
+  win_audit_rule:
+    path: HKLM:\software
+    user: BUILTIN\Users
+    rights: delete
+    audit_flags: 'success'
+
+- name: Remove filesystem audit rule
+  win_audit_rule:
+    path: C:\inetpub\wwwroot\website
+    user: BUILTIN\Users
+    state: absent
+
+- name: Remove registry audit rule
+  win_audit_rule:
+    path: HKLM:\software
+    user: BUILTIN\Users
+    state: absent
+
+
+RETURN VALUES:
+
+current_audit_rules:
+  description:
+    - The current rules on the defined I(path)
+    - Will return "No audit rules defined on I(path)"
+  returned: always
+  type: dict
+  sample: |
+    {
+      "audit_flags": "Success",
+      "user": "Everyone",
+      "inheritance_flags": "False",
+      "is_inherited": "False",
+      "propagation_flags": "None",
+      "rights": "Delete"
+    }
+path_type:
+  description:
+    - The type of I(path) being targetted.
+    - Will be one of file, directory, registry.
+  returned: always
+  type: str
+

@@ -1,0 +1,118 @@
+> VMWARE_EXPORT_OVF    (/usr/lib/python2.7/dist-packages/ansible/modules/cloud/vmware/vmware_export_ovf.py)
+
+        This module can be used to export a VMware virtual machine to OVF template from vCenter server or ESXi host.
+
+  * This module is maintained by The Ansible Community
+OPTIONS (= is mandatory):
+
+- datacenter
+        Datacenter name of the virtual machine to export.
+        This parameter is case sensitive.
+        [Default: ha-datacenter]
+
+= export_dir
+        Absolute path to place the exported files on the server running this task, must have write permission.
+        If folder not exist will create it, also create a folder under this path named with VM name.
+
+
+- export_with_images
+        Export an ISO image of the media mounted on the CD/DVD Drive within the virtual machine.
+        [Default: False]
+        type: bool
+
+- folder
+        Destination folder, absolute path to find the specified guest.
+        The folder should include the datacenter. ESX's datacenter is ha-datacenter.
+        This parameter is case sensitive.
+        If multiple machines are found with same name, this parameter is used to identify uniqueness of the virtual machine.
+        version_added 2.5
+        Examples:
+           folder: /ha-datacenter/vm
+           folder: ha-datacenter/vm
+           folder: /datacenter1/vm
+           folder: datacenter1/vm
+           folder: /datacenter1/vm/folder1
+           folder: datacenter1/vm/folder1
+           folder: /folder1/datacenter1/vm
+           folder: folder1/datacenter1/vm
+           folder: /folder1/datacenter1/vm/folder2
+        [Default: (null)]
+
+- hostname
+        The hostname or IP address of the vSphere vCenter or ESXi server.
+        If the value is not specified in the task, the value of environment variable `VMWARE_HOST' will be used instead.
+        Environment variable support added in Ansible 2.6.
+        [Default: (null)]
+        type: str
+
+- name
+        Name of the virtual machine to export.
+        This is a required parameter, if parameter `uuid' is not supplied.
+        [Default: (null)]
+
+- password
+        The password of the vSphere vCenter or ESXi server.
+        If the value is not specified in the task, the value of environment variable `VMWARE_PASSWORD' will be used instead.
+        Environment variable support added in Ansible 2.6.
+        (Aliases: pass, pwd)[Default: (null)]
+        type: str
+
+- port
+        The port number of the vSphere vCenter or ESXi server.
+        If the value is not specified in the task, the value of environment variable `VMWARE_PORT' will be used instead.
+        Environment variable support added in Ansible 2.6.
+        [Default: 443]
+        type: int
+        version_added: 2.5
+
+- username
+        The username of the vSphere vCenter or ESXi server.
+        If the value is not specified in the task, the value of environment variable `VMWARE_USER' will be used instead.
+        Environment variable support added in Ansible 2.6.
+        (Aliases: admin, user)[Default: (null)]
+        type: str
+
+- uuid
+        Uuid of the virtual machine to export.
+        This is a required parameter, if parameter `name' is not supplied.
+        [Default: (null)]
+
+- validate_certs
+        Allows connection when SSL certificates are not valid. Set to `false' when certificates are not trusted.
+        If the value is not specified in the task, the value of environment variable `VMWARE_VALIDATE_CERTS' will be used instead.
+        Environment variable support added in Ansible 2.6.
+        If set to `yes', please make sure Python >= 2.7.9 is installed on the given machine.
+        [Default: True]
+        type: bool
+
+
+REQUIREMENTS:  python >= 2.6, PyVmomi
+
+AUTHOR: Diane Wang (@Tomorrow9) <dianew@vmware.com>
+        METADATA:
+          status:
+          - preview
+          supported_by: community
+        
+
+EXAMPLES:
+
+- vmware_export_ovf:
+    validate_certs: false
+    hostname: '{{ vcenter_hostname }}'
+    username: '{{ vcenter_username }}'
+    password: '{{ vcenter_password }}'
+    name: '{{ vm_name }}'
+    export_with_images: true
+    export_dir: /path/to/ovf_template/
+  delegate_to: localhost
+
+
+RETURN VALUES:
+
+instance:
+    description: list of the exported files, if exported from vCenter server, device file is not named with vm name
+    returned: always
+    type: dict
+    sample: None
+

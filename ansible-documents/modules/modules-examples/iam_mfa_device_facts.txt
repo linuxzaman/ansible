@@ -1,0 +1,30 @@
+EXAMPLES:
+
+# Note: These examples do not set authentication details, see the AWS Guide for details.
+
+# List MFA devices (more details: https://docs.aws.amazon.com/IAM/latest/APIReference/API_ListMFADevices.html)
+- iam_mfa_device_facts:
+  register: mfa_devices
+
+# Assume an existing role (more details: https://docs.aws.amazon.com/STS/latest/APIReference/API_AssumeRole.html)
+- sts_assume_role:
+    mfa_serial_number: "{{ mfa_devices.mfa_devices[0].serial_number }}"
+    role_arn: "arn:aws:iam::123456789012:role/someRole"
+    role_session_name: "someRoleSession"
+  register: assumed_role
+
+
+RETURN VALUES:
+
+mfa_devices:
+    description: The MFA devices registered for the given user
+    returned: always
+    type: list
+    sample:
+      - enable_date: "2016-03-11T23:25:36+00:00"
+        serial_number: arn:aws:iam::085120003701:mfa/pwnall
+        user_name: pwnall
+      - enable_date: "2016-03-11T23:25:37+00:00"
+        serial_number: arn:aws:iam::085120003702:mfa/pwnall
+        user_name: pwnall
+

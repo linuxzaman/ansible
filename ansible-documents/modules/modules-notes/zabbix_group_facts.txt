@@ -1,0 +1,83 @@
+> ZABBIX_GROUP_FACTS    (/usr/lib/python2.7/dist-packages/ansible/modules/monitoring/zabbix/zabbix_group_facts.py)
+
+        This module allows you to search for Zabbix hostgroup entries.
+
+  * This module is maintained by The Ansible Community
+OPTIONS (= is mandatory):
+
+= hostgroup_name
+        Name of the hostgroup in Zabbix.
+        hostgroup is the unique identifier used and cannot be updated using this module.
+
+
+- http_login_password
+        Basic Auth password
+        [Default: (null)]
+        type: str
+        version_added: 2.1
+
+= http_login_user
+        Basic Auth login
+
+        type: str
+        version_added: 2.1
+
+= login_password
+        Zabbix user password.
+
+        type: str
+
+= login_user
+        Zabbix user name.
+
+        type: str
+
+= server_url
+        URL of Zabbix server, with protocol (http or https). `url' is an alias for `server_url'.
+        (Aliases: url)
+        type: str
+
+- timeout
+        The timeout of API request (seconds).
+        [Default: 10]
+        type: int
+
+- validate_certs
+        If set to False, SSL certificates will not be validated. This should only be used on personally controlled sites using self-
+        signed certificates.
+        [Default: True]
+        type: bool
+        version_added: 2.5
+
+
+REQUIREMENTS:  python >= 2.6, zabbix-api
+
+AUTHOR: Michael Miko (@RedWhiteMiko)
+        METADATA:
+          status:
+          - preview
+          supported_by: community
+        
+
+EXAMPLES:
+
+- name: Get hostgroup info
+  local_action:
+    module: zabbix_group_facts
+    server_url: http://monitor.example.com
+    login_user: username
+    login_password: password
+    hostgroup_name:
+      - ExampleHostgroup
+    timeout: 10
+
+
+RETURN VALUES:
+
+---
+host_groups:
+  description: List of Zabbix groups.
+  returned: success
+  type: dict
+  sample: [ { "flags": "0", "groupid": "33", "internal": "0", "name": "Hostgruup A" } ]
+

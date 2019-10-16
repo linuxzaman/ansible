@@ -1,0 +1,51 @@
+EXAMPLES:
+
+- name: Gather feature capability facts about all ESXi Hosts in given Cluster
+  vmware_host_feature_facts:
+    hostname: '{{ vcenter_hostname }}'
+    username: '{{ vcenter_username }}'
+    password: '{{ vcenter_password }}'
+    cluster_name: cluster_name
+  delegate_to: localhost
+  register: all_cluster_hosts_facts
+
+- name: Check if ESXi is vulnerable for Speculative Store Bypass Disable (SSBD) vulnerability
+  vmware_host_feature_facts:
+    hostname: "{{ vcenter_server }}"
+    username: "{{ vcenter_user }}"
+    password: "{{ vcenter_pass }}"
+    validate_certs: no
+    esxi_hostname: "{{ esxi_hostname }}"
+  register: features_set
+- set_fact:
+    ssbd : "{{ item.value }}"
+  loop: "{{ features_set.host_feature_facts[esxi_hostname] |json_query(name) }}"
+  vars:
+    name: "[?key=='cpuid.SSBD']"
+- assert:
+    that:
+      - ssbd|int == 1
+  when: ssbd is defined
+
+
+RETURN VALUES:
+
+hosts_feature_facts:
+    description: metadata about host's feature capability information
+    returned: always
+    type: dict
+    sample: {
+        "10.76.33.226": [
+            {
+                "feature_name": "cpuid.3DNOW",
+                "key": "cpuid.3DNOW",
+                "value": "0"
+            },
+            {
+                "feature_name": "cpuid.3DNOWPLUS",
+                "key": "cpuid.3DNOWPLUS",
+                "value": "0"
+            },
+        ]
+    }
+

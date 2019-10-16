@@ -1,0 +1,91 @@
+EXAMPLES:
+
+- name: static route module test
+  hosts: cloudengine
+  connection: local
+  gather_facts: no
+  vars:
+    cli:
+      host: "{{ inventory_hostname }}"
+      port: "{{ ansible_ssh_port }}"
+      username: "{{ username }}"
+      password: "{{ password }}"
+      transport: cli
+
+  tasks:
+
+  - name: Config a ipv4 static route, next hop is an address and that it has the proper description
+    ce_static_route:
+      prefix: 2.1.1.2
+      mask: 24
+      next_hop: 3.1.1.2
+      description: 'Configured by Ansible'
+      aftype: v4
+      provider: "{{ cli }}"
+  - name: Config a ipv4 static route ,next hop is an interface and that it has the proper description
+    ce_static_route:
+      prefix: 2.1.1.2
+      mask: 24
+      next_hop: 10GE1/0/1
+      description: 'Configured by Ansible'
+      aftype: v4
+      provider: "{{ cli }}"
+  - name: Config a ipv6 static route, next hop is an address and that it has the proper description
+    ce_static_route:
+      prefix: fc00:0:0:2001::1
+      mask: 64
+      next_hop: fc00:0:0:2004::1
+      description: 'Configured by Ansible'
+      aftype: v6
+      provider: "{{ cli }}"
+  - name: Config a ipv4 static route, next hop is an interface and that it has the proper description
+    ce_static_route:
+      prefix: fc00:0:0:2001::1
+      mask: 64
+      next_hop: 10GE1/0/1
+      description: 'Configured by Ansible'
+      aftype: v6
+      provider: "{{ cli }}"
+  - name: Config a VRF and set ipv4 static route, next hop is an address and that it has the proper description
+    ce_static_route:
+      vrf: vpna
+      prefix: 2.1.1.2
+      mask: 24
+      next_hop: 3.1.1.2
+      description: 'Configured by Ansible'
+      aftype: v4
+      provider: "{{ cli }}"
+
+
+RETURN VALUES:
+
+proposed:
+    description: k/v pairs of parameters passed into module
+    returned: always
+    type: dict
+    sample: {"next_hop": "3.3.3.3", "pref": "100",
+            "prefix": "192.168.20.642", "mask": "24", "description": "testing",
+            "vrf": "_public_"}
+existing:
+    description: k/v pairs of existing switchport
+    returned: always
+    type: dict
+    sample: {}
+end_state:
+    description: k/v pairs of switchport after module execution
+    returned: always
+    type: dict
+    sample: {"next_hop": "3.3.3.3", "pref": "100",
+            "prefix": "192.168.20.0", "mask": "24", "description": "testing",
+            "tag" : "null"}
+updates:
+    description: command list sent to the device
+    returned: always
+    type: list
+    sample: ["ip route-static 192.168.20.0 255.255.255.0 3.3.3.3 preference 100 description testing"]
+changed:
+    description: check to see if a change was made on the device
+    returned: always
+    type: bool
+    sample: true
+

@@ -1,0 +1,21 @@
+EXAMPLES:
+
+# Examples don't contain auth parameter for simplicity,
+# look at ovirt_auth module to see how to reuse authentication:
+
+# Gather facts about all snapshots which description start with C(update) for VM named C(centos7):
+- ovirt_snapshot_facts:
+    vm: centos7
+    description: update*
+- debug:
+    var: ovirt_snapshots
+
+
+RETURN VALUES:
+
+ovirt_snapshots:
+    description: "List of dictionaries describing the snapshot. Snapshot attributes are mapped to dictionary keys,
+                  all snapshot attributes can be found at following url: http://ovirt.github.io/ovirt-engine-api-model/master/#types/snapshot."
+    returned: On success.
+    type: list
+

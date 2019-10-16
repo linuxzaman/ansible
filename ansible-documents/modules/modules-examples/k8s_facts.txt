@@ -1,0 +1,65 @@
+EXAMPLES:
+
+- name: Get an existing Service object
+  k8s_facts:
+    api_version: v1
+    kind: Service
+    name: web
+    namespace: testing
+  register: web_service
+
+- name: Get a list of all service objects
+  k8s_facts:
+    api_version: v1
+    kind: Service
+    namespace: testing
+  register: service_list
+
+- name: Get a list of all pods from any namespace
+  k8s_facts:
+    kind: Pod
+  register: pod_list
+
+- name: Search for all Pods labelled app=web
+  k8s_facts:
+    kind: Pod
+    label_selectors:
+      - app = web
+      - tier in (dev, test)
+
+- name: Search for all running pods
+  k8s_facts:
+    kind: Pod
+    field_selectors:
+      - status.phase = running
+
+
+RETURN VALUES:
+
+resources:
+  description:
+  - The object(s) that exists
+  returned: success
+  type: complex
+  contains:
+    api_version:
+      description: The versioned schema of this representation of an object.
+      returned: success
+      type: str
+    kind:
+      description: Represents the REST resource this object represents.
+      returned: success
+      type: str
+    metadata:
+      description: Standard object metadata. Includes name, namespace, annotations, labels, etc.
+      returned: success
+      type: dict
+    spec:
+      description: Specific attributes of the object. Will vary based on the I(api_version) and I(kind).
+      returned: success
+      type: dict
+    status:
+      description: Current status details for the object.
+      returned: success
+      type: dict
+

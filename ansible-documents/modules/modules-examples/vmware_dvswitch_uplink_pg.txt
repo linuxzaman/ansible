@@ -1,0 +1,62 @@
+EXAMPLES:
+
+- name: Configure Uplink portgroup
+  vmware_dvswitch_uplink_pg:
+    hostname: '{{ inventory_hostname }}'
+    username: '{{ vcsa_username }}'
+    password: '{{ vcsa_password }}'
+    switch: dvSwitch
+    name: dvSwitch-DVUplinks
+    advanced:
+      port_config_reset_at_disconnect: True
+      block_override: True
+      vendor_config_override: False
+      vlan_override: False
+      netflow_override: False
+      traffic_filter_override: False
+    vlan_trunk_range:
+      - '0-4094'
+    netflow_enabled: False
+    block_all_ports: False
+  delegate_to: localhost
+
+- name: Enabled LACP on Uplink portgroup
+  vmware_dvswitch_uplink_pg:
+    hostname: '{{ inventory_hostname }}'
+    username: '{{ vcsa_username }}'
+    password: '{{ vcsa_password }}'
+    switch: dvSwitch
+    lacp:
+      status: enabled
+      mode: active
+  delegate_to: localhost
+
+
+RETURN VALUES:
+
+result:
+    description: information about performed operation
+    returned: always
+    type: str
+    sample: {
+        "adv_block_ports": true,
+        "adv_netflow": false,
+        "adv_reset_at_disconnect": true,
+        "adv_traffic_filtering": false,
+        "adv_vendor_conf": false,
+        "adv_vlan": false,
+        "block_all_ports": false,
+        "changed": false,
+        "description": null,
+        "dvswitch": "dvSwitch",
+        "lacp_status": "disabled",
+        "lacp_status_previous": "enabled",
+        "name": "dvSwitch-DVUplinks",
+        "netflow_enabled": false,
+        "result": "Uplink portgroup already configured properly",
+        "vlan_trunk_range": [
+            "2-3967",
+            "4049-4092"
+        ]
+    }
+

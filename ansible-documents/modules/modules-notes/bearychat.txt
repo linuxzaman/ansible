@@ -1,0 +1,71 @@
+> BEARYCHAT    (/usr/lib/python2.7/dist-packages/ansible/modules/notification/bearychat.py)
+
+        The [bearychat] module sends notifications to https://bearychat.com via the Incoming Robot integration.
+
+  * This module is maintained by The Ansible Community
+OPTIONS (= is mandatory):
+
+- attachments
+        Define a list of attachments. For more information, see https://github.com/bearyinnovative/bearychat-
+        tutorial/blob/master/robots/incoming.md#attachments
+        [Default: (null)]
+
+- channel
+        Channel to send the message to. If absent, the message goes to the default channel selected by the `url'.
+        [Default: (null)]
+
+- markdown
+        If `yes', text will be parsed as markdown.
+        [Default: yes]
+        type: bool
+
+- text
+        Message to send.
+        [Default: (null)]
+
+= url
+        BearyChat WebHook URL. This authenticates you to the bearychat service. It looks like
+        `https://hook.bearychat.com/=ae2CF/incoming/e61bd5c57b164e04b11ac02e66f47f60'.
+
+
+
+AUTHOR: Jiangge Zhang (@tonyseek)
+        METADATA:
+          status:
+          - stableinterface
+          supported_by: community
+        
+
+EXAMPLES:
+
+- name: Send notification message via BearyChat
+  local_action:
+    module: bearychat
+    url: |
+      https://hook.bearychat.com/=ae2CF/incoming/e61bd5c57b164e04b11ac02e66f47f60
+    text: "{{ inventory_hostname }} completed"
+
+- name: Send notification message via BearyChat all options
+  local_action:
+    module: bearychat
+    url: |
+      https://hook.bearychat.com/=ae2CF/incoming/e61bd5c57b164e04b11ac02e66f47f60
+    text: "{{ inventory_hostname }} completed"
+    markdown: no
+    channel: "#ansible"
+    attachments:
+      - title: "Ansible on {{ inventory_hostname }}"
+        text: "May the Force be with you."
+        color: "#ffffff"
+        images:
+          - http://example.com/index.png
+
+
+RETURN VALUES:
+
+msg:
+    description: execution result
+    returned: success
+    type: str
+    sample: "OK"
+

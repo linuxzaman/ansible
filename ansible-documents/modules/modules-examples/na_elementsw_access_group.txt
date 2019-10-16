@@ -1,0 +1,49 @@
+EXAMPLES:
+
+- name: Create Access Group
+     na_elementsw_access_group:
+       hostname: "{{ elementsw_hostname }}"
+       username: "{{ elementsw_username }}"
+       password: "{{ elementsw_password }}"
+       state: present
+       name: AnsibleAccessGroup
+       volumes: [7,8]
+       account_id: 1
+
+   - name: Modify Access Group
+     na_elementsw_access_group:
+       hostname: "{{ elementsw_hostname }}"
+       username: "{{ elementsw_username }}"
+       password: "{{ elementsw_password }}"
+       state: present
+       name: AnsibleAccessGroup-Renamed
+       account_id: 1
+       attributes: {"volumes": [1,2,3], "virtual_network_id": 12345}
+
+   - name: Rename Access Group
+     na_elementsw_access_group:
+       hostname: "{{ elementsw_hostname }}"
+       username: "{{ elementsw_username }}"
+       password: "{{ elementsw_password }}"
+       state: present
+       from_name: AnsibleAccessGroup
+       name: AnsibleAccessGroup-Renamed
+
+   - name: Delete Access Group
+     na_elementsw_access_group:
+       hostname: "{{ elementsw_hostname }}"
+       username: "{{ elementsw_username }}"
+       password: "{{ elementsw_password }}"
+       state: absent
+       name: 1
+
+
+RETURN VALUES:
+
+
+msg:
+    description: Success message
+    returned: success
+    type: str
+
+

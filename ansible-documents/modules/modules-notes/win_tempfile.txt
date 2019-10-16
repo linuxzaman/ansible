@@ -1,0 +1,63 @@
+> WIN_TEMPFILE    (/usr/lib/python2.7/dist-packages/ansible/modules/windows/win_tempfile.py)
+
+        Creates temporary files and directories. For non-Windows targets, please use the [tempfile] module instead.
+
+  * This module is maintained by The Ansible Community
+OPTIONS (= is mandatory):
+
+- path
+        Location where temporary file or directory should be created.
+        If path is not specified default system temporary directory (%TEMP%) will be used.
+        (Aliases: dest)[Default: %TEMP%]
+        type: path
+
+- prefix
+        Prefix of file/directory name created by module.
+        [Default: ansible.]
+        type: str
+
+- state
+        Whether to create file or directory.
+        (Choices: directory, file)[Default: file]
+        type: str
+
+- suffix
+        Suffix of file/directory name created by module.
+        [Default: ]
+        type: str
+
+
+SEE ALSO:
+      * Module tempfile
+           The official documentation on the tempfile module.
+           https://docs.ansible.com/ansible/latest/modules/tempfile_module.html
+
+
+AUTHOR: Dag Wieers (@dagwieers)
+        METADATA:
+          status:
+          - preview
+          supported_by: community
+        
+
+EXAMPLES:
+
+- name: Create temporary build directory
+  win_tempfile:
+    state: directory
+    suffix: build
+
+- name: Create temporary file
+  win_tempfile:
+    state: file
+    suffix: temp
+
+
+RETURN VALUES:
+
+path:
+  description: The absolute path to the created file or directory.
+  returned: success
+  type: str
+  sample: C:\Users\Administrator\AppData\Local\Temp\ansible.bMlvdk
+

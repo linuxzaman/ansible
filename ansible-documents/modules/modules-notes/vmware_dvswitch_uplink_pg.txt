@@ -1,0 +1,173 @@
+> VMWARE_DVSWITCH_UPLINK_PG    (/usr/lib/python2.7/dist-packages/ansible/modules/cloud/vmware/vmware_dvswitch_uplink_pg.py)
+
+        This module can be used to configure the uplink portgroup of a Distributed Switch.
+
+  * This module is maintained by The Ansible Community
+OPTIONS (= is mandatory):
+
+- advanced
+        Dictionary which configures the advanced policy settings for the uplink portgroup.
+        Valid attributes are:
+        - `port_config_reset_at_disconnect' (bool): indicates if the configuration of a port is reset automatically after disconnect.
+        (default: true)
+        - `block_override' (bool): indicates if the block policy can be changed per port. (default: true)
+        - `netflow_override' (bool): indicates if the NetFlow policy can be changed per port. (default: false)
+        - `traffic_filter_override' (bool): indicates if the traffic filter can be changed per port. (default: false)
+        - `vendor_config_override' (bool): indicates if the vendor config can be changed per port. (default: false)
+        - `vlan_override' (bool): indicates if the vlan can be changed per port. (default: false)
+        (Aliases: port_policy)[Default: {u'vendor_config_override': False, u'traffic_filter_override': False, u'block_override': True,
+        u'netflow_override': False, u'port_config_reset_at_disconnect': True, u'vlan_override': False}]
+
+- block_all_ports
+        Indicates if all ports are blocked on the uplink portgroup.
+        [Default: False]
+        type: bool
+
+- description
+        The description of the uplink portgroup.
+        [Default: (null)]
+        type: str
+
+- hostname
+        The hostname or IP address of the vSphere vCenter or ESXi server.
+        If the value is not specified in the task, the value of environment variable `VMWARE_HOST' will be used instead.
+        Environment variable support added in Ansible 2.6.
+        [Default: (null)]
+        type: str
+
+- lacp
+        Dictionary which configures the LACP settings for the uplink portgroup.
+        The options are only used if the LACP support mode is set to 'basic'.
+        The following parameters are required:
+        - `status' (str): Indicates if LACP is enabled. (default: disabled)
+        - `mode' (str): The negotiating state of the uplinks/ports. (default: passive)
+        [Default: {u'status': u'disabled', u'mode': u'passive'}]
+
+- name
+        The name of the uplink portgroup.
+        The current name will be used if not specified.
+        [Default: (null)]
+        type: str
+
+- netflow_enabled
+        Indicates if NetFlow is enabled on the uplink portgroup.
+        [Default: False]
+        type: bool
+
+- password
+        The password of the vSphere vCenter or ESXi server.
+        If the value is not specified in the task, the value of environment variable `VMWARE_PASSWORD' will be used instead.
+        Environment variable support added in Ansible 2.6.
+        (Aliases: pass, pwd)[Default: (null)]
+        type: str
+
+- port
+        The port number of the vSphere vCenter or ESXi server.
+        If the value is not specified in the task, the value of environment variable `VMWARE_PORT' will be used instead.
+        Environment variable support added in Ansible 2.6.
+        [Default: 443]
+        type: int
+        version_added: 2.5
+
+= switch
+        The name of the Distributed Switch.
+        (Aliases: dvswitch)
+        type: str
+
+- username
+        The username of the vSphere vCenter or ESXi server.
+        If the value is not specified in the task, the value of environment variable `VMWARE_USER' will be used instead.
+        Environment variable support added in Ansible 2.6.
+        (Aliases: admin, user)[Default: (null)]
+        type: str
+
+- validate_certs
+        Allows connection when SSL certificates are not valid. Set to `false' when certificates are not trusted.
+        If the value is not specified in the task, the value of environment variable `VMWARE_VALIDATE_CERTS' will be used instead.
+        Environment variable support added in Ansible 2.6.
+        If set to `yes', please make sure Python >= 2.7.9 is installed on the given machine.
+        [Default: True]
+        type: bool
+
+- vlan_trunk_range
+        The VLAN trunk range that should be configured with the uplink portgroup.
+        This can be a combination of multiple ranges and numbers, example: [ 2-3967, 4049-4092 ].
+        [Default: [u'0-4094']]
+        type: list
+
+
+NOTES:
+      * Tested on vSphere 6.5 and 6.7
+
+
+REQUIREMENTS:  python >= 2.6, PyVmomi
+
+AUTHOR: Christian Kotte (@ckotte)
+        METADATA:
+          status:
+          - preview
+          supported_by: community
+        
+
+EXAMPLES:
+
+- name: Configure Uplink portgroup
+  vmware_dvswitch_uplink_pg:
+    hostname: '{{ inventory_hostname }}'
+    username: '{{ vcsa_username }}'
+    password: '{{ vcsa_password }}'
+    switch: dvSwitch
+    name: dvSwitch-DVUplinks
+    advanced:
+      port_config_reset_at_disconnect: True
+      block_override: True
+      vendor_config_override: False
+      vlan_override: False
+      netflow_override: False
+      traffic_filter_override: False
+    vlan_trunk_range:
+      - '0-4094'
+    netflow_enabled: False
+    block_all_ports: False
+  delegate_to: localhost
+
+- name: Enabled LACP on Uplink portgroup
+  vmware_dvswitch_uplink_pg:
+    hostname: '{{ inventory_hostname }}'
+    username: '{{ vcsa_username }}'
+    password: '{{ vcsa_password }}'
+    switch: dvSwitch
+    lacp:
+      status: enabled
+      mode: active
+  delegate_to: localhost
+
+
+RETURN VALUES:
+
+result:
+    description: information about performed operation
+    returned: always
+    type: str
+    sample: {
+        "adv_block_ports": true,
+        "adv_netflow": false,
+        "adv_reset_at_disconnect": true,
+        "adv_traffic_filtering": false,
+        "adv_vendor_conf": false,
+        "adv_vlan": false,
+        "block_all_ports": false,
+        "changed": false,
+        "description": null,
+        "dvswitch": "dvSwitch",
+        "lacp_status": "disabled",
+        "lacp_status_previous": "enabled",
+        "name": "dvSwitch-DVUplinks",
+        "netflow_enabled": false,
+        "result": "Uplink portgroup already configured properly",
+        "vlan_trunk_range": [
+            "2-3967",
+            "4049-4092"
+        ]
+    }
+

@@ -1,0 +1,195 @@
+> POSTGRESQL_TABLESPACE    (/usr/lib/python2.7/dist-packages/ansible/modules/database/postgresql/postgresql_tablespace.py)
+
+        Adds or removes PostgreSQL tablespaces from remote hosts https://www.postgresql.org/docs/current/sql-createtablespace.html,
+        https://www.postgresql.org/docs/current/manage-ag-tablespaces.html.
+
+  * This module is maintained by The Ansible Community
+OPTIONS (= is mandatory):
+
+- ca_cert
+        Specifies the name of a file containing SSL certificate authority (CA) certificate(s).
+        If the file exists, the server's certificate will be verified to be signed by one of these authorities.
+        (Aliases: ssl_rootcert)[Default: (null)]
+        type: str
+
+- db
+        Name of database to connect to and run queries against.
+        (Aliases: login_db)[Default: (null)]
+        type: str
+
+- location
+        Path to the tablespace directory in the file system.
+        Ensure that the location exists and has right privileges.
+        (Aliases: path)[Default: (null)]
+        type: path
+
+- login_host
+        Host running the database.
+        [Default: (null)]
+        type: str
+
+- login_password
+        The password used to authenticate with.
+        [Default: (null)]
+        type: str
+
+- login_unix_socket
+        Path to a Unix domain socket for local connections.
+        [Default: (null)]
+        type: str
+
+- login_user
+        The username used to authenticate with.
+        [Default: postgres]
+        type: str
+
+- owner
+        Name of the role to set as an owner of the tablespace.
+        If this option is not specified, the tablespace owner is a role that creates the tablespace.
+        [Default: (null)]
+        type: str
+
+- port
+        Database port to connect to.
+        (Aliases: login_port)[Default: 5432]
+        type: int
+
+- rename_to
+        New name of the tablespace.
+        The new name cannot begin with pg_, as such names are reserved for system tablespaces.
+        [Default: (null)]
+
+- session_role
+        Switch to session_role after connecting. The specified session_role must be a role that the current login_user is a member of.
+        Permissions checking for SQL commands is carried out as though the session_role were the one that had logged in originally.
+        [Default: (null)]
+        type: str
+
+- set
+        Dict of tablespace options to set. Supported from PostgreSQL 9.0.
+        For more information see https://www.postgresql.org/docs/current/sql-createtablespace.html.
+        When reset is passed as an option's value, if the option was set previously, it will be removed
+        https://www.postgresql.org/docs/current/sql-altertablespace.html.
+        [Default: (null)]
+        type: dict
+
+- ssl_mode
+        Determines whether or with what priority a secure SSL TCP/IP connection will be negotiated with the server.
+        See https://www.postgresql.org/docs/current/static/libpq-ssl.html for more information on the modes.
+        Default of `prefer' matches libpq default.
+        (Choices: allow, disable, prefer, require, verify-ca, verify-full)[Default: prefer]
+        type: str
+
+- state
+        Tablespace state.
+        `state=present' implies the tablespace must be created if it doesn't exist.
+        `state=absent' implies the tablespace must be removed if present. `state=absent' is mutually exclusive with `location', `owner',
+        i(set).
+        See the Notes section for information about check mode restrictions.
+        (Choices: absent, present)[Default: present]
+        type: str
+
+= tablespace
+        Name of the tablespace to add or remove.
+        (Aliases: name)
+        type: str
+
+
+NOTES:
+      * `state=absent' and `state=present' (the second one if the tablespace doesn't exist) do not support check mode because the
+        corresponding PostgreSQL DROP and CREATE TABLESPACE commands can not be run inside the transaction block.
+      * The default authentication assumes that you are either logging in as or sudo'ing to the postgres account on the host.
+      * To avoid "Peer authentication failed for user postgres" error, use postgres user as a `become_user'.
+      * This module uses psycopg2, a Python PostgreSQL database adapter. You must ensure that psycopg2 is installed on the host
+        before using this module.
+      * If the remote host is the PostgreSQL server (which is the default case), then PostgreSQL must also be installed on the
+        remote host.
+      * For Ubuntu-based systems, install the postgresql, libpq-dev, and python-psycopg2 packages on the remote host before using
+        this module.
+      * The default authentication assumes that you are either logging in as or sudo'ing to the `postgres' account on the host.
+      * This module uses `psycopg2', a Python PostgreSQL database adapter. You must ensure that psycopg2 is installed on the host
+        before using this module. If the remote host is the PostgreSQL server (which is the default case), then PostgreSQL must
+        also be installed on the remote host. For Ubuntu-based systems, install the `postgresql', `libpq-dev', and `python-
+        psycopg2' packages on the remote host before using this module.
+      * The ca_cert parameter requires at least Postgres version 8.4 and `psycopg2' version 2.4.3.
+
+
+REQUIREMENTS:  psycopg2
+
+AUTHOR: Flavien Chantelot (@Dorn-), Antoine Levy-Lambert (@antoinell), Andrew Klychkov (@Andersson007)
+        METADATA:
+          status:
+          - preview
+          supported_by: community
+        
+
+EXAMPLES:
+
+- name: Create a new tablespace called acme and set bob as an its owner
+  postgresql_tablespace:
+    name: acme
+    owner: bob
+    location: /data/foo
+
+- name: Create a new tablespace called bar with tablespace options
+  postgresql_tablespace:
+    name: bar
+    set:
+      random_page_cost: 1
+      seq_page_cost: 1
+
+- name: Reset random_page_cost option
+  postgresql_tablespace:
+    name: bar
+    set:
+      random_page_cost: reset
+
+- name: Rename the tablespace from bar to pcie_ssd
+  postgresql_tablespace:
+    name: bar
+    rename_to: pcie_ssd
+
+- name: Drop tablespace called bloat
+  postgresql_tablespace:
+    name: bloat
+    state: absent
+
+
+RETURN VALUES:
+
+queries:
+    description: List of queries that was tried to be executed.
+    returned: always
+    type: str
+    sample: [ "CREATE TABLESPACE bar LOCATION '/incredible/ssd'" ]
+tablespace:
+    description: Tablespace name.
+    returned: always
+    type: str
+    sample: 'ssd'
+owner:
+    description: Tablespace owner.
+    returned: always
+    type: str
+    sample: 'Bob'
+options:
+    description: Tablespace options.
+    returned: always
+    type: dict
+    sample: { 'random_page_cost': 1, 'seq_page_cost': 1 }
+location:
+    description: Path to the tablespace in the file system.
+    returned: always
+    type: str
+    sample: '/incredible/fast/ssd'
+newname:
+    description: New tablespace name
+    returned: if existent
+    type: str
+    sample: new_ssd
+state:
+    description: Tablespace state at the end of execution.
+    returned: always
+    type: str
+    sample: 'present'
+

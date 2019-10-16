@@ -1,0 +1,49 @@
+EXAMPLES:
+
+# Basic Snapshot Copy
+- ec2_snapshot_copy:
+    source_region: eu-central-1
+    region: eu-west-1
+    source_snapshot_id: snap-xxxxxxx
+
+# Copy Snapshot and wait until available
+- ec2_snapshot_copy:
+    source_region: eu-central-1
+    region: eu-west-1
+    source_snapshot_id: snap-xxxxxxx
+    wait: yes
+    wait_timeout: 1200   # Default timeout is 600
+  register: snapshot_id
+
+# Tagged Snapshot copy
+- ec2_snapshot_copy:
+    source_region: eu-central-1
+    region: eu-west-1
+    source_snapshot_id: snap-xxxxxxx
+    tags:
+        Name: Snapshot-Name
+
+# Encrypted Snapshot copy
+- ec2_snapshot_copy:
+    source_region: eu-central-1
+    region: eu-west-1
+    source_snapshot_id: snap-xxxxxxx
+    encrypted: yes
+
+# Encrypted Snapshot copy with specified key
+- ec2_snapshot_copy:
+    source_region: eu-central-1
+    region: eu-west-1
+    source_snapshot_id: snap-xxxxxxx
+    encrypted: yes
+    kms_key_id: arn:aws:kms:eu-central-1:XXXXXXXXXXXX:key/746de6ea-50a4-4bcb-8fbc-e3b29f2d367b
+
+
+RETURN VALUES:
+
+snapshot_id:
+    description: snapshot id of the newly created snapshot
+    returned: when snapshot copy is successful
+    type: str
+    sample: "snap-e9095e8c"
+

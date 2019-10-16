@@ -1,0 +1,37 @@
+EXAMPLES:
+
+- name: Log into DockerHub
+  docker_login:
+    username: docker
+    password: rekcod
+
+- name: Log into private registry and force re-authorization
+  docker_login:
+    registry: your.private.registry.io
+    username: yourself
+    password: secrets3
+    reauthorize: yes
+
+- name: Log into DockerHub using a custom config file
+  docker_login:
+    username: docker
+    password: rekcod
+    config_path: /tmp/.mydockercfg
+
+- name: Log out of DockerHub
+  docker_login:
+    state: absent
+
+
+RETURN VALUES:
+
+login_results:
+    description: Results from the login.
+    returned: when state='present'
+    type: dict
+    sample: {
+        "email": "testuer@yahoo.com",
+        "serveraddress": "localhost:5000",
+        "username": "testuser"
+    }
+

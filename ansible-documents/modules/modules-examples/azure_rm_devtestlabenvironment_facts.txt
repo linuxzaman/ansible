@@ -1,0 +1,68 @@
+EXAMPLES:
+
+- name: Get instance of Environment
+    azure_rm_devtestlabenvironment_facts:
+      resource_group: myResourceGroup
+      lab_name: myLab
+      user_name: myUser
+      name: myEnvironment
+
+
+RETURN VALUES:
+
+environments:
+    description: A list of dictionaries containing facts for Environment.
+    returned: always
+    type: complex
+    contains:
+        id:
+            description:
+                - The identifier of the artifact source.
+            returned: always
+            type: str
+            sample: "/subscriptions/xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxxx/resourceGroups/myResourceGroup/providers/Microsoft.DevTestLab/labs/myLab/sc
+                     hedules/xxxxxxxx-xxxx-xxxx-xxxxx-xxxxxxxxxxxxx/environments/myEnvironment"
+        resource_group:
+            description:
+                - Name of the resource group.
+            returned: always
+            type: str
+            sample: myResourceGroup
+        lab_name:
+            description:
+                - Name of the lab.
+            returned: always
+            type: str
+            sample: myLab
+        name:
+            description:
+                - The name of the environment.
+            returned: always
+            type: str
+            sample: myEnvironment
+        deployment_template:
+            description:
+                - The identifier of the artifact source.
+            returned: always
+            type: str
+            sample: "/subscriptions/xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx/resourcegroups/myResourceGroup/providers/microsoft.devtestlab/labs/mylab/art
+                     ifactSources/public environment repo/armTemplates/WebApp"
+        resource_group_id:
+            description:
+                - Target resource group id.
+            returned: always
+            type: str
+            sample: "/subscriptions/xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx/resourcegroups/myLab-myEnvironment-982571"
+        state:
+            description:
+                - Deployment state.
+            returned: always
+            type: str
+            sample: Succeeded
+        tags:
+            description:
+                - The tags of the resource.
+            returned: always
+            type: complex
+            sample: "{ 'MyTag': 'MyValue' }"
+

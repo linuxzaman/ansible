@@ -1,0 +1,55 @@
+EXAMPLES:
+
+- name: Get facts for one route table
+      azure_rm_routetable_facts:
+        name: Testing
+        resource_group: myResourceGroup
+
+    - name: Get facts for all route tables
+      azure_rm_routetable_facts:
+        resource_group: myResourceGroup
+
+    - name: Get facts by tags
+      azure_rm_routetable_facts:
+        tags:
+          - testing
+          - foo:bar
+
+
+RETURN VALUES:
+
+id:
+    description: Resource id.
+    returned: success
+    type: str
+name:
+    description: Name of the resource.
+    returned: success
+    type: str
+resource_group:
+    description: Resource group of the route table.
+    returned: success
+    type: str
+disable_bgp_route_propagation:
+    description: Whether the routes learned by BGP on that route table disabled.
+    returned: success
+    type: bool
+tags:
+    description: Tags of the route table.
+    returned: success
+    type: list
+routes:
+    description: Current routes of the route table.
+    returned: success
+    type: list
+    sample: [
+        {
+          "id": "/subscriptions/xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx/resourceGroup/myResourceGroup/providers/Microsoft.Network/routeTables/foobar/routes/route",
+          "name": "route",
+          "resource_group": "Testing",
+          "routeTables": "foobar",
+          "address_prefix": "192.0.0.1",
+          "next_hop_type": "virtual_networkGateway"
+        }
+    ]
+

@@ -1,0 +1,108 @@
+EXAMPLES:
+
+# (Message will be pushed; there is no check to see if the message was pushed before
+- name: Create a topic and publish a message to it
+  gcpubsub:
+    topic: ansible-topic-example
+    state: present
+
+# Subscriptions associated with topic are not deleted.
+- name: Delete Topic
+  gcpubsub:
+    topic: ansible-topic-example
+    state: absent
+
+# Setting absent will keep the messages from being sent
+- name: Publish multiple messages, with attributes (key:value available with the message)
+  gcpubsub:
+    topic: '{{ topic_name }}'
+    state: present
+    publish:
+      - message: this is message 1
+        attributes:
+          mykey1: myvalue
+          mykey2: myvalu2
+          mykey3: myvalue3
+      - message: this is message 2
+        attributes:
+          server: prod
+          sla: "99.9999"
+          owner: fred
+
+- name: Create Subscription (pull)
+  gcpubsub:
+    topic: ansible-topic-example
+    subscription:
+    - name: mysub
+    state: present
+
+# pull is default, ack_deadline is not required
+- name: Create Subscription with ack_deadline and push endpoint
+  gcpubsub:
+    topic: ansible-topic-example
+    subscription:
+    - name: mysub
+      ack_deadline: "60"
+      push_endpoint: http://pushendpoint.example.com
+    state: present
+
+# Setting push_endpoint to "None" converts subscription to pull.
+- name: Subscription change from push to pull
+  gcpubsub:
+    topic: ansible-topic-example
+    subscription:
+      name: mysub
+      push_endpoint: "None"
+
+### Topic will not be deleted
+- name: Delete subscription
+  gcpubsub:
+    topic: ansible-topic-example
+    subscription:
+    - name: mysub
+    state: absent
+
+# only pull keyword is required.
+- name: Pull messages from subscription
+  gcpubsub:
+    topic: ansible-topic-example
+    subscription:
+      name: ansible-topic-example-sub
+      pull:
+        message_ack: yes
+        max_messages: "100"
+
+
+RETURN VALUES:
+
+publish:
+    description: List of dictionaries describing messages and attributes to be published.  Dictionary is in message(str):attributes(dict) format.
+                 Only message is required.
+    returned: Only when specified
+    type: list
+    sample: "publish: ['message': 'my message', attributes: {'key1': 'value1'}]"
+
+pulled_messages:
+    description: list of dictionaries containing message info.  Fields are ack_id, attributes, data, message_id.
+    returned: Only when subscription.pull is specified
+    type: list
+    sample: [{ "ack_id": "XkASTCcYREl...","attributes": {"key1": "val1",...}, "data": "this is message 1", "message_id": "49107464153705"},..]
+
+state:
+    description: The state of the topic or subscription. Value will be either 'absent' or 'present'.
+    returned: Always
+    type: str
+    sample: "present"
+
+subscription:
+    description: Name of subscription.
+    returned: When subscription fields are specified
+    type: str
+    sample: "mysubscription"
+
+topic:
+    description: Name of topic.
+    returned: Always
+    type: str
+    sample: "mytopic"
+

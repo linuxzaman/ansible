@@ -1,0 +1,139 @@
+> GC_STORAGE    (/usr/lib/python2.7/dist-packages/ansible/modules/cloud/google/gc_storage.py)
+
+        This module allows users to manage their objects/buckets in Google Cloud Storage.  It allows upload and download operations and
+        can set some canned permissions. It also allows retrieval of URLs for objects for use in playbooks, and retrieval of string
+        contents of objects.  This module requires setting the default project in GCS prior to playbook usage.  See
+        https://developers.google.com/storage/docs/reference/v1/apiversion1 for information about setting the default project.
+
+  * This module is maintained by The Ansible Community
+OPTIONS (= is mandatory):
+
+= bucket
+        Bucket name.
+
+
+- dest
+        The destination file path when downloading an object/key with a GET operation.
+        [Default: (null)]
+
+- expiration
+        Time limit (in seconds) for the URL generated and returned by GCA when performing a mode=put or mode=get_url operation. This url
+        is only available when public-read is the acl for the object.
+        [Default: (null)]
+
+- force
+        Forces an overwrite either locally on the filesystem or remotely with the object/key. Used with PUT and GET operations.
+        (Aliases: overwrite)[Default: yes]
+        type: bool
+
+= gs_access_key
+        GS access key. If not set then the value of the GS_ACCESS_KEY_ID environment variable is used.
+
+
+= gs_secret_key
+        GS secret key. If not set then the value of the GS_SECRET_ACCESS_KEY environment variable is used.
+
+
+- headers
+        Headers to attach to object.
+        [Default: {}]
+        version_added: 2.0
+
+= mode
+        Switches the module behaviour between upload, download, get_url (return download url) , get_str (download object as string),
+        create (bucket) and delete (bucket).
+        (Choices: get, put, get_url, get_str, delete, create)
+
+- object
+        Keyname of the object inside the bucket. Can be also be used to create "virtual directories" (see examples).
+        [Default: (null)]
+
+- permission
+        This option let's the user set the canned permissions on the object/bucket that are created. The permissions that can be set are
+        'private', 'public-read', 'authenticated-read'.
+        [Default: private]
+
+- region
+        The gs region to use. If not defined then the value 'US' will be used. See https://cloud.google.com/storage/docs/bucket-locations
+        [Default: US]
+        version_added: 2.4
+
+- src
+        The source file path when performing a PUT operation.
+        [Default: (null)]
+
+- versioning
+        Whether versioning is enabled or disabled (note that once versioning is enabled, it can only be suspended)
+        [Default: (null)]
+        type: bool
+        version_added: 2.4
+
+
+REQUIREMENTS:  python >= 2.6, boto >= 2.9
+
+AUTHOR: Benno Joy (@bennojoy), Lukas Beumer (@Nitaco)
+        METADATA:
+          status:
+          - preview
+          supported_by: community
+        
+
+EXAMPLES:
+
+- name: Upload some content
+  gc_storage:
+    bucket: mybucket
+    object: key.txt
+    src: /usr/local/myfile.txt
+    mode: put
+    permission: public-read
+
+- name: Upload some headers
+  gc_storage:
+    bucket: mybucket
+    object: key.txt
+    src: /usr/local/myfile.txt
+    headers: '{"Content-Encoding": "gzip"}'
+
+- name: Download some content
+  gc_storage:
+    bucket: mybucket
+    object: key.txt
+    dest: /usr/local/myfile.txt
+    mode: get
+
+- name: Download an object as a string to use else where in your playbook
+  gc_storage:
+    bucket: mybucket
+    object: key.txt
+    mode: get_str
+
+- name: Create an empty bucket
+  gc_storage:
+    bucket: mybucket
+    mode: create
+
+- name: Create a bucket with key as directory
+  gc_storage:
+    bucket: mybucket
+    object: /my/directory/path
+    mode: create
+
+- name: Delete a bucket and all contents
+  gc_storage:
+    bucket: mybucket
+    mode: delete
+
+- name: Create a bucket with versioning enabled
+  gc_storage:
+    bucket: "mybucket"
+    versioning: yes
+    mode: create
+
+- name: Create a bucket located in the eu
+  gc_storage:
+    bucket: "mybucket"
+    region: "europe-west3"
+    mode: create
+
+

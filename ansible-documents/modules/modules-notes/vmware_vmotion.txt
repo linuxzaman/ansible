@@ -1,0 +1,131 @@
+> VMWARE_VMOTION    (/usr/lib/python2.7/dist-packages/ansible/modules/cloud/vmware/vmware_vmotion.py)
+
+        Using VMware vCenter, move a virtual machine using vMotion to a different host, and/or its vmdks to another datastore using
+        storage vMotion.
+
+  * This module is maintained by The Ansible Community
+OPTIONS (= is mandatory):
+
+- destination_datastore
+        Name of the destination datastore the virtual machine's vmdk should be moved on.
+        (Aliases: datastore)[Default: (null)]
+        version_added: 2.7
+        
+
+- destination_host
+        Name of the destination host the virtual machine should be running on.
+        Version 2.6 onwards, this parameter is not a required parameter, unlike the previous versions.
+        (Aliases: destination)[Default: (null)]
+
+- hostname
+        The hostname or IP address of the vSphere vCenter or ESXi server.
+        If the value is not specified in the task, the value of environment variable `VMWARE_HOST' will be used instead.
+        Environment variable support added in Ansible 2.6.
+        [Default: (null)]
+        type: str
+
+- password
+        The password of the vSphere vCenter or ESXi server.
+        If the value is not specified in the task, the value of environment variable `VMWARE_PASSWORD' will be used instead.
+        Environment variable support added in Ansible 2.6.
+        (Aliases: pass, pwd)[Default: (null)]
+        type: str
+
+- port
+        The port number of the vSphere vCenter or ESXi server.
+        If the value is not specified in the task, the value of environment variable `VMWARE_PORT' will be used instead.
+        Environment variable support added in Ansible 2.6.
+        [Default: 443]
+        type: int
+        version_added: 2.5
+
+- use_instance_uuid
+        Whether to use the VMWare instance UUID rather than the BIOS UUID.
+        [Default: False]
+        type: bool
+        version_added: 2.8
+
+- username
+        The username of the vSphere vCenter or ESXi server.
+        If the value is not specified in the task, the value of environment variable `VMWARE_USER' will be used instead.
+        Environment variable support added in Ansible 2.6.
+        (Aliases: admin, user)[Default: (null)]
+        type: str
+
+- validate_certs
+        Allows connection when SSL certificates are not valid. Set to `false' when certificates are not trusted.
+        If the value is not specified in the task, the value of environment variable `VMWARE_VALIDATE_CERTS' will be used instead.
+        Environment variable support added in Ansible 2.6.
+        If set to `yes', please make sure Python >= 2.7.9 is installed on the given machine.
+        [Default: True]
+        type: bool
+
+- vm_name
+        Name of the VM to perform a vMotion on.
+        This is required parameter, if `vm_uuid' is not set.
+        Version 2.6 onwards, this parameter is not a required parameter, unlike the previous versions.
+        (Aliases: vm)[Default: (null)]
+
+- vm_uuid
+        UUID of the virtual machine to perform a vMotion operation on.
+        This is a required parameter, if `vm_name' is not set.
+        (Aliases: uuid)[Default: (null)]
+        version_added: 2.7
+        
+
+
+NOTES:
+      * Tested on vSphere 6.0
+
+
+REQUIREMENTS:  python >= 2.6, pyVmomi
+
+AUTHOR: Bede Carroll (@bedecarroll), Olivier Boukili (@oboukili)
+        METADATA:
+          status:
+          - preview
+          supported_by: community
+        
+
+EXAMPLES:
+
+- name: Perform vMotion of virtual machine
+  vmware_vmotion:
+    hostname: '{{ vcenter_hostname }}'
+    username: '{{ vcenter_username }}'
+    password: '{{ vcenter_password }}'
+    validate_certs: no
+    vm_name: 'vm_name_as_per_vcenter'
+    destination_host: 'destination_host_as_per_vcenter'
+  delegate_to: localhost
+
+- name: Perform storage vMotion of of virtual machine
+  vmware_vmotion:
+    hostname: '{{ vcenter_hostname }}'
+    username: '{{ vcenter_username }}'
+    password: '{{ vcenter_password }}'
+    validate_certs: no
+    vm_name: 'vm_name_as_per_vcenter'
+    destination_datastore: 'destination_datastore_as_per_vcenter'
+  delegate_to: localhost
+
+- name: Perform storage vMotion and host vMotion of virtual machine
+  vmware_vmotion:
+    hostname: '{{ vcenter_hostname }}'
+    username: '{{ vcenter_username }}'
+    password: '{{ vcenter_password }}'
+    validate_certs: no
+    vm_name: 'vm_name_as_per_vcenter'
+    destination_host: 'destination_host_as_per_vcenter'
+    destination_datastore: 'destination_datastore_as_per_vcenter'
+  delegate_to: localhost
+
+
+RETURN VALUES:
+
+running_host:
+    description: List the host the virtual machine is registered to
+    returned: changed or success
+    type: str
+    sample: 'host1.example.com'
+

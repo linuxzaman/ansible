@@ -1,0 +1,24 @@
+EXAMPLES:
+
+- name: Check if GitHub issue is closed or not
+  github_issue:
+    organization: ansible
+    repo: ansible
+    issue: 23642
+    action: get_status
+  register: r
+
+- name: Take action depending upon issue status
+  debug:
+    msg: Do something when issue 23642 is open
+  when: r.issue_status == 'open'
+
+
+RETURN VALUES:
+
+get_status:
+    description: State of the GitHub issue
+    type: str
+    returned: success
+    sample: open, closed
+

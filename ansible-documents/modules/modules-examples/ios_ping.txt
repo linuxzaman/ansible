@@ -1,0 +1,52 @@
+EXAMPLES:
+
+- name: Test reachability to 10.10.10.10 using default vrf
+  ios_ping:
+    dest: 10.10.10.10
+
+- name: Test reachability to 10.20.20.20 using prod vrf
+  ios_ping:
+    dest: 10.20.20.20
+    vrf: prod
+
+- name: Test unreachability to 10.30.30.30 using default vrf
+  ios_ping:
+    dest: 10.30.30.30
+    state: absent
+
+- name: Test reachability to 10.40.40.40 using prod vrf and setting count and source
+  ios_ping:
+    dest: 10.40.40.40
+    source: loopback0
+    vrf: prod
+    count: 20
+
+
+RETURN VALUES:
+
+commands:
+  description: Show the command sent.
+  returned: always
+  type: list
+  sample: ["ping vrf prod 10.40.40.40 count 20 source loopback0"]
+packet_loss:
+  description: Percentage of packets lost.
+  returned: always
+  type: str
+  sample: "0%"
+packets_rx:
+  description: Packets successfully received.
+  returned: always
+  type: int
+  sample: 20
+packets_tx:
+  description: Packets successfully transmitted.
+  returned: always
+  type: int
+  sample: 20
+rtt:
+  description: Show RTT stats.
+  returned: always
+  type: dict
+  sample: {"avg": 2, "max": 8, "min": 1}
+

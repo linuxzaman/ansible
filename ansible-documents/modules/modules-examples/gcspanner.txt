@@ -1,0 +1,56 @@
+EXAMPLES:
+
+- name: Create instance
+  gcspanner:
+    instance_id: '{{ instance_id }}'
+    configuration: '{{ configuration }}'
+    state: present
+    node_count: 1
+
+- name: Create database
+  gcspanner:
+    instance_id: '{{ instance_id }}'
+    configuration: '{{ configuration }}'
+    database_name: '{{ database_name }}'
+    state: present
+
+- name: Delete instance (and all databases)
+- gcspanner:
+    instance_id: '{{ instance_id }}'
+    configuration: '{{ configuration }}'
+    state: absent
+    force_instance_delete: yes
+
+
+RETURN VALUES:
+
+state:
+    description: The state of the instance or database. Value will be either 'absent' or 'present'.
+    returned: Always
+    type: str
+    sample: "present"
+
+database_name:
+    description: Name of database.
+    returned: When database name is specified
+    type: str
+    sample: "mydatabase"
+
+instance_id:
+    description: Name of instance.
+    returned: Always
+    type: str
+    sample: "myinstance"
+
+previous_values:
+   description: List of dictionaries containing previous values prior to update.
+   returned: When an instance update has occurred and a field has been modified.
+   type: dict
+   sample: "'previous_values': { 'instance': { 'instance_display_name': 'my-instance', 'node_count': 1 } }"
+
+updated:
+   description: Boolean field to denote an update has occurred.
+   returned: When an update has occurred.
+   type: bool
+   sample: True
+

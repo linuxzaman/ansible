@@ -1,0 +1,57 @@
+EXAMPLES:
+
+- name: Import ASM policy
+  bigip_asm_policy_import:
+    name: new_asm_policy
+    file: /root/asm_policy.xml
+    provider:
+      server: lb.mydomain.com
+      user: admin
+      password: secret
+  delegate_to: localhost
+
+- name: Import ASM policy inline
+  bigip_asm_policy_import:
+    name: foo-policy4
+    inline: <xml>content</xml>
+    provider:
+      server: lb.mydomain.com
+      user: admin
+      password: secret
+  delegate_to: localhost
+
+- name: Override existing ASM policy
+  bigip_asm_policy:
+    name: new_asm_policy
+    file: /root/asm_policy_new.xml
+    force: yes
+    provider:
+      server: lb.mydomain.com
+      user: admin
+      password: secret
+  delegate_to: localhost
+
+
+RETURN VALUES:
+
+source:
+  description: Local path to an ASM policy file.
+  returned: changed
+  type: str
+  sample: /root/some_policy.xml
+inline:
+  description: Contents of policy as an inline string
+  returned: changed
+  type: str
+  sample: <xml>foobar contents</xml>
+name:
+  description: Name of the ASM policy to be created/overwritten
+  returned: changed
+  type: str
+  sample: Asm_APP1_Transparent
+force:
+  description: Set when overwriting an existing policy
+  returned: changed
+  type: bool
+  sample: yes
+

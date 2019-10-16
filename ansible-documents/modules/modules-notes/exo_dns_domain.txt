@@ -1,0 +1,169 @@
+> EXO_DNS_DOMAIN    (/usr/lib/python2.7/dist-packages/ansible/modules/net_tools/exoscale/exo_dns_domain.py)
+
+        Create and remove domain records.
+
+  * This module is maintained by The Ansible Community
+OPTIONS (= is mandatory):
+
+- api_key
+        API key of the Exoscale DNS API.
+        Since 2.4, the ENV variable `CLOUDSTACK_KEY' is used as default, when defined.
+        [Default: (null)]
+        type: str
+
+- api_region
+        Name of the ini section in the `cloustack.ini' file.
+        Since 2.4, the ENV variable `CLOUDSTACK_REGION' is used as default, when defined.
+        [Default: cloudstack]
+        type: str
+
+- api_secret
+        Secret key of the Exoscale DNS API.
+        Since 2.4, the ENV variable `CLOUDSTACK_SECRET' is used as default, when defined.
+        [Default: (null)]
+        type: str
+
+- api_timeout
+        HTTP timeout to Exoscale DNS API.
+        Since 2.4, the ENV variable `CLOUDSTACK_TIMEOUT' is used as default, when defined.
+        [Default: 10]
+        type: int
+
+= name
+        Name of the record.
+
+
+- state
+        State of the resource.
+        (Choices: present, absent)[Default: present]
+
+- validate_certs
+        Validate SSL certs of the Exoscale DNS API.
+        [Default: True]
+        type: bool
+
+
+NOTES:
+      * As Exoscale DNS uses the same API key and secret for all services, we reuse the config used for Exscale Compute based on
+        CloudStack. The config is read from several locations, in the following order. The `CLOUDSTACK_KEY', `CLOUDSTACK_SECRET'
+        environment variables. A `CLOUDSTACK_CONFIG' environment variable pointing to an `.ini' file, A `cloudstack.ini' file in
+        the current working directory. A `.cloudstack.ini' file in the users home directory. Optionally multiple credentials and
+        endpoints can be specified using ini sections in `cloudstack.ini'. Use the argument `api_region' to select the section
+        name, default section is `cloudstack'.
+      * This module does not support multiple A records and will complain properly if you try.
+      * More information Exoscale DNS can be found on https://community.exoscale.ch/documentation/dns/.
+      * This module supports check mode and diff.
+
+
+REQUIREMENTS:  python >= 2.6
+
+AUTHOR: René Moser (@resmo)
+        METADATA:
+          status:
+          - preview
+          supported_by: community
+        
+
+EXAMPLES:
+
+- name: Create a domain
+  local_action:
+    module: exo_dns_domain
+    name: example.com
+
+- name: Remove a domain
+  local_action:
+    module: exo_dns_domain
+    name: example.com
+    state: absent
+
+
+RETURN VALUES:
+
+---
+exo_dns_domain:
+    description: API domain results
+    returned: success
+    type: complex
+    contains:
+        account_id:
+            description: Your account ID
+            returned: success
+            type: int
+            sample: 34569
+        auto_renew:
+            description: Whether domain is auto renewed or not
+            returned: success
+            type: bool
+            sample: false
+        created_at:
+            description: When the domain was created
+            returned: success
+            type: str
+            sample: "2016-08-12T15:24:23.989Z"
+        expires_on:
+            description: When the domain expires
+            returned: success
+            type: str
+            sample: "2016-08-12T15:24:23.989Z"
+        id:
+            description: ID of the domain
+            returned: success
+            type: int
+            sample: "2016-08-12T15:24:23.989Z"
+        lockable:
+            description: Whether the domain is lockable or not
+            returned: success
+            type: bool
+            sample: true
+        name:
+            description: Domain name
+            returned: success
+            type: str
+            sample: example.com
+        record_count:
+            description: Number of records related to this domain
+            returned: success
+            type: int
+            sample: 5
+        registrant_id:
+            description: ID of the registrant
+            returned: success
+            type: int
+            sample: null
+        service_count:
+            description: Number of services
+            returned: success
+            type: int
+            sample: 0
+        state:
+            description: State of the domain
+            returned: success
+            type: str
+            sample: "hosted"
+        token:
+            description: Token
+            returned: success
+            type: str
+            sample: "r4NzTRp6opIeFKfaFYvOd6MlhGyD07jl"
+        unicode_name:
+            description: Domain name as unicode
+            returned: success
+            type: str
+            sample: "example.com"
+        updated_at:
+            description: When the domain was updated last.
+            returned: success
+            type: str
+            sample: "2016-08-12T15:24:23.989Z"
+        user_id:
+            description: ID of the user
+            returned: success
+            type: int
+            sample: null
+        whois_protected:
+            description: Whether the whois is protected or not
+            returned: success
+            type: bool
+            sample: false
+

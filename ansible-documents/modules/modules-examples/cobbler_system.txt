@@ -1,0 +1,66 @@
+EXAMPLES:
+
+- name: Ensure the system exists in Cobbler
+  cobbler_system:
+    host: cobbler01
+    username: cobbler
+    password: MySuperSecureP4sswOrd
+    name: myhost
+    properties:
+      profile: CentOS6-x86_64
+      name_servers: [ 2.3.4.5, 3.4.5.6 ]
+      name_servers_search: foo.com, bar.com
+    interfaces:
+      eth0:
+        macaddress: 00:01:02:03:04:05
+        ipaddress: 1.2.3.4
+  delegate_to: localhost
+
+- name: Enable network boot in Cobbler
+  cobbler_system:
+    host: bdsol-aci-cobbler-01
+    username: cobbler
+    password: ins3965!
+    name: bdsol-aci51-apic1.cisco.com
+    properties:
+      netboot_enabled: yes
+    state: present
+  delegate_to: localhost
+
+- name: Query all systems in Cobbler
+  cobbler_system:
+    host: cobbler01
+    username: cobbler
+    password: MySuperSecureP4sswOrd
+  register: cobbler_systems
+  delegate_to: localhost
+
+- name: Query a specific system in Cobbler
+  cobbler_system:
+    host: cobbler01
+    username: cobbler
+    password: MySuperSecureP4sswOrd
+    name: '{{ inventory_hostname }}'
+  register: cobbler_properties
+  delegate_to: localhost
+
+- name: Ensure the system does not exist in Cobbler
+  cobbler_system:
+    host: cobbler01
+    username: cobbler
+    password: MySuperSecureP4sswOrd
+    name: myhost
+  delegate_to: localhost
+
+
+RETURN VALUES:
+
+systems:
+  description: List of systems
+  returned: C(state=query) and C(name) is not provided
+  type: list
+system:
+  description: (Resulting) information about the system we are working with
+  returned: when C(name) is provided
+  type: dict
+

@@ -1,0 +1,43 @@
+EXAMPLES:
+
+- name: configure interface
+  onyx_interface:
+      name: Eth1/2
+      description: test-interface
+      speed: 100G
+      mtu: 512
+
+- name: make interface up
+  onyx_interface:
+    name: Eth1/2
+    enabled: True
+
+- name: make interface down
+  onyx_interface:
+    name: Eth1/2
+    enabled: False
+
+- name: Check intent arguments
+  onyx_interface:
+    name: Eth1/2
+    state: up
+
+- name: Config + intent
+  onyx_interface:
+    name: Eth1/2
+    enabled: False
+    state: down
+
+
+RETURN VALUES:
+
+commands:
+  description: The list of configuration mode commands to send to the device.
+  returned: always
+  type: list
+  sample:
+    - interface ethernet 1/2
+    - description test-interface
+    - mtu 512
+    - exit
+

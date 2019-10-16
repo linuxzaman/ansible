@@ -1,0 +1,63 @@
+EXAMPLES:
+
+# Examples don't contain auth parameter for simplicity,
+# look at ovirt_auth module to see how to reuse authentication:
+
+- name: Add NIC to VM
+  ovirt_nic:
+    state: present
+    vm: myvm
+    name: mynic
+    interface: e1000
+    mac_address: 00:1a:4a:16:01:56
+    profile: ovirtmgmt
+    network: ovirtmgmt
+
+- name: Plug NIC to VM
+  ovirt_nic:
+    state: plugged
+    vm: myvm
+    name: mynic
+
+- name: Unplug NIC from VM
+  ovirt_nic:
+    state: unplugged
+    vm: myvm
+    name: mynic
+
+- name: Add NIC to template
+  ovirt_nic:
+    auth: "{{ ovirt_auth }}"
+    state: present
+    template: my_template
+    name: nic1
+    interface: virtio
+    profile: ovirtmgmt
+    network: ovirtmgmt
+
+- name: Remove NIC from VM
+  ovirt_nic:
+    state: absent
+    vm: myvm
+    name: mynic
+
+# Change NIC Name
+- ovirt_nic:
+    id: 00000000-0000-0000-0000-000000000000
+    name: "new_nic_name"
+    vm: myvm
+
+
+RETURN VALUES:
+
+id:
+    description: ID of the network interface which is managed
+    returned: On success if network interface is found.
+    type: str
+    sample: 7de90f31-222c-436c-a1ca-7e655bd5b60c
+nic:
+    description: "Dictionary of all the network interface attributes. Network interface attributes can be found on your oVirt/RHV instance
+                  at following url: http://ovirt.github.io/ovirt-engine-api-model/master/#types/nic."
+    returned: On success if network interface is found.
+    type: dict
+

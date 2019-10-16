@@ -1,0 +1,199 @@
+> BIGIP_APPSVCS_EXTENSION    (/usr/lib/python2.7/dist-packages/ansible/modules/network/f5/bigip_appsvcs_extension.py)
+
+        Manages application service deployments via the App Services Extension functionality in BIG-IP.
+
+  * This module is maintained by an Ansible Partner
+OPTIONS (= is mandatory):
+
+= content
+        Declaration of tenants configured on the system.
+        This parameter is most often used along with the `file' or `template' lookup plugins. Refer to the examples section for correct
+        usage.
+        For anything advanced or with formatting consider using the `template' lookup.
+        This can additionally be used for specifying application service configurations directly in YAML, however that is not an
+        encouraged practice and, if used at all, should only be used for the absolute smallest of configurations to prevent your
+        Playbooks from becoming too large.
+        If you `content' includes encrypted values (such as ciphertexts, passphrases, etc), the returned `changed' value will always be
+        true.
+        If you are using the `to_nice_json' filter, it will cause this module to fail because the purpose of that filter is to format the
+        JSON to be human-readable and this process includes inserting "extra characters that break JSON validators.
+
+        type: raw
+
+- force
+        Force updates a declaration.
+        This parameter should be used in cases where your declaration includes items that are encrypted or in cases (such as WAF
+        Policies) where you want a large reload to take place.
+        [Default: False]
+        type: bool
+
+= password
+        The password for the user account used to connect to the BIG-IP.
+        You may omit this option by setting the environment variable `F5_PASSWORD'.
+        (Aliases: pass, pwd)
+        type: str
+
+- provider
+        A dict object containing connection details.
+        [Default: (null)]
+        suboptions:
+          password:
+            aliases:
+            - pass
+            - pwd
+            description:
+            - The password for the user account used to connect to the BIG-IP.
+            - You may omit this option by setting the environment variable `F5_PASSWORD'.
+            required: true
+            type: str
+          server:
+            description:
+            - The BIG-IP host.
+            - You may omit this option by setting the environment variable `F5_SERVER'.
+            required: true
+            type: str
+          server_port:
+            default: 443
+            description:
+            - The BIG-IP server port.
+            - You may omit this option by setting the environment variable `F5_SERVER_PORT'.
+            type: int
+          ssh_keyfile:
+            description:
+            - Specifies the SSH keyfile to use to authenticate the connection to the remote
+              device.  This argument is only used for `cli' transports.
+            - You may omit this option by setting the environment variable `ANSIBLE_NET_SSH_KEYFILE'.
+            type: path
+          timeout:
+            default: 10
+            description:
+            - Specifies the timeout in seconds for communicating with the network device for
+              either connecting or sending commands.  If the timeout is exceeded before the
+              operation is completed, the module will error.
+            type: int
+          transport:
+            choices:
+            - cli
+            - rest
+            default: rest
+            description:
+            - Configures the transport connection to use when connecting to the remote device.
+            type: str
+          user:
+            description:
+            - The username to connect to the BIG-IP with. This user must have administrative
+              privileges on the device.
+            - You may omit this option by setting the environment variable `F5_USER'.
+            required: true
+            type: str
+          validate_certs:
+            default: true
+            description:
+            - If `no', SSL certificates are not validated. Use this only on personally controlled
+              sites using self-signed certificates.
+            - You may omit this option by setting the environment variable `F5_VALIDATE_CERTS'.
+            type: bool
+        
+        type: dict
+        version_added: 2.5
+
+= server
+        The BIG-IP host.
+        You may omit this option by setting the environment variable `F5_SERVER'.
+
+        type: str
+
+- server_port
+        The BIG-IP server port.
+        You may omit this option by setting the environment variable `F5_SERVER_PORT'.
+        [Default: 443]
+        type: int
+        version_added: 2.2
+
+- state
+        When `state' is `present', ensures the configuration exists.
+        When `state' is `absent', ensures that the configuration is removed.
+        (Choices: present, absent)[Default: present]
+        type: str
+
+- tenants
+        A list of tenants that you want to remove.
+        This parameter is only relevant when `state' is `absent'. It will be ignored when `state' is `present'.
+        A value of `all' will remove all tenants.
+        Tenants can be specified as a list as well to remove only specific tenants.
+        [Default: (null)]
+        type: raw
+
+= user
+        The username to connect to the BIG-IP with. This user must have administrative privileges on the device.
+        You may omit this option by setting the environment variable `F5_USER'.
+
+        type: str
+
+- validate_certs
+        If `no', SSL certificates are not validated. Use this only on personally controlled sites using self-signed certificates.
+        You may omit this option by setting the environment variable `F5_VALIDATE_CERTS'.
+        [Default: True]
+        type: bool
+        version_added: 2.0
+
+
+NOTES:
+      * For more information on using Ansible to manage F5 Networks devices see https://www.ansible.com/integrations/networks/f5.
+      * Requires BIG-IP software version >= 12.
+      * The F5 modules only manipulate the running configuration of the F5 product. To ensure that BIG-IP specific configuration
+        persists to disk, be sure to include at least one task that uses the [bigip_config] module to save the running
+        configuration. Refer to the module's documentation for the correct usage of the module to save your running configuration.
+
+
+AUTHOR: Tim Rupp (@caphrim007)
+        METADATA:
+          status:
+          - preview
+          supported_by: certified
+        
+
+EXAMPLES:
+
+- name: Deploy an app service configuration
+  bigip_appsvcs_extension:
+    content: "{{ lookup('file', '/path/to/appsvcs.json') }}"
+    state: present
+    provider:
+      password: secret
+      server: lb.mydomain.com
+      user: admin
+  delegate_to: localhost
+
+- name: Remove all app service configurations
+  bigip_appsvcs_extension:
+    tenants: all
+    state: absent
+    provider:
+      password: secret
+      server: lb.mydomain.com
+      user: admin
+  delegate_to: localhost
+
+- name: Remove tenants T1 and T2 from app service configurations
+  bigip_appsvcs_extension:
+    tenants:
+      - T1
+      - T2
+    state: absent
+    provider:
+      password: secret
+      server: lb.mydomain.com
+      user: admin
+  delegate_to: localhost
+
+
+RETURN VALUES:
+
+action:
+  description:
+    - The action performed.
+  returned: changed
+  type: str
+  sample: deploy
+

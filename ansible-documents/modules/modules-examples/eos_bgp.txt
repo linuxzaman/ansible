@@ -1,0 +1,104 @@
+EXAMPLES:
+
+- name: configure global bgp as 64496
+  eos_bgp:
+    config:
+      bgp_as: 64496
+      router_id: 192.0.2.1
+      log_neighbor_changes: True
+      neighbors:
+        - neighbor: 203.0.113.5
+          remote_as: 64511
+          timers:
+            keepalive: 300
+            holdtime: 360
+        - neighbor: 198.51.100.2
+          remote_as: 64498
+      networks:
+        - prefix: 198.51.100.0
+          route_map: RMAP_1
+        - prefix: 192.0.2.0
+          masklen: 23
+      address_family:
+        - afi: ipv4
+          safi: unicast
+          redistribute:
+            - protocol: isis
+              route_map: RMAP_1
+    operation: merge
+
+- name: Configure BGP neighbors
+  eos_bgp:
+    config:
+      bgp_as: 64496
+      neighbors:
+        - neighbor: 192.0.2.10
+          remote_as: 64496
+          description: IBGP_NBR_1
+          ebgp_multihop: 100
+          timers:
+            keepalive: 300
+            holdtime: 360
+
+        - neighbor: 192.0.2.15
+          remote_as: 64496
+          description: IBGP_NBR_2
+          ebgp_multihop: 150
+    operation: merge
+
+- name: Configure root-level networks for BGP
+  eos_bgp:
+    config:
+      bgp_as: 64496
+      networks:
+        - prefix: 203.0.113.0
+          masklen: 27
+          route_map: RMAP_1
+
+        - prefix: 203.0.113.32
+          masklen: 27
+          route_map: RMAP_2
+    operation: merge
+
+- name: Configure BGP neighbors under address family mode
+  eos_bgp:
+    config:
+      bgp_as: 64496
+      address_family:
+        - afi: ipv4
+          neighbors:
+            - neighbor: 203.0.113.10
+              activate: yes
+              default_originate: True
+
+            - neighbor: 192.0.2.15
+              activate: yes
+              graceful_restart: True
+    operation: merge
+
+- name: remove bgp as 64496 from config
+  eos_bgp:
+    config:
+      bgp_as: 64496
+    operation: delete
+
+
+RETURN VALUES:
+
+commands:
+  description: The list of configuration mode commands to send to the device
+  returned: always
+  type: list
+  sample:
+    - router bgp 64496
+    - bgp router-id 192.0.2.1
+    - bgp log-neighbor-changes
+    - neighbor 203.0.113.5 remote-as 64511
+    - neighbor 203.0.113.5 timers 300 360
+    - neighbor 198.51.100.2 remote-as 64498
+    - network 198.51.100.0 route-map RMAP_1
+    - network 192.0.2.0 mask 255.255.254.0
+    - address-family ipv4
+    - redistribute isis route-map RMAP_1
+    - exit-address-family
+

@@ -1,0 +1,66 @@
+> OPENWRT_INIT    (/usr/lib/python2.7/dist-packages/ansible/modules/system/openwrt_init.py)
+
+        Controls OpenWrt services on remote hosts.
+
+  * This module is maintained by The Ansible Community
+OPTIONS (= is mandatory):
+
+- enabled
+        Whether the service should start on boot. *At least one of state and enabled are required.*
+        [Default: (null)]
+        type: bool
+
+= name
+        Name of the service.
+        (Aliases: service)
+
+- pattern
+        If the service does not respond to the 'running' command, name a substring to look for as would be found in the output of the
+        `ps' command as a stand-in for a 'running' result.  If the string is found, the service will be assumed to be running.
+        [Default: (null)]
+
+- state
+        `started'/`stopped' are idempotent actions that will not run commands unless necessary. `restarted' will always bounce the
+        service. `reloaded' will always reload.
+        (Choices: started, stopped, restarted, reloaded)[Default: (null)]
+
+
+NOTES:
+      * One option other than name is required.
+
+
+REQUIREMENTS:  An OpenWrt system (with python)
+
+AUTHOR: Andrew Gaffney (@agaffney)
+        METADATA:
+          status:
+          - preview
+          supported_by: community
+        
+
+EXAMPLES:
+
+# Example action to start service httpd, if not running
+- openwrt_init:
+    state: started
+    name: httpd
+
+# Example action to stop service cron, if running
+- openwrt_init:
+    name: cron
+    state: stopped
+
+# Example action to reload service httpd, in all cases
+- openwrt_init:
+    name: httpd
+    state: reloaded
+
+# Example action to enable service httpd
+- openwrt_init:
+    name: httpd
+    enabled: yes
+
+
+RETURN VALUES:
+
+

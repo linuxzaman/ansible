@@ -1,0 +1,51 @@
+EXAMPLES:
+
+- name: Create Aggregates and wait 5 minutes until aggregate is online
+  na_ontap_aggregate:
+    state: present
+    service_state: online
+    name: ansibleAggr
+    disk_count: 1
+    wait_for_online: True
+    time_out: 300
+    hostname: "{{ netapp_hostname }}"
+    username: "{{ netapp_username }}"
+    password: "{{ netapp_password }}"
+
+- name: Manage Aggregates
+  na_ontap_aggregate:
+    state: present
+    service_state: offline
+    unmount_volumes: true
+    name: ansibleAggr
+    disk_count: 1
+    hostname: "{{ netapp_hostname }}"
+    username: "{{ netapp_username }}"
+    password: "{{ netapp_password }}"
+
+- name: Rename Aggregates
+  na_ontap_aggregate:
+    state: present
+    service_state: online
+    from_name: ansibleAggr
+    name: ansibleAggr2
+    disk_count: 1
+    hostname: "{{ netapp_hostname }}"
+    username: "{{ netapp_username }}"
+    password: "{{ netapp_password }}"
+
+- name: Delete Aggregates
+  na_ontap_aggregate:
+    state: absent
+    service_state: offline
+    unmount_volumes: true
+    name: ansibleAggr
+    hostname: "{{ netapp_hostname }}"
+    username: "{{ netapp_username }}"
+    password: "{{ netapp_password }}"
+
+
+RETURN VALUES:
+
+
+

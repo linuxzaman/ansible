@@ -1,0 +1,102 @@
+> FLATPAK_REMOTE    (/usr/lib/python2.7/dist-packages/ansible/modules/packaging/os/flatpak_remote.py)
+
+        Allows users to add or remove flatpak remotes. The flatpak remotes concept is comparable to what is called repositories in other
+        packaging formats. Currently, remote addition is only supported via `flatpakrepo' file URLs. Existing remotes will not be
+        updated. See the [flatpak] module for managing flatpaks.
+
+  * This module is maintained by The Ansible Community
+OPTIONS (= is mandatory):
+
+- executable
+        The path to the `flatpak' executable to use.
+        By default, this module looks for the `flatpak' executable on the path.
+        [Default: flatpak]
+
+- flatpakrepo_url
+        The URL to the `flatpakrepo' file representing the repository remote to add.
+        When used with `state=present', the flatpak remote specified under the `flatpakrepo_url' is added using the specified
+        installation `method'.
+        When used with `state=absent', this is not required.
+        Required when `state=present'.
+        [Default: (null)]
+
+- method
+        The installation method to use.
+        Defines if the `flatpak' is supposed to be installed globally for the whole `system' or only for the current `user'.
+        (Choices: system, user)[Default: system]
+
+= name
+        The desired name for the flatpak remote to be registered under on the managed host.
+        When used with `state=present', the remote will be added to the managed host under the specified `name'.
+        When used with `state=absent' the remote with that name will be removed.
+
+
+- state
+        Indicates the desired package state.
+        (Choices: absent, present)[Default: present]
+
+
+REQUIREMENTS:  flatpak
+
+AUTHOR: John Kwiatkoski (@JayKayy), Alexander Bethke (@oolongbrothers)
+        METADATA:
+          status:
+          - preview
+          supported_by: community
+        
+
+EXAMPLES:
+
+- name: Add the Gnome flatpak remote to the system installation
+  flatpak_remote:
+    name: gnome
+    state: present
+    flatpakrepo_url: https://sdk.gnome.org/gnome-apps.flatpakrepo
+
+- name: Add the flathub flatpak repository remote to the user installation
+  flatpak_remote:
+    name: flathub
+    state: present
+    flatpakrepo_url: https://dl.flathub.org/repo/flathub.flatpakrepo
+    method: user
+
+- name: Remove the Gnome flatpak remote from the user installation
+  flatpak_remote:
+    name: gnome
+    state: absent
+    method: user
+
+- name: Remove the flathub remote from the system installation
+  flatpak_remote:
+    name: flathub
+    state: absent
+
+
+RETURN VALUES:
+
+command:
+  description: The exact flatpak command that was executed
+  returned: When a flatpak command has been executed
+  type: str
+  sample: "/usr/bin/flatpak remote-add --system flatpak-test https://dl.flathub.org/repo/flathub.flatpakrepo"
+msg:
+  description: Module error message
+  returned: failure
+  type: str
+  sample: "Executable '/usr/local/bin/flatpak' was not found on the system."
+rc:
+  description: Return code from flatpak binary
+  returned: When a flatpak command has been executed
+  type: int
+  sample: 0
+stderr:
+  description: Error output from flatpak binary
+  returned: When a flatpak command has been executed
+  type: str
+  sample: "error: GPG verification enabled, but no summary found (check that the configured URL in remote config is correct)\n"
+stdout:
+  description: Output from flatpak binary
+  returned: When a flatpak command has been executed
+  type: str
+  sample: "flathub\tFlathub\thttps://dl.flathub.org/repo/\t1\t\n"
+

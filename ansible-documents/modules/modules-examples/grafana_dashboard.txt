@@ -1,0 +1,34 @@
+EXAMPLES:
+
+- hosts: localhost
+  connection: local
+  tasks:
+    - name: Import Grafana dashboard foo
+      grafana_dashboard:
+        grafana_url: http://grafana.company.com
+        grafana_api_key: "{{ grafana_api_key }}"
+        state: present
+        message: Updated by ansible
+        overwrite: yes
+        path: /path/to/dashboards/foo.json
+
+    - name: Export dashboard
+      grafana_dashboard:
+        grafana_url: http://grafana.company.com
+        grafana_user: "admin"
+        grafana_password: "{{ grafana_password }}"
+        org_id: 1
+        state: export
+        uid: "000000653"
+        path: "/path/to/dashboards/000000653.json"
+
+
+RETURN VALUES:
+
+---
+uid:
+  description: uid or slug of the created / deleted / exported dashboard.
+  returned: success
+  type: str
+  sample: 000000063
+

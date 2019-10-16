@@ -1,0 +1,137 @@
+EXAMPLES:
+
+- name: ensure a zone scoped storage_pool is present
+  cs_storage_pool:
+    zone: zone01
+    storage_url: rbd://admin:SECRET@ceph-mons.domain/poolname
+    provider: DefaultPrimary
+    name: Ceph RBD
+    scope: zone
+    hypervisor: KVM
+  delegate_to: localhost
+
+- name: ensure a cluster scoped storage_pool is disabled
+  cs_storage_pool:
+    name: Ceph RBD
+    zone: zone01
+    cluster: cluster01
+    pod: pod01
+    storage_url: rbd://admin:SECRET@ceph-the-mons.domain/poolname
+    provider: DefaultPrimary
+    scope: cluster
+    allocation_state: disabled
+  delegate_to: localhost
+
+- name: ensure a cluster scoped storage_pool is in maintenance
+  cs_storage_pool:
+    name: Ceph RBD
+    zone: zone01
+    cluster: cluster01
+    pod: pod01
+    storage_url: rbd://admin:SECRET@ceph-the-mons.domain/poolname
+    provider: DefaultPrimary
+    scope: cluster
+    allocation_state: maintenance
+  delegate_to: localhost
+
+- name: ensure a storage_pool is absent
+  cs_storage_pool:
+    name: Ceph RBD
+    state: absent
+  delegate_to: localhost
+
+
+RETURN VALUES:
+
+---
+id:
+  description: UUID of the pool.
+  returned: success
+  type: str
+  sample: a3fca65a-7db1-4891-b97c-48806a978a96
+created:
+  description: Date of the pool was created.
+  returned: success
+  type: str
+  sample: 2014-12-01T14:57:57+0100
+capacity_iops:
+  description: IOPS CloudStack can provision from this storage pool
+  returned: when available
+  type: int
+  sample: 60000
+zone:
+  description: The name of the zone.
+  returned: success
+  type: str
+  sample: Zone01
+cluster:
+  description: The name of the cluster.
+  returned: when scope is cluster
+  type: str
+  sample: Cluster01
+pod:
+  description: The name of the pod.
+  returned: when scope is cluster
+  type: str
+  sample: Cluster01
+disk_size_allocated:
+  description: The pool's currently allocated disk space.
+  returned: success
+  type: int
+  sample: 2443517624320
+disk_size_total:
+  description: The total size of the pool.
+  returned: success
+  type: int
+  sample: 3915055693824
+disk_size_used:
+  description: The pool's currently used disk size.
+  returned: success
+  type: int
+  sample: 1040862622180
+scope:
+  description: The scope of the storage pool.
+  returned: success
+  type: str
+  sample: cluster
+hypervisor:
+  description: Hypervisor related to this storage pool.
+  returned: when available
+  type: str
+  sample: KVM
+state:
+  description: The state of the storage pool as returned by the API.
+  returned: success
+  type: str
+  sample: Up
+allocation_state:
+  description: The state of the storage pool.
+  returned: success
+  type: str
+  sample: enabled
+path:
+  description: The storage pool path used in the storage_url.
+  returned: success
+  type: str
+  sample: poolname
+overprovision_factor:
+  description: The overprovision factor of the storage pool.
+  returned: success
+  type: str
+  sample: 2.0
+suitable_for_migration:
+  description: Whether the storage pool is suitable to migrate a volume or not.
+  returned: success
+  type: bool
+  sample: false
+storage_capabilities:
+  description: Capabilities of the torage pool.
+  returned: success
+  type: dict
+  sample: {"VOLUME_SNAPSHOT_QUIESCEVM": "false"}
+storage_tags:
+  description: the tags for the storage pool.
+  returned: success
+  type: list
+  sample: ["perf", "ssd"]
+

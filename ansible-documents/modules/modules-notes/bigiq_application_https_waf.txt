@@ -1,0 +1,355 @@
+> BIGIQ_APPLICATION_HTTPS_WAF    (/usr/lib/python2.7/dist-packages/ansible/modules/network/f5/bigiq_application_https_waf.py)
+
+        Manages BIG-IQ applications used for load balancing an HTTPS application on port 443 with a Web Application Firewall (WAF) using
+        an ASM Rapid Deployment policy.
+
+  * This module is maintained by an Ansible Partner
+OPTIONS (= is mandatory):
+
+- add_analytics
+        Collects statistics of the BIG-IP that the application is deployed to.
+        This parameter is only relevant when specifying a `service_environment' which is a BIG-IP; not an SSG.
+        [Default: False]
+        type: bool
+
+- client_ssl_profile
+        Specifies the SSL profile for managing client-side SSL traffic.
+        [Default: (null)]
+        suboptions:
+          cert_key_chain:
+            description:
+            - One or more certificates and keys to associate with the SSL profile.
+            - This option is always a list. The keys in the list dictate the details of the
+              client/key/chain/passphrase combination.
+            - Note that BIG-IPs can only have one of each type of each certificate/key type.
+              This means that you can only have one RSA, one DSA, and one ECDSA per profile.
+            - If you attempt to assign two RSA, DSA, or ECDSA certificate/key combo, the device
+              will reject this.
+            - This list is a complex list that specifies a number of keys.
+            - When creating a new profile, if this parameter is not specified, the default
+              value of `inherit' will be used.
+            suboptions:
+              cert:
+                description:
+                - Specifies a cert name for use.
+                required: true
+                type: str
+              chain:
+                description:
+                - Specifies a certificate chain that is relevant to the certificate and key
+                  mentioned earlier.
+                - This key is optional.
+                type: str
+              key:
+                description:
+                - Specifies a key name.
+                required: true
+                type: str
+              passphrase:
+                description:
+                - Contains the passphrase of the key file, should it require one.
+                - Passphrases are encrypted on the remote BIG-IP device.
+                type: str
+            type: raw
+          name:
+            description:
+            - The name of the client SSL profile to created and used.
+            - When creating a new application, if this value is not specified, the default
+              value of `clientssl' will be used.
+            type: str
+        
+        type: dict
+
+- description
+        Description of the application.
+        [Default: (null)]
+        type: str
+
+- domain_names
+        Specifies host names that are used to access the web application that this security policy protects.
+        When creating a new application, this parameter is required.
+        [Default: (null)]
+        type: list
+
+- inbound_virtual
+        Settings to configure the virtual which will receive the inbound connection.
+        This virtual will be used to host the HTTPS endpoint of the application.
+        Traffic destined to the `redirect_virtual' will be offloaded to this parameter to ensure that proper redirection from insecure,
+        to secure, occurs.
+        [Default: (null)]
+        suboptions:
+          address:
+            description:
+            - Specifies destination IP address information to which the virtual server sends
+              traffic.
+            - This parameter is required when creating a new application.
+            type: str
+          netmask:
+            description:
+            - Specifies the netmask to associate with the given `destination'.
+            - This parameter is required when creating a new application.
+            type: str
+          port:
+            default: 443
+            description:
+            - The port that the virtual listens for connections on.
+            - When creating a new application, if this parameter is not specified, the default
+              value of `443' will be used.
+            type: str
+        
+        type: dict
+
+= name
+        Name of the new application.
+
+        type: str
+
+= password
+        The password for the user account used to connect to the BIG-IP.
+        You may omit this option by setting the environment variable `F5_PASSWORD'.
+        (Aliases: pass, pwd)
+        type: str
+
+- provider
+        A dict object containing connection details.
+        [Default: (null)]
+        suboptions:
+          password:
+            aliases:
+            - pass
+            - pwd
+            description:
+            - The password for the user account used to connect to the BIG-IP.
+            - You may omit this option by setting the environment variable `F5_PASSWORD'.
+            required: true
+            type: str
+          server:
+            description:
+            - The BIG-IP host.
+            - You may omit this option by setting the environment variable `F5_SERVER'.
+            required: true
+            type: str
+          server_port:
+            default: 443
+            description:
+            - The BIG-IP server port.
+            - You may omit this option by setting the environment variable `F5_SERVER_PORT'.
+            type: int
+          ssh_keyfile:
+            description:
+            - Specifies the SSH keyfile to use to authenticate the connection to the remote
+              device.  This argument is only used for `cli' transports.
+            - You may omit this option by setting the environment variable `ANSIBLE_NET_SSH_KEYFILE'.
+            type: path
+          timeout:
+            default: 10
+            description:
+            - Specifies the timeout in seconds for communicating with the network device for
+              either connecting or sending commands.  If the timeout is exceeded before the
+              operation is completed, the module will error.
+            type: int
+          transport:
+            choices:
+            - cli
+            - rest
+            default: rest
+            description:
+            - Configures the transport connection to use when connecting to the remote device.
+            type: str
+          user:
+            description:
+            - The username to connect to the BIG-IP with. This user must have administrative
+              privileges on the device.
+            - You may omit this option by setting the environment variable `F5_USER'.
+            required: true
+            type: str
+          validate_certs:
+            default: true
+            description:
+            - If `no', SSL certificates are not validated. Use this only on personally controlled
+              sites using self-signed certificates.
+            - You may omit this option by setting the environment variable `F5_VALIDATE_CERTS'.
+            type: bool
+        
+        type: dict
+        version_added: 2.5
+
+- redirect_virtual
+        Settings to configure the virtual which will receive the connection to be redirected.
+        This virtual will be used to host the HTTP endpoint of the application.
+        Traffic destined to this parameter will be offloaded to the `inbound_virtual' parameter to ensure that proper redirection from
+        insecure, to secure, occurs.
+        [Default: (null)]
+        suboptions:
+          address:
+            description:
+            - Specifies destination IP address information to which the virtual server sends
+              traffic.
+            - This parameter is required when creating a new application.
+            type: str
+          netmask:
+            description:
+            - Specifies the netmask to associate with the given `destination'.
+            - This parameter is required when creating a new application.
+            type: str
+          port:
+            default: 80
+            description:
+            - The port that the virtual listens for connections on.
+            - When creating a new application, if this parameter is not specified, the default
+              value of `80' will be used.
+            type: str
+        
+        type: dict
+
+= server
+        The BIG-IP host.
+        You may omit this option by setting the environment variable `F5_SERVER'.
+
+        type: str
+
+- server_port
+        The BIG-IP server port.
+        You may omit this option by setting the environment variable `F5_SERVER_PORT'.
+        [Default: 443]
+        type: int
+        version_added: 2.2
+
+- servers
+        A list of servers that the application is hosted on.
+        If you are familiar with other BIG-IP setting, you might also refer to this list as the list of pool members.
+        When creating a new application, at least one server is required.
+        [Default: (null)]
+        suboptions:
+          address:
+            description:
+            - The IP address of the server.
+            type: str
+          port:
+            default: 80
+            description:
+            - The port of the server.
+            type: str
+        
+        type: list
+
+- service_environment
+        Specifies the name of service environment that the application will be deployed to.
+        When creating a new application, this parameter is required.
+        [Default: (null)]
+        type: str
+
+- state
+        The state of the resource on the system.
+        When `present', guarantees that the resource exists with the provided attributes.
+        When `absent', removes the resource from the system.
+        (Choices: absent, present)[Default: present]
+        type: str
+
+= user
+        The username to connect to the BIG-IP with. This user must have administrative privileges on the device.
+        You may omit this option by setting the environment variable `F5_USER'.
+
+        type: str
+
+- validate_certs
+        If `no', SSL certificates are not validated. Use this only on personally controlled sites using self-signed certificates.
+        You may omit this option by setting the environment variable `F5_VALIDATE_CERTS'.
+        [Default: True]
+        type: bool
+        version_added: 2.0
+
+- wait
+        If the module should wait for the application to be created, deleted or updated.
+        [Default: True]
+        type: bool
+
+
+NOTES:
+      * This module will not work on BIGIQ version 6.1.x or greater.
+      * For more information on using Ansible to manage F5 Networks devices see https://www.ansible.com/integrations/networks/f5.
+      * Requires BIG-IP software version >= 12.
+      * The F5 modules only manipulate the running configuration of the F5 product. To ensure that BIG-IP specific configuration
+        persists to disk, be sure to include at least one task that uses the [bigip_config] module to save the running
+        configuration. Refer to the module's documentation for the correct usage of the module to save your running configuration.
+
+
+AUTHOR: Tim Rupp (@caphrim007)
+        METADATA:
+          status:
+          - preview
+          supported_by: certified
+        
+
+EXAMPLES:
+
+- name: Load balance an HTTPS application on port 443 with a WAF using ASM
+  bigiq_application_https_waf:
+    name: my-app
+    description: Redirect HTTP to HTTPS via WAF
+    service_environment: my-ssg
+    servers:
+      - address: 1.2.3.4
+        port: 8080
+      - address: 5.6.7.8
+        port: 8080
+    inbound_virtual:
+      address: 2.2.2.2
+      netmask: 255.255.255.255
+      port: 443
+    redirect_virtual:
+      address: 2.2.2.2
+      netmask: 255.255.255.255
+      port: 80
+    provider:
+      password: secret
+      server: lb.mydomain.com
+      user: admin
+    state: present
+  delegate_to: localhost
+
+
+RETURN VALUES:
+
+description:
+  description: The new description of the application of the resource.
+  returned: changed
+  type: str
+  sample: My application
+service_environment:
+  description: The environment which the service was deployed to.
+  returned: changed
+  type: str
+  sample: my-ssg1
+inbound_virtual_destination:
+  description: The destination of the virtual that was created.
+  returned: changed
+  type: str
+  sample: 6.7.8.9
+inbound_virtual_netmask:
+  description: The network mask of the provided inbound destination.
+  returned: changed
+  type: str
+  sample: 255.255.255.0
+inbound_virtual_port:
+  description: The port the inbound virtual address listens on.
+  returned: changed
+  type: int
+  sample: 80
+servers:
+  description: List of servers, and their ports, that make up the application.
+  type: complex
+  returned: changed
+  contains:
+    address:
+      description: The IP address of the server.
+      returned: changed
+      type: str
+      sample: 2.3.4.5
+    port:
+      description: The port that the server listens on.
+      returned: changed
+      type: int
+      sample: 8080
+  sample: hash/dictionary of values
+

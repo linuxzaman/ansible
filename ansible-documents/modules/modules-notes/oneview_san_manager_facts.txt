@@ -1,0 +1,83 @@
+> ONEVIEW_SAN_MANAGER_FACTS    (/usr/lib/python2.7/dist-packages/ansible/modules/remote_management/oneview/oneview_san_manager_facts.py)
+
+        Retrieve facts about one or more of the SAN Managers from OneView
+
+  * This module is maintained by The Ansible Community
+OPTIONS (= is mandatory):
+
+- config
+        Path to a .json configuration file containing the OneView client configuration. The configuration file is optional and when used
+        should be present in the host running the ansible commands. If the file path is not provided, the configuration will be loaded
+        from environment variables. For links to example configuration files or how to use the environment variables verify the notes
+        section.
+        [Default: (null)]
+        type: path
+
+- params
+        List of params to delimit, filter and sort the list of resources.
+        params allowed: - `start': The first item to return, using 0-based indexing. - `count': The number of resources to return. -
+        `query': A general query string to narrow the list of resources returned. - `sort': The sort order of the returned data set.
+        [Default: (null)]
+
+- provider_display_name
+        Provider Display Name.
+        [Default: (null)]
+
+
+NOTES:
+      * A sample configuration file for the config parameter can be found at: https://github.com/HewlettPackard/oneview-
+        ansible/blob/master/examples/oneview_config-rename.json
+      * Check how to use environment variables for configuration at: https://github.com/HewlettPackard/oneview-ansible#environment-
+        variables
+      * Additional Playbooks for the HPE OneView Ansible modules can be found at: https://github.com/HewlettPackard/oneview-
+        ansible/tree/master/examples
+      * The OneView API version used will directly affect returned and expected fields in resources. Information on setting the
+        desired API version and can be found at: https://github.com/HewlettPackard/oneview-ansible#setting-your-oneview-version
+
+
+REQUIREMENTS:  hpOneView >= 2.0.1, python >= 2.7.9
+
+AUTHOR: Felipe Bulsoni (@fgbulsoni), Thiago Miotto (@tmiotto), Adriane Cardozo (@adriane-cardozo)
+        METADATA:
+          status:
+          - preview
+          supported_by: community
+        
+
+EXAMPLES:
+
+- name: Gather facts about all SAN Managers
+  oneview_san_manager_facts:
+    config: /etc/oneview/oneview_config.json
+  delegate_to: localhost
+
+- debug: var=san_managers
+
+- name: Gather paginated, filtered and sorted facts about SAN Managers
+  oneview_san_manager_facts:
+    config: /etc/oneview/oneview_config.json
+    params:
+      start: 0
+      count: 3
+      sort: name:ascending
+      query: isInternal eq false
+  delegate_to: localhost
+
+- debug: var=san_managers
+
+- name: Gather facts about a SAN Manager by provider display name
+  oneview_san_manager_facts:
+    config: /etc/oneview/oneview_config.json
+    provider_display_name: Brocade Network Advisor
+  delegate_to: localhost
+
+- debug: var=san_managers
+
+
+RETURN VALUES:
+
+san_managers:
+    description: Has all the OneView facts about the SAN Managers.
+    returned: Always, but can be null.
+    type: dict
+

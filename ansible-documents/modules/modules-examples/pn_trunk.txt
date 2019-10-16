@@ -1,0 +1,33 @@
+EXAMPLES:
+
+- name: create trunk
+  pn_trunk:
+    state: 'present'
+    pn_name: 'spine-to-leaf'
+    pn_ports: '11,12,13,14'
+
+- name: delete trunk
+  pn_trunk:
+    state: 'absent'
+    pn_name: 'spine-to-leaf'
+
+
+RETURN VALUES:
+
+command:
+  description: The CLI command run on the target node(s).
+  returned: always
+  type: str
+stdout:
+  description: The set of responses from the trunk command.
+  returned: always
+  type: list
+stderr:
+  description: The set of error responses from the trunk command.
+  returned: on error
+  type: list
+changed:
+  description: Indicates whether the CLI caused changes on the target.
+  returned: always
+  type: bool
+

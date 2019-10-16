@@ -1,0 +1,37 @@
+EXAMPLES:
+
+- name: Ensure PIM is not running on the interface
+  nxos_pim_interface:
+    interface: eth1/33
+    state: absent
+
+- name: Ensure the interface has pim-sm enabled with the appropriate priority and hello interval
+  nxos_pim_interface:
+    interface: eth1/33
+    dr_prio: 10
+    hello_interval: 40
+    state: present
+
+- name: Ensure join-prune policies exist
+  nxos_pim_interface:
+    interface: eth1/33
+    jp_policy_in: JPIN
+    jp_policy_out: JPOUT
+    jp_type_in: routemap
+    jp_type_out: routemap
+
+- name: Ensure defaults are in place
+  nxos_pim_interface:
+    interface: eth1/33
+    state: default
+
+
+RETURN VALUES:
+
+commands:
+    description: command sent to the device
+    returned: always
+    type: list
+    sample: ["interface eth1/33", "ip pim neighbor-policy test",
+            "ip pim neighbor-policy test"]
+

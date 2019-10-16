@@ -1,0 +1,47 @@
+EXAMPLES:
+
+- name: Create a vCMP guest
+  bigip_vcmp_guest:
+    name: foo
+    mgmt_network: bridge
+    mgmt_address: 10.20.30.40/24
+    provider:
+      password: secret
+      server: lb.mydomain.com
+      user: admin
+  delegate_to: localhost
+
+- name: Create a vCMP guest with specific VLANs
+  bigip_vcmp_guest:
+    name: foo
+    mgmt_network: bridge
+    mgmt_address: 10.20.30.40/24
+    vlans:
+      - vlan1
+      - vlan2
+    provider:
+      password: secret
+      server: lb.mydomain.com
+      user: admin
+  delegate_to: localhost
+
+- name: Remove vCMP guest and disk
+  bigip_vcmp_guest:
+    name: guest1
+    state: absent
+    delete_virtual_disk: yes
+    provider:
+      password: secret
+      server: lb.mydomain.com
+      user: admin
+  register: result
+
+
+RETURN VALUES:
+
+vlans:
+  description: The VLANs assigned to the vCMP guest, in their full path format.
+  returned: changed
+  type: list
+  sample: ['/Common/vlan1', '/Common/vlan2']
+

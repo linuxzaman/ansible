@@ -1,0 +1,220 @@
+> OS_NETWORK    (/usr/lib/python2.7/dist-packages/ansible/modules/cloud/openstack/os_network.py)
+
+        Add or remove network from OpenStack.
+
+  * This module is maintained by The Ansible Community
+OPTIONS (= is mandatory):
+
+- admin_state_up
+        Whether the state should be marked as up or down.
+        [Default: yes]
+        type: bool
+
+- api_timeout
+        How long should the socket layer wait before timing out for API calls. If this is omitted, nothing will be passed to the requests
+        library.
+        [Default: (null)]
+        type: int
+
+- auth
+        Dictionary containing auth information as needed by the cloud's auth plugin strategy. For the default `password' plugin, this
+        would contain `auth_url', `username', `password', `project_name' and any information about domains (for example,
+        `os_user_domain_name' or `os_project_domain_name') if the cloud supports them. For other plugins, this param will need to contain
+        whatever parameters that auth plugin requires. This parameter is not needed if a named cloud is provided or OpenStack OS_*
+        environment variables are present.
+        [Default: (null)]
+        type: dict
+
+- auth_type
+        Name of the auth plugin to use. If the cloud uses something other than password authentication, the name of the plugin should be
+        indicated here and the contents of the `auth' parameter should be updated accordingly.
+        [Default: (null)]
+        type: str
+
+- availability_zone
+        Ignored. Present for backwards compatibility
+        [Default: (null)]
+
+- ca_cert
+        A path to a CA Cert bundle that can be used as part of verifying SSL API requests.
+        (Aliases: cacert)[Default: (null)]
+        type: str
+
+- client_cert
+        A path to a client certificate to use as part of the SSL transaction.
+        (Aliases: cert)[Default: (null)]
+        type: str
+
+- client_key
+        A path to a client key to use as part of the SSL transaction.
+        (Aliases: key)[Default: (null)]
+        type: str
+
+- cloud
+        Named cloud or cloud config to operate against. If `cloud' is a string, it references a named cloud config as defined in an
+        OpenStack clouds.yaml file. Provides default values for `auth' and `auth_type'. This parameter is not needed if `auth' is
+        provided or if OpenStack OS_* environment variables are present. If `cloud' is a dict, it contains a complete cloud configuration
+        like would be in a section of clouds.yaml.
+        [Default: (null)]
+        type: raw
+
+- external
+        Whether this network is externally accessible.
+        [Default: no]
+        type: bool
+
+- interface
+        Endpoint URL type to fetch from the service catalog.
+        (Aliases: endpoint_type)(Choices: admin, internal, public)[Default: public]
+        type: str
+        version_added: 2.3
+
+= name
+        Name to be assigned to the network.
+
+
+- port_security_enabled
+        Whether port security is enabled on the network or not. Network will use OpenStack defaults if this option is not utilised.
+        [Default: (null)]
+        type: bool
+        version_added: 2.8
+
+- project
+        Project name or ID containing the network (name admin-only)
+        [Default: (null)]
+        version_added: 2.1
+
+- provider_network_type
+        The type of physical network that maps to this network resource.
+        [Default: (null)]
+        version_added: 2.1
+
+- provider_physical_network
+        The physical network where this network object is implemented.
+        [Default: (null)]
+        version_added: 2.1
+
+- provider_segmentation_id
+        An isolated segment on the physical network. The `network_type' attribute defines the segmentation model. For example, if the
+        `network_type' value is vlan, this ID is a vlan identifier. If the `network_type' value is gre, this ID is a gre key.
+        [Default: (null)]
+        version_added: 2.1
+
+- region_name
+        Name of the region.
+        [Default: (null)]
+        type: str
+
+- shared
+        Whether this network is shared or not.
+        [Default: no]
+        type: bool
+
+- state
+        Indicate desired state of the resource.
+        (Choices: present, absent)[Default: present]
+
+- timeout
+        How long should ansible wait for the requested resource.
+        [Default: 180]
+        type: int
+
+- validate_certs
+        Whether or not SSL API requests should be verified.
+        Before Ansible 2.3 this defaulted to `yes'.
+        (Aliases: verify)[Default: False]
+        type: bool
+
+- wait
+        Should ansible wait until the requested resource is complete.
+        [Default: True]
+        type: bool
+
+
+NOTES:
+      * The standard OpenStack environment variables, such as `OS_USERNAME' may be used instead of providing explicit values.
+      * Auth information is driven by openstacksdk, which means that values can come from a yaml config file in
+        /etc/ansible/openstack.yaml, /etc/openstack/clouds.yaml or ~/.config/openstack/clouds.yaml, then from standard environment
+        variables, then finally by explicit parameters in plays. More information can be found at
+        https://docs.openstack.org/openstacksdk/
+
+
+REQUIREMENTS:  openstacksdk, python >= 2.7
+
+AUTHOR: Monty Taylor (@emonty)
+        METADATA:
+          status:
+          - preview
+          supported_by: community
+        
+
+EXAMPLES:
+
+# Create an externally accessible network named 'ext_network'.
+- os_network:
+    cloud: mycloud
+    state: present
+    name: ext_network
+    external: true
+
+
+RETURN VALUES:
+
+network:
+    description: Dictionary describing the network.
+    returned: On success when I(state) is 'present'.
+    type: complex
+    contains:
+        id:
+            description: Network ID.
+            type: str
+            sample: "4bb4f9a5-3bd2-4562-bf6a-d17a6341bb56"
+        name:
+            description: Network name.
+            type: str
+            sample: "ext_network"
+        shared:
+            description: Indicates whether this network is shared across all tenants.
+            type: bool
+            sample: false
+        status:
+            description: Network status.
+            type: str
+            sample: "ACTIVE"
+        mtu:
+            description: The MTU of a network resource.
+            type: int
+            sample: 0
+        admin_state_up:
+            description: The administrative state of the network.
+            type: bool
+            sample: true
+        port_security_enabled:
+            description: The port security status
+            type: bool
+            sample: true
+        router:external:
+            description: Indicates whether this network is externally accessible.
+            type: bool
+            sample: true
+        tenant_id:
+            description: The tenant ID.
+            type: str
+            sample: "06820f94b9f54b119636be2728d216fc"
+        subnets:
+            description: The associated subnets.
+            type: list
+            sample: []
+        "provider:physical_network":
+            description: The physical network where this network object is implemented.
+            type: str
+            sample: my_vlan_net
+        "provider:network_type":
+            description: The type of physical network that maps to this network resource.
+            type: str
+            sample: vlan
+        "provider:segmentation_id":
+            description: An isolated segment on the physical network.
+            type: str
+            sample: 101
+

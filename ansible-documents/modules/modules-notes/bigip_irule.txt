@@ -1,0 +1,197 @@
+> BIGIP_IRULE    (/usr/lib/python2.7/dist-packages/ansible/modules/network/f5/bigip_irule.py)
+
+        Manage iRules across different modules on a BIG-IP.
+
+  * This module is maintained by an Ansible Partner
+OPTIONS (= is mandatory):
+
+- content
+        When used instead of 'src', sets the contents of an iRule directly to the specified value. This is for simple values, but can be
+        used with lookup plugins for anything complex or with formatting. Either one of `src' or `content' must be provided.
+        [Default: (null)]
+        type: str
+
+= module
+        The BIG-IP module to add the iRule to.
+        (Choices: ltm, gtm)
+        type: str
+
+= name
+        The name of the iRule.
+
+        type: str
+
+- partition
+        Device partition to manage resources on.
+        [Default: Common]
+        type: str
+        version_added: 2.5
+        
+
+= password
+        The password for the user account used to connect to the BIG-IP.
+        You may omit this option by setting the environment variable `F5_PASSWORD'.
+        (Aliases: pass, pwd)
+        type: str
+
+- provider
+        A dict object containing connection details.
+        [Default: (null)]
+        suboptions:
+          password:
+            aliases:
+            - pass
+            - pwd
+            description:
+            - The password for the user account used to connect to the BIG-IP.
+            - You may omit this option by setting the environment variable `F5_PASSWORD'.
+            required: true
+            type: str
+          server:
+            description:
+            - The BIG-IP host.
+            - You may omit this option by setting the environment variable `F5_SERVER'.
+            required: true
+            type: str
+          server_port:
+            default: 443
+            description:
+            - The BIG-IP server port.
+            - You may omit this option by setting the environment variable `F5_SERVER_PORT'.
+            type: int
+          ssh_keyfile:
+            description:
+            - Specifies the SSH keyfile to use to authenticate the connection to the remote
+              device.  This argument is only used for `cli' transports.
+            - You may omit this option by setting the environment variable `ANSIBLE_NET_SSH_KEYFILE'.
+            type: path
+          timeout:
+            default: 10
+            description:
+            - Specifies the timeout in seconds for communicating with the network device for
+              either connecting or sending commands.  If the timeout is exceeded before the
+              operation is completed, the module will error.
+            type: int
+          transport:
+            choices:
+            - cli
+            - rest
+            default: rest
+            description:
+            - Configures the transport connection to use when connecting to the remote device.
+            type: str
+          user:
+            description:
+            - The username to connect to the BIG-IP with. This user must have administrative
+              privileges on the device.
+            - You may omit this option by setting the environment variable `F5_USER'.
+            required: true
+            type: str
+          validate_certs:
+            default: true
+            description:
+            - If `no', SSL certificates are not validated. Use this only on personally controlled
+              sites using self-signed certificates.
+            - You may omit this option by setting the environment variable `F5_VALIDATE_CERTS'.
+            type: bool
+        
+        type: dict
+        version_added: 2.5
+
+= server
+        The BIG-IP host.
+        You may omit this option by setting the environment variable `F5_SERVER'.
+
+        type: str
+
+- server_port
+        The BIG-IP server port.
+        You may omit this option by setting the environment variable `F5_SERVER_PORT'.
+        [Default: 443]
+        type: int
+        version_added: 2.2
+
+= src
+        The iRule file to interpret and upload to the BIG-IP. Either one of `src' or `content' must be provided.
+
+        type: path
+
+- state
+        Whether the iRule should exist or not.
+        (Choices: present, absent)[Default: present]
+        type: str
+
+= user
+        The username to connect to the BIG-IP with. This user must have administrative privileges on the device.
+        You may omit this option by setting the environment variable `F5_USER'.
+
+        type: str
+
+- validate_certs
+        If `no', SSL certificates are not validated. Use this only on personally controlled sites using self-signed certificates.
+        You may omit this option by setting the environment variable `F5_VALIDATE_CERTS'.
+        [Default: True]
+        type: bool
+        version_added: 2.0
+
+
+NOTES:
+      * For more information on using Ansible to manage F5 Networks devices see https://www.ansible.com/integrations/networks/f5.
+      * Requires BIG-IP software version >= 12.
+      * The F5 modules only manipulate the running configuration of the F5 product. To ensure that BIG-IP specific configuration
+        persists to disk, be sure to include at least one task that uses the [bigip_config] module to save the running
+        configuration. Refer to the module's documentation for the correct usage of the module to save your running configuration.
+
+
+AUTHOR: Tim Rupp (@caphrim007), Wojciech Wypior (@wojtek0806)
+        METADATA:
+          status:
+          - stableinterface
+          supported_by: certified
+        
+
+EXAMPLES:
+
+- name: Add the iRule contained in template irule.tcl to the LTM module
+  bigip_irule:
+    content: "{{ lookup('template', 'irule.tcl') }}"
+    module: ltm
+    name: MyiRule
+    state: present
+    provider:
+      user: admin
+      password: secret
+      server: lb.mydomain.com
+  delegate_to: localhost
+
+- name: Add the iRule contained in static file irule.tcl to the LTM module
+  bigip_irule:
+    module: ltm
+    name: MyiRule
+    src: irule.tcl
+    state: present
+    provider:
+      user: admin
+      password: secret
+      server: lb.mydomain.com
+  delegate_to: localhost
+
+
+RETURN VALUES:
+
+module:
+  description: The module that the iRule was added to
+  returned: changed and success
+  type: str
+  sample: gtm
+src:
+  description: The filename that included the iRule source
+  returned: changed and success, when provided
+  type: str
+  sample: /opt/src/irules/example1.tcl
+content:
+  description: The content of the iRule that was managed
+  returned: changed and success
+  type: str
+  sample: "when LB_FAILED { set wipHost [LB::server addr] }"
+

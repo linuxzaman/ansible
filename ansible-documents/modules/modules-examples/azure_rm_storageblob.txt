@@ -1,0 +1,59 @@
+EXAMPLES:
+
+- name: Remove container foo
+  azure_rm_storageblob:
+    resource_group: myResourceGroup
+    storage_account_name: clh0002
+    container: foo
+    state: absent
+
+- name: Create container foo and upload a file
+  azure_rm_storageblob:
+    resource_group: myResourceGroup
+    storage_account_name: clh0002
+    container: foo
+    blob: graylog.png
+    src: ./files/graylog.png
+    public_access: container
+    content_type: 'application/image'
+
+- name: Download the file
+  azure_rm_storageblob:
+    resource_group: myResourceGroup
+    storage_account_name: clh0002
+    container: foo
+    blob: graylog.png
+    dest: ~/tmp/images/graylog.png
+
+
+RETURN VALUES:
+
+blob:
+    description: Facts about the current state of the blob.
+    returned: when a blob is operated on
+    type: dict
+    sample: {
+        "content_length": 136532,
+        "content_settings": {
+            "cache_control": null,
+            "content_disposition": null,
+            "content_encoding": null,
+            "content_language": null,
+            "content_md5": null,
+            "content_type": "application/image"
+        },
+        "last_modified": "09-Mar-2016 22:08:25 +0000",
+        "name": "graylog.png",
+        "tags": {},
+        "type": "BlockBlob"
+    }
+container:
+    description: Facts about the current state of the selected container.
+    returned: always
+    type: dict
+    sample: {
+        "last_mdoified": "09-Mar-2016 19:28:26 +0000",
+        "name": "foo",
+        "tags": {}
+    }
+

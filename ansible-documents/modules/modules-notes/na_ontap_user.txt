@@ -1,0 +1,140 @@
+> NA_ONTAP_USER    (/usr/lib/python2.7/dist-packages/ansible/modules/storage/netapp/na_ontap_user.py)
+
+        Create or destroy users.
+
+  * This module is maintained by an Ansible Partner
+OPTIONS (= is mandatory):
+
+= applications
+        List of application to grant access to.
+        (Aliases: application)(Choices: console, http, ontapi, rsh, snmp, service-processor, sp, ssh, telnet)
+        type: list
+
+= authentication_method
+        Authentication method for the application.
+        Not all authentication methods are valid for an application.
+        Valid authentication methods for each application are as denoted in `authentication_choices_description'.
+        Password for console application
+        Password, domain, nsswitch, cert for http application.
+        Password, domain, nsswitch, cert for ontapi application.
+        Community for snmp application (when creating SNMPv1 and SNMPv2 users).
+        The usm and community for snmp application (when creating SNMPv3 users).
+        Password for sp application.
+        Password for rsh application.
+        Password for telnet application.
+        Password, publickey, domain, nsswitch for ssh application.
+        (Choices: community, password, publickey, domain, nsswitch, usm)
+
+= hostname
+        The hostname or IP address of the ONTAP instance.
+
+        type: str
+
+- http_port
+        Override the default port (80 or 443) with this port
+        [Default: (null)]
+        type: int
+
+- https
+        Enable and disable https
+        [Default: False]
+        type: bool
+
+- lock_user
+        Whether the specified user account is locked.
+        [Default: (null)]
+        type: bool
+
+= name
+        The name of the user to manage.
+
+
+- ontapi
+        The ontap api version to use
+        [Default: (null)]
+        type: int
+
+= password
+        Password for the specified user.
+        (Aliases: pass)
+        type: str
+
+- role_name
+        The name of the role. Required when `state=present'
+        [Default: (null)]
+
+- set_password
+        Password for the user account.
+        It is ignored for creating snmp users, but is required for creating non-snmp users.
+        For an existing user, this value will be used as the new password.
+        [Default: (null)]
+
+- state
+        Whether the specified user should exist or not.
+        (Choices: present, absent)[Default: present]
+
+= username
+        This can be a Cluster-scoped or SVM-scoped account, depending on whether a Cluster-level or SVM-level API is required. For more
+        information, please read the documentation https://mysupport.netapp.com/NOW/download/software/nmsdk/9.4/.
+        (Aliases: user)
+        type: str
+
+- validate_certs
+        If set to `no', the SSL certificates will not be validated.
+        This should only set to `False' used on personally controlled sites using self-signed certificates.
+        [Default: True]
+        type: bool
+
+= vserver
+        The name of the vserver to use.
+
+
+
+NOTES:
+      * The modules prefixed with na\\_ontap are built to support the ONTAP storage platform.
+
+
+REQUIREMENTS:  A physical or virtual clustered Data ONTAP system. The modules support Data ONTAP 9.1 and onward, Ansible 2.6, Python2
+        netapp-lib (2017.10.30) or later. Install using 'pip install netapp-lib', Python3 netapp-lib (2018.11.13) or
+        later. Install using 'pip install netapp-lib', To enable http on the cluster you must run the following commands
+        'set -privilege advanced;' 'system services web modify -http-enabled true;'
+
+AUTHOR: NetApp Ansible Team (@carchi8py) <ng-ansibleteam@netapp.com>
+        METADATA:
+          status:
+          - preview
+          supported_by: certified
+        
+
+EXAMPLES:
+
+- name: Create User
+      na_ontap_user:
+        state: present
+        name: SampleUser
+        applications: ssh,console
+        authentication_method: password
+        set_password: apn1242183u1298u41
+        lock_user: True
+        role_name: vsadmin
+        vserver: ansibleVServer
+        hostname: "{{ netapp_hostname }}"
+        username: "{{ netapp_username }}"
+        password: "{{ netapp_password }}"
+
+    - name: Delete User
+      na_ontap_user:
+        state: absent
+        name: SampleUser
+        applications: ssh
+        authentication_method: password
+        vserver: ansibleVServer
+        hostname: "{{ netapp_hostname }}"
+        username: "{{ netapp_username }}"
+        password: "{{ netapp_password }}"
+
+
+RETURN VALUES:
+
+
+

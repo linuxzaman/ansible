@@ -1,0 +1,28 @@
+EXAMPLES:
+
+- name: Add lun to storage group
+  emc_vnx_sg_member:
+    name: sg01
+    sp_address: sp1a.fqdn
+    sp_user: sysadmin
+    sp_password: sysadmin
+    lunid: 100
+    state: present
+
+- name: Remove lun from storage group
+  emc_vnx_sg_member:
+    name: sg01
+    sp_address: sp1a.fqdn
+    sp_user: sysadmin
+    sp_password: sysadmin
+    lunid: 100
+    state: absent
+
+
+RETURN VALUES:
+
+hluid:
+    description: LUNID that hosts attached to the storage group will see.
+    type: int
+    returned: success
+

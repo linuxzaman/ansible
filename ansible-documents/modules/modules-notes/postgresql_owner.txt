@@ -1,0 +1,175 @@
+> POSTGRESQL_OWNER    (/usr/lib/python2.7/dist-packages/ansible/modules/database/postgresql/postgresql_owner.py)
+
+        Change an owner of PostgreSQL database object. Also allows to reassign the ownership of database objects owned by a database role
+        to another role. For more information about REASSIGN OWNED BY command see https://www.postgresql.org/docs/current/sql-reassign-
+        owned.html.
+
+  * This module is maintained by The Ansible Community
+OPTIONS (= is mandatory):
+
+- ca_cert
+        Specifies the name of a file containing SSL certificate authority (CA) certificate(s).
+        If the file exists, the server's certificate will be verified to be signed by one of these authorities.
+        (Aliases: ssl_rootcert)[Default: (null)]
+        type: str
+
+- db
+        Name of database to connect to.
+        (Aliases: login_db)[Default: (null)]
+        type: str
+
+- fail_on_role
+        If `yes', fail when `reassign_owned_by' role does not exist. Otherwise just warn and continue.
+        Mutually exclusive with `obj_name' and `obj_type'.
+        [Default: True]
+        type: bool
+
+- login_host
+        Host running the database.
+        [Default: (null)]
+        type: str
+
+- login_password
+        The password used to authenticate with.
+        [Default: (null)]
+        type: str
+
+- login_unix_socket
+        Path to a Unix domain socket for local connections.
+        [Default: (null)]
+        type: str
+
+- login_user
+        The username used to authenticate with.
+        [Default: postgres]
+        type: str
+
+= new_owner
+        Role (user/group) to set as an `obj_name' owner.
+
+        type: str
+
+- obj_name
+        Name of a database object to change ownership.
+        Mutually exclusive with `reassign_owned_by'.
+        [Default: (null)]
+        type: str
+
+= obj_type
+        Type of a database object.
+        Mutually exclusive with `reassign_owned_by'.
+        (Aliases: type)(Choices: database, function, matview, sequence, schema, table, tablespace, view)
+        type: str
+
+- port
+        Database port to connect to.
+        (Aliases: login_port)[Default: 5432]
+        type: int
+
+- reassign_owned_by
+        The list of role names. The ownership of all the objects within the current database, and of all shared objects (databases,
+        tablespaces), owned by this role(s) will be reassigned to `owner'.
+        Pay attention - it reassignes all objects owned by this role(s) in the `db'!
+        If role(s) exists, always returns changed True.
+        Cannot reassign ownership of objects that are required by the database system.
+        For more information see https://www.postgresql.org/docs/current/sql-reassign-owned.html.
+        Mutually exclusive with `obj_type'.
+        [Default: (null)]
+        type: list
+
+- session_role
+        Switch to session_role after connecting. The specified session_role must be a role that the current login_user is a member of.
+        Permissions checking for SQL commands is carried out as though the session_role were the one that had logged in originally.
+        [Default: (null)]
+        type: str
+
+- ssl_mode
+        Determines whether or with what priority a secure SSL TCP/IP connection will be negotiated with the server.
+        See https://www.postgresql.org/docs/current/static/libpq-ssl.html for more information on the modes.
+        Default of `prefer' matches libpq default.
+        (Choices: allow, disable, prefer, require, verify-ca, verify-full)[Default: prefer]
+        type: str
+
+
+NOTES:
+      * The default authentication assumes that you are either logging in as or sudo'ing to the postgres account on the host.
+      * To avoid "Peer authentication failed for user postgres" error, use postgres user as a `become_user'.
+      * This module uses psycopg2, a Python PostgreSQL database adapter. You must ensure that psycopg2 is installed on the host
+        before using this module.
+      * If the remote host is the PostgreSQL server (which is the default case), then PostgreSQL must also be installed on the
+        remote host.
+      * For Ubuntu-based systems, install the postgresql, libpq-dev, and python-psycopg2 packages on the remote host before using
+        this module.
+      * The default authentication assumes that you are either logging in as or sudo'ing to the `postgres' account on the host.
+      * This module uses `psycopg2', a Python PostgreSQL database adapter. You must ensure that psycopg2 is installed on the host
+        before using this module. If the remote host is the PostgreSQL server (which is the default case), then PostgreSQL must
+        also be installed on the remote host. For Ubuntu-based systems, install the `postgresql', `libpq-dev', and `python-
+        psycopg2' packages on the remote host before using this module.
+      * The ca_cert parameter requires at least Postgres version 8.4 and `psycopg2' version 2.4.3.
+
+
+REQUIREMENTS:  psycopg2
+
+AUTHOR: Andrew Klychkov (@Andersson007)
+        METADATA:
+          status:
+          - preview
+          supported_by: community
+        
+
+EXAMPLES:
+
+# Set owner as alice for function myfunc in database bar by ansible ad-hoc command:
+# ansible -m postgresql_owner -a "db=bar new_owner=alice obj_name=myfunc obj_type=function"
+
+- name: The same as above by playbook
+  postgresql_owner:
+    db: bar
+    new_owner: alice
+    obj_name: myfunc
+    obj_type: function
+
+- name: Set owner as bob for table acme in database bar
+  postgresql_owner:
+    db: bar
+    new_owner: bob
+    obj_name: acme
+    obj_type: table
+
+- name: Set owner as alice for view test_view in database bar
+  postgresql_owner:
+    db: bar
+    new_owner: alice
+    obj_name: test_view
+    obj_type: view
+
+- name: Set owner as bob for tablespace ssd in database foo
+  postgresql_owner:
+    db: foo
+    new_owner: bob
+    obj_name: ssd
+    obj_type: tablespace
+
+- name: Reassign all object in database bar owned by bob to alice
+  postgresql_owner:
+    db: bar
+    new_owner: alice
+    reassign_owned_by: bob
+
+- name: Reassign all object in database bar owned by bob and bill to alice
+  postgresql_owner:
+    db: bar
+    new_owner: alice
+    reassign_owned_by:
+    - bob
+    - bill
+
+
+RETURN VALUES:
+
+queries:
+  description: List of executed queries.
+  returned: always
+  type: str
+  sample: [ 'REASSIGN OWNED BY "bob" TO "alice"' ]
+

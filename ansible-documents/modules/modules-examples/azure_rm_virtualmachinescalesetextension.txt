@@ -1,0 +1,32 @@
+EXAMPLES:
+
+- name: Install VMSS Extension
+      azure_rm_virtualmachinescalesetextension:
+        name: myvmssextension
+        location: eastus
+        resource_group: myResourceGroup
+        vmss_name: myvm
+        publisher: Microsoft.Azure.Extensions
+        type: CustomScript
+        type_handler_version: 2.0
+        settings: '{"commandToExecute": "hostname"}'
+        auto_upgrade_minor_version: true
+
+    - name: Remove VMSS Extension
+      azure_rm_virtualmachinescalesetextension:
+        name: myvmssextension
+        location: eastus
+        resource_group: myResourceGroup
+        vmss_name: myvm
+        state: absent
+
+
+RETURN VALUES:
+
+id:
+    description:
+        - VMSS extension resource ID
+    returned: always
+    type: str
+    sample: /subscriptions/xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx/resourceGroups/myResourceGroup/providers/Microsoft.Compute/scalesets/myscaleset/extensions/myext
+

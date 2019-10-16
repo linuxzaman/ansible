@@ -1,0 +1,30 @@
+EXAMPLES:
+
+- name: Add an alert profile to ManageIQ
+  manageiq_alert_profiles:
+    state: present
+    name: Test profile
+    resource_type: ContainerNode
+    alerts:
+      - Test Alert 01
+      - Test Alert 02
+    manageiq_connection:
+      url: 'http://127.0.0.1:3000'
+      username: 'admin'
+      password: 'smartvm'
+      validate_certs: False
+
+- name: Delete an alert profile from ManageIQ
+  manageiq_alert_profiles:
+    state: absent
+    name: Test profile
+    manageiq_connection:
+      url: 'http://127.0.0.1:3000'
+      username: 'admin'
+      password: 'smartvm'
+      validate_certs: False
+
+
+RETURN VALUES:
+
+

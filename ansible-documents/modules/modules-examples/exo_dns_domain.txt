@@ -1,0 +1,103 @@
+EXAMPLES:
+
+- name: Create a domain
+  local_action:
+    module: exo_dns_domain
+    name: example.com
+
+- name: Remove a domain
+  local_action:
+    module: exo_dns_domain
+    name: example.com
+    state: absent
+
+
+RETURN VALUES:
+
+---
+exo_dns_domain:
+    description: API domain results
+    returned: success
+    type: complex
+    contains:
+        account_id:
+            description: Your account ID
+            returned: success
+            type: int
+            sample: 34569
+        auto_renew:
+            description: Whether domain is auto renewed or not
+            returned: success
+            type: bool
+            sample: false
+        created_at:
+            description: When the domain was created
+            returned: success
+            type: str
+            sample: "2016-08-12T15:24:23.989Z"
+        expires_on:
+            description: When the domain expires
+            returned: success
+            type: str
+            sample: "2016-08-12T15:24:23.989Z"
+        id:
+            description: ID of the domain
+            returned: success
+            type: int
+            sample: "2016-08-12T15:24:23.989Z"
+        lockable:
+            description: Whether the domain is lockable or not
+            returned: success
+            type: bool
+            sample: true
+        name:
+            description: Domain name
+            returned: success
+            type: str
+            sample: example.com
+        record_count:
+            description: Number of records related to this domain
+            returned: success
+            type: int
+            sample: 5
+        registrant_id:
+            description: ID of the registrant
+            returned: success
+            type: int
+            sample: null
+        service_count:
+            description: Number of services
+            returned: success
+            type: int
+            sample: 0
+        state:
+            description: State of the domain
+            returned: success
+            type: str
+            sample: "hosted"
+        token:
+            description: Token
+            returned: success
+            type: str
+            sample: "r4NzTRp6opIeFKfaFYvOd6MlhGyD07jl"
+        unicode_name:
+            description: Domain name as unicode
+            returned: success
+            type: str
+            sample: "example.com"
+        updated_at:
+            description: When the domain was updated last.
+            returned: success
+            type: str
+            sample: "2016-08-12T15:24:23.989Z"
+        user_id:
+            description: ID of the user
+            returned: success
+            type: int
+            sample: null
+        whois_protected:
+            description: Whether the whois is protected or not
+            returned: success
+            type: bool
+            sample: false
+

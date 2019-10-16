@@ -1,0 +1,98 @@
+EXAMPLES:
+
+- name: Create a PVC and import data from an external source
+  kubevirt_pvc:
+    name: pvc1
+    namespace: default
+    size: 100Mi
+    access_modes:
+      - ReadWriteOnce
+    cdi_source:
+      http:
+        url: https://www.source.example/path/of/data/vm.img
+      # If the URL points to a tar.gz containing the disk image, ucomment the line below:
+      #content_type: archive
+
+- name: Create a PVC as a clone from a different PVC
+  kubevirt_pvc:
+    name: pvc2
+    namespace: default
+    size: 100Mi
+    access_modes:
+      - ReadWriteOnce
+    cdi_source:
+      pvc:
+        namespace: source-ns
+        name: source-pvc
+
+- name: Create a PVC ready for data upload
+  kubevirt_pvc:
+    name: pvc3
+    namespace: default
+    size: 100Mi
+    access_modes:
+      - ReadWriteOnce
+    cdi_source:
+      upload: yes
+    # You need the kubevirt_cdi_upload module to actually upload something
+
+- name: Create a PVC with a blank raw image
+  kubevirt_pvc:
+    name: pvc4
+    namespace: default
+    size: 100Mi
+    access_modes:
+      - ReadWriteOnce
+    cdi_source:
+      blank: yes
+
+- name: Create a PVC and fill it with data from a container
+  kubevirt_pvc:
+    name: pvc5
+    namespace: default
+    size: 100Mi
+    access_modes:
+      - ReadWriteOnce
+    cdi_source:
+      registry:
+        url: "docker://kubevirt/fedora-cloud-registry-disk-demo"
+
+
+RETURN VALUES:
+
+result:
+  description:
+  - The created, patched, or otherwise present object. Will be empty in the case of a deletion.
+  returned: success
+  type: complex
+  contains:
+     api_version:
+       description: The versioned schema of this representation of an object.
+       returned: success
+       type: str
+     kind:
+       description: Represents the REST resource this object represents.
+       returned: success
+       type: str
+     metadata:
+       description: Standard object metadata. Includes name, namespace, annotations, labels, etc.
+       returned: success
+       type: complex
+     spec:
+       description: Specific attributes of the object. Will vary based on the I(api_version) and I(kind).
+       returned: success
+       type: complex
+     status:
+       description: Current status details for the object.
+       returned: success
+       type: complex
+     items:
+       description: Returned only when multiple yaml documents are passed to src or resource_definition
+       returned: when resource_definition or src contains list of objects
+       type: list
+     duration:
+       description: elapsed time of task in seconds
+       returned: when C(wait) is true
+       type: int
+       sample: 48
+

@@ -1,0 +1,59 @@
+EXAMPLES:
+
+- name: create an origin access identity
+  cloudfront_origin_access_identity:
+    state: present
+    caller_reference: this is an example reference
+    comment: this is an example comment
+
+- name: update an existing origin access identity using caller_reference as an identifier
+  cloudfront_origin_access_identity:
+     origin_access_identity_id: E17DRN9XUOAHZX
+     caller_reference: this is an example reference
+     comment: this is a new comment
+
+- name: delete an existing origin access identity using caller_reference as an identifier
+  cloudfront_origin_access_identity:
+     state: absent
+     caller_reference: this is an example reference
+     comment: this is a new comment
+
+
+RETURN VALUES:
+
+cloud_front_origin_access_identity:
+  description: The origin access identity's information.
+  returned: always
+  type: complex
+  contains:
+    cloud_front_origin_access_identity_config:
+      description: describes a url specifying the origin access identity.
+      returned: always
+      type: complex
+      contains:
+        caller_reference:
+          description: a caller reference for the oai
+          returned: always
+          type: str
+        comment:
+          description: a comment describing the oai
+          returned: always
+          type: str
+    id:
+      description: a unique identifier of the oai
+      returned: always
+      type: str
+    s3_canonical_user_id:
+      description: the cannonical user id of the user who created the oai
+      returned: always
+      type: str
+e_tag:
+  description: The current version of the origin access identity created.
+  returned: always
+  type: str
+location:
+  description: The fully qualified URI of the new origin access identity just created.
+  returned: when initially created
+  type: str
+
+

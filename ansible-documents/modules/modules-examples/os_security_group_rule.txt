@@ -1,0 +1,101 @@
+EXAMPLES:
+
+# Create a security group rule
+- os_security_group_rule:
+    cloud: mordred
+    security_group: foo
+    protocol: tcp
+    port_range_min: 80
+    port_range_max: 80
+    remote_ip_prefix: 0.0.0.0/0
+
+# Create a security group rule for ping
+- os_security_group_rule:
+    cloud: mordred
+    security_group: foo
+    protocol: icmp
+    remote_ip_prefix: 0.0.0.0/0
+
+# Another way to create the ping rule
+- os_security_group_rule:
+    cloud: mordred
+    security_group: foo
+    protocol: icmp
+    port_range_min: -1
+    port_range_max: -1
+    remote_ip_prefix: 0.0.0.0/0
+
+# Create a TCP rule covering all ports
+- os_security_group_rule:
+    cloud: mordred
+    security_group: foo
+    protocol: tcp
+    port_range_min: 1
+    port_range_max: 65535
+    remote_ip_prefix: 0.0.0.0/0
+
+# Another way to create the TCP rule above (defaults to all ports)
+- os_security_group_rule:
+    cloud: mordred
+    security_group: foo
+    protocol: tcp
+    remote_ip_prefix: 0.0.0.0/0
+
+# Create a rule for VRRP with numbered protocol 112
+- os_security_group_rule:
+    security_group: loadbalancer_sg
+    protocol: 112
+    remote_group: loadbalancer-node_sg
+
+# Create a security group rule for a given project
+- os_security_group_rule:
+    cloud: mordred
+    security_group: foo
+    protocol: icmp
+    remote_ip_prefix: 0.0.0.0/0
+    project: myproj
+
+
+RETURN VALUES:
+
+id:
+  description: Unique rule UUID.
+  type: str
+  returned: state == present
+direction:
+  description: The direction in which the security group rule is applied.
+  type: str
+  sample: 'egress'
+  returned: state == present
+ethertype:
+  description: One of IPv4 or IPv6.
+  type: str
+  sample: 'IPv4'
+  returned: state == present
+port_range_min:
+  description: The minimum port number in the range that is matched by
+               the security group rule.
+  type: int
+  sample: 8000
+  returned: state == present
+port_range_max:
+  description: The maximum port number in the range that is matched by
+               the security group rule.
+  type: int
+  sample: 8000
+  returned: state == present
+protocol:
+  description: The protocol that is matched by the security group rule.
+  type: str
+  sample: 'tcp'
+  returned: state == present
+remote_ip_prefix:
+  description: The remote IP prefix to be associated with this security group rule.
+  type: str
+  sample: '0.0.0.0/0'
+  returned: state == present
+security_group_id:
+  description: The security group ID to associate with this security group rule.
+  type: str
+  returned: state == present
+

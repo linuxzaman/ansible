@@ -1,0 +1,105 @@
+> ONE_HOST    (/usr/lib/python2.7/dist-packages/ansible/modules/cloud/opennebula/one_host.py)
+
+        Manages OpenNebula Hosts
+
+  * This module is maintained by The Ansible Community
+OPTIONS (= is mandatory):
+
+- api_password
+        The password or token for XMLRPC authentication.
+        If not specified then the value of the ONE_PASSWORD environment variable, if any, is used.
+        (Aliases: api_token)[Default: (null)]
+        type: str
+
+- api_url
+        The ENDPOINT URL of the XMLRPC server.
+        If not specified then the value of the ONE_URL environment variable, if any, is used.
+        (Aliases: api_endpoint)[Default: (null)]
+        type: str
+
+- api_username
+        The name of the user for XMLRPC authentication.
+        If not specified then the value of the ONE_USERNAME environment variable, if any, is used.
+        [Default: (null)]
+        type: str
+
+- cluster_id
+        The cluster ID.
+        [Default: 0]
+
+- cluster_name
+        The cluster specified by name.
+        [Default: (null)]
+
+- im_mad_name
+        The name of the information manager, this values are taken from the oned.conf with the tag name IM_MAD (name)
+        [Default: kvm]
+
+- labels
+        The labels for this host.
+        [Default: (null)]
+
+= name
+        Hostname of the machine to manage.
+
+
+- state
+        Takes the host to the desired lifecycle state.
+        If `absent' the host will be deleted from the cluster.
+        If `present' the host will be created in the cluster (includes `enabled', `disabled' and `offline' states).
+        If `enabled' the host is fully operational.
+        `disabled', e.g. to perform maintenance operations.
+        `offline', host is totally offline.
+        (Choices: absent, present, enabled, disabled, offline)[Default: present]
+
+- template
+        The template or attribute changes to merge into the host template.
+        (Aliases: attributes)[Default: (null)]
+
+- validate_certs
+        Whether to validate the SSL certificates or not.
+        This parameter is ignored if PYTHONHTTPSVERIFY environment variable is used.
+        [Default: True]
+        type: bool
+
+- vmm_mad_name
+        The name of the virtual machine manager mad name, this values are taken from the oned.conf with the tag name VM_MAD (name)
+        [Default: kvm]
+
+- wait_timeout
+        Time to wait for the desired state to be reached before timeout, in seconds.
+        [Default: 300]
+        type: int
+
+
+REQUIREMENTS:  pyone
+
+AUTHOR: Rafael del Valle (@rvalle)
+        METADATA:
+          status:
+          - preview
+          supported_by: community
+        
+
+EXAMPLES:
+
+- name: Create a new host in OpenNebula
+  one_host:
+    name: host1
+    cluster_id: 1
+    api_url: http://127.0.0.1:2633/RPC2
+
+- name: Create a host and adjust its template
+  one_host:
+    name: host2
+    cluster_name: default
+    template:
+        LABELS:
+            - gold
+            - ssd
+        RESERVED_CPU: -100
+
+
+RETURN VALUES:
+
+

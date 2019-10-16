@@ -1,0 +1,266 @@
+> AWS_KMS_FACTS    (/usr/lib/python2.7/dist-packages/ansible/modules/cloud/amazon/aws_kms_facts.py)
+
+        Gather facts about AWS KMS keys including tags and grants
+
+  * This module is maintained by The Ansible Community
+OPTIONS (= is mandatory):
+
+- aws_access_key
+        AWS access key. If not set then the value of the AWS_ACCESS_KEY_ID, AWS_ACCESS_KEY or EC2_ACCESS_KEY environment variable is
+        used.
+        (Aliases: ec2_access_key, access_key)[Default: (null)]
+        type: str
+
+- aws_secret_key
+        AWS secret key. If not set then the value of the AWS_SECRET_ACCESS_KEY, AWS_SECRET_KEY, or EC2_SECRET_KEY environment variable is
+        used.
+        (Aliases: ec2_secret_key, secret_key)[Default: (null)]
+        type: str
+
+- debug_botocore_endpoint_logs
+        Use a botocore.endpoint logger to parse the unique (rather than total) "resource:action" API calls made during a task, outputing
+        the set to the resource_actions key in the task results. Use the aws_resource_action callback to output to total list made during
+        a playbook. The ANSIBLE_DEBUG_BOTOCORE_LOGS environment variable may also be used.
+        [Default: no]
+        type: bool
+        version_added: 2.8
+
+- ec2_url
+        Url to use to connect to EC2 or your Eucalyptus cloud (by default the module will use EC2 endpoints). Ignored for modules where
+        region is required. Must be specified for all other modules if region is not used. If not set then the value of the EC2_URL
+        environment variable, if any, is used.
+        [Default: (null)]
+        type: str
+
+- filters
+        A dict of filters to apply. Each dict item consists of a filter key and a filter value. The filters aren't natively supported by
+        boto3, but are supported to provide similar functionality to other modules. Standard tag filters (`tag-key', `tag-value' and
+        `tag:tagName') are available, as are `key-id' and `alias'
+        [Default: (null)]
+
+- pending_deletion
+        Whether to get full details (tags, grants etc.) of keys pending deletion
+        [Default: False]
+        type: bool
+
+- profile
+        Uses a boto profile. Only works with boto >= 2.24.0.
+        [Default: (null)]
+        type: str
+        version_added: 1.6
+
+- region
+        The AWS region to use. If not specified then the value of the AWS_REGION or EC2_REGION environment variable, if any, is used. See
+        http://docs.aws.amazon.com/general/latest/gr/rande.html#ec2_region
+        (Aliases: aws_region, ec2_region)[Default: (null)]
+        type: str
+
+- security_token
+        AWS STS security token. If not set then the value of the AWS_SECURITY_TOKEN or EC2_SECURITY_TOKEN environment variable is used.
+        (Aliases: access_token)[Default: (null)]
+        type: str
+        version_added: 1.6
+
+- validate_certs
+        When set to "no", SSL certificates will not be validated for boto versions >= 2.6.0.
+        [Default: True]
+        type: bool
+        version_added: 1.5
+
+
+NOTES:
+      * If parameters are not set within the module, the following environment variables can be used in decreasing order of
+        precedence `AWS_URL' or `EC2_URL', `AWS_ACCESS_KEY_ID' or `AWS_ACCESS_KEY' or `EC2_ACCESS_KEY', `AWS_SECRET_ACCESS_KEY' or
+        `AWS_SECRET_KEY' or `EC2_SECRET_KEY', `AWS_SECURITY_TOKEN' or `EC2_SECURITY_TOKEN', `AWS_REGION' or `EC2_REGION'
+      * Ansible uses the boto configuration file (typically ~/.boto) if no credentials are provided. See
+        https://boto.readthedocs.io/en/latest/boto_config_tut.html
+      * `AWS_REGION' or `EC2_REGION' can be typically be used to specify the AWS region, when required, but this can also be
+        configured in the boto config file
+
+
+REQUIREMENTS:  python >= 2.6, boto
+
+AUTHOR: Will Thames (@willthames)
+        METADATA:
+          status:
+          - preview
+          supported_by: community
+        
+
+EXAMPLES:
+
+# Note: These examples do not set authentication details, see the AWS Guide for details.
+
+# Gather facts about all KMS keys
+- aws_kms_facts:
+
+# Gather facts about all keys with a Name tag
+- aws_kms_facts:
+    filters:
+      tag-key: Name
+
+# Gather facts about all keys with a specific name
+- aws_kms_facts:
+    filters:
+      "tag:Name": Example
+
+
+RETURN VALUES:
+
+keys:
+  description: list of keys
+  type: complex
+  returned: always
+  contains:
+    key_id:
+      description: ID of key
+      type: str
+      returned: always
+      sample: abcd1234-abcd-1234-5678-ef1234567890
+    key_arn:
+      description: ARN of key
+      type: str
+      returned: always
+      sample: arn:aws:kms:ap-southeast-2:123456789012:key/abcd1234-abcd-1234-5678-ef1234567890
+    key_state:
+      description: The state of the key
+      type: str
+      returned: always
+      sample: PendingDeletion
+    key_usage:
+      description: The cryptographic operations for which you can use the key.
+      type: str
+      returned: always
+      sample: ENCRYPT_DECRYPT
+    origin:
+      description:
+        The source of the key's key material. When this value is C(AWS_KMS),
+        AWS KMS created the key material. When this value is C(EXTERNAL), the
+        key material was imported or the CMK lacks key material.
+      type: str
+      returned: always
+      sample: AWS_KMS
+    aws_account_id:
+      description: The AWS Account ID that the key belongs to
+      type: str
+      returned: always
+      sample: 1234567890123
+    creation_date:
+      description: Date of creation of the key
+      type: str
+      returned: always
+      sample: 2017-04-18T15:12:08.551000+10:00
+    description:
+      description: Description of the key
+      type: str
+      returned: always
+      sample: "My Key for Protecting important stuff"
+    enabled:
+      description: Whether the key is enabled. True if C(KeyState) is true.
+      type: str
+      returned: always
+      sample: false
+    aliases:
+      description: list of aliases associated with the key
+      type: list
+      returned: always
+      sample:
+        - aws/acm
+        - aws/ebs
+    tags:
+      description: dictionary of tags applied to the key. Empty when access is denied even if there are tags.
+      type: dict
+      returned: always
+      sample:
+        Name: myKey
+        Purpose: protecting_stuff
+    policies:
+      description: list of policy documents for the keys. Empty when access is denied even if there are policies.
+      type: list
+      returned: always
+      sample:
+        Version: "2012-10-17"
+        Id: "auto-ebs-2"
+        Statement:
+        - Sid: "Allow access through EBS for all principals in the account that are authorized to use EBS"
+          Effect: "Allow"
+          Principal:
+            AWS: "*"
+          Action:
+          - "kms:Encrypt"
+          - "kms:Decrypt"
+          - "kms:ReEncrypt*"
+          - "kms:GenerateDataKey*"
+          - "kms:CreateGrant"
+          - "kms:DescribeKey"
+          Resource: "*"
+          Condition:
+            StringEquals:
+              kms:CallerAccount: "111111111111"
+              kms:ViaService: "ec2.ap-southeast-2.amazonaws.com"
+        - Sid: "Allow direct access to key metadata to the account"
+          Effect: "Allow"
+          Principal:
+            AWS: "arn:aws:iam::111111111111:root"
+          Action:
+          - "kms:Describe*"
+          - "kms:Get*"
+          - "kms:List*"
+          - "kms:RevokeGrant"
+          Resource: "*"
+    grants:
+      description: list of grants associated with a key
+      type: complex
+      returned: always
+      contains:
+        constraints:
+          description: Constraints on the encryption context that the grant allows.
+            See U(https://docs.aws.amazon.com/kms/latest/APIReference/API_GrantConstraints.html) for further details
+          type: dict
+          returned: always
+          sample:
+            encryption_context_equals:
+               "aws:lambda:_function_arn": "arn:aws:lambda:ap-southeast-2:012345678912:function:xyz"
+        creation_date:
+          description: Date of creation of the grant
+          type: str
+          returned: always
+          sample: 2017-04-18T15:12:08+10:00
+        grant_id:
+          description: The unique ID for the grant
+          type: str
+          returned: always
+          sample: abcd1234abcd1234abcd1234abcd1234abcd1234abcd1234abcd1234abcd1234
+        grantee_principal:
+          description: The principal that receives the grant's permissions
+          type: str
+          returned: always
+          sample: arn:aws:sts::0123456789012:assumed-role/lambda_xyz/xyz
+        issuing_account:
+          description: The AWS account under which the grant was issued
+          type: str
+          returned: always
+          sample: arn:aws:iam::01234567890:root
+        key_id:
+          description: The key ARN to which the grant applies.
+          type: str
+          returned: always
+          sample: arn:aws:kms:ap-southeast-2:123456789012:key/abcd1234-abcd-1234-5678-ef1234567890
+        name:
+          description: The friendly name that identifies the grant
+          type: str
+          returned: always
+          sample: xyz
+        operations:
+          description: The list of operations permitted by the grant
+          type: list
+          returned: always
+          sample:
+            - Decrypt
+            - RetireGrant
+        retiring_principal:
+          description: The principal that can retire the grant
+          type: str
+          returned: always
+          sample: arn:aws:sts::0123456789012:assumed-role/lambda_xyz/xyz
+

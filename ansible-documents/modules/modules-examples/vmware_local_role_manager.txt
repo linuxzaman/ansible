@@ -1,0 +1,93 @@
+EXAMPLES:
+
+- name: Add local role to ESXi
+  vmware_local_role_manager:
+    hostname: '{{ esxi_hostname }}'
+    username: '{{ esxi_username }}'
+    password: '{{ esxi_password }}'
+    local_role_name: vmware_qa
+    state: present
+  delegate_to: localhost
+
+- name: Add local role with privileges to ESXi
+  vmware_local_role_manager:
+    hostname: '{{ esxi_hostname }}'
+    username: '{{ esxi_username }}'
+    password: '{{ esxi_password }}'
+    local_role_name: vmware_qa
+    local_privilege_ids: [ 'Folder.Create', 'Folder.Delete']
+    state: present
+  delegate_to: localhost
+
+- name: Remove local role from ESXi
+  vmware_local_role_manager:
+    hostname: '{{ esxi_hostname }}'
+    username: '{{ esxi_username }}'
+    password: '{{ esxi_password }}'
+    local_role_name: vmware_qa
+    state: absent
+  delegate_to: localhost
+
+- name: Add a privilege to an existing local role
+  vmware_local_role_manager:
+    hostname: '{{ esxi_hostname }}'
+    username: '{{ esxi_username }}'
+    password: '{{ esxi_password }}'
+    local_role_name: vmware_qa
+    local_privilege_ids: [ 'Folder.Create' ]
+    action: add
+  delegate_to: localhost
+
+- name: Remove a privilege to an existing local role
+  vmware_local_role_manager:
+    hostname: '{{ esxi_hostname }}'
+    username: '{{ esxi_username }}'
+    password: '{{ esxi_password }}'
+    local_role_name: vmware_qa
+    local_privilege_ids: [ 'Folder.Create' ]
+    action: remove
+  delegate_to: localhost
+
+- name: Set a privilege to an existing local role
+  vmware_local_role_manager:
+    hostname: '{{ esxi_hostname }}'
+    username: '{{ esxi_username }}'
+    password: '{{ esxi_password }}'
+    local_role_name: vmware_qa
+    local_privilege_ids: [ 'Folder.Create' ]
+    action: set
+  delegate_to: localhost
+
+
+RETURN VALUES:
+
+role_name:
+    description: Name of local role
+    returned: always
+    type: str
+role_id:
+    description: ESXi generated local role id
+    returned: always
+    type: int
+privileges:
+    description: List of privileges
+    returned: always
+    type: list
+privileges_previous:
+    description: List of privileges of role before the update
+    returned: on update
+    type: list
+# NOTE: the following keys are deprecated from 2.11 onwards
+local_role_name:
+    description: Name of local role
+    returned: always
+    type: str
+new_privileges:
+    description: List of privileges
+    returned: always
+    type: list
+old_privileges:
+    description: List of privileges of role before the update
+    returned: on update
+    type: list
+

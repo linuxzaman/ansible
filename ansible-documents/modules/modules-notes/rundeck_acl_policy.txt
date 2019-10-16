@@ -1,0 +1,90 @@
+> RUNDECK_ACL_POLICY    (/usr/lib/python2.7/dist-packages/ansible/modules/web_infrastructure/rundeck_acl_policy.py)
+
+        Create, update and remove Rundeck ACL policies through HTTP API.
+
+  * This module is maintained by The Ansible Community
+OPTIONS (= is mandatory):
+
+- api_version
+        Sets the API version used by module.
+        API version must be at least 14.
+        [Default: 14]
+
+= name
+        Sets the project name.
+
+
+- policy
+        Sets the ACL policy content.
+        ACL policy content is a YAML object as described in http://rundeck.org/docs/man5/aclpolicy.html.
+        It can be a YAML string or a pure Ansible inventory YAML object.
+        [Default: (null)]
+
+- project
+        Sets the project which receive the ACL policy.
+        If unset, it's a system ACL policy.
+        [Default: (null)]
+
+- state
+        Create or remove Rundeck project.
+        (Choices: present, absent)[Default: present]
+
+= token
+        Sets the token to authenticate against Rundeck API.
+
+
+= url
+        Sets the rundeck instance URL.
+
+
+
+AUTHOR: Loic Blot (@nerzhul)
+        METADATA:
+          status:
+          - preview
+          supported_by: community
+        
+
+EXAMPLES:
+
+- name: Create or update a rundeck ACL policy in project Ansible
+  rundeck_acl_policy:
+    name: "Project_01"
+    api_version: 18
+    url: "https://rundeck.example.org"
+    token: "mytoken"
+    state: present
+    project: "Ansible"
+    policy:
+      description: "my policy"
+      context:
+        application: rundeck
+      for:
+        project:
+          - allow: read
+      by:
+        group: "build"
+
+- name: Remove a rundeck system policy
+  rundeck_acl_policy:
+    name: "Project_02"
+    url: "https://rundeck.example.org"
+    token: "mytoken"
+    state: absent
+
+
+RETURN VALUES:
+
+rundeck_response:
+    description: Rundeck response when a failure occurs.
+    returned: failed
+    type: str
+before:
+    description: dictionnary containing ACL policy informations before modification.
+    returned: success
+    type: dict
+after:
+    description: dictionnary containing ACL policy informations after modification.
+    returned: success
+    type: dict
+

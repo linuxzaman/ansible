@@ -1,0 +1,64 @@
+> RABBITMQ_VHOST_LIMITS    (/usr/lib/python2.7/dist-packages/ansible/modules/messaging/rabbitmq/rabbitmq_vhost_limits.py)
+
+        This module sets/clears certain limits on a virtual host. The configurable limits are `max_connections' and `max-queues'.
+
+  * This module is maintained by The Ansible Community
+OPTIONS (= is mandatory):
+
+- max_connections
+        Max number of concurrent client connections.
+        Negative value means "no limit".
+        Ignored when the `state' is `absent'.
+        [Default: -1]
+
+- max_queues
+        Max number of queues.
+        Negative value means "no limit".
+        Ignored when the `state' is `absent'.
+        [Default: -1]
+
+- node
+        Name of the RabbitMQ Erlang node to manage.
+        [Default: (null)]
+
+- state
+        Specify whether the limits are to be set or cleared.
+        If set to `absent', the limits of both `max_connections' and `max-queues' will be cleared.
+        (Choices: present, absent)[Default: present]
+
+- vhost
+        Name of the virtual host to manage.
+        [Default: /]
+
+
+AUTHOR: Hiroyuki Matsuo (@h-matsuo)
+        METADATA:
+          status:
+          - preview
+          supported_by: community
+        
+
+EXAMPLES:
+
+# Limit both of the max number of connections and queues on the vhost '/'.
+- rabbitmq_vhost_limits:
+    vhost: /
+    max_connections: 64
+    max_queues: 256
+    state: present
+
+# Limit the max number of connections on the vhost '/'.
+# This task implicitly clears the max number of queues limit using default value: -1.
+- rabbitmq_vhost_limits:
+    vhost: /
+    max_connections: 64
+    state: present
+
+# Clear the limits on the vhost '/'.
+- rabbitmq_vhost_limits:
+    vhost: /
+    state: absent
+
+
+RETURN VALUES:
+ # 

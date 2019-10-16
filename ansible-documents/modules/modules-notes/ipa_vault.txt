@@ -1,0 +1,173 @@
+> IPA_VAULT    (/usr/lib/python2.7/dist-packages/ansible/modules/identity/ipa/ipa_vault.py)
+
+        Add, modify and delete vaults and secret vaults. KRA service should be enabled to use this module.
+
+  * This module is maintained by The Ansible Community
+OPTIONS (= is mandatory):
+
+= cn
+        Vault name.
+        Can not be changed as it is the unique identifier.
+        (Aliases: name)
+
+- description
+        Description.
+        [Default: (null)]
+
+- ipa_host
+        IP or hostname of IPA server.
+        If the value is not specified in the task, the value of environment variable `IPA_HOST' will be used instead.
+        If both the environment variable `IPA_HOST' and the value are not specified in the task, then DNS will be used to try to discover
+        the FreeIPA server.
+        The relevant entry needed in FreeIPA is the 'ipa-ca' entry.
+        If neither the DNS entry, nor the environment `IPA_HOST', nor the value are available in the task, then the default value will be
+        used.
+        Environment variable fallback mechanism is added in Ansible 2.5.
+        [Default: ipa.example.com]
+        type: str
+
+= ipa_pass
+        Password of administrative user.
+        If the value is not specified in the task, the value of environment variable `IPA_PASS' will be used instead.
+        Note that if the 'urllib_gssapi' library is available, it is possible to use GSSAPI to authenticate to FreeIPA.
+        If the environment variable `KRB5CCNAME' is available, the module will use this kerberos credentials cache to authenticate to the
+        FreeIPA server.
+        If the environment variable `KRB5_CLIENT_KTNAME' is available, and `KRB5CCNAME' is not; the module will use this kerberos keytab
+        to authenticate.
+        If GSSAPI is not available, the usage of 'ipa_pass' is required.
+        Environment variable fallback mechanism is added in Ansible 2.5.
+
+        type: str
+
+- ipa_port
+        Port of FreeIPA / IPA server.
+        If the value is not specified in the task, the value of environment variable `IPA_PORT' will be used instead.
+        If both the environment variable `IPA_PORT' and the value are not specified in the task, then default value is set.
+        Environment variable fallback mechanism is added in Ansible 2.5.
+        [Default: 443]
+        type: int
+
+- ipa_prot
+        Protocol used by IPA server.
+        If the value is not specified in the task, the value of environment variable `IPA_PROT' will be used instead.
+        If both the environment variable `IPA_PROT' and the value are not specified in the task, then default value is set.
+        Environment variable fallback mechanism is added in Ansible 2.5.
+        (Choices: http, https)[Default: https]
+        type: str
+
+- ipa_timeout
+        Specifies idle timeout (in seconds) for the connection.
+        For bulk operations, you may want to increase this in order to avoid timeout from IPA server.
+        If the value is not specified in the task, the value of environment variable `IPA_TIMEOUT' will be used instead.
+        If both the environment variable `IPA_TIMEOUT' and the value are not specified in the task, then default value is set.
+        [Default: 10]
+        type: int
+        version_added: 2.7
+
+- ipa_user
+        Administrative account used on IPA server.
+        If the value is not specified in the task, the value of environment variable `IPA_USER' will be used instead.
+        If both the environment variable `IPA_USER' and the value are not specified in the task, then default value is set.
+        Environment variable fallback mechanism is added in Ansible 2.5.
+        [Default: admin]
+        type: str
+
+- ipavaultpublickey
+        Public key.
+        (Aliases: vault_public_key)[Default: (null)]
+
+- ipavaultsalt
+        Vault Salt.
+        (Aliases: vault_salt)[Default: (null)]
+
+= ipavaulttype
+        Vault types are based on security level.
+        (Aliases: vault_type)(Choices: standard, symmetric, asymmetric)[Default: symmetric]
+
+- replace
+        Force replace the existant vault on IPA server.
+        (Choices: True, False)[Default: False]
+        type: bool
+
+- service
+        Any service can own one or more service vaults.
+        Mutually exclusive with user.
+        [Default: (null)]
+
+- state
+        State to ensure.
+        (Choices: present, absent)[Default: present]
+
+- username
+        Any user can own one or more user vaults.
+        Mutually exclusive with service.
+        (Aliases: user)[Default: (null)]
+
+- validate_certs
+        Validate IPA server certificates.
+        [Default: True]
+        type: bool
+
+
+AUTHOR: Juan Manuel Parrilla (@jparrill)
+        METADATA:
+          status:
+          - preview
+          supported_by: community
+        
+
+EXAMPLES:
+
+# Ensure vault is present
+- ipa_vault:
+    name: vault01
+    vault_type: standard
+    user: user01
+    ipa_host: ipa.example.com
+    ipa_user: admin
+    ipa_pass: topsecret
+    validate_certs: false
+
+# Ensure vault is present for Admin user
+- ipa_vault:
+    name: vault01
+    vault_type: standard
+    ipa_host: ipa.example.com
+    ipa_user: admin
+    ipa_pass: topsecret
+
+# Ensure vault is absent
+- ipa_vault:
+    name: vault01
+    vault_type: standard
+    user: user01
+    state: absent
+    ipa_host: ipa.example.com
+    ipa_user: admin
+    ipa_pass: topsecret
+
+# Modify vault if already exists
+- ipa_vault:
+    name: vault01
+    vault_type: standard
+    description: "Vault for test"
+    ipa_host: ipa.example.com
+    ipa_user: admin
+    ipa_pass: topsecret
+    replace: True
+
+# Get vault info if already exists
+- ipa_vault:
+    name: vault01
+    ipa_host: ipa.example.com
+    ipa_user: admin
+    ipa_pass: topsecret
+
+
+RETURN VALUES:
+
+vault:
+  description: Vault as returned by IPA API
+  returned: always
+  type: dict
+

@@ -1,0 +1,190 @@
+> AVI_SERVERAUTOSCALEPOLICY    (/usr/lib/python2.7/dist-packages/ansible/modules/network/avi/avi_serverautoscalepolicy.py)
+
+        This module is used to configure ServerAutoScalePolicy object more examples at https://github.com/avinetworks/devops
+
+  * This module is maintained by The Ansible Community
+OPTIONS (= is mandatory):
+
+- api_context
+        Avi API context that includes current session ID and CSRF Token.
+        This allows user to perform single login and re-use the session.
+        [Default: (null)]
+        type: dict
+        version_added: 2.5
+
+- api_version
+        Avi API version of to use for Avi API and objects.
+        [Default: 16.4.4]
+        type: str
+
+- avi_api_patch_op
+        Patch operation to use when using avi_api_update_method as patch.
+        (Choices: add, replace, delete)[Default: (null)]
+        version_added: 2.5
+
+- avi_api_update_method
+        Default method for object update is HTTP PUT.
+        Setting to patch will override that behavior to use HTTP PATCH.
+        (Choices: put, patch)[Default: put]
+        version_added: 2.5
+
+- avi_credentials
+        Avi Credentials dictionary which can be used in lieu of enumerating Avi Controller login details.
+        [Default: (null)]
+        type: dict
+        version_added: 2.5
+
+- controller
+        IP address or hostname of the controller. The default value is the environment variable `AVI_CONTROLLER'.
+        [Default: ]
+        type: str
+
+- description
+        User defined description for the object.
+        [Default: (null)]
+
+- intelligent_autoscale
+        Use avi intelligent autoscale algorithm where autoscale is performed by comparing load on the pool against estimated capacity of
+        all the servers.
+        Default value when not specified in API or module is interpreted by Avi Controller as False.
+        [Default: (null)]
+        type: bool
+
+- intelligent_scalein_margin
+        Maximum extra capacity as percentage of load used by the intelligent scheme.
+        Scalein is triggered when available capacity is more than this margin.
+        Allowed values are 1-99.
+        Default value when not specified in API or module is interpreted by Avi Controller as 40.
+        [Default: (null)]
+
+- intelligent_scaleout_margin
+        Minimum extra capacity as percentage of load used by the intelligent scheme.
+        Scaleout is triggered when available capacity is less than this margin.
+        Allowed values are 1-99.
+        Default value when not specified in API or module is interpreted by Avi Controller as 20.
+        [Default: (null)]
+
+- max_scalein_adjustment_step
+        Maximum number of servers to scalein simultaneously.
+        The actual number of servers to scalein is chosen such that target number of servers is always more than or equal to the
+        min_size.
+        Default value when not specified in API or module is interpreted by Avi Controller as 1.
+        [Default: (null)]
+
+- max_scaleout_adjustment_step
+        Maximum number of servers to scaleout simultaneously.
+        The actual number of servers to scaleout is chosen such that target number of servers is always less than or equal to the
+        max_size.
+        Default value when not specified in API or module is interpreted by Avi Controller as 1.
+        [Default: (null)]
+
+- max_size
+        Maximum number of servers after scaleout.
+        Allowed values are 0-400.
+        [Default: (null)]
+
+- min_size
+        No scale-in happens once number of operationally up servers reach min_servers.
+        Allowed values are 0-400.
+        [Default: (null)]
+
+= name
+        Name of the object.
+
+
+- password
+        Password of Avi user in Avi controller. The default value is the environment variable `AVI_PASSWORD'.
+        [Default: ]
+        type: str
+
+- scalein_alertconfig_refs
+        Trigger scalein when alerts due to any of these alert configurations are raised.
+        It is a reference to an object of type alertconfig.
+        [Default: (null)]
+
+- scalein_cooldown
+        Cooldown period during which no new scalein is triggered to allow previous scalein to successfully complete.
+        Default value when not specified in API or module is interpreted by Avi Controller as 300.
+        Units(SEC).
+        [Default: (null)]
+
+- scaleout_alertconfig_refs
+        Trigger scaleout when alerts due to any of these alert configurations are raised.
+        It is a reference to an object of type alertconfig.
+        [Default: (null)]
+
+- scaleout_cooldown
+        Cooldown period during which no new scaleout is triggered to allow previous scaleout to successfully complete.
+        Default value when not specified in API or module is interpreted by Avi Controller as 300.
+        Units(SEC).
+        [Default: (null)]
+
+- state
+        The state that should be applied on the entity.
+        (Choices: absent, present)[Default: present]
+
+- tenant
+        Name of tenant used for all Avi API calls and context of object.
+        [Default: admin]
+        type: str
+
+- tenant_ref
+        It is a reference to an object of type tenant.
+        [Default: (null)]
+
+- tenant_uuid
+        UUID of tenant used for all Avi API calls and context of object.
+        [Default: ]
+        type: str
+
+- url
+        Avi controller URL of the object.
+        [Default: (null)]
+
+- use_predicted_load
+        Use predicted load rather than current load.
+        Default value when not specified in API or module is interpreted by Avi Controller as False.
+        [Default: (null)]
+        type: bool
+
+- username
+        Username used for accessing Avi controller. The default value is the environment variable `AVI_USERNAME'.
+        [Default: ]
+        type: str
+
+- uuid
+        Unique object identifier of the object.
+        [Default: (null)]
+
+
+NOTES:
+      * For more information on using Ansible to manage Avi Network devices see https://www.ansible.com/ansible-avi-networks.
+
+
+REQUIREMENTS:  avisdk
+
+AUTHOR: Gaurav Rastogi (@grastogi23) <grastogi@avinetworks.com>
+        METADATA:
+          status:
+          - preview
+          supported_by: community
+        
+
+EXAMPLES:
+
+- name: Example to create ServerAutoScalePolicy object
+  avi_serverautoscalepolicy:
+    controller: 10.10.25.42
+    username: admin
+    password: something
+    state: present
+    name: sample_serverautoscalepolicy
+
+
+RETURN VALUES:
+
+obj:
+    description: ServerAutoScalePolicy (api/serverautoscalepolicy) object
+    returned: success, changed
+    type: dict
+

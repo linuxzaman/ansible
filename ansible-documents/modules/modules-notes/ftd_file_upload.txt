@@ -1,0 +1,47 @@
+> FTD_FILE_UPLOAD    (/usr/lib/python2.7/dist-packages/ansible/modules/network/ftd/ftd_file_upload.py)
+
+        Uploads files to Cisco FTD devices including disk files, backups, and upgrades.
+
+  * This module is maintained by The Ansible Community
+OPTIONS (= is mandatory):
+
+= file_to_upload
+        Absolute path to the file that should be uploaded.
+
+        type: path
+        version_added: 2.8
+
+= operation
+        The name of the operation to execute.
+        Only operations that upload file can be used in this module.
+
+        type: str
+
+- register_as
+        Specifies Ansible fact name that is used to register received response from the FTD device.
+        [Default: (null)]
+        type: str
+
+
+AUTHOR: Cisco Systems, Inc. (@annikulin)
+        METADATA:
+          status:
+          - preview
+          supported_by: community
+        
+
+EXAMPLES:
+
+- name: Upload disk file
+  ftd_file_upload:
+    operation: 'postuploaddiskfile'
+    file_to_upload: /tmp/test1.txt
+
+
+RETURN VALUES:
+
+msg:
+    description: The error message describing why the module failed.
+    returned: error
+    type: str
+

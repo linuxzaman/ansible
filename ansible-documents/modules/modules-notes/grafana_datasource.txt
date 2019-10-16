@@ -1,0 +1,349 @@
+> GRAFANA_DATASOURCE    (/usr/lib/python2.7/dist-packages/ansible/modules/monitoring/grafana_datasource.py)
+
+        Create/update/delete Grafana datasources via API.
+
+  * This module is maintained by The Ansible Community
+OPTIONS (= is mandatory):
+
+- access
+        The access mode for this datasource.
+        (Choices: direct, proxy)[Default: proxy]
+
+- aws_access_key
+        AWS access key for CloudWatch datasource type when `aws_auth_type' is `keys'
+        [Default: ]
+        version_added: 2.8
+        
+
+- aws_assume_role_arn
+        AWS IAM role arn to assume for CloudWatch datasource type when `aws_auth_type' is `arn'
+        [Default: ]
+        version_added: 2.8
+        
+
+- aws_auth_type
+        Type for AWS authentication for CloudWatch datasource type (authType of grafana api)
+        (Choices: keys, credentials, arn)[Default: keys]
+        version_added: 2.8
+        
+
+- aws_credentials_profile
+        Profile for AWS credentials for CloudWatch datasource type when `aws_auth_type' is `credentials'
+        [Default: ]
+        version_added: 2.8
+        
+
+- aws_custom_metrics_namespaces
+        Namespaces of Custom Metrics for CloudWatch datasource type
+        [Default: ]
+        version_added: 2.8
+        
+
+- aws_default_region
+        AWS default region for CloudWatch datasource type
+        (Choices: ap-northeast-1, ap-northeast-2, ap-southeast-1, ap-southeast-2, ap-south-1, ca-central-1, cn-north-1, cn-northwest-1,
+        eu-central-1, eu-west-1, eu-west-2, eu-west-3, sa-east-1, us-east-1, us-east-2, us-gov-west-1, us-west-1, us-west-2)[Default: us-
+        east-1]
+        version_added: 2.8
+        
+
+- aws_secret_key
+        AWS secret key for CloudWatch datasource type when `aws_auth_type' is `keys'
+        [Default: ]
+        version_added: 2.8
+        
+
+- basic_auth_password
+        The datasource basic auth password, when `basic auth' is `yes'.
+        [Default: (null)]
+
+- basic_auth_user
+        The datasource basic auth user.
+        Setting this option with basic_auth_password will enable basic auth.
+        [Default: (null)]
+
+- client_cert
+        TLS certificate path used by ansible to query grafana api
+        [Default: (null)]
+        version_added: 2.8
+        
+
+- client_key
+        TLS private key path used by ansible to query grafana api
+        [Default: (null)]
+        version_added: 2.8
+        
+
+- database
+        Name of the database for the datasource.
+        This options is required when the `ds_type' is `influxdb', `elasticsearch' (index name), `mysql' or `postgres'.
+        [Default: (null)]
+
+= ds_type
+        The type of the datasource.
+        (Choices: graphite, prometheus, elasticsearch, influxdb, opentsdb, mysql, postgres, cloudwatch, alexanderzobnin-zabbix-
+        datasource)
+
+- es_version
+        Elasticsearch version (for `ds_type = elasticsearch' only)
+        Version 56 is for elasticsearch 5.6+ where tou can specify the `max_concurrent_shard_requests' option.
+        (Choices: 2, 5, 56)[Default: 5]
+
+- grafana_api_key
+        The Grafana API key.
+        If set, `grafana_user' and `grafana_password' will be ignored.
+        [Default: (null)]
+
+= grafana_url
+        The Grafana URL.
+
+
+- interval
+        For elasticsearch `ds_type', this is the index pattern used.
+        (Choices: , Hourly, Daily, Weekly, Monthly, Yearly)[Default: (null)]
+
+- is_default
+        Make this datasource the default one.
+        [Default: no]
+        type: bool
+
+- max_concurrent_shard_requests
+        Starting with elasticsearch 5.6, you can specify the max concurrent shard per requests.
+        [Default: 256]
+
+= name
+        The name of the datasource.
+
+
+- org_id
+        Grafana Organisation ID in which the datasource should be created.
+        Not used when `grafana_api_key' is set, because the `grafana_api_key' only belong to one organisation.
+        [Default: 1]
+
+- password
+        The datasource password
+        [Default: (null)]
+
+- sslmode
+        SSL mode for `postgres' datasoure type.
+        (Choices: disable, require, verify-ca, verify-full)[Default: (null)]
+
+- state
+        Status of the datasource
+        (Choices: absent, present)[Default: present]
+
+- time_field
+        Name of the time field in elasticsearch ds.
+        For example `@timestamp'
+        [Default: timestamp]
+
+- time_interval
+        Minimum group by interval for `influxdb' or `elasticsearch' datasources.
+        for example `>10s'
+        [Default: (null)]
+
+- tls_ca_cert
+        The TLS CA certificate for self signed certificates.
+        Only used when `tls_client_cert' and `tls_client_key' are set.
+        [Default: (null)]
+
+- tls_client_cert
+        The client TLS certificate.
+        If `tls_client_cert' and `tls_client_key' are set, this will enable TLS authentication.
+        Starts with ----- BEGIN CERTIFICATE -----
+        [Default: (null)]
+
+- tls_client_key
+        The client TLS private key
+        Starts with ----- BEGIN RSA PRIVATE KEY -----
+        [Default: (null)]
+
+- tls_skip_verify
+        Skip the TLS datasource certificate verification.
+        [Default: False]
+        type: bool
+        version_added: 2.6
+        
+
+- trends
+        Use trends or not for zabbix datasource type
+        [Default: (null)]
+        type: bool
+        version_added: 2.6
+        
+
+- tsdb_resolution
+        The opentsdb time resolution.
+        (Choices: millisecond, second)[Default: second]
+
+- tsdb_version
+        The opentsdb version.
+        Use `1' for <=2.1, `2' for ==2.2, `3' for ==2.3.
+        (Choices: 1, 2, 3)[Default: 1]
+
+= url
+        The URL of the datasource.
+        (Aliases: ds_url)
+
+- url_password
+        The Grafana API password.
+        (Aliases: grafana_password)[Default: admin]
+        version_added: 2.7
+        
+
+- url_username
+        The Grafana API user.
+        (Aliases: grafana_user)[Default: admin]
+        version_added: 2.7
+        
+
+- use_proxy
+        Boolean of whether or not to use proxy.
+        [Default: yes]
+        type: bool
+        version_added: 2.8
+        
+
+- user
+        The datasource login user for influxdb datasources.
+        [Default: (null)]
+
+- validate_certs
+        Whether to validate the Grafana certificate.
+        [Default: yes]
+        type: bool
+
+- with_credentials
+        Whether credentials such as cookies or auth headers should be sent with cross-site requests.
+        [Default: no]
+        type: bool
+
+
+AUTHOR: Thierry Sallé (@seuf), Martin Wang (@martinwangjian)
+        METADATA:
+          status:
+          - preview
+          supported_by: community
+        
+
+EXAMPLES:
+
+---
+- name: Create elasticsearch datasource
+  grafana_datasource:
+    name: "datasource-elastic"
+    grafana_url: "https://grafana.company.com"
+    grafana_user: "admin"
+    grafana_password: "xxxxxx"
+    org_id: "1"
+    ds_type: "elasticsearch"
+    ds_url: "https://elastic.company.com:9200"
+    database: "[logstash_]YYYY.MM.DD"
+    basic_auth_user: "grafana"
+    basic_auth_password: "******"
+    time_field: "@timestamp"
+    time_interval: "1m"
+    interval: "Daily"
+    es_version: 56
+    max_concurrent_shard_requests: 42
+    tls_ca_cert: "/etc/ssl/certs/ca.pem"
+
+- name: Create influxdb datasource
+  grafana_datasource:
+    name: "datasource-influxdb"
+    grafana_url: "https://grafana.company.com"
+    grafana_user: "admin"
+    grafana_password: "xxxxxx"
+    org_id: "1"
+    ds_type: "influxdb"
+    ds_url: "https://influx.company.com:8086"
+    database: "telegraf"
+    time_interval: ">10s"
+    tls_ca_cert: "/etc/ssl/certs/ca.pem"
+
+- name: Create postgres datasource
+  grafana_datasource:
+    name: "datasource-postgres"
+    grafana_url: "https://grafana.company.com"
+    grafana_user: "admin"
+    grafana_password: "xxxxxx"
+    org_id: "1"
+    ds_type: "postgres"
+    ds_url: "postgres.company.com:5432"
+    database: "db"
+    user: "postgres"
+    password: "iampgroot"
+    sslmode: "verify-full"
+
+- name: Create cloudwatch datasource
+  grafana_datasource:
+    name: "datasource-cloudwatch"
+    grafana_url: "https://grafana.company.com"
+    grafana_user: "admin"
+    grafana_password: "xxxxxx"
+    org_id: "1"
+    ds_type: "cloudwatch"
+    url: "http://monitoring.us-west-1.amazonaws.com"
+    aws_auth_type: "keys"
+    aws_default_region: "us-west-1"
+    aws_access_key: "speakFriendAndEnter"
+    aws_secret_key: "mel10n"
+    aws_custom_metrics_namespaces: "n1,n2"
+
+
+RETURN VALUES:
+
+---
+name:
+  description: name of the datasource created.
+  returned: success
+  type: str
+  sample: test-ds
+id:
+  description: Id of the datasource
+  returned: success
+  type: int
+  sample: 42
+before:
+  description: datasource returned by grafana api
+  returned: changed
+  type: dict
+  sample: { "access": "proxy",
+        "basicAuth": false,
+        "database": "test_*",
+        "id": 1035,
+        "isDefault": false,
+        "jsonData": {
+            "esVersion": 5,
+            "timeField": "@timestamp",
+            "timeInterval": "1m",
+        },
+        "name": "grafana_datasource_test",
+        "orgId": 1,
+        "type": "elasticsearch",
+        "url": "http://elastic.company.com:9200",
+        "user": "",
+        "password": "",
+        "withCredentials": false }
+after:
+  description: datasource updated by module
+  returned: changed
+  type: dict
+  sample: { "access": "proxy",
+        "basicAuth": false,
+        "database": "test_*",
+        "id": 1035,
+        "isDefault": false,
+        "jsonData": {
+            "esVersion": 5,
+            "timeField": "@timestamp",
+            "timeInterval": "10s",
+        },
+        "name": "grafana_datasource_test",
+        "orgId": 1,
+        "type": "elasticsearch",
+        "url": "http://elastic.company.com:9200",
+        "user": "",
+        "password": "",
+        "withCredentials": false }
+

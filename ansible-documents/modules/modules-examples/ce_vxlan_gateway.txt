@@ -1,0 +1,69 @@
+EXAMPLES:
+
+- name: vxlan gateway module test
+  hosts: ce128
+  connection: local
+  gather_facts: no
+  vars:
+    cli:
+      host: "{{ inventory_hostname }}"
+      port: "{{ ansible_ssh_port }}"
+      username: "{{ username }}"
+      password: "{{ password }}"
+      transport: cli
+
+  tasks:
+
+  - name: Configuring Centralized All-Active Gateways for the VXLAN Network
+    ce_vxlan_gateway:
+      dfs_id: 1
+      dfs_source_ip: 6.6.6.6
+      dfs_all_active: enable
+      dfs_peer_ip: 7.7.7.7
+      provider: "{{ cli }}"
+  - name: Bind the VPN instance to a Layer 3 gateway, enable distributed gateway, and configure host route advertisement.
+    ce_vxlan_gateway:
+      vbdif_name: Vbdif100
+      vbdif_bind_vpn: vpn1
+      arp_distribute_gateway: enable
+      arp_direct_route: enable
+      provider: "{{ cli }}"
+  - name: Assign a VNI to a VPN instance.
+    ce_vxlan_gateway:
+      vpn_instance: vpn1
+      vpn_vni: 100
+      provider: "{{ cli }}"
+
+
+RETURN VALUES:
+
+proposed:
+    description: k/v pairs of parameters passed into module
+    returned: verbose mode
+    type: dict
+    sample: {"dfs_id": "1", "dfs_source_ip": "6.6.6.6", "dfs_all_active":"enable", "dfs_peer_ip": "7.7.7.7"}
+existing:
+    description: k/v pairs of existing configuration
+    returned: verbose mode
+    type: dict
+    sample: {"dfs_id": "1", "dfs_source_ip": null, "evn_peer_ip": [], "dfs_all_active": "disable"}
+end_state:
+    description: k/v pairs of configuration after module execution
+    returned: verbose mode
+    type: dict
+    sample: {"dfs_id": "1", "evn_source_ip": "6.6.6.6", "evn_source_vpn": null,
+             "evn_peers": [{"ip": "7.7.7.7", "vpn": ""}], "dfs_all_active": "enable"}
+updates:
+    description: commands sent to the device
+    returned: always
+    type: list
+    sample: ["dfs-group 1",
+             "source ip 6.6.6.6",
+             "active-active-gateway",
+             "peer 7.7.7.7"]
+changed:
+    description: check to see if a change was made on the device
+    returned: always
+    type: bool
+    sample: true
+

@@ -1,0 +1,100 @@
+> CNOS_VRF    (/usr/lib/python2.7/dist-packages/ansible/modules/network/cnos/cnos_vrf.py)
+
+        This module provides declarative management of VRFs on Lenovo CNOS network devices.
+
+  * This module is maintained by The Ansible Community
+OPTIONS (= is mandatory):
+
+- aggregate
+        List of VRFs contexts
+        [Default: (null)]
+
+- associated_interfaces
+        This is a intent option and checks the operational state of the for given vrf `name' for associated interfaces. If the value in
+        the `associated_interfaces' does not match with the operational state of vrf interfaces on device it will result in failure.
+        [Default: (null)]
+
+- delay
+        Time in seconds to wait before checking for the operational state on remote device. This wait is applicable for operational state
+        arguments.
+        [Default: 10]
+
+- interfaces
+        Identifies the set of interfaces that should be configured in the VRF. Interfaces must be routed interfaces in order to be placed
+        into a VRF. The name of interface should be in expanded format and not abbreviated.
+        [Default: (null)]
+
+= name
+        Name of the VRF.
+
+
+- purge
+        Purge VRFs not defined in the `aggregate' parameter.
+        [Default: False]
+        type: bool
+
+- rd
+        Route distinguisher of the VRF
+        [Default: (null)]
+
+- state
+        State of the VRF configuration.
+        (Choices: present, absent)[Default: present]
+
+
+NOTES:
+      * Tested against CNOS 10.9.1
+
+
+AUTHOR: Anil Kumar Muraleedharan (@amuraleedhar)
+        METADATA:
+          status:
+          - preview
+          supported_by: community
+        
+
+EXAMPLES:
+
+- name: Create vrf
+  cnos_vrf:
+    name: test
+    rd: 1:200
+    interfaces:
+      - Ethernet1/33
+    state: present
+
+- name: Delete VRFs
+  cnos_vrf:
+    name: test
+    state: absent
+
+- name: Create aggregate of VRFs with purge
+  cnos_vrf:
+    aggregate:
+      - { name: test4, rd: "1:204" }
+      - { name: test5, rd: "1:205" }
+    state: present
+    purge: yes
+
+- name: Delete aggregate of VRFs
+  cnos_vrf:
+    aggregate:
+      - name: test2
+      - name: test3
+      - name: test4
+      - name: test5
+    state: absent
+
+
+RETURN VALUES:
+
+commands:
+  description: The list of configuration mode commands to send to the device
+  returned: always
+  type: list
+  sample:
+    - vrf context test
+    - rd 1:100
+    - interface Ethernet1/44
+    - vrf member test
+

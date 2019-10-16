@@ -1,0 +1,37 @@
+EXAMPLES:
+
+- name: configure hostname and domain name
+  junos_system:
+    hostname: junos01
+    domain_name: test.example.com
+    domain-search:
+      - ansible.com
+      - redhat.com
+      - juniper.com
+
+- name: remove configuration
+  junos_system:
+    state: absent
+
+- name: configure name servers
+  junos_system:
+    name_servers:
+      - 8.8.8.8
+      - 8.8.4.4
+
+
+RETURN VALUES:
+
+diff.prepared:
+  description: Configuration difference before and after applying change.
+  returned: when configuration is changed and diff option is enabled.
+  type: str
+  sample: >
+          [edit system]
+          +  host-name test;
+          +  domain-name ansible.com;
+          +  domain-search redhat.com;
+          [edit system name-server]
+              172.26.1.1 { ... }
+          +   8.8.8.8;
+

@@ -1,0 +1,167 @@
+> NA_ONTAP_INTERFACE    (/usr/lib/python2.7/dist-packages/ansible/modules/storage/netapp/na_ontap_interface.py)
+
+        Creating / deleting and modifying the LIF.
+
+  * This module is maintained by an Ansible Partner
+OPTIONS (= is mandatory):
+
+- address
+        Specifies the LIF's IP address.
+        Required when `state=present'
+        [Default: (null)]
+
+- admin_status
+        Specifies the administrative status of the LIF.
+        (Choices: up, down)[Default: (null)]
+
+- failover_policy
+        Specifies the failover policy for the LIF.
+        Possible values are 'disabled', 'system-defined', 'local-only', 'sfo-partner-only', and 'broadcast-domain-wide'
+        [Default: (null)]
+
+- firewall_policy
+        Specifies the firewall policy for the LIF.
+        [Default: (null)]
+
+- home_node
+        Specifies the LIF's home node.
+        By default, the first node from the cluster is considered as home node
+        [Default: (null)]
+
+- home_port
+        Specifies the LIF's home port.
+        Required when `state=present'
+        [Default: (null)]
+
+= hostname
+        The hostname or IP address of the ONTAP instance.
+
+        type: str
+
+- http_port
+        Override the default port (80 or 443) with this port
+        [Default: (null)]
+        type: int
+
+- https
+        Enable and disable https
+        [Default: False]
+        type: bool
+
+= interface_name
+        Specifies the logical interface (LIF) name.
+
+
+- is_auto_revert
+        If true, data LIF will revert to its home node under certain circumstances such as startup, and load balancing migration
+        capability is disabled automatically
+        [Default: (null)]
+        type: bool
+
+- netmask
+        Specifies the LIF's netmask.
+        Required when `state=present'.
+        [Default: (null)]
+
+- ontapi
+        The ontap api version to use
+        [Default: (null)]
+        type: int
+
+= password
+        Password for the specified user.
+        (Aliases: pass)
+        type: str
+
+- protocols
+        Specifies the list of data protocols configured on the LIF. By default, the values in this element are nfs, cifs and fcache.
+        Other supported protocols are iscsi and fcp. A LIF can be configured to not support any data protocols by specifying 'none'.
+        Protocol values of none, iscsi, fc-nvme or fcp can't be combined with any other data protocol(s).
+        address, netmask and firewall_policy parameters are not supported for 'fc-nvme' option.
+        [Default: (null)]
+
+- role
+        Specifies the role of the LIF.
+        When setting role as "intercluster", setting protocol is not supported.
+        Required when `state=present'.
+        [Default: (null)]
+
+- state
+        Whether the specified interface should exist or not.
+        (Choices: present, absent)[Default: present]
+
+- subnet_name
+        Subnet where the interface address is allocated from. If the option is not used, the IP address will need to be provided by the
+        administrator during configuration.
+        [Default: (null)]
+        version_added: 2.8
+
+= username
+        This can be a Cluster-scoped or SVM-scoped account, depending on whether a Cluster-level or SVM-level API is required. For more
+        information, please read the documentation https://mysupport.netapp.com/NOW/download/software/nmsdk/9.4/.
+        (Aliases: user)
+        type: str
+
+- validate_certs
+        If set to `no', the SSL certificates will not be validated.
+        This should only set to `False' used on personally controlled sites using self-signed certificates.
+        [Default: True]
+        type: bool
+
+= vserver
+        The name of the vserver to use.
+
+
+
+NOTES:
+      * The modules prefixed with na\\_ontap are built to support the ONTAP storage platform.
+
+
+REQUIREMENTS:  A physical or virtual clustered Data ONTAP system. The modules support Data ONTAP 9.1 and onward, Ansible 2.6, Python2
+        netapp-lib (2017.10.30) or later. Install using 'pip install netapp-lib', Python3 netapp-lib (2018.11.13) or
+        later. Install using 'pip install netapp-lib', To enable http on the cluster you must run the following commands
+        'set -privilege advanced;' 'system services web modify -http-enabled true;'
+
+AUTHOR: NetApp Ansible Team (@carchi8py) <ng-ansibleteam@netapp.com>
+        METADATA:
+          status:
+          - preview
+          supported_by: certified
+        
+
+EXAMPLES:
+
+- name: Create interface
+      na_ontap_interface:
+        state: present
+        interface_name: data2
+        home_port: e0d
+        home_node: laurentn-vsim1
+        role: data
+        protocols: nfs
+        admin_status: up
+        failover_policy: local-only
+        firewall_policy: mgmt
+        is_auto_revert: true
+        address: 10.10.10.10
+        netmask: 255.255.255.0
+        force_subnet_association: false
+        vserver: svm1
+        hostname: "{{ netapp_hostname }}"
+        username: "{{ netapp_username }}"
+        password: "{{ netapp_password }}"
+
+    - name: Delete interface
+      na_ontap_interface:
+        state: absent
+        interface_name: data2
+        vserver: svm1
+        hostname: "{{ netapp_hostname }}"
+        username: "{{ netapp_username }}"
+        password: "{{ netapp_password }}"
+
+
+RETURN VALUES:
+
+
+

@@ -1,0 +1,183 @@
+> GITLAB_USER    (/usr/lib/python2.7/dist-packages/ansible/modules/source_control/gitlab_user.py)
+
+        When the user does not exist in Gitlab, it will be created. When the user does exists and state=absent, the user will be deleted.
+        When changes are made to user, the user will be updated.
+
+  * This module is maintained by The Ansible Community
+OPTIONS (= is mandatory):
+
+- access_level
+        The access level to the group. One of the following can be used.
+        guest
+        reporter
+        developer
+        master (alias for maintainer)
+        maintainer
+        owner
+        (Choices: guest, reporter, developer, master, maintainer, owner)[Default: guest]
+        type: str
+
+- api_password
+        The password to use for authentication against the API
+        [Default: (null)]
+        type: str
+
+- api_token
+        Gitlab token for logging in.
+        (Aliases: login_token)[Default: (null)]
+        type: str
+
+- api_url
+        The resolvable endpoint for the API
+        [Default: (null)]
+        type: str
+
+- api_username
+        The username to use for authentication against the API
+        [Default: (null)]
+        type: str
+
+- confirm
+        Require confirmation.
+        [Default: True]
+        type: bool
+        version_added: 2.4
+
+= email
+        The email that belongs to the user.
+
+        type: str
+
+- external
+        Define external parameter for this user
+        [Default: False]
+        type: bool
+        version_added: 2.8
+
+- group
+        Id or Full path of parent group in the form of group/name
+        Add user as an member to this group.
+        [Default: (null)]
+        type: str
+
+- isadmin
+        Grant admin privilieges to the user
+        [Default: False]
+        type: bool
+        version_added: 2.8
+
+- login_password
+        Gitlab password for login_user
+        [Default: (null)]
+        type: str
+
+- login_user
+        Gitlab user name.
+        [Default: (null)]
+        type: str
+
+= name
+        Name of the user you want to create
+
+        type: str
+
+= password
+        The password of the user.
+        GitLab server enforces minimum password length to 8, set this value with 8 or more characters.
+
+        type: str
+
+= server_url
+        The URL of the Gitlab server, with protocol (i.e. http or https).
+
+        type: str
+
+- sshkey_file
+        The ssh key itself.
+        [Default: (null)]
+        type: str
+
+- sshkey_name
+        The name of the sshkey
+        [Default: (null)]
+        type: str
+
+- state
+        create or delete group.
+        Possible values are present and absent.
+        (Choices: present, absent)[Default: present]
+        type: str
+
+= username
+        The username of the user.
+
+        type: str
+
+- validate_certs
+        Whether or not to validate SSL certs when supplying a https endpoint.
+        [Default: True]
+        type: bool
+
+
+REQUIREMENTS:  python >= 2.7, python-gitlab python module, administrator rights on the Gitlab server
+
+AUTHOR: Werner Dijkerman (@dj-wasabi), Guillaume Martinez (@Lunik)
+        METADATA:
+          status:
+          - preview
+          supported_by: community
+        
+
+EXAMPLES:
+
+- name: "Delete Gitlab User"
+  gitlab_user:
+    api_url: https://gitlab.example.com/
+    api_token: "{{ access_token }}"
+    validate_certs: False
+    username: myusername
+    state: absent
+  delegate_to: localhost
+
+- name: "Create Gitlab User"
+  gitlab_user:
+    api_url: https://gitlab.example.com/
+    validate_certs: True
+    api_username: dj-wasabi
+    api_password: "MySecretPassword"
+    name: My Name
+    username: myusername
+    password: mysecretpassword
+    email: me@example.com
+    sshkey_name: MySSH
+    sshkey_file: ssh-rsa AAAAB3NzaC1yc...
+    state: present
+    group: super_group/mon_group
+    access_level: owner
+  delegate_to: localhost
+
+
+RETURN VALUES:
+
+msg:
+  description: Success or failure message
+  returned: always
+  type: str
+  sample: "Success"
+
+result:
+  description: json parsed response from the server
+  returned: always
+  type: dict
+
+error:
+  description: the error message returned by the Gitlab API
+  returned: failed
+  type: str
+  sample: "400: path is already in use"
+
+user:
+  description: API object
+  returned: always
+  type: dict
+

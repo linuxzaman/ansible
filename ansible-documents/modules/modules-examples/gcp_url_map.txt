@@ -1,0 +1,67 @@
+EXAMPLES:
+
+- name: Create Minimal Url_Map
+  gcp_url_map:
+    service_account_email: "{{ service_account_email }}"
+    credentials_file: "{{ credentials_file }}"
+    project_id: "{{ project_id }}"
+    url_map_name: my-url_map
+    default_service: my-backend-service
+    state: present
+- name: Create UrlMap with pathmatcher
+  gcp_url_map:
+    service_account_email: "{{ service_account_email }}"
+    credentials_file: "{{ credentials_file }}"
+    project_id: "{{ project_id }}"
+    url_map_name: my-url-map-pm
+    default_service: default-backend-service
+    path_matchers:
+    - name: 'path-matcher-one'
+      description: 'path matcher one'
+      default_service: 'bes-pathmatcher-one-default'
+      path_rules:
+      - service: 'my-one-bes'
+        paths:
+        - '/data'
+        - '/aboutus'
+    host_rules:
+      - hosts:
+        - '*.'
+        path_matcher: 'path-matcher-one'
+    state: "present"
+
+
+RETURN VALUES:
+
+host_rules:
+    description: List of HostRules.
+    returned: If specified.
+    type: dict
+    sample: [ { hosts: ["*."], "path_matcher": "my-pm" } ]
+path_matchers:
+    description: The list of named PathMatchers to use against the URL.
+    returned: If specified.
+    type: dict
+    sample: [ { "name": "my-pm", "path_rules": [ { "paths": [ "/data" ] } ], "service": "my-service" } ]
+state:
+    description: state of the Url_Map
+    returned: Always.
+    type: str
+    sample: present
+updated_url_map:
+    description: True if the url_map has been updated. Will not appear on
+                 initial url_map creation.
+    returned: if the url_map has been updated.
+    type: bool
+    sample: true
+url_map_name:
+    description: Name of the Url_Map
+    returned: Always
+    type: str
+    sample: my-url-map
+url_map:
+    description: GCP Url_Map dictionary
+    returned: Always. Refer to GCP documentation for detailed field descriptions.
+    type: dict
+    sample: { "name": "my-url-map", "hostRules": [...], "pathMatchers": [...] }
+

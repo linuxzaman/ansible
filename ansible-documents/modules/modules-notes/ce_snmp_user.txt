@@ -1,0 +1,139 @@
+> CE_SNMP_USER    (/usr/lib/python2.7/dist-packages/ansible/modules/network/cloudengine/ce_snmp_user.py)
+
+        Manages SNMP user configurations on CloudEngine switches.
+
+  * This module is maintained by The Ansible Community
+OPTIONS (= is mandatory):
+
+- aaa_local_user
+        Unique name to identify the local user.
+        [Default: (null)]
+
+- acl_number
+        Access control list number.
+        [Default: (null)]
+
+- auth_key
+        The authentication password. Password length, 8-255 characters.
+        [Default: (null)]
+
+- auth_protocol
+        Authentication protocol.
+        (Choices: noAuth, md5, sha)[Default: (null)]
+
+- priv_key
+        The encryption password. Password length 8-255 characters.
+        [Default: (null)]
+
+- priv_protocol
+        Encryption protocol.
+        (Choices: noPriv, des56, 3des168, aes128, aes192, aes256)[Default: (null)]
+
+- remote_engine_id
+        Remote engine id of the USM user.
+        [Default: (null)]
+
+- user_group
+        Name of the group where user belongs to.
+        [Default: (null)]
+
+- usm_user_name
+        Unique name to identify the USM user.
+        [Default: (null)]
+
+
+AUTHOR: wangdezhuang (@QijunPan)
+        METADATA:
+          status:
+          - preview
+          supported_by: community
+        
+
+EXAMPLES:
+
+- name: CloudEngine snmp user test
+  hosts: cloudengine
+  connection: local
+  gather_facts: no
+  vars:
+    cli:
+      host: "{{ inventory_hostname }}"
+      port: "{{ ansible_ssh_port }}"
+      username: "{{ username }}"
+      password: "{{ password }}"
+      transport: cli
+
+  tasks:
+
+  - name: "Config SNMP usm user"
+    ce_snmp_user:
+      state: present
+      usm_user_name: wdz_snmp
+      remote_engine_id: 800007DB03389222111200
+      acl_number: 2000
+      user_group: wdz_group
+      provider: "{{ cli }}"
+
+  - name: "Undo SNMP usm user"
+    ce_snmp_user:
+      state: absent
+      usm_user_name: wdz_snmp
+      remote_engine_id: 800007DB03389222111200
+      acl_number: 2000
+      user_group: wdz_group
+      provider: "{{ cli }}"
+
+  - name: "Config SNMP local user"
+    ce_snmp_user:
+      state: present
+      aaa_local_user: wdz_user
+      auth_protocol: md5
+      auth_key: huawei123
+      priv_protocol: des56
+      priv_key: huawei123
+      provider: "{{ cli }}"
+
+  - name: "Config SNMP local user"
+    ce_snmp_user:
+      state: absent
+      aaa_local_user: wdz_user
+      auth_protocol: md5
+      auth_key: huawei123
+      priv_protocol: des56
+      priv_key: huawei123
+      provider: "{{ cli }}"
+
+
+RETURN VALUES:
+
+changed:
+    description: check to see if a change was made on the device
+    returned: always
+    type: bool
+    sample: true
+proposed:
+    description: k/v pairs of parameters passed into module
+    returned: always
+    type: dict
+    sample: {"acl_number": "2000", "remote_engine_id": "800007DB03389222111200",
+             "state": "present", "user_group": "wdz_group",
+             "usm_user_name": "wdz_snmp"}
+existing:
+    description: k/v pairs of existing aaa server
+    returned: always
+    type: dict
+    sample: {"snmp local user": {"local_user_info": []},
+             "snmp usm user": {"usm_user_info": []}}
+end_state:
+    description: k/v pairs of aaa params after module execution
+    returned: always
+    type: dict
+    sample: {"snmp local user": {"local_user_info": []},
+             "snmp usm user": {"usm_user_info": [{"aclNumber": "2000", "engineID": "800007DB03389222111200",
+                                 "groupName": "wdz_group", "userName": "wdz_snmp"}]}}
+updates:
+    description: command sent to the device
+    returned: always
+    type: list
+    sample: ["snmp-agent remote-engineid 800007DB03389222111200 usm-user v3 wdz_snmp wdz_group acl 2000"]
+

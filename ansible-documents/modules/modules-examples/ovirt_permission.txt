@@ -1,0 +1,46 @@
+EXAMPLES:
+
+# Examples don't contain auth parameter for simplicity,
+# look at ovirt_auth module to see how to reuse authentication:
+
+- name: Add user user1 from authorization provider example.com-authz
+  ovirt_permission:
+    user_name: user1
+    authz_name: example.com-authz
+    object_type: vm
+    object_name: myvm
+    role: UserVmManager
+
+- name: Remove permission from user
+  ovirt_permission:
+    state: absent
+    user_name: user1
+    authz_name: example.com-authz
+    object_type: cluster
+    object_name: mycluster
+    role: ClusterAdmin
+
+- name: Assign QuotaConsumer role to user
+  ovirt_permissions:
+    state: present
+    user_name: user1
+    authz_name: example.com-authz
+    object_type: data_center
+    object_name: mydatacenter
+    quota_name: myquota
+    role: QuotaConsumer
+
+
+RETURN VALUES:
+
+id:
+    description: ID of the permission which is managed
+    returned: On success if permission is found.
+    type: str
+    sample: 7de90f31-222c-436c-a1ca-7e655bd5b60c
+permission:
+    description: "Dictionary of all the permission attributes. Permission attributes can be found on your oVirt/RHV instance
+                  at following url: http://ovirt.github.io/ovirt-engine-api-model/master/#types/permission."
+    returned: On success if permission is found.
+    type: dict
+

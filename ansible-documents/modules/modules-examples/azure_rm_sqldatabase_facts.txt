@@ -1,0 +1,103 @@
+EXAMPLES:
+
+- name: Get instance of SQL Database
+    azure_rm_sqldatabase_facts:
+      resource_group: testrg
+      server_name: testserver
+      name: testdb
+
+  - name: List instances of SQL Database
+    azure_rm_sqldatabase_facts:
+      resource_group: testrg
+      server_name: testserver
+      elastic_pool_name: testep
+
+  - name: List instances of SQL Database
+    azure_rm_sqldatabase_facts:
+      resource_group: testrg
+      server_name: testserver
+
+
+RETURN VALUES:
+
+databases:
+    description: A list of dictionaries containing facts for SQL Database.
+    returned: always
+    type: complex
+    contains:
+        id:
+            description:
+                - Resource ID.
+            returned: always
+            type: str
+            sample: /subscriptions/xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx/resourceGroups/testrg/providers/Microsoft.Sql/servers/testserver/databases/testdb
+        name:
+            description:
+                - Database name.
+            returned: always
+            type: str
+            sample: testdb
+        location:
+            description:
+                - Resource location.
+            returned: always
+            type: str
+            sample: southeastasia
+        tags:
+            description:
+                - Resource tags.
+            returned: always
+            type: dict
+            sample:
+                taga: aaa
+                tagb: bbb
+        sku:
+            description:
+                - The name and tier of the SKU.
+            returned: always
+            type: complex
+            sample: sku
+            contains:
+                name:
+                    description:
+                        - The name of the SKU.
+                    returned: always
+                    type: str
+                    sample: BC_Gen4_2
+                tier:
+                    description:
+                        - Service tier.
+                    returned: always
+                    type: str
+                    sample: BusinessCritical
+                capacity:
+                    description:
+                        - Capacity.
+                    returned: always
+                    type: int
+                    sample: 2
+        kind:
+            description:
+                - Kind of database. This is metadata used for the Azure portal experience.
+            returned: always
+            type: str
+            sample: v12.0,user
+        collation:
+            description:
+                - The collation of the database.
+            returned: always
+            type: str
+            sample: SQL_Latin1_General_CP1_CI_AS
+        status:
+            description:
+                - The status of the database.
+            returned: always
+            type: str
+            sample: Online
+        zone_redundant:
+            description:
+                - Whether or not this database is zone redundant, which means the replicas of this database will be spread across multiple availability zones.
+            returned: always
+            type: bool
+            sample: true
+

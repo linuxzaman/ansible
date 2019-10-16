@@ -1,0 +1,133 @@
+EXAMPLES:
+
+- name: Create a new transit gateway using defaults
+  ec2_transit_gateway:
+    state: present
+    region: us-east-1
+    description: personal-testing
+  register: created_tgw
+
+- name: Create a new transit gateway with options
+  ec2_transit_gateway:
+    asn: 64514
+    auto_associate: no
+    auto_propagate: no
+    dns_support: True
+    description: "nonprod transit gateway"
+    purge_tags: False
+    state: present
+    region: us-east-1
+    tags:
+      Name: nonprod transit gateway
+      status: testing
+
+- name: Remove a transit gateway by description
+  ec2_transit_gateway:
+    state: absent
+    region: us-east-1
+    description: personal-testing
+
+- name: Remove a transit gateway by id
+  ec2_transit_gateway:
+    state: absent
+    region: ap-southeast-2
+    transit_gateway_id: tgw-3a9aa123
+  register: deleted_tgw
+
+
+RETURN VALUES:
+
+transit_gateway:
+  description: The attributes of the transit gateway.
+  type: complex
+  returned: I(state=present)
+  contains:
+    creation_time:
+      description: The creation time of the transit gateway.
+      returned: always
+      type: str
+      sample: "2019-03-06T17:13:51+00:00"
+    description:
+      description: The description of the transit gateway.
+      returned: always
+      type: str
+      sample: my test tgw
+    options:
+      description: The options attributes of the transit gateway
+      returned: always
+      type: complex
+      contains:
+        amazon_side_asn:
+          description:
+            - A private Autonomous System Number (ASN) for the Amazon side of a BGP session.
+              The range is 64512 to 65534 for 16-bit ASNs and 4200000000 to 4294967294 for 32-bit ASNs.
+          returned: always
+          type: str
+          sample: 64512
+        auto_accept_shared_attachements:
+          description: Indicates whether attachment requests are automatically accepted.
+          returned: always
+          type: str
+          sample: disable
+        default_route_table_association:
+          description:
+           - Indicates  whether resource attachments are automatically
+              associated with the default association route table.
+          returned: always
+          type: str
+          sample: enable
+        association_default_route_table_id:
+          description: The ID of the default association route table.
+          returned: Iwhen exists
+          type: str
+          sample: tgw-rtb-abc123444
+        default_route_table_propagation:
+          description:
+           - Indicates  whether  resource  attachments   automatically
+             propagate routes to the default propagation route table.
+          returned: always
+          type: str
+          sample: disable
+        propagation_default_route_table_id:
+          description: The ID of the default propagation route table.
+          returned: when exists
+          type: str
+          sample: tgw-rtb-def456777
+        vpn_ecmp_support:
+          description: Indicates  whether  Equal Cost Multipath Protocol support is enabled.
+          returned: always
+          type: str
+          sample: enable
+        dns_support:
+          description: Indicates whether DNS support is enabled.
+          returned: always
+          type: str
+          sample: enable
+    owner_id:
+      description: The account that owns the transit gateway.
+      returned: always
+      type: str
+      sample: '123456789012'
+    state:
+      description: The state of the transit gateway.
+      returned: always
+      type: str
+      sample: pending
+    tags:
+      description: A dictionary of resource tags
+      returned: always
+      type: dict
+      sample:
+        tags:
+          Name: nonprod_tgw
+    transit_gateway_arn:
+      description: The ID of the transit_gateway.
+      returned: always
+      type: str
+      sample: tgw-3a9aa123
+    transit_gateway_id:
+      description: The ID of the transit_gateway.
+      returned: always
+      type: str
+      sample: tgw-3a9aa123
+

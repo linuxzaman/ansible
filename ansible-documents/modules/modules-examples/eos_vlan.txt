@@ -1,0 +1,50 @@
+EXAMPLES:
+
+- name: Create vlan
+  eos_vlan:
+    vlan_id: 4000
+    name: vlan-4000
+    state: present
+
+- name: Add interfaces to vlan
+  eos_vlan:
+    vlan_id: 4000
+    state: present
+    interfaces:
+      - Ethernet1
+      - Ethernet2
+
+- name: Check if interfaces is assigned to vlan
+  eos_vlan:
+    vlan_id: 4000
+    associated_interfaces:
+      - Ethernet1
+      - Ethernet2
+
+- name: Suspend vlan
+  eos_vlan:
+    vlan_id: 4000
+    state: suspend
+
+- name: Unsuspend vlan
+  eos_vlan:
+    vlan_id: 4000
+    state: active
+
+- name: Create aggregate of vlans
+  eos_vlan:
+    aggregate:
+      - vlan_id: 4000
+      - {vlan_id: 4001, name: vlan-4001}
+
+
+RETURN VALUES:
+
+commands:
+  description: The list of configuration mode commands to send to the device
+  returned: always
+  type: list
+  sample:
+    - vlan 20
+    - name test-vlan
+

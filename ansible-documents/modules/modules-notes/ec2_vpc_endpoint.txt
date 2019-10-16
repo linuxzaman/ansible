@@ -1,0 +1,208 @@
+> EC2_VPC_ENDPOINT    (/usr/lib/python2.7/dist-packages/ansible/modules/cloud/amazon/ec2_vpc_endpoint.py)
+
+        Creates AWS VPC endpoints. Deletes AWS VPC endpoints. This module support check mode.
+
+  * This module is maintained by The Ansible Community
+OPTIONS (= is mandatory):
+
+- aws_access_key
+        AWS access key. If not set then the value of the AWS_ACCESS_KEY_ID, AWS_ACCESS_KEY or EC2_ACCESS_KEY environment variable is
+        used.
+        (Aliases: ec2_access_key, access_key)[Default: (null)]
+        type: str
+
+- aws_secret_key
+        AWS secret key. If not set then the value of the AWS_SECRET_ACCESS_KEY, AWS_SECRET_KEY, or EC2_SECRET_KEY environment variable is
+        used.
+        (Aliases: ec2_secret_key, secret_key)[Default: (null)]
+        type: str
+
+- client_token
+        Optional client token to ensure idempotency
+        [Default: (null)]
+
+- debug_botocore_endpoint_logs
+        Use a botocore.endpoint logger to parse the unique (rather than total) "resource:action" API calls made during a task, outputing
+        the set to the resource_actions key in the task results. Use the aws_resource_action callback to output to total list made during
+        a playbook. The ANSIBLE_DEBUG_BOTOCORE_LOGS environment variable may also be used.
+        [Default: no]
+        type: bool
+        version_added: 2.8
+
+- ec2_url
+        Url to use to connect to EC2 or your Eucalyptus cloud (by default the module will use EC2 endpoints). Ignored for modules where
+        region is required. Must be specified for all other modules if region is not used. If not set then the value of the EC2_URL
+        environment variable, if any, is used.
+        [Default: (null)]
+        type: str
+
+- policy
+        A properly formatted json policy as string, see https://github.com/ansible/ansible/issues/7005#issuecomment-42894813. Cannot be
+        used with `policy_file'.
+        Option when creating an endpoint. If not provided AWS will utilise a default policy which provides full access to the service.
+        [Default: (null)]
+
+- policy_file
+        The path to the properly json formatted policy file, see https://github.com/ansible/ansible/issues/7005#issuecomment-42894813 on
+        how to use it properly. Cannot be used with `policy'.
+        Option when creating an endpoint. If not provided AWS will utilise a default policy which provides full access to the service.
+        (Aliases: policy_path)[Default: (null)]
+
+- profile
+        Uses a boto profile. Only works with boto >= 2.24.0.
+        [Default: (null)]
+        type: str
+        version_added: 1.6
+
+- region
+        The AWS region to use. If not specified then the value of the AWS_REGION or EC2_REGION environment variable, if any, is used. See
+        http://docs.aws.amazon.com/general/latest/gr/rande.html#ec2_region
+        (Aliases: aws_region, ec2_region)[Default: (null)]
+        type: str
+
+- route_table_ids
+        List of one or more route table ids to attach to the endpoint. A route is added to the route table with the destination of the
+        endpoint if provided.
+        [Default: (null)]
+
+- security_token
+        AWS STS security token. If not set then the value of the AWS_SECURITY_TOKEN or EC2_SECURITY_TOKEN environment variable is used.
+        (Aliases: access_token)[Default: (null)]
+        type: str
+        version_added: 1.6
+
+- service
+        An AWS supported vpc endpoint service. Use the ec2_vpc_endpoint_facts module to describe the supported endpoint services.
+        Required when creating an endpoint.
+        [Default: (null)]
+
+- state
+        present to ensure resource is created.
+        absent to remove resource
+        (Choices: present, absent)[Default: present]
+
+- validate_certs
+        When set to "no", SSL certificates will not be validated for boto versions >= 2.6.0.
+        [Default: True]
+        type: bool
+        version_added: 1.5
+
+- vpc_endpoint_id
+        One or more vpc endpoint ids to remove from the AWS account
+        [Default: (null)]
+
+- vpc_id
+        Required when creating a VPC endpoint.
+        [Default: (null)]
+
+- wait
+        When specified, will wait for either available status for state present. Unfortunately this is ignored for delete actions due to
+        a difference in behaviour from AWS.
+        [Default: False]
+        type: bool
+
+- wait_timeout
+        Used in conjunction with wait. Number of seconds to wait for status. Unfortunately this is ignored for delete actions due to a
+        difference in behaviour from AWS.
+        [Default: 320]
+
+
+NOTES:
+      * If parameters are not set within the module, the following environment variables can be used in decreasing order of
+        precedence `AWS_URL' or `EC2_URL', `AWS_ACCESS_KEY_ID' or `AWS_ACCESS_KEY' or `EC2_ACCESS_KEY', `AWS_SECRET_ACCESS_KEY' or
+        `AWS_SECRET_KEY' or `EC2_SECRET_KEY', `AWS_SECURITY_TOKEN' or `EC2_SECURITY_TOKEN', `AWS_REGION' or `EC2_REGION'
+      * Ansible uses the boto configuration file (typically ~/.boto) if no credentials are provided. See
+        https://boto.readthedocs.io/en/latest/boto_config_tut.html
+      * `AWS_REGION' or `EC2_REGION' can be typically be used to specify the AWS region, when required, but this can also be
+        configured in the boto config file
+
+
+REQUIREMENTS:  boto, boto3, python >= 2.6
+
+AUTHOR: Karen Cheng (@Etherdaemon)
+        METADATA:
+          status:
+          - preview
+          supported_by: community
+        
+
+EXAMPLES:
+
+# Note: These examples do not set authentication details, see the AWS Guide for details.
+
+- name: Create new vpc endpoint with a json template for policy
+  ec2_vpc_endpoint:
+    state: present
+    region: ap-southeast-2
+    vpc_id: vpc-12345678
+    service: com.amazonaws.ap-southeast-2.s3
+    policy: " {{ lookup( 'template', 'endpoint_policy.json.j2') }} "
+    route_table_ids:
+      - rtb-12345678
+      - rtb-87654321
+  register: new_vpc_endpoint
+
+- name: Create new vpc endpoint the default policy
+  ec2_vpc_endpoint:
+    state: present
+    region: ap-southeast-2
+    vpc_id: vpc-12345678
+    service: com.amazonaws.ap-southeast-2.s3
+    route_table_ids:
+      - rtb-12345678
+      - rtb-87654321
+  register: new_vpc_endpoint
+
+- name: Create new vpc endpoint with json file
+  ec2_vpc_endpoint:
+    state: present
+    region: ap-southeast-2
+    vpc_id: vpc-12345678
+    service: com.amazonaws.ap-southeast-2.s3
+    policy_file: "{{ role_path }}/files/endpoint_policy.json"
+    route_table_ids:
+      - rtb-12345678
+      - rtb-87654321
+  register: new_vpc_endpoint
+
+- name: Delete newly created vpc endpoint
+  ec2_vpc_endpoint:
+    state: absent
+    nat_gateway_id: "{{ new_vpc_endpoint.result['VpcEndpointId'] }}"
+    region: ap-southeast-2
+
+
+RETURN VALUES:
+
+endpoints:
+  description: The resulting endpoints from the module call
+  returned: success
+  type: list
+  sample: [
+      {
+        "creation_timestamp": "2017-02-20T05:04:15+00:00",
+        "policy_document": {
+          "Id": "Policy1450910922815",
+          "Statement": [
+            {
+              "Action": "s3:*",
+              "Effect": "Allow",
+              "Principal": "*",
+              "Resource": [
+                "arn:aws:s3:::*/*",
+                "arn:aws:s3:::*"
+              ],
+              "Sid": "Stmt1450910920641"
+            }
+          ],
+          "Version": "2012-10-17"
+        },
+        "route_table_ids": [
+          "rtb-abcd1234"
+        ],
+        "service_name": "com.amazonaws.ap-southeast-2.s3",
+        "vpc_endpoint_id": "vpce-a1b2c3d4",
+        "vpc_id": "vpc-abbad0d0"
+      }
+    ]
+

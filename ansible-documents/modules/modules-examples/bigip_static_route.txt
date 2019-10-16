@@ -1,0 +1,64 @@
+EXAMPLES:
+
+- name: Create static route with gateway address
+  bigip_static_route:
+    destination: 10.10.10.10
+    netmask: 255.255.255.255
+    gateway_address: 10.2.2.3
+    name: test-route
+    provider:
+      password: secret
+      server: lb.mydomain.come
+      user: admin
+      validate_certs: no
+  delegate_to: localhost
+
+
+RETURN VALUES:
+
+vlan:
+  description: Whether the banner is enabled or not.
+  returned: changed
+  type: str
+  sample: true
+gateway_address:
+  description: Whether the banner is enabled or not.
+  returned: changed
+  type: str
+  sample: true
+destination:
+  description: Whether the banner is enabled or not.
+  returned: changed
+  type: str
+  sample: true
+route_domain:
+  description: Route domain of the static route.
+  returned: changed
+  type: int
+  sample: 1
+netmask:
+  description: Netmask of the destination.
+  returned: changed
+  type: str
+  sample: 255.255.255.255
+pool:
+  description: Whether the banner is enabled or not.
+  returned: changed
+  type: str
+  sample: true
+partition:
+  description: The partition that the static route was created on.
+  returned: changed
+  type: str
+  sample: Common
+description:
+  description: Whether the banner is enabled or not.
+  returned: changed
+  type: str
+  sample: true
+reject:
+  description: Whether the banner is enabled or not.
+  returned: changed
+  type: str
+  sample: true
+

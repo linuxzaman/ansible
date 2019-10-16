@@ -1,0 +1,264 @@
+> FORTIOS_REPORT_THEME    (/usr/lib/python2.7/dist-packages/ansible/modules/network/fortios/fortios_report_theme.py)
+
+        This module is able to configure a FortiGate or FortiOS by allowing the user to set and modify report feature and theme category.
+        Examples include all parameters and values need to be adjusted to datasources before usage. Tested with FOS v6.0.2
+
+  * This module is maintained by The Ansible Community
+OPTIONS (= is mandatory):
+
+= host
+        FortiOS or FortiGate ip address.
+
+
+- https
+        Indicates if the requests towards FortiGate must use HTTPS protocol
+        [Default: True]
+        type: bool
+
+- password
+        FortiOS or FortiGate password.
+        [Default: ]
+
+- report_theme
+        Report themes configuration
+        [Default: None]
+        suboptions:
+          bullet-list-style:
+            description:
+            - Bullet list style.
+          column-count:
+            choices:
+            - 1
+            - 2
+            - 3
+            description:
+            - Report page column count.
+          default-html-style:
+            description:
+            - Default HTML report style.
+          default-pdf-style:
+            description:
+            - Default PDF report style.
+          graph-chart-style:
+            description:
+            - Graph chart style.
+          heading1-style:
+            description:
+            - Report heading style.
+          heading2-style:
+            description:
+            - Report heading style.
+          heading3-style:
+            description:
+            - Report heading style.
+          heading4-style:
+            description:
+            - Report heading style.
+          hline-style:
+            description:
+            - Horizontal line style.
+          image-style:
+            description:
+            - Image style.
+          name:
+            description:
+            - Report theme name.
+            required: true
+          normal-text-style:
+            description:
+            - Normal text style.
+          numbered-list-style:
+            description:
+            - Numbered list style.
+          page-footer-style:
+            description:
+            - Report page footer style.
+          page-header-style:
+            description:
+            - Report page header style.
+          page-orient:
+            choices:
+            - portrait
+            - landscape
+            description:
+            - Report page orientation.
+          page-style:
+            description:
+            - Report page style.
+          report-subtitle-style:
+            description:
+            - Report subtitle style.
+          report-title-style:
+            description:
+            - Report title style.
+          state:
+            choices:
+            - present
+            - absent
+            description:
+            - Indicates whether to create or remove the object
+          table-chart-caption-style:
+            description:
+            - Table chart caption style.
+          table-chart-even-row-style:
+            description:
+            - Table chart even row style.
+          table-chart-head-style:
+            description:
+            - Table chart head row style.
+          table-chart-odd-row-style:
+            description:
+            - Table chart odd row style.
+          table-chart-style:
+            description:
+            - Table chart style.
+          toc-heading1-style:
+            description:
+            - Table of contents heading style.
+          toc-heading2-style:
+            description:
+            - Table of contents heading style.
+          toc-heading3-style:
+            description:
+            - Table of contents heading style.
+          toc-heading4-style:
+            description:
+            - Table of contents heading style.
+          toc-title-style:
+            description:
+            - Table of contents title style.
+        
+
+= username
+        FortiOS or FortiGate username.
+
+
+- vdom
+        Virtual domain, among those defined previously. A vdom is a virtual instance of the FortiGate that can be configured and used as
+        a different unit.
+        [Default: root]
+
+
+NOTES:
+      * Requires fortiosapi library developed by Fortinet
+      * Run as a local_action in your playbook
+
+
+REQUIREMENTS:  fortiosapi>=0.9.8
+
+AUTHOR: Miguel Angel Munoz (@mamunozgonzalez), Nicolas Thomas (@thomnico)
+        METADATA:
+          status:
+          - preview
+          supported_by: community
+        
+
+EXAMPLES:
+
+- hosts: localhost
+  vars:
+   host: "192.168.122.40"
+   username: "admin"
+   password: ""
+   vdom: "root"
+  tasks:
+  - name: Report themes configuration
+    fortios_report_theme:
+      host:  "{{ host }}"
+      username: "{{ username }}"
+      password: "{{ password }}"
+      vdom:  "{{ vdom }}"
+      https: "False"
+      report_theme:
+        state: "present"
+        bullet-list-style: "<your_own_value>"
+        column-count: "1"
+        default-html-style: "<your_own_value>"
+        default-pdf-style: "<your_own_value>"
+        graph-chart-style: "<your_own_value>"
+        heading1-style: "<your_own_value>"
+        heading2-style: "<your_own_value>"
+        heading3-style: "<your_own_value>"
+        heading4-style: "<your_own_value>"
+        hline-style: "<your_own_value>"
+        image-style: "<your_own_value>"
+        name: "default_name_14"
+        normal-text-style: "<your_own_value>"
+        numbered-list-style: "<your_own_value>"
+        page-footer-style: "<your_own_value>"
+        page-header-style: "<your_own_value>"
+        page-orient: "portrait"
+        page-style: "<your_own_value>"
+        report-subtitle-style: "<your_own_value>"
+        report-title-style: "<your_own_value>"
+        table-chart-caption-style: "<your_own_value>"
+        table-chart-even-row-style: "<your_own_value>"
+        table-chart-head-style: "<your_own_value>"
+        table-chart-odd-row-style: "<your_own_value>"
+        table-chart-style: "<your_own_value>"
+        toc-heading1-style: "<your_own_value>"
+        toc-heading2-style: "<your_own_value>"
+        toc-heading3-style: "<your_own_value>"
+        toc-heading4-style: "<your_own_value>"
+        toc-title-style: "<your_own_value>"
+
+
+RETURN VALUES:
+
+build:
+  description: Build number of the fortigate image
+  returned: always
+  type: str
+  sample: '1547'
+http_method:
+  description: Last method used to provision the content into FortiGate
+  returned: always
+  type: str
+  sample: 'PUT'
+http_status:
+  description: Last result given by FortiGate on last operation applied
+  returned: always
+  type: str
+  sample: "200"
+mkey:
+  description: Master key (id) used in the last call to FortiGate
+  returned: success
+  type: str
+  sample: "id"
+name:
+  description: Name of the table used to fulfill the request
+  returned: always
+  type: str
+  sample: "urlfilter"
+path:
+  description: Path of the table used to fulfill the request
+  returned: always
+  type: str
+  sample: "webfilter"
+revision:
+  description: Internal revision number
+  returned: always
+  type: str
+  sample: "17.0.2.10658"
+serial:
+  description: Serial number of the unit
+  returned: always
+  type: str
+  sample: "FGVMEVYYQT3AB5352"
+status:
+  description: Indication of the operation's result
+  returned: always
+  type: str
+  sample: "success"
+vdom:
+  description: Virtual domain used
+  returned: always
+  type: str
+  sample: "root"
+version:
+  description: Version of the FortiGate
+  returned: always
+  type: str
+  sample: "v5.6.3"
+
+

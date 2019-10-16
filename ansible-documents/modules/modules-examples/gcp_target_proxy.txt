@@ -1,0 +1,42 @@
+EXAMPLES:
+
+- name: Create Minimum HTTP Target_Proxy
+  gcp_target_proxy:
+    service_account_email: "{{ service_account_email }}"
+    credentials_file: "{{ credentials_file }}"
+    project_id: "{{ project_id }}"
+    target_proxy_name: my-target_proxy
+    target_proxy_type: HTTP
+    url_map_name: my-url-map
+    state: present
+
+
+RETURN VALUES:
+
+state:
+    description: state of the Target_Proxy
+    returned: Always.
+    type: str
+    sample: present
+updated_target_proxy:
+    description: True if the target_proxy has been updated. Will not appear on
+                 initial target_proxy creation.
+    returned: if the target_proxy has been updated.
+    type: bool
+    sample: true
+target_proxy_name:
+    description: Name of the Target_Proxy
+    returned: Always
+    type: str
+    sample: my-target-proxy
+target_proxy_type:
+    description: Type of Target_Proxy. One of HTTP, HTTPS or SSL.
+    returned: Always
+    type: str
+    sample: HTTP
+target_proxy:
+    description: GCP Target_Proxy dictionary
+    returned: Always. Refer to GCP documentation for detailed field descriptions.
+    type: dict
+    sample: { "name": "my-target-proxy", "urlMap": "..." }
+

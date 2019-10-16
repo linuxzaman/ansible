@@ -1,0 +1,82 @@
+> SCALEWAY_VOLUME_FACTS    (/usr/lib/python2.7/dist-packages/ansible/modules/cloud/scaleway/scaleway_volume_facts.py)
+
+        Gather facts about the Scaleway volumes available.
+
+  * This module is maintained by The Ansible Community
+OPTIONS (= is mandatory):
+
+- api_timeout
+        HTTP timeout to Scaleway API in seconds.
+        (Aliases: timeout)[Default: 30]
+        type: int
+
+- api_token
+        Scaleway OAuth token.
+        (Aliases: oauth_token)[Default: (null)]
+        type: str
+
+- api_url
+        Scaleway API URL.
+        (Aliases: base_url)[Default: https://api.scaleway.com]
+        type: str
+
+- query_parameters
+        List of parameters passed to the query string.
+        [Default: {}]
+        type: dict
+
+= region
+        Scaleway region to use (for example par1).
+        (Choices: ams1, EMEA-NL-EVS, par1, EMEA-FR-PAR1)
+        version_added: 2.8
+
+- validate_certs
+        Validate SSL certs of the Scaleway API.
+        [Default: True]
+        type: bool
+
+
+NOTES:
+      * Also see the API documentation on https://developer.scaleway.com/
+      * If `api_token' is not set within the module, the following environment variables can be used in decreasing order of
+        precedence `SCW_TOKEN', `SCW_API_KEY', `SCW_OAUTH_TOKEN' or `SCW_API_TOKEN'.
+      * If one wants to use a different `api_url' one can also set the `SCW_API_URL' environment variable.
+
+
+AUTHOR: Yanis Guenane (@Spredzy), Remy Leone (@sieben)
+        METADATA:
+          status:
+          - preview
+          supported_by: community
+        
+
+EXAMPLES:
+
+- name: Gather Scaleway volumes facts
+  scaleway_volume_facts:
+    region: par1
+
+
+RETURN VALUES:
+
+---
+scaleway_volume_facts:
+  description: Response from Scaleway API
+  returned: success
+  type: complex
+  contains:
+    "scaleway_volume_facts": [
+        {
+            "creation_date": "2018-08-14T20:56:24.949660+00:00",
+            "export_uri": null,
+            "id": "b8d51a06-daeb-4fef-9539-a8aea016c1ba",
+            "modification_date": "2018-08-14T20:56:24.949660+00:00",
+            "name": "test-volume",
+            "organization": "3f709602-5e6c-4619-b80c-e841c89734af",
+            "server": null,
+            "size": 50000000000,
+            "state": "available",
+            "volume_type": "l_ssd"
+        }
+    ]
+

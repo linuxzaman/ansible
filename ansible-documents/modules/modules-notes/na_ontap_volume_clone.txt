@@ -1,0 +1,121 @@
+> NA_ONTAP_VOLUME_CLONE    (/usr/lib/python2.7/dist-packages/ansible/modules/storage/netapp/na_ontap_volume_clone.py)
+
+        Create NetApp ONTAP volume clones. A FlexClone License is required to use this module
+
+  * This module is maintained by The Ansible Community
+OPTIONS (= is mandatory):
+
+= hostname
+        The hostname or IP address of the ONTAP instance.
+
+        type: str
+
+- http_port
+        Override the default port (80 or 443) with this port
+        [Default: (null)]
+        type: int
+
+- https
+        Enable and disable https
+        [Default: False]
+        type: bool
+
+- junction_path
+        Junction path of the volume.
+        [Default: (null)]
+        version_added: 2.8
+
+- ontapi
+        The ontap api version to use
+        [Default: (null)]
+        type: int
+
+- parent_snapshot
+        Parent snapshot in which volume clone is created off.
+        [Default: (null)]
+
+= parent_volume
+        The parent volume of the volume clone being created.
+
+
+- parent_vserver
+        Vserver of parent volume in which clone is created off.
+        [Default: (null)]
+
+= password
+        Password for the specified user.
+        (Aliases: pass)
+        type: str
+
+- qos_policy_group_name
+        The qos-policy-group-name which should be set for volume clone.
+        [Default: (null)]
+
+- space_reserve
+        The space_reserve setting which should be used for the volume clone.
+        (Choices: volume, none)[Default: (null)]
+
+- state
+        Whether volume clone should be created.
+        (Choices: present)[Default: present]
+
+= username
+        This can be a Cluster-scoped or SVM-scoped account, depending on whether a Cluster-level or SVM-level API is required. For more
+        information, please read the documentation https://mysupport.netapp.com/NOW/download/software/nmsdk/9.4/.
+        (Aliases: user)
+        type: str
+
+- validate_certs
+        If set to `no', the SSL certificates will not be validated.
+        This should only set to `False' used on personally controlled sites using self-signed certificates.
+        [Default: True]
+        type: bool
+
+= volume
+        The name of the volume clone being created.
+
+
+- volume_type
+        The volume-type setting which should be used for the volume clone.
+        (Choices: rw, dp)[Default: (null)]
+
+= vserver
+        Vserver in which the volume clone should be created.
+
+
+
+NOTES:
+      * The modules prefixed with na\\_ontap are built to support the ONTAP storage platform.
+
+
+REQUIREMENTS:  A physical or virtual clustered Data ONTAP system. The modules support Data ONTAP 9.1 and onward, Ansible 2.6, Python2
+        netapp-lib (2017.10.30) or later. Install using 'pip install netapp-lib', Python3 netapp-lib (2018.11.13) or
+        later. Install using 'pip install netapp-lib', To enable http on the cluster you must run the following commands
+        'set -privilege advanced;' 'system services web modify -http-enabled true;'
+
+AUTHOR: NetApp Ansible Team (@carchi8py) <ng-ansibleteam@netapp.com>
+        METADATA:
+          status:
+          - preview
+          supported_by: community
+        
+
+EXAMPLES:
+
+- name: create volume clone
+      na_ontap_volume_clone:
+        state: present
+        username: "{{ netapp username }}"
+        password: "{{ netapp password }}"
+        hostname: "{{ netapp hostname }}"
+        vserver: vs_hack
+        parent_volume: normal_volume
+        volume: clone_volume_7
+        space_reserve: none
+        parent_snapshot: backup1
+        junction_path: /clone_volume_7
+
+
+RETURN VALUES:
+
+

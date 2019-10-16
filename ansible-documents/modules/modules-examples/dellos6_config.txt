@@ -1,0 +1,61 @@
+EXAMPLES:
+
+- dellos6_config:
+    lines: ['hostname {{ inventory_hostname }}']
+
+- dellos6_config:
+    lines:
+      - 10 permit ip 1.1.1.1 any log
+      - 20 permit ip 2.2.2.2 any log
+      - 30 permit ip 3.3.3.3 any log
+      - 40 permit ip 4.4.4.4 any log
+      - 50 permit ip  5.5.5.5 any log
+    parents: ['ip access-list test']
+    before: ['no ip access-list test']
+    match: exact
+
+- dellos6_config:
+    lines:
+      - 10 permit ip 1.1.1.1 any log
+      - 20 permit ip 2.2.2.2 any log
+      - 30 permit ip 3.3.3.3 any log
+      - 40 permit ip 4.4.4.4 any log
+    parents: ['ip access-list test']
+    before: ['no ip access-list test']
+    replace: block
+
+- dellos6_config:
+    lines: ['hostname {{ inventory_hostname }}']
+    backup: yes
+    backup_options:
+      filename: backup.cfg
+      dir_path: /home/user
+
+
+RETURN VALUES:
+
+updates:
+  description: The set of commands that will be pushed to the remote device.
+  returned: always
+  type: list
+  sample: ['interface Te1/0/1', 'no shutdown', 'exit']
+
+commands:
+  description: The set of commands that will be pushed to the remote device
+  returned: always
+  type: list
+  sample: ['interface Te1/0/1', 'no shutdown', 'exit']
+
+saved:
+  description: Returns whether the configuration is saved to the startup
+               configuration or not.
+  returned: When not check_mode.
+  type: bool
+  sample: True
+
+backup_path:
+  description: The full path to the backup file
+  returned: when backup is yes
+  type: str
+  sample: /playbooks/ansible/backup/dellos6_config.2017-07-16@22:28:34
+

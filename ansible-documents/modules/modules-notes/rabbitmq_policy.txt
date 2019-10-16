@@ -1,0 +1,66 @@
+> RABBITMQ_POLICY    (/usr/lib/python2.7/dist-packages/ansible/modules/messaging/rabbitmq/rabbitmq_policy.py)
+
+        Manage the state of a policy in RabbitMQ.
+
+  * This module is maintained by The Ansible Community
+OPTIONS (= is mandatory):
+
+- apply_to
+        What the policy applies to. Requires RabbitMQ 3.2.0 or later.
+        (Choices: all, exchanges, queues)[Default: all]
+        version_added: 2.1
+
+= name
+        The name of the policy to manage.
+
+
+- node
+        Erlang node name of the rabbit we wish to configure.
+        [Default: rabbit]
+
+= pattern
+        A regex of queues to apply the policy to.
+
+
+- priority
+        The priority of the policy.
+        [Default: 0]
+
+- state
+        The state of the policy.
+        (Choices: present, absent)[Default: present]
+
+= tags
+        A dict or string describing the policy.
+
+
+- vhost
+        The name of the vhost to apply to.
+        [Default: /]
+
+
+AUTHOR: John Dewey (@retr0h)
+        METADATA:
+          status:
+          - preview
+          supported_by: community
+        
+
+EXAMPLES:
+
+- name: ensure the default vhost contains the HA policy via a dict
+  rabbitmq_policy:
+    name: HA
+    pattern: .*
+  args:
+    tags:
+      ha-mode: all
+
+- name: ensure the default vhost contains the HA policy
+  rabbitmq_policy:
+    name: HA
+    pattern: .*
+    tags:
+      ha-mode: all
+
+

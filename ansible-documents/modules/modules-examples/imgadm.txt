@@ -1,0 +1,57 @@
+EXAMPLES:
+
+- name: Import an image
+  imgadm:
+    uuid: '70e3ae72-96b6-11e6-9056-9737fd4d0764'
+    state: imported
+
+- name: Delete an image
+  imgadm:
+    uuid: '70e3ae72-96b6-11e6-9056-9737fd4d0764'
+    state: deleted
+
+- name: Update all images
+  imgadm:
+    uuid: '*'
+    state: updated
+
+- name: Update a single image
+  imgadm:
+    uuid: '70e3ae72-96b6-11e6-9056-9737fd4d0764'
+    state: updated
+
+- name: Add a source
+  imgadm:
+    source: 'https://datasets.project-fifo.net'
+    state: present
+
+- name: Add a Docker source
+  imgadm:
+    source: 'https://docker.io'
+    type: docker
+    state: present
+
+- name: Remove a source
+  imgadm:
+    source: 'https://docker.io'
+    state: absent
+
+
+RETURN VALUES:
+
+source:
+    description: Source that is managed.
+    returned: When not managing an image.
+    type: str
+    sample: https://datasets.project-fifo.net
+uuid:
+    description: UUID for an image operated on.
+    returned: When not managing an image source.
+    type: str
+    sample: 70e3ae72-96b6-11e6-9056-9737fd4d0764
+state:
+    description: State of the target, after execution.
+    returned: success
+    type: str
+    sample: 'present'
+

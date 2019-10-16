@@ -1,0 +1,34 @@
+EXAMPLES:
+
+- name: add vrouter-loopback-interface
+  pn_vrouterlbif:
+    state: 'present'
+    pn_vrouter_name: 'ansible-vrouter'
+    pn_interface_ip: '104.104.104.1'
+
+- name: remove vrouter-loopback-interface
+  pn_vrouterlbif:
+    state: 'absent'
+    pn_vrouter_name: 'ansible-vrouter'
+    pn_interface_ip: '104.104.104.1'
+
+
+RETURN VALUES:
+
+command:
+  description: The CLI command run on the target node(s).
+  returned: always
+  type: str
+stdout:
+  description: The set of responses from the vrouterlb command.
+  returned: always
+  type: list
+stderr:
+  description: The set of error responses from the vrouterlb command.
+  returned: on error
+  type: list
+changed:
+  description: Indicates whether the CLI caused changes on the target.
+  returned: always
+  type: bool
+

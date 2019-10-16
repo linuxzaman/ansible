@@ -1,0 +1,76 @@
+> BITBUCKET_PIPELINE_KEY_PAIR    (/usr/lib/python2.7/dist-packages/ansible/modules/source_control/bitbucket/bitbucket_pipeline_key_pair.py)
+
+        Manages Bitbucket pipeline SSH key pair.
+
+  * This module is maintained by The Ansible Community
+OPTIONS (= is mandatory):
+
+- client_id
+        OAuth consumer key.
+        If not set the environment variable `BITBUCKET_CLIENT_ID' will be used.
+        [Default: (null)]
+        type: str
+
+- client_secret
+        OAuth consumer secret.
+        If not set the environment variable `BITBUCKET_CLIENT_SECRET' will be used.
+        [Default: (null)]
+        type: str
+
+- private_key
+        The private key.
+        [Default: (null)]
+        type: str
+
+- public_key
+        The public key.
+        [Default: (null)]
+        type: str
+
+= repository
+        The repository name.
+
+        type: str
+
+= state
+        Indicates desired state of the key pair.
+        (Choices: absent, present)
+        type: str
+
+= username
+        The repository owner.
+
+        type: str
+
+
+NOTES:
+      * Bitbucket OAuth consumer key and secret can be obtained from Bitbucket profile -> Settings -> Access Management -> OAuth.
+      * Check mode is supported.
+
+
+AUTHOR: Evgeniy Krysanov (@catcombo)
+        METADATA:
+          status:
+          - preview
+          supported_by: community
+        
+
+EXAMPLES:
+
+- name: Create or update SSH key pair
+  bitbucket_pipeline_key_pair:
+    repository: 'bitbucket-repo'
+    username: bitbucket_username
+    public_key: '{{lookup("file", "bitbucket.pub") }}'
+    private_key: '{{lookup("file", "bitbucket") }}'
+    state: present
+
+- name: Remove SSH key pair
+  bitbucket_pipeline_key_pair:
+    repository: bitbucket-repo
+    username: bitbucket_username
+    state: absent
+
+
+RETURN VALUES:
+ # 

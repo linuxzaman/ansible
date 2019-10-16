@@ -1,0 +1,61 @@
+> PACEMAKER_CLUSTER    (/usr/lib/python2.7/dist-packages/ansible/modules/clustering/pacemaker_cluster.py)
+
+        This module can manage a pacemaker cluster and nodes from Ansible using the pacemaker cli.
+
+  * This module is maintained by The Ansible Community
+OPTIONS (= is mandatory):
+
+- force
+        Force the change of the cluster state
+        [Default: yes]
+        type: bool
+
+- node
+        Specify which node of the cluster you want to manage. None == the cluster status itself, 'all' == check the status of all nodes.
+        [Default: (null)]
+
+= state
+        Indicate desired state of the cluster
+        (Choices: cleanup, offline, online, restart)
+
+- timeout
+        Timeout when the module should considered that the action has failed
+        [Default: 300]
+
+
+AUTHOR: Mathieu Bultel (@matbu)
+        METADATA:
+          status:
+          - preview
+          supported_by: community
+        
+
+EXAMPLES:
+
+---
+- name: Set cluster Online
+  hosts: localhost
+  gather_facts: no
+  tasks:
+  - name: Get cluster state
+    pacemaker_cluster:
+      state: online
+
+
+RETURN VALUES:
+
+changed:
+    description: True if the cluster state has changed
+    type: bool
+    returned: always
+out:
+    description: The output of the current state of the cluster. It return a
+                 list of the nodes state.
+    type: str
+    sample: 'out: [["  overcloud-controller-0", " Online"]]}'
+    returned: always
+rc:
+    description: exit code of the module
+    type: bool
+    returned: always
+

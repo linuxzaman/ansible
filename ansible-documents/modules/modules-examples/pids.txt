@@ -1,0 +1,21 @@
+EXAMPLES:
+
+# Pass the process name
+- name: Getting process IDs of the process
+  pids:
+      name: python
+  register: pids_of_python
+
+- name: Printing the process IDs obtained
+  debug:
+    msg: "PIDS of python:{{pids_of_python.pids|join(',')}}"
+
+
+RETURN VALUES:
+
+pids:
+  description: Process IDs of the given process
+  returned: list of none, one, or more process IDs
+  type: list
+  sample: [100,200]
+

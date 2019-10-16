@@ -1,0 +1,151 @@
+> GITLAB_GROUP    (/usr/lib/python2.7/dist-packages/ansible/modules/source_control/gitlab_group.py)
+
+        When the group does not exist in Gitlab, it will be created. When the group does exist and state=absent, the group will be
+        deleted.
+
+  * This module is maintained by The Ansible Community
+OPTIONS (= is mandatory):
+
+- api_password
+        The password to use for authentication against the API
+        [Default: (null)]
+        type: str
+
+- api_token
+        Gitlab token for logging in.
+        (Aliases: login_token)[Default: (null)]
+        type: str
+
+- api_url
+        The resolvable endpoint for the API
+        [Default: (null)]
+        type: str
+
+- api_username
+        The username to use for authentication against the API
+        [Default: (null)]
+        type: str
+
+- description
+        A description for the group.
+        [Default: (null)]
+        type: str
+        version_added: 2.7
+
+- login_password
+        Gitlab password for login_user
+        [Default: (null)]
+        type: str
+
+- login_user
+        Gitlab user name.
+        [Default: (null)]
+        type: str
+
+= name
+        Name of the group you want to create.
+
+        type: str
+
+- parent
+        Allow to create subgroups
+        Id or Full path of parent group in the form of group/name
+        [Default: (null)]
+        type: str
+        version_added: 2.8
+
+- path
+        The path of the group you want to create, this will be server_url/group_path
+        If not supplied, the group_name will be used.
+        [Default: (null)]
+        type: str
+
+= server_url
+        The URL of the Gitlab server, with protocol (i.e. http or https).
+
+        type: str
+
+- state
+        create or delete group.
+        Possible values are present and absent.
+        (Choices: present, absent)[Default: present]
+        type: str
+
+- validate_certs
+        Whether or not to validate SSL certs when supplying a https endpoint.
+        [Default: True]
+        type: bool
+
+- visibility
+        Default visibility of the group
+        (Choices: private, internal, public)[Default: private]
+        type: str
+        version_added: 2.8
+
+
+REQUIREMENTS:  python >= 2.7, python-gitlab python module
+
+AUTHOR: Werner Dijkerman (@dj-wasabi), Guillaume Martinez (@Lunik)
+        METADATA:
+          status:
+          - preview
+          supported_by: community
+        
+
+EXAMPLES:
+
+- name: "Delete Gitlab Group"
+  gitlab_group:
+    api_url: https://gitlab.example.com/
+    api_token: "{{ access_token }}"
+    validate_certs: False
+    name: my_first_group
+    state: absent
+
+- name: "Create Gitlab Group"
+  gitlab_group:
+    api_url: https://gitlab.example.com/
+    validate_certs: True
+    api_usersername: dj-wasabi
+    api_password: "MySecretPassword"
+    name: my_first_group
+    path: my_first_group
+    state: present
+
+# The group will by created at https://gitlab.dj-wasabi.local/super_parent/parent/my_first_group
+- name: "Create Gitlab SubGroup"
+  gitlab_group:
+    api_url: https://gitlab.example.com/
+    validate_certs: True
+    api_usersername: dj-wasabi
+    api_password: "MySecretPassword"
+    name: my_first_group
+    path: my_first_group
+    state: present
+    parent: "super_parent/parent"
+
+
+RETURN VALUES:
+
+msg:
+  description: Success or failure message
+  returned: always
+  type: str
+  sample: "Success"
+
+result:
+  description: json parsed response from the server
+  returned: always
+  type: dict
+
+error:
+  description: the error message returned by the Gitlab API
+  returned: failed
+  type: str
+  sample: "400: path is already in use"
+
+group:
+  description: API object
+  returned: always
+  type: dict
+

@@ -1,0 +1,188 @@
+> RAX_SCALING_GROUP    (/usr/lib/python2.7/dist-packages/ansible/modules/cloud/rackspace/rax_scaling_group.py)
+
+        Manipulate Rackspace Cloud Autoscale Groups
+
+  * This module is maintained by The Ansible Community
+OPTIONS (= is mandatory):
+
+- api_key
+        Rackspace API key, overrides `credentials'.
+        (Aliases: password)[Default: (null)]
+        type: str
+
+- auth_endpoint
+        The URI of the authentication service.
+        [Default: https://identity.api.rackspacecloud.com/v2.0/]
+        version_added: 1.5
+
+- config_drive
+        Attach read-only configuration drive to server as label config-2
+        [Default: no]
+        type: bool
+        version_added: 1.8
+        
+
+- cooldown
+        The period of time, in seconds, that must pass before any scaling can occur after the previous scaling. Must be an integer
+        between 0 and 86400 (24 hrs).
+        [Default: (null)]
+
+- credentials
+        File to find the Rackspace credentials in. Ignored if `api_key' and `username' are provided.
+        (Aliases: creds_file)[Default: (null)]
+        type: path
+
+- disk_config
+        Disk partitioning strategy
+        (Choices: auto, manual)[Default: auto]
+
+- env
+        Environment as configured in `~/.pyrax.cfg', see https://github.com/rackspace/pyrax/blob/master/docs/getting_started.md#pyrax-
+        configuration.
+        [Default: (null)]
+        type: str
+        version_added: 1.5
+
+- files
+        Files to insert into the instance. Hash of `remotepath: localpath'
+        [Default: (null)]
+
+= flavor
+        flavor to use for the instance
+
+
+- identity_type
+        Authentication mechanism to use, such as rackspace or keystone.
+        [Default: rackspace]
+        version_added: 1.5
+
+= image
+        image to use for the instance. Can be an `id', `human_id' or `name'
+
+
+- key_name
+        key pair to use on the instance
+        [Default: (null)]
+
+- loadbalancers
+        List of load balancer `id' and `port' hashes
+        [Default: (null)]
+
+= max_entities
+        The maximum number of entities that are allowed in the scaling group. Must be an integer between 0 and 1000.
+
+
+- meta
+        A hash of metadata to associate with the instance
+        [Default: (null)]
+
+= min_entities
+        The minimum number of entities that are allowed in the scaling group. Must be an integer between 0 and 1000.
+
+
+= name
+        Name to give the scaling group
+
+
+- networks
+        The network to attach to the instances. If specified, you must include ALL networks including the public and private interfaces.
+        Can be `id' or `label'.
+        [Default: [u'public', u'private']]
+
+- region
+        Region to create an instance in.
+        [Default: DFW]
+        type: str
+
+= server_name
+        The base name for servers created by Autoscale
+
+
+- state
+        Indicate desired state of the resource
+        (Choices: present, absent)[Default: present]
+
+- tenant_id
+        The tenant ID used for authentication.
+        [Default: (null)]
+        version_added: 1.5
+
+- tenant_name
+        The tenant name used for authentication.
+        [Default: (null)]
+        version_added: 1.5
+
+- user_data
+        Data to be uploaded to the servers config drive. This option implies `config_drive'. Can be a file path or a string
+        [Default: (null)]
+        version_added: 1.8
+        
+
+- username
+        Rackspace username, overrides `credentials'.
+        [Default: (null)]
+        type: str
+
+- validate_certs
+        Whether or not to require SSL validation of API endpoints.
+        (Aliases: verify_ssl)[Default: (null)]
+        type: bool
+        version_added: 1.5
+
+- wait
+        wait for the scaling group to finish provisioning the minimum amount of servers
+        [Default: no]
+        type: bool
+
+- wait_timeout
+        how long before wait gives up, in seconds
+        [Default: 300]
+
+
+NOTES:
+      * The following environment variables can be used, `RAX_USERNAME', `RAX_API_KEY', `RAX_CREDS_FILE', `RAX_CREDENTIALS',
+        `RAX_REGION'.
+      * `RAX_CREDENTIALS' and `RAX_CREDS_FILE' points to a credentials file appropriate for pyrax. See
+        https://github.com/rackspace/pyrax/blob/master/docs/getting_started.md#authenticating
+      * `RAX_USERNAME' and `RAX_API_KEY' obviate the use of a credentials file
+      * `RAX_REGION' defines a Rackspace Public Cloud region (DFW, ORD, LON, ...)
+      * The following environment variables can be used, `RAX_USERNAME', `RAX_API_KEY', `RAX_CREDS_FILE', `RAX_CREDENTIALS',
+        `RAX_REGION'.
+      * `RAX_CREDENTIALS' and `RAX_CREDS_FILE' points to a credentials file appropriate for pyrax. See
+        https://github.com/rackspace/pyrax/blob/master/docs/getting_started.md#authenticating
+      * `RAX_USERNAME' and `RAX_API_KEY' obviate the use of a credentials file
+      * `RAX_REGION' defines a Rackspace Public Cloud region (DFW, ORD, LON, ...)
+
+
+REQUIREMENTS:  pyrax, python >= 2.6
+
+AUTHOR: Matt Martz (@sivel)
+        METADATA:
+          status:
+          - preview
+          supported_by: community
+        
+
+EXAMPLES:
+
+---
+- hosts: localhost
+  gather_facts: false
+  connection: local
+  tasks:
+    - rax_scaling_group:
+        credentials: ~/.raxpub
+        region: ORD
+        cooldown: 300
+        flavor: performance1-1
+        image: bb02b1a3-bc77-4d17-ab5b-421d89850fca
+        min_entities: 5
+        max_entities: 10
+        name: ASG Test
+        server_name: asgtest
+        loadbalancers:
+            - id: 228385
+              port: 80
+      register: asg
+
+

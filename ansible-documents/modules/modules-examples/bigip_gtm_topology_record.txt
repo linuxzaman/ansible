@@ -1,0 +1,51 @@
+EXAMPLES:
+
+- name: Create an IP Subnet and an ISP based topology record
+  bigip_gtm_topology_record:
+    source:
+      - subnet: 192.168.1.0/24
+    destination:
+      - isp: AOL
+    weight: 10
+    provider:
+      password: secret
+      server: lb.mydomain.com
+      user: admin
+  delegate_to: localhost
+
+- name: Create a region and a pool based topology record
+  bigip_gtm_topology_record:
+    source:
+      - region: Foo
+    destination:
+      - pool: FooPool
+    partition: FooBar
+    provider:
+      password: secret
+      server: lb.mydomain.com
+      user: admin
+  delegate_to: localhost
+
+- name: Create a negative region and a negative data center based topology record
+  bigip_gtm_topology_record:
+    source:
+      - region: Baz
+      - negate: yes
+    destination:
+      - datacenter: Baz-DC
+      - negate: yes
+    provider:
+      password: secret
+      server: lb.mydomain.com
+      user: admin
+  delegate_to: localhost
+
+
+RETURN VALUES:
+
+weight:
+  description: The weight of the topology record.
+  returned: changed
+  type: int
+  sample: 20
+

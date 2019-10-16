@@ -1,0 +1,206 @@
+> CS_VPC_OFFERING    (/usr/lib/python2.7/dist-packages/ansible/modules/cloud/cloudstack/cs_vpc_offering.py)
+
+        Create, update, enable, disable and remove CloudStack VPC offerings.
+
+  * This module is maintained by The Ansible Community
+OPTIONS (= is mandatory):
+
+- api_http_method
+        HTTP method used to query the API endpoint.
+        If not given, the `CLOUDSTACK_METHOD' env variable is considered.
+        As the last option, the value is taken from the ini config file, also see the notes.
+        Fallback value is `get' if not specified.
+        (Choices: get, post)[Default: (null)]
+        type: str
+
+- api_key
+        API key of the CloudStack API.
+        If not given, the `CLOUDSTACK_KEY' env variable is considered.
+        As the last option, the value is taken from the ini config file, also see the notes.
+        [Default: (null)]
+        type: str
+
+- api_region
+        Name of the ini section in the `cloustack.ini' file.
+        If not given, the `CLOUDSTACK_REGION' env variable is considered.
+        [Default: cloudstack]
+        type: str
+
+- api_secret
+        Secret key of the CloudStack API.
+        If not set, the `CLOUDSTACK_SECRET' env variable is considered.
+        As the last option, the value is taken from the ini config file, also see the notes.
+        [Default: (null)]
+        type: str
+
+- api_timeout
+        HTTP timeout in seconds.
+        If not given, the `CLOUDSTACK_TIMEOUT' env variable is considered.
+        As the last option, the value is taken from the ini config file, also see the notes.
+        Fallback value is 10 seconds if not specified.
+        [Default: (null)]
+        type: int
+
+- api_url
+        URL of the CloudStack API e.g. https://cloud.example.com/client/api.
+        If not given, the `CLOUDSTACK_ENDPOINT' env variable is considered.
+        As the last option, the value is taken from the ini config file, also see the notes.
+        [Default: (null)]
+        type: str
+
+- display_text
+        Display text of the vpc offerings
+        [Default: (null)]
+        type: str
+
+= name
+        The name of the vpc offering
+
+        type: str
+
+- poll_async
+        Poll async jobs until job has finished.
+        [Default: True]
+        type: bool
+
+- service_capabilities
+        Desired service capabilities as part of vpc offering.
+        (Aliases: service_capability)[Default: (null)]
+        type: list
+
+- service_offering
+        The name or ID of the service offering for the VPC router appliance.
+        [Default: (null)]
+        type: str
+
+- service_providers
+        provider to service mapping. If not specified, the provider for the service will be mapped to the default provider on the
+        physical network
+        (Aliases: service_provider)[Default: (null)]
+        type: list
+
+- state
+        State of the vpc offering.
+        (Choices: enabled, present, disabled, absent)[Default: present]
+        type: str
+
+- supported_services
+        Services supported by the vpc offering
+        (Aliases: supported_service)[Default: (null)]
+        type: list
+
+
+NOTES:
+      * Ansible uses the `cs' library's configuration method if credentials are not provided by the arguments `api_url', `api_key',
+        `api_secret'. Configuration is read from several locations, in the following order. The `CLOUDSTACK_ENDPOINT',
+        `CLOUDSTACK_KEY', `CLOUDSTACK_SECRET' and `CLOUDSTACK_METHOD'. `CLOUDSTACK_TIMEOUT' environment variables. A
+        `CLOUDSTACK_CONFIG' environment variable pointing to an `.ini' file. A `cloudstack.ini' file in the current working
+        directory. A `.cloudstack.ini' file in the users home directory. Optionally multiple credentials and endpoints can be
+        specified using ini sections in `cloudstack.ini'. Use the argument `api_region' to select the section name, default section
+        is `cloudstack'. See https://github.com/exoscale/cs for more information.
+      * A detailed guide about cloudstack modules can be found in the L(CloudStack Cloud
+        Guide,../scenario_guides/guide_cloudstack.html).
+      * This module supports check mode.
+
+
+REQUIREMENTS:  python >= 2.6, cs >= 0.6.10
+
+AUTHOR: David Passante (@dpassante)
+        METADATA:
+          status:
+          - preview
+          supported_by: community
+        
+
+EXAMPLES:
+
+- name: Create a vpc offering and enable it
+  cs_vpc_offering:
+    name: my_vpc_offering
+    display_text: vpc offering description
+    state: enabled
+    supported_services: [ Dns, Dhcp ]
+    service_providers:
+      - {service: 'dns', provider: 'VpcVirtualRouter'}
+      - {service: 'dhcp', provider: 'VpcVirtualRouter'}
+  delegate_to: localhost
+
+- name: Create a vpc offering with redundant router
+  cs_vpc_offering:
+    name: my_vpc_offering
+    display_text: vpc offering description
+    supported_services: [ Dns, Dhcp, SourceNat ]
+    service_providers:
+      - {service: 'dns', provider: 'VpcVirtualRouter'}
+      - {service: 'dhcp', provider: 'VpcVirtualRouter'}
+      - {service: 'SourceNat', provider: 'VpcVirtualRouter'}
+    service_capabilities:
+      - {service: 'SourceNat', capabilitytype: 'RedundantRouter', capabilityvalue: true}
+  delegate_to: localhost
+
+- name: Create a region level vpc offering with distributed router
+  cs_vpc_offering:
+    name: my_vpc_offering
+    display_text: vpc offering description
+    state: present
+    supported_services: [ Dns, Dhcp, SourceNat ]
+    service_providers:
+      - {service: 'dns', provider: 'VpcVirtualRouter'}
+      - {service: 'dhcp', provider: 'VpcVirtualRouter'}
+      - {service: 'SourceNat', provider: 'VpcVirtualRouter'}
+    service_capabilities:
+      - {service: 'Connectivity', capabilitytype: 'DistributedRouter', capabilityvalue: true}
+      - {service: 'Connectivity', capabilitytype: 'RegionLevelVPC', capabilityvalue: true}
+  delegate_to: localhost
+
+- name: Remove a vpc offering
+  cs_vpc_offering:
+    name: my_vpc_offering
+    state: absent
+  delegate_to: localhost
+
+
+RETURN VALUES:
+
+---
+id:
+  description: UUID of the vpc offering.
+  returned: success
+  type: str
+  sample: a6f7a5fc-43f8-11e5-a151-feff819cdc9f
+name:
+  description: The name of the vpc offering
+  returned: success
+  type: str
+  sample: MyCustomVPCOffering
+display_text:
+  description: The display text of the vpc offering
+  returned: success
+  type: str
+  sample: My vpc offering
+state:
+  description: The state of the vpc offering
+  returned: success
+  type: str
+  sample: Enabled
+service_offering_id:
+  description: The service offering ID.
+  returned: success
+  type: str
+  sample: c5f7a5fc-43f8-11e5-a151-feff819cdc9f
+is_default:
+  description: Whether VPC offering is the default offering or not.
+  returned: success
+  type: bool
+  sample: false
+region_level:
+  description: Indicated if the offering can support region level vpc.
+  returned: success
+  type: bool
+  sample: false
+distributed:
+  description: Indicates if the vpc offering supports distributed router for one-hop forwarding.
+  returned: success
+  type: bool
+  sample: false
+

@@ -1,0 +1,94 @@
+> IBM_SA_VOL_MAP    (/usr/lib/python2.7/dist-packages/ansible/modules/storage/ibm/ibm_sa_vol_map.py)
+
+        This module maps volumes to or unmaps them from the hosts on IBM Spectrum Accelerate Family storage systems.
+
+  * This module is maintained by The Ansible Community
+OPTIONS (= is mandatory):
+
+- cluster
+        Maps the volume to a cluster.
+        [Default: (null)]
+
+= endpoints
+        The hostname or management IP of Spectrum Accelerate storage system.
+
+        type: str
+
+- host
+        Maps the volume to a host.
+        [Default: (null)]
+
+- lun
+        The LUN identifier.
+        [Default: (null)]
+
+- override
+        Overrides the existing volume mapping.
+        [Default: (null)]
+
+= password
+        Password for username on the spectrum accelerate storage system.
+
+        type: str
+
+= state
+        When the state is present the volume is mapped. When the state is absent, the volume is meant to be unmapped.
+        (Choices: present, absent)[Default: present]
+
+= username
+        Management user on the spectrum accelerate storage system.
+
+        type: str
+
+= vol
+        Volume name.
+
+
+
+NOTES:
+      * This module requires pyxcli python library. Use 'pip install pyxcli' in order to get pyxcli.
+
+
+REQUIREMENTS:  python >= 2.7, pyxcli
+
+AUTHOR: Tzur Eliyahu (@tzure)
+        METADATA:
+          status:
+          - preview
+          supported_by: community
+        
+
+EXAMPLES:
+
+- name: Map volume to host.
+  ibm_sa_vol_map:
+    vol: volume_name
+    lun: 1
+    host: host_name
+    username: admin
+    password: secret
+    endpoints: hostdev-system
+    state: present
+
+- name: Map volume to cluster.
+  ibm_sa_vol_map:
+    vol: volume_name
+    lun: 1
+    cluster: cluster_name
+    username: admin
+    password: secret
+    endpoints: hostdev-system
+    state: present
+
+- name: Unmap volume.
+  ibm_sa_vol_map:
+    host: host_name
+    username: admin
+    password: secret
+    endpoints: hostdev-system
+    state: absent
+
+
+RETURN VALUES:
+
+

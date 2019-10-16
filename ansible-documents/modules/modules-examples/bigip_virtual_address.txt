@@ -1,0 +1,73 @@
+EXAMPLES:
+
+- name: Add virtual address
+  bigip_virtual_address:
+    state: present
+    partition: Common
+    address: 10.10.10.10
+    provider:
+      server: lb.mydomain.net
+      user: admin
+      password: secret
+  delegate_to: localhost
+
+- name: Enable route advertisement on the virtual address
+  bigip_virtual_address:
+    state: present
+    address: 10.10.10.10
+    use_route_advertisement: yes
+    provider:
+      server: lb.mydomain.net
+      user: admin
+      password: secret
+  delegate_to: localhost
+
+
+RETURN VALUES:
+
+use_route_advertisement:
+  description: The new setting for whether to use route advertising or not.
+  returned: changed
+  type: bool
+  sample: true
+auto_delete:
+  description: New setting for auto deleting virtual address.
+  returned: changed
+  type: str
+  sample: enabled
+icmp_echo:
+  description: New ICMP echo setting applied to virtual address.
+  returned: changed
+  type: str
+  sample: disabled
+connection_limit:
+  description: The new connection limit of the virtual address.
+  returned: changed
+  type: int
+  sample: 1000
+netmask:
+  description: The netmask of the virtual address.
+  returned: created
+  type: int
+  sample: 2345
+arp:
+  description: The new way the virtual address handles ARP requests.
+  returned: changed
+  type: bool
+  sample: yes
+address:
+  description: The address of the virtual address.
+  returned: created
+  type: int
+  sample: 2345
+state:
+  description: The new state of the virtual address.
+  returned: changed
+  type: str
+  sample: disabled
+spanning:
+  description: Whether spanning is enabled or not
+  returned: changed
+  type: str
+  sample: disabled
+

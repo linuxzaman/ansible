@@ -1,0 +1,211 @@
+> AWS_DIRECT_CONNECT_LINK_AGGREGATION_GROUP    (/usr/lib/python2.7/dist-packages/ansible/modules/cloud/amazon/aws_direct_connect_link_aggregation_group.py)
+
+        Create, delete, or modify a Direct Connect link aggregation group.
+
+  * This module is maintained by The Ansible Community
+OPTIONS (= is mandatory):
+
+- aws_access_key
+        AWS access key. If not set then the value of the AWS_ACCESS_KEY_ID, AWS_ACCESS_KEY or EC2_ACCESS_KEY environment variable is
+        used.
+        (Aliases: ec2_access_key, access_key)[Default: (null)]
+        type: str
+
+- aws_secret_key
+        AWS secret key. If not set then the value of the AWS_SECRET_ACCESS_KEY, AWS_SECRET_KEY, or EC2_SECRET_KEY environment variable is
+        used.
+        (Aliases: ec2_secret_key, secret_key)[Default: (null)]
+        type: str
+
+- bandwidth
+        The bandwidth of the link aggregation group.
+        [Default: (null)]
+
+- connection_id
+        A connection ID to link with the link aggregation group upon creation.
+        [Default: (null)]
+
+- debug_botocore_endpoint_logs
+        Use a botocore.endpoint logger to parse the unique (rather than total) "resource:action" API calls made during a task, outputing
+        the set to the resource_actions key in the task results. Use the aws_resource_action callback to output to total list made during
+        a playbook. The ANSIBLE_DEBUG_BOTOCORE_LOGS environment variable may also be used.
+        [Default: no]
+        type: bool
+        version_added: 2.8
+
+- delete_with_disassociation
+        To be used with `state=absent' to delete connections after disassociating them with the LAG.
+        [Default: (null)]
+        type: bool
+
+- ec2_url
+        Url to use to connect to EC2 or your Eucalyptus cloud (by default the module will use EC2 endpoints). Ignored for modules where
+        region is required. Must be specified for all other modules if region is not used. If not set then the value of the EC2_URL
+        environment variable, if any, is used.
+        [Default: (null)]
+        type: str
+
+- force_delete
+        This allows the minimum number of links to be set to 0, any hosted connections disassociated, and any virtual interfaces
+        associated to the LAG deleted.
+        [Default: (null)]
+        type: bool
+
+- link_aggregation_group_id
+        The ID of the Direct Connect link aggregation group.
+        [Default: (null)]
+
+- location
+        The location of the link aggregation group.
+        [Default: (null)]
+
+- min_links
+        The minimum number of physical connections that must be operational for the LAG itself to be operational.
+        [Default: (null)]
+
+- name
+        The name of the Direct Connect link aggregation group.
+        [Default: (null)]
+
+- num_connections
+        The number of connections with which to intialize the link aggregation group.
+        [Default: (null)]
+
+- profile
+        Uses a boto profile. Only works with boto >= 2.24.0.
+        [Default: (null)]
+        type: str
+        version_added: 1.6
+
+- region
+        The AWS region to use. If not specified then the value of the AWS_REGION or EC2_REGION environment variable, if any, is used. See
+        http://docs.aws.amazon.com/general/latest/gr/rande.html#ec2_region
+        (Aliases: aws_region, ec2_region)[Default: (null)]
+        type: str
+
+- security_token
+        AWS STS security token. If not set then the value of the AWS_SECURITY_TOKEN or EC2_SECURITY_TOKEN environment variable is used.
+        (Aliases: access_token)[Default: (null)]
+        type: str
+        version_added: 1.6
+
+- state
+        The state of the Direct Connect link aggregation group.
+        (Choices: present, absent)[Default: (null)]
+
+- validate_certs
+        When set to "no", SSL certificates will not be validated for boto versions >= 2.6.0.
+        [Default: True]
+        type: bool
+        version_added: 1.5
+
+- wait
+        Whether or not to wait for the operation to complete. May be useful when waiting for virtual interfaces to be deleted. May modify
+        the time of waiting with `wait_timeout'.
+        [Default: (null)]
+        type: bool
+
+- wait_timeout
+        The duration in seconds to wait if `wait' is True.
+        [Default: 120]
+
+
+NOTES:
+      * If parameters are not set within the module, the following environment variables can be used in decreasing order of
+        precedence `AWS_URL' or `EC2_URL', `AWS_ACCESS_KEY_ID' or `AWS_ACCESS_KEY' or `EC2_ACCESS_KEY', `AWS_SECRET_ACCESS_KEY' or
+        `AWS_SECRET_KEY' or `EC2_SECRET_KEY', `AWS_SECURITY_TOKEN' or `EC2_SECURITY_TOKEN', `AWS_REGION' or `EC2_REGION'
+      * Ansible uses the boto configuration file (typically ~/.boto) if no credentials are provided. See
+        https://boto.readthedocs.io/en/latest/boto_config_tut.html
+      * `AWS_REGION' or `EC2_REGION' can be typically be used to specify the AWS region, when required, but this can also be
+        configured in the boto config file
+
+
+REQUIREMENTS:  boto, boto3, botocore, python >= 2.6
+
+AUTHOR: Sloane Hertel (@s-hertel)
+        METADATA:
+          status:
+          - preview
+          supported_by: community
+        
+
+EXAMPLES:
+
+# create a Direct Connect connection
+- aws_direct_connect_link_aggregation_group:
+  state: present
+  location: EqDC2
+  lag_id: dxlag-xxxxxxxx
+  bandwidth: 1Gbps
+
+
+RETURN VALUES:
+
+changed:
+  type: str
+  description: Whether or not the LAG has changed.
+  returned: always
+aws_device:
+  type: str
+  description: The AWS Direct Connection endpoint that hosts the LAG.
+  sample: "EqSe2-1bwfvazist2k0"
+  returned: when I(state=present)
+connections:
+  type: list
+  description: A list of connections bundled by this LAG.
+  sample:
+    "connections": [
+      {
+         "aws_device": "EqSe2-1bwfvazist2k0",
+         "bandwidth": "1Gbps",
+         "connection_id": "dxcon-fgzjah5a",
+         "connection_name": "Requested Connection 1 for Lag dxlag-fgtoh97h",
+         "connection_state": "down",
+         "lag_id": "dxlag-fgnsp4rq",
+         "location": "EqSe2",
+         "owner_account": "448830907657",
+         "region": "us-west-2"
+      }
+      ]
+  returned: when I(state=present)
+connections_bandwidth:
+  type: str
+  description: The individual bandwidth of the physical connections bundled by the LAG.
+  sample: "1Gbps"
+  returned: when I(state=present)
+lag_id:
+  type: str
+  description: Unique identifier for the link aggregation group.
+  sample: "dxlag-fgnsp4rq"
+  returned: when I(state=present)
+lag_name:
+  type: str
+  description: User-provided name for the link aggregation group.
+  returned: when I(state=present)
+lag_state:
+  type: str
+  description: State of the LAG.
+  sample: "pending"
+  returned: when I(state=present)
+location:
+  type: str
+  description: Where the connection is located.
+  sample: "EqSe2"
+  returned: when I(state=present)
+minimum_links:
+  type: int
+  description: The minimum number of physical connections that must be operational for the LAG itself to be operational.
+  returned: when I(state=present)
+number_of_connections:
+  type: int
+  description: The number of physical connections bundled by the LAG.
+  returned: when I(state=present)
+owner_account:
+  type: str
+  description: Owner account ID of the LAG.
+  returned: when I(state=present)
+region:
+  type: str
+  description: The region in which the LAG exists.
+  returned: when I(state=present)
+

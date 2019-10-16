@@ -1,0 +1,42 @@
+EXAMPLES:
+
+- name: create SnapShot
+      tags:
+        - create
+      na_ontap_snapshot:
+        state: present
+        snapshot: "{{ snapshot name }}"
+        volume: "{{ vol name }}"
+        comment: "i am a comment"
+        vserver: "{{ vserver name }}"
+        username: "{{ netapp username }}"
+        password: "{{ netapp password }}"
+        hostname: "{{ netapp hostname }}"
+    - name: delete SnapShot
+      tags:
+        - delete
+      na_ontap_snapshot:
+        state: absent
+        snapshot: "{{ snapshot name }}"
+        volume: "{{ vol name }}"
+        vserver: "{{ vserver name }}"
+        username: "{{ netapp username }}"
+        password: "{{ netapp password }}"
+        hostname: "{{ netapp hostname }}"
+    - name: modify SnapShot
+      tags:
+        - modify
+      na_ontap_snapshot:
+        state: present
+        snapshot: "{{ snapshot name }}"
+        comment: "New comments are great"
+        volume: "{{ vol name }}"
+        vserver: "{{ vserver name }}"
+        username: "{{ netapp username }}"
+        password: "{{ netapp password }}"
+        hostname: "{{ netapp hostname }}"
+
+
+RETURN VALUES:
+
+

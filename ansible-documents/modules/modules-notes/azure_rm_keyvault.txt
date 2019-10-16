@@ -1,0 +1,291 @@
+> AZURE_RM_KEYVAULT    (/usr/lib/python2.7/dist-packages/ansible/modules/cloud/azure/azure_rm_keyvault.py)
+
+        Create, update and delete instance of Key Vault.
+
+  * This module is maintained by The Ansible Community
+OPTIONS (= is mandatory):
+
+- access_policies
+        An array of 0 to 16 identities that have access to the key vault. All identities in the array must use the same tenant ID as the
+        key vault's tenant ID.
+        [Default: (null)]
+        suboptions:
+          application_id:
+            description:
+            - Application ID of the client making request on behalf of a principal
+          certificates:
+            choices:
+            - get
+            - list
+            - delete
+            - create
+            - import
+            - update
+            - managecontacts
+            - getissuers
+            - listissuers
+            - setissuers
+            - deleteissuers
+            - manageissuers
+            - recover
+            - purge
+            description:
+            - List of permissions to certificates
+          keys:
+            choices:
+            - encrypt
+            - decrypt
+            - wrapkey
+            - unwrapkey
+            - sign
+            - verify
+            - get
+            - list
+            - create
+            - update
+            - import
+            - delete
+            - backup
+            - restore
+            - recover
+            - purge
+            description:
+            - List of permissions to keys
+          object_id:
+            description:
+            - The object ID of a user, service principal or security group in the Azure Active
+              Directory tenant for the vault. The object ID must be unique for the list of
+              access policies.
+            - Please note this is not application id. Object id can be obtained by running
+              "az ad sp show --id <application id>".
+            required: true
+          secrets:
+            choices:
+            - get
+            - list
+            - set
+            - delete
+            - backup
+            - restore
+            - recover
+            - purge
+            description:
+            - List of permissions to secrets
+          storage:
+            description:
+            - List of permissions to storage accounts
+          tenant_id:
+            description:
+            - The Azure Active Directory tenant ID that should be used for authenticating
+              requests to the key vault.
+            - Current keyvault `tenant_id' value will be used if not specified.
+        
+
+- ad_user
+        Active Directory username. Use when authenticating with an Active Directory user rather than service principal.
+        [Default: (null)]
+        type: str
+
+- adfs_authority_url
+        Azure AD authority url. Use when authenticating with Username/password, and has your own ADFS authority.
+        [Default: (null)]
+        type: str
+        version_added: 2.6
+
+- api_profile
+        Selects an API profile to use when communicating with Azure services. Default value of `latest' is appropriate for public clouds;
+        future values will allow use with Azure Stack.
+        [Default: latest]
+        type: str
+        version_added: 2.5
+
+- append_tags
+        Use to control if tags field is canonical or just appends to existing tags.
+        When canonical, any tags not found in the tags parameter will be removed from the object's metadata.
+        [Default: True]
+        type: bool
+
+- auth_source
+        Controls the source of the credentials to use for authentication.
+        If not specified, ANSIBLE_AZURE_AUTH_SOURCE environment variable will be used and default to `auto' if variable is not defined.
+        `auto' will follow the default precedence of module parameters -> environment variables -> default profile in credential file
+        `~/.azure/credentials'.
+        When set to `cli', the credentials will be sources from the default Azure CLI profile.
+        Can also be set via the `ANSIBLE_AZURE_AUTH_SOURCE' environment variable.
+        When set to `msi', the host machine must be an azure resource with an enabled MSI extension. `subscription_id' or the environment
+        variable `AZURE_SUBSCRIPTION_ID' can be used to identify the subscription ID if the resource is granted access to more than one
+        subscription, otherwise the first subscription is chosen.
+        The `msi' was added in Ansible 2.6.
+        (Choices: auto, cli, credential_file, env, msi)[Default: (null)]
+        type: str
+        version_added: 2.5
+
+- cert_validation_mode
+        Controls the certificate validation behavior for Azure endpoints. By default, all modules will validate the server certificate,
+        but when an HTTPS proxy is in use, or against Azure Stack, it may be necessary to disable this behavior by passing `ignore'. Can
+        also be set via credential file profile or the `AZURE_CERT_VALIDATION' environment variable.
+        (Choices: ignore, validate)[Default: (null)]
+        type: str
+        version_added: 2.5
+
+- client_id
+        Azure client ID. Use when authenticating with a Service Principal.
+        [Default: (null)]
+        type: str
+
+- cloud_environment
+        For cloud environments other than the US public cloud, the environment name (as defined by Azure Python SDK, eg,
+        `AzureChinaCloud', `AzureUSGovernment'), or a metadata discovery endpoint URL (required for Azure Stack). Can also be set via
+        credential file profile or the `AZURE_CLOUD_ENVIRONMENT' environment variable.
+        [Default: AzureCloud]
+        type: str
+        version_added: 2.4
+
+- enable_soft_delete
+        Property to specify whether the soft delete functionality is enabled for this key vault.
+        [Default: (null)]
+        type: bool
+
+- enabled_for_deployment
+        Property to specify whether Azure Virtual Machines are permitted to retrieve certificates stored as secrets from the key vault.
+        [Default: (null)]
+        type: bool
+
+- enabled_for_disk_encryption
+        Property to specify whether Azure Disk Encryption is permitted to retrieve secrets from the vault and unwrap keys.
+        [Default: (null)]
+        type: bool
+
+- enabled_for_template_deployment
+        Property to specify whether Azure Resource Manager is permitted to retrieve secrets from the key vault.
+        [Default: (null)]
+        type: bool
+
+- location
+        Resource location. If not set, location from the resource group will be used as default.
+        [Default: (null)]
+
+- password
+        Active Directory user password. Use when authenticating with an Active Directory user rather than service principal.
+        [Default: (null)]
+
+- profile
+        Security profile found in ~/.azure/credentials file.
+        [Default: (null)]
+        type: str
+
+- recover_mode
+        Create vault in recovery mode.
+        [Default: (null)]
+        type: bool
+
+= resource_group
+        The name of the Resource Group to which the server belongs.
+
+
+- secret
+        Azure client secret. Use when authenticating with a Service Principal.
+        [Default: (null)]
+        type: str
+
+- sku
+        SKU details
+        [Default: (null)]
+        suboptions:
+          family:
+            description:
+            - SKU family name
+          name:
+            choices:
+            - standard
+            - premium
+            description:
+            - SKU name to specify whether the key vault is a standard vault or a premium vault.
+            required: true
+        
+
+- state
+        Assert the state of the KeyVault. Use `present' to create or update an KeyVault and `absent' to delete it.
+        (Choices: absent, present)[Default: present]
+
+- subscription_id
+        Your Azure subscription Id.
+        [Default: (null)]
+        type: str
+
+- tags
+        Dictionary of string:string pairs to assign as metadata to the object.
+        Metadata tags on the object will be updated with any provided values.
+        To remove tags set append_tags option to false.
+        [Default: (null)]
+        type: dict
+
+- tenant
+        Azure tenant ID. Use when authenticating with a Service Principal.
+        [Default: (null)]
+        type: str
+
+= vault_name
+        Name of the vault
+
+
+- vault_tenant
+        The Azure Active Directory tenant ID that should be used for authenticating requests to the key vault.
+        [Default: (null)]
+
+
+NOTES:
+      * For authentication with Azure you can pass parameters, set environment variables, use a profile stored in
+        ~/.azure/credentials, or log in before you run your tasks or playbook with `az login'.
+      * Authentication is also possible using a service principal or Active Directory user.
+      * To authenticate via service principal, pass subscription_id, client_id, secret and tenant or set environment variables
+        AZURE_SUBSCRIPTION_ID, AZURE_CLIENT_ID, AZURE_SECRET and AZURE_TENANT.
+      * To authenticate via Active Directory user, pass ad_user and password, or set AZURE_AD_USER and AZURE_PASSWORD in the
+        environment.
+      * Alternatively, credentials can be stored in ~/.azure/credentials. This is an ini file containing a [default] section and
+        the following keys: subscription_id, client_id, secret and tenant or subscription_id, ad_user and password. It is also
+        possible to add additional profiles. Specify the profile by passing profile or setting AZURE_PROFILE in the environment.
+
+
+SEE ALSO:
+      * Sign in with Azure CLI
+           How to authenticate using the `az login' command.
+           https://docs.microsoft.com/en-us/cli/azure/authenticate-azure-cli?view=azure-cli-latest
+
+
+REQUIREMENTS:  python >= 2.7, azure >= 2.0.0
+
+AUTHOR: Zim Kalinowski (@zikalino)
+        METADATA:
+          status:
+          - preview
+          supported_by: community
+        
+
+EXAMPLES:
+
+- name: Create instance of Key Vault
+    azure_rm_keyvault:
+      resource_group: myResourceGroup
+      vault_name: samplekeyvault
+      enabled_for_deployment: yes
+      vault_tenant: 72f98888-8666-4144-9199-2d7cd0111111
+      sku:
+        name: standard
+      access_policies:
+        - tenant_id: 72f98888-8666-4144-9199-2d7cd0111111
+          object_id: 99998888-8666-4144-9199-2d7cd0111111
+          keys:
+            - get
+            - list
+
+
+RETURN VALUES:
+
+id:
+    description:
+        - The Azure Resource Manager resource ID for the key vault.
+    returned: always
+    type: str
+    sample: id
+

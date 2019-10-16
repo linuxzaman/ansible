@@ -1,0 +1,36 @@
+EXAMPLES:
+
+- name: Get facts
+  setup:
+
+- name: Add Pester module
+  action:
+    module_name: "{{ 'win_psmodule' if ansible_powershell_version >= 5 else 'win_chocolatey' }}"
+    name: Pester
+    state: present
+
+- name: Run the pester test provided in the path parameter.
+  win_pester:
+    path: C:\Pester
+
+# Run pesters tests files that are present in the specified folder
+# ensure that the pester module version available is greater or equal to the version parameter.
+- name: Run the pester test present in a folder and check the Pester module version.
+  win_pester:
+    path: C:\Pester\test01.test.ps1
+    version: 4.1.0
+
+
+RETURN VALUES:
+
+pester_version:
+    description: Version of the pester module found on the remote host.
+    returned: always
+    type: str
+    sample: 4.3.1
+output:
+    description: Results of the Pester tests.
+    returned: success
+    type: list
+    sample: false
+

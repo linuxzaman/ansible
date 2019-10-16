@@ -1,0 +1,96 @@
+> SCRIPT    (/usr/lib/python2.7/dist-packages/ansible/modules/commands/script.py)
+
+        The `script' module takes the script name followed by a list of space-delimited arguments. The local script at path will be
+        transferred to the remote node and then executed. The given script will be processed through the shell environment on the remote
+        node. This module does not require python on the remote system, much like the [raw] module. This module is also supported for
+        Windows targets.
+
+  * This module is maintained by The Ansible Core Team
+  * note: This module has a corresponding action plugin.
+
+OPTIONS (= is mandatory):
+
+- chdir
+        Change into this directory on the remote node before running the script.
+        [Default: (null)]
+        version_added: 2.4
+
+- creates
+        A filename on the remote node, when it already exists, this step will *not* be run.
+        [Default: (null)]
+        version_added: 1.5
+
+- decrypt
+        This option controls the autodecryption of source files using vault.
+        [Default: True]
+        type: bool
+        version_added: 2.4
+
+- executable
+        Name or path of a executable to invoke the script with.
+        [Default: (null)]
+        version_added: 2.6
+
+= free_form
+        Path to the local script file followed by optional arguments.
+        There is no parameter actually named 'free form', see the examples!
+
+
+- removes
+        A filename on the remote node, when it does not exist, this step will *not* be run.
+        [Default: (null)]
+        version_added: 1.5
+
+
+NOTES:
+      * It is usually preferable to write Ansible modules rather than pushing scripts. Convert your script to an Ansible module for
+        bonus points!
+      * The `ssh' connection plugin will force pseudo-tty allocation via `-tt' when scripts are executed. Pseudo-ttys do not have a
+        stderr channel and all stderr is sent to stdout. If you depend on separated stdout and stderr result keys, please switch to
+        a copy+command set of tasks instead of using script.
+      * If the path to the local script contains spaces, it needs to be quoted.
+      * This module is also supported for Windows targets.
+
+
+SEE ALSO:
+      * Module shell
+           The official documentation on the shell module.
+           https://docs.ansible.com/ansible/latest/modules/shell_module.html
+      * Module win_shell
+           The official documentation on the win_shell module.
+           https://docs.ansible.com/ansible/latest/modules/win_shell_module.html
+
+
+AUTHOR: Ansible Core Team, Michael DeHaan
+        METADATA:
+          status:
+          - stableinterface
+          supported_by: core
+        
+
+EXAMPLES:
+
+- name: Run a script with arguments
+  script: /some/local/script.sh --some-argument 1234
+
+- name: Run a script only if file.txt does not exist on the remote node
+  script: /some/local/create_file.sh --some-argument 1234
+  args:
+    creates: /the/created/file.txt
+
+- name: Run a script only if file.txt exists on the remote node
+  script: /some/local/remove_file.sh --some-argument 1234
+  args:
+    removes: /the/removed/file.txt
+
+- name: Run a script using an executable in a non-system path
+  script: /some/local/script
+  args:
+    executable: /some/remote/executable
+
+- name: Run a script using an executable in a system path
+  script: /some/local/script.py
+  args:
+    executable: python3
+
+

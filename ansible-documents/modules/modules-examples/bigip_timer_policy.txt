@@ -1,0 +1,47 @@
+EXAMPLES:
+
+- name: Create a timer policy
+  bigip_timer_policy:
+    name: timer1
+    description: My timer policy
+    rules:
+      - name: rule1
+        protocol: tcp
+        idle_timeout: indefinite
+        destination_ports:
+          - 443
+          - 80
+      - name: rule2
+        protocol: 200
+      - name: rule3
+        protocol: sctp
+        idle_timeout: 200
+        destination_ports:
+          - 21
+    state: present
+    provider:
+      password: secret
+      server: lb.mydomain.com
+      user: admin
+  delegate_to: localhost
+
+- name: Remove a timer policy and all its associated rules
+  bigip_timer_policy:
+    name: timer1
+    description: My timer policy
+    state: absent
+    provider:
+      user: admin
+      password: secret
+      server: lb.mydomain.com
+  delegate_to: localhost
+
+
+RETURN VALUES:
+
+description:
+  description: The new description of the timer policy.
+  returned: changed
+  type: str
+  sample: true
+

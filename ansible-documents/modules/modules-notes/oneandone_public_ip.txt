@@ -1,0 +1,93 @@
+> ONEANDONE_PUBLIC_IP    (/usr/lib/python2.7/dist-packages/ansible/modules/cloud/oneandone/oneandone_public_ip.py)
+
+        Create, update, and remove public IPs. This module has a dependency on 1and1 >= 1.0
+
+  * This module is maintained by The Ansible Community
+OPTIONS (= is mandatory):
+
+- api_url
+        Custom API URL. Overrides the ONEANDONE_API_URL environement variable.
+        [Default: (null)]
+
+= auth_token
+        Authenticating API token provided by 1&1.
+
+
+- datacenter
+        ID of the datacenter where the IP will be created (only for unassigned IPs).
+        [Default: (null)]
+
+= public_ip_id
+        The ID of the public IP used with update and delete states.
+
+
+- reverse_dns
+        Reverse DNS name. maxLength=256
+        [Default: (null)]
+
+- state
+        Define a public ip state to create, remove, or update.
+        (Choices: present, absent, update)[Default: present]
+
+- type
+        Type of IP. Currently, only IPV4 is available.
+        (Choices: IPV4, IPV6)[Default: IPV4]
+
+- wait
+        wait for the instance to be in state 'running' before returning
+        [Default: yes]
+        type: bool
+
+- wait_interval
+        Defines the number of seconds to wait when using the _wait_for methods
+        [Default: 5]
+
+- wait_timeout
+        how long before wait gives up, in seconds
+        [Default: 600]
+
+
+REQUIREMENTS:  1and1, python >= 2.6
+
+AUTHOR: Amel Ajdinovic (@aajdinov), Ethan Devenport (@edevenport)
+        METADATA:
+          status:
+          - preview
+          supported_by: community
+        
+
+EXAMPLES:
+
+# Create a public IP.
+
+- oneandone_public_ip:
+    auth_token: oneandone_private_api_key
+    reverse_dns: example.com
+    datacenter: US
+    type: IPV4
+
+# Update a public IP.
+
+- oneandone_public_ip:
+    auth_token: oneandone_private_api_key
+    public_ip_id: public ip id
+    reverse_dns: secondexample.com
+    state: update
+
+
+# Delete a public IP
+
+- oneandone_public_ip:
+    auth_token: oneandone_private_api_key
+    public_ip_id: public ip id
+    state: absent
+
+
+RETURN VALUES:
+
+public_ip:
+    description: Information about the public ip that was processed
+    type: dict
+    sample: '{"id": "F77CC589EBC120905B4F4719217BFF6D", "ip": "10.5.132.106"}'
+    returned: always
+

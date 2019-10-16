@@ -1,0 +1,128 @@
+> NA_ONTAP_CIFS_SERVER    (/usr/lib/python2.7/dist-packages/ansible/modules/storage/netapp/na_ontap_cifs_server.py)
+
+        Creating / deleting and modifying the CIFS server .
+
+  * This module is maintained by an Ansible Partner
+OPTIONS (= is mandatory):
+
+- admin_password
+        Specifies the cifs server admin password.
+        [Default: (null)]
+
+- admin_user_name
+        Specifies the cifs server admin username.
+        [Default: (null)]
+
+- domain
+        The Fully Qualified Domain Name of the Windows Active Directory this CIFS server belongs to.
+        [Default: (null)]
+
+- force
+        If this is set and a machine account with the same name as specified in 'name' exists in the Active Directory, it will be
+        overwritten and reused.
+        [Default: (null)]
+        type: bool
+        version_added: 2.7
+
+= hostname
+        The hostname or IP address of the ONTAP instance.
+
+        type: str
+
+- http_port
+        Override the default port (80 or 443) with this port
+        [Default: (null)]
+        type: int
+
+- https
+        Enable and disable https
+        [Default: False]
+        type: bool
+
+= name
+        Specifies the cifs_server name.
+        (Aliases: cifs_server_name)
+
+- ontapi
+        The ontap api version to use
+        [Default: (null)]
+        type: int
+
+- ou
+        The Organizational Unit (OU) within the Windows Active Directory this CIFS server belongs to.
+        [Default: (null)]
+        version_added: 2.7
+
+= password
+        Password for the specified user.
+        (Aliases: pass)
+        type: str
+
+- service_state
+        CIFS Server Administrative Status.
+        (Choices: stopped, started)[Default: (null)]
+
+- state
+        Whether the specified cifs_server should exist or not.
+        (Choices: present, absent)[Default: present]
+
+= username
+        This can be a Cluster-scoped or SVM-scoped account, depending on whether a Cluster-level or SVM-level API is required. For more
+        information, please read the documentation https://mysupport.netapp.com/NOW/download/software/nmsdk/9.4/.
+        (Aliases: user)
+        type: str
+
+- validate_certs
+        If set to `no', the SSL certificates will not be validated.
+        This should only set to `False' used on personally controlled sites using self-signed certificates.
+        [Default: True]
+        type: bool
+
+= vserver
+        The name of the vserver to use.
+
+
+- workgroup
+        The NetBIOS name of the domain or workgroup this CIFS server belongs to.
+        [Default: (null)]
+
+
+NOTES:
+      * The modules prefixed with na\\_ontap are built to support the ONTAP storage platform.
+
+
+REQUIREMENTS:  A physical or virtual clustered Data ONTAP system. The modules support Data ONTAP 9.1 and onward, Ansible 2.6, Python2
+        netapp-lib (2017.10.30) or later. Install using 'pip install netapp-lib', Python3 netapp-lib (2018.11.13) or
+        later. Install using 'pip install netapp-lib', To enable http on the cluster you must run the following commands
+        'set -privilege advanced;' 'system services web modify -http-enabled true;'
+
+AUTHOR: NetApp Ansible Team (@carchi8py) <ng-ansibleteam@netapp.com>
+        METADATA:
+          status:
+          - preview
+          supported_by: certified
+        
+
+EXAMPLES:
+
+- name: Create cifs_server
+      na_ontap_cifs_server:
+        state: present
+        vserver: svm1
+        hostname: "{{ netapp_hostname }}"
+        username: "{{ netapp_username }}"
+        password: "{{ netapp_password }}"
+
+    - name: Delete cifs_server
+      na_ontap_cifs_server:
+        state: absent
+        name: data2
+        vserver: svm1
+        hostname: "{{ netapp_hostname }}"
+        username: "{{ netapp_username }}"
+        password: "{{ netapp_password }}"
+
+
+RETURN VALUES:
+
+

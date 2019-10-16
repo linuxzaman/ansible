@@ -1,0 +1,38 @@
+EXAMPLES:
+
+- name: Create Portset
+      na_ontap_portset:
+        state: present
+        vserver: vserver_name
+        name: portset_name
+        ports: a1
+        type: "{{ protocol type }}"
+        username: "{{ netapp username }}"
+        password: "{{ netapp password }}"
+        hostname: "{{ netapp hostname }}"
+
+    - name: Modify ports in portset
+      na_ontap_portset:
+        state: present
+        vserver: vserver_name
+        name: portset_name
+        ports: a1,a2
+        username: "{{ netapp username }}"
+        password: "{{ netapp password }}"
+        hostname: "{{ netapp hostname }}"
+
+    - name: Delete Portset
+      na_ontap_portset:
+        state: absent
+        vserver: vserver_name
+        name: portset_name
+        force: True
+        type: "{{ protocol type }}"
+        username: "{{ netapp username }}"
+        password: "{{ netapp password }}"
+        hostname: "{{ netapp hostname }}"
+
+
+RETURN VALUES:
+
+

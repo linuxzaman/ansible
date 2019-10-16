@@ -1,0 +1,124 @@
+EXAMPLES:
+
+# Examples don't contain auth parameter for simplicity,
+# look at ovirt_auth module to see how to reuse authentication:
+
+# Create template from vm
+- ovirt_template:
+    cluster: Default
+    name: mytemplate
+    vm: rhel7
+    cpu_profile: Default
+    description: Test
+
+# Import template
+- ovirt_template:
+  state: imported
+  name: mytemplate
+  export_domain: myexport
+  storage_domain: mystorage
+  cluster: mycluster
+
+# Remove template
+- ovirt_template:
+    state: absent
+    name: mytemplate
+
+# Change Template Name
+- ovirt_template:
+    id: 00000000-0000-0000-0000-000000000000
+    name: "new_template_name"
+
+# Register template
+- ovirt_template:
+  state: registered
+  storage_domain: mystorage
+  cluster: mycluster
+  name: mytemplate
+
+# Register template using id
+- ovirt_template:
+  state: registered
+  storage_domain: mystorage
+  cluster: mycluster
+  id: 1111-1111-1111-1111
+
+# Register template, allowing partial import
+- ovirt_template:
+  state: registered
+  storage_domain: mystorage
+  allow_partial_import: "True"
+  cluster: mycluster
+  id: 1111-1111-1111-1111
+
+# Register template with vnic profile mappings
+- ovirt_template:
+    state: registered
+    storage_domain: mystorage
+    cluster: mycluster
+    id: 1111-1111-1111-1111
+    vnic_profile_mappings:
+      - source_network_name: mynetwork
+        source_profile_name: mynetwork
+        target_profile_id: 3333-3333-3333-3333
+      - source_network_name: mynetwork2
+        source_profile_name: mynetwork2
+        target_profile_id: 4444-4444-4444-4444
+
+# Register template with mapping
+- ovirt_template:
+    state: registered
+    storage_domain: mystorage
+    cluster: mycluster
+    id: 1111-1111-1111-1111
+    role_mappings:
+      - source_name: Role_A
+        dest_name: Role_B
+    domain_mappings:
+      - source_name: Domain_A
+        dest_name: Domain_B
+    cluster_mappings:
+      - source_name: cluster_A
+        dest_name: cluster_B
+
+# Import image from Glance s a template
+- ovirt_template:
+    state: imported
+    name: mytemplate
+    image_disk: "centos7"
+    template_image_disk_name: centos7_from_glance
+    image_provider: "glance_domain"
+    storage_domain: mystorage
+    cluster: mycluster
+
+# Edit template subeversion
+- ovirt_template:
+    cluster: mycluster
+    name: mytemplate
+    vm: rhel7
+    version:
+        number: 2
+        name: subversion
+
+# Create new template subeversion
+- ovirt_template:
+    cluster: mycluster
+    name: mytemplate
+    vm: rhel7
+    version:
+        name: subversion
+
+
+RETURN VALUES:
+
+id:
+    description: ID of the template which is managed
+    returned: On success if template is found.
+    type: str
+    sample: 7de90f31-222c-436c-a1ca-7e655bd5b60c
+template:
+    description: "Dictionary of all the template attributes. Template attributes can be found on your oVirt/RHV instance
+                  at following url: http://ovirt.github.io/ovirt-engine-api-model/master/#types/template."
+    returned: On success if template is found.
+    type: dict
+

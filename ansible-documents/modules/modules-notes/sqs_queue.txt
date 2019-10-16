@@ -1,0 +1,182 @@
+> SQS_QUEUE    (/usr/lib/python2.7/dist-packages/ansible/modules/cloud/amazon/sqs_queue.py)
+
+        Create or delete AWS SQS queues. Update attributes on existing queues.
+
+  * This module is maintained by The Ansible Community
+OPTIONS (= is mandatory):
+
+- aws_access_key
+        AWS access key. If not set then the value of the AWS_ACCESS_KEY_ID, AWS_ACCESS_KEY or EC2_ACCESS_KEY environment variable is
+        used.
+        (Aliases: ec2_access_key, access_key)[Default: (null)]
+        type: str
+
+- aws_secret_key
+        AWS secret key. If not set then the value of the AWS_SECRET_ACCESS_KEY, AWS_SECRET_KEY, or EC2_SECRET_KEY environment variable is
+        used.
+        (Aliases: ec2_secret_key, secret_key)[Default: (null)]
+        type: str
+
+- debug_botocore_endpoint_logs
+        Use a botocore.endpoint logger to parse the unique (rather than total) "resource:action" API calls made during a task, outputing
+        the set to the resource_actions key in the task results. Use the aws_resource_action callback to output to total list made during
+        a playbook. The ANSIBLE_DEBUG_BOTOCORE_LOGS environment variable may also be used.
+        [Default: no]
+        type: bool
+        version_added: 2.8
+
+- default_visibility_timeout
+        The default visibility timeout in seconds.
+        [Default: (null)]
+
+- delivery_delay
+        The delivery delay in seconds.
+        [Default: (null)]
+
+- ec2_url
+        Url to use to connect to EC2 or your Eucalyptus cloud (by default the module will use EC2 endpoints). Ignored for modules where
+        region is required. Must be specified for all other modules if region is not used. If not set then the value of the EC2_URL
+        environment variable, if any, is used.
+        [Default: (null)]
+        type: str
+
+- maximum_message_size
+        The maximum message size in bytes.
+        [Default: (null)]
+
+- message_retention_period
+        The message retention period in seconds.
+        [Default: (null)]
+
+= name
+        Name of the queue.
+
+
+- policy
+        The json dict policy to attach to queue
+        [Default: (null)]
+        version_added: 2.1
+
+- profile
+        Uses a boto profile. Only works with boto >= 2.24.0.
+        [Default: (null)]
+        type: str
+        version_added: 1.6
+
+- receive_message_wait_time
+        The receive message wait time in seconds.
+        [Default: (null)]
+
+- redrive_policy
+        json dict with the redrive_policy (see example)
+        [Default: (null)]
+        version_added: 2.2
+
+- region
+        The AWS region to use. If not specified then the value of the AWS_REGION or EC2_REGION environment variable, if any, is used. See
+        http://docs.aws.amazon.com/general/latest/gr/rande.html#ec2_region
+        (Aliases: aws_region, ec2_region)[Default: (null)]
+        type: str
+
+- security_token
+        AWS STS security token. If not set then the value of the AWS_SECURITY_TOKEN or EC2_SECURITY_TOKEN environment variable is used.
+        (Aliases: access_token)[Default: (null)]
+        type: str
+        version_added: 1.6
+
+- state
+        Create or delete the queue
+        (Choices: present, absent)[Default: present]
+
+- validate_certs
+        When set to "no", SSL certificates will not be validated for boto versions >= 2.6.0.
+        [Default: True]
+        type: bool
+        version_added: 1.5
+
+
+NOTES:
+      * If parameters are not set within the module, the following environment variables can be used in decreasing order of
+        precedence `AWS_URL' or `EC2_URL', `AWS_ACCESS_KEY_ID' or `AWS_ACCESS_KEY' or `EC2_ACCESS_KEY', `AWS_SECRET_ACCESS_KEY' or
+        `AWS_SECRET_KEY' or `EC2_SECRET_KEY', `AWS_SECURITY_TOKEN' or `EC2_SECURITY_TOKEN', `AWS_REGION' or `EC2_REGION'
+      * Ansible uses the boto configuration file (typically ~/.boto) if no credentials are provided. See
+        https://boto.readthedocs.io/en/latest/boto_config_tut.html
+      * `AWS_REGION' or `EC2_REGION' can be typically be used to specify the AWS region, when required, but this can also be
+        configured in the boto config file
+
+
+REQUIREMENTS:  boto, boto >= 2.33.0, python >= 2.6
+
+AUTHOR: Alan Loi (@loia), Fernando Jose Pando (@nand0p), Nadir Lloret (@nadirollo)
+        METADATA:
+          status:
+          - stableinterface
+          supported_by: community
+        
+
+EXAMPLES:
+
+# Create SQS queue with redrive policy
+- sqs_queue:
+    name: my-queue
+    region: ap-southeast-2
+    default_visibility_timeout: 120
+    message_retention_period: 86400
+    maximum_message_size: 1024
+    delivery_delay: 30
+    receive_message_wait_time: 20
+    policy: "{{ json_dict }}"
+    redrive_policy:
+      maxReceiveCount: 5
+      deadLetterTargetArn: arn:aws:sqs:eu-west-1:123456789012:my-dead-queue
+
+# Delete SQS queue
+- sqs_queue:
+    name: my-queue
+    region: ap-southeast-2
+    state: absent
+
+
+RETURN VALUES:
+
+default_visibility_timeout:
+    description: The default visibility timeout in seconds.
+    type: int
+    returned: always
+    sample: 30
+delivery_delay:
+    description: The delivery delay in seconds.
+    type: int
+    returned: always
+    sample: 0
+maximum_message_size:
+    description: The maximum message size in bytes.
+    type: int
+    returned: always
+    sample: 262144
+message_retention_period:
+    description: The message retention period in seconds.
+    type: int
+    returned: always
+    sample: 345600
+name:
+    description: Name of the SQS Queue
+    type: str
+    returned: always
+    sample: "queuename-987d2de0"
+queue_arn:
+    description: The queue's Amazon resource name (ARN).
+    type: str
+    returned: on successful creation or update of the queue
+    sample: 'arn:aws:sqs:us-east-1:199999999999:queuename-987d2de0'
+receive_message_wait_time:
+    description: The receive message wait time in seconds.
+    type: int
+    returned: always
+    sample: 0
+region:
+    description: Region that the queue was created within
+    type: str
+    returned: always
+    sample: 'us-east-1'
+

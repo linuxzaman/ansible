@@ -1,0 +1,378 @@
+> BIGIP_PROFILE_PERSISTENCE_COOKIE    (/usr/lib/python2.7/dist-packages/ansible/modules/network/f5/bigip_profile_persistence_cookie.py)
+
+        Manage cookie persistence profiles on BIG-IP.
+
+  * This module is maintained by an Ansible Partner
+OPTIONS (= is mandatory):
+
+- always_send
+        Send the cookie persistence entry on every reply, even if the entry has previously been supplied to the client.
+        [Default: (null)]
+        type: bool
+
+- cookie_encryption
+        Specifies the way in which the cookie encryption format is used.
+        When `disabled', generates the cookie format unencrypted.
+        When `preferred', generate an encrypted cookie, but accepts both encrypted and unencrypted formats.
+        When `required', cookie format must be encrypted.
+        (Choices: disabled, preferred, required)[Default: (null)]
+        type: str
+
+- cookie_method
+        Specifies the type of cookie processing that the system uses.
+        When `hash', specifies that the server provides the cookie, which the system then maps consistently to a specific node. This
+        persistence type requires a `cookie_name' value.
+        When `insert', specifies that the system inserts server information, in the form of a cookie, into the header of the server
+        response.
+        When `passive', specifies that the server provides the cookie, formatted with the correct server information and timeout. This
+        persistence type requires a `cookie_name' value.
+        When `rewrite', specifies that the system intercepts the BIGipCookie header, sent from the server, and overwrites the name and
+        value of that cookie.
+        (Choices: hash, insert, passive, rewrite)[Default: (null)]
+        type: str
+
+- cookie_name
+        Specifies a unique name for the cookie.
+        [Default: (null)]
+        type: str
+
+- description
+        Description of the profile.
+        [Default: (null)]
+        type: str
+
+- encrypt_cookie_pool_name
+        Specifies whether the pool-name in the inserted BIG-IP default cookie should be encrypted.
+        [Default: (null)]
+        type: bool
+
+- encryption_passphrase
+        Specifies a passphrase to be used for cookie encryption.
+        [Default: (null)]
+        type: str
+
+- expiration
+        Specifies the expiration time of the cookie. By default the system generates and uses session cookie. This cookie expires when
+        the user session expires, that is when the browser is closed.
+        [Default: (null)]
+        suboptions:
+          days:
+            description:
+            - Cookie expiration time in days, the value must be in range from `0' to `24855'
+              days.
+            type: int
+          hours:
+            description:
+            - Cookie expiration time in hours, the value must be in the range from `0' to
+              `23' hours.
+            type: int
+          minutes:
+            description:
+            - Cookie expiration time in minutes, the value must be in the range from `0'
+              to `59' minutes.
+            type: int
+          seconds:
+            default: 0
+            description:
+            - Cookie expiration time in seconds, the value must be in the range from `0'
+              to `59' seconds.
+            type: int
+        
+        type: dict
+        version_added: 2.8
+        
+
+- http_only
+        Specifies whether the httponly attribute should be enabled or disabled for the inserted cookies.
+        [Default: (null)]
+        type: bool
+
+- match_across_pools
+        When `yes', specifies that the system can use any pool that contains this persistence record.
+        When creating a new profile, if this parameter is not specified, the default is provided by the parent profile.
+        [Default: (null)]
+        type: bool
+
+- match_across_services
+        When `yes', specifies that all persistent connections from a client IP address that go to the same virtual IP address also go to
+        the same node.
+        When creating a new profile, if this parameter is not specified, the default is provided by the parent profile.
+        [Default: (null)]
+        type: bool
+
+- match_across_virtuals
+        When `yes', specifies that all persistent connections from the same client IP address go to the same node.
+        When creating a new profile, if this parameter is not specified, the default is provided by the parent profile.
+        [Default: (null)]
+        type: bool
+
+= name
+        Specifies the name of the profile.
+
+        type: str
+
+- override_connection_limit
+        When `yes', specifies that the system allows you to specify that pool member connection limits will be overridden for persisted
+        clients.
+        Per-virtual connection limits remain hard limits and are not overridden.
+        [Default: (null)]
+        type: bool
+
+- parent
+        Specifies the profile from which this profile inherits settings.
+        When creating a new profile, if this parameter is not specified, the default is the system-supplied `cookie' profile.
+        [Default: cookie]
+        type: str
+
+- partition
+        Device partition to manage resources on.
+        [Default: Common]
+        type: str
+
+= password
+        The password for the user account used to connect to the BIG-IP.
+        You may omit this option by setting the environment variable `F5_PASSWORD'.
+        (Aliases: pass, pwd)
+        type: str
+
+- provider
+        A dict object containing connection details.
+        [Default: (null)]
+        suboptions:
+          password:
+            aliases:
+            - pass
+            - pwd
+            description:
+            - The password for the user account used to connect to the BIG-IP.
+            - You may omit this option by setting the environment variable `F5_PASSWORD'.
+            required: true
+            type: str
+          server:
+            description:
+            - The BIG-IP host.
+            - You may omit this option by setting the environment variable `F5_SERVER'.
+            required: true
+            type: str
+          server_port:
+            default: 443
+            description:
+            - The BIG-IP server port.
+            - You may omit this option by setting the environment variable `F5_SERVER_PORT'.
+            type: int
+          ssh_keyfile:
+            description:
+            - Specifies the SSH keyfile to use to authenticate the connection to the remote
+              device.  This argument is only used for `cli' transports.
+            - You may omit this option by setting the environment variable `ANSIBLE_NET_SSH_KEYFILE'.
+            type: path
+          timeout:
+            default: 10
+            description:
+            - Specifies the timeout in seconds for communicating with the network device for
+              either connecting or sending commands.  If the timeout is exceeded before the
+              operation is completed, the module will error.
+            type: int
+          transport:
+            choices:
+            - cli
+            - rest
+            default: rest
+            description:
+            - Configures the transport connection to use when connecting to the remote device.
+            type: str
+          user:
+            description:
+            - The username to connect to the BIG-IP with. This user must have administrative
+              privileges on the device.
+            - You may omit this option by setting the environment variable `F5_USER'.
+            required: true
+            type: str
+          validate_certs:
+            default: true
+            description:
+            - If `no', SSL certificates are not validated. Use this only on personally controlled
+              sites using self-signed certificates.
+            - You may omit this option by setting the environment variable `F5_VALIDATE_CERTS'.
+            type: bool
+        
+        type: dict
+        version_added: 2.5
+
+- secure
+        Specifies whether the secure attribute should be enabled or disabled for the inserted cookies.
+        [Default: (null)]
+        type: bool
+
+= server
+        The BIG-IP host.
+        You may omit this option by setting the environment variable `F5_SERVER'.
+
+        type: str
+
+- server_port
+        The BIG-IP server port.
+        You may omit this option by setting the environment variable `F5_SERVER_PORT'.
+        [Default: 443]
+        type: int
+        version_added: 2.2
+
+- state
+        When `present', ensures that the profile exists.
+        When `absent', ensures the profile is removed.
+        (Choices: present, absent)[Default: present]
+        type: str
+
+- update_password
+        `always' will allow to update passphrases if the user chooses to do so. `on_create' will only set the passphrase for newly
+        created profiles.
+        (Choices: always, on_create)[Default: always]
+        type: str
+
+= user
+        The username to connect to the BIG-IP with. This user must have administrative privileges on the device.
+        You may omit this option by setting the environment variable `F5_USER'.
+
+        type: str
+
+- validate_certs
+        If `no', SSL certificates are not validated. Use this only on personally controlled sites using self-signed certificates.
+        You may omit this option by setting the environment variable `F5_VALIDATE_CERTS'.
+        [Default: True]
+        type: bool
+        version_added: 2.0
+
+
+NOTES:
+      * For more information on using Ansible to manage F5 Networks devices see https://www.ansible.com/integrations/networks/f5.
+      * Requires BIG-IP software version >= 12.
+      * The F5 modules only manipulate the running configuration of the F5 product. To ensure that BIG-IP specific configuration
+        persists to disk, be sure to include at least one task that uses the [bigip_config] module to save the running
+        configuration. Refer to the module's documentation for the correct usage of the module to save your running configuration.
+
+
+AUTHOR: Tim Rupp (@caphrim007), Wojciech Wypior (@wojtek0806)
+        METADATA:
+          status:
+          - preview
+          supported_by: certified
+        
+
+EXAMPLES:
+
+- name: Create a persistence cookie profile
+  bigip_profile_persistence_cookie:
+    name: foo
+    provider:
+      password: secret
+      server: lb.mydomain.com
+      user: admin
+  delegate_to: localhost
+- name: Create a persistence cookie profile with expiration time
+  bigip_profile_persistence_cookie:
+    name: foo
+    expiration:
+      days: 7
+      hours: 12
+      minutes: 30
+    provider:
+      password: secret
+      server: lb.mydomain.com
+      user: admin
+  delegate_to: localhost
+
+
+RETURN VALUES:
+
+cookie_name:
+  description: The new Cookie Name value.
+  returned: changed
+  type: str
+  sample: cookie1
+cookie_method:
+  description: The new Cookie Method.
+  returned: changed
+  type: str
+  sample: insert
+parent:
+  description: The parent profile.
+  returned: changed
+  type: str
+  sample: /Common/cookie
+cookie_encryption:
+  description: The new Cookie Encryption type.
+  returned: changed
+  type: str
+  sample: preferred
+match_across_pools:
+  description: The new Match Across Pools value.
+  returned: changed
+  type: bool
+  sample: yes
+match_across_services:
+  description: The new Match Across Services value.
+  returned: changed
+  type: bool
+  sample: no
+match_across_virtuals:
+  description: The new Match Across Virtuals value.
+  returned: changed
+  type: bool
+  sample: yes
+override_connection_limit:
+  description: The new Override Connection Limit value.
+  returned: changed
+  type: bool
+  sample: no
+encrypt_cookie_pool_name:
+  description: The new Encrypt Cookie Pool Name value.
+  returned: changed
+  type: bool
+  sample: yes
+always_send:
+  description: The new Always Send value.
+  returned: changed
+  type: bool
+  sample: no
+http_only:
+  description: The new HTTP Only value.
+  returned: changed
+  type: bool
+  sample: yes
+description:
+  description: The new description.
+  returned: changed
+  type: str
+  sample: My description
+secure:
+  description: The new Secure Cookie value.
+  returned: changed
+  type: bool
+  sample: no
+expiration:
+  description: The expiration time of the cookie.
+  returned: changed
+  type: complex
+  contains:
+    days:
+      description: Cookie expiration time in days.
+      returned: changed
+      type: int
+      sample: 125
+    hours:
+      description: Cookie expiration time in hours.
+      returned: changed
+      type: int
+      sample: 22
+    minutes:
+      description: Cookie expiration time in minutes.
+      returned: changed
+      type: int
+      sample: 58
+    seconds:
+      description: Cookie expiration time in seconds.
+      returned: changed
+      type: int
+      sample: 20
+  sample: hash/dictionary of values
+

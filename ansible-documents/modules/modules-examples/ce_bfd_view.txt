@@ -1,0 +1,103 @@
+EXAMPLES:
+
+- name: bfd view module test
+  hosts: cloudengine
+  connection: local
+  gather_facts: no
+  vars:
+    cli:
+      host: "{{ inventory_hostname }}"
+      port: "{{ ansible_ssh_port }}"
+      username: "{{ username }}"
+      password: "{{ password }}"
+      transport: cli
+
+  tasks:
+  - name: Set the local discriminator of a BFD session to 80 and the remote discriminator to 800
+    ce_bfd_view:
+      session_name: atob
+      local_discr: 80
+      remote_discr: 800
+      state: present
+      provider: '{{ cli }}'
+
+  - name: Set the minimum interval for receiving BFD packets to 500 ms
+    ce_bfd_view:
+      session_name: atob
+      min_rx_interval: 500
+      state: present
+      provider: '{{ cli }}'
+
+
+RETURN VALUES:
+
+proposed:
+    description: k/v pairs of parameters passed into module
+    returned: always
+    type: dict
+    sample: {
+        "admin_down": false,
+        "description": null,
+        "detect_multi": null,
+        "local_discr": 80,
+        "min_rx_interval": null,
+        "min_tx_interval": null,
+        "remote_discr": 800,
+        "session_name": "atob",
+        "state": "present",
+        "tos_exp": null,
+        "wtr_interval": null
+    }
+existing:
+    description: k/v pairs of existing configuration
+    returned: always
+    type: dict
+    sample: {
+        "session": {
+            "adminDown": "false",
+            "createType": "SESS_STATIC",
+            "description": null,
+            "detectMulti": "3",
+            "localDiscr": null,
+            "minRxInt": null,
+            "minTxInt": null,
+            "remoteDiscr": null,
+            "sessName": "atob",
+            "tosExp": null,
+            "wtrTimerInt": null
+        }
+    }
+end_state:
+    description: k/v pairs of configuration after module execution
+    returned: always
+    type: dict
+    sample: {
+        "session": {
+            "adminDown": "false",
+            "createType": "SESS_STATIC",
+            "description": null,
+            "detectMulti": "3",
+            "localDiscr": "80",
+            "minRxInt": null,
+            "minTxInt": null,
+            "remoteDiscr": "800",
+            "sessName": "atob",
+            "tosExp": null,
+            "wtrTimerInt": null
+        }
+    }
+updates:
+    description: commands sent to the device
+    returned: always
+    type: list
+    sample: [
+        "bfd atob",
+        "discriminator local 80",
+        "discriminator remote 800"
+    ]
+changed:
+    description: check to see if a change was made on the device
+    returned: always
+    type: bool
+    sample: true
+

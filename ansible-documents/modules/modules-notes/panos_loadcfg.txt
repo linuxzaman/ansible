@@ -1,0 +1,69 @@
+> PANOS_LOADCFG    (/usr/lib/python2.7/dist-packages/ansible/modules/network/panos/_panos_loadcfg.py)
+
+        Load configuration on PAN-OS device
+
+DEPRECATED: 
+
+	Reason: Consolidating code base.
+	Will be removed in: Ansible 2.12
+	Alternatives: Use U(https://galaxy.ansible.com/PaloAltoNetworks/paloaltonetworks) instead.
+
+
+  * This module is maintained by The Ansible Community
+OPTIONS (= is mandatory):
+
+- commit
+        commit if changed
+        [Default: yes]
+        type: bool
+
+- file
+        configuration file to load
+        [Default: (null)]
+
+= ip_address
+        IP address (or hostname) of PAN-OS device.
+
+        type: str
+
+= password
+        Password for authentication.
+
+        type: str
+
+- username
+        Username for authentication.
+        [Default: admin]
+        type: str
+
+
+REQUIREMENTS:  pan-python
+
+AUTHOR: Luigi Mori (@jtschichold), Ivan Bojer (@ivanbojer)
+        METADATA:
+          status:
+          - deprecated
+          supported_by: community
+        
+
+EXAMPLES:
+
+# Import and load config file from URL
+  - name: import configuration
+    panos_import:
+      ip_address: "192.168.1.1"
+      password: "admin"
+      url: "{{ConfigURL}}"
+      category: "configuration"
+    register: result
+  - name: load configuration
+    panos_loadcfg:
+      ip_address: "192.168.1.1"
+      password: "admin"
+      file: "{{result.filename}}"
+
+
+RETURN VALUES:
+
+# Default return values
+

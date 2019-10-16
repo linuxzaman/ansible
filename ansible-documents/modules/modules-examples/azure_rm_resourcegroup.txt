@@ -1,0 +1,44 @@
+EXAMPLES:
+
+- name: Create a resource group
+      azure_rm_resourcegroup:
+        name: myResourceGroup
+        location: westus
+        tags:
+            testing: testing
+            delete: never
+
+    - name: Delete a resource group
+      azure_rm_resourcegroup:
+        name: myResourceGroup
+        state: absent
+
+    - name: Delete a resource group including resources it contains
+      azure_rm_resourcegroup:
+        name: myResourceGroup
+        force_delete_nonempty: yes
+        state: absent
+
+
+RETURN VALUES:
+
+contains_resources:
+    description: Whether or not the resource group contains associated resources.
+    returned: always
+    type: bool
+    sample: True
+state:
+    description: Current state of the resource group.
+    returned: always
+    type: dict
+    sample: {
+        "id": "/subscriptions/xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx/resourceGroup/myResourceGroup",
+        "location": "westus",
+        "name": "Testing",
+        "provisioning_state": "Succeeded",
+        "tags": {
+            "delete": "on-exit",
+            "testing": "no"
+        }
+    }
+

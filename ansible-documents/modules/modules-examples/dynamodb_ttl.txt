@@ -1,0 +1,25 @@
+EXAMPLES:
+
+- name: enable TTL on my cowfacts table
+  dynamodb_ttl:
+    state: enable
+    table_name: cowfacts
+    attribute_name: cow_deleted_date
+
+- name: disable TTL on my cowfacts table
+  dynamodb_ttl:
+    state: disable
+    table_name: cowfacts
+    attribute_name: cow_deleted_date
+
+
+RETURN VALUES:
+
+current_status:
+  description: current or new TTL specification.
+  type: dict
+  returned: always
+  sample:
+  - { "AttributeName": "deploy_timestamp", "TimeToLiveStatus": "ENABLED" }
+  - { "AttributeName": "deploy_timestamp", "Enabled": true }
+

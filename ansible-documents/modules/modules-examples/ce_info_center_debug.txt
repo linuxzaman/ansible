@@ -1,0 +1,75 @@
+EXAMPLES:
+
+- name: CloudEngine info center debug test
+  hosts: cloudengine
+  connection: local
+  gather_facts: no
+  vars:
+    cli:
+      host: "{{ inventory_hostname }}"
+      port: "{{ ansible_ssh_port }}"
+      username: "{{ username }}"
+      password: "{{ password }}"
+      transport: cli
+
+  tasks:
+
+  - name: "Config debug time stamp"
+    ce_info_center_debug:
+      state: present
+      debug_time_stamp: date_boot
+      provider: "{{ cli }}"
+
+  - name: "Undo debug time stamp"
+    ce_info_center_debug:
+      state: absent
+      debug_time_stamp: date_boot
+      provider: "{{ cli }}"
+
+  - name: "Config debug module log level"
+    ce_info_center_debug:
+      state: present
+      module_name: aaa
+      channel_id: 1
+      debug_enable: true
+      debug_level: error
+      provider: "{{ cli }}"
+
+  - name: "Undo debug module log level"
+    ce_info_center_debug:
+      state: absent
+      module_name: aaa
+      channel_id: 1
+      debug_enable: true
+      debug_level: error
+      provider: "{{ cli }}"
+
+
+RETURN VALUES:
+
+changed:
+    description: check to see if a change was made on the device
+    returned: always
+    type: bool
+    sample: true
+proposed:
+    description: k/v pairs of parameters passed into module
+    returned: always
+    type: dict
+    sample: {"state": "present", "debug_time_stamp": "date_boot"}
+existing:
+    description: k/v pairs of existing aaa server
+    returned: always
+    type: dict
+    sample: {"debugTimeStamp": "DATE_MILLISECOND"}
+end_state:
+    description: k/v pairs of aaa params after module execution
+    returned: always
+    type: dict
+    sample: {"debugTimeStamp": "DATE_BOOT"}
+updates:
+    description: command sent to the device
+    returned: always
+    type: list
+    sample: ["info-center timestamp debugging boot"]
+

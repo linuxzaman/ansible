@@ -1,0 +1,43 @@
+> SLXOS_LLDP    (/usr/lib/python2.7/dist-packages/ansible/modules/network/slxos/slxos_lldp.py)
+
+        This module provides declarative management of LLDP service on Extreme SLX-OS network devices.
+
+  * This module is maintained by The Ansible Community
+OPTIONS (= is mandatory):
+
+- state
+        State of the LLDP configuration. If value is `present' lldp will be enabled else if it is `absent' it will be disabled.
+        (Choices: present, absent)[Default: present]
+
+
+NOTES:
+      * Tested against SLX-OS 17s.1.02
+
+
+AUTHOR: Matthew Stone (@bigmstone)
+        METADATA:
+          status:
+          - preview
+          supported_by: community
+        
+
+EXAMPLES:
+
+- name: Enable LLDP service
+  slxos_lldp:
+    state: present
+
+- name: Disable LLDP service
+  slxos_lldp:
+    state: absent
+
+
+RETURN VALUES:
+
+commands:
+  description: The list of configuration mode commands to send to the device
+  returned: always, except for the platforms that use Netconf transport to manage the device.
+  type: list
+  sample:
+    - lldp run
+

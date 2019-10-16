@@ -1,0 +1,44 @@
+> PIDS    (/usr/lib/python2.7/dist-packages/ansible/modules/system/pids.py)
+
+        Retrieves a list of PIDs of given process name in Ansible controller/controlled machines.Returns an empty list if no process in
+        that name exists.
+
+  * This module is maintained by The Ansible Community
+OPTIONS (= is mandatory):
+
+= name
+        the name of the process you want to get PID for.
+
+        type: str
+
+
+REQUIREMENTS:  psutil(python module)
+
+AUTHOR: Saranya Sridharan (@saranyasridharan)
+        METADATA:
+          status:
+          - preview
+          supported_by: community
+        
+
+EXAMPLES:
+
+# Pass the process name
+- name: Getting process IDs of the process
+  pids:
+      name: python
+  register: pids_of_python
+
+- name: Printing the process IDs obtained
+  debug:
+    msg: "PIDS of python:{{pids_of_python.pids|join(',')}}"
+
+
+RETURN VALUES:
+
+pids:
+  description: Process IDs of the given process
+  returned: list of none, one, or more process IDs
+  type: list
+  sample: [100,200]
+

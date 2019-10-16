@@ -1,0 +1,67 @@
+EXAMPLES:
+
+# Create a user
+- os_user:
+    cloud: mycloud
+    state: present
+    name: demouser
+    password: secret
+    email: demo@example.com
+    domain: default
+    default_project: demo
+
+# Delete a user
+- os_user:
+    cloud: mycloud
+    state: absent
+    name: demouser
+
+# Create a user but don't update password if user exists
+- os_user:
+    cloud: mycloud
+    state: present
+    name: demouser
+    password: secret
+    update_password: on_create
+    email: demo@example.com
+    domain: default
+    default_project: demo
+
+# Create a user without password
+- os_user:
+    cloud: mycloud
+    state: present
+    name: demouser
+    email: demo@example.com
+    domain: default
+    default_project: demo
+
+
+RETURN VALUES:
+
+user:
+    description: Dictionary describing the user.
+    returned: On success when I(state) is 'present'
+    type: complex
+    contains:
+        default_project_id:
+            description: User default project ID. Only present with Keystone >= v3.
+            type: str
+            sample: "4427115787be45f08f0ec22a03bfc735"
+        domain_id:
+            description: User domain ID. Only present with Keystone >= v3.
+            type: str
+            sample: "default"
+        email:
+            description: User email address
+            type: str
+            sample: "demo@example.com"
+        id:
+            description: User ID
+            type: str
+            sample: "f59382db809c43139982ca4189404650"
+        name:
+            description: User name
+            type: str
+            sample: "demouser"
+

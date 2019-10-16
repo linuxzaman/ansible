@@ -1,0 +1,101 @@
+> SPECTRUM_DEVICE    (/usr/lib/python2.7/dist-packages/ansible/modules/monitoring/spectrum_device.py)
+
+        This module allows you to create and delete devices in CA Spectrum https://www.ca.com/us/products/ca-spectrum.html. Tested on CA
+        Spectrum 9.4.2, 10.1.1 and 10.2.1
+
+  * This module is maintained by The Ansible Community
+OPTIONS (= is mandatory):
+
+- agentport
+        UDP port used for SNMP discovery.
+        [Default: 161]
+
+- community
+        SNMP community used for device discovery.
+        Required when `state=present'.
+        [Default: (null)]
+
+= device
+        IP address of the device.
+        If a hostname is given, it will be resolved to the IP address.
+        (Aliases: host, name)
+
+= landscape
+        Landscape handle of the SpectroServer to which add or remove the device.
+
+
+- state
+        On `present' creates the device when it does not exist.
+        On `absent' removes the device when it exists.
+        (Choices: present, absent)[Default: present]
+
+= url
+        HTTP, HTTPS URL of the Oneclick server in the form (http|https)://host.domain[:port]
+        (Aliases: oneclick_url)
+
+= url_password
+        Oneclick user password.
+        (Aliases: oneclick_password)
+
+= url_username
+        Oneclick user name.
+        (Aliases: oneclick_user)
+
+- use_proxy
+        if `no', it will not use a proxy, even if one is defined in an environment variable on the target hosts.
+        [Default: yes]
+        type: bool
+
+- validate_certs
+        If `no', SSL certificates will not be validated. This should only be used on personally controlled sites using self-signed
+        certificates.
+        [Default: yes]
+        type: bool
+
+
+NOTES:
+      * The devices will be created inside the `Universe' container of the specified landscape.
+      * All the operations will be performed only on the specified landscape.
+
+
+AUTHOR: Renato Orgito (@orgito)
+        METADATA:
+          status:
+          - preview
+          supported_by: community
+        
+
+EXAMPLES:
+
+- name: Add device to CA Spectrum
+  local_action:
+    module: spectrum_device
+    device: '{{ ansible_host }}'
+    community: secret
+    landscape: '0x100000'
+    oneclick_url: http://oneclick.example.com:8080
+    oneclick_user: username
+    oneclick_password: password
+    state: present
+
+
+- name: Remove device from CA Spectrum
+  local_action:
+    module: spectrum_device
+    device: '{{ ansible_host }}'
+    landscape: '{{ landscape_handle }}'
+    oneclick_url: http://oneclick.example.com:8080
+    oneclick_user: username
+    oneclick_password: password
+    use_proxy: no
+    state: absent
+
+
+RETURN VALUES:
+
+device:
+  description: device data when state = present
+  returned: success
+  type: dict
+  sample: {'model_handle': '0x1007ab', 'landscape': '0x100000', 'address': '10.10.5.1'}
+

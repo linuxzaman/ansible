@@ -1,0 +1,43 @@
+EXAMPLES:
+
+# Get Plug status for all ports
+- name: Get the Plug status for ALL ports of a WTI device
+  cpm_plugcontrol:
+    cpm_action: "getplugcontrol"
+    cpm_url: "rest.wti.com"
+    cpm_username: "restpower"
+    cpm_password: "restfulpowerpass12"
+    use_https: true
+    validate_certs: true
+    plug_id: "all"
+
+# Get Plug status for port 2
+- name: Get the Plug status for the given port of a WTI device
+  cpm_plugcontrol:
+    cpm_action: "getplugcontrol"
+    cpm_url: "rest.wti.com"
+    cpm_username: "restpower"
+    cpm_password: "restfulpowerpass12"
+    use_https: true
+    validate_certs: false
+    plug_id: "2"
+
+# Reboot plug 5
+- name: Reboot Plug 5 on a given WTI device
+  cpm_plugcontrol:
+    cpm_action: "setplugcontrol"
+    cpm_url: "rest.wti.com"
+    cpm_username: "restpower"
+    cpm_password: "restfulpowerpass12"
+    use_https: true
+    plug_id: "5"
+    plug_state: "boot"
+
+
+RETURN VALUES:
+
+data:
+    description: The output JSON returned from the commands sent
+    returned: always
+    type: str
+

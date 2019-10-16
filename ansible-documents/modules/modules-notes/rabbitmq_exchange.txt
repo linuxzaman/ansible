@@ -1,0 +1,110 @@
+> RABBITMQ_EXCHANGE    (/usr/lib/python2.7/dist-packages/ansible/modules/messaging/rabbitmq/rabbitmq_exchange.py)
+
+        This module uses rabbitMQ Rest API to create/delete exchanges
+
+  * This module is maintained by The Ansible Community
+OPTIONS (= is mandatory):
+
+- arguments
+        extra arguments for exchange. If defined this argument is a key/value dictionary
+        [Default: {}]
+
+- auto_delete
+        if the exchange should delete itself after all queues/exchanges unbound from it
+        [Default: False]
+        type: bool
+
+- ca_cert
+        CA certificate to verify SSL connection to management API.
+        (Aliases: cacert)[Default: (null)]
+        type: path
+        version_added: 2.3
+
+- client_cert
+        Client certificate to send on SSL connections to management API.
+        (Aliases: cert)[Default: (null)]
+        type: path
+        version_added: 2.3
+
+- client_key
+        Private key matching the client certificate.
+        (Aliases: key)[Default: (null)]
+        type: path
+        version_added: 2.3
+
+- durable
+        whether exchange is durable or not
+        [Default: True]
+        type: bool
+
+- exchange_type
+        type for the exchange
+        (Aliases: type)(Choices: fanout, direct, headers, topic)[Default: direct]
+
+- internal
+        exchange is available only for other exchanges
+        [Default: False]
+        type: bool
+
+- login_host
+        RabbitMQ host for connection.
+        [Default: localhost]
+        type: str
+
+- login_password
+        RabbitMQ password for connection.
+        [Default: (null)]
+        type: str
+
+- login_port
+        RabbitMQ management API port.
+        [Default: 15672]
+        type: str
+
+- login_protocol
+        RabbitMQ management API protocol.
+        (Choices: http, https)[Default: http]
+        type: str
+        version_added: 2.3
+
+- login_user
+        RabbitMQ user for connection.
+        [Default: guest]
+        type: str
+
+= name
+        Name of the exchange to create
+
+
+- state
+        Whether the exchange should be present or absent
+        (Choices: present, absent)[Default: present]
+
+- vhost
+        RabbitMQ virtual host.
+        [Default: /]
+        type: str
+
+
+REQUIREMENTS:  requests >= 1.0.0
+
+AUTHOR: Manuel Sousa (@manuel-sousa)
+        METADATA:
+          status:
+          - preview
+          supported_by: community
+        
+
+EXAMPLES:
+
+# Create direct exchange
+- rabbitmq_exchange:
+    name: directExchange
+
+# Create topic exchange on vhost
+- rabbitmq_exchange:
+    name: topicExchange
+    type: topic
+    vhost: myVhost
+
+

@@ -1,0 +1,223 @@
+EXAMPLES:
+
+- name: Create a new rule in the foo firewall policy
+  bigip_firewall_rule:
+    name: foo
+    parent_policy: policy1
+    protocol: tcp
+    source:
+      - address: 1.2.3.4
+      - address: "::1"
+      - address_list: foo-list1
+      - address_range: 1.1.1.1-2.2.2.2
+      - vlan: vlan1
+      - country: US
+      - port: 22
+      - port_list: port-list1
+      - port_range: 80-443
+    destination:
+      - address: 1.2.3.4
+      - address: "::1"
+      - address_list: foo-list1
+      - address_range: 1.1.1.1-2.2.2.2
+      - country: US
+      - port: 22
+      - port_list: port-list1
+      - port_range: 80-443
+    irule: irule1
+    action: accept
+    logging: yes
+    provider:
+      password: secret
+      server: lb.mydomain.com
+      user: admin
+  delegate_to: localhost
+
+- name: Create an ICMP specific rule
+  bigip_firewall_rule:
+    name: foo
+    protocol: icmp
+    icmp_message:
+      type: 0
+    source:
+      - country: US
+    action: drop
+    logging: yes
+    provider:
+      password: secret
+      server: lb.mydomain.com
+      user: admin
+  delegate_to: localhost
+
+- name: Add a new rule that is uses an existing rule list
+  bigip_firewall_rule:
+    name: foo
+    rule_list: rule-list1
+    provider:
+      password: secret
+      server: lb.mydomain.com
+      user: admin
+  delegate_to: localhost
+
+
+RETURN VALUES:
+
+name:
+  description: Name of the rule.
+  returned: changed
+  type: str
+  sample: FooRule
+parent_policy:
+  description: The policy which contains the rule to be managed.
+  returned: changed
+  type: str
+  sample: FooPolicy
+parent_rule_list:
+  description: The rule list which contains the rule to be managed.
+  returned: changed
+  type: str
+  sample: FooRuleList
+action:
+  description: The action for the firewall rule.
+  returned: changed
+  type: str
+  sample: drop
+status:
+  description: The activity state of the rule or rule list.
+  returned: changed
+  type: str
+  sample: scheduled
+schedule:
+  description: The schedule for the firewall rule.
+  returned: changed
+  type: str
+  sample: Foo_schedule
+description:
+  description: The rule description.
+  returned: changed
+  type: str
+  sample: MyRule
+irule:
+  description: The iRule that is applied to the firewall rule.
+  returned: changed
+  type: str
+  sample: _sys_auth_radius
+protocol:
+  description: The protocol to which the rule applies.
+  returned: changed
+  type: str
+  sample: any
+source:
+  description: The packet sources to which the rule applies
+  returned: changed
+  type: complex
+  contains:
+    address:
+      description: A specific IP address.
+      returned: changed
+      type: str
+      sample: 192.168.1.1
+    address_list:
+      description: An existing address list.
+      returned: changed
+      type: str
+      sample: foo-list1
+    address_range:
+      description: The address range.
+      returned: changed
+      type: str
+      sample: 1.1.1.1-2.2.2.2
+    country:
+      description: A country code.
+      returned: changed
+      type: str
+      sample: US
+    port:
+      description: Single numeric port.
+      returned: changed
+      type: int
+      sample: 8080
+    port_list:
+      description: An existing port list.
+      returned: changed
+      type: str
+      sample: port-list1
+    port_range:
+      description: The port range.
+      returned: changed
+      type: str
+      sample: 80-443
+    vlan:
+      description: Source VLANs for the packets.
+      returned: changed
+      type: str
+      sample: vlan1
+  sample: hash/dictionary of values
+destination:
+  description: The packet destinations to which the rule applies.
+  returned: changed
+  type: complex
+  contains:
+    address:
+      description: A specific IP address.
+      returned: changed
+      type: str
+      sample: 192.168.1.1
+    address_list:
+      description: An existing address list.
+      returned: changed
+      type: str
+      sample: foo-list1
+    address_range:
+      description: The address range.
+      returned: changed
+      type: str
+      sample: 1.1.1.1-2.2.2.2
+    country:
+      description: A country code.
+      returned: changed
+      type: str
+      sample: US
+    port:
+      description: Single numeric port.
+      returned: changed
+      type: int
+      sample: 8080
+    port_list:
+      description: An existing port list.
+      returned: changed
+      type: str
+      sample: port-list1
+    port_range:
+      description: The port range.
+      returned: changed
+      type: str
+      sample: 80-443
+  sample: hash/dictionary of values
+logging:
+  description: Enable or Disable logging for the firewall rule.
+  returned: changed
+  type: bool
+  sample: yes
+rule_list:
+  description: An existing rule list to use in the rule.
+  returned: changed
+  type: str
+  sample: rule-list-1
+icmp_message:
+  description: The (ICMP) or ICMPv6 message C(type) and C(code) that the rule uses.
+  returned: changed
+  type: complex
+  contains:
+    type:
+      description: The type of ICMP message.
+      returned: changed
+      type: str
+      sample: 0
+    code:
+      description: The code returned in response to the specified ICMP message type.
+      returned: changed
+      type: str
+      sample: 1
+  sample: hash/dictionary of values
+

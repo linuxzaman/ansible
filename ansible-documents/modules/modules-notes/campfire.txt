@@ -1,0 +1,54 @@
+> CAMPFIRE    (/usr/lib/python2.7/dist-packages/ansible/modules/notification/campfire.py)
+
+        Send a message to Campfire. Messages with newlines will result in a "Paste" message being sent.
+
+  * This module is maintained by The Ansible Community
+OPTIONS (= is mandatory):
+
+= msg
+        The message body.
+
+
+- notify
+        Send a notification sound before the message.
+        (Choices: 56k, bell, bezos, bueller, clowntown, cottoneyejoe, crickets, dadgummit, dangerzone, danielsan, deeper, drama,
+        greatjob, greyjoy, guarantee, heygirl, horn, horror, inconceivable, live, loggins, makeitso, noooo, nyan, ohmy, ohyeah, pushit,
+        rimshot, rollout, rumble, sax, secret, sexyback, story, tada, tmyk, trololo, trombone, unix, vuvuzela, what, whoomp, yeah,
+        yodel)[Default: (null)]
+
+= room
+        Room number to which the message should be sent.
+
+
+= subscription
+        The subscription name to use.
+
+
+= token
+        API token.
+
+
+
+AUTHOR: Adam Garside (@fabulops)
+        METADATA:
+          status:
+          - preview
+          supported_by: community
+        
+
+EXAMPLES:
+
+- campfire:
+    subscription: foo
+    token: 12345
+    room: 123
+    msg: Task completed.
+
+- campfire:
+    subscription: foo
+    token: 12345
+    room: 123
+    notify: loggins
+    msg: Task completed ... with feeling.
+
+

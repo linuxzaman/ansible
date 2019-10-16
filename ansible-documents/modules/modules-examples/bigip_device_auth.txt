@@ -1,0 +1,63 @@
+EXAMPLES:
+
+- name: Set the system auth to TACACS+, default server port
+  bigip_device_auth:
+    type: tacacs
+    authentication: use-all-servers
+    protocol_name: ip
+    secret: secret
+    servers:
+      - 10.10.10.10
+      - 10.10.10.11
+    service_name: ppp
+    state: present
+    use_for_auth: yes
+    provider:
+      password: secret
+      server: lb.mydomain.com
+      user: admin
+  delegate_to: localhost
+
+- name: Set the system auth to TACACS+, override server port
+  bigip_device_auth:
+    type: tacacs
+    authentication: use-all-servers
+    protocol_name: ip
+    secret: secret
+    servers:
+      - address: 10.10.10.10
+        port: 1234
+      - 10.10.10.11
+    service_name: ppp
+    use_for_auth: yes
+    state: present
+    provider:
+      password: secret
+      server: lb.mydomain.com
+      user: admin
+  delegate_to: localhost
+
+
+RETURN VALUES:
+
+servers:
+  description: List of servers used in TACACS authentication.
+  returned: changed
+  type: list
+  sample: ['1.2.2.1', '4.5.5.4']
+authentication:
+  description: Process the system uses to serve authentication requests when using TACACS.
+  returned: changed
+  type: str
+  sample: use-all-servers
+service_name:
+  description: Name of the service the user is requesting to be authorized to use.
+  returned: changed
+  type: str
+  sample: ppp
+protocol_name:
+  description: Name of the protocol associated with C(service_name) used for client authentication.
+  returned: changed
+  type: str
+  sample: ip
+

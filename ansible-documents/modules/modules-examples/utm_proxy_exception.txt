@@ -1,0 +1,79 @@
+EXAMPLES:
+
+- name: Create UTM proxy_exception
+  utm_proxy_exception:
+    utm_host: sophos.host.name
+    utm_token: abcdefghijklmno1234
+    name: TestExceptionEntry
+    backend: REF_OBJECT_STRING
+    state: present
+
+- name: Remove UTM proxy_exception
+  utm_proxy_exception:
+    utm_host: sophos.host.name
+    utm_token: abcdefghijklmno1234
+    name: TestExceptionEntry
+    state: absent
+
+
+RETURN VALUES:
+
+result:
+    description: The utm object that was created
+    returned: success
+    type: complex
+    contains:
+        _ref:
+            description: The reference name of the object
+            type: string
+        _locked:
+            description: Whether or not the object is currently locked
+            type: boolean
+        _type:
+            description: The type of the object
+            type: string
+        name:
+            description: The name of the object
+            type: string
+        comment:
+            description: The optional comment string
+        op:
+            description: The operand to be used with the entries of the path parameter
+            type: string
+        path:
+            description: The paths the exception in the reverse proxy is defined for
+            type: array
+        skip_custom_threats_filters:
+            description: A list of threats to be skipped
+            type: array
+        skip_threats_filter_categories:
+            description: Define which categories of threats are skipped
+            type: array
+        skipav:
+            description: Skip the Antivirus Scanning
+            type: bool
+        skipbadclients:
+            description: Block clients with bad reputation
+            type: bool
+        skipcookie:
+            description: Skip the Cookie Signing check
+            type: bool
+        skipform:
+            description: Enable form hardening
+            type: bool
+        skipform_missingtoken:
+            description: Enable form hardening with missing tokens
+            type: bool
+        skiphtmlrewrite:
+            description: Protection against SQL
+            type: bool
+        skiptft:
+            description: Enable true file type control
+            type: bool
+        skipurl:
+            description: Enable static URL hardening
+            type: bool
+        source:
+            description: Define which categories of threats are skipped
+            type: array
+

@@ -1,0 +1,36 @@
+EXAMPLES:
+
+- name: Create interface
+      na_ontap_interface:
+        state: present
+        interface_name: data2
+        home_port: e0d
+        home_node: laurentn-vsim1
+        role: data
+        protocols: nfs
+        admin_status: up
+        failover_policy: local-only
+        firewall_policy: mgmt
+        is_auto_revert: true
+        address: 10.10.10.10
+        netmask: 255.255.255.0
+        force_subnet_association: false
+        vserver: svm1
+        hostname: "{{ netapp_hostname }}"
+        username: "{{ netapp_username }}"
+        password: "{{ netapp_password }}"
+
+    - name: Delete interface
+      na_ontap_interface:
+        state: absent
+        interface_name: data2
+        vserver: svm1
+        hostname: "{{ netapp_hostname }}"
+        username: "{{ netapp_username }}"
+        password: "{{ netapp_password }}"
+
+
+RETURN VALUES:
+
+
+

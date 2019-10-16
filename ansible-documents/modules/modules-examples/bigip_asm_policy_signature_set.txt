@@ -1,0 +1,51 @@
+EXAMPLES:
+
+- name: Add Signature Set to ASM Policy
+  bigip_asm_policy_signature_set:
+    name: IIS and Windows Signatures
+    policy_name: FooPolicy
+    provider:
+      password: secret
+      server: lb.mydomain.com
+      user: admin
+  delegate_to: localhost
+- name: Remove Signature Set to ASM Policy
+  bigip_asm_policy_signature_set:
+    name: IIS and Windows Signatures
+    policy_name: FooPolicy
+    state: absent
+    provider:
+      password: secret
+      server: lb.mydomain.com
+      user: admin
+  delegate_to: localhost
+
+
+RETURN VALUES:
+
+policy_name:
+  description: The name of the ASM policy
+  returned: changed
+  type: str
+  sample: FooPolicy
+name:
+  description: The name of Signature Set added/removed on ASM policy
+  returned: changed
+  type: str
+  sample: Cisco Signatures
+alarm:
+  description: Specifies whether the security policy logs the request data in the Statistics screen
+  returned: changed
+  type: bool
+  sample: yes
+block:
+  description: Determines how the system treats requests that match a signature included in the signature set
+  returned: changed
+  type: bool
+  sample: no
+learn:
+  description: Specifies if the policy learns all requests that match a signature that is included in the signature set
+  returned: changed
+  type: bool
+  sample: yes
+

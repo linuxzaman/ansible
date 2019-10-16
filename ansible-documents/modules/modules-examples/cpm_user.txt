@@ -1,0 +1,66 @@
+EXAMPLES:
+
+# Get User Parameters
+- name: Get the User Parameters for the given user of a WTI device
+  cpm_user:
+    cpm_action: "getuser"
+    cpm_url: "rest.wti.com"
+    cpm_username: "restuser"
+    cpm_password: "restfuluserpass12"
+    use_https: true
+    validate_certs: true
+    user_name: "usernumberone"
+
+# Create User
+- name: Create a User on a given WTI device
+  cpm_user:
+    cpm_action: "adduser"
+    cpm_url: "rest.wti.com"
+    cpm_username: "restuser"
+    cpm_password: "restfuluserpass12"
+    use_https: true
+    validate_certs: false
+    user_name: "usernumberone"
+    user_pass: "complicatedpassword"
+    user_accesslevel: 2
+    user_accessssh: 1
+    user_accessserial: 1
+    user_accessweb: 0
+    user_accessapi: 1
+    user_accessmonitor: 0
+    user_accessoutbound: 0
+    user_portaccess: "10011111"
+    user_plugaccess: "00000111"
+    user_groupaccess: "00000000"
+
+# Edit User
+- name: Edit a User on a given WTI device
+  cpm_user:
+    cpm_action: "edituser"
+    cpm_url: "rest.wti.com"
+    cpm_username: "restuser"
+    cpm_password: "restfuluserpass12"
+    use_https: true
+    validate_certs: false
+    user_name: "usernumberone"
+    user_pass: "newpasswordcomplicatedpassword"
+
+# Delete User
+- name: Delete a User from a given WTI device
+  cpm_user:
+    cpm_action: "deleteuser"
+    cpm_url: "rest.wti.com"
+    cpm_username: "restuser"
+    cpm_password: "restfuluserpass12"
+    use_https: true
+    validate_certs: true
+    user_name: "usernumberone"
+
+
+RETURN VALUES:
+
+data:
+    description: The output JSON returned from the commands sent
+    returned: always
+    type: str
+

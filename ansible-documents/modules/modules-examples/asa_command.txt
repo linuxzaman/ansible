@@ -1,0 +1,43 @@
+EXAMPLES:
+
+---
+- name: "Show the ASA version"
+  asa_command:
+    commands:
+      - show version
+
+- name: "Show ASA drops and memory"
+  asa_command:
+    commands:
+      - show asp drop
+      - show memory
+
+- name: "Send repeat pings and wait for the result to pass 100%"
+  asa_command:
+    commands:
+      - ping 8.8.8.8 repeat 20 size 350
+    wait_for:
+      - result[0] contains 100
+    retries: 2
+
+
+RETURN VALUES:
+
+stdout:
+  description: the set of responses from the commands
+  returned: always
+  type: list
+  sample: ['...', '...']
+
+stdout_lines:
+  description: The value of stdout split into a list
+  returned: always
+  type: list
+  sample: [['...', '...'], ['...'], ['...']]
+
+failed_conditions:
+  description: the conditionals that failed
+  returned: failed
+  type: list
+  sample: ['...', '...']
+

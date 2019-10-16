@@ -1,0 +1,165 @@
+> NETBOX_DEVICE    (/usr/lib/python2.7/dist-packages/ansible/modules/net_tools/netbox/netbox_device.py)
+
+        Creates, updates or removes devices from Netbox
+
+  * This module is maintained by The Ansible Community
+OPTIONS (= is mandatory):
+
+= data
+        Defines the device configuration
+
+        suboptions:
+          asset_tag:
+            description:
+            - Asset tag that is associated to the device
+          cluster:
+            description:
+            - Cluster that the device will be assigned to
+          comments:
+            description:
+            - Comments that may include additional information in regards to the device
+          custom_fields:
+            description:
+            - must exist in Netbox
+          device_role:
+            description:
+            - Required if `state=present' and the device does not exist yet
+          device_type:
+            description:
+            - Required if `state=present' and the device does not exist yet
+          face:
+            description:
+            - Required if `rack' is defined
+          name:
+            description:
+            - The name of the device
+            required: true
+          platform:
+            description:
+            - The platform of the device
+          position:
+            description:
+            - The position of the device in the rack defined above
+          rack:
+            description:
+            - The name of the rack to assign the device to
+          serial:
+            description:
+            - Serial number of the device
+          site:
+            description:
+            - Required if `state=present' and the device does not exist yet
+          status:
+            choices:
+            - Active
+            - Offline
+            - Planned
+            - Staged
+            - Failed
+            - Inventory
+            description:
+            - The status of the device
+          tags:
+            description:
+            - Any tags that the device may need to be associated with
+          tenant:
+            description:
+            - The tenant that the device will be assigned to
+        
+
+= netbox_token
+        The token created within Netbox to authorize API access
+
+
+= netbox_url
+        URL of the Netbox instance resolvable by Ansible control host
+
+
+- state
+        Use `present' or `absent' for adding or removing.
+        (Choices: absent, present)[Default: present]
+
+- validate_certs
+        If `no', SSL certificates will not be validated. This should only be used on personally controlled sites using self-signed
+        certificates.
+        [Default: yes]
+        type: bool
+
+
+NOTES:
+      * Tags should be defined as a YAML list
+      * This should be ran with connection `local' and hosts `localhost'
+
+
+REQUIREMENTS:  pynetbox
+
+AUTHOR: Mikhail Yohman (@FragmentedPacket), David Gomez (@amb1s1)
+        METADATA:
+          status:
+          - preview
+          supported_by: community
+        
+
+EXAMPLES:
+
+- name: "Test Netbox modules"
+  connection: local
+  hosts: localhost
+  gather_facts: False
+
+  tasks:
+    - name: Create device within Netbox with only required information
+      netbox_device:
+        netbox_url: http://netbox.local
+        netbox_token: thisIsMyToken
+        data:
+          name: Test Device
+          device_type: C9410R
+          device_role: Core Switch
+          site: Main
+        state: present
+
+    - name: Delete device within netbox
+      netbox_device:
+        netbox_url: http://netbox.local
+        netbox_token: thisIsMyToken
+        data:
+          name: Test Device
+        state: absent
+
+    - name: Create device with tags
+      netbox_device:
+        netbox_url: http://netbox.local
+        netbox_token: thisIsMyToken
+        data:
+          name: Another Test Device
+          device_type: C9410R
+          device_role: Core Switch
+          site: Main
+          tags:
+            - Schnozzberry
+        state: present
+
+    - name: Update the rack and position of an existing device
+      netbox_device:
+        netbox_url: http://netbox.local
+        netbox_token: thisIsMyToken
+        data:
+          name: Test Device
+          rack: Test Rack
+          position: 10
+          face: Front
+        state: present
+
+
+RETURN VALUES:
+
+device:
+  description: Serialized object as created or already existent within Netbox
+  returned: success (when I(state=present))
+  type: dict
+msg:
+  description: Message indicating failure or info about what has been achieved
+  returned: always
+  type: str
+

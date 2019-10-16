@@ -1,0 +1,46 @@
+EXAMPLES:
+
+tasks:
+  - name: run command on remote devices
+    routeros_command:
+      commands: /system routerboard print
+
+  - name: run command and check to see if output contains routeros
+    routeros_command:
+      commands: /system resource print
+      wait_for: result[0] contains MikroTik
+
+  - name: run multiple commands on remote nodes
+    routeros_command:
+      commands:
+        - /system routerboard print
+        - /system identity print
+
+  - name: run multiple commands and evaluate the output
+    routeros_command:
+      commands:
+        - /system routerboard print
+        - /interface ethernet print
+      wait_for:
+        - result[0] contains x86
+        - result[1] contains ether1
+
+
+RETURN VALUES:
+
+stdout:
+  description: The set of responses from the commands
+  returned: always apart from low level errors (such as action plugin)
+  type: list
+  sample: ['...', '...']
+stdout_lines:
+  description: The value of stdout split into a list
+  returned: always apart from low level errors (such as action plugin)
+  type: list
+  sample: [['...', '...'], ['...'], ['...']]
+failed_conditions:
+  description: The list of conditionals that have failed
+  returned: failed
+  type: list
+  sample: ['...', '...']
+

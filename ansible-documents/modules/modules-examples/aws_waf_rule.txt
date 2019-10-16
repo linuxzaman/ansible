@@ -1,0 +1,65 @@
+EXAMPLES:
+
+- name: create WAF rule
+    aws_waf_rule:
+      name: my_waf_rule
+      conditions:
+        - name: my_regex_condition
+          type: regex
+          negated: no
+        - name: my_geo_condition
+          type: geo
+          negated: no
+        - name: my_byte_condition
+          type: byte
+          negated: yes
+
+  - name: remove WAF rule
+    aws_waf_rule:
+      name: "my_waf_rule"
+      state: absent
+
+
+RETURN VALUES:
+
+rule:
+  description: WAF rule contents
+  returned: always
+  type: complex
+  contains:
+    metric_name:
+      description: Metric name for the rule
+      returned: always
+      type: str
+      sample: ansibletest1234rule
+    name:
+      description: Friendly name for the rule
+      returned: always
+      type: str
+      sample: ansible-test-1234_rule
+    predicates:
+      description: List of conditions used in the rule
+      returned: always
+      type: complex
+      contains:
+        data_id:
+          description: ID of the condition
+          returned: always
+          type: str
+          sample: 8251acdb-526c-42a8-92bc-d3d13e584166
+        negated:
+          description: Whether the sense of the condition is negated
+          returned: always
+          type: bool
+          sample: false
+        type:
+          description: type of the condition
+          returned: always
+          type: str
+          sample: ByteMatch
+    rule_id:
+      description: ID of the WAF rule
+      returned: always
+      type: str
+      sample: 15de0cbc-9204-4e1f-90e6-69b2f415c261
+

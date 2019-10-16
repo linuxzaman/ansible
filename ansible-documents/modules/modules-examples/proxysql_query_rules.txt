@@ -1,0 +1,77 @@
+EXAMPLES:
+
+---
+# This example adds a rule to redirect queries from a specific user to another
+# hostgroup, it saves the mysql query rule config to disk, but avoids loading
+# the mysql query config config to runtime (this might be because several
+# rules are being added and the user wants to push the config to runtime in a
+# single batch using the M(proxysql_manage_config) module). It uses supplied
+# credentials to connect to the proxysql admin interface.
+
+- proxysql_query_rules:
+    login_user: admin
+    login_password: admin
+    username: 'guest_ro'
+    match_pattern: "^SELECT.*"
+    destination_hostgroup: 1
+    active: 1
+    retries: 3
+    state: present
+    load_to_runtime: False
+
+# This example removes all rules that use the username 'guest_ro', saves the
+# mysql query rule config to disk, and dynamically loads the mysql query rule
+# config to runtime.  It uses credentials in a supplied config file to connect
+# to the proxysql admin interface.
+
+- proxysql_query_rules:
+    config_file: '~/proxysql.cnf'
+    username: 'guest_ro'
+    state: absent
+    force_delete: true
+
+
+RETURN VALUES:
+
+stdout:
+    description: The mysql user modified or removed from proxysql
+    returned: On create/update will return the newly modified rule, in all
+              other cases will return a list of rules that match the supplied
+              criteria.
+    type: dict
+    "sample": {
+        "changed": true,
+        "msg": "Added rule to mysql_query_rules",
+        "rules": [
+            {
+                "active": "0",
+                "apply": "0",
+                "cache_ttl": null,
+                "client_addr": null,
+                "comment": null,
+                "delay": null,
+                "destination_hostgroup": 1,
+                "digest": null,
+                "error_msg": null,
+                "flagIN": "0",
+                "flagOUT": null,
+                "log": null,
+                "match_digest": null,
+                "match_pattern": null,
+                "mirror_flagOUT": null,
+                "mirror_hostgroup": null,
+                "negate_match_pattern": "0",
+                "proxy_addr": null,
+                "proxy_port": null,
+                "reconnect": null,
+                "replace_pattern": null,
+                "retries": null,
+                "rule_id": "1",
+                "schemaname": null,
+                "timeout": null,
+                "username": "guest_ro"
+            }
+        ],
+        "state": "present"
+    }
+

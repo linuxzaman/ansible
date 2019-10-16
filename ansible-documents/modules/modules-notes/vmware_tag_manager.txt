@@ -1,0 +1,150 @@
+> VMWARE_TAG_MANAGER    (/usr/lib/python2.7/dist-packages/ansible/modules/cloud/vmware/vmware_tag_manager.py)
+
+        This module can be used to assign / remove VMware tags from the given VMware objects. Tag feature is introduced in vSphere 6
+        version, so this module is not supported in the earlier versions of vSphere. All variables and VMware object names are case
+        sensitive.
+
+  * This module is maintained by The Ansible Community
+OPTIONS (= is mandatory):
+
+- hostname
+        The hostname or IP address of the vSphere vCenter server.
+        If the value is not specified in the task, the value of environment variable `VMWARE_HOST' will be used instead.
+        [Default: (null)]
+        type: str
+
+= object_name
+        Name of the object to work with.
+        For DistributedVirtualPortgroups the format should be "switch_name:portgroup_name"
+
+
+= object_type
+        Type of object to work with.
+        (Choices: VirtualMachine, Datacenter, ClusterComputeResource, HostSystem, DistributedVirtualSwitch, DistributedVirtualPortgroup)
+
+- password
+        The password of the vSphere vCenter server.
+        If the value is not specified in the task, the value of environment variable `VMWARE_PASSWORD' will be used instead.
+        (Aliases: pass, pwd)[Default: (null)]
+        type: str
+
+- protocol
+        The connection to protocol.
+        (Choices: http, https)[Default: https]
+        type: str
+
+- state
+        If `state' is set to `add' or `present' will add the tags to the existing tag list of the given object.
+        If `state' is set to `remove' or `absent' will remove the tags from the existing tag list of the given object.
+        If `state' is set to `set' will replace the tags of the given objects with the user defined list of tags.
+        (Choices: present, absent, add, remove, set)[Default: add]
+
+= tag_names
+        List of tag(s) to be managed.
+        You can also specify category name by specifying colon separated value. For example, "category_name:tag_name".
+        You can skip category name if you have unique tag names.
+
+
+- username
+        The username of the vSphere vCenter server.
+        If the value is not specified in the task, the value of environment variable `VMWARE_USER' will be used instead.
+        (Aliases: admin, user)[Default: (null)]
+        type: str
+
+- validate_certs
+        Allows connection when SSL certificates are not valid.
+        Set to `no' when certificates are not trusted.
+        If the value is not specified in the task, the value of environment variable `VMWARE_VALIDATE_CERTS' will be used instead.
+        [Default: True]
+        type: bool
+
+
+NOTES:
+      * Tested on vSphere 6.5
+
+
+REQUIREMENTS:  python >= 2.6, PyVmomi, vSphere Automation SDK, vCloud Suite SDK
+
+AUTHOR: Abhijeet Kasurde (@Akasurde), Frederic Van Reet (@GBrawl)
+        METADATA:
+          status:
+          - preview
+          supported_by: community
+        
+
+EXAMPLES:
+
+- name: Add tags to a virtual machine
+  vmware_tag_manager:
+    hostname: '{{ vcenter_hostname }}'
+    username: '{{ vcenter_username }}'
+    password: '{{ vcenter_password }}'
+    validate_certs: no
+    tag_names:
+      - Sample_Tag_0002
+      - Category_0001:Sample_Tag_0003
+    object_name: Fedora_VM
+    object_type: VirtualMachine
+    state: add
+  delegate_to: localhost
+
+- name: Remove a tag from a virtual machine
+  vmware_tag_manager:
+    hostname: '{{ vcenter_hostname }}'
+    username: '{{ vcenter_username }}'
+    password: '{{ vcenter_password }}'
+    validate_certs: no
+    tag_names:
+      - Sample_Tag_0002
+    object_name: Fedora_VM
+    object_type: VirtualMachine
+    state: remove
+  delegate_to: localhost
+
+- name: Add tags to a distributed virtual switch
+  vmware_tag_manager:
+    hostname: '{{ vcenter_hostname }}'
+    username: '{{ vcenter_username }}'
+    password: '{{ vcenter_password }}'
+    validate_certs: no
+    tag_names:
+      - Sample_Tag_0003
+    object_name: Switch_0001
+    object_type: DistributedVirtualSwitch
+    state: add
+  delegate_to: localhost
+
+- name: Add tags to a distributed virtual portgroup
+  vmware_tag_manager:
+    hostname: '{{ vcenter_hostname }}'
+    username: '{{ vcenter_username }}'
+    password: '{{ vcenter_password }}'
+    validate_certs: no
+    tag_names:
+      - Sample_Tag_0004
+    object_name: Switch_0001:Portgroup_0001
+    object_type: DistributedVirtualPortgroup
+    state: add
+  delegate_to: localhost
+
+
+RETURN VALUES:
+
+tag_status:
+    description: metadata about tags related to object configuration
+    returned: on success
+    type: list
+    sample: {
+        "current_tags": [
+            "backup",
+            "security"
+        ],
+        "desired_tags": [
+            "security"
+        ],
+        "previous_tags": [
+            "backup",
+            "security"
+        ]
+    }
+

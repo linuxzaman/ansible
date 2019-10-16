@@ -1,0 +1,176 @@
+> ROUTE53_ZONE    (/usr/lib/python2.7/dist-packages/ansible/modules/cloud/amazon/route53_zone.py)
+
+        Creates and deletes Route53 private and public zones
+
+  * This module is maintained by The Ansible Community
+OPTIONS (= is mandatory):
+
+- aws_access_key
+        AWS access key. If not set then the value of the AWS_ACCESS_KEY_ID, AWS_ACCESS_KEY or EC2_ACCESS_KEY environment variable is
+        used.
+        (Aliases: ec2_access_key, access_key)[Default: (null)]
+        type: str
+
+- aws_secret_key
+        AWS secret key. If not set then the value of the AWS_SECRET_ACCESS_KEY, AWS_SECRET_KEY, or EC2_SECRET_KEY environment variable is
+        used.
+        (Aliases: ec2_secret_key, secret_key)[Default: (null)]
+        type: str
+
+- comment
+        Comment associated with the zone
+        [Default: ]
+
+- debug_botocore_endpoint_logs
+        Use a botocore.endpoint logger to parse the unique (rather than total) "resource:action" API calls made during a task, outputing
+        the set to the resource_actions key in the task results. Use the aws_resource_action callback to output to total list made during
+        a playbook. The ANSIBLE_DEBUG_BOTOCORE_LOGS environment variable may also be used.
+        [Default: no]
+        type: bool
+        version_added: 2.8
+
+- delegation_set_id
+        The reusable delegation set ID to be associated with the zone. Note that you can't associate a reusable delegation set with a
+        private hosted zone.
+        [Default: (null)]
+        version_added: 2.6
+        
+
+- ec2_url
+        Url to use to connect to EC2 or your Eucalyptus cloud (by default the module will use EC2 endpoints). Ignored for modules where
+        region is required. Must be specified for all other modules if region is not used. If not set then the value of the EC2_URL
+        environment variable, if any, is used.
+        [Default: (null)]
+        type: str
+
+- hosted_zone_id
+        The unique zone identifier you want to delete or "all" if there are many zones with the same domain name. Required if there are
+        multiple zones identified with the above options
+        [Default: (null)]
+        version_added: 2.4
+        
+
+- profile
+        Uses a boto profile. Only works with boto >= 2.24.0.
+        [Default: (null)]
+        type: str
+        version_added: 1.6
+
+- region
+        The AWS region to use. If not specified then the value of the AWS_REGION or EC2_REGION environment variable, if any, is used. See
+        http://docs.aws.amazon.com/general/latest/gr/rande.html#ec2_region
+        (Aliases: aws_region, ec2_region)[Default: (null)]
+        type: str
+
+- security_token
+        AWS STS security token. If not set then the value of the AWS_SECURITY_TOKEN or EC2_SECURITY_TOKEN environment variable is used.
+        (Aliases: access_token)[Default: (null)]
+        type: str
+        version_added: 1.6
+
+- state
+        whether or not the zone should exist or not
+        (Choices: present, absent)[Default: present]
+
+- validate_certs
+        When set to "no", SSL certificates will not be validated for boto versions >= 2.6.0.
+        [Default: True]
+        type: bool
+        version_added: 1.5
+
+- vpc_id
+        The VPC ID the zone should be a part of (if this is going to be a private zone)
+        [Default: (null)]
+
+- vpc_region
+        The VPC Region the zone should be a part of (if this is going to be a private zone)
+        [Default: (null)]
+
+= zone
+        The DNS zone record (eg: foo.com.)
+
+
+
+NOTES:
+      * If parameters are not set within the module, the following environment variables can be used in decreasing order of
+        precedence `AWS_URL' or `EC2_URL', `AWS_ACCESS_KEY_ID' or `AWS_ACCESS_KEY' or `EC2_ACCESS_KEY', `AWS_SECRET_ACCESS_KEY' or
+        `AWS_SECRET_KEY' or `EC2_SECRET_KEY', `AWS_SECURITY_TOKEN' or `EC2_SECURITY_TOKEN', `AWS_REGION' or `EC2_REGION'
+      * Ansible uses the boto configuration file (typically ~/.boto) if no credentials are provided. See
+        https://boto.readthedocs.io/en/latest/boto_config_tut.html
+      * `AWS_REGION' or `EC2_REGION' can be typically be used to specify the AWS region, when required, but this can also be
+        configured in the boto config file
+
+
+REQUIREMENTS:  boto, boto3, python >= 2.6
+
+AUTHOR: Christopher Troup (@minichate)
+        METADATA:
+          status:
+          - stableinterface
+          supported_by: community
+        
+
+EXAMPLES:
+
+- name: create a public zone
+  route53_zone:
+    zone: example.com
+    comment: this is an example
+
+- name: delete a public zone
+  route53_zone:
+    zone: example.com
+    state: absent
+
+- name: create a private zone
+  route53_zone:
+    zone: devel.example.com
+    vpc_id: '{{ myvpc_id }}'
+    vpc_region: us-west-2
+    comment: developer domain
+
+- name: create a public zone associated with a specific reusable delegation set
+  route53_zone:
+    zone: example.com
+    comment: reusable delegation set example
+    delegation_set_id: A1BCDEF2GHIJKL
+
+
+RETURN VALUES:
+
+comment:
+    description: optional hosted zone comment
+    returned: when hosted zone exists
+    type: str
+    sample: "Private zone"
+name:
+    description: hosted zone name
+    returned: when hosted zone exists
+    type: str
+    sample: "private.local."
+private_zone:
+    description: whether hosted zone is private or public
+    returned: when hosted zone exists
+    type: bool
+    sample: true
+vpc_id:
+    description: id of vpc attached to private hosted zone
+    returned: for private hosted zone
+    type: str
+    sample: "vpc-1d36c84f"
+vpc_region:
+    description: region of vpc attached to private hosted zone
+    returned: for private hosted zone
+    type: str
+    sample: "eu-west-1"
+zone_id:
+    description: hosted zone id
+    returned: when hosted zone exists
+    type: str
+    sample: "Z6JQG9820BEFMW"
+delegation_set_id:
+    description: id of the associated reusable delegation set
+    returned: for public hosted zones, if they have been associated with a reusable delegation set
+    type: str
+    sample: "A1BCDEF2GHIJKL"
+

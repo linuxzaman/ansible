@@ -1,0 +1,54 @@
+EXAMPLES:
+
+- name: create a smn topic
+  hwc_smn_topic:
+      identity_endpoint: "{{ identity_endpoint }}"
+      user_name: "{{ user_name }}"
+      password: "{{ password }}"
+      domain_name: "{{ domain_name }}"
+      project_name: "{{ project_name }}"
+      region: "{{ region }}"
+      name: "ansible_smn_topic_test"
+      state: present
+
+
+RETURN VALUES:
+
+create_time:
+    description:
+        - Time when the topic was created.
+    returned: success
+    type: str
+display_name:
+    description:
+        - Topic display name, which is presented as the name of the email
+          sender in an email message. The topic display name contains a
+          maximum of 192 bytes.
+    returned: success
+    type: str
+name:
+    description:
+        - Name of the topic to be created. The topic name is a string of 1
+          to 256 characters. It must contain upper- or lower-case letters,
+          digits, hyphens (-), and underscores C(_), and must start with a
+          letter or digit.
+    returned: success
+    type: str
+push_policy:
+    description:
+        - Message pushing policy. 0 indicates that the message sending
+          fails and the message is cached in the queue. 1 indicates that
+          the failed message is discarded.
+    returned: success
+    type: int
+topic_urn:
+    description:
+        - Resource identifier of a topic, which is unique.
+    returned: success
+    type: str
+update_time:
+    description:
+        - Time when the topic was updated.
+    returned: success
+    type: str
+

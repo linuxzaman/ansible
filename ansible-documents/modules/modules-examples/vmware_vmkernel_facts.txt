@@ -1,0 +1,49 @@
+EXAMPLES:
+
+- name: Gather VMKernel facts about all ESXi Host in given Cluster
+  vmware_vmkernel_facts:
+    hostname: '{{ vcenter_hostname }}'
+    username: '{{ vcenter_username }}'
+    password: '{{ vcenter_password }}'
+    cluster_name: cluster_name
+  delegate_to: localhost
+  register: cluster_host_vmks
+
+- name: Gather VMKernel facts about ESXi Host
+  vmware_vmkernel_facts:
+    hostname: '{{ vcenter_hostname }}'
+    username: '{{ vcenter_username }}'
+    password: '{{ vcenter_password }}'
+    esxi_hostname: '{{ esxi_hostname }}'
+  delegate_to: localhost
+  register: host_vmks
+
+
+RETURN VALUES:
+
+host_vmk_facts:
+    description: metadata about VMKernel present on given host system
+    returned: success
+    type: dict
+    sample:
+        {
+            "10.76.33.208": [
+                {
+                    "device": "vmk0",
+                    "dhcp": true,
+                    "enable_ft": false,
+                    "enable_management": true,
+                    "enable_vmotion": false,
+                    "enable_vsan": false,
+                    "ipv4_address": "10.76.33.28",
+                    "ipv4_subnet_mask": "255.255.255.0",
+                    "key": "key-vim.host.VirtualNic-vmk0",
+                    "mac": "52:54:00:12:50:ce",
+                    "mtu": 1500,
+                    "portgroup": "Management Network",
+                    "stack": "defaultTcpipStack"
+                },
+            ]
+        }
+
+

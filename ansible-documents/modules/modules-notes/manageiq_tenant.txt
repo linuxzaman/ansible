@@ -1,0 +1,182 @@
+> MANAGEIQ_TENANT    (/usr/lib/python2.7/dist-packages/ansible/modules/remote_management/manageiq/manageiq_tenant.py)
+
+        The manageiq_tenant module supports adding, updating and deleting tenants in ManageIQ.
+
+  * This module is maintained by The Ansible Community
+OPTIONS (= is mandatory):
+
+= description
+        The tenant description.
+        [Default: None]
+
+= manageiq_connection
+        ManageIQ connection configuration information.
+
+        suboptions:
+          ca_cert:
+            aliases:
+            - ca_bundle_path
+            description:
+            - The path to a CA bundle file or directory with certificates. defaults to None.
+            type: path
+          password:
+            description:
+            - ManageIQ password. `MIQ_PASSWORD' env var if set. otherwise, required if no
+              token is passed in.
+            type: str
+          token:
+            description:
+            - ManageIQ token. `MIQ_TOKEN' env var if set. otherwise, required if no username
+              or password is passed in.
+            type: str
+          url:
+            description:
+            - ManageIQ environment url. `MIQ_URL' env var if set. otherwise, it is required
+              to pass it.
+            required: true
+            type: str
+          username:
+            description:
+            - ManageIQ username. `MIQ_USERNAME' env var if set. otherwise, required if no
+              token is passed in.
+            type: str
+          validate_certs:
+            aliases:
+            - verify_ssl
+            default: true
+            description:
+            - Whether SSL certificates should be verified for HTTPS requests. defaults to
+              True.
+            type: bool
+        
+        type: dict
+
+= name
+        The tenant name.
+        [Default: None]
+
+- parent
+        The name of the parent tenant. If not supplied and no `parent_id' is supplied the root tenant is used.
+        [Default: None]
+
+- parent_id
+        The id of the parent tenant. If not supplied the root tenant is used.
+        The `parent_id' takes president over `parent' when supplied
+        [Default: None]
+
+- quotas
+        The tenant quotas.
+        All parameters case sensitive.
+        Valid attributes are:
+         - `cpu_allocated' (int): use null to remove the quota.
+         - `mem_allocated' (GB): use null to remove the quota.
+         - `storage_allocated' (GB): use null to remove the quota.
+         - `vms_allocated' (int): use null to remove the quota.
+         - `templates_allocated' (int): use null to remove the quota.
+        [Default: None]
+
+- state
+        absent - tenant should not exist, present - tenant should be.
+        (Choices: absent, present)[Default: present]
+
+
+REQUIREMENTS:  manageiq-client https://github.com/ManageIQ/manageiq-api-client-python/
+
+AUTHOR: Evert Mulder (@evertmulder)
+        METADATA:
+          status:
+          - preview
+          supported_by: community
+        
+
+EXAMPLES:
+
+- name: Update the root tenant in ManageIQ
+  manageiq_tenant:
+    name: 'My Company'
+    description: 'My company name'
+    manageiq_connection:
+      url: 'http://127.0.0.1:3000'
+      username: 'admin'
+      password: 'smartvm'
+      validate_certs: False
+
+- name: Create a tenant in ManageIQ
+  manageiq_tenant:
+    name: 'Dep1'
+    description: 'Manufacturing department'
+    parent_id: 1
+    manageiq_connection:
+      url: 'http://127.0.0.1:3000'
+      username: 'admin'
+      password: 'smartvm'
+      validate_certs: False
+
+- name: Delete a tenant in ManageIQ
+  manageiq_tenant:
+    state: 'absent'
+    name: 'Dep1'
+    parent_id: 1
+    manageiq_connection:
+      url: 'http://127.0.0.1:3000'
+      username: 'admin'
+      password: 'smartvm'
+      validate_certs: False
+
+- name: Set tenant quota for cpu_allocated, mem_allocated, remove quota for vms_allocated
+  manageiq_tenant:
+    name: 'Dep1'
+    parent_id: 1
+    quotas:
+      - cpu_allocated: 100
+      - mem_allocated: 50
+      - vms_allocated: null
+    manageiq_connection:
+      url: 'http://127.0.0.1:3000'
+      username: 'admin'
+      password: 'smartvm'
+      validate_certs: False
+
+
+- name: Delete a tenant in ManageIQ using a token
+  manageiq_tenant:
+    state: 'absent'
+    name: 'Dep1'
+    parent_id: 1
+    manageiq_connection:
+      url: 'http://127.0.0.1:3000'
+      token: 'sometoken'
+      validate_certs: False
+
+
+RETURN VALUES:
+
+tenant:
+  description: The tenant.
+  returned: success
+  type: complex
+  contains:
+    id:
+      description: The tenant id
+      returned: success
+      type: int
+    name:
+      description: The tenant name
+      returned: success
+      type: str
+    description:
+      description: The tenant description
+      returned: success
+      type: str
+    parent_id:
+      description: The id of the parent tenant
+      returned: success
+      type: int
+    quotas:
+      description: List of tenant quotas
+      returned: success
+      type: list
+      sample:
+        cpu_allocated: 100
+        mem_allocated: 50
+

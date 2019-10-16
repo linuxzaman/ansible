@@ -1,0 +1,103 @@
+> REDFISH_CONFIG    (/usr/lib/python2.7/dist-packages/ansible/modules/remote_management/redfish/redfish_config.py)
+
+        Builds Redfish URIs locally and sends them to remote OOB controllers to set or update a configuration attribute. Manages BIOS
+        configuration settings. Manages OOB controller configuration settings.
+
+  * This module is maintained by The Ansible Community
+OPTIONS (= is mandatory):
+
+= baseuri
+        Base URI of OOB controller
+
+
+- bios_attribute_name
+        name of BIOS attribute to update
+        [Default: null]
+        version_added: 2.8
+
+- bios_attribute_value
+        value of BIOS attribute to update
+        [Default: null]
+        version_added: 2.8
+
+= category
+        Category to execute on OOB controller
+
+
+= command
+        List of commands to execute on OOB controller
+
+
+= password
+        Password for authentication with OOB controller
+
+
+- timeout
+        Timeout in seconds for URL requests to OOB controller
+        [Default: 10]
+        type: int
+        version_added: 2.8
+
+= username
+        User for authentication with OOB controller
+
+        version_added: 2.8
+
+
+AUTHOR: Jose Delarosa (@jose-delarosa)
+        METADATA:
+          status:
+          - preview
+          supported_by: community
+        
+
+EXAMPLES:
+
+- name: Set BootMode to UEFI
+    redfish_config:
+      category: Systems
+      command: SetBiosAttributes
+      bios_attribute_name: BootMode
+      bios_attribute_value: Uefi
+      baseuri: "{{ baseuri }}"
+      username: "{{ username }}"
+      password: "{{ password }}"
+
+  - name: Set BootMode to Legacy BIOS
+    redfish_config:
+      category: Systems
+      command: SetBiosAttributes
+      bios_attribute_name: BootMode
+      bios_attribute_value: Bios
+      baseuri: "{{ baseuri }}"
+      username: "{{ username }}"
+      password: "{{ password }}"
+
+  - name: Enable PXE Boot for NIC1
+    redfish_config:
+      category: Systems
+      command: SetBiosAttributes
+      bios_attribute_name: PxeDev1EnDis
+      bios_attribute_value: Enabled
+      baseuri: "{{ baseuri }}"
+      username: "{{ username }}"
+      password: "{{ password }}"
+
+  - name: Set BIOS default settings with a timeout of 20 seconds
+    redfish_config:
+      category: Systems
+      command: SetBiosDefaultSettings
+      baseuri: "{{ baseuri }}"
+      username: "{{ username }}"
+      password: "{{ password }}"
+      timeout: 20
+
+
+RETURN VALUES:
+
+msg:
+    description: Message with action result or error description
+    returned: always
+    type: str
+    sample: "Action was successful"
+

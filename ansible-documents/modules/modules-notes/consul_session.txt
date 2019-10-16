@@ -1,0 +1,100 @@
+> CONSUL_SESSION    (/usr/lib/python2.7/dist-packages/ansible/modules/clustering/consul_session.py)
+
+        Allows the addition, modification and deletion of sessions in a consul cluster. These sessions can then be used in conjunction
+        with key value pairs to implement distributed locks. In depth documentation for working with sessions can be found at
+        http://www.consul.io/docs/internals/sessions.html
+
+  * This module is maintained by The Ansible Community
+OPTIONS (= is mandatory):
+
+- behavior
+        The optional behavior that can be attached to the session when it is created. This controls the behavior when a session is
+        invalidated.
+        (Choices: delete, release)[Default: release]
+        version_added: 2.2
+
+- checks
+        A list of checks that will be used to verify the session health. If all the checks fail, the session will be invalidated and any
+        locks associated with the session will be release and can be acquired once the associated lock delay has expired.
+        [Default: (null)]
+
+- datacenter
+        The name of the datacenter in which the session exists or should be created.
+        [Default: (null)]
+
+- delay
+        The optional lock delay that can be attached to the session when it is created. Locks for invalidated sessions ar blocked from
+        being acquired until this delay has expired. Durations are in seconds.
+        [Default: 15]
+
+- host
+        The host of the consul agent defaults to localhost.
+        [Default: localhost]
+
+- name
+        The name that should be associated with the session. This is opaque to Consul and not required.
+        [Default: (null)]
+
+- node
+        The name of the node that with which the session will be associated. by default this is the name of the agent.
+        [Default: (null)]
+
+- port
+        The port on which the consul agent is running.
+        [Default: 8500]
+
+- scheme
+        The protocol scheme on which the consul agent is running.
+        [Default: http]
+        version_added: 2.1
+
+- state
+        Whether the session should be present i.e. created if it doesn't exist, or absent, removed if present. If created, the ID for the
+        session is returned in the output. If absent, the name or ID is required to remove the session. Info for a single session, all
+        the sessions for a node or all available sessions can be retrieved by specifying info, node or list for the state; for node or
+        info, the node name or session id is required as parameter.
+        (Choices: absent, info, list, node, present)[Default: present]
+
+- validate_certs
+        Whether to verify the tls certificate of the consul agent.
+        [Default: True]
+        type: bool
+        version_added: 2.1
+
+
+REQUIREMENTS:  python >= 2.6, python-consul, requests
+
+AUTHOR: Steve Gargan (@sgargan)
+        METADATA:
+          status:
+          - preview
+          supported_by: community
+        
+
+EXAMPLES:
+
+- name: register basic session with consul
+  consul_session:
+    name: session1
+
+- name: register a session with an existing check
+  consul_session:
+    name: session_with_check
+    checks:
+      - existing_check_name
+
+- name: register a session with lock_delay
+  consul_session:
+    name: session_with_delay
+    delay: 20s
+
+- name: retrieve info about session by id
+  consul_session:
+    id: session_id
+    state: info
+
+- name: retrieve active sessions
+  consul_session:
+    state: list
+
+

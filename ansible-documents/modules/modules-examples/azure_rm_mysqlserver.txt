@@ -1,0 +1,44 @@
+EXAMPLES:
+
+- name: Create (or update) MySQL Server
+    azure_rm_mysqlserver:
+      resource_group: myResourceGroup
+      name: testserver
+      sku:
+        name: B_Gen5_1
+        tier: Basic
+      location: eastus
+      storage_mb: 1024
+      enforce_ssl: True
+      version: 5.6
+      admin_username: cloudsa
+      admin_password: password
+
+
+RETURN VALUES:
+
+id:
+    description:
+        - Resource ID
+    returned: always
+    type: str
+    sample: /subscriptions/xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx/resourceGroups/myResourceGroup/providers/Microsoft.DBforMySQL/servers/mysqlsrv1b6dd89593
+version:
+    description:
+        - 'Server version. Possible values include: C(5.6), C(5.7)'
+    returned: always
+    type: str
+    sample: 5.6
+state:
+    description:
+        - 'A state of a server that is visible to user. Possible values include: C(Ready), C(Dropping), C(Disabled)'
+    returned: always
+    type: str
+    sample: Ready
+fully_qualified_domain_name:
+    description:
+        - The fully qualified domain name of a server.
+    returned: always
+    type: str
+    sample: mysqlsrv1b6dd89593.mysql.database.azure.com
+

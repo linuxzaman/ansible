@@ -1,0 +1,41 @@
+EXAMPLES:
+
+- name: Create topology region
+  bigip_gtm_topology_region:
+    name: foobar
+    region_members:
+      - country: CN
+        negate: yes
+      - datacenter: baz
+    provider:
+      password: secret
+      server: lb.mydomain.com
+      user: admin
+  delegate_to: localhost
+
+- name: Modify topology region
+  bigip_gtm_topology_region:
+    name: foobar
+    region_members:
+      - continent: EU
+      - country: PL
+    provider:
+      password: secret
+      server: lb.mydomain.com
+      user: admin
+  delegate_to: localhost
+
+
+RETURN VALUES:
+
+name:
+  description: The name value of the GTM region.
+  returned: changed
+  type: str
+  sample: foobar
+region_members:
+  description: The list of members of the GTM region.
+  returned: changed
+  type: list
+  sample: [{"continent": "EU"}, {"country": "PL"}]
+

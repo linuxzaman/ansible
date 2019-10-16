@@ -1,0 +1,31 @@
+EXAMPLES:
+
+- name: show list of all interfaces
+  panos_op:
+    ip_address: '{{ ip_address }}'
+    username: '{{ username }}'
+    password: '{{ password }}'
+    cmd: 'show interfaces all'
+
+- name: show system info
+  panos_op:
+    ip_address: '{{ ip_address }}'
+    username: '{{ username }}'
+    password: '{{ password }}'
+    cmd: 'show system info'
+
+
+RETURN VALUES:
+
+stdout:
+    description: output of the given OP command as JSON formatted string
+    returned: success
+    type: str
+    sample: "{system: {app-release-date: 2017/05/01  15:09:12}}"
+
+stdout_xml:
+    description: output of the given OP command as JSON formatted string
+    returned: success
+    type: str
+    sample: "<response status=success><result><system><hostname>fw2</hostname>"
+

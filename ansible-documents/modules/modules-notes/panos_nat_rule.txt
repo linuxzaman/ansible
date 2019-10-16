@@ -1,0 +1,157 @@
+> PANOS_NAT_RULE    (/usr/lib/python2.7/dist-packages/ansible/modules/network/panos/_panos_nat_rule.py)
+
+        - Create a policy nat rule. Keep in mind that we can either end up configuring source NAT, destination NAT, or both. Instead of
+        splitting it into two we will make a fair attempt to determine which one the user wants.
+
+DEPRECATED: 
+
+	Reason: Consolidating code base.
+	Will be removed in: Ansible 2.12
+	Alternatives: Use U(https://galaxy.ansible.com/PaloAltoNetworks/paloaltonetworks) instead.
+
+
+  * This module is maintained by The Ansible Community
+OPTIONS (= is mandatory):
+
+- api_key
+        API key that can be used instead of `username'/`password' credentials.
+        [Default: (null)]
+
+- commit
+        Commit configuration if changed.
+        [Default: yes]
+        type: bool
+
+- description
+        The description
+        [Default: (null)]
+
+- destination_ip
+        list of destination addresses
+        [Default: [u'any']]
+
+= destination_zone
+        destination zone
+
+
+- devicegroup
+        If Panorama, the device group to put this rule in.
+        [Default: (null)]
+
+- dnat_address
+        dnat translated address
+        [Default: (null)]
+
+- dnat_port
+        dnat translated port
+        [Default: (null)]
+
+= ip_address
+        IP address (or hostname) of PAN-OS device being configured.
+
+
+= operation
+        The action to be taken.  Supported values are `add'/`update'/`find'/`delete'.
+        (Choices: add, update, delete, find)
+
+= password
+        Password credentials to use for auth unless `api_key' is set.
+
+
+= rule_name
+        name of the SNAT rule
+
+
+- service
+        service
+        [Default: any]
+
+- snat_address_type
+        type of source translation. Supported values are `translated-address'/`translated-address'.
+        (Choices: interface-address, translated-address)[Default: interface-address]
+
+- snat_bidirectional
+        bidirectional flag
+        [Default: no]
+        type: bool
+
+- snat_dynamic_address
+        Source NAT translated address. Used with Dynamic-IP and Dynamic-IP-and-Port.
+        [Default: (null)]
+
+- snat_interface
+        snat interface
+        [Default: (null)]
+
+- snat_interface_address
+        snat interface address
+        [Default: (null)]
+
+- snat_static_address
+        Source NAT translated address. Used with Static-IP translation.
+        [Default: (null)]
+
+- snat_type
+        type of source translation
+        (Choices: static-ip, dynamic-ip-and-port, dynamic-ip)[Default: (null)]
+
+- source_ip
+        list of source addresses
+        [Default: [u'any']]
+
+= source_zone
+        list of source zones
+
+
+- tag_name
+        Tag for the NAT rule.
+        [Default: (null)]
+
+- to_interface
+        Destination interface.
+        [Default: any]
+
+- username
+        Username credentials to use for auth unless `api_key' is set.
+        [Default: admin]
+
+
+NOTES:
+      * Checkmode is not supported.
+      * Panorama is supported.
+
+
+REQUIREMENTS:  pan-python can be obtained from PyPI https://pypi.org/project/pan-python/, pandevice can be obtained from PyPI
+        https://pypi.org/project/pandevice/
+
+AUTHOR: Luigi Mori (@jtschichold), Ivan Bojer (@ivanbojer), Robert Hagen (@rnh556)
+        METADATA:
+          status:
+          - deprecated
+          supported_by: community
+        
+
+EXAMPLES:
+
+# Create a source and destination nat rule
+  - name: Create NAT SSH rule for 10.0.1.101
+    panos_nat_rule:
+      ip_address: '{{ ip_address }}'
+      username: '{{ username }}'
+      password: '{{ password }}'
+      rule_name: "Web SSH"
+      source_zone: ["external"]
+      destination_zone: "external"
+      source: ["any"]
+      destination: ["10.0.0.100"]
+      service: "service-tcp-221"
+      snat_type: "dynamic-ip-and-port"
+      snat_interface: "ethernet1/2"
+      dnat_address: "10.0.1.101"
+      dnat_port: "22"
+
+
+RETURN VALUES:
+
+# Default return values
+

@@ -1,0 +1,202 @@
+EXAMPLES:
+
+- name: Create a network
+  cs_network:
+    name: my network
+    zone: gva-01
+    network_offering: DefaultIsolatedNetworkOfferingWithSourceNatService
+    network_domain: example.com
+  delegate_to: localhost
+
+- name: Create a VPC tier
+  cs_network:
+    name: my VPC tier 1
+    zone: gva-01
+    vpc: my VPC
+    network_offering: DefaultIsolatedNetworkOfferingForVpcNetworks
+    gateway: 10.43.0.1
+    netmask: 255.255.255.0
+    acl: my web acl
+  delegate_to: localhost
+
+- name: Update a network
+  cs_network:
+    name: my network
+    display_text: network of domain example.local
+    network_domain: example.local
+  delegate_to: localhost
+
+- name: Restart a network with clean up
+  cs_network:
+    name: my network
+    clean_up: yes
+    state: restared
+  delegate_to: localhost
+
+- name: Remove a network
+  cs_network:
+    name: my network
+    state: absent
+  delegate_to: localhost
+
+
+RETURN VALUES:
+
+---
+id:
+  description: UUID of the network.
+  returned: success
+  type: str
+  sample: 04589590-ac63-4ffc-93f5-b698b8ac38b6
+name:
+  description: Name of the network.
+  returned: success
+  type: str
+  sample: web project
+display_text:
+  description: Display text of the network.
+  returned: success
+  type: str
+  sample: web project
+dns1:
+  description: IP address of the 1st nameserver.
+  returned: success
+  type: str
+  sample: 1.2.3.4
+dns2:
+  description: IP address of the 2nd nameserver.
+  returned: success
+  type: str
+  sample: 1.2.3.4
+cidr:
+  description: IPv4 network CIDR.
+  returned: success
+  type: str
+  sample: 10.101.64.0/24
+gateway:
+  description: IPv4 gateway.
+  returned: success
+  type: str
+  sample: 10.101.64.1
+netmask:
+  description: IPv4 netmask.
+  returned: success
+  type: str
+  sample: 255.255.255.0
+cidr_ipv6:
+  description: IPv6 network CIDR.
+  returned: if available
+  type: str
+  sample: 2001:db8::/64
+gateway_ipv6:
+  description: IPv6 gateway.
+  returned: if available
+  type: str
+  sample: 2001:db8::1
+zone:
+  description: Name of zone.
+  returned: success
+  type: str
+  sample: ch-gva-2
+domain:
+  description: Domain the network is related to.
+  returned: success
+  type: str
+  sample: ROOT
+account:
+  description: Account the network is related to.
+  returned: success
+  type: str
+  sample: example account
+project:
+  description: Name of project.
+  returned: success
+  type: str
+  sample: Production
+tags:
+  description: List of resource tags associated with the network.
+  returned: success
+  type: list
+  sample: '[ { "key": "foo", "value": "bar" } ]'
+acl_type:
+  description: Access type of the network (Domain, Account).
+  returned: success
+  type: str
+  sample: Account
+acl:
+  description: Name of the access control list for the VPC network tier.
+  returned: success
+  type: str
+  sample: My ACL
+  version_added: '2.5'
+acl_id:
+  description: ID of the access control list for the VPC network tier.
+  returned: success
+  type: str
+  sample: dfafcd55-0510-4b8c-b6c5-b8cedb4cfd88
+  version_added: '2.5'
+broadcast_domain_type:
+  description: Broadcast domain type of the network.
+  returned: success
+  type: str
+  sample: Vlan
+type:
+  description: Type of the network.
+  returned: success
+  type: str
+  sample: Isolated
+traffic_type:
+  description: Traffic type of the network.
+  returned: success
+  type: str
+  sample: Guest
+state:
+  description: State of the network (Allocated, Implemented, Setup).
+  returned: success
+  type: str
+  sample: Allocated
+is_persistent:
+  description: Whether the network is persistent or not.
+  returned: success
+  type: bool
+  sample: false
+network_domain:
+  description: The network domain
+  returned: success
+  type: str
+  sample: example.local
+network_offering:
+  description: The network offering name.
+  returned: success
+  type: str
+  sample: DefaultIsolatedNetworkOfferingWithSourceNatService
+network_offering_display_text:
+  description: The network offering display text.
+  returned: success
+  type: str
+  sample: Offering for Isolated Vpc networks with Source Nat service enabled
+  version_added: '2.5'
+network_offering_conserve_mode:
+  description: Whether the network offering has IP conserve mode enabled or not.
+  returned: success
+  type: bool
+  sample: false
+  version_added: '2.5'
+network_offering_availability:
+  description: The availability of the network offering the network is created from
+  returned: success
+  type: str
+  sample: Optional
+  version_added: '2.5'
+is_system:
+  description: Whether the network is system related or not.
+  returned: success
+  type: bool
+  sample: false
+  version_added: '2.5'
+vpc:
+  description: Name of the VPC.
+  returned: if available
+  type: str
+  sample: My VPC
+

@@ -1,0 +1,133 @@
+EXAMPLES:
+
+- hosts: localhost
+  vars:
+   host: "192.168.122.40"
+   username: "admin"
+   password: ""
+   vdom: "root"
+  tasks:
+  - name: Configure url to be filtered by fortigate
+    fortios_webfilter:
+      host:  "{{  host }}"
+      username: "{{  username}}"
+      password: "{{ password }}"
+      vdom:  "{{  vdom }}"
+      webfilter_url:
+        state: "present"
+        id: "1"
+        name: "default"
+        comment: "mycomment"
+        one-arm-ips-url-filter: "disable"
+        ip-addr-block: "disable"
+        entries:
+          - id: "1"
+            url: "www.test1.com"
+            type: "simple"
+            action: "exempt"
+            status: "enable"
+            exempt: "pass"
+            web-proxy-profile: ""
+            referrrer-host: ""
+          - id: "2"
+            url: "www.test2.com"
+            type: "simple"
+            action: "exempt"
+            status: "enable"
+            exempt: "pass"
+            web-proxy-profile: ""
+            referrrer-host: ""
+
+
+- hosts: localhost
+  vars:
+   host: "192.168.122.40"
+   username: "admin"
+   password: ""
+   vdom: "root"
+  tasks:
+  - name: Configure web content filtering in fortigate
+    fortios_webfilter:
+      host:  "{{  host }}"
+      username: "{{  username}}"
+      password: "{{ password }}"
+      vdom:  "{{  vdom }}"
+      webfilter_content:
+        id: "1"
+        name: "default"
+        comment: ""
+        entries:
+          - name: "1"
+            pattern-type: "www.test45.com"
+            status: "enable"
+            lang: "western"
+            score: 40
+            action: "block"
+          - name: "2"
+            pattern-type: "www.test46.com"
+            status: "enable"
+            lang: "western"
+            score: 42
+            action: "block"
+        state: "present"
+
+
+RETURN VALUES:
+
+build:
+  description: Build number of the fortigate image
+  returned: always
+  type: str
+  sample: '1547'
+http_method:
+  description: Last method used to provision the content into FortiGate
+  returned: always
+  type: str
+  sample: 'PUT'
+http_status:
+  description: Last result given by FortiGate on last operation applied
+  returned: always
+  type: str
+  sample: "200"
+mkey:
+  description: Master key (id) used in the last call to FortiGate
+  returned: success
+  type: str
+  sample: "key1"
+name:
+  description: Name of the table used to fulfill the request
+  returned: always
+  type: str
+  sample: "urlfilter"
+path:
+  description: Path of the table used to fulfill the request
+  returned: always
+  type: str
+  sample: "webfilter"
+revision:
+  description: Internal revision number
+  returned: always
+  type: str
+  sample: "17.0.2.10658"
+serial:
+  description: Serial number of the unit
+  returned: always
+  type: str
+  sample: "FGVMEVYYQT3AB5352"
+status:
+  description: Indication of the operation's result
+  returned: always
+  type: str
+  sample: "success"
+vdom:
+  description: Virtual domain used
+  returned: always
+  type: str
+  sample: "root"
+version:
+  description: Version of the FortiGate
+  returned: always
+  type: str
+  sample: "v5.6.3"
+
+

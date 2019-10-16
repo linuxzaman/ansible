@@ -1,0 +1,86 @@
+> HCLOUD_DATACENTER_FACTS    (/usr/lib/python2.7/dist-packages/ansible/modules/cloud/hcloud/hcloud_datacenter_facts.py)
+
+        Gather facts about your Hetzner Cloud datacenters.
+
+  * This module is maintained by The Ansible Community
+OPTIONS (= is mandatory):
+
+= api_token
+        This is the API Token for the Hetzner Cloud.
+
+        type: str
+
+- endpoint
+        This is the API Endpoint for the Hetzner Cloud.
+        [Default: https://api.hetzner.cloud/v1]
+        type: str
+
+- id
+        The ID of the datacenter you want to get.
+        [Default: (null)]
+        type: int
+
+- name
+        The name of the datacenter you want to get.
+        [Default: (null)]
+        type: str
+
+
+SEE ALSO:
+      * Documentation for Hetzner Cloud API
+           Complete reference for the Hetzner Cloud API.
+           https://docs.hetzner.cloud/
+
+
+REQUIREMENTS:  hcloud-python >= 1.0.0
+
+AUTHOR: Lukas Kaemmerling (@lkaemmerling)
+        METADATA:
+          status:
+          - preview
+          supported_by: community
+        
+
+EXAMPLES:
+
+- name: Gather hcloud datacenter facts
+  local_action:
+    module: hcloud_datacenter_facts
+- name: Print the gathered facts
+  debug:
+    var: ansible_facts.hcloud_datacenter_facts
+
+
+RETURN VALUES:
+
+hcloud_datacenter_facts:
+    description: The datacenter facts as list
+    returned: always
+    type: complex
+    contains:
+        id:
+            description: Numeric identifier of the location
+            returned: always
+            type: int
+            sample: 1937415
+        name:
+            description: Name of the location
+            returned: always
+            type: str
+            sample: fsn1-dc8
+        description:
+            description: Detail description of the location
+            returned: always
+            type: str
+            sample: Falkenstein DC 8
+        location:
+            description: Name of the location where the datacenter resides in
+            returned: always
+            type: str
+            sample: fsn1
+        city:
+            description: City of the location
+            returned: always
+            type: str
+            sample: fsn1
+

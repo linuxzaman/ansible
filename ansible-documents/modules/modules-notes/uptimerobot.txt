@@ -1,0 +1,48 @@
+> UPTIMEROBOT    (/usr/lib/python2.7/dist-packages/ansible/modules/monitoring/uptimerobot.py)
+
+        This module will let you start and pause Uptime Robot Monitoring
+
+  * This module is maintained by The Ansible Community
+OPTIONS (= is mandatory):
+
+= apikey
+        Uptime Robot API key.
+
+
+= monitorid
+        ID of the monitor to check.
+
+
+= state
+        Define whether or not the monitor should be running or paused.
+        (Choices: started, paused)
+
+
+NOTES:
+      * Support for adding and removing monitors and alert contacts has not yet been implemented.
+
+
+REQUIREMENTS:  Valid Uptime Robot API Key
+
+AUTHOR: Nate Kingsley (@nate-kingsley)
+        METADATA:
+          status:
+          - preview
+          supported_by: community
+        
+
+EXAMPLES:
+
+# Pause the monitor with an ID of 12345.
+- uptimerobot:
+    monitorid: 12345
+    apikey: 12345-1234512345
+    state: paused
+
+# Start the monitor with an ID of 12345.
+- uptimerobot:
+    monitorid: 12345
+    apikey: 12345-1234512345
+    state: started
+
+

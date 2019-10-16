@@ -1,0 +1,82 @@
+EXAMPLES:
+
+# Create a new Lightsail instance, register the instance details
+- lightsail:
+    state: present
+    name: myinstance
+    region: us-east-1
+    zone: us-east-1a
+    blueprint_id: ubuntu_16_04
+    bundle_id: nano_1_0
+    key_pair_name: id_rsa
+    user_data: " echo 'hello world' > /home/ubuntu/test.txt"
+    wait_timeout: 500
+  register: my_instance
+
+- debug:
+    msg: "Name is {{ my_instance.instance.name }}"
+
+- debug:
+    msg: "IP is {{ my_instance.instance.public_ip_address }}"
+
+# Delete an instance if present
+- lightsail:
+    state: absent
+    region: us-east-1
+    name: myinstance
+
+
+RETURN VALUES:
+
+changed:
+  description: if a snapshot has been modified/created
+  returned: always
+  type: bool
+  sample:
+    changed: true
+instance:
+  description: instance data
+  returned: always
+  type: dict
+  sample:
+    arn: "arn:aws:lightsail:us-east-1:448830907657:Instance/1fef0175-d6c8-480e-84fa-214f969cda87"
+    blueprint_id: "ubuntu_16_04"
+    blueprint_name: "Ubuntu"
+    bundle_id: "nano_1_0"
+    created_at: "2017-03-27T08:38:59.714000-04:00"
+    hardware:
+      cpu_count: 1
+      ram_size_in_gb: 0.5
+    is_static_ip: false
+    location:
+      availability_zone: "us-east-1a"
+      region_name: "us-east-1"
+    name: "my_instance"
+    networking:
+      monthly_transfer:
+        gb_per_month_allocated: 1024
+      ports:
+        - access_direction: "inbound"
+          access_from: "Anywhere (0.0.0.0/0)"
+          access_type: "public"
+          common_name: ""
+          from_port: 80
+          protocol: tcp
+          to_port: 80
+        - access_direction: "inbound"
+          access_from: "Anywhere (0.0.0.0/0)"
+          access_type: "public"
+          common_name: ""
+          from_port: 22
+          protocol: tcp
+          to_port: 22
+    private_ip_address: "172.26.8.14"
+    public_ip_address: "34.207.152.202"
+    resource_type: "Instance"
+    ssh_key_name: "keypair"
+    state:
+      code: 16
+      name: running
+    support_code: "588307843083/i-0997c97831ee21e33"
+    username: "ubuntu"
+

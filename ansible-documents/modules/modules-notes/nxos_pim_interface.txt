@@ -1,0 +1,238 @@
+> NXOS_PIM_INTERFACE    (/usr/lib/python2.7/dist-packages/ansible/modules/network/nxos/nxos_pim_interface.py)
+
+        Manages PIM interface configuration settings.
+
+  * This module is maintained by The Ansible Network Team
+OPTIONS (= is mandatory):
+
+- border
+        Configures interface to be a boundary of a PIM domain.
+        [Default: False]
+        type: bool
+
+- dr_prio
+        Configures priority for PIM DR election on interface.
+        [Default: (null)]
+        type: str
+
+- hello_auth_key
+        Authentication for hellos on this interface.
+        [Default: (null)]
+        type: str
+
+- hello_interval
+        Hello interval in milliseconds for this interface.
+        [Default: (null)]
+        type: int
+
+= interface
+        Full name of the interface such as Ethernet1/33.
+
+        type: str
+
+- jp_policy_in
+        Policy for join-prune messages (inbound).
+        [Default: (null)]
+        type: str
+
+- jp_policy_out
+        Policy for join-prune messages (outbound).
+        [Default: (null)]
+        type: str
+
+- jp_type_in
+        Type of policy mapped to `jp_policy_in'.
+        (Choices: prefix, routemap)[Default: (null)]
+        type: str
+
+- jp_type_out
+        Type of policy mapped to `jp_policy_out'.
+        (Choices: prefix, routemap)[Default: (null)]
+        type: str
+
+- neighbor_policy
+        Configures a neighbor policy for filtering adjacencies.
+        [Default: (null)]
+        type: str
+
+- neighbor_type
+        Type of policy mapped to neighbor_policy.
+        (Choices: prefix, routemap)[Default: (null)]
+        type: str
+
+- provider
+        *Deprecated*
+        Starting with Ansible 2.5 we recommend using `connection: network_cli'.
+        This option is only required if you are using NX-API.
+        For more information please see the L(NXOS Platform Options guide, ../network/user_guide/platform_nxos.html).
+        HORIZONTALLINE
+        A dict object containing connection details.
+        [Default: (null)]
+        suboptions:
+          auth_pass:
+            description:
+            - Specifies the password to use if required to enter privileged mode on the remote
+              device.  If `authorize' is false, then this argument does nothing. If the value
+              is not specified in the task, the value of environment variable `ANSIBLE_NET_AUTH_PASS'
+              will be used instead.
+            type: str
+            version_added: 2.5.3
+          authorize:
+            default: false
+            description:
+            - Instructs the module to enter privileged mode on the remote device before sending
+              any commands.  If not specified, the device will attempt to execute all commands
+              in non-privileged mode. If the value is not specified in the task, the value
+              of environment variable `ANSIBLE_NET_AUTHORIZE' will be used instead.
+            type: bool
+            version_added: 2.5.3
+          host:
+            description:
+            - Specifies the DNS host name or address for connecting to the remote device over
+              the specified transport.  The value of host is used as the destination address
+              for the transport.
+            required: true
+            type: str
+          password:
+            description:
+            - Specifies the password to use to authenticate the connection to the remote device.  This
+              is a common argument used for either `cli' or `nxapi' transports. If the value
+              is not specified in the task, the value of environment variable `ANSIBLE_NET_PASSWORD'
+              will be used instead.
+            type: str
+          port:
+            default: 0 (use common port)
+            description:
+            - Specifies the port to use when building the connection to the remote device.  This
+              value applies to either `cli' or `nxapi'.  The port value will default to
+              the appropriate transport common port if none is provided in the task.  (cli=22,
+              http=80, https=443).
+            type: int
+          ssh_keyfile:
+            description:
+            - Specifies the SSH key to use to authenticate the connection to the remote device.  This
+              argument is only used for the `cli' transport. If the value is not specified
+              in the task, the value of environment variable `ANSIBLE_NET_SSH_KEYFILE' will
+              be used instead.
+            type: str
+          timeout:
+            default: 10
+            description:
+            - Specifies the timeout in seconds for communicating with the network device for
+              either connecting or sending commands.  If the timeout is exceeded before the
+              operation is completed, the module will error. NX-API can be slow to return
+              on long-running commands (sh mac, sh bgp, etc).
+            type: int
+            version_added: '2.3'
+          transport:
+            choices:
+            - cli
+            - nxapi
+            default: cli
+            description:
+            - Configures the transport connection to use when connecting to the remote device.  The
+              transport argument supports connectivity to the device over cli (ssh) or nxapi.
+            required: true
+            type: str
+          use_proxy:
+            default: true
+            description:
+            - If `no', the environment variables `http_proxy' and `https_proxy' will be
+              ignored.
+            type: bool
+            version_added: '2.5'
+          use_ssl:
+            default: false
+            description:
+            - Configures the `transport' to use SSL if set to `yes' only when the `transport=nxapi',
+              otherwise this value is ignored.
+            type: bool
+          username:
+            description:
+            - Configures the username to use to authenticate the connection to the remote
+              device.  This value is used to authenticate either the CLI login or the nxapi
+              authentication depending on which transport is used. If the value is not specified
+              in the task, the value of environment variable `ANSIBLE_NET_USERNAME' will
+              be used instead.
+            type: str
+          validate_certs:
+            default: true
+            description:
+            - If `no', SSL certificates will not be validated. This should only be used on
+              personally controlled sites using self-signed certificates.  If the transport
+              argument is not nxapi, this value is ignored.
+            type: bool
+        
+        type: dict
+
+- sparse
+        Enable/disable sparse-mode on the interface.
+        [Default: False]
+        type: bool
+
+- state
+        Manages desired state of the resource.
+        (Choices: present, default)[Default: present]
+        type: str
+
+
+NOTES:
+      * Tested against NXOSv 7.3.(0)D1(1) on VIRL
+      * When `state=default', supported params will be reset to a default state. These include `dr_prio', `hello_auth_key',
+        `hello_interval', `jp_policy_out', `jp_policy_in', `jp_type_in', `jp_type_out', `border', `neighbor_policy',
+        `neighbor_type'.
+      * The `hello_auth_key' param is not idempotent.
+      * `hello_auth_key' only supports clear text passwords.
+      * When `state=absent', pim interface configuration will be set to defaults and pim-sm will be disabled on the interface.
+      * PIM must be enabled on the device to use this module.
+      * This module is for Layer 3 interfaces.
+      * For information on using CLI and NX-API see the :ref:`NXOS Platform Options guide <nxos_platform_options>`
+      * For more information on using Ansible to manage network devices see the :ref:`Ansible Network Guide <network_guide>`
+      * For more information on using Ansible to manage Cisco devices see the `Cisco integration page
+        <https://www.ansible.com/integrations/networks/cisco>`_.
+
+
+AUTHOR: Jason Edelman (@jedelman8)
+        METADATA:
+          status:
+          - preview
+          supported_by: network
+        
+
+EXAMPLES:
+
+- name: Ensure PIM is not running on the interface
+  nxos_pim_interface:
+    interface: eth1/33
+    state: absent
+
+- name: Ensure the interface has pim-sm enabled with the appropriate priority and hello interval
+  nxos_pim_interface:
+    interface: eth1/33
+    dr_prio: 10
+    hello_interval: 40
+    state: present
+
+- name: Ensure join-prune policies exist
+  nxos_pim_interface:
+    interface: eth1/33
+    jp_policy_in: JPIN
+    jp_policy_out: JPOUT
+    jp_type_in: routemap
+    jp_type_out: routemap
+
+- name: Ensure defaults are in place
+  nxos_pim_interface:
+    interface: eth1/33
+    state: default
+
+
+RETURN VALUES:
+
+commands:
+    description: command sent to the device
+    returned: always
+    type: list
+    sample: ["interface eth1/33", "ip pim neighbor-policy test",
+            "ip pim neighbor-policy test"]
+

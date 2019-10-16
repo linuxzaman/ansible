@@ -1,0 +1,104 @@
+> CE_VXLAN_TUNNEL    (/usr/lib/python2.7/dist-packages/ansible/modules/network/cloudengine/ce_vxlan_tunnel.py)
+
+        This module offers the ability to set the VNI and mapped to the BD, and configure an ingress replication list on HUAWEI
+        CloudEngine devices.
+
+  * This module is maintained by The Ansible Community
+OPTIONS (= is mandatory):
+
+- bridge_domain_id
+        Specifies a bridge domain ID. The value is an integer ranging from 1 to 16777215.
+        [Default: (null)]
+
+- nve_mode
+        Specifies the working mode of an NVE interface.
+        (Choices: mode-l2, mode-l3)[Default: (null)]
+
+- nve_name
+        Specifies the number of an NVE interface. The value ranges from 1 to 2.
+        [Default: (null)]
+
+- peer_list_ip
+        Specifies the IP address of a remote VXLAN tunnel endpoints (VTEP). The value is in dotted decimal notation.
+        [Default: (null)]
+
+- protocol_type
+        The operation type of routing protocol.
+        (Choices: bgp, null)[Default: (null)]
+
+- source_ip
+        Specifies an IP address for a source VTEP. The value is in dotted decimal notation.
+        [Default: (null)]
+
+- state
+        Manage the state of the resource.
+        (Choices: present, absent)[Default: present]
+
+- vni_id
+        Specifies a VXLAN network identifier (VNI) ID. The value is an integer ranging from 1 to 16000000.
+        [Default: (null)]
+
+
+AUTHOR: Li Yanfeng (@QijunPan)
+        METADATA:
+          status:
+          - preview
+          supported_by: community
+        
+
+EXAMPLES:
+
+- name: vxlan tunnel module test
+  hosts: ce128
+  connection: local
+  gather_facts: no
+  vars:
+    cli:
+      host: "{{ inventory_hostname }}"
+      port: "{{ ansible_ssh_port }}"
+      username: "{{ username }}"
+      password: "{{ password }}"
+      transport: cli
+
+  tasks:
+
+  - name: Make sure nve_name is exist, ensure vni_id and protocol_type is configured on Nve1 interface.
+    ce_vxlan_tunnel:
+      nve_name: Nve1
+      vni_id: 100
+      protocol_type: bgp
+      state: present
+      provider: "{{ cli }}"
+
+
+RETURN VALUES:
+
+proposed:
+    description: k/v pairs of parameters passed into module
+    returned: always
+    type: dict
+    sample: {nve_interface_name": "Nve1", nve_mode": "mode-l2", "source_ip": "0.0.0.0"}
+existing:
+    description:
+        - k/v pairs of existing rollback
+    returned: always
+    type: dict
+    sample: {nve_interface_name": "Nve1", nve_mode": "mode-l3", "source_ip": "0.0.0.0"}
+
+updates:
+    description: command sent to the device
+    returned: always
+    type: list
+    sample: ["interface Nve1",
+             "mode l3"]
+changed:
+    description: check to see if a change was made on the device
+    returned: always
+    type: bool
+    sample: true
+end_state:
+    description: k/v pairs of configuration after module execution
+    returned: always
+    type: dict
+    sample: {nve_interface_name": "Nve1", nve_mode": "mode-l3", "source_ip": "0.0.0.0"}
+

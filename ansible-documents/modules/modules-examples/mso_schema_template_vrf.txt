@@ -1,0 +1,51 @@
+EXAMPLES:
+
+- name: Add a new VRF
+  mso_schema_template_vrf:
+    host: mso_host
+    username: admin
+    password: SomeSecretPassword
+    schema: Schema 1
+    template: Template 1
+    vrf: VRF 1
+    state: present
+  delegate_to: localhost
+
+- name: Remove an VRF
+  mso_schema_template_vrf:
+    host: mso_host
+    username: admin
+    password: SomeSecretPassword
+    schema: Schema 1
+    template: Template 1
+    vrf: VRF1
+    state: absent
+  delegate_to: localhost
+
+- name: Query a specific VRFs
+  mso_schema_template_vrf:
+    host: mso_host
+    username: admin
+    password: SomeSecretPassword
+    schema: Schema 1
+    template: Template 1
+    vrf: VRF1
+    state: query
+  delegate_to: localhost
+  register: query_result
+
+- name: Query all VRFs
+  mso_schema_template_vrf:
+    host: mso_host
+    username: admin
+    password: SomeSecretPassword
+    schema: Schema 1
+    template: Template 1
+    state: query
+  delegate_to: localhost
+  register: query_result
+
+
+RETURN VALUES:
+
+

@@ -1,0 +1,43 @@
+> ICINGA2_FEATURE    (/usr/lib/python2.7/dist-packages/ansible/modules/monitoring/icinga2_feature.py)
+
+        This module can be used to enable or disable an Icinga2 feature.
+
+  * This module is maintained by The Ansible Community
+OPTIONS (= is mandatory):
+
+= name
+        This is the feature name to enable or disable.
+
+
+- state
+        If set to `present' and feature is disabled, then feature is enabled.
+        If set to `present' and feature is already enabled, then nothing is changed.
+        If set to `absent' and feature is enabled, then feature is disabled.
+        If set to `absent' and feature is already disabled, then nothing is changed.
+        (Choices: present, absent)[Default: present]
+
+
+AUTHOR: Loic Blot (@nerzhul)
+        METADATA:
+          status:
+          - preview
+          supported_by: community
+        
+
+EXAMPLES:
+
+- name: Enable ido-pgsql feature
+  icinga2_feature:
+    name: ido-pgsql
+    state: present
+
+- name: Disable api feature
+  icinga2_feature:
+    name: api
+    state: absent
+
+
+RETURN VALUES:
+
+#
+

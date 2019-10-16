@@ -1,0 +1,76 @@
+> DLADM_LINKPROP    (/usr/lib/python2.7/dist-packages/ansible/modules/network/illumos/dladm_linkprop.py)
+
+        Set / reset link properties on Solaris/illumos systems.
+
+  * This module is maintained by The Ansible Community
+OPTIONS (= is mandatory):
+
+= link
+        Link interface name.
+        (Aliases: nic, interface)
+
+= property
+        Specifies the name of the property we want to manage.
+        (Aliases: name)
+
+- state
+        Set or reset the property value.
+        (Choices: present, absent, reset)[Default: present]
+
+- temporary
+        Specifies that lin property configuration is temporary. Temporary link property configuration does not persist across reboots.
+        [Default: False]
+        type: bool
+
+- value
+        Specifies the value we want to set for the link property.
+        [Default: (null)]
+
+
+AUTHOR: Adam Števko (@xen0l)
+        METADATA:
+          status:
+          - preview
+          supported_by: community
+        
+
+EXAMPLES:
+
+- name: Set 'maxbw' to 100M on e1000g1
+  dladm_linkprop: name=e1000g1 property=maxbw value=100M state=present
+
+- name: Set 'mtu' to 9000 on e1000g1
+  dladm_linkprop: name=e1000g1 property=mtu value=9000
+
+- name: Reset 'mtu' property on e1000g1
+  dladm_linkprop: name=e1000g1 property=mtu state=reset
+
+
+RETURN VALUES:
+
+property:
+    description: property name
+    returned: always
+    type: str
+    sample: mtu
+state:
+    description: state of the target
+    returned: always
+    type: str
+    sample: present
+temporary:
+    description: specifies if operation will persist across reboots
+    returned: always
+    type: bool
+    sample: True
+link:
+    description: link name
+    returned: always
+    type: str
+    sample: e100g0
+value:
+    description: property value
+    returned: always
+    type: str
+    sample: 9000
+

@@ -1,0 +1,44 @@
+EXAMPLES:
+
+- name: Ensure an user role is present
+  cs_role:
+    name: myrole_user
+  delegate_to: localhost
+
+- name: Ensure a role having particular ID is named as myrole_user
+  cs_role:
+    name: myrole_user
+    id: 04589590-ac63-4ffc-93f5-b698b8ac38b6
+  delegate_to: localhost
+
+- name: Ensure a role is absent
+  cs_role:
+    name: myrole_user
+    state: absent
+  delegate_to: localhost
+
+
+RETURN VALUES:
+
+---
+id:
+  description: UUID of the role.
+  returned: success
+  type: str
+  sample: 04589590-ac63-4ffc-93f5-b698b8ac38b6
+name:
+  description: Name of the role.
+  returned: success
+  type: str
+  sample: myrole
+description:
+  description: Description of the role.
+  returned: success
+  type: str
+  sample: "This is my role description"
+role_type:
+  description: Type of the role.
+  returned: success
+  type: str
+  sample: User
+

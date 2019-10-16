@@ -1,0 +1,95 @@
+> HCLOUD_VOLUME_FACTS    (/usr/lib/python2.7/dist-packages/ansible/modules/cloud/hcloud/hcloud_volume_facts.py)
+
+        Gather facts about your Hetzner Cloud volumes.
+
+  * This module is maintained by The Ansible Community
+OPTIONS (= is mandatory):
+
+= api_token
+        This is the API Token for the Hetzner Cloud.
+
+        type: str
+
+- endpoint
+        This is the API Endpoint for the Hetzner Cloud.
+        [Default: https://api.hetzner.cloud/v1]
+        type: str
+
+- id
+        The ID of the volume you want to get.
+        [Default: (null)]
+        type: int
+
+- label_selector
+        The label selector for the volume you want to get.
+        [Default: (null)]
+        type: str
+
+- name
+        The name of the volume you want to get.
+        [Default: (null)]
+        type: str
+
+
+SEE ALSO:
+      * Documentation for Hetzner Cloud API
+           Complete reference for the Hetzner Cloud API.
+           https://docs.hetzner.cloud/
+
+
+REQUIREMENTS:  hcloud-python >= 1.0.0
+
+AUTHOR: Lukas Kaemmerling (@lkaemmerling)
+        METADATA:
+          status:
+          - preview
+          supported_by: community
+        
+
+EXAMPLES:
+
+- name: Gather hcloud volume facts
+  local_action:
+    module: hcloud_volume_facts
+- name: Print the gathered facts
+  debug:
+    var: ansible_facts.hcloud_volume_facts
+
+
+RETURN VALUES:
+
+hcloud_volume_facts:
+    description: The volume facts as list
+    returned: always
+    type: complex
+    contains:
+        id:
+            description: Numeric identifier of the volume
+            returned: always
+            type: int
+            sample: 1937415
+        name:
+            description: Name of the volume
+            returned: always
+            type: str
+            sample: my-volume
+        size:
+            description: Size of the volume
+            returned: always
+            type: str
+            sample: 10
+        location:
+            description: Name of the location where the volume resides in
+            returned: always
+            type: str
+            sample: fsn1
+        server:
+            description: Name of the server where the volume is attached to
+            returned: always
+            type: str
+            sample: my-server
+        labels:
+            description: User-defined labels (key-value pairs)
+            returned: always
+            type: dict
+

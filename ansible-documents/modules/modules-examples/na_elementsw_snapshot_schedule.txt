@@ -1,0 +1,49 @@
+EXAMPLES:
+
+- name: Create Snapshot schedule
+     na_elementsw_snapshot_schedule:
+       hostname: "{{ elementsw_hostname }}"
+       username: "{{ elementsw_username }}"
+       password: "{{ elementsw_password }}"
+       state: present
+       name: Schedule_A
+       schedule_type: TimeIntervalFrequency
+       time_interval_days: 1
+       starting_date: '2016-12-01T00:00:00Z'
+       volumes:
+       - 7
+       - test
+       account_id: 1
+
+   - name: Update Snapshot schedule
+     na_elementsw_snapshot_schedule:
+       hostname: "{{ elementsw_hostname }}"
+       username: "{{ elementsw_username }}"
+       password: "{{ elementsw_password }}"
+       state: present
+       name: Schedule_A
+       schedule_type: TimeIntervalFrequency
+       time_interval_days: 1
+       starting_date: '2016-12-01T00:00:00Z'
+       volumes:
+       - 8
+       - test1
+       account_id: 1
+
+   - name: Delete Snapshot schedule
+     na_elementsw_snapshot_schedule:
+       hostname: "{{ elementsw_hostname }}"
+       username: "{{ elementsw_username }}"
+       password: "{{ elementsw_password }}"
+       state: absent
+       name: 6
+
+
+RETURN VALUES:
+
+
+schedule_id:
+    description: Schedule ID of the newly created schedule
+    returned: success
+    type: str
+

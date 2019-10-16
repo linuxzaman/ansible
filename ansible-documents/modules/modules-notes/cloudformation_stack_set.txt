@@ -1,0 +1,300 @@
+> CLOUDFORMATION_STACK_SET    (/usr/lib/python2.7/dist-packages/ansible/modules/cloud/amazon/cloudformation_stack_set.py)
+
+        Launches/updates/deletes AWS CloudFormation Stack Sets
+
+  * This module is maintained by The Ansible Community
+OPTIONS (= is mandatory):
+
+- accounts
+        A list of AWS accounts in which to create instance of CloudFormation stacks.
+        At least one region must be specified to create a stack set. On updates, if fewer regions are specified only the specified
+        regions will have their stack instances updated.
+        [Default: (null)]
+
+- administration_role_arn
+        ARN of the administration role, meaning the role that CloudFormation Stack Sets use to assume the roles in your child accounts.
+        This defaults to `arn:aws:iam::{{ account ID }}:role/AWSCloudFormationStackSetAdministrationRole' where `{{ account ID }}' is
+        replaced with the account number of the current IAM role/user/STS credentials.
+        (Aliases: admin_role_arn, admin_role, administration_role)[Default: (null)]
+
+- aws_access_key
+        AWS access key. If not set then the value of the AWS_ACCESS_KEY_ID, AWS_ACCESS_KEY or EC2_ACCESS_KEY environment variable is
+        used.
+        (Aliases: ec2_access_key, access_key)[Default: (null)]
+        type: str
+
+- aws_secret_key
+        AWS secret key. If not set then the value of the AWS_SECRET_ACCESS_KEY, AWS_SECRET_KEY, or EC2_SECRET_KEY environment variable is
+        used.
+        (Aliases: ec2_secret_key, secret_key)[Default: (null)]
+        type: str
+
+- capabilities
+        Capabilities allow stacks to create and modify IAM resources, which may include adding users or roles.
+        Currently the only available values are 'CAPABILITY_IAM' and 'CAPABILITY_NAMED_IAM'. Either or both may be provided.
+        The following resources require that one or both of these parameters is specified: AWS::IAM::AccessKey, AWS::IAM::Group,
+        AWS::IAM::InstanceProfile, AWS::IAM::Policy, AWS::IAM::Role, AWS::IAM::User, AWS::IAM::UserToGroupAddition
+        (Choices: CAPABILITY_IAM, CAPABILITY_NAMED_IAM)[Default: (null)]
+
+- debug_botocore_endpoint_logs
+        Use a botocore.endpoint logger to parse the unique (rather than total) "resource:action" API calls made during a task, outputing
+        the set to the resource_actions key in the task results. Use the aws_resource_action callback to output to total list made during
+        a playbook. The ANSIBLE_DEBUG_BOTOCORE_LOGS environment variable may also be used.
+        [Default: no]
+        type: bool
+        version_added: 2.8
+
+- description
+        A description of what this stack set creates
+        [Default: (null)]
+
+- ec2_url
+        Url to use to connect to EC2 or your Eucalyptus cloud (by default the module will use EC2 endpoints). Ignored for modules where
+        region is required. Must be specified for all other modules if region is not used. If not set then the value of the EC2_URL
+        environment variable, if any, is used.
+        [Default: (null)]
+        type: str
+
+- execution_role_name
+        ARN of the execution role, meaning the role that CloudFormation Stack Sets assumes in your child accounts.
+        This MUST NOT be an ARN, and the roles must exist in each child account specified.
+        The default name for the execution role is `AWSCloudFormationStackSetExecutionRole'
+        (Aliases: exec_role_name, exec_role, execution_role)[Default: (null)]
+
+- failure_tolerance
+        Settings to change what is considered "failed" when running stack instance updates, and how many to do at a time.
+        [Default: (null)]
+
+= name
+        name of the cloudformation stack set
+
+
+- parameters
+        A list of hashes of all the template variables for the stack. The value can be a string or a dict.
+        Dict can be used to set additional template parameter attributes like UsePreviousValue (see example).
+        [Default: {}]
+
+- profile
+        Uses a boto profile. Only works with boto >= 2.24.0.
+        [Default: (null)]
+        type: str
+        version_added: 1.6
+
+- purge_stacks
+        Only applicable when `state=absent'. Sets whether, when deleting a stack set, the stack instances should also be deleted.
+        By default, instances will be deleted. Set to 'no' or 'false' to keep stacks when stack set is deleted.
+        [Default: True]
+        type: bool
+
+- region
+        The AWS region to use. If not specified then the value of the AWS_REGION or EC2_REGION environment variable, if any, is used. See
+        http://docs.aws.amazon.com/general/latest/gr/rande.html#ec2_region
+        (Aliases: aws_region, ec2_region)[Default: (null)]
+        type: str
+
+- regions
+        A list of AWS regions to create instances of a stack in. The `region' parameter chooses where the Stack Set is created, and
+        `regions' specifies the region for stack instances.
+        At least one region must be specified to create a stack set. On updates, if fewer regions are specified only the specified
+        regions will have their stack instances updated.
+        [Default: (null)]
+
+- security_token
+        AWS STS security token. If not set then the value of the AWS_SECURITY_TOKEN or EC2_SECURITY_TOKEN environment variable is used.
+        (Aliases: access_token)[Default: (null)]
+        type: str
+        version_added: 1.6
+
+- state
+        If state is "present", stack will be created.  If state is "present" and if stack exists and template has changed, it will be
+        updated. If state is "absent", stack will be removed.
+        (Choices: present, absent)[Default: present]
+
+- tags
+        Dictionary of tags to associate with stack and its resources during stack creation. Can be updated later, updating tags removes
+        previous entries.
+        [Default: (null)]
+
+- template
+        The local path of the cloudformation template.
+        This must be the full path to the file, relative to the working directory. If using roles this may look like
+        "roles/cloudformation/files/cloudformation-example.json".
+        If 'state' is 'present' and the stack does not exist yet, either 'template', 'template_body' or 'template_url' must be specified
+        (but only one of them). If 'state' is present, the stack does exist, and neither 'template', 'template_body' nor 'template_url'
+        are specified, the previous template will be reused.
+        [Default: (null)]
+
+- template_body
+        Template body. Use this to pass in the actual body of the Cloudformation template.
+        If 'state' is 'present' and the stack does not exist yet, either 'template', 'template_body' or 'template_url' must be specified
+        (but only one of them). If 'state' is present, the stack does exist, and neither 'template', 'template_body' nor 'template_url'
+        are specified, the previous template will be reused.
+        [Default: (null)]
+
+- template_url
+        Location of file containing the template body. The URL must point to a template (max size 307,200 bytes) located in an S3 bucket
+        in the same region as the stack.
+        If 'state' is 'present' and the stack does not exist yet, either 'template', 'template_body' or 'template_url' must be specified
+        (but only one of them). If 'state' is present, the stack does exist, and neither 'template', 'template_body' nor 'template_url'
+        are specified, the previous template will be reused.
+        [Default: (null)]
+
+- validate_certs
+        When set to "no", SSL certificates will not be validated for boto versions >= 2.6.0.
+        [Default: True]
+        type: bool
+        version_added: 1.5
+
+- wait
+        Whether or not to wait for stack operation to complete. This includes waiting for stack instances to reach UPDATE_COMPLETE
+        status.
+        If you choose not to wait, this module will not notify when stack operations fail because it will not wait for them to finish.
+        [Default: False]
+        type: bool
+
+- wait_timeout
+        How long to wait (in seconds) for stacks to complete create/update/delete operations.
+        [Default: 900]
+
+
+NOTES:
+      * To make an individual stack, you want the cloudformation module.
+      * If parameters are not set within the module, the following environment variables can be used in decreasing order of
+        precedence `AWS_URL' or `EC2_URL', `AWS_ACCESS_KEY_ID' or `AWS_ACCESS_KEY' or `EC2_ACCESS_KEY', `AWS_SECRET_ACCESS_KEY' or
+        `AWS_SECRET_KEY' or `EC2_SECRET_KEY', `AWS_SECURITY_TOKEN' or `EC2_SECURITY_TOKEN', `AWS_REGION' or `EC2_REGION'
+      * Ansible uses the boto configuration file (typically ~/.boto) if no credentials are provided. See
+        https://boto.readthedocs.io/en/latest/boto_config_tut.html
+      * `AWS_REGION' or `EC2_REGION' can be typically be used to specify the AWS region, when required, but this can also be
+        configured in the boto config file
+
+
+REQUIREMENTS:  boto, boto3>=1.6, botocore>=1.10.26, python >= 2.6
+
+AUTHOR: Ryan Scott Brown (@ryansb)
+        METADATA:
+          status:
+          - preview
+          supported_by: community
+        
+
+EXAMPLES:
+
+- name: Create a stack set with instances in two accounts
+  cloudformation_stack_set:
+    name: my-stack
+    description: Test stack in two accounts
+    state: present
+    template_url: https://s3.amazonaws.com/my-bucket/cloudformation.template
+    accounts: [1234567890, 2345678901]
+    regions:
+    - us-east-1
+
+- name: on subsequent calls, templates are optional but parameters and tags can be altered
+  cloudformation_stack_set:
+    name: my-stack
+    state: present
+    parameters:
+      InstanceName: my_stacked_instance
+    tags:
+      foo: bar
+      test: stack
+    accounts: [1234567890, 2345678901]
+    regions:
+    - us-east-1
+
+- name: The same type of update, but wait for the update to complete in all stacks
+  cloudformation_stack_set:
+    name: my-stack
+    state: present
+    wait: true
+    parameters:
+      InstanceName: my_restacked_instance
+    tags:
+      foo: bar
+      test: stack
+    accounts: [1234567890, 2345678901]
+    regions:
+    - us-east-1
+
+
+RETURN VALUES:
+
+operations_log:
+  type: list
+  description: Most recent events in Cloudformation's event log. This may be from a previous run in some cases.
+  returned: always
+  sample:
+  - action: CREATE
+    creation_timestamp: '2018-06-18T17:40:46.372000+00:00'
+    end_timestamp: '2018-06-18T17:41:24.560000+00:00'
+    operation_id: Ansible-StackInstance-Create-0ff2af5b-251d-4fdb-8b89-1ee444eba8b8
+    status: FAILED
+    stack_instances:
+    - account: '1234567890'
+      region: us-east-1
+      stack_set_id: TestStackPrime:19f3f684-aae9-4e67-ba36-e09f92cf5929
+      status: OUTDATED
+      status_reason: Account 1234567890 should have 'AWSCloudFormationStackSetAdministrationRole' role with trust relationship to CloudFormation service.
+
+operations:
+  description: All operations initiated by this run of the cloudformation_stack_set module
+  returned: always
+  type: list
+  sample:
+  - action: CREATE
+    administration_role_arn: arn:aws:iam::1234567890:role/AWSCloudFormationStackSetAdministrationRole
+    creation_timestamp: '2018-06-18T17:40:46.372000+00:00'
+    end_timestamp: '2018-06-18T17:41:24.560000+00:00'
+    execution_role_name: AWSCloudFormationStackSetExecutionRole
+    operation_id: Ansible-StackInstance-Create-0ff2af5b-251d-4fdb-8b89-1ee444eba8b8
+    operation_preferences:
+      region_order:
+      - us-east-1
+      - us-east-2
+    stack_set_id: TestStackPrime:19f3f684-aae9-4e67-ba36-e09f92cf5929
+    status: FAILED
+stack_instances:
+  description: CloudFormation stack instances that are members of this stack set. This will also include their region and account ID.
+  returned: state == present
+  type: list
+  sample:
+    - account: '1234567890'
+      region: us-east-1
+      stack_set_id: TestStackPrime:19f3f684-aae9-4e67-ba36-e09f92cf5929
+      status: OUTDATED
+      status_reason: >
+        Account 1234567890 should have 'AWSCloudFormationStackSetAdministrationRole' role with trust relationship to CloudFormation service.
+    - account: '1234567890'
+      region: us-east-2
+      stack_set_id: TestStackPrime:19f3f684-aae9-4e67-ba36-e09f92cf5929
+      status: OUTDATED
+      status_reason: Cancelled since failure tolerance has exceeded
+stack_set:
+  type: dict
+  description: Facts about the currently deployed stack set, its parameters, and its tags
+  returned: state == present
+  sample:
+    administration_role_arn: arn:aws:iam::1234567890:role/AWSCloudFormationStackSetAdministrationRole
+    capabilities: []
+    description: test stack PRIME
+    execution_role_name: AWSCloudFormationStackSetExecutionRole
+    parameters: []
+    stack_set_arn: arn:aws:cloudformation:us-east-1:1234567890:stackset/TestStackPrime:19f3f684-aae9-467-ba36-e09f92cf5929
+    stack_set_id: TestStackPrime:19f3f684-aae9-4e67-ba36-e09f92cf5929
+    stack_set_name: TestStackPrime
+    status: ACTIVE
+    tags:
+      Some: Thing
+      an: other
+    template_body: |
+      AWSTemplateFormatVersion: "2010-09-09"
+      Parameters: {}
+      Resources:
+        Bukkit:
+          Type: "AWS::S3::Bucket"
+          Properties: {}
+        other:
+          Type: "AWS::SNS::Topic"
+          Properties: {}
+
+

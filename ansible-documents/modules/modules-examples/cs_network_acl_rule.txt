@@ -1,0 +1,140 @@
+EXAMPLES:
+
+- name: create a network ACL rule, allow port 80 ingress
+  cs_network_acl_rule:
+    network_acl: web
+    rule_position: 1
+    vpc: my vpc
+    traffic_type: ingress
+    action_policy: allow
+    port: 80
+    cidr: 0.0.0.0/0
+  delegate_to: localhost
+
+- name: create a network ACL rule, deny port range 8000-9000 ingress for 10.20.0.0/16
+  cs_network_acl_rule:
+    network_acl: web
+    rule_position: 1
+    vpc: my vpc
+    traffic_type: ingress
+    action_policy: deny
+    start_port: 8000
+    end_port: 8000
+    cidr: 10.20.0.0/16
+  delegate_to: localhost
+
+- name: create a network ACL rule
+  cs_network_acl_rule:
+    network_acl: web
+    rule_position: 1
+    vpc: my vpc
+    traffic_type: ingress
+    action_policy: deny
+    start_port: 8000
+    end_port: 8000
+    cidr: 10.20.0.0/16
+  delegate_to: localhost
+
+- name: remove a network ACL rule
+  cs_network_acl_rule:
+    network_acl: web
+    rule_position: 1
+    vpc: my vpc
+    state: absent
+  delegate_to: localhost
+
+
+RETURN VALUES:
+
+---
+network_acl:
+  description: Name of the network ACL.
+  returned: success
+  type: str
+  sample: customer acl
+cidr:
+  description: CIDR of the network ACL rule.
+  returned: success
+  type: str
+  sample: 0.0.0.0/0
+rule_position:
+  description: Position of the network ACL rule.
+  returned: success
+  type: int
+  sample: 1
+action_policy:
+  description: Action policy of the network ACL rule.
+  returned: success
+  type: str
+  sample: deny
+traffic_type:
+  description: Traffic type of the network ACL rule.
+  returned: success
+  type: str
+  sample: ingress
+protocol:
+  description: Protocol of the network ACL rule.
+  returned: success
+  type: str
+  sample: tcp
+protocol_number:
+  description: Protocol number in case protocol is by number.
+  returned: success
+  type: int
+  sample: 8
+start_port:
+  description: Start port of the network ACL rule.
+  returned: success
+  type: int
+  sample: 80
+end_port:
+  description: End port of the network ACL rule.
+  returned: success
+  type: int
+  sample: 80
+icmp_code:
+  description: ICMP code of the network ACL rule.
+  returned: success
+  type: int
+  sample: 8
+icmp_type:
+  description: ICMP type of the network ACL rule.
+  returned: success
+  type: int
+  sample: 0
+state:
+  description: State of the network ACL rule.
+  returned: success
+  type: str
+  sample: Active
+vpc:
+  description: VPC of the network ACL.
+  returned: success
+  type: str
+  sample: customer vpc
+tags:
+  description: List of resource tags associated with the network ACL rule.
+  returned: success
+  type: list
+  sample: '[ { "key": "foo", "value": "bar" } ]'
+domain:
+  description: Domain the network ACL rule is related to.
+  returned: success
+  type: str
+  sample: example domain
+account:
+  description: Account the network ACL rule is related to.
+  returned: success
+  type: str
+  sample: example account
+project:
+  description: Name of project the network ACL rule is related to.
+  returned: success
+  type: str
+  sample: Production
+zone:
+  description: Zone the VPC is related to.
+  returned: success
+  type: str
+  sample: ch-gva-2
+

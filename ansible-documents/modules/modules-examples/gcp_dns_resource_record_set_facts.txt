@@ -1,0 +1,44 @@
+EXAMPLES:
+
+- name: " a resource record set facts"
+  gcp_dns_resource_record_set_facts:
+    managed_zone: "{{ managed_zone }}"
+    project: test_project
+    auth_kind: serviceaccount
+    service_account_file: "/tmp/auth.pem"
+    state: facts
+
+
+RETURN VALUES:
+
+items:
+  description: List of items
+  returned: always
+  type: complex
+  contains:
+    name:
+      description:
+      - For example, U(www.example.com.)
+      returned: success
+      type: str
+    type:
+      description:
+      - One of valid DNS resource types.
+      returned: success
+      type: str
+    ttl:
+      description:
+      - Number of seconds that this ResourceRecordSet can be cached by resolvers.
+      returned: success
+      type: int
+    target:
+      description:
+      - As defined in RFC 1035 (section 5) and RFC 1034 (section 3.6.1) .
+      returned: success
+      type: list
+    managed_zone:
+      description:
+      - Identifies the managed zone addressed by this request.
+      returned: success
+      type: dict
+

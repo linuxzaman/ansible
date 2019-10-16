@@ -1,0 +1,142 @@
+> CLC_FIREWALL_POLICY    (/usr/lib/python2.7/dist-packages/ansible/modules/cloud/centurylink/clc_firewall_policy.py)
+
+        Create or delete or update firewall polices on Centurylink Cloud
+
+  * This module is maintained by The Ansible Community
+OPTIONS (= is mandatory):
+
+- destination
+        The list of destination addresses for traffic on the terminating firewall. This is required when state is 'present'
+        [Default: (null)]
+
+- destination_account_alias
+        CLC alias for the destination account
+        [Default: (null)]
+
+- enabled
+        Whether the firewall policy is enabled or disabled
+        (Choices: True, False)[Default: yes]
+
+- firewall_policy_id
+        Id of the firewall policy. This is required to update or delete an existing firewall policy
+        [Default: (null)]
+
+= location
+        Target datacenter for the firewall policy
+
+
+- ports
+        The list of ports associated with the policy. TCP and UDP can take in single ports or port ranges.
+        (Choices: any, icmp, TCP/123, UDP/123, TCP/123-456, UDP/123-456)[Default: (null)]
+
+- source
+        The list  of source addresses for traffic on the originating firewall. This is required when state is 'present'
+        [Default: (null)]
+
+= source_account_alias
+        CLC alias for the source account
+
+
+- state
+        Whether to create or delete the firewall policy
+        (Choices: present, absent)[Default: present]
+
+- wait
+        Whether to wait for the provisioning tasks to finish before returning.
+        [Default: yes]
+        type: bool
+
+
+NOTES:
+      * To use this module, it is required to set the below environment variables which enables access to the Centurylink Cloud -
+        CLC_V2_API_USERNAME, the account login id for the centurylink cloud - CLC_V2_API_PASSWORD, the account password for the
+        centurylink cloud
+      * Alternatively, the module accepts the API token and account alias. The API token can be generated using the CLC account
+        login and password via the HTTP api call @ https://api.ctl.io/v2/authentication/login - CLC_V2_API_TOKEN, the API token
+        generated from https://api.ctl.io/v2/authentication/login - CLC_ACCT_ALIAS, the account alias associated with the
+        centurylink cloud
+      * Users can set CLC_V2_API_URL to specify an endpoint for pointing to a different CLC environment.
+
+
+REQUIREMENTS:  python = 2.7, requests >= 2.5.0, clc-sdk
+
+AUTHOR: CLC Runner (@clc-runner)
+        METADATA:
+          status:
+          - preview
+          supported_by: community
+        
+
+EXAMPLES:
+
+---
+- name: Create Firewall Policy
+  hosts: localhost
+  gather_facts: False
+  connection: local
+  tasks:
+    - name: Create / Verify an Firewall Policy at CenturyLink Cloud
+      clc_firewall:
+        source_account_alias: WFAD
+        location: VA1
+        state: present
+        source: 10.128.216.0/24
+        destination: 10.128.216.0/24
+        ports: Any
+        destination_account_alias: WFAD
+
+---
+- name: Delete Firewall Policy
+  hosts: localhost
+  gather_facts: False
+  connection: local
+  tasks:
+    - name: Delete an Firewall Policy at CenturyLink Cloud
+      clc_firewall:
+        source_account_alias: WFAD
+        location: VA1
+        state: absent
+        firewall_policy_id: c62105233d7a4231bd2e91b9c791e43e1
+
+
+RETURN VALUES:
+
+firewall_policy_id:
+    description: The fire wall policy id
+    returned: success
+    type: str
+    sample: fc36f1bfd47242e488a9c44346438c05
+firewall_policy:
+    description: The fire wall policy information
+    returned: success
+    type: dict
+    sample:
+        {
+           "destination":[
+              "10.1.1.0/24",
+              "10.2.2.0/24"
+           ],
+           "destinationAccount":"wfad",
+           "enabled":true,
+           "id":"fc36f1bfd47242e488a9c44346438c05",
+           "links":[
+              {
+                 "href":"http://api.ctl.io/v2-experimental/firewallPolicies/wfad/uc1/fc36f1bfd47242e488a9c44346438c05",
+                 "rel":"self",
+                 "verbs":[
+                    "GET",
+                    "PUT",
+                    "DELETE"
+                 ]
+              }
+           ],
+           "ports":[
+              "any"
+           ],
+           "source":[
+              "10.1.1.0/24",
+              "10.2.2.0/24"
+           ],
+           "status":"active"
+        }
+

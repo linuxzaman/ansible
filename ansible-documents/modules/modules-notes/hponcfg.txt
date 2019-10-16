@@ -1,0 +1,70 @@
+> HPONCFG    (/usr/lib/python2.7/dist-packages/ansible/modules/remote_management/hpilo/hponcfg.py)
+
+        This modules configures the HP iLO interface using hponcfg.
+
+  * This module is maintained by The Ansible Community
+OPTIONS (= is mandatory):
+
+- executable
+        Path to the hponcfg executable (`hponcfg` which uses $PATH).
+        [Default: hponcfg]
+        version_added: 2.4
+
+- minfw
+        The minimum firmware level needed.
+        [Default: (null)]
+
+= path
+        The XML file as accepted by hponcfg.
+        (Aliases: src)
+
+- verbose
+        Run hponcfg in verbose mode (-v).
+        [Default: False]
+        type: bool
+        version_added: 2.4
+
+
+NOTES:
+      * You need a working hponcfg on the target system.
+
+
+REQUIREMENTS:  hponcfg tool
+
+AUTHOR: Dag Wieers (@dagwieers)
+        METADATA:
+          status:
+          - preview
+          supported_by: community
+        
+
+EXAMPLES:
+
+- name: Example hponcfg configuration XML
+  copy:
+    content: |
+      <ribcl VERSION="2.0">
+        <login USER_LOGIN="user" PASSWORD="password">
+          <rib_info MODE="WRITE">
+            <mod_global_settings>
+              <session_timeout value="0"/>
+              <ssh_status value="Y"/>
+              <ssh_port value="22"/>
+              <serial_cli_status value="3"/>
+              <serial_cli_speed value="5"/>
+            </mod_global_settings>
+          </rib_info>
+        </login>
+      </ribcl>
+    dest: /tmp/enable-ssh.xml
+
+- name: Configure HP iLO using enable-ssh.xml
+  hponcfg:
+    src: /tmp/enable-ssh.xml
+
+- name: Configure HP iLO on VMware ESXi hypervisor
+  hponcfg:
+    src: /tmp/enable-ssh.xml
+    executable: /opt/hp/tools/hponcfg
+
+

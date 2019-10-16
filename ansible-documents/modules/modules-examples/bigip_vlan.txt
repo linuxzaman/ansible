@@ -1,0 +1,109 @@
+EXAMPLES:
+
+- name: Create VLAN
+  bigip_vlan:
+    name: net1
+    provider:
+      password: secret
+      server: lb.mydomain.com
+      user: admin
+  delegate_to: localhost
+
+- name: Set VLAN tag
+  bigip_vlan:
+    name: net1
+    tag: 2345
+    provider:
+      user: admin
+      password: secret
+      server: lb.mydomain.com
+  delegate_to: localhost
+
+- name: Add VLAN 2345 as tagged to interface 1.1
+  bigip_vlan:
+    tagged_interface: 1.1
+    name: net1
+    tag: 2345
+    provider:
+      password: secret
+      server: lb.mydomain.com
+      user: admin
+  delegate_to: localhost
+
+- name: Add VLAN 1234 as tagged to interfaces 1.1 and 1.2
+  bigip_vlan:
+    tagged_interfaces:
+      - 1.1
+      - 1.2
+    name: net1
+    tag: 1234
+    provider:
+      user: admin
+      password: secret
+      server: lb.mydomain.com
+  delegate_to: localhost
+
+
+RETURN VALUES:
+
+description:
+  description: The description set on the VLAN.
+  returned: changed
+  type: str
+  sample: foo VLAN
+interfaces:
+  description: Interfaces that the VLAN is assigned to.
+  returned: changed
+  type: list
+  sample: ['1.1','1.2']
+partition:
+  description: The partition that the VLAN was created on.
+  returned: changed
+  type: str
+  sample: Common
+tag:
+  description: The ID of the VLAN.
+  returned: changed
+  type: int
+  sample: 2345
+cmp_hash:
+  description: New traffic disaggregation method.
+  returned: changed
+  type: str
+  sample: source-address
+dag_tunnel:
+  description: The new DAG tunnel setting.
+  returned: changed
+  type: str
+  sample: outer
+source_check:
+  description: The new Source Check setting.
+  returned: changed
+  type: bool
+  sample: yes
+fail_safe:
+  description: The new Fail Safe setting.
+  returned: changed
+  type: bool
+  sample: no
+fail_safe_timeout:
+  description: The new Fail Safe Timeout setting.
+  returned: changed
+  type: int
+  sample: 90
+fail_safe_action:
+  description: The new Fail Safe Action setting.
+  returned: changed
+  type: str
+  sample: reboot
+sflow_poll_interval:
+  description: The new sFlow Polling Interval setting.
+  returned: changed
+  type: int
+  sample: 10
+sflow_sampling_rate:
+  description: The new sFlow Sampling Rate setting.
+  returned: changed
+  type: int
+  sample: 20
+

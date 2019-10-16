@@ -1,0 +1,116 @@
+> VMWARE_HOST_SCANHBA    (/usr/lib/python2.7/dist-packages/ansible/modules/cloud/vmware/vmware_host_scanhba.py)
+
+        This module can force a rescan of the hosts HBA subsystem which is needed when wanting to mount a new datastore. You could use
+        this before using vmware_host_datastore to mount a new datastore to ensure your device/volume is ready. You can also optionally
+        force a Refresh of the Storage System in vCenter/ESXi Web Client. All parameters and VMware object names are case sensitive. You
+        can supply an esxi_hostname or a cluster_name
+
+  * This module is maintained by The Ansible Community
+OPTIONS (= is mandatory):
+
+- cluster_name
+        Cluster name to Rescan the storage subsystem on (this will run the rescan task on each host in the cluster).
+        [Default: (null)]
+
+- esxi_hostname
+        ESXi hostname to Rescan the storage subsystem on.
+        [Default: (null)]
+
+- hostname
+        The hostname or IP address of the vSphere vCenter or ESXi server.
+        If the value is not specified in the task, the value of environment variable `VMWARE_HOST' will be used instead.
+        Environment variable support added in Ansible 2.6.
+        [Default: (null)]
+        type: str
+
+- password
+        The password of the vSphere vCenter or ESXi server.
+        If the value is not specified in the task, the value of environment variable `VMWARE_PASSWORD' will be used instead.
+        Environment variable support added in Ansible 2.6.
+        (Aliases: pass, pwd)[Default: (null)]
+        type: str
+
+- port
+        The port number of the vSphere vCenter or ESXi server.
+        If the value is not specified in the task, the value of environment variable `VMWARE_PORT' will be used instead.
+        Environment variable support added in Ansible 2.6.
+        [Default: 443]
+        type: int
+        version_added: 2.5
+
+- refresh_storage
+        Refresh the storage system in vCenter/ESXi Web Client for each host found
+        [Default: False]
+        type: bool
+
+- username
+        The username of the vSphere vCenter or ESXi server.
+        If the value is not specified in the task, the value of environment variable `VMWARE_USER' will be used instead.
+        Environment variable support added in Ansible 2.6.
+        (Aliases: admin, user)[Default: (null)]
+        type: str
+
+- validate_certs
+        Allows connection when SSL certificates are not valid. Set to `false' when certificates are not trusted.
+        If the value is not specified in the task, the value of environment variable `VMWARE_VALIDATE_CERTS' will be used instead.
+        Environment variable support added in Ansible 2.6.
+        If set to `yes', please make sure Python >= 2.7.9 is installed on the given machine.
+        [Default: True]
+        type: bool
+
+
+NOTES:
+      * Tested on vSphere 6.0
+
+
+REQUIREMENTS:  python >= 2.6, PyVmomi
+
+AUTHOR: Michael Eaton (@michaeldeaton)
+        METADATA:
+          status:
+          - preview
+          supported_by: community
+        
+
+EXAMPLES:
+
+- name: Recan HBA's for a given ESXi host and refresh storage system objects
+  vmware_host_scanhba:
+      hostname: '{{ vcenter_hostname }}'
+      username: '{{ vcenter_username }}'
+      password: '{{ vcenter_password }}'
+      esxi_hostname: '{{ inventory_hostname }}'
+      refresh_storage: true
+  delegate_to: localhost
+
+- name: Rescan HBA's for a given cluster - all found hosts will be scanned
+  vmware_host_scanhba:
+      hostname: '{{ vcenter_hostname }}'
+      username: '{{ vcenter_username }}'
+      password: '{{ vcenter_password }}'
+      esxi_hostname: '{{ inventory_hostname }}'
+      refresh_storage: true
+  delegate_to: localhost
+
+- name: Recan HBA's for a given ESXi host and don't refresh storage system objects
+  vmware_host_scanhba:
+      hostname: '{{ vcenter_hostname }}'
+      username: '{{ vcenter_username }}'
+      password: '{{ vcenter_password }}'
+      esxi_hostname: '{{ inventory_hostname }}'
+  delegate_to: localhost
+
+
+RETURN VALUES:
+
+result:
+    description: return confirmation of requested host and updated / refreshed storage system
+    returned: always
+    type: dict
+    sample: {
+        "esxi01.example.com": {
+            "rescaned_hba": "true",
+            "refreshed_storage": "true"
+        }
+    }
+

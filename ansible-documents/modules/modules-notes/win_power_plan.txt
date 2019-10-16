@@ -1,0 +1,53 @@
+> WIN_POWER_PLAN    (/usr/lib/python2.7/dist-packages/ansible/modules/windows/win_power_plan.py)
+
+        This module will change the power plan of a Windows system to the defined string. Windows defaults to `balanced' which will cause
+        CPU throttling. In some cases it can be preferable to change the mode to `high performance' to increase CPU performance.
+
+  * This module is maintained by The Ansible Community
+OPTIONS (= is mandatory):
+
+= name
+        String value that indicates the desired power plan.
+        The power plan must already be present on the system.
+        Commonly there will be options for `balanced' and `high performance'.
+
+        type: str
+
+
+AUTHOR: Noah Sparks (@nwsparks)
+        METADATA:
+          status:
+          - preview
+          supported_by: community
+        
+
+EXAMPLES:
+
+- name: Change power plan to high performance
+  win_power_plan:
+    name: high performance
+
+
+RETURN VALUES:
+
+power_plan_name:
+  description: Value of the intended power plan.
+  returned: always
+  type: str
+  sample: balanced
+power_plan_enabled:
+  description: State of the intended power plan.
+  returned: success
+  type: bool
+  sample: true
+all_available_plans:
+  description: The name and enabled state of all power plans.
+  returned: always
+  type: dict
+  sample: |
+    {
+        "High performance":  false,
+        "Balanced":  true,
+        "Power saver":  false
+    }
+

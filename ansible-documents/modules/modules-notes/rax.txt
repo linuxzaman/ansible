@@ -1,0 +1,265 @@
+> RAX    (/usr/lib/python2.7/dist-packages/ansible/modules/cloud/rackspace/rax.py)
+
+        creates / deletes a Rackspace Public Cloud instance and optionally waits for it to be 'running'.
+
+  * This module is maintained by The Ansible Community
+OPTIONS (= is mandatory):
+
+- api_key
+        Rackspace API key, overrides `credentials'.
+        (Aliases: password)[Default: (null)]
+
+- auth_endpoint
+        The URI of the authentication service.
+        [Default: https://identity.api.rackspacecloud.com/v2.0/]
+        version_added: 1.5
+
+- auto_increment
+        Whether or not to increment a single number with the name of the created servers. Only applicable when used with the `group'
+        attribute or meta key.
+        [Default: yes]
+        type: bool
+        version_added: 1.5
+        
+
+- boot_from_volume
+        Whether or not to boot the instance from a Cloud Block Storage volume. If `yes' and `image' is specified a new volume will be
+        created at boot time. `boot_volume_size' is required with `image' to create a new volume at boot time.
+        [Default: no]
+        type: bool
+        version_added: 1.9
+        
+
+- boot_volume
+        Cloud Block Storage ID or Name to use as the boot volume of the instance
+        [Default: (null)]
+        version_added: 1.9
+        
+
+- boot_volume_size
+        Size of the volume to create in Gigabytes. This is only required with `image' and `boot_from_volume'.
+        [Default: 100]
+        version_added: 1.9
+        
+
+- boot_volume_terminate
+        Whether the `boot_volume' or newly created volume from `image' will be terminated when the server is terminated
+        [Default: no]
+        type: bool
+        version_added: 1.9
+        
+
+- config_drive
+        Attach read-only configuration drive to server as label config-2
+        [Default: no]
+        type: bool
+        version_added: 1.7
+        
+
+- count
+        number of instances to launch
+        [Default: 1]
+        version_added: 1.4
+        
+
+- count_offset
+        number count to start at
+        [Default: 1]
+        version_added: 1.4
+        
+
+- credentials
+        File to find the Rackspace credentials in. Ignored if `api_key' and `username' are provided.
+        (Aliases: creds_file)[Default: (null)]
+
+- disk_config
+        Disk partitioning strategy
+        (Choices: auto, manual)[Default: auto]
+        version_added: 1.4
+
+- env
+        Environment as configured in `~/.pyrax.cfg', see https://github.com/rackspace/pyrax/blob/master/docs/getting_started.md#pyrax-
+        configuration.
+        [Default: (null)]
+        version_added: 1.5
+
+- exact_count
+        Explicitly ensure an exact count of instances, used with state=active/present. If specified as `yes' and `count' is less than the
+        servers matched, servers will be deleted to match the count. If the number of matched servers is fewer than specified in `count'
+        additional servers will be added.
+        [Default: no]
+        type: bool
+        version_added: 1.4
+        
+
+- extra_client_args
+        A hash of key/value pairs to be used when creating the cloudservers client. This is considered an advanced option, use it wisely
+        and with caution.
+        [Default: (null)]
+        version_added: 1.6
+        
+
+- extra_create_args
+        A hash of key/value pairs to be used when creating a new server. This is considered an advanced option, use it wisely and with
+        caution.
+        [Default: (null)]
+        version_added: 1.6
+        
+
+- files
+        Files to insert into the instance. remotefilename:localcontent
+        [Default: (null)]
+
+- flavor
+        flavor to use for the instance
+        [Default: (null)]
+
+- group
+        host group to assign to server, is also used for idempotent operations to ensure a specific number of instances
+        [Default: (null)]
+        version_added: 1.4
+        
+
+- identity_type
+        Authentication mechanism to use, such as rackspace or keystone.
+        [Default: rackspace]
+        version_added: 1.5
+
+- image
+        image to use for the instance. Can be an `id', `human_id' or `name'. With `boot_from_volume', a Cloud Block Storage volume will
+        be created with this image
+        [Default: (null)]
+
+- instance_ids
+        list of instance ids, currently only used when state='absent' to remove instances
+        [Default: (null)]
+        version_added: 1.4
+        
+
+- key_name
+        key pair to use on the instance
+        (Aliases: keypair)[Default: (null)]
+
+- meta
+        A hash of metadata to associate with the instance
+        [Default: (null)]
+
+- name
+        Name to give the instance
+        [Default: (null)]
+
+- networks
+        The network to attach to the instances. If specified, you must include ALL networks including the public and private interfaces.
+        Can be `id' or `label'.
+        [Default: [u'public', u'private']]
+        version_added: 1.4
+        
+
+- region
+        Region to create an instance in.
+        [Default: DFW]
+
+- state
+        Indicate desired state of the resource
+        (Choices: present, absent)[Default: present]
+
+- tenant_id
+        The tenant ID used for authentication.
+        [Default: (null)]
+        version_added: 1.5
+
+- tenant_name
+        The tenant name used for authentication.
+        [Default: (null)]
+        version_added: 1.5
+
+- user_data
+        Data to be uploaded to the servers config drive. This option implies `config_drive'. Can be a file path or a string
+        [Default: (null)]
+        version_added: 1.7
+        
+
+- username
+        Rackspace username, overrides `credentials'.
+        [Default: (null)]
+
+- validate_certs
+        Whether or not to require SSL validation of API endpoints.
+        (Aliases: verify_ssl)[Default: (null)]
+        type: bool
+        version_added: 1.5
+
+- wait
+        wait for the instance to be in state 'running' before returning
+        [Default: no]
+        type: bool
+
+- wait_timeout
+        how long before wait gives up, in seconds
+        [Default: 300]
+
+
+NOTES:
+      * `exact_count' can be "destructive" if the number of running servers in the `group' is larger than that specified in
+        `count'. In such a case, the `state' is effectively set to `absent' and the extra servers are deleted. In the case of
+        deletion, the returned data structure will have `action' set to `delete', and the oldest servers in the group will be
+        deleted.
+      * The following environment variables can be used, `RAX_USERNAME', `RAX_API_KEY', `RAX_CREDS_FILE', `RAX_CREDENTIALS',
+        `RAX_REGION'.
+      * `RAX_CREDENTIALS' and `RAX_CREDS_FILE' points to a credentials file appropriate for pyrax. See
+        https://github.com/rackspace/pyrax/blob/master/docs/getting_started.md#authenticating
+      * `RAX_USERNAME' and `RAX_API_KEY' obviate the use of a credentials file
+      * `RAX_REGION' defines a Rackspace Public Cloud region (DFW, ORD, LON, ...)
+
+
+REQUIREMENTS:  python >= 2.6, pyrax
+
+AUTHOR: Jesse Keating (@omgjlk), Matt Martz (@sivel)
+        METADATA:
+          status:
+          - preview
+          supported_by: community
+        
+
+EXAMPLES:
+
+- name: Build a Cloud Server
+  gather_facts: False
+  tasks:
+    - name: Server build request
+      local_action:
+        module: rax
+        credentials: ~/.raxpub
+        name: rax-test1
+        flavor: 5
+        image: b11d9567-e412-4255-96b9-bd63ab23bcfe
+        key_name: my_rackspace_key
+        files:
+          /root/test.txt: /home/localuser/test.txt
+        wait: yes
+        state: present
+        networks:
+          - private
+          - public
+      register: rax
+
+- name: Build an exact count of cloud servers with incremented names
+  hosts: local
+  gather_facts: False
+  tasks:
+    - name: Server build requests
+      local_action:
+        module: rax
+        credentials: ~/.raxpub
+        name: test%03d.example.org
+        flavor: performance1-1
+        image: ubuntu-1204-lts-precise-pangolin
+        state: present
+        count: 10
+        count_offset: 10
+        exact_count: yes
+        group: test
+        wait: yes
+      register: rax
+
+

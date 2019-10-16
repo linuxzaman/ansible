@@ -1,0 +1,58 @@
+EXAMPLES:
+
+- name: Configure vNIC template
+  ucs_vnic_template:
+    hostname: 172.16.143.150
+    username: admin
+    password: password
+    name: vNIC-A
+    fabric: A
+    vlans_list:
+    - name: default
+      native: 'yes'
+
+- name: Configure vNIC template with failover
+  ucs_vnic_template:
+    hostname: 172.16.143.150
+    username: admin
+    password: password
+    name: vNIC-A-B
+    fabric: A-B
+    vlans_list:
+    - name: default
+      native: 'yes'
+      state: present
+
+- name: Remove vNIC template
+  ucs_vnic_template:
+    hostname: 172.16.143.150
+    username: admin
+    password: password
+    name: vNIC-A
+    state: absent
+
+- name: Remove another vNIC template
+  ucs_vnic_template:
+    hostname: 172.16.143.150
+    username: admin
+    password: password
+    name: vNIC-A-B
+    state: absent
+
+- name: Remove VLAN from template
+  ucs_vnic_template:
+    hostname: 172.16.143.150
+    username: admin
+    password: password
+    name: vNIC-A-B
+    fabric: A-B
+    vlans_list:
+    - name: default
+      native: 'yes'
+      state: absent
+
+
+RETURN VALUES:
+
+#
+

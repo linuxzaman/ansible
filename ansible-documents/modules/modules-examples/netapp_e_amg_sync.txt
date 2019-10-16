@@ -1,0 +1,54 @@
+EXAMPLES:
+
+- name: start AMG async
+      netapp_e_amg_sync:
+        name: "{{ amg_sync_name }}"
+        state: running
+        ssid: "{{ ssid }}"
+        api_url: "{{ netapp_api_url }}"
+        api_username: "{{ netapp_api_username }}"
+        api_password: "{{ netapp_api_password }}"
+
+
+RETURN VALUES:
+
+json:
+    description: The object attributes of the AMG.
+    returned: success
+    type: str
+    example:
+        {
+            "changed": false,
+            "connectionType": "fc",
+            "groupRef": "3700000060080E5000299C24000006EF57ACAC70",
+            "groupState": "optimal",
+            "id": "3700000060080E5000299C24000006EF57ACAC70",
+            "label": "made_with_ansible",
+            "localRole": "primary",
+            "mirrorChannelRemoteTarget": "9000000060080E5000299C24005B06E557AC7EEC",
+            "orphanGroup": false,
+            "recoveryPointAgeAlertThresholdMinutes": 20,
+            "remoteRole": "secondary",
+            "remoteTarget": {
+                "nodeName": {
+                    "ioInterfaceType": "fc",
+                    "iscsiNodeName": null,
+                    "remoteNodeWWN": "20040080E5299F1C"
+                },
+                "remoteRef": "9000000060080E5000299C24005B06E557AC7EEC",
+                "scsiinitiatorTargetBaseProperties": {
+                    "ioInterfaceType": "fc",
+                    "iscsiinitiatorTargetBaseParameters": null
+                }
+            },
+            "remoteTargetId": "ansible2",
+            "remoteTargetName": "Ansible2",
+            "remoteTargetWwn": "60080E5000299F880000000056A25D56",
+            "repositoryUtilizationWarnThreshold": 80,
+            "roleChangeProgress": "none",
+            "syncActivity": "idle",
+            "syncCompletionTimeAlertThresholdMinutes": 10,
+            "syncIntervalMinutes": 10,
+            "worldWideName": "60080E5000299C24000006EF57ACAC70"
+    }
+

@@ -1,0 +1,116 @@
+> VIRT    (/usr/lib/python2.7/dist-packages/ansible/modules/cloud/misc/virt.py)
+
+        Manages virtual machines supported by `libvirt'.
+
+  * This module is maintained by The Ansible Community
+OPTIONS (= is mandatory):
+
+- autostart
+        start VM at host startup.
+        [Default: (null)]
+        type: bool
+        version_added: 2.3
+
+- command
+        In addition to state management, various non-idempotent commands are available.
+        (Choices: create, define, destroy, freemem, get_xml, info, list_vms, nodeinfo, pause, shutdown, start, status, stop, undefine,
+        unpause, virttype)[Default: (null)]
+
+- name
+        name of the guest VM being managed. Note that VM must be previously defined with xml.
+        This option is required unless `command' is `list_vms'.
+        [Default: (null)]
+
+- state
+        Note that there may be some lag for state requests like `shutdown' since these refer only to VM states. After starting a guest,
+        it may not be immediately accessible. state and command are mutually exclusive except when command=list_vms. In this case all VMs
+        in specified state will be listed.
+        (Choices: destroyed, paused, running, shutdown)[Default: (null)]
+
+- uri
+        libvirt connection uri.
+        [Default: qemu:///system]
+
+- xml
+        XML document used with the define command.
+        Must be raw XML content using `lookup'. XML cannot be reference to a file.
+        [Default: (null)]
+
+
+REQUIREMENTS:  python >= 2.6, libvirt-python
+
+AUTHOR: Ansible Core Team, Michael DeHaan, Seth Vidal (@skvidal)
+        METADATA:
+          status:
+          - preview
+          supported_by: community
+        
+
+EXAMPLES:
+
+# a playbook task line:
+- virt:
+    name: alpha
+    state: running
+
+# /usr/bin/ansible invocations
+# ansible host -m virt -a "name=alpha command=status"
+# ansible host -m virt -a "name=alpha command=get_xml"
+# ansible host -m virt -a "name=alpha command=create uri=lxc:///"
+
+# defining and launching an LXC guest
+- name: define vm
+  virt:
+    command: define
+    xml: "{{ lookup('template', 'container-template.xml.j2') }}"
+    uri: 'lxc:///'
+- name: start vm
+  virt:
+    name: foo
+    state: running
+    uri: 'lxc:///'
+
+# setting autostart on a qemu VM (default uri)
+- name: set autostart for a VM
+  virt:
+    name: foo
+    autostart: yes
+
+# Defining a VM and making is autostart with host. VM will be off after this task
+- name: define vm from xml and set autostart
+  virt:
+    command: define
+    xml: "{{ lookup('template', 'vm_template.xml.j2') }}"
+    autostart: yes
+
+# Listing VMs
+- name: list all VMs
+  virt:
+    command: list_vms
+  register: all_vms
+
+- name: list only running VMs
+  virt:
+    command: list_vms
+    state: running
+  register: running_vms
+
+
+RETURN VALUES:
+
+# for list_vms command
+list_vms:
+    description: The list of vms defined on the remote system
+    type: list
+    returned: success
+    sample: [
+        "build.example.org",
+        "dev.example.org"
+    ]
+# for status command
+status:
+    description: The status of the VM, among running, crashed, paused and shutdown
+    type: str
+    sample: "success"
+    returned: success
+

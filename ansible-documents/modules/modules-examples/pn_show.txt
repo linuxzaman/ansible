@@ -1,0 +1,38 @@
+EXAMPLES:
+
+- name: run the vlan-show command
+  pn_show:
+    pn_command: 'vlan-show'
+    pn_parameters: id,scope,ports
+    pn_options: 'layout vertical'
+
+- name: run the vlag-show command
+  pn_show:
+    pn_command: 'vlag-show'
+    pn_parameters: 'id,name,cluster,mode'
+    pn_options: 'no-show-headers'
+
+- name: run the cluster-show command
+  pn_show:
+    pn_command: 'cluster-show'
+
+
+RETURN VALUES:
+
+command:
+  description: The CLI command run on the target node(s).
+  returned: always
+  type: str
+stdout:
+  description: The set of responses from the show command.
+  returned: always
+  type: list
+stderr:
+  description: The set of error responses from the show command.
+  returned: on error
+  type: list
+changed:
+  description: Indicates whether the CLI caused any change on the target.
+  returned: always(False)
+  type: bool
+

@@ -1,0 +1,40 @@
+EXAMPLES:
+
+# Note: These examples do not set authentication details or the AWS region,
+# see the AWS Guide for details.
+
+# List all placement groups.
+- ec2_placement_group_facts:
+  register: all_ec2_placement_groups
+
+# List two placement groups.
+- ec2_placement_group_facts:
+    names:
+     - my-cluster
+     - my-other-cluster
+  register: specific_ec2_placement_groups
+
+- debug: msg="{{ specific_ec2_placement_groups | json_query("[?name=='my-cluster']") }}"
+
+
+RETURN VALUES:
+
+placement_groups:
+  description: Placement group attributes
+  returned: always
+  type: complex
+  contains:
+    name:
+      description: PG name
+      type: str
+      sample: my-cluster
+    state:
+      description: PG state
+      type: str
+      sample: "available"
+    strategy:
+      description: PG strategy
+      type: str
+      sample: "cluster"
+
+

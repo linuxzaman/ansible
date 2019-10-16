@@ -1,0 +1,69 @@
+> URPMI    (/usr/lib/python2.7/dist-packages/ansible/modules/packaging/os/urpmi.py)
+
+        Manages packages with `urpmi' (such as for Mageia or Mandriva)
+
+  * This module is maintained by The Ansible Community
+OPTIONS (= is mandatory):
+
+- force
+        Assume "yes" is the answer to any question urpmi has to ask. Corresponds to the `--force' option for `urpmi'.
+        [Default: yes]
+        type: bool
+
+= name
+        A list of package names to install, upgrade or remove.
+        (Aliases: package, pkg)
+        version_added: 2.6
+
+- no-recommends
+        Corresponds to the `--no-recommends' option for `urpmi'.
+        (Aliases: no-recommends)[Default: yes]
+        type: bool
+
+- root
+        Specifies an alternative install root, relative to which all packages will be installed. Corresponds to the `--root' option for
+        `urpmi'.
+        (Aliases: installroot)[Default: /]
+        version_added: 2.4
+
+- state
+        Indicates the desired package state.
+        (Choices: absent, present)[Default: present]
+
+- update_cache
+        Update the package database first `urpmi.update -a'.
+        [Default: no]
+        type: bool
+
+
+AUTHOR: Philippe Makowski (@pmakowski)
+        METADATA:
+          status:
+          - preview
+          supported_by: community
+        
+
+EXAMPLES:
+
+- name: Install package foo
+  urpmi:
+    pkg: foo
+    state: present
+
+- name: Remove package foo
+  urpmi:
+    pkg: foo
+    state: absent
+
+- name: Remove packages foo and bar
+  urpmi:
+    pkg: foo,bar
+    state: absent
+
+- name: Update the package database (urpmi.update -a -q) and install bar (bar will be the updated if a newer version exists)
+- urpmi:
+    name: bar
+    state: present
+    update_cache: yes
+
+

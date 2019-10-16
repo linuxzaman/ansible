@@ -1,0 +1,111 @@
+> CLI_COMMAND    (/usr/lib/python2.7/dist-packages/ansible/modules/network/cli/cli_command.py)
+
+        Sends a command to a network device and returns the result read from the device.
+
+  * This module is maintained by The Ansible Network Team
+  * note: This module has a corresponding action plugin.
+
+OPTIONS (= is mandatory):
+
+- answer
+        The answer to reply with if `prompt' is matched. The value can be a single answer or a list of answer for multiple prompts. In
+        case the command execution results in multiple prompts the sequence of the prompt and excepted answer should be in same order.
+        [Default: (null)]
+        type: list
+
+- check_all
+        By default if any one of the prompts mentioned in `prompt' option is matched it won't check for other prompts. This boolean flag,
+        that when set to `True' will check for all the prompts mentioned in `prompt' option in the given order. If the option is set to
+        `True' all the prompts should be received from remote host if not it will result in timeout.
+        [Default: False]
+        type: bool
+
+= command
+        The command to send to the remote network device.  The resulting output from the command is returned, unless `sendonly' is set.
+
+
+- prompt
+        A single regex pattern or a sequence of patterns to evaluate the expected prompt from `command'.
+        [Default: (null)]
+        type: list
+
+- sendonly
+        The boolean value, that when set to true will send `command' to the device but not wait for a result.
+        [Default: False]
+        type: bool
+
+
+NOTES:
+      * This module is supported on `ansible_network_os' network platforms. See the :ref:`Network Platform Options
+        <platform_options>` for details.
+
+
+AUTHOR: Nathaniel Case (@qalthos)
+        METADATA:
+          status:
+          - preview
+          supported_by: network
+        
+
+EXAMPLES:
+
+- name: run show version on remote devices
+  cli_command:
+    command: show version
+
+- name: run command with json formatted output
+  cli_command:
+    command: show version | json
+
+- name: run command expecting user confirmation
+  cli_command:
+    command: commit replace
+    prompt: This commit will replace or remove the entire running configuration
+    answer: yes
+
+- name: run config mode command and handle prompt/answer
+  cli_command:
+    command: "{{ item }}"
+    prompt:
+      - "Exit with uncommitted changes"
+    answer: 'y'
+  loop:
+    - configure
+    - set system syslog file test any any
+    - exit
+
+- name: multiple prompt, multiple answer (mandatory check for all prompts)
+  cli_command:
+    command: "copy sftp sftp://user@host//user/test.img"
+    check_all: True
+    prompt:
+      - "Confirm download operation"
+      - "Password"
+      - "Do you want to change that to the standby image"
+    answer:
+      - 'y'
+      - <password>
+      - 'y'
+
+
+RETURN VALUES:
+
+stdout:
+  description: The response from the command
+  returned: when sendonly is false
+  type: str
+  sample: 'Version:      VyOS 1.1.7[...]'
+
+json:
+  description: A dictionary representing a JSON-formatted response
+  returned: when the device response is valid JSON
+  type: dict
+  sample: |
+    {
+      "architecture": "i386",
+      "bootupTimestamp": 1532649700.56,
+      "modelName": "vEOS",
+      "version": "4.15.9M"
+      [...]
+    }
+

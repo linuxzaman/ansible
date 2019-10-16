@@ -1,0 +1,36 @@
+EXAMPLES:
+
+# Note: These examples do not set authentication details, see the AWS Guide for details.
+
+# Gather facts about all availability zones
+- aws_az_facts:
+
+# Gather facts about a single availability zone
+- aws_az_facts:
+    filters:
+      zone-name: eu-west-1a
+
+
+RETURN VALUES:
+
+availability_zones:
+    returned: on success
+    description: >
+        Availability zones that match the provided filters. Each element consists of a dict with all the information
+        related to that available zone.
+    type: list
+    sample: "[
+        {
+            'messages': [],
+            'region_name': 'us-west-1',
+            'state': 'available',
+            'zone_name': 'us-west-1b'
+        },
+        {
+            'messages': [],
+            'region_name': 'us-west-1',
+            'state': 'available',
+            'zone_name': 'us-west-1c'
+        }
+    ]"
+

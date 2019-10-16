@@ -1,0 +1,260 @@
+> APT    (/usr/lib/python2.7/dist-packages/ansible/modules/packaging/os/apt.py)
+
+        Manages `apt' packages (such as for Debian/Ubuntu).
+
+  * This module is maintained by The Ansible Core Team
+OPTIONS (= is mandatory):
+
+- allow_unauthenticated
+        Ignore if packages cannot be authenticated. This is useful for bootstrapping environments that manage their own apt-key setup.
+        `allow_unauthenticated' is only supported with state: `install'/`present'
+        [Default: no]
+        type: bool
+        version_added: 2.1
+
+- autoclean
+        If `yes', cleans the local repository of retrieved package files that can no longer be downloaded.
+        [Default: no]
+        type: bool
+        version_added: 2.4
+
+- autoremove
+        If `yes', remove unused dependency packages for all module states except `build-dep'. It can also be used as the only option.
+        Previous to version 2.4, autoclean was also an alias for autoremove, now it is its own separate command. See documentation for
+        further information.
+        [Default: no]
+        type: bool
+        version_added: 2.1
+
+- cache_valid_time
+        Update the apt cache if its older than the `cache_valid_time'. This option is set in seconds.
+        As of Ansible 2.4, if explicitly set, this sets `update_cache=yes'.
+        [Default: 0]
+
+- deb
+        Path to a .deb package on the remote machine.
+        If :// in the path, ansible will attempt to download deb before installing. (Version added 2.1)
+        Requires the `xz-utils' package to extract the control file of the deb package to install.
+        [Default: (null)]
+        version_added: 1.6
+
+- default_release
+        Corresponds to the `-t' option for `apt' and sets pin priorities
+        [Default: (null)]
+
+- dpkg_options
+        Add dpkg options to apt command. Defaults to '-o "Dpkg::Options::=--force-confdef" -o "Dpkg::Options::=--force-confold"'
+        Options should be supplied as comma separated list
+        [Default: force-confdef,force-confold]
+
+- force
+        Corresponds to the `--force-yes' to `apt-get' and implies `allow_unauthenticated: yes'
+        This option will disable checking both the packages' signatures and the certificates of the web servers they are downloaded from.
+        This option *is not* the equivalent of passing the `-f' flag to `apt-get' on the command line
+        **This is a destructive operation with the potential to destroy your system, and it should almost never be used.** Please also
+        see `man apt-get' for more information.
+        [Default: no]
+        type: bool
+
+- force_apt_get
+        Force usage of apt-get instead of aptitude
+        [Default: no]
+        type: bool
+        version_added: 2.4
+
+- install_recommends
+        Corresponds to the `--no-install-recommends' option for `apt'. `yes' installs recommended packages.  `no' does not install
+        recommended packages. By default, Ansible will use the same defaults as the operating system. Suggested packages are never
+        installed.
+        (Aliases: install-recommends)[Default: (null)]
+        type: bool
+
+- name
+        A list of package names, like `foo', or package specifier with version, like `foo=1.0'. Name wildcards (fnmatch) like `apt*' and
+        version wildcards like `foo=1.0*' are also supported.
+        (Aliases: package, pkg)[Default: (null)]
+
+- only_upgrade
+        Only upgrade a package if it is already installed.
+        [Default: no]
+        type: bool
+        version_added: 2.1
+
+- policy_rc_d
+        Force the exit code of /usr/sbin/policy-rc.d.
+        For example, if `policy_rc_d=101' the installed package will not trigger a service start.
+        If /usr/sbin/policy-rc.d already exist, it is backed up and restored after the package installation.
+        If `null', the /usr/sbin/policy-rc.d isn't created/changed.
+        [Default: None]
+        type: int
+        version_added: 2.8
+
+- purge
+        Will force purging of configuration files if the module state is set to `absent'.
+        [Default: no]
+        type: bool
+
+- state
+        Indicates the desired package state. `latest' ensures that the latest version is installed. `build-dep' ensures the package build
+        dependencies are installed. `fixed' attempt to correct a system with broken dependencies in place.
+        (Choices: absent, build-dep, latest, present, fixed)[Default: present]
+
+- update_cache
+        Run the equivalent of `apt-get update' before the operation. Can be run as part of the package installation or as a separate
+        step.
+        [Default: no]
+        type: bool
+
+- upgrade
+        If yes or safe, performs an aptitude safe-upgrade.
+        If full, performs an aptitude full-upgrade.
+        If dist, performs an apt-get dist-upgrade.
+        Note: This does not upgrade a specific package, use state=latest for that.
+        Note: Since 2.4, apt-get is used as a fall-back if aptitude is not present.
+        (Choices: dist, full, no, safe, yes)[Default: no]
+        version_added: 1.1
+
+
+NOTES:
+      * Three of the upgrade modes (`full', `safe' and its alias `yes') required `aptitude' up to 2.3, since 2.4 `apt-get' is used
+        as a fall-back.
+      * apt starts newly installed services by default, this is what the underlying tooling does, to avoid this you can set the
+        ``RUNLEVEL`` environment variable to 1.
+      * The apt-get commandline supports implicit regex matches here but we do not because it can let typos through easier (If you
+        typo `foo' as `fo' apt-get would install packages that have "fo" in their name with a warning and a prompt for the user.
+        Since we don't have warnings and prompts before installing we disallow this.Use an explicit fnmatch pattern if you want
+        wildcarding)
+      * When used with a `loop:` each package will be processed individually, it is much more efficient to pass the list directly
+        to the `name` option.
+
+
+REQUIREMENTS:  python-apt (python 2), python3-apt (python 3), aptitude (before 2.4)
+
+AUTHOR: Matthew Williams (@mgwilliams)
+        METADATA:
+          status:
+          - stableinterface
+          supported_by: core
+        
+
+EXAMPLES:
+
+- name: Update repositories cache and install "foo" package
+  apt:
+    name: foo
+    update_cache: yes
+
+- name: Install apache httpd but avoid starting it immediately (state=present is optional)
+  apt:
+    name: apache2
+    state: present
+  environment:
+    RUNLEVEL: 1
+
+- name: Remove "foo" package
+  apt:
+    name: foo
+    state: absent
+
+- name: Install the package "foo"
+  apt:
+    name: foo
+
+- name: Install a list of packages
+  apt:
+    name: "{{ packages }}"
+  vars:
+    packages:
+    - foo
+    - foo-tools
+
+- name: Install the version '1.00' of package "foo"
+  apt:
+    name: foo=1.00
+
+- name: Update the repository cache and update package "nginx" to latest version using default release squeeze-backport
+  apt:
+    name: nginx
+    state: latest
+    default_release: squeeze-backports
+    update_cache: yes
+
+- name: Install latest version of "openjdk-6-jdk" ignoring "install-recommends"
+  apt:
+    name: openjdk-6-jdk
+    state: latest
+    install_recommends: no
+
+- name: Upgrade all packages to the latest version
+  apt:
+    name: "*"
+    state: latest
+
+- name: Update all packages to the latest version
+  apt:
+    upgrade: dist
+
+- name: Run the equivalent of "apt-get update" as a separate step
+  apt:
+    update_cache: yes
+
+- name: Only run "update_cache=yes" if the last one is more than 3600 seconds ago
+  apt:
+    update_cache: yes
+    cache_valid_time: 3600
+
+- name: Pass options to dpkg on run
+  apt:
+    upgrade: dist
+    update_cache: yes
+    dpkg_options: 'force-confold,force-confdef'
+
+- name: Install a .deb package
+  apt:
+    deb: /tmp/mypackage.deb
+
+- name: Install the build dependencies for package "foo"
+  apt:
+    pkg: foo
+    state: build-dep
+
+- name: Install a .deb package from the internet.
+  apt:
+    deb: https://example.com/python-ppq_0.1-1_all.deb
+
+- name: Remove useless packages from the cache
+  apt:
+    autoclean: yes
+
+- name: Remove dependencies that are no longer required
+  apt:
+    autoremove: yes
+
+
+RETURN VALUES:
+
+cache_updated:
+    description: if the cache was updated or not
+    returned: success, in some cases
+    type: bool
+    sample: True
+cache_update_time:
+    description: time of the last cache update (0 if unknown)
+    returned: success, in some cases
+    type: int
+    sample: 1425828348000
+stdout:
+    description: output from apt
+    returned: success, when needed
+    type: str
+    sample: "Reading package lists...
+Building dependency tree...
+Reading state information...
+The following extra packages will be installed:
+  apache2-bin ..."
+stderr:
+    description: error output from apt
+    returned: success, when needed
+    type: str
+    sample: "AH00558: apache2: Could not reliably determine the server's fully qualified domain name, using 127.0.1.1. Set the 'ServerName' directive globally to ..."
+

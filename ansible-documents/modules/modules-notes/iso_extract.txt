@@ -1,0 +1,70 @@
+> ISO_EXTRACT    (/usr/lib/python2.7/dist-packages/ansible/modules/files/iso_extract.py)
+
+        This module has two possible ways of operation. If 7zip is installed on the system, this module extracts files from an ISO into a
+        temporary directory and copies files to a given destination, if needed. If the user has mount-capabilities (CAP_SYS_ADMIN on
+        Linux) this module mounts the ISO image to a temporary location, and copies files to a given destination, if needed.
+
+  * This module is maintained by The Ansible Community
+OPTIONS (= is mandatory):
+
+= dest
+        The destination directory to extract files to.
+
+        type: path
+
+- executable
+        The path to the `7z' executable to use for extracting files from the ISO.
+        [Default: 7z]
+        type: path
+        version_added: 2.4
+
+= files
+        A list of files to extract from the image.
+        Extracting directories does not work.
+
+        type: list
+
+- force
+        If `yes', which will replace the remote file when contents are different than the source.
+        If `no', the file will only be extracted and copied if the destination does not already exist.
+        (Aliases: thirsty)[Default: True]
+        type: bool
+        version_added: 2.4
+
+= image
+        The ISO image to extract files from.
+        (Aliases: path, src)
+        type: path
+
+
+NOTES:
+      * Only the file checksum (content) is taken into account when extracting files from the ISO image. If `force=no', only checks
+        the presence of the file.
+      * In Ansible 2.3 this module was using `mount' and `umount' commands only, requiring root access. This is no longer needed
+        with the introduction of 7zip for extraction.
+
+
+REQUIREMENTS:  Either 7z (from `7zip' or `p7zip' package), Or mount capabilities (root-access, or CAP_SYS_ADMIN capability on Linux)
+
+AUTHOR: Jeroen Hoekx (@jhoekx), Matt Robinson (@ribbons), Dag Wieers (@dagwieers)
+        METADATA:
+          status:
+          - preview
+          supported_by: community
+        
+
+EXAMPLES:
+
+- name: Extract kernel and ramdisk from a LiveCD
+  iso_extract:
+    image: /tmp/rear-test.iso
+    dest: /tmp/virt-rear/
+    files:
+    - isolinux/kernel
+    - isolinux/initrd.cgz
+
+
+RETURN VALUES:
+
+#
+

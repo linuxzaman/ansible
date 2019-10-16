@@ -1,0 +1,94 @@
+> RESTCONF_CONFIG    (/usr/lib/python2.7/dist-packages/ansible/modules/network/restconf/restconf_config.py)
+
+        RESTCONF is a standard mechanisms to allow web applications to configure and manage data. RESTCONF is a IETF standard and
+        documented on RFC 8040. This module allows the user to configure data on RESTCONF enabled devices.
+
+  * This module is maintained by The Ansible Network Team
+OPTIONS (= is mandatory):
+
+- content
+        The configuration data in format as specififed in `format' option. Required unless `method' is `delete'.
+        [Default: (null)]
+
+- format
+        The format of the configuration provided as value of `content'. Accepted values are `xml' and `json' and the given configuration
+        format should be supported by remote RESTCONF server.
+        (Choices: json, xml)[Default: json]
+
+- method
+        The RESTCONF method to manage the configuration change on device. The value `post' is used to create a data resource or invoke an
+        operation resource, `put' is used to replace the target data resource, `patch' is used to modify the target resource, and
+        `delete' is used to delete the target resource.
+        (Choices: post, put, patch, delete)[Default: post]
+
+= path
+        URI being used to execute API calls.
+
+
+
+AUTHOR: Ganesh Nalawade (@ganeshrn)
+        METADATA:
+          status:
+          - preview
+          supported_by: network
+        
+
+EXAMPLES:
+
+- name: create l3vpn services
+  restconf_config:
+    path: /config/ietf-l3vpn-svc:l3vpn-svc/vpn-services
+    content: |
+          {
+            "vpn-service":[
+                            {
+                              "vpn-id": "red_vpn2",
+                              "customer-name": "blue",
+                              "vpn-service-topology": "ietf-l3vpn-svc:any-to-any"
+                            },
+                            {
+                              "vpn-id": "blue_vpn1",
+                              "customer-name": "red",
+                              "vpn-service-topology": "ietf-l3vpn-svc:any-to-any"
+                            }
+                          ]
+           }
+
+
+RETURN VALUES:
+
+candidate:
+  description: The configuration sent to the device.
+  returned: When the method is not delete
+  type: dict
+  sample: |
+        {
+            "vpn-service": [
+                {
+                    "customer-name": "red",
+                    "vpn-id": "blue_vpn1",
+                    "vpn-service-topology": "ietf-l3vpn-svc:any-to-any"
+                }
+            ]
+        }
+running:
+  description: The current running configuration on the device.
+  returned: When the method is not delete
+  type: dict
+  sample: |
+        {
+            "vpn-service": [
+                {
+                  "vpn-id": "red_vpn2",
+                  "customer-name": "blue",
+                  "vpn-service-topology": "ietf-l3vpn-svc:any-to-any"
+                },
+                {
+                  "vpn-id": "blue_vpn1",
+                  "customer-name": "red",
+                  "vpn-service-topology": "ietf-l3vpn-svc:any-to-any"
+                }
+            ]
+        }
+
+

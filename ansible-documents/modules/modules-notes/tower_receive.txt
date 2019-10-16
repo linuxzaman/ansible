@@ -1,0 +1,127 @@
+> TOWER_RECEIVE    (/usr/lib/python2.7/dist-packages/ansible/modules/web_infrastructure/ansible_tower/tower_receive.py)
+
+        Receive assets from Ansible Tower. See https://www.ansible.com/tower for an overview.
+
+  * This module is maintained by The Ansible Community
+OPTIONS (= is mandatory):
+
+- all
+        Export all assets
+        [Default: False]
+        type: bool
+
+- credential
+        List of credential names to export
+        [Default: []]
+
+- credential_type
+        List of credential type names to export
+        [Default: []]
+
+- inventory
+        List of inventory names to export
+        [Default: []]
+
+- inventory_script
+        List of inventory script names to export
+        [Default: []]
+
+- job_template
+        List of job template names to export
+        [Default: []]
+
+- notification_template
+        List of notification template names to export
+        [Default: []]
+
+- organization
+        List of organization names to export
+        [Default: []]
+
+- project
+        List of project names to export
+        [Default: []]
+
+- team
+        List of team names to export
+        [Default: []]
+
+- tower_config_file
+        Path to the Tower config file.
+        [Default: (null)]
+        type: path
+
+- tower_host
+        URL to your Tower instance.
+        [Default: (null)]
+        type: str
+
+- tower_password
+        Password for your Tower instance.
+        [Default: (null)]
+        type: str
+
+- tower_username
+        Username for your Tower instance.
+        [Default: (null)]
+        type: str
+
+- user
+        List of user names to export
+        [Default: []]
+
+- validate_certs
+        Whether to allow insecure connections to Tower.
+        If `no', SSL certificates will not be validated.
+        This should only be used on personally controlled sites using self-signed certificates.
+        (Aliases: tower_verify_ssl)[Default: (null)]
+        type: bool
+
+- workflow
+        List of workflow names to export
+        [Default: []]
+
+
+NOTES:
+      * Specifying a name of "all" for any asset type will export all items of that asset type.
+      * If no `config_file' is provided we will attempt to use the tower-cli library defaults to find your Tower host information.
+      * `config_file' should contain Tower configuration in the following format host=hostname username=username password=password
+
+
+REQUIREMENTS:  ansible-tower-cli >= 3.0.2, ansible-tower-cli >= 3.3.0
+
+AUTHOR: John Westcott IV (@john-westcott-iv)
+        METADATA:
+          status:
+          - preview
+          supported_by: community
+        
+
+EXAMPLES:
+
+- name: Export all tower assets
+  tower_receive:
+    all: True
+    tower_config_file: "~/tower_cli.cfg"
+
+- name: Export all inventories
+  tower_receive:
+    inventory:
+      - all
+
+- name: Export a job template named "My Template" and all Credentials
+  tower_receive:
+    job_template:
+      - "My Template"
+    credential:
+      - all
+
+
+RETURN VALUES:
+
+assets:
+    description: The exported assets
+    returned: success
+    type: dict
+    sample: [ {}, {} ]
+

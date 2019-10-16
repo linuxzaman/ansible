@@ -1,0 +1,90 @@
+> WIN_OPTIONAL_FEATURE    (/usr/lib/python2.7/dist-packages/ansible/modules/windows/win_optional_feature.py)
+
+        Install or uninstall optional Windows features on non-Server Windows. This module uses the `Enable-WindowsOptionalFeature' and
+        `Disable-WindowsOptionalFeature' cmdlets.
+
+  * This module is maintained by The Ansible Community
+OPTIONS (= is mandatory):
+
+- include_parent
+        Whether to enable the parent feature and the parent's dependencies.
+        [Default: False]
+        type: bool
+
+= name
+        The name(s) of the feature to install.
+        This relates to `FeatureName' in the Powershell cmdlet.
+        To list all available features use the PowerShell command `Get-WindowsOptionalFeature'.
+
+        type: list
+
+- source
+        Specify a source to install the feature from.
+        Can either be `{driveletter}:\sources\sxs' or `\\{IP}\share\sources\sxs'.
+        [Default: (null)]
+        type: str
+
+- state
+        Whether to ensure the feature is absent or present on the system.
+        (Choices: absent, present)[Default: present]
+        type: str
+
+
+SEE ALSO:
+      * Module win_chocolatey
+           The official documentation on the win_chocolatey module.
+           https://docs.ansible.com/ansible/latest/modules/win_chocolatey_module.html
+      * Module win_feature
+           The official documentation on the win_feature module.
+           https://docs.ansible.com/ansible/latest/modules/win_feature_module.html
+      * Module win_package
+           The official documentation on the win_package module.
+           https://docs.ansible.com/ansible/latest/modules/win_package_module.html
+
+
+AUTHOR: Carson Anderson (@rcanderson23)
+        METADATA:
+          status:
+          - preview
+          supported_by: community
+        
+
+EXAMPLES:
+
+- name: Install .Net 3.5
+  win_optional_feature:
+    name: NetFx3
+    state: present
+
+- name: Install .Net 3.5 from source
+  win_optional_feature:
+    name: NetFx3
+    source: \\share01\win10\sources\sxs
+    state: present
+
+- name: Install Microsoft Subsystem for Linux
+  win_optional_feature:
+    name: Microsoft-Windows-Subsystem-Linux
+    state: present
+  register: wsl_status
+
+- name: Reboot if installing Linux Subsytem as feature requires it
+  win_reboot:
+  when: wsl_status.reboot_required
+
+- name: Install multiple features in one task
+  win_optional_feature:
+    name:
+    - NetFx3
+    - Microsoft-Windows-Subsystem-Linux
+    state: present
+
+
+RETURN VALUES:
+
+reboot_required:
+    description: True when the target server requires a reboot to complete updates
+    returned: success
+    type: bool
+    sample: true
+

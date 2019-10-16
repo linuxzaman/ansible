@@ -1,0 +1,31 @@
+EXAMPLES:
+
+- name: Enable email-based alerting
+      netapp_e_alerts:
+        state: enabled
+        sender: noreply@example.com
+        server: mail@example.com
+        contact: "Phone: 1-555-555-5555"
+        recipients:
+            - name1@example.com
+            - name2@example.com
+        api_url: "10.1.1.1:8443"
+        api_username: "admin"
+        api_password: "myPass"
+
+    - name: Disable alerting
+      netapp_e_alerts:
+        state: disabled
+        api_url: "10.1.1.1:8443"
+        api_username: "admin"
+        api_password: "myPass"
+
+
+RETURN VALUES:
+
+msg:
+    description: Success message
+    returned: on success
+    type: str
+    sample: The settings have been updated.
+

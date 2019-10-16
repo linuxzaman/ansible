@@ -1,0 +1,157 @@
+> GCP_HEALTHCHECK    (/usr/lib/python2.7/dist-packages/ansible/modules/cloud/google/_gcp_healthcheck.py)
+
+        Create, Update or Destroy a Healthcheck. Currently only HTTP and HTTPS Healthchecks are supported. Healthchecks are used to
+        monitor individual instances, managed instance groups and/or backend services. Healtchecks are reusable. Visit
+        https://cloud.google.com/compute/docs/load-balancing/health-checks for an overview of Healthchecks on GCP. See
+        https://cloud.google.com/compute/docs/reference/latest/httpHealthChecks for API details on HTTP Healthchecks. See
+        https://cloud.google.com/compute/docs/reference/latest/httpsHealthChecks for more details on the HTTPS Healtcheck API.
+
+DEPRECATED: 
+
+	Reason: Updated modules released with increased functionality
+	Will be removed in: Ansible 2.12
+	Alternatives: Use M(gcp_compute_health_check), M(gcp_compute_http_health_check) or M(gcp_compute_https_health_check) instead.
+
+
+
+  * This module is maintained by The Ansible Community
+OPTIONS (= is mandatory):
+
+- check_interval
+        How often (in seconds) to send a health check.
+        [Default: 5]
+
+- credentials_file
+        Path to the JSON file associated with the service account email
+        [Default: (null)]
+
+= healthcheck_name
+        Name of the Healthcheck.
+
+
+= healthcheck_type
+        Type of Healthcheck.
+        (Choices: HTTP, HTTPS)
+
+- healthy_threshold
+        A so-far unhealthy instance will be marked healthy after this many consecutive successes.
+        [Default: 2]
+
+= host_header
+        The value of the host header in the health check request. If left empty, the public IP on behalf of which this health check is
+        performed will be used.
+        [Default: ]
+
+- port
+        The TCP port number for the health check request. The default value is 443 for HTTPS and 80 for HTTP.
+        [Default: (null)]
+
+- project_id
+        Your GCP project ID
+        [Default: (null)]
+
+- request_path
+        The request path of the HTTPS health check request.
+        [Default: /]
+
+- service_account_email
+        service account email
+        [Default: (null)]
+
+- service_account_permissions
+        service account permissions (see https://cloud.google.com/sdk/gcloud/reference/compute/instances/create, --scopes section for
+        detailed information)
+        (Choices: bigquery, cloud-platform, compute-ro, compute-rw, useraccounts-ro, useraccounts-rw, datastore, logging-write,
+        monitoring, sql-admin, storage-full, storage-ro, storage-rw, taskqueue, userinfo-email)[Default: (null)]
+        version_added: 2.0
+
+= state
+        State of the Healthcheck.
+        (Choices: present, absent)
+
+- timeout
+        How long (in seconds) to wait for a response before claiming failure. It is invalid for timeout to have a greater value than
+        check_interval.
+        [Default: 5]
+
+- unhealthy_threshold
+        A so-far healthy instance will be marked unhealthy after this many consecutive failures.
+        [Default: 2]
+
+
+NOTES:
+      * Only supports HTTP and HTTPS Healthchecks currently.
+
+
+REQUIREMENTS:  python >= 2.6, google-api-python-client >= 1.6.2, google-auth >= 0.9.0, google-auth-httplib2 >= 0.0.2
+
+AUTHOR: Tom Melendez (@supertom) <tom@supertom.com>
+        METADATA:
+          status:
+          - deprecated
+          supported_by: community
+        
+
+EXAMPLES:
+
+- name: Create Minimum HealthCheck
+  gcp_healthcheck:
+    service_account_email: "{{ service_account_email }}"
+    credentials_file: "{{ credentials_file }}"
+    project_id: "{{ project_id }}"
+    healthcheck_name: my-healthcheck
+    healthcheck_type: HTTP
+    state: present
+- name: Create HTTP HealthCheck
+  gcp_healthcheck:
+    service_account_email: "{{ service_account_email }}"
+    credentials_file: "{{ credentials_file }}"
+    project_id: "{{ project_id }}"
+    healthcheck_name: my-healthcheck
+    healthcheck_type: HTTP
+    host: my-host
+    request_path: /hc
+    check_interval: 10
+    timeout: 30
+    unhealthy_threshhold: 2
+    healthy_threshhold: 1
+    state: present
+- name: Create HTTPS HealthCheck
+  gcp_healthcheck:
+    service_account_email: "{{ service_account_email }}"
+    credentials_file: "{{ credentials_file }}"
+    project_id: "{{ project_id }}"
+    healthcheck_name: "{{ https_healthcheck }}"
+    healthcheck_type: HTTPS
+    host_header: my-host
+    request_path: /hc
+    check_interval: 5
+    timeout: 5
+    unhealthy_threshold: 2
+    healthy_threshold: 1
+    state: present
+
+
+RETURN VALUES:
+
+state:
+    description: state of the Healthcheck
+    returned: Always.
+    type: str
+    sample: present
+healthcheck_name:
+    description: Name of the Healthcheck
+    returned: Always
+    type: str
+    sample: my-url-map
+healthcheck_type:
+    description: Type of the Healthcheck
+    returned: Always
+    type: str
+    sample: HTTP
+healthcheck:
+    description: GCP Healthcheck dictionary
+    returned: Always. Refer to GCP documentation for detailed field descriptions.
+    type: dict
+    sample: { "name": "my-hc", "port": 443, "requestPath": "/foo" }
+

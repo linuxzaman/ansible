@@ -1,0 +1,81 @@
+EXAMPLES:
+
+- name: Create UTM aaa_group
+  utm_aaa_group:
+    utm_host: sophos.host.name
+    utm_token: abcdefghijklmno1234
+    name: TestAAAGroupEntry
+    backend_match: ldap
+    dynamic: directory_groups
+    ldap_attributes: memberof
+    ldap_attributes_value: "cn=groupname,ou=Groups,dc=mydomain,dc=com"
+    network: REF_OBJECT_STRING
+    state: present
+
+- name: Remove UTM aaa_group
+  utm_aaa_group:
+    utm_host: sophos.host.name
+    utm_token: abcdefghijklmno1234
+    name: TestAAAGroupEntry
+    state: absent
+
+
+RETURN VALUES:
+
+result:
+    description: The utm object that was created.
+    returned: success
+    type: complex
+    contains:
+        _ref:
+            description: The reference name of the object.
+            type: string
+        _locked:
+            description: Whether or not the object is currently locked.
+            type: boolean
+        _type:
+            description: The type of the object.
+            type: string
+        name:
+            description: The name of the object.
+            type: string
+        adirectory_groups:
+            description: List of Active Directory Groups.
+            type: string
+        adirectory_groups_sids:
+            description: List of Active Directory Groups SIDS.
+            type: list
+        backend_match:
+            description: The backend to use.
+            type: string
+        comment:
+            description: The comment string.
+            type: string
+        dynamic:
+            description: Whether the group match is ipsec_dn or directory_group.
+            type: string
+        edirectory_groups:
+            description: List of eDirectory Groups.
+            type: string
+        ipsec_dn:
+            description: ipsec_dn identifier to match.
+            type: string
+        ldap_attribute:
+            description: The LDAP Attribute to match against.
+            type: string
+        ldap_attribute_value:
+            description: The LDAP Attribute Value to match against.
+            type: string
+        members:
+            description: List of member identifiers of the group.
+            type: list
+        network:
+            description: The identifier of the network (network/aaa).
+            type: string
+        radius_group:
+            description: The radius group identifier.
+            type: string
+        tacacs_group:
+            description: The tacacs group identifier.
+            type: string
+

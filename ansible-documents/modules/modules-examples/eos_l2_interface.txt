@@ -1,0 +1,37 @@
+EXAMPLES:
+
+- name: Ensure Ethernet1 does not have any switchport
+  eos_l2_interface:
+    name: Ethernet1
+    state: absent
+
+- name: Ensure Ethernet1 is configured for access vlan 20
+  eos_l2_interface:
+    name: Ethernet1
+    mode: access
+    access_vlan: 20
+
+- name: Ensure Ethernet1 is a trunk port and ensure 2-50 are being tagged (doesn't mean others aren't also being tagged)
+  eos_l2_interface:
+    name: Ethernet1
+    mode: trunk
+    native_vlan: 10
+    trunk_allowed_vlans: 2-50
+
+- name: Set switchports on aggregate
+  eos_l2_interface:
+    aggregate:
+      - { name: ethernet1, mode: access, access_vlan: 20}
+      - { name: ethernet2, mode: trunk, native_vlan: 10}
+
+
+RETURN VALUES:
+
+commands:
+  description: The list of configuration mode commands to send to the device
+  returned: always.
+  type: list
+  sample:
+    - interface ethernet1
+    - switchport access vlan 20
+

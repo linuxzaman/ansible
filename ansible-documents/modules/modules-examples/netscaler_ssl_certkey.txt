@@ -1,0 +1,39 @@
+EXAMPLES:
+
+- name: Setup ssl certkey
+  delegate_to: localhost
+  netscaler_ssl_certkey:
+    nitro_user: nsroot
+    nitro_pass: nsroot
+    nsip: 172.18.0.2
+
+    certkey: certirificate_1
+    cert: server.crt
+    key: server.key
+    expirymonitor: enabled
+    notificationperiod: 30
+    inform: PEM
+    password: False
+    passplain: somesecret
+
+
+RETURN VALUES:
+
+loglines:
+    description: list of logged messages by the module
+    returned: always
+    type: list
+    sample: "['message 1', 'message 2']"
+
+msg:
+    description: Message detailing the failure reason
+    returned: failure
+    type: str
+    sample: "Action does not exist"
+
+diff:
+    description: List of differences between the actual configured object and the configuration specified in the module
+    returned: failure
+    type: dict
+    sample: "{ 'targetlbvserver': 'difference. ours: (str) server1 other: (str) server2' }"
+

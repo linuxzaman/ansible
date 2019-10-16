@@ -1,0 +1,39 @@
+> ONYX_LLDP    (/usr/lib/python2.7/dist-packages/ansible/modules/network/onyx/onyx_lldp.py)
+
+        This module provides declarative management of LLDP service configuration on Mellanox ONYX network devices.
+
+  * This module is maintained by The Ansible Community
+OPTIONS (= is mandatory):
+
+- state
+        State of the LLDP protocol configuration.
+        (Choices: present, absent)[Default: present]
+
+
+AUTHOR: Samer Deeb (@samerd)
+        METADATA:
+          status:
+          - preview
+          supported_by: community
+        
+
+EXAMPLES:
+
+- name: Enable LLDP protocol
+  onyx_lldp:
+    state: present
+
+- name: Disable LLDP protocol
+  onyx_lldp:
+    state: lldp
+
+
+RETURN VALUES:
+
+commands:
+  description: The list of configuration mode commands to send to the device
+  returned: always.
+  type: list
+  sample:
+    - lldp
+

@@ -1,0 +1,52 @@
+> UDM_DNS_RECORD    (/usr/lib/python2.7/dist-packages/ansible/modules/cloud/univention/udm_dns_record.py)
+
+        This module allows to manage dns records on a univention corporate server (UCS). It uses the python API of the UCS to create a
+        new object or edit it.
+
+  * This module is maintained by The Ansible Community
+OPTIONS (= is mandatory):
+
+- data
+        Additional data for this record, e.g. ['a': '192.0.2.1']. Required if `state=present'.
+        [Default: []]
+
+= name
+        Name of the record, this is also the DNS record. E.g. www for www.example.com.
+
+
+- state
+        Whether the dns record is present or not.
+        (Choices: present, absent)[Default: present]
+
+= type
+        Define the record type. `host_record' is a A or AAAA record, `alias' is a CNAME, `ptr_record' is a PTR record, `srv_record' is a
+        SRV record and `txt_record' is a TXT record.
+        (Choices: host_record, alias, ptr_record, srv_record, txt_record)
+
+= zone
+        Corresponding DNS zone for this record, e.g. example.com.
+
+
+
+REQUIREMENTS:  Python >= 2.6, Univention
+
+AUTHOR: Tobias Rüetschi (@keachi)
+        METADATA:
+          status:
+          - preview
+          supported_by: community
+        
+
+EXAMPLES:
+
+# Create a DNS record on a UCS
+- udm_dns_zone:
+    name: www
+    zone: example.com
+    type: host_record
+    data:
+      - a: 192.0.2.1
+
+
+RETURN VALUES:
+# 

@@ -1,0 +1,144 @@
+EXAMPLES:
+
+- name: Generate a Self Signed OpenSSL certificate
+  openssl_certificate:
+    path: /etc/ssl/crt/ansible.com.crt
+    privatekey_path: /etc/ssl/private/ansible.com.pem
+    csr_path: /etc/ssl/csr/ansible.com.csr
+    provider: selfsigned
+
+- name: Generate an OpenSSL certificate signed with your own CA certificate
+  openssl_certificate:
+    path: /etc/ssl/crt/ansible.com.crt
+    csr_path: /etc/ssl/csr/ansible.com.csr
+    ownca_path: /etc/ssl/crt/ansible_CA.crt
+    ownca_privatekey_path: /etc/ssl/private/ansible_CA.pem
+    provider: ownca
+
+- name: Generate a Let's Encrypt Certificate
+  openssl_certificate:
+    path: /etc/ssl/crt/ansible.com.crt
+    csr_path: /etc/ssl/csr/ansible.com.csr
+    provider: acme
+    acme_accountkey_path: /etc/ssl/private/ansible.com.pem
+    acme_challenge_path: /etc/ssl/challenges/ansible.com/
+
+- name: Force (re-)generate a new Let's Encrypt Certificate
+  openssl_certificate:
+    path: /etc/ssl/crt/ansible.com.crt
+    csr_path: /etc/ssl/csr/ansible.com.csr
+    provider: acme
+    acme_accountkey_path: /etc/ssl/private/ansible.com.pem
+    acme_challenge_path: /etc/ssl/challenges/ansible.com/
+    force: yes
+
+# Examples for some checks one could use the assertonly provider for:
+
+# How to use the assertonly provider to implement and trigger your own custom certificate generation workflow:
+- name: Check if a certificate is currently still valid, ignoring failures
+  openssl_certificate:
+    path: /etc/ssl/crt/example.com.crt
+    provider: assertonly
+    has_expired: no
+  ignore_errors: yes
+  register: validity_check
+
+- name: Run custom task(s) to get a new, valid certificate in case the initial check failed
+  command: superspecialSSL recreate /etc/ssl/crt/example.com.crt
+  when: validity_check.failed
+
+- name: Check the new certificate again for validity with the same parameters, this time failing the play if it is still invalid
+  openssl_certificate:
+    path: /etc/ssl/crt/example.com.crt
+    provider: assertonly
+    has_expired: no
+  when: validity_check.failed
+
+# Some other checks that assertonly could be used for:
+- name: Verify that an existing certificate was issued by the Let's Encrypt CA and is currently still valid
+  openssl_certificate:
+    path: /etc/ssl/crt/example.com.crt
+    provider: assertonly
+    issuer:
+      O: Let's Encrypt
+    has_expired: no
+
+- name: Ensure that a certificate uses a modern signature algorithm (no SHA1, MD5 or DSA)
+  openssl_certificate:
+    path: /etc/ssl/crt/example.com.crt
+    provider: assertonly
+    signature_algorithms:
+      - sha224WithRSAEncryption
+      - sha256WithRSAEncryption
+      - sha384WithRSAEncryption
+      - sha512WithRSAEncryption
+      - sha224WithECDSAEncryption
+      - sha256WithECDSAEncryption
+      - sha384WithECDSAEncryption
+      - sha512WithECDSAEncryption
+
+- name: Ensure that the existing certificate belongs to the specified private key
+  openssl_certificate:
+    path: /etc/ssl/crt/example.com.crt
+    privatekey_path: /etc/ssl/private/example.com.pem
+    provider: assertonly
+
+- name: Ensure that the existing certificate is still valid at the winter solstice 2017
+  openssl_certificate:
+    path: /etc/ssl/crt/example.com.crt
+    provider: assertonly
+    valid_at: 20171221162800Z
+
+- name: Ensure that the existing certificate is still valid 2 weeks (1209600 seconds) from now
+  openssl_certificate:
+    path: /etc/ssl/crt/example.com.crt
+    provider: assertonly
+    valid_in: 1209600
+
+- name: Ensure that the existing certificate is only used for digital signatures and encrypting other keys
+  openssl_certificate:
+    path: /etc/ssl/crt/example.com.crt
+    provider: assertonly
+    key_usage:
+      - digitalSignature
+      - keyEncipherment
+    key_usage_strict: true
+
+- name: Ensure that the existing certificate can be used for client authentication
+  openssl_certificate:
+    path: /etc/ssl/crt/example.com.crt
+    provider: assertonly
+    extended_key_usage:
+      - clientAuth
+
+- name: Ensure that the existing certificate can only be used for client authentication and time stamping
+  openssl_certificate:
+    path: /etc/ssl/crt/example.com.crt
+    provider: assertonly
+    extended_key_usage:
+      - clientAuth
+      - 1.3.6.1.5.5.7.3.8
+    extended_key_usage_strict: true
+
+- name: Ensure that the existing certificate has a certain domain in its subjectAltName
+  openssl_certificate:
+    path: /etc/ssl/crt/example.com.crt
+    provider: assertonly
+    subject_alt_name:
+      - www.example.com
+      - test.example.com
+
+
+RETURN VALUES:
+
+filename:
+    description: Path to the generated Certificate
+    returned: changed or success
+    type: str
+    sample: /etc/ssl/crt/www.ansible.com.crt
+backup_file:
+    description: Name of backup file created.
+    returned: changed and if I(backup) is C(yes)
+    type: str
+    sample: /path/to/www.ansible.com.crt.2019-03-09@11:22~
+

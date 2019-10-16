@@ -1,0 +1,104 @@
+> RABBITMQ_USER    (/usr/lib/python2.7/dist-packages/ansible/modules/messaging/rabbitmq/rabbitmq_user.py)
+
+        Add or remove users to RabbitMQ and assign permissions
+
+  * This module is maintained by The Ansible Community
+OPTIONS (= is mandatory):
+
+- configure_priv
+        Regular expression to restrict configure actions on a resource for the specified vhost.
+        By default all actions are restricted.
+        This option will be ignored when permissions option is used.
+        [Default: ^$]
+
+- force
+        Deletes and recreates the user.
+        [Default: no]
+        type: bool
+
+- node
+        erlang node name of the rabbit we wish to configure
+        [Default: rabbit]
+        version_added: 1.2
+
+- password
+        Password of user to add.
+        To change the password of an existing user, you must also specify `update_password=always'.
+        [Default: (null)]
+
+- permissions
+        a list of dicts, each dict contains vhost, configure_priv, write_priv, and read_priv, and represents a permission rule for that
+        vhost.
+        This option should be preferable when you care about all permissions of the user.
+        You should use vhost, configure_priv, write_priv, and read_priv options instead if you care about permissions for just some
+        vhosts.
+        [Default: []]
+
+- read_priv
+        Regular expression to restrict configure actions on a resource for the specified vhost.
+        By default all actions are restricted.
+        This option will be ignored when permissions option is used.
+        [Default: ^$]
+
+- state
+        Specify if user is to be added or removed
+        (Choices: present, absent)[Default: present]
+
+- tags
+        User tags specified as comma delimited
+        [Default: (null)]
+
+- update_password
+        `on_create' will only set the password for newly created users.  `always' will update passwords if they differ.
+        (Choices: on_create, always)[Default: on_create]
+        version_added: 2.6
+
+= user
+        Name of user to add
+        (Aliases: username, name)
+
+- vhost
+        vhost to apply access privileges.
+        This option will be ignored when permissions option is used.
+        [Default: /]
+
+- write_priv
+        Regular expression to restrict configure actions on a resource for the specified vhost.
+        By default all actions are restricted.
+        This option will be ignored when permissions option is used.
+        [Default: ^$]
+
+
+AUTHOR: Chris Hoffman (@chrishoffman)
+        METADATA:
+          status:
+          - preview
+          supported_by: community
+        
+
+EXAMPLES:
+
+# Add user to server and assign full access control on / vhost.
+# The user might have permission rules for other vhost but you don't care.
+- rabbitmq_user:
+    user: joe
+    password: changeme
+    vhost: /
+    configure_priv: .*
+    read_priv: .*
+    write_priv: .*
+    state: present
+
+# Add user to server and assign full access control on / vhost.
+# The user doesn't have permission rules for other vhosts
+- rabbitmq_user:
+    user: joe
+    password: changeme
+    permissions:
+      - vhost: /
+        configure_priv: .*
+        read_priv: .*
+        write_priv: .*
+    state: present
+
+

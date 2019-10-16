@@ -1,0 +1,270 @@
+> DOCKER_SWARM_INFO    (/usr/lib/python2.7/dist-packages/ansible/modules/cloud/docker/docker_swarm_info.py)
+
+        Retrieves facts about a Docker Swarm. Returns lists of swarm objects names for the services - nodes, services, tasks. The output
+        differs depending on API version available on docker host. Must be run on Swarm Manager node; otherwise module fails with error
+        message. It does return boolean flags in on both error and success which indicate whether the docker daemon can be communicated
+        with, whether it is in Swarm mode, and whether it is a Swarm Manager node.
+
+  * This module is maintained by The Ansible Community
+OPTIONS (= is mandatory):
+
+- api_version
+        The version of the Docker API running on the Docker Host.
+        Defaults to the latest version of the API supported by Docker SDK for Python and the docker daemon.
+        If the value is not specified in the task, the value of environment variable `DOCKER_API_VERSION' will be used instead. If the
+        environment variable is not set, the default value will be used.
+        (Aliases: docker_api_version)[Default: auto]
+        type: str
+
+- ca_cert
+        Use a CA certificate when performing server verification by providing the path to a CA certificate file.
+        If the value is not specified in the task and the environment variable `DOCKER_CERT_PATH' is set, the file `ca.pem' from the
+        directory specified in the environment variable `DOCKER_CERT_PATH' will be used.
+        (Aliases: tls_ca_cert, cacert_path)[Default: (null)]
+        type: path
+
+- client_cert
+        Path to the client's TLS certificate file.
+        If the value is not specified in the task and the environment variable `DOCKER_CERT_PATH' is set, the file `cert.pem' from the
+        directory specified in the environment variable `DOCKER_CERT_PATH' will be used.
+        (Aliases: tls_client_cert, cert_path)[Default: (null)]
+        type: path
+
+- client_key
+        Path to the client's TLS key file.
+        If the value is not specified in the task and the environment variable `DOCKER_CERT_PATH' is set, the file `key.pem' from the
+        directory specified in the environment variable `DOCKER_CERT_PATH' will be used.
+        (Aliases: tls_client_key, key_path)[Default: (null)]
+        type: path
+
+- debug
+        Debug mode
+        [Default: False]
+        type: bool
+
+- docker_host
+        The URL or Unix socket path used to connect to the Docker API. To connect to a remote host, provide the TCP connection string.
+        For example, `tcp://192.0.2.23:2376'. If TLS is used to encrypt the connection, the module will automatically replace `tcp' in
+        the connection URL with `https'.
+        If the value is not specified in the task, the value of environment variable `DOCKER_HOST' will be used instead. If the
+        environment variable is not set, the default value will be used.
+        (Aliases: docker_url)[Default: unix://var/run/docker.sock]
+        type: str
+
+- nodes
+        Whether to list swarm nodes.
+        [Default: False]
+        type: bool
+
+- nodes_filters
+        A dictionary of filter values used for selecting nodes to list.
+        For example, `name: mynode'.
+        See L(the docker documentation,https://docs.docker.com/engine/reference/commandline/node_ls/#filtering) for more information on
+        possible filters.
+        [Default: (null)]
+        type: dict
+
+- services
+        Whether to list swarm services.
+        [Default: False]
+        type: bool
+
+- services_filters
+        A dictionary of filter values used for selecting services to list.
+        For example, `name: myservice'.
+        See L(the docker documentation,https://docs.docker.com/engine/reference/commandline/service_ls/#filtering) for more information
+        on possible filters.
+        [Default: (null)]
+        type: dict
+
+- ssl_version
+        Provide a valid SSL version number. Default value determined by ssl.py module.
+        If the value is not specified in the task, the value of environment variable `DOCKER_SSL_VERSION' will be used instead.
+        [Default: (null)]
+        type: str
+
+- tasks
+        Whether to list containers.
+        [Default: False]
+        type: bool
+
+- tasks_filters
+        A dictionary of filter values used for selecting tasks to list.
+        For example, `node: mynode-1'.
+        See L(the docker documentation,https://docs.docker.com/engine/reference/commandline/service_ps/#filtering) for more information
+        on possible filters.
+        [Default: (null)]
+        type: dict
+
+- timeout
+        The maximum amount of time in seconds to wait on a response from the API.
+        If the value is not specified in the task, the value of environment variable `DOCKER_TIMEOUT' will be used instead. If the
+        environment variable is not set, the default value will be used.
+        [Default: 60]
+        type: int
+
+- tls
+        Secure the connection to the API by using TLS without verifying the authenticity of the Docker host server. Note that if
+        `tls_verify' is set to `yes' as well, it will take precedence.
+        If the value is not specified in the task, the value of environment variable `DOCKER_TLS' will be used instead. If the
+        environment variable is not set, the default value will be used.
+        [Default: False]
+        type: bool
+
+- tls_hostname
+        When verifying the authenticity of the Docker Host server, provide the expected name of the server.
+        If the value is not specified in the task, the value of environment variable `DOCKER_TLS_HOSTNAME' will be used instead. If the
+        environment variable is not set, the default value will be used.
+        [Default: localhost]
+        type: str
+
+- unlock_key
+        Whether to retrieve the swarm unlock key.
+        [Default: False]
+        type: bool
+
+- validate_certs
+        Secure the connection to the API by using TLS and verifying the authenticity of the Docker host server.
+        If the value is not specified in the task, the value of environment variable `DOCKER_TLS_VERIFY' will be used instead. If the
+        environment variable is not set, the default value will be used.
+        (Aliases: tls_verify)[Default: False]
+        type: bool
+
+- verbose_output
+        When set to `yes' and `nodes', `services' or `tasks' is set to `yes' then output will contain verbose information about objects
+        matching the full output of API method. For details see the documentation of your version of Docker API at
+        https://docs.docker.com/engine/api/.
+        The verbose output in this module contains only subset of information returned by `_info' module for each type of the objects.
+        [Default: False]
+        type: bool
+
+
+NOTES:
+      * Connect to the Docker daemon by providing parameters with each task or by defining environment variables. You can define
+        `DOCKER_HOST', `DOCKER_TLS_HOSTNAME', `DOCKER_API_VERSION', `DOCKER_CERT_PATH', `DOCKER_SSL_VERSION', `DOCKER_TLS',
+        `DOCKER_TLS_VERIFY' and `DOCKER_TIMEOUT'. If you are using docker machine, run the script shipped with the product that
+        sets up the environment. It will set these variables for you. See https://docker-py.readthedocs.io/en/stable/machine/ for
+        more details.
+      * When connecting to Docker daemon with TLS, you might need to install additional Python packages. For the Docker SDK for
+        Python, version 2.4 or newer, this can be done by installing `docker[tls]' with [pip].
+      * Note that the Docker SDK for Python only allows to specify the path to the Docker configuration for very few functions. In
+        general, it will use `$HOME/.docker/config.json' if the `DOCKER_CONFIG' environment variable is not specified, and use
+        `$DOCKER_CONFIG/config.json' otherwise.
+
+
+REQUIREMENTS:  Docker API >= 1.24, Docker SDK for Python: Please note that the L(docker-py,https://pypi.org/project/docker-py/) Python
+        module has been superseded by L(docker,https://pypi.org/project/docker/) (see L(here,https://github.com/docker
+        /docker-py/issues/1310) for details). For Python 2.6, `docker-py' must be used. Otherwise, it is recommended to
+        install the `docker' Python module. Note that both modules should `not' be installed at the same time. Also note
+        that when both modules are installed and one of them is uninstalled, the other might no longer function and a
+        reinstall of it is required., L(Docker SDK for Python,https://docker-py.readthedocs.io/en/stable/) >= 1.10.0 (use
+        L(docker-py,https://pypi.org/project/docker-py/) for Python 2.6)
+
+AUTHOR: Piotr Wojciechowski (@WojciechowskiPiotr)
+        METADATA:
+          status:
+          - preview
+          supported_by: community
+        
+
+EXAMPLES:
+
+- name: Get info on Docker Swarm
+  docker_swarm_info:
+  ignore_errors: yes
+  register: result
+
+- name: Inform about basic flags
+  debug:
+    msg: |
+      Was able to talk to docker daemon: {{ result.can_talk_to_docker }}
+      Docker in Swarm mode: {{ result.docker_swarm_active }}
+      This is a Manager node: {{ result.docker_swarm_manager }}
+
+- block:
+
+- name: Get info on Docker Swarm and list of registered nodes
+  docker_swarm_info:
+    nodes: yes
+  register: result
+
+- name: Get info on Docker Swarm and extended list of registered nodes
+  docker_swarm_info:
+    nodes: yes
+    verbose_output: yes
+  register: result
+
+- name: Get info on Docker Swarm and filtered list of registered nodes
+  docker_swarm_info:
+    nodes: yes
+    nodes_filter:
+      name: mynode
+  register: result
+
+- debug:
+    var: result.swarm_facts
+
+- name: Get the swarm unlock key
+  docker_swarm_info:
+    unlock_key: yes
+  register: result
+
+- debug:
+    var: result.swarm_unlock_key
+
+
+RETURN VALUES:
+
+can_talk_to_docker:
+    description:
+      - Will be C(true) if the module can talk to the docker daemon.
+    returned: both on success and on error
+    type: bool
+docker_swarm_active:
+    description:
+      - Will be C(true) if the module can talk to the docker daemon,
+        and the docker daemon is in Swarm mode.
+    returned: both on success and on error
+    type: bool
+docker_swarm_manager:
+    description:
+      - Will be C(true) if the module can talk to the docker daemon,
+        the docker daemon is in Swarm mode, and the current node is
+        a manager node.
+      - Only if this one is C(true), the module will not fail.
+    returned: both on success and on error
+    type: bool
+swarm_facts:
+    description:
+      - Facts representing the basic state of the docker Swarm cluster.
+      - Contains tokens to connect to the Swarm
+    returned: always
+    type: dict
+swarm_unlock_key:
+    description:
+      - Contains the key needed to unlock the swarm.
+    returned: When I(unlock_key) is C(true).
+    type: str
+nodes:
+    description:
+      - List of dict objects containing the basic information about each volume.
+        Keys matches the C(docker node ls) output unless I(verbose_output=yes).
+        See description for I(verbose_output).
+    returned: When I(nodes) is C(yes)
+    type: list
+services:
+    description:
+      - List of dict objects containing the basic information about each volume.
+        Keys matches the C(docker service ls) output unless I(verbose_output=yes).
+        See description for I(verbose_output).
+    returned: When I(services) is C(yes)
+    type: list
+tasks:
+    description:
+      - List of dict objects containing the basic information about each volume.
+        Keys matches the C(docker service ps) output unless I(verbose_output=yes).
+        See description for I(verbose_output).
+    returned: When I(tasks) is C(yes)
+    type: list
+
+

@@ -1,0 +1,27 @@
+EXAMPLES:
+
+- name: configure VLAN ID and name
+  net_vlan:
+    vlan_id: 20
+    name: test-vlan
+
+- name: remove configuration
+  net_vlan:
+    state: absent
+
+- name: configure VLAN state
+  net_vlan:
+    vlan_id:
+    state: suspend
+
+
+RETURN VALUES:
+
+commands:
+  description: The list of configuration mode commands to send to the device
+  returned: always, except for the platforms that use Netconf transport to manage the device.
+  type: list
+  sample:
+    - vlan 20
+    - name test-vlan
+

@@ -1,0 +1,33 @@
+EXAMPLES:
+
+- name: Create a DNS resolver cache
+  bigip_dns_cache:
+    name: foo
+    answer_default_zones: yes
+    forward_zones:
+      - name: foo.bar.com
+        nameservers:
+          - address: 1.2.3.4
+            port: 53
+          - address: 5.6.7.8
+    route_domain: 0
+    provider:
+      password: secret
+      server: lb.mydomain.com
+      user: admin
+  delegate_to: localhost
+
+
+RETURN VALUES:
+
+param1:
+  description: The new param1 value of the resource.
+  returned: changed
+  type: bool
+  sample: true
+param2:
+  description: The new param2 value of the resource.
+  returned: changed
+  type: str
+  sample: Foo is bar
+

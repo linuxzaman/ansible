@@ -1,0 +1,78 @@
+> STACKDRIVER    (/usr/lib/python2.7/dist-packages/ansible/modules/monitoring/stackdriver.py)
+
+        Send code deploy and annotation events to Stackdriver
+
+  * This module is maintained by The Ansible Community
+OPTIONS (= is mandatory):
+
+- annotated_by
+        The person or robot who the annotation should be attributed to.
+        [Default: Ansible]
+
+- deployed_by
+        The person or robot responsible for deploying the code
+        [Default: Ansible]
+
+- deployed_to
+        The environment code was deployed to. (ie: development, staging, production)
+        [Default: (null)]
+
+- event
+        The type of event to send, either annotation or deploy
+        (Choices: annotation, deploy)[Default: (null)]
+
+- event_epoch
+        Unix timestamp of where the event should appear in the timeline, defaults to now. Be careful with this.
+        [Default: (null)]
+
+- instance_id
+        id of an EC2 instance that this event should be attached to, which will limit the contexts where this event is shown
+        [Default: (null)]
+
+= key
+        API key.
+
+
+- level
+        one of INFO/WARN/ERROR, defaults to INFO if not supplied.  May affect display.
+        (Choices: INFO, WARN, ERROR)[Default: INFO]
+
+- msg
+        The contents of the annotation message, in plain text.  Limited to 256 characters. Required for annotation.
+        [Default: (null)]
+
+- repository
+        The repository (or project) deployed
+        [Default: (null)]
+
+- revision_id
+        The revision of the code that was deployed. Required for deploy events
+        [Default: (null)]
+
+
+AUTHOR: Ben Whaley (@bwhaley)
+        METADATA:
+          status:
+          - preview
+          supported_by: community
+        
+
+EXAMPLES:
+
+- stackdriver:
+    key: AAAAAA
+    event: deploy
+    deployed_to: production
+    deployed_by: leeroyjenkins
+    repository: MyWebApp
+    revision_id: abcd123
+
+- stackdriver:
+    key: AAAAAA
+    event: annotation
+    msg: Greetings from Ansible
+    annotated_by: leeroyjenkins
+    level: WARN
+    instance_id: i-abcd1234
+
+

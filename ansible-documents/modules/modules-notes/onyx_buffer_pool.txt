@@ -1,0 +1,56 @@
+> ONYX_BUFFER_POOL    (/usr/lib/python2.7/dist-packages/ansible/modules/network/onyx/onyx_buffer_pool.py)
+
+        This module provides declarative management of Onyx Buffer Pool configuration on Mellanox ONYX network devices.
+
+  * This module is maintained by The Ansible Community
+OPTIONS (= is mandatory):
+
+- memory_percent
+        memory percent.
+        [Default: (null)]
+
+= name
+        pool name.
+
+
+- pool_type
+        pool type.
+        (Choices: lossless, lossy)[Default: lossy]
+
+- switch_priority
+        switch priority, range 1-7.
+        [Default: (null)]
+
+
+NOTES:
+      * Tested on ONYX 3.6.8130
+
+
+AUTHOR: Anas Badaha (@anasb)
+        METADATA:
+          status:
+          - preview
+          supported_by: community
+        
+
+EXAMPLES:
+
+- name: configure buffer pool
+  onyx_buffer_pool:
+    name: roce
+    pool_type: lossless
+    memory_percent: 50.00
+    switch_priority: 3
+
+
+RETURN VALUES:
+
+commands:
+  description: The list of configuration mode commands to send to the device.
+  returned: always
+  type: list
+  sample:
+    - traffic pool roce type lossless
+    - traffic pool roce memory percent 50.00
+    - traffic pool roce map switch-priority 3
+

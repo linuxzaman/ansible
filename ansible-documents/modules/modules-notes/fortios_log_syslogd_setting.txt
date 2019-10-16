@@ -1,0 +1,225 @@
+> FORTIOS_LOG_SYSLOGD_SETTING    (/usr/lib/python2.7/dist-packages/ansible/modules/network/fortios/fortios_log_syslogd_setting.py)
+
+        This module is able to configure a FortiGate or FortiOS by allowing the user to set and modify log_syslogd feature and setting
+        category. Examples include all parameters and values need to be adjusted to datasources before usage. Tested with FOS v6.0.2
+
+  * This module is maintained by The Ansible Community
+OPTIONS (= is mandatory):
+
+= host
+        FortiOS or FortiGate ip address.
+
+
+- https
+        Indicates if the requests towards FortiGate must use HTTPS protocol
+        [Default: True]
+        type: bool
+
+- log_syslogd_setting
+        Global settings for remote syslog server.
+        [Default: None]
+        suboptions:
+          certificate:
+            description:
+            - Certificate used to communicate with Syslog server. Source certificate.local.name.
+          custom-field-name:
+            description:
+            - Custom field name for CEF format logging.
+            suboptions:
+              custom:
+                description:
+                - Field custom name.
+              id:
+                description:
+                - Entry ID.
+                required: true
+              name:
+                description:
+                - Field name.
+          enc-algorithm:
+            choices:
+            - high-medium
+            - high
+            - low
+            - disable
+            description:
+            - Enable/disable reliable syslogging with TLS encryption.
+          facility:
+            choices:
+            - kernel
+            - user
+            - mail
+            - daemon
+            - auth
+            - syslog
+            - lpr
+            - news
+            - uucp
+            - cron
+            - authpriv
+            - ftp
+            - ntp
+            - audit
+            - alert
+            - clock
+            - local0
+            - local1
+            - local2
+            - local3
+            - local4
+            - local5
+            - local6
+            - local7
+            description:
+            - Remote syslog facility.
+          format:
+            choices:
+            - default
+            - csv
+            - cef
+            description:
+            - Log format.
+          mode:
+            choices:
+            - udp
+            - legacy-reliable
+            - reliable
+            description:
+            - Remote syslog logging over UDP/Reliable TCP.
+          port:
+            description:
+            - Server listen port.
+          server:
+            description:
+            - Address of remote syslog server.
+          source-ip:
+            description:
+            - Source IP address of syslog.
+          status:
+            choices:
+            - enable
+            - disable
+            description:
+            - Enable/disable remote syslog logging.
+        
+
+- password
+        FortiOS or FortiGate password.
+        [Default: ]
+
+= username
+        FortiOS or FortiGate username.
+
+
+- vdom
+        Virtual domain, among those defined previously. A vdom is a virtual instance of the FortiGate that can be configured and used as
+        a different unit.
+        [Default: root]
+
+
+NOTES:
+      * Requires fortiosapi library developed by Fortinet
+      * Run as a local_action in your playbook
+
+
+REQUIREMENTS:  fortiosapi>=0.9.8
+
+AUTHOR: Miguel Angel Munoz (@mamunozgonzalez), Nicolas Thomas (@thomnico)
+        METADATA:
+          status:
+          - preview
+          supported_by: community
+        
+
+EXAMPLES:
+
+- hosts: localhost
+  vars:
+   host: "192.168.122.40"
+   username: "admin"
+   password: ""
+   vdom: "root"
+  tasks:
+  - name: Global settings for remote syslog server.
+    fortios_log_syslogd_setting:
+      host:  "{{ host }}"
+      username: "{{ username }}"
+      password: "{{ password }}"
+      vdom:  "{{ vdom }}"
+      https: "False"
+      log_syslogd_setting:
+        certificate: "<your_own_value> (source certificate.local.name)"
+        custom-field-name:
+         -
+            custom: "<your_own_value>"
+            id:  "6"
+            name: "default_name_7"
+        enc-algorithm: "high-medium"
+        facility: "kernel"
+        format: "default"
+        mode: "udp"
+        port: "12"
+        server: "192.168.100.40"
+        source-ip: "84.230.14.43"
+        status: "enable"
+
+
+RETURN VALUES:
+
+build:
+  description: Build number of the fortigate image
+  returned: always
+  type: str
+  sample: '1547'
+http_method:
+  description: Last method used to provision the content into FortiGate
+  returned: always
+  type: str
+  sample: 'PUT'
+http_status:
+  description: Last result given by FortiGate on last operation applied
+  returned: always
+  type: str
+  sample: "200"
+mkey:
+  description: Master key (id) used in the last call to FortiGate
+  returned: success
+  type: str
+  sample: "id"
+name:
+  description: Name of the table used to fulfill the request
+  returned: always
+  type: str
+  sample: "urlfilter"
+path:
+  description: Path of the table used to fulfill the request
+  returned: always
+  type: str
+  sample: "webfilter"
+revision:
+  description: Internal revision number
+  returned: always
+  type: str
+  sample: "17.0.2.10658"
+serial:
+  description: Serial number of the unit
+  returned: always
+  type: str
+  sample: "FGVMEVYYQT3AB5352"
+status:
+  description: Indication of the operation's result
+  returned: always
+  type: str
+  sample: "success"
+vdom:
+  description: Virtual domain used
+  returned: always
+  type: str
+  sample: "root"
+version:
+  description: Version of the FortiGate
+  returned: always
+  type: str
+  sample: "v5.6.3"
+
+

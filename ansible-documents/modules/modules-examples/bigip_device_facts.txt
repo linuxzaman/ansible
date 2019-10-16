@@ -1,0 +1,1001 @@
+EXAMPLES:
+
+- name: Collect BIG-IP facts
+  bigip_device_facts:
+    gather_subset:
+      - interfaces
+      - vlans
+    provider:
+      server: lb.mydomain.com
+      user: admin
+      password: secret
+  delegate_to: localhost
+
+- name: Collect all BIG-IP facts
+  bigip_device_facts:
+    gather_subset:
+      - all
+    provider:
+      server: lb.mydomain.com
+      user: admin
+      password: secret
+  delegate_to: localhost
+
+- name: Collect all BIG-IP facts except trunks
+  bigip_device_facts:
+    gather_subset:
+      - all
+      - "!trunks"
+    provider:
+      server: lb.mydomain.com
+      user: admin
+      password: secret
+  delegate_to: localhost
+
+
+RETURN VALUES:
+
+asm_policy_stats:
+  description: Miscellaneous ASM policy related facts.
+  returned: When C(asm-policy-stats) is specified in C(gather_subset).
+  type: complex
+  contains:
+    policies:
+      description:
+        - The total number of ASM policies on the device.
+      returned: changed
+      type: int
+      sample: 3
+    policies_active:
+      description:
+        - The number of ASM policies that are marked as active.
+      returned: changed
+      type: int
+      sample: 3
+    policies_attached:
+      description:
+        - The number of ASM policies that are attached to virtual servers.
+      returned: changed
+      type: int
+      sample: 1
+    policies_inactive:
+      description:
+        - The number of ASM policies that are marked as inactive.
+      returned: changed
+      type: int
+      sample: 0
+    policies_unattached:
+      description:
+        - The number of ASM policies that are not attached to a virtual server.
+      returned: changed
+      type: int
+      sample: 3
+  sample: hash/dictionary of values
+asm_policies:
+  description: Detailed facts for ASM policies present on device.
+  returned: When C(asm-policies) is specified in C(gather_subset).
+  type: complex
+  contains:
+    full_path:
+      description:
+        - Full name of the resource as known to BIG-IP.
+      returned: changed
+      type: str
+      sample: /Common/foo_policy
+    name:
+      description:
+        - Relative name of the resource in BIG-IP.
+      returned: changed
+      type: str
+      sample: foo_policy
+    policy_id:
+      description:
+        - Generated ID of the ASM policy resource.
+      returned: changed
+      type: str
+      sample: l0Ckxe-7yHsXp8U5tTgbFQ
+    active:
+      description:
+        - Indicates if an ASM policy is active.
+      returned: changed
+      type: bool
+      sample: yes
+    protocol_independent:
+      description:
+        - Indicates if the ASM policy differentiates between HTTP/WS and HTTPS/WSS URLs.
+      returned: changed
+      type: bool
+      sample: no
+    has_parent:
+      description:
+        - Indicates if the ASM policy is a child of another ASM policy.
+      returned: changed
+      type: bool
+      sample: no
+    type:
+      description:
+        - The type of policy, can be C(Security) or C(Parent).
+      returned: changed
+      type: str
+      sample: security
+    virtual_servers:
+      description:
+        - Virtual server or servers which have this policy assigned to them.
+      returned: changed
+      type: list
+      sample: ['/Common/foo_VS/']
+    allowed_response_codes:
+      description:
+        - Lists the response status codes between 400 and 599 that the security profile considers legal.
+      returned: changed
+      type: list
+      sample: ['400', '404']
+    description:
+      description:
+        - Description of the resource.
+      returned: changed
+      type: str
+      sample: Significant Policy Description
+    learning_mode:
+      description:
+        - Determine how the policy is built.
+      returned: changed
+      type: str
+      sample: manual
+    enforcement_mode:
+      description:
+        - Specifies whether blocking is active or inactive for the ASM policy.
+      returned: changed
+      type: str
+      sample: blocking
+    trust_xff:
+      description:
+        - Indicates the system has confidence in an XFF (X-Forwarded-For) header in the request.
+      returned: changed
+      type: bool
+      sample: yes
+    custom_xff_headers:
+      description:
+        - List of custom XFF headers trusted by the system.
+      returned: changed
+      type: str
+      sample: asm-proxy1
+    case_insensitive:
+      description:
+        - Indicates if the ASM policy treats file types, URLs, and parameters as case sensitive.
+      returned: changed
+      type: bool
+      sample: yes
+    signature_staging:
+      description:
+        - Specifies if the staging feature is active on the ASM policy.
+      returned: changed
+      type: bool
+      sample: yes
+    place_signatures_in_staging:
+      description:
+        - Specifies if the system places new or updated signatures in staging
+          for the number of days specified in the enforcement readiness period.
+      returned: changed
+      type: bool
+      sample: no
+    enforcement_readiness_period:
+      description:
+        - Period in days both security policy entities and attack signatures
+          remain in staging mode before the system suggests to enforce them.
+      returned: changed
+      type: int
+      sample: 8
+    path_parameter_handling:
+      description:
+        - Specifies how the system handles path parameters that are attached to path segments in URIs.
+      returned: changed
+      type: str
+      sample: ignore
+    trigger_asm_irule_event:
+      description:
+        - Indicates if iRule event is enabled.
+      returned: changed
+      type: str
+      sample: disabled
+    inspect_http_uploads:
+      description:
+        - Specify if the system should inspect all http uploads.
+      returned: changed
+      type: bool
+      sample: yes
+    mask_credit_card_numbers_in_request:
+      description:
+        - Indicates if the system masks credit card numbers.
+      returned: changed
+      type: bool
+      sample: no
+    maximum_http_header_length:
+      description:
+        - Maximum length of an HTTP header name and value that the system processes.
+      returned: changed
+      type: int
+      sample: 8192
+    use_dynamic_session_id_in_url:
+      description:
+        - Specifies how the security policy processes URLs that use dynamic sessions.
+      returned: changed
+      type: bool
+      sample: no
+    maximum_cookie_header_length:
+      description:
+        - Maximum length of a cookie header name and value that the system processes.
+      returned: changed
+      type: int
+      sample: 8192
+    application_language:
+      description:
+        - The language encoding for the web application.
+      returned: changed
+      type: str
+      sample: utf-8
+    disallowed_geolocations:
+      description:
+        - Displays countries that may not access the web application.
+      returned: changed
+      type: str
+      sample: Argentina
+    csrf_protection_enabled:
+      description:
+        - Specifies if CSRF protection is active on the ASM policy.
+      returned: changed
+      type: bool
+      sample: yes
+    csrf_protection_ssl_only:
+      description:
+        - Specifies that only HTTPS URLs will be checked for CSRF protection.
+      returned: changed
+      type: bool
+      sample: yes
+    csrf_protection_expiration_time_in_seconds:
+      description:
+        - Specifies how long, in seconds, a configured CSRF token is valid before it expires.
+      returned: changed
+      type: int
+      sample: 600
+    csrf_urls:
+      description:
+        - Specifies a list of URLs for CSRF token verification.
+        - In version 13.0.0 and above this has become a sub-collection and a list of dictionaries.
+        - In version 12.x this is a list of simple strings.
+      returned: changed
+      type: complex
+      contains:
+        csrf_url_required_parameters:
+          description:
+            - Indicates whether to ignore or require one of the specified parameters is present
+              in a request when checking if the URL entry matches the request.
+          returned: changed
+          type: str
+          sample: ignore
+        csrf_url_parameters_list:
+          description:
+            - List of parameters to look for in a request when checking if the URL entry matches the request.
+          returned: changed
+          type: list
+          sample: ['fooparam']
+        csrf_url:
+          description:
+            - Specifies an URL to protect.
+          returned: changed
+          type: str
+          sample: ['/foo.html']
+        csrf_url_method:
+          description:
+            - Method for the specified URL.
+          returned: changed
+          type: str
+          sample: POST
+        csrf_url_enforcement_action:
+          description:
+            - Indicates the action specified for the system to take when the URL entry matches.
+          returned: changed
+          type: str
+          sample: none
+        csrf_url_id:
+          description:
+            - Specified the generated ID for the configured CSRF url resource.
+          returned: changed
+          type: str
+          sample: l0Ckxe-7yHsXp8U5tTgbFQ
+        csrf_url_wildcard_order:
+          description:
+            - Specified the order in which the wildcard URLs are enforced.
+          returned: changed
+          type: str
+          sample: 1
+  sample: hash/dictionary of values
+asm_server_technologies:
+  description: Detailed facts for ASM server technologies present on device.
+  returned: When C(asm-server-technologies) is specified in C(gather_subset).
+  type: complex
+  contains:
+    id:
+      description:
+        - Displays the generated ID for the server technology resource.
+      returned: changed
+      type: str
+      sample: l0Ckxe-7yHsXp8U5tTgbFQ
+    server_technology_name:
+      description:
+        - Human friendly name of the server technology resource.
+      returned: changed
+      type: str
+      sample: Wordpress
+    server_technology_references:
+      description:
+        - List of dictionaries containing API self links of the associated technology resources.
+      returned: changed
+      type: complex
+      contains:
+        link:
+          description:
+            - A self link to an associated server technology.
+      sample: https://localhost/mgmt/tm/asm/server-technologies/NQG7CT02OBC2cQWbnP7T-A?ver=13.1.0
+  sample: hash/dictionary of values
+asm_signature_sets:
+  description: Detailed facts for ASM signature sets present on device.
+  returned: When C(asm-signature-sets) is specified in C(gather_subset).
+  type: complex
+  contains:
+    name:
+      description:
+        - Name of the signature set
+      returned: changed
+      type: str
+      sample: WebSphere signatures
+    id:
+      description:
+        - Displays the generated ID for the signature set resource.
+      returned: changed
+      type: str
+      sample: l0Ckxe-7yHsXp8U5tTgbFQ
+    type:
+      description:
+        - The method used to select signatures to be a part of the signature set.
+      returned: changed
+      type: str
+      sample: filter-based
+    category:
+      description:
+        - Displays the category of the signature set.
+      returned: changed
+      type: str
+      sample: filter-based
+    is_user_defined:
+      description:
+        - Specifies that this signature set was added by a user.
+      returned: changed
+      type: bool
+      sample: no
+    assign_to_policy_by_default:
+      description:
+        - Indicates whether the system assigns this signature set to a new created security policy by default.
+      returned: changed
+      type: bool
+      sample: yes
+    default_alarm:
+      description:
+        - Displays whether the security policy logs the request data in the Statistics
+          screen if a request matches a signature that is included in the signature set
+      returned: changed
+      type: bool
+      sample: yes
+    default_block:
+      description:
+        - Displays, when the security policy's enforcement mode is Blocking,
+          how the system treats requests that match a signature included in the signature set.
+      returned: changed
+      type: bool
+      sample: yes
+    default_learn:
+      description:
+        - Displays whether the security policy learns all requests that match a signature
+          that is included in the signature set.
+      returned: changed
+      type: bool
+      sample: yes
+  sample: hash/dictionary of values
+client_ssl_profiles:
+  description: Client SSL Profile related facts.
+  returned: When C(client-ssl-profiles) is specified in C(gather_subset).
+  type: complex
+  contains:
+    full_path:
+      description:
+        - Full name of the resource as known to BIG-IP.
+      returned: changed
+      type: str
+      sample: /Common/bigip02.internal
+    name:
+      description:
+        - Relative name of the resource in BIG-IP.
+      returned: changed
+      type: str
+      sample: bigip02.internal
+    alert_timeout:
+      description:
+        - Maximum time period in seconds to keep the SSL session active after alert
+          message is sent, or indefinite.
+      returned: changed
+      type: int
+      sample: 0
+    allow_non_ssl:
+      description:
+        - Enables or disables non-SSL connections.
+      returned: changed
+      type: bool
+      sample: yes
+    authenticate_depth:
+      description:
+        - Specifies the authenticate depth. This is the client certificate chain maximum traversal depth.
+      returned: changed
+      type: int
+      sample: 9
+    authenticate_frequency:
+      description:
+        - Specifies how often the system authenticates a user.
+      returned: changed
+      type: str
+      sample: once
+    ca_file:
+      description:
+        - Specifies the certificate authority (CA) file name.
+      returned: changed
+      type: str
+      sample: /Common/default-ca.crt
+    cache_size:
+      description:
+        - Specifies the SSL session cache size.
+      returned: changed
+      type: int
+      sample: 262144
+    cache_timeout:
+      description:
+        - Specifies the SSL session cache timeout value.
+      returned: changed
+      type: int
+      sample: 3600
+    certificate_file:
+      description:
+        - Specifies the name of the certificate installed on the traffic
+          management system for the purpose of terminating or initiating
+          an SSL connection.
+      returned: changed
+      type: str
+      sample: /Common/default.crt
+    chain_file:
+      description:
+        - Specifies or builds a certificate chain file that a client can
+          use to authenticate the profile.
+      returned: changed
+      type: str
+      sample: /Common/ca-chain.crt
+    ciphers:
+      description:
+        - Specifies a list of cipher names.
+      returned: changed
+      type: str
+      sample: ['DEFAULT']
+    crl_file:
+      description:
+        - Specifies the certificate revocation list file name.
+      returned: changed
+      type: str
+      sample: /Common/default.crl
+    parent:
+      description:
+        - Parent of the profile
+      returned: changed
+      type: str
+      sample: /Common/clientssl
+    description:
+      description:
+        - Description of the profile.
+      returned: changed
+      type: str
+      sample: My profile
+    modssl_methods:
+      description:
+        - Enables or disables ModSSL method emulation.
+      returned: changed
+      type: bool
+      sample: no
+    peer_certification_mode:
+      description:
+        - Specifies the peer certificate mode.
+      returned: changed
+      type: str
+      sample: ignore
+    sni_require:
+      description:
+        - When this option is C(yes), a client connection that does not
+          specify a known server name or does not support SNI extension will
+          be rejected.
+      returned: changed
+      type: bool
+      sample: no
+    sni_default:
+      description:
+        - When C(yes), this profile is the default SSL profile when the server
+          name in a client connection does not match any configured server
+          names, or a client connection does not specify any server name at
+          all.
+      returned: changed
+      type: bool
+      sample: yes
+    strict_resume:
+      description:
+        - Enables or disables strict-resume.
+      returned: changed
+      type: bool
+      sample: yes
+    profile_mode_enabled:
+      description:
+        - Specifies the profile mode, which enables or disables SSL
+          processing.
+      returned: changed
+      type: bool
+      sample: yes
+    renegotiation_maximum_record_delay:
+      description:
+        - Maximum number of SSL records that the traffic
+          management system can receive before it renegotiates an SSL
+          session.
+      returned: changed
+      type: int
+      sample: 0
+    renegotiation_period:
+      description:
+        - Number of seconds required to renegotiate an SSL
+          session.
+      returned: changed
+      type: int
+      sample: 0
+    renegotiation:
+      description:
+        - Specifies whether renegotiations are enabled.
+      returned: changed
+      type: bool
+      sample: yes
+    server_name:
+      description:
+        - Specifies the server names to be matched with SNI (server name
+          indication) extension information in ClientHello from a client
+          connection.
+      returned: changed
+      type: str
+      sample: bigip01
+    session_ticket:
+      description:
+        - Enables or disables session-ticket.
+      returned: changed
+      type: bool
+      sample: no
+    unclean_shutdown:
+      description:
+        - Whether to force the SSL profile to perform a clean shutdown of all SSL
+          connections or not
+      returned: changed
+      type: bool
+      sample: no
+    retain_certificate:
+      description:
+        - APM module requires storing certificate in SSL session. When
+          C(no), certificate will not be stored in SSL session.
+      returned: changed
+      type: bool
+      sample: yes
+    secure_renegotiation_mode:
+      description:
+        - Specifies the secure renegotiation mode.
+      returned: changed
+      type: str
+      sample: require
+    handshake_timeout:
+      description:
+        - Specifies the handshake timeout in seconds.
+      returned: changed
+      type: int
+      sample: 10
+    forward_proxy_certificate_extension_include:
+      description:
+        - Specifies the extensions of the web server certificates to be
+          included in the generated certificates using SSL Forward Proxy.
+      returned: changed
+      type: list
+      sample: ["basic-constraints", "subject-alternative-name"]
+    forward_proxy_certificate_lifespan:
+      description:
+        - Specifies the lifespan of the certificate generated using the SSL
+          forward proxy feature.
+      returned: changed
+      type: int
+      sample: 30
+    forward_proxy_lookup_by_ipaddr_port:
+      description:
+        - Specifies whether to perform certificate look up by IP address and
+          port number.
+      returned: changed
+      type: bool
+      sample: no
+    forward_proxy_enabled:
+      description:
+        - Enables or disables SSL forward proxy feature.
+      returned: changed
+      type: bool
+      sample: yes
+    forward_proxy_ca_passphrase:
+      description:
+        - Specifies the passphrase of the key file that is used as the
+          certification authority key when SSL forward proxy feature is
+          enabled.
+      returned: changed
+      type: str
+    forward_proxy_ca_certificate_file:
+      description:
+        - Specifies the name of the certificate file that is used as the
+          certification authority certificate when SSL forward proxy feature
+          is enabled.
+      returned: changed
+      type: str
+    forward_proxy_ca_key_file:
+      description:
+        - Specifies the name of the key file that is used as the
+          certification authority key when SSL forward proxy feature is
+          enabled.
+      returned: changed
+      type: str
+  sample: hash/dictionary of values
+devices:
+  description: Device related facts.
+  returned: When C(devices) is specified in C(gather_subset).
+  type: complex
+  contains:
+    full_path:
+      description:
+        - Full name of the resource as known to BIG-IP.
+      returned: changed
+      type: str
+      sample: /Common/bigip02.internal
+    name:
+      description:
+        - Relative name of the resource in BIG-IP.
+      returned: changed
+      type: str
+      sample: bigip02.internal
+    active_modules:
+      description:
+        - The currently licensed and provisioned modules on the device.
+      returned: changed
+      type: list
+      sample: ["DNS Services (LAB)", "PSM, VE"]
+    base_mac_address:
+      description:
+        - Media Access Control address (MAC address) of the device.
+      returned: changed
+      type: str
+      sample: "fa:16:3e:c3:42:6f"
+    build:
+      description:
+        - The minor version information of the total product version.
+      returned: changed
+      type: str
+      sample: 0.0.1
+    chassis_id:
+      description:
+        - Serial number of the device.
+      returned: changed
+      type: str
+      sample: 11111111-2222-3333-444444444444
+    chassis_type:
+      description:
+        - Displays the chassis type. The possible values are C(individual) and C(viprion).
+      returned: changed
+      type: str
+      sample: individual
+    comment:
+      description:
+        - User comments about the device.
+      returned: changed
+      type: str
+      sample: My device
+    configsync_address:
+      description:
+        - IP address used for configuration synchronization.
+      returned: changed
+      type: str
+      sample: 10.10.10.10
+    contact:
+      description:
+        - Administrator contact information.
+      returned: changed
+      type: str
+      sample: The User
+    description:
+      description:
+        - Description of the device.
+      returned: changed
+      type: str
+      sample: My device
+    edition:
+      description:
+        - Displays the software edition.
+      returned: changed
+      type: str
+      sample: Point Release 7
+    failover_state:
+      description:
+        - Device failover state.
+      returned: changed
+      type: str
+      sample: active
+    hostname:
+      description:
+        - Device hostname
+      returned: changed
+      type: str
+      sample: bigip02.internal
+    location:
+      description:
+        - Specifies the physical location of the device.
+      returned: changed
+      type: str
+      sample: London
+    management_address:
+      description:
+        - IP address of the management interface.
+      returned: changed
+      type: str
+      sample: 3.3.3.3
+    marketing_name:
+      description:
+        - Marketing name of the device platform.
+      returned: changed
+      type: str
+      sample: BIG-IP Virtual Edition
+    multicast_address:
+      description:
+        - Specifies the multicast IP address used for failover.
+      returned: changed
+      type: str
+      sample: 4.4.4.4
+    optional_modules:
+      description:
+        - Modules that are available for the current platform, but are not currently licensed.
+      returned: changed
+      type: list
+      sample: ["App Mode (TMSH Only, No Root/Bash)", "BIG-IP VE, Multicast Routing"]
+    platform_id:
+      description:
+        - Displays the device platform identifier.
+      returned: changed
+      type: str
+      sample: Z100
+    primary_mirror_address:
+      description:
+        - Specifies the IP address used for state mirroring.
+      returned: changed
+      type: str
+      sample: 5.5.5.5
+    product:
+      description:
+        - Displays the software product name.
+      returned: changed
+      type: str
+      sample: BIG-IP
+    secondary_mirror_address:
+      description:
+        - Secondary IP address used for state mirroring.
+      returned: changed
+      type: str
+      sample: 2.2.2.2
+    self:
+      description:
+        - Whether this device is the one that was queried for facts, or not.
+      returned: changed
+      type: bool
+      sample: yes
+    software_version:
+      description:
+        - Displays the software version number.
+      returned: changed
+      type: str
+      sample: 13.1.0.7
+    timelimited_modules:
+      description:
+        - Displays the licensed modules that are time-limited.
+      returned: changed
+      type: list
+      sample: ["IP Intelligence, 3Yr, ...", "PEM URL Filtering, 3Yr, ..."]
+    timezone:
+      description:
+        - Displays the time zone configured on the device.
+      returned: changed
+      type: str
+      sample: UTC
+    unicast_addresses:
+      description:
+        - Specifies the entire set of unicast addresses used for failover.
+      returned: changed
+      type: complex
+      contains:
+        effective_ip:
+          description:
+            - The IP address that peers can use to reach this unicast address IP.
+          returned: changed
+          type: str
+          sample: 5.4.3.5
+        effective_port:
+          description:
+            - The port that peers can use to reach this unicast address.
+          returned: changed
+          type: int
+          sample: 1026
+        ip:
+          description:
+            - The IP address that the failover daemon will listen on for packets from its peers.
+          returned: changed
+          type: str
+          sample: 5.4.3.5
+        port:
+          description:
+            - The IP port that the failover daemon uses to accept packets from its peers.
+          returned: changed
+          type: int
+          sample: 1026
+  sample: hash/dictionary of values
+device_groups:
+  description: Device group related facts.
+  returned: When C(device-groups) is specified in C(gather_subset).
+  type: complex
+  contains:
+    full_path:
+      description:
+        - Full name of the resource as known to BIG-IP.
+      returned: changed
+      type: str
+      sample: /Common/fasthttp
+    name:
+      description:
+        - Relative name of the resource in BIG-IP.
+      returned: changed
+      type: str
+      sample: fasthttp
+    autosync_enabled:
+      description:
+        - Whether the device group automatically synchronizes configuration data to its members.
+      returned: changed
+      type: bool
+      sample: no
+    description:
+      description:
+        - Description of the device group.
+      returned: changed
+      type: str
+      sample: My device group
+    devices:
+      description:
+        - List of devices that are in the group. Devices are listed by their C(full_path).
+      returned: changed
+      type: list
+      sample: [/Common/bigip02.internal]
+    full_load_on_sync:
+      description:
+        - Specifies that the entire configuration for a device group is sent when configuration
+          synchronization is performed.
+      returned: changed
+      type: bool
+      sample: yes
+    incremental_config_sync_size_maximum:
+      description:
+        - Specifies the maximum size (in KB) to devote to incremental config sync cached transactions.
+      returned: changed
+      type: int
+      sample: 1024
+    network_failover_enabled:
+      description:
+        - Specifies whether network failover is used.
+      returned: changed
+      type: bool
+      sample: yes
+    type:
+      description:
+        - Specifies the type of device group.
+      returned: changed
+      type: str
+      sample: sync-only
+    asm_sync_enabled:
+      description:
+        - Specifies whether to synchronize ASM configurations of device group members.
+      returned: changed
+      type: bool
+      sample: yes
+  sample: hash/dictionary of values
+external_monitors:
+  description: External monitor related facts.
+  returned: When C(external-monitors) is specified in C(gather_subset).
+  type: complex
+  contains:
+    full_path:
+      description:
+        - Full name of the resource as known to BIG-IP.
+      returned: changed
+      type: str
+      sample: /Common/external
+    name:
+      description:
+        - Relative name of the resource in BIG-IP.
+      returned: changed
+      type: str
+      sample: external
+    parent:
+      description:
+        - Profile from which this profile inherits settings.
+      returned: changed
+      type: str
+      sample: external
+    description:
+      description:
+        - Description of the resource.
+      returned: changed
+      type: str
+      sample: My monitor
+    destination:
+      description:
+        - Specifies the IP address and service port of the resource that is
+          the destination of this monitor.
+      type: str
+      sample: "*:*"
+    args:
+      description:
+        - Specifies any command-line arguments that the script requires.
+      type: str
+      sample: arg1 arg2 arg3
+    external_program:
+      description:
+        - Specifies the name of the file for the monitor to use.
+      type: str
+      sample: /Common/arg_example
+    variables:
+      description:
+        - Specifies any variables that the script requires.
+      type: complex
+      sample: { "key1": "val", "key_2": "val 2" }
+    interval:
+      description:
+        - Specifies, in seconds, the frequency at which the system issues
+          the monitor check when either the resource is down or the status
+          of the resource is unknown.
+      type: int
+      sample: 5
+    manual_resume:
+      description:
+        - Specifies whether the system automatically changes the status of a
+          resource to up at the next successful monitor check.
+      type: bool
+      sample: yes
+    time_until_up:
+      description:
+        - Specifies the amount of time, in seconds, after the first
+          successful response before a node is marked up.
+      type: int
+      sample: 0
+    timeout:
+      description:
+        - Specifies the number of seconds the target has in which to respond
+          to the monitor request.
+      type: int
+      sample: 16
+    up_interval:
+      description:
+        - Specifies, in seconds, the frequency at which the system issues
+          the monitor check when the resource is up.
+      type: int
+      sample: 0
+  sample: hash/dictionary of values

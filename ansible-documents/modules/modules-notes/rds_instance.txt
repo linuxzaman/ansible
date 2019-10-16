@@ -1,0 +1,751 @@
+> RDS_INSTANCE    (/usr/lib/python2.7/dist-packages/ansible/modules/cloud/amazon/rds_instance.py)
+
+        Create, modify, and delete RDS instances.
+
+  * This module is maintained by The Ansible Community
+OPTIONS (= is mandatory):
+
+- allocated_storage
+        The amount of storage (in gibibytes) to allocate for the DB instance.
+        [Default: (null)]
+
+- allow_major_version_upgrade
+        Whether to allow major version upgrades.
+        [Default: (null)]
+        type: bool
+
+- apply_immediately
+        A value that specifies whether modifying a cluster with `new_db_instance_identifier' and `master_user_password' should be applied
+        as soon as possible, regardless of the `preferred_maintenance_window' setting. If false, changes are applied during the next
+        maintenance window.
+        [Default: False]
+        type: bool
+
+- auto_minor_version_upgrade
+        Whether minor version upgrades are applied automatically to the DB instance during the maintenance window.
+        [Default: (null)]
+        type: bool
+
+- availability_zone
+        A list of EC2 Availability Zones that instances in the DB cluster can be created in. May be used when creating a cluster or when
+        restoring from S3 or a snapshot. Mutually exclusive with `multi_az'.
+        (Aliases: az, zone)[Default: (null)]
+
+- aws_access_key
+        AWS access key. If not set then the value of the AWS_ACCESS_KEY_ID, AWS_ACCESS_KEY or EC2_ACCESS_KEY environment variable is
+        used.
+        (Aliases: ec2_access_key, access_key)[Default: (null)]
+        type: str
+
+- aws_secret_key
+        AWS secret key. If not set then the value of the AWS_SECRET_ACCESS_KEY, AWS_SECRET_KEY, or EC2_SECRET_KEY environment variable is
+        used.
+        (Aliases: ec2_secret_key, secret_key)[Default: (null)]
+        type: str
+
+- backup_retention_period
+        The number of days for which automated backups are retained (must be greater or equal to 1). May be used when creating a new
+        cluster, when restoring from S3, or when modifying a cluster.
+        [Default: (null)]
+
+- ca_certificate_identifier
+        The identifier of the CA certificate for the DB instance.
+        [Default: (null)]
+
+- character_set_name
+        The character set to associate with the DB cluster.
+        [Default: (null)]
+
+- copy_tags_to_snapshot
+        Whether or not to copy all tags from the DB instance to snapshots of the instance. When initially creating a DB instance the RDS
+        API defaults this to false if unspecified.
+        [Default: (null)]
+        type: bool
+
+- creation_source
+        Which source to use if restoring from a template (an existing instance, S3 bucket, or snapshot).
+        (Choices: snapshot, s3, instance)[Default: (null)]
+
+- db_cluster_identifier
+        The DB cluster (lowercase) identifier to add the aurora DB instance to. The identifier must contain from 1 to 63 letters,
+        numbers, or hyphens and the first character must be a letter and may not end in a hyphen or contain consecutive hyphens.
+        (Aliases: cluster_id)[Default: (null)]
+
+- db_instance_class
+        The compute and memory capacity of the DB instance, for example db.t2.micro.
+        (Aliases: class, instance_type)[Default: (null)]
+
+= db_instance_identifier
+        The DB instance (lowercase) identifier. The identifier must contain from 1 to 63 letters, numbers, or hyphens and the first
+        character must be a letter and may not end in a hyphen or contain consecutive hyphens.
+        (Aliases: instance_id, id)
+
+- db_name
+        The name for your database. If a name is not provided Amazon RDS will not create a database.
+        [Default: (null)]
+
+- db_parameter_group_name
+        The name of the DB parameter group to associate with this DB instance. When creating the DB instance if this argument is omitted
+        the default DBParameterGroup for the specified engine is used.
+        [Default: (null)]
+
+- db_security_groups
+        (EC2-Classic platform) A list of DB security groups to associate with this DB instance.
+        [Default: (null)]
+        type: list
+
+- db_snapshot_identifier
+        The identifier for the DB snapshot to restore from if using `creation_source=snapshot'.
+        [Default: (null)]
+
+- db_subnet_group_name
+        The DB subnet group name to use for the DB instance.
+        (Aliases: subnet_group)[Default: (null)]
+
+- debug_botocore_endpoint_logs
+        Use a botocore.endpoint logger to parse the unique (rather than total) "resource:action" API calls made during a task, outputing
+        the set to the resource_actions key in the task results. Use the aws_resource_action callback to output to total list made during
+        a playbook. The ANSIBLE_DEBUG_BOTOCORE_LOGS environment variable may also be used.
+        [Default: no]
+        type: bool
+        version_added: 2.8
+
+- domain
+        The Active Directory Domain to restore the instance in.
+        [Default: (null)]
+
+- domain_iam_role_name
+        The name of the IAM role to be used when making API calls to the Directory Service.
+        [Default: (null)]
+
+- ec2_url
+        Url to use to connect to EC2 or your Eucalyptus cloud (by default the module will use EC2 endpoints). Ignored for modules where
+        region is required. Must be specified for all other modules if region is not used. If not set then the value of the EC2_URL
+        environment variable, if any, is used.
+        [Default: (null)]
+        type: str
+
+- enable_cloudwatch_logs_exports
+        A list of log types that need to be enabled for exporting to CloudWatch Logs.
+        (Aliases: cloudwatch_log_exports)[Default: (null)]
+        type: list
+
+- enable_iam_database_authentication
+        Enable mapping of AWS Identity and Access Management (IAM) accounts to database accounts. If this option is omitted when creating
+        the cluster, Amazon RDS sets this to False.
+        [Default: (null)]
+        type: bool
+
+- enable_performance_insights
+        Whether to enable Performance Insights for the DB instance.
+        [Default: (null)]
+        type: bool
+
+- engine
+        The name of the database engine to be used for this DB instance. This is required to create an instance. Valid choices are aurora
+        | aurora-mysql | aurora-postgresql | mariadb | mysql | oracle-ee | oracle-se | oracle-se1 | oracle-se2 | postgres | sqlserver-ee
+        | sqlserver-ex | sqlserver-se | sqlserver-web
+        [Default: (null)]
+
+- engine_version
+        The version number of the database engine to use. For Aurora MySQL that could be 5.6.10a , 5.7.12. Aurora PostgreSQL example,
+        9.6.3
+        [Default: (null)]
+
+- final_db_snapshot_identifier
+        The DB instance snapshot identifier of the new DB instance snapshot created when `skip_final_snapshot' is false.
+        (Aliases: final_snapshot_identifier)[Default: (null)]
+
+- force_failover
+        Set to true to conduct the reboot through a MultiAZ failover.
+        [Default: (null)]
+        type: bool
+
+- force_update_password
+        Set to True to update your cluster password with `master_user_password'. Since comparing passwords to determine if it needs to be
+        updated is not possible this is set to False by default to allow idempotence.
+        [Default: False]
+        type: bool
+
+- iops
+        The Provisioned IOPS (I/O operations per second) value. Is only set when using `storage_type' is set to io1.
+        [Default: (null)]
+        type: int
+
+- kms_key_id
+        The ARN of the AWS KMS key identifier for an encrypted DB instance. If you are creating a DB instance with the same AWS account
+        that owns the KMS encryption key used to encrypt the new DB instance, then you can use the KMS key alias instead of the ARN for
+        the KM encryption key.
+        If `storage_encrypted' is true and and this option is not provided, the default encryption key is used.
+        [Default: (null)]
+
+- license_model
+        The license model for the DB instance.
+        (Choices: license-included, bring-your-own-license, general-public-license)[Default: (null)]
+
+- master_user_password
+        An 8-41 character password for the master database user. The password can contain any printable ASCII character except "/", """,
+        or "@". To modify the password use `force_password_update'. Use `apply immediately' to change the password immediately, otherwise
+        it is updated during the next maintenance window.
+        (Aliases: password)[Default: (null)]
+
+- master_username
+        The name of the master user for the DB cluster. Must be 1-16 letters or numbers and begin with a letter.
+        (Aliases: username)[Default: (null)]
+
+- monitoring_interval
+        The interval, in seconds, when Enhanced Monitoring metrics are collected for the DB instance. To disable collecting metrics,
+        specify 0. Amazon RDS defaults this to 0 if omitted when initially creating a DB instance.
+        [Default: (null)]
+
+- monitoring_role_arn
+        The ARN for the IAM role that permits RDS to send enhanced monitoring metrics to Amazon CloudWatch Logs.
+        [Default: (null)]
+
+- multi_az
+        Specifies if the DB instance is a Multi-AZ deployment. Mutually exclusive with `availability_zone'.
+        [Default: (null)]
+        type: bool
+
+- new_db_instance_identifier
+        The new DB cluster (lowercase) identifier for the DB cluster when renaming a DB instance. The identifier must contain from 1 to
+        63 letters, numbers, or hyphens and the first character must be a letter and may not end in a hyphen or contain consecutive
+        hyphens. Use `apply_immediately' to rename immediately, otherwise it is updated during the next maintenance window.
+        (Aliases: new_instance_id, new_id)[Default: (null)]
+
+- option_group_name
+        The option group to associate with the DB instance.
+        [Default: (null)]
+
+- performance_insights_kms_key_id
+        The AWS KMS key identifier (ARN, name, or alias) for encryption of Performance Insights data.
+        [Default: (null)]
+
+- performance_insights_retention_period
+        The amount of time, in days, to retain Performance Insights data. Valid values are 7 or 731.
+        [Default: (null)]
+
+- port
+        The port number on which the instances accept connections.
+        [Default: (null)]
+
+- preferred_backup_window
+        The daily time range (in UTC) of at least 30 minutes, during which automated backups are created if automated backups are enabled
+        using `backup_retention_period'. The option must be in the format of "hh24:mi-hh24:mi" and not conflict with
+        `preferred_maintenance_window'.
+        (Aliases: backup_window)[Default: (null)]
+
+- preferred_maintenance_window
+        The weekly time range (in UTC) of at least 30 minutes, during which system maintenance can occur. The option must be in the
+        format "ddd:hh24:mi-ddd:hh24:mi" where ddd is one of Mon, Tue, Wed, Thu, Fri, Sat, Sun.
+        (Aliases: maintenance_window)[Default: (null)]
+
+- processor_features
+        A dictionary of Name, Value pairs to indicate the number of CPU cores and the number of threads per core for the DB instance
+        class of the DB instance. Names are threadsPerCore and coreCount. Set this option to an empty dictionary to use the default
+        processor features.
+        [Default: (null)]
+        suboptions:
+          coreCount:
+            description: The number of CPU cores
+          threadsPerCore:
+            description: The number of threads per core
+        
+
+- profile
+        Uses a boto profile. Only works with boto >= 2.24.0.
+        [Default: (null)]
+        type: str
+        version_added: 1.6
+
+- promotion_tier
+        An integer that specifies the order in which an Aurora Replica is promoted to the primary instance after a failure of the
+        existing primary instance.
+        [Default: (null)]
+
+- publicly_accessible
+        Specifies the accessibility options for the DB instance. A value of true specifies an Internet-facing instance with a publicly
+        resolvable DNS name, which resolves to a public IP address. A value of false specifies an internal instance with a DNS name that
+        resolves to a private IP address.
+        [Default: (null)]
+        type: bool
+
+- purge_cloudwatch_logs_exports
+        Set to False to retain any enabled cloudwatch logs that aren't specified in the task and are associated with the instance.
+        [Default: True]
+        type: bool
+
+- purge_tags
+        Set to False to retain any tags that aren't specified in task and are associated with the instance.
+        [Default: True]
+        type: bool
+
+- read_replica
+        Set to False to promote a read replica cluster or true to create one. When creating a read replica `creation_source' should be
+        set to 'instance' or not provided. `source_db_instance_identifier' must be provided with this option.
+        [Default: (null)]
+        type: bool
+
+- region
+        The AWS region to use. If not specified then the value of the AWS_REGION or EC2_REGION environment variable, if any, is used. See
+        http://docs.aws.amazon.com/general/latest/gr/rande.html#ec2_region
+        (Aliases: aws_region, ec2_region)[Default: (null)]
+        type: str
+
+- restore_time
+        If using `creation_source=instance' this indicates the UTC date and time to restore from the source instance. For example,
+        "2009-09-07T23:45:00Z". May alternatively set c(use_latest_restore_time) to True.
+        [Default: (null)]
+
+- s3_bucket_name
+        The name of the Amazon S3 bucket that contains the data used to create the Amazon DB instance.
+        [Default: (null)]
+
+- s3_ingestion_role_arn
+        The Amazon Resource Name (ARN) of the AWS Identity and Access Management (IAM) role that authorizes Amazon RDS to access the
+        Amazon S3 bucket on your behalf.
+        [Default: (null)]
+
+- s3_prefix
+        The prefix for all of the file names that contain the data used to create the Amazon DB instance. If you do not specify a
+        SourceS3Prefix value, then the Amazon DB instance is created by using all of the files in the Amazon S3 bucket.
+        [Default: (null)]
+
+- security_token
+        AWS STS security token. If not set then the value of the AWS_SECURITY_TOKEN or EC2_SECURITY_TOKEN environment variable is used.
+        (Aliases: access_token)[Default: (null)]
+        type: str
+        version_added: 1.6
+
+- skip_final_snapshot
+        Whether a final DB cluster snapshot is created before the DB cluster is deleted. If this is false `final_db_snapshot_identifier'
+        must be provided.
+        [Default: False]
+        type: bool
+
+- snapshot_identifier
+        The ARN of the DB snapshot to restore from when using `creation_source=snapshot'.
+        [Default: (null)]
+
+- source_db_instance_identifier
+        The identifier or ARN of the source DB instance from which to restore when creating a read replica or spinning up a point-in-time
+        DB instance using `creation_source=instance'. If the source DB is not in the same region this should be an ARN.
+        [Default: (null)]
+
+- source_engine
+        The identifier for the database engine that was backed up to create the files stored in the Amazon S3 bucket.
+        (Choices: mysql)[Default: (null)]
+
+- source_engine_version
+        The version of the database that the backup files were created from.
+        [Default: (null)]
+
+- source_region
+        The region of the DB instance from which the replica is created.
+        [Default: (null)]
+
+- state
+        Whether the snapshot should exist or not. `rebooted' is not idempotent and will leave the DB instance in a running state and
+        start it prior to rebooting if it was stopped. `present' will leave the DB instance in the current running/stopped state,
+        (running if creating the DB instance).
+        `state=running' and `state=started' are synonyms, as are `state=rebooted' and `state=restarted'. Note - rebooting the instance is
+        not idempotent.
+        (Choices: present, absent, terminated, running, started, stopped, rebooted, restarted)[Default: present]
+
+- storage_encrypted
+        Whether the DB instance is encrypted.
+        [Default: (null)]
+        type: bool
+
+- storage_type
+        The storage type to be associated with the DB instance. `storage_type' does not apply to Aurora DB instances.
+        (Choices: standard, gp2, io1)[Default: (null)]
+
+- tags
+        A dictionary of key value pairs to assign the DB cluster.
+        [Default: (null)]
+
+- tde_credential_arn
+        The ARN from the key store with which to associate the instance for Transparent Data Encryption. This is supported by Oracle or
+        SQL Server DB instances and may be used in conjunction with `storage_encrypted' though it might slightly affect the performance
+        of your database.
+        (Aliases: transparent_data_encryption_arn)[Default: (null)]
+
+- tde_credential_password
+        The password for the given ARN from the key store in order to access the device.
+        (Aliases: transparent_data_encryption_password)[Default: (null)]
+
+- timezone
+        The time zone of the DB instance.
+        [Default: (null)]
+
+- use_latest_restorable_time
+        Whether to restore the DB instance to the latest restorable backup time. Only one of `use_latest_restorable_time' and
+        `restore_to_time' may be provided.
+        (Aliases: restore_from_latest)[Default: (null)]
+        type: bool
+
+- validate_certs
+        When set to "no", SSL certificates will not be validated for boto versions >= 2.6.0.
+        [Default: True]
+        type: bool
+        version_added: 1.5
+
+- vpc_security_group_ids
+        A list of EC2 VPC security groups to associate with the DB cluster.
+        [Default: (null)]
+        type: list
+
+- wait
+        Whether to wait for the cluster to be available, stopped, or deleted. At a later time a wait_timeout option may be added.
+        Following each API call to create/modify/delete the instance a waiter is used with a 60 second delay 30 times until the instance
+        reaches the expected state (available/stopped/deleted). The total task time may also be influenced by AWSRetry which helps
+        stabilize if the instance is in an invalid state to operate on to begin with (such as if you try to stop it when it is in the
+        process of rebooting). If setting this to False task retries and delays may make your playbook execution better handle timeouts
+        for major modifications.
+        [Default: True]
+        type: bool
+
+
+NOTES:
+      * If parameters are not set within the module, the following environment variables can be used in decreasing order of
+        precedence `AWS_URL' or `EC2_URL', `AWS_ACCESS_KEY_ID' or `AWS_ACCESS_KEY' or `EC2_ACCESS_KEY', `AWS_SECRET_ACCESS_KEY' or
+        `AWS_SECRET_KEY' or `EC2_SECRET_KEY', `AWS_SECURITY_TOKEN' or `EC2_SECURITY_TOKEN', `AWS_REGION' or `EC2_REGION'
+      * Ansible uses the boto configuration file (typically ~/.boto) if no credentials are provided. See
+        https://boto.readthedocs.io/en/latest/boto_config_tut.html
+      * `AWS_REGION' or `EC2_REGION' can be typically be used to specify the AWS region, when required, but this can also be
+        configured in the boto config file
+
+
+REQUIREMENTS:  boto, boto3 >= 1.5.0, botocore, python >= 2.6
+
+AUTHOR: Sloane Hertel (@s-hertel)
+        METADATA:
+          status:
+          - preview
+          supported_by: community
+        
+
+EXAMPLES:
+
+# Note: These examples do not set authentication details, see the AWS Guide for details.
+- name: create minimal aurora instance in default VPC and default subnet group
+  rds_instance:
+    engine: aurora
+    db_instance_identifier: ansible-test-aurora-db-instance
+    instance_type: db.t2.small
+    password: "{{ password }}"
+    username: "{{ username }}"
+    cluster_id: ansible-test-cluster  # This cluster must exist - see rds_cluster to manage it
+
+- name: Create a DB instance using the default AWS KMS encryption key
+  rds_instance:
+    id: test-encrypted-db
+    state: present
+    engine: mariadb
+    storage_encrypted: True
+    db_instance_class: db.t2.medium
+    username: "{{ username }}"
+    password: "{{ password }}"
+    allocated_storage: "{{ allocated_storage }}"
+
+- name: remove the DB instance without a final snapshot
+  rds_instance:
+    id: "{{ instance_id }}"
+    state: absent
+    skip_final_snapshot: True
+
+- name: remove the DB instance with a final snapshot
+  rds_instance:
+    id: "{{ instance_id }}"
+    state: absent
+    final_snapshot_identifier: "{{ snapshot_id }}"
+
+
+RETURN VALUES:
+
+allocated_storage:
+  description: The allocated storage size in gibibytes. This is always 1 for aurora database engines.
+  returned: always
+  type: int
+  sample: 20
+auto_minor_version_upgrade:
+  description: Whether minor engine upgrades are applied automatically to the DB instance during the maintenance window.
+  returned: always
+  type: bool
+  sample: true
+availability_zone:
+  description: The availability zone for the DB instance.
+  returned: always
+  type: str
+  sample: us-east-1f
+backup_retention_period:
+  description: The number of days for which automated backups are retained.
+  returned: always
+  type: int
+  sample: 1
+ca_certificate_identifier:
+  description: The identifier of the CA certificate for the DB instance.
+  returned: always
+  type: str
+  sample: rds-ca-2015
+copy_tags_to_snapshot:
+  description: Whether tags are copied from the DB instance to snapshots of the DB instance.
+  returned: always
+  type: bool
+  sample: false
+db_instance_arn:
+  description: The Amazon Resource Name (ARN) for the DB instance.
+  returned: always
+  type: str
+  sample: arn:aws:rds:us-east-1:123456789012:db:ansible-test
+db_instance_class:
+  description: The name of the compute and memory capacity class of the DB instance.
+  returned: always
+  type: str
+  sample: db.m4.large
+db_instance_identifier:
+  description: The identifier of the DB instance
+  returned: always
+  type: str
+  sample: ansible-test
+db_instance_port:
+  description: The port that the DB instance listens on.
+  returned: always
+  type: int
+  sample: 0
+db_instance_status:
+  description: The current state of this database.
+  returned: always
+  type: str
+  sample: stopped
+db_parameter_groups:
+  description: The list of DB parameter groups applied to this DB instance.
+  returned: always
+  type: complex
+  contains:
+    db_parameter_group_name:
+      description: The name of the DP parameter group.
+      returned: always
+      type: str
+      sample: default.mariadb10.0
+    parameter_apply_status:
+      description: The status of parameter updates.
+      returned: always
+      type: str
+      sample: in-sync
+db_security_groups:
+  description: A list of DB security groups associated with this DB instance.
+  returned: always
+  type: list
+  sample: []
+db_subnet_group:
+  description: The subnet group associated with the DB instance.
+  returned: always
+  type: complex
+  contains:
+    db_subnet_group_description:
+      description: The description of the DB subnet group.
+      returned: always
+      type: str
+      sample: default
+    db_subnet_group_name:
+      description: The name of the DB subnet group.
+      returned: always
+      type: str
+      sample: default
+    subnet_group_status:
+      description: The status of the DB subnet group.
+      returned: always
+      type: str
+      sample: Complete
+    subnets:
+      description: A list of Subnet elements.
+      returned: always
+      type: complex
+      contains:
+        subnet_availability_zone:
+          description: The availability zone of the subnet.
+          returned: always
+          type: complex
+          contains:
+            name:
+              description: The name of the Availability Zone.
+              returned: always
+              type: str
+              sample: us-east-1c
+        subnet_identifier:
+          description: The ID of the subnet.
+          returned: always
+          type: str
+          sample: subnet-12345678
+        subnet_status:
+          description: The status of the subnet.
+          returned: always
+          type: str
+          sample: Active
+    vpc_id:
+      description: The VpcId of the DB subnet group.
+      returned: always
+      type: str
+      sample: vpc-12345678
+dbi_resource_id:
+  description: The AWS Region-unique, immutable identifier for the DB instance.
+  returned: always
+  type: str
+  sample: db-UHV3QRNWX4KB6GALCIGRML6QFA
+domain_memberships:
+  description: The Active Directory Domain membership records associated with the DB instance.
+  returned: always
+  type: list
+  sample: []
+endpoint:
+  description: The connection endpoint.
+  returned: always
+  type: complex
+  contains:
+    address:
+      description: The DNS address of the DB instance.
+      returned: always
+      type: str
+      sample: ansible-test.cvlrtwiennww.us-east-1.rds.amazonaws.com
+    hosted_zone_id:
+      description: The ID that Amazon Route 53 assigns when you create a hosted zone.
+      returned: always
+      type: str
+      sample: ZTR2ITUGPA61AM
+    port:
+      description: The port that the database engine is listening on.
+      returned: always
+      type: int
+      sample: 3306
+engine:
+  description: The database engine version.
+  returned: always
+  type: str
+  sample: mariadb
+engine_version:
+  description: The database engine version.
+  returned: always
+  type: str
+  sample: 10.0.35
+iam_database_authentication_enabled:
+  description: Whether mapping of AWS Identity and Access Management (IAM) accounts to database accounts is enabled.
+  returned: always
+  type: bool
+  sample: false
+instance_create_time:
+  description: The date and time the DB instance was created.
+  returned: always
+  type: str
+  sample: '2018-07-04T16:48:35.332000+00:00'
+kms_key_id:
+  description: The AWS KMS key identifier for the encrypted DB instance when storage_encrypted is true.
+  returned: When storage_encrypted is true
+  type: str
+  sample: arn:aws:kms:us-east-1:123456789012:key/70c45553-ad2e-4a85-9f14-cfeb47555c33
+latest_restorable_time:
+  description: The latest time to which a database can be restored with point-in-time restore.
+  returned: always
+  type: str
+  sample: '2018-07-04T16:50:50.642000+00:00'
+license_model:
+  description: The License model information for this DB instance.
+  returned: always
+  type: str
+  sample: general-public-license
+master_username:
+  description: The master username for the DB instance.
+  returned: always
+  type: str
+  sample: test
+monitoring_interval:
+  description:
+    - The interval, in seconds, between points when Enhanced Monitoring metrics are collected for the DB instance.
+      0 means collecting Enhanced Monitoring metrics is disabled.
+  returned: always
+  type: int
+  sample: 0
+multi_az:
+  description: Whether the DB instance is a Multi-AZ deployment.
+  returned: always
+  type: bool
+  sample: false
+option_group_memberships:
+  description: The list of option group memberships for this DB instance.
+  returned: always
+  type: complex
+  contains:
+    option_group_name:
+      description: The name of the option group that the instance belongs to.
+      returned: always
+      type: str
+      sample: default:mariadb-10-0
+    status:
+      description: The status of the DB instance's option group membership.
+      returned: always
+      type: str
+      sample: in-sync
+pending_modified_values:
+  description: The changes to the DB instance that are pending.
+  returned: always
+  type: complex
+  contains: {}
+performance_insights_enabled:
+  description: True if Performance Insights is enabled for the DB instance, and otherwise false.
+  returned: always
+  type: bool
+  sample: false
+preferred_backup_window:
+  description: The daily time range during which automated backups are created if automated backups are enabled.
+  returned: always
+  type: str
+  sample: 07:01-07:31
+preferred_maintenance_window:
+  description: The weekly time range (in UTC) during which system maintenance can occur.
+  returned: always
+  type: str
+  sample: sun:09:31-sun:10:01
+publicly_accessible:
+  description:
+    - True for an Internet-facing instance with a publicly resolvable DNS name, False to indicate an
+      internal instance with a DNS name that resolves to a private IP address.
+  returned: always
+  type: bool
+  sample: true
+read_replica_db_instance_identifiers:
+  description: Identifiers of the Read Replicas associated with this DB instance.
+  returned: always
+  type: list
+  sample: []
+storage_encrypted:
+  description: Whether the DB instance is encrypted.
+  returned: always
+  type: bool
+  sample: false
+storage_type:
+  description: The storage type to be associated with the DB instance.
+  returned: always
+  type: str
+  sample: standard
+tags:
+  description: A dictionary of tags associated with the DB instance.
+  returned: always
+  type: complex
+  contains: {}
+vpc_security_groups:
+  description: A list of VPC security group elements that the DB instance belongs to.
+  returned: always
+  type: complex
+  contains:
+    status:
+      description: The status of the VPC security group.
+      returned: always
+      type: str
+      sample: active
+    vpc_security_group_id:
+      description: The name of the VPC security group.
+      returned: always
+      type: str
+      sample: sg-12345678
+

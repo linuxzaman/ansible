@@ -1,0 +1,79 @@
+EXAMPLES:
+
+# Example git checkout from Ansible Playbooks
+- git:
+    repo: 'https://foosball.example.org/path/to/repo.git'
+    dest: /srv/checkout
+    version: release-0.22
+
+# Example read-write git checkout from github
+- git:
+    repo: git@github.com:mylogin/hello.git
+    dest: /home/mylogin/hello
+
+# Example just ensuring the repo checkout exists
+- git:
+    repo: 'https://foosball.example.org/path/to/repo.git'
+    dest: /srv/checkout
+    update: no
+
+# Example just get information about the repository whether or not it has
+# already been cloned locally.
+- git:
+    repo: 'https://foosball.example.org/path/to/repo.git'
+    dest: /srv/checkout
+    clone: no
+    update: no
+
+# Example checkout a github repo and use refspec to fetch all pull requests
+- git:
+    repo: https://github.com/ansible/ansible-examples.git
+    dest: /src/ansible-examples
+    refspec: '+refs/pull/*:refs/heads/*'
+
+# Example Create git archive from repo
+- git:
+    repo: https://github.com/ansible/ansible-examples.git
+    dest: /src/ansible-examples
+    archive: /tmp/ansible-examples.zip
+
+# Example clone a repo with separate git directory
+- git:
+    repo: https://github.com/ansible/ansible-examples.git
+    dest: /src/ansible-examples
+    separate_git_dir: /src/ansible-examples.git
+
+
+RETURN VALUES:
+
+after:
+    description: last commit revision of the repository retrieved during the update
+    returned: success
+    type: str
+    sample: 4c020102a9cd6fe908c9a4a326a38f972f63a903
+before:
+    description: commit revision before the repository was updated, "null" for new repository
+    returned: success
+    type: str
+    sample: 67c04ebe40a003bda0efb34eacfb93b0cafdf628
+remote_url_changed:
+    description: Contains True or False whether or not the remote URL was changed.
+    returned: success
+    type: bool
+    sample: True
+warnings:
+    description: List of warnings if requested features were not available due to a too old git version.
+    returned: error
+    type: str
+    sample: Your git version is too old to fully support the depth argument. Falling back to full checkouts.
+git_dir_now:
+    description: Contains the new path of .git directory if it's changed
+    returned: success
+    type: str
+    sample: /path/to/new/git/dir
+git_dir_before:
+    description: Contains the original path of .git directory if it's changed
+    returned: success
+    type: str
+    sample: /path/to/old/git/dir
+

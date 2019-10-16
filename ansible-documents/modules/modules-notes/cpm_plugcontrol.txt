@@ -1,0 +1,99 @@
+> CPM_PLUGCONTROL    (/usr/lib/python2.7/dist-packages/ansible/modules/remote_management/cpm/cpm_plugcontrol.py)
+
+        Get and Set Plug actions on WTI OOB and PDU devices
+
+  * This module is maintained by The Ansible Community
+OPTIONS (= is mandatory):
+
+= cpm_action
+        This is the Action to send the module.
+        (Choices: getplugcontrol, setplugcontrol)
+
+- cpm_password
+        This is the Password of the WTI device to send the module.
+        [Default: (null)]
+
+= cpm_url
+        This is the URL of the WTI device  to send the module.
+
+
+- cpm_username
+        This is the Username of the WTI device to send the module.
+        [Default: (null)]
+
+= plug_id
+        This is the plug number or the plug name that is to be manipulated For the plugget command, the plug_id 'all' will return the
+        status of all the plugs the user has rights to access.
+
+
+- plug_state
+        This is what action to take on the plug.
+        (Choices: on, off, boot, default)[Default: (null)]
+
+- use_https
+        Designates to use an https connection or http connection.
+        [Default: True]
+        type: bool
+
+- use_proxy
+        Flag to control if the lookup will observe HTTP proxy environment variables when present.
+        [Default: False]
+        type: bool
+
+- validate_certs
+        If false, SSL certificates will not be validated. This should only be used
+        on personally controlled sites using self-signed certificates.
+        [Default: True]
+        type: bool
+
+
+AUTHOR: Western Telematic Inc. (@wtinetworkgear)
+        METADATA:
+          status:
+          - preview
+          supported_by: community
+        
+
+EXAMPLES:
+
+# Get Plug status for all ports
+- name: Get the Plug status for ALL ports of a WTI device
+  cpm_plugcontrol:
+    cpm_action: "getplugcontrol"
+    cpm_url: "rest.wti.com"
+    cpm_username: "restpower"
+    cpm_password: "restfulpowerpass12"
+    use_https: true
+    validate_certs: true
+    plug_id: "all"
+
+# Get Plug status for port 2
+- name: Get the Plug status for the given port of a WTI device
+  cpm_plugcontrol:
+    cpm_action: "getplugcontrol"
+    cpm_url: "rest.wti.com"
+    cpm_username: "restpower"
+    cpm_password: "restfulpowerpass12"
+    use_https: true
+    validate_certs: false
+    plug_id: "2"
+
+# Reboot plug 5
+- name: Reboot Plug 5 on a given WTI device
+  cpm_plugcontrol:
+    cpm_action: "setplugcontrol"
+    cpm_url: "rest.wti.com"
+    cpm_username: "restpower"
+    cpm_password: "restfulpowerpass12"
+    use_https: true
+    plug_id: "5"
+    plug_state: "boot"
+
+
+RETURN VALUES:
+
+data:
+    description: The output JSON returned from the commands sent
+    returned: always
+    type: str
+

@@ -1,0 +1,116 @@
+> ONYX_IGMP_VLAN    (/usr/lib/python2.7/dist-packages/ansible/modules/network/onyx/onyx_igmp_vlan.py)
+
+        This module provides declarative management of IGMP vlan configuration on Mellanox ONYX network devices.
+
+  * This module is maintained by The Ansible Community
+OPTIONS (= is mandatory):
+
+- mrouter
+        Configure ip igmp snooping mrouter port on vlan
+        [Default: (null)]
+        suboptions:
+          name:
+            description:
+            - Configure mrouter interface
+            required: true
+          state:
+            choices:
+            - enabled
+            - disabled
+            default: enabled
+            description:
+            - Enable IGMP snooping mrouter on vlan interface.
+        
+
+- querier
+        Configure the IGMP querier parameters
+        [Default: (null)]
+        suboptions:
+          address:
+            description:
+            - Update IP address for the querier
+          interval:
+            description:
+            - Update time interval between querier queries, range 60-600
+          state:
+            choices:
+            - enabled
+            - disabled
+            default: enabled
+            description:
+            - Enable IGMP snooping querier on vlan in the switch.
+        
+
+- state
+        IGMP state.
+        (Choices: enabled, disabled)[Default: enabled]
+
+- static_groups
+        List of IGMP static groups.
+        [Default: (null)]
+        suboptions:
+          multicast_ip_address:
+            description:
+            - Configure static IP multicast group, range 224.0.1.0-239.255.255.25.
+            required: true
+          name:
+            description:
+            - interface name to configure static groups on it.
+          sources:
+            description:
+            - List of IP sources to be configured
+        
+
+- version
+        IGMP snooping operation version on this vlan
+        (Choices: V2, V3)[Default: (null)]
+
+= vlan_id
+        VLAN ID, vlan should exist.
+
+
+
+NOTES:
+      * Tested on ONYX 3.7.0932-01
+
+
+AUTHOR: Anas Badaha (@anasbadaha)
+        METADATA:
+          status:
+          - preview
+          supported_by: community
+        
+
+EXAMPLES:
+
+- name: configure igmp vlan
+  onyx_igmp_vlan:
+    state: enabled
+    vlan_id: 10
+    version:
+      V2
+    querier:
+      state: enabled
+      interval: 70
+      address: 10.11.121.13
+    mrouter:
+      state: disabled
+      name: Eth1/2
+    static_groups:
+      - multicast_ip_address: 224.5.5.8
+        name: Eth1/1
+        sources:
+          - 1.1.1.1
+          - 1.1.1.2
+
+
+RETURN VALUES:
+
+commands:
+  description: The list of configuration mode commands to send to the device.
+  returned: always
+  type: list
+  sample:
+    - vlan 10 ip igmp snooping
+    - vlan 10 ip igmp snooping static-group 224.5.5.5 interface ethernet 1/1
+

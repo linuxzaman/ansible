@@ -1,0 +1,42 @@
+EXAMPLES:
+
+- name: populate service facts
+  service_facts:
+
+- debug:
+    var: ansible_facts.services
+
+
+RETURN VALUES:
+
+ansible_facts:
+  description: Facts to add to ansible_facts about the services on the system
+  returned: always
+  type: complex
+  contains:
+    services:
+      description: States of the services with service name as key.
+      returned: always
+      type: complex
+      contains:
+        source:
+          description: Init system of the service. One of C(systemd), C(sysv), C(upstart).
+          returned: always
+          type: str
+          sample: sysv
+        state:
+          description: State of the service. Either C(running), C(stopped), or C(unknown).
+          returned: always
+          type: str
+          sample: running
+        status:
+          description: State of the service. Either C(enabled), C(disabled), or C(unknown).
+          returned: systemd systems or RedHat/SUSE flavored sysvinit/upstart
+          type: string
+          sample: enabled
+        name:
+          description: Name of the service.
+          returned: always
+          type: str
+          sample: arp-ethers.service
+

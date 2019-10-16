@@ -1,0 +1,74 @@
+EXAMPLES:
+
+- name: Create a project
+  cs_project:
+    name: web
+    tags:
+      - { key: admin, value: john }
+      - { key: foo,   value: bar }
+  delegate_to: localhost
+
+- name: Rename a project
+  cs_project:
+    name: web
+    display_text: my web project
+  delegate_to: localhost
+
+- name: Suspend an existing project
+  cs_project:
+    name: web
+    state: suspended
+  delegate_to: localhost
+
+- name: Activate an existing project
+  cs_project:
+    name: web
+    state: active
+  delegate_to: localhost
+
+- name: Remove a project
+  cs_project:
+    name: web
+    state: absent
+  delegate_to: localhost
+
+
+RETURN VALUES:
+
+---
+id:
+  description: UUID of the project.
+  returned: success
+  type: str
+  sample: 04589590-ac63-4ffc-93f5-b698b8ac38b6
+name:
+  description: Name of the project.
+  returned: success
+  type: str
+  sample: web project
+display_text:
+  description: Display text of the project.
+  returned: success
+  type: str
+  sample: web project
+state:
+  description: State of the project.
+  returned: success
+  type: str
+  sample: Active
+domain:
+  description: Domain the project is related to.
+  returned: success
+  type: str
+  sample: example domain
+account:
+  description: Account the project is related to.
+  returned: success
+  type: str
+  sample: example account
+tags:
+  description: List of resource tags associated with the project.
+  returned: success
+  type: list
+  sample: '[ { "key": "foo", "value": "bar" } ]'
+

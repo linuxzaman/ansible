@@ -1,0 +1,84 @@
+EXAMPLES:
+
+- name: Create a high-speed logging destination
+  bigip_log_destination:
+    name: foo
+    type: remote-high-speed-log
+    pool: my-ltm-pool
+    provider:
+      password: secret
+      server: lb.mydomain.com
+      user: admin
+  delegate_to: localhost
+
+- name: Create a remote-syslog logging destination
+  bigip_log_destination:
+    name: foo
+    type: remote-syslog
+    syslog_format: rfc5424
+    forward_to: my-destination
+    provider:
+      password: secret
+      server: lb.mydomain.com
+      user: admin
+  delegate_to: localhost
+
+
+RETURN VALUES:
+
+forward_to:
+  description: The new Forward To value.
+  returned: changed
+  type: str
+  sample: /Common/dest1
+pool:
+  description: The new Pool value.
+  returned: changed
+  type: str
+  sample: /Common/pool1
+distribution:
+  description: The new Distribution Method value.
+  returned: changed
+  type: str
+  sample: balanced
+protocol:
+  description: The new Protocol value.
+  returned: changed
+  type: str
+  sample: tcp
+syslog_format:
+  description: The new Syslog format value.
+  returned: changed
+  type: str
+  sample: syslog
+address:
+  description: The new Address value.
+  returned: changed
+  type: str
+  sample: 1.2.3.2
+port:
+  description: The new Port value.
+  returned: changed
+  type: int
+  sample: 2020
+template_delete_delay:
+  description: The new Template Delete Delay value.
+  returned: changed
+  type: int
+  sample: 20
+template_retransmit_interval:
+  description: The new Template Retransmit Interval value.
+  returned: changed
+  type: int
+  sample: 200
+transport_profile:
+  description: The new Transport Profile value.
+  returned: changed
+  type: str
+  sample: /Common/tcp
+server_ssl_profile:
+  description: The new Server SSL Profile value.
+  returned: changed
+  type: str
+  sample: /Common/serverssl
+

@@ -1,0 +1,45 @@
+EXAMPLES:
+
+- name: Add a new tenant
+  mso_tenant:
+    host: mso_host
+    username: admin
+    password: SomeSecretPassword
+    tenant: north_europe
+    display_name: North European Datacenter
+    description: This tenant manages the NEDC environment.
+    state: present
+  delegate_to: localhost
+
+- name: Remove a tenant
+  mso_tenant:
+    host: mso_host
+    username: admin
+    password: SomeSecretPassword
+    tenant: north_europe
+    state: absent
+  delegate_to: localhost
+
+- name: Query a tenant
+  mso_tenant:
+    host: mso_host
+    username: admin
+    password: SomeSecretPassword
+    tenant: north_europe
+    state: query
+  delegate_to: localhost
+  register: query_result
+
+- name: Query all tenants
+  mso_tenant:
+    host: mso_host
+    username: admin
+    password: SomeSecretPassword
+    state: query
+  delegate_to: localhost
+  register: query_result
+
+
+RETURN VALUES:
+
+

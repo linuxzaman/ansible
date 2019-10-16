@@ -1,0 +1,324 @@
+> BIGIP_DEVICE_SYSLOG    (/usr/lib/python2.7/dist-packages/ansible/modules/network/f5/bigip_device_syslog.py)
+
+        Manage system-level syslog settings on BIG-IP.
+
+  * This module is maintained by an Ansible Partner
+OPTIONS (= is mandatory):
+
+- auth_priv_from
+        Specifies the lowest level of messages about user authentication to include in the system log.
+        (Choices: alert, crit, debug, emerg, err, info, notice, warning)[Default: (null)]
+        type: str
+
+- auth_priv_to
+        Specifies the highest level of messages about user authentication to include in the system log.
+        (Choices: alert, crit, debug, emerg, err, info, notice, warning)[Default: (null)]
+        type: str
+
+- console_log
+        Enables or disables logging emergency syslog messages to the console.
+        [Default: (null)]
+        type: bool
+
+- cron_from
+        Specifies the lowest level of messages about time-based scheduling to include in the system log.
+        (Choices: alert, crit, debug, emerg, err, info, notice, warning)[Default: (null)]
+        type: str
+
+- cron_to
+        Specifies the highest level of messages about time-based scheduling to include in the system log.
+        (Choices: alert, crit, debug, emerg, err, info, notice, warning)[Default: (null)]
+        type: str
+
+- daemon_from
+        Specifies the lowest level of messages about daemon performance to include in the system log.
+        (Choices: alert, crit, debug, emerg, err, info, notice, warning)[Default: (null)]
+        type: str
+
+- daemon_to
+        Specifies the highest level of messages about daemon performance to include in the system log.
+        (Choices: alert, crit, debug, emerg, err, info, notice, warning)[Default: (null)]
+        type: str
+
+- include
+        Syslog-NG configuration to include in the device syslog config.
+        [Default: (null)]
+        type: str
+
+- iso_date
+        Enables or disables the ISO date format for messages in the log files.
+        [Default: (null)]
+        type: bool
+
+- kern_from
+        Specifies the lowest level of kernel messages to include in the system log.
+        (Choices: alert, crit, debug, emerg, err, info, notice, warning)[Default: (null)]
+        type: str
+
+- kern_to
+        Specifies the highest level of kernel messages to include in the system log.
+        (Choices: alert, crit, debug, emerg, err, info, notice, warning)[Default: (null)]
+        type: str
+
+- local6_from
+        Specifies the lowest error level for messages from the local6 facility to include in the log.
+        (Choices: alert, crit, debug, emerg, err, info, notice, warning)[Default: (null)]
+        type: str
+
+- local6_to
+        Specifies the highest error level for messages from the local6 facility to include in the log.
+        (Choices: alert, crit, debug, emerg, err, info, notice, warning)[Default: (null)]
+        type: str
+
+- mail_from
+        Specifies the lowest level of mail log messages to include in the system log.
+        (Choices: alert, crit, debug, emerg, err, info, notice, warning)[Default: (null)]
+        type: str
+
+- mail_to
+        Specifies the highest level of mail log messages to include in the system log.
+        (Choices: alert, crit, debug, emerg, err, info, notice, warning)[Default: (null)]
+        type: str
+
+- messages_from
+        Specifies the lowest level of system messages to include in the system log.
+        (Choices: alert, crit, debug, emerg, err, info, notice, warning)[Default: (null)]
+        type: str
+
+- messages_to
+        Specifies the highest level of system messages to include in the system log.
+        (Choices: alert, crit, debug, emerg, err, info, notice, warning)[Default: (null)]
+        type: str
+
+= password
+        The password for the user account used to connect to the BIG-IP.
+        You may omit this option by setting the environment variable `F5_PASSWORD'.
+        (Aliases: pass, pwd)
+        type: str
+
+- provider
+        A dict object containing connection details.
+        [Default: (null)]
+        suboptions:
+          password:
+            aliases:
+            - pass
+            - pwd
+            description:
+            - The password for the user account used to connect to the BIG-IP.
+            - You may omit this option by setting the environment variable `F5_PASSWORD'.
+            required: true
+            type: str
+          server:
+            description:
+            - The BIG-IP host.
+            - You may omit this option by setting the environment variable `F5_SERVER'.
+            required: true
+            type: str
+          server_port:
+            default: 443
+            description:
+            - The BIG-IP server port.
+            - You may omit this option by setting the environment variable `F5_SERVER_PORT'.
+            type: int
+          ssh_keyfile:
+            description:
+            - Specifies the SSH keyfile to use to authenticate the connection to the remote
+              device.  This argument is only used for `cli' transports.
+            - You may omit this option by setting the environment variable `ANSIBLE_NET_SSH_KEYFILE'.
+            type: path
+          timeout:
+            default: 10
+            description:
+            - Specifies the timeout in seconds for communicating with the network device for
+              either connecting or sending commands.  If the timeout is exceeded before the
+              operation is completed, the module will error.
+            type: int
+          transport:
+            choices:
+            - cli
+            - rest
+            default: rest
+            description:
+            - Configures the transport connection to use when connecting to the remote device.
+            type: str
+          user:
+            description:
+            - The username to connect to the BIG-IP with. This user must have administrative
+              privileges on the device.
+            - You may omit this option by setting the environment variable `F5_USER'.
+            required: true
+            type: str
+          validate_certs:
+            default: true
+            description:
+            - If `no', SSL certificates are not validated. Use this only on personally controlled
+              sites using self-signed certificates.
+            - You may omit this option by setting the environment variable `F5_VALIDATE_CERTS'.
+            type: bool
+        
+        type: dict
+        version_added: 2.5
+
+= server
+        The BIG-IP host.
+        You may omit this option by setting the environment variable `F5_SERVER'.
+
+        type: str
+
+- server_port
+        The BIG-IP server port.
+        You may omit this option by setting the environment variable `F5_SERVER_PORT'.
+        [Default: 443]
+        type: int
+        version_added: 2.2
+
+= user
+        The username to connect to the BIG-IP with. This user must have administrative privileges on the device.
+        You may omit this option by setting the environment variable `F5_USER'.
+
+        type: str
+
+- user_log_from
+        Specifies the lowest level of user account messages to include in the system log.
+        (Choices: alert, crit, debug, emerg, err, info, notice, warning)[Default: (null)]
+        type: str
+
+- user_log_to
+        Specifies the highest level of user account messages to include in the system log.
+        (Choices: alert, crit, debug, emerg, err, info, notice, warning)[Default: (null)]
+        type: str
+
+- validate_certs
+        If `no', SSL certificates are not validated. Use this only on personally controlled sites using self-signed certificates.
+        You may omit this option by setting the environment variable `F5_VALIDATE_CERTS'.
+        [Default: True]
+        type: bool
+        version_added: 2.0
+
+
+NOTES:
+      * For more information on using Ansible to manage F5 Networks devices see https://www.ansible.com/integrations/networks/f5.
+      * Requires BIG-IP software version >= 12.
+      * The F5 modules only manipulate the running configuration of the F5 product. To ensure that BIG-IP specific configuration
+        persists to disk, be sure to include at least one task that uses the [bigip_config] module to save the running
+        configuration. Refer to the module's documentation for the correct usage of the module to save your running configuration.
+
+
+AUTHOR: Tim Rupp (@caphrim007)
+        METADATA:
+          status:
+          - preview
+          supported_by: certified
+        
+
+EXAMPLES:
+
+- name: Create a syslog config
+  bigip_device_syslog:
+    name: foo
+    provider:
+      password: secret
+      server: lb.mydomain.com
+      user: admin
+  delegate_to: localhost
+
+
+RETURN VALUES:
+
+auth_priv_from:
+  description: The new lowest user authentication logging level
+  returned: changed
+  type: str
+  sample: alert
+auth_priv_to:
+  description: The new highest user authentication logging level.
+  returned: changed
+  type: str
+  sample: emerg
+console_log:
+  description: Whether logging to console is enabled or not.
+  returned: changed
+  type: bool
+  sample: yes
+iso_date:
+  description: Whether ISO date format in logs is enabled or not
+  returned: changed
+  type: bool
+  sample: no
+cron_from:
+  description: The new lowest time-based scheduling logging level.
+  returned: changed
+  type: str
+  sample: emerg
+cron_to:
+  description: The new highest time-based scheduling logging level.
+  returned: changed
+  type: str
+  sample: alert
+daemon_from:
+  description: The new lowest daemon performance logging level.
+  returned: changed
+  type: str
+  sample: alert
+daemon_to:
+  description: The new highest daemon performance logging level.
+  returned: changed
+  type: str
+  sample: alert
+include:
+  description: The new extra syslog-ng configuration to include in syslog config.
+  returned: changed
+  type: str
+  sample: "filter f_remote_syslog { not (facility(local6)) };"
+kern_from:
+  description: The new lowest kernel messages logging level.
+  returned: changed
+  type: str
+  sample: alert
+kern_to:
+  description: The new highest kernel messages logging level.
+  returned: changed
+  type: str
+  sample: alert
+local6_from:
+  description: The new lowest local6 facility logging level.
+  returned: changed
+  type: str
+  sample: alert
+local6_to:
+  description: The new highest local6 facility logging level.
+  returned: changed
+  type: str
+  sample: alert
+mail_from:
+  description: The new lowest mail log logging level.
+  returned: changed
+  type: str
+  sample: alert
+mail_to:
+  description: The new highest mail log logging level.
+  returned: changed
+  type: str
+  sample: alert
+messages_from:
+  description: The new lowest system logging level.
+  returned: changed
+  type: str
+  sample: alert
+messages_to:
+  description: The new highest system logging level.
+  returned: changed
+  type: str
+  sample: alert
+user_log_from:
+  description: The new lowest user account logging level.
+  returned: changed
+  type: str
+  sample: alert
+user_log_to:
+  description: The new highest user account logging level.
+  returned: changed
+  type: str
+  sample: alert
+

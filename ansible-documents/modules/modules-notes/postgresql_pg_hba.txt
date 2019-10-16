@@ -1,0 +1,232 @@
+> POSTGRESQL_PG_HBA    (/usr/lib/python2.7/dist-packages/ansible/modules/database/postgresql/postgresql_pg_hba.py)
+
+        The fundamental function of the module is to create, or delete lines in pg_hba files. The lines in the file should be in a
+        typical pg_hba form and lines should be unique per key (type, databases, users, source). If they are not unique and the SID is
+        'the one to change', only one for `state=present' or none for `state=absent' of the SID's will remain.
+
+  * This module is maintained by The Ansible Community
+OPTIONS (= is mandatory):
+
+- address
+        The source address/net where the connections could come from.
+        Will not be used for entries of `type'=`local'.
+        You can also use keywords `all', `samehost', and `samenet'.
+        (Aliases: source, src)[Default: samehost]
+        type: str
+
+- attributes
+        The attributes the resulting file or directory should have.
+        To get supported flags look at the man page for `chattr' on the target system.
+        This string should contain the attributes in the same order as the one displayed by `lsattr'.
+        The `=' operator is assumed as default, otherwise `+' or `-' operators need to be included in the string.
+        (Aliases: attr)[Default: (null)]
+        type: str
+        version_added: 2.3
+
+- backup
+        If set, create a backup of the `pg_hba' file before it is modified. The location of the backup is returned in the (backup)
+        variable by this module.
+        [Default: False]
+        type: bool
+
+- backup_file
+        Write backup to a specific backupfile rather than a temp file.
+        [Default: (null)]
+        type: str
+
+- contype
+        Type of the rule. If not set, `postgresql_pg_hba' will only return contents.
+        (Choices: local, host, hostnossl, hostssl)[Default: (null)]
+        type: str
+
+- create
+        Create an `pg_hba' file if none exists.
+        When set to false, an error is raised when the `pg_hba' file doesn't exist.
+        [Default: False]
+        type: bool
+
+- databases
+        Databases this line applies to.
+        [Default: all]
+        type: str
+
+= dest
+        Path to `pg_hba' file to modify.
+
+        type: path
+
+- group
+        Name of the group that should own the file/directory, as would be fed to `chown'.
+        [Default: (null)]
+        type: str
+
+- method
+        Authentication method to be used.
+        (Choices: cert, gss, ident, krb5, ldap, md5, pam, password, peer, radius, reject, scram-sha-256, sspi, trust)[Default: md5]
+        type: str
+
+- mode
+        The permissions the resulting file or directory should have.
+        For those used to `/usr/bin/chmod' remember that modes are actually octal numbers. You must either add a leading zero so that
+        Ansible's YAML parser knows it is an octal number (like `0644' or `01777') or quote it (like `'644'' or `'1777'') so Ansible
+        receives a string and can do its own conversion from string into number.
+        Giving Ansible a number without following one of these rules will end up with a decimal number which will have unexpected
+        results.
+        As of Ansible 1.8, the mode may be specified as a symbolic mode (for example, `u+rwx' or `u=rw,g=r,o=r').
+        As of Ansible 2.6, the mode may also be the special string `preserve'.
+        When set to `preserve' the file will be given the same permissions as the source file.
+        [Default: (null)]
+        type: str
+
+- netmask
+        The netmask of the source address.
+        [Default: (null)]
+        type: str
+
+- options
+        Additional options for the authentication `method'.
+        [Default: (null)]
+        type: str
+
+- order
+        The entries will be written out in a specific order. With this option you can control by which field they are ordered first,
+        second and last. s=source, d=databases, u=users.
+        (Choices: sdu, sud, dsu, dus, usd, uds)[Default: sdu]
+
+- owner
+        Name of the user that should own the file/directory, as would be fed to `chown'.
+        [Default: (null)]
+        type: str
+
+- selevel
+        The level part of the SELinux file context.
+        This is the MLS/MCS attribute, sometimes known as the `range'.
+        When set to `_default', it will use the `level' portion of the policy if available.
+        [Default: s0]
+        type: str
+
+- serole
+        The role part of the SELinux file context.
+        When set to `_default', it will use the `role' portion of the policy if available.
+        [Default: (null)]
+        type: str
+
+- setype
+        The type part of the SELinux file context.
+        When set to `_default', it will use the `type' portion of the policy if available.
+        [Default: (null)]
+        type: str
+
+- seuser
+        The user part of the SELinux file context.
+        By default it uses the `system' policy, where applicable.
+        When set to `_default', it will use the `user' portion of the policy if available.
+        [Default: (null)]
+        type: str
+
+- state
+        The lines will be added/modified when `state=present' and removed when `state=absent'.
+        (Choices: absent, present)[Default: present]
+
+- unsafe_writes
+        Influence when to use atomic operation to prevent data corruption or inconsistent reads from the target file.
+        By default this module uses atomic operations to prevent data corruption or inconsistent reads from the target files, but
+        sometimes systems are configured or just broken in ways that prevent this. One example is docker mounted files, which cannot be
+        updated atomically from inside the container and can only be written in an unsafe manner.
+        This option allows Ansible to fall back to unsafe methods of updating files when atomic operations fail (however, it doesn't
+        force Ansible to perform unsafe writes).
+        IMPORTANT! Unsafe writes are subject to race conditions and can lead to data corruption.
+        [Default: False]
+        type: bool
+        version_added: 2.2
+
+- users
+        Users this line applies to.
+        [Default: all]
+
+
+NOTES:
+      * The default authentication assumes that on the host, you are either logging in as or sudo'ing to an account with
+        appropriate permissions to read and modify the file.
+      * This module also returns the pg_hba info. You can use this module to only retrieve it by only specifying `dest'. The info
+        can be found in the returned data under key pg_hba, being a list, containing a dict per rule.
+      * This module will sort resulting `pg_hba' files if a rule change is required. This could give unexpected results with manual
+        created hba files, if it was improperly sorted. For example a rule was created for a net first and for a ip in that net
+        range next. In that situation, the 'ip specific rule' will never hit, it is in the `pg_hba' file obsolete. After the
+        `pg_hba' file is rewritten by the [postgresql_pg_hba] module, the ip specific rule will be sorted above the range rule. And
+        then it will hit, which will give unexpected results.
+      * With the 'order' parameter you can control which field is used to sort first, next and last.
+      * The module supports a check mode and a diff mode.
+
+
+REQUIREMENTS:  ipaddress
+
+AUTHOR: Sebastiaan Mannem (@sebasmannem)
+        METADATA:
+          status:
+          - preview
+          supported_by: community
+        
+
+EXAMPLES:
+
+- name: Grant users joe and simon access to databases sales and logistics from ipv6 localhost ::1/128 using peer authentication.
+  postgresql_pg_hba:
+    dest: /var/lib/postgres/data/pg_hba.conf
+    contype: host
+    users: joe,simon
+    source: ::1
+    databases: sales,logistics
+    method: peer
+    create: true
+
+- name: Grant user replication from network 192.168.0.100/24 access for replication with client cert authentication.
+  postgresql_pg_hba:
+    dest: /var/lib/postgres/data/pg_hba.conf
+    contype: host
+    users: replication
+    source: 192.168.0.100/24
+    databases: replication
+    method: cert
+
+- name: Revoke access from local user mary on database mydb.
+  postgresql_pg_hba:
+    dest: /var/lib/postgres/data/pg_hba.conf
+    contype: local
+    users: mary
+    databases: mydb
+    state: absent
+
+
+RETURN VALUES:
+
+msgs:
+    description: List of textual messages what was done
+    returned: always
+    type: list
+    sample:
+       "msgs": [
+          "Removing",
+          "Changed",
+          "Writing"
+        ]
+backup_file:
+    description: File that the original pg_hba file was backed up to
+    returned: changed
+    type: str
+    sample: /tmp/pg_hba_jxobj_p
+pg_hba:
+    description: List of the pg_hba rules as they are configured in the specified hba file
+    returned: always
+    type: list
+    sample:
+      "pg_hba": [
+         {
+            "db": "all",
+            "method": "md5",
+            "src": "samehost",
+            "type": "host",
+            "usr": "all"
+         }
+      ]
+

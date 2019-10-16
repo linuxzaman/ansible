@@ -1,0 +1,57 @@
+EXAMPLES:
+
+- name: Add a domain user/group to a domain group
+  win_domain_group_membership:
+    name: Foo
+    members:
+      - Bar
+    state: present
+
+- name: Remove a domain user/group from a domain group
+  win_domain_group_membership:
+    name: Foo
+    members:
+      - Bar
+    state: absent
+
+- name: Ensure only a domain user/group exists in a domain group
+  win_domain_group_membership:
+    name: Foo
+    members:
+      - Bar
+    state: pure
+
+- name: Add a computer to a domain group
+  win_domain_group_membership:
+    name: Foo
+    members:
+      - DESKTOP$
+    state: present
+
+
+RETURN VALUES:
+
+name:
+    description: The name of the target domain group.
+    returned: always
+    type: str
+    sample: Domain-Admins
+added:
+    description: A list of members added when C(state) is C(present) or
+      C(pure); this is empty if no members are added.
+    returned: success and C(state) is C(present) or C(pure)
+    type: list
+    sample: ["UserName", "GroupName"]
+removed:
+    description: A list of members removed when C(state) is C(absent) or
+      C(pure); this is empty if no members are removed.
+    returned: success and C(state) is C(absent) or C(pure)
+    type: list
+    sample: ["UserName", "GroupName"]
+members:
+    description: A list of all domain group members at completion; this is empty
+      if the group contains no members.
+    returned: success
+    type: list
+    sample: ["UserName", "GroupName"]
+

@@ -1,0 +1,94 @@
+> EXPECT    (/usr/lib/python2.7/dist-packages/ansible/modules/commands/expect.py)
+
+        The `expect' module executes a command and responds to prompts. The given command will be executed on all selected nodes. It will
+        not be processed through the shell, so variables like `$HOME' and operations like `"<"', `">"', `"|"', and `"&"' will not work.
+
+  * This module is maintained by The Ansible Community
+OPTIONS (= is mandatory):
+
+- chdir
+        Change into this directory before running the command.
+        [Default: (null)]
+        type: path
+
+= command
+        The command module takes command to run.
+
+
+- creates
+        A filename, when it already exists, this step will *not* be run.
+        [Default: (null)]
+        type: path
+
+- echo
+        Whether or not to echo out your response strings.
+        [Default: False]
+        type: bool
+
+- removes
+        A filename, when it does not exist, this step will *not* be run.
+        [Default: (null)]
+        type: path
+
+= responses
+        Mapping of expected string/regex and string to respond with. If the response is a list, successive matches return successive
+        responses. List functionality is new in 2.1.
+
+        type: dict
+
+- timeout
+        Amount of time in seconds to wait for the expected strings. Use `null' to disable timeout.
+        [Default: 30]
+        type: int
+
+
+NOTES:
+      * If you want to run a command through the shell (say you are using `<', `>', `|', etc), you must specify a shell in the
+        command such as `/bin/bash -c "/path/to/something | grep else"'.
+      * The question, or key, under `responses' is a python regex match. Case insensitive searches are indicated with a prefix of
+        `?i'.
+      * By default, if a question is encountered multiple times, its string response will be repeated. If you need different
+        responses for successive question matches, instead of a string response, use a list of strings as the response. The list
+        functionality is new in 2.1.
+      * The [expect] module is designed for simple scenarios. For more complex needs, consider the use of expect code with the
+        [shell] or [script] modules. (An example is part of the [shell] module documentation)
+
+
+SEE ALSO:
+      * Module script
+           The official documentation on the script module.
+           https://docs.ansible.com/ansible/latest/modules/script_module.html
+      * Module shell
+           The official documentation on the shell module.
+           https://docs.ansible.com/ansible/latest/modules/shell_module.html
+
+
+REQUIREMENTS:  python >= 2.6, pexpect >= 3.3
+
+AUTHOR: Matt Martz (@sivel)
+        METADATA:
+          status:
+          - preview
+          supported_by: community
+        
+
+EXAMPLES:
+
+- name: Case insensitive password string match
+  expect:
+    command: passwd username
+    responses:
+      (?i)password: "MySekretPa$$word"
+  # you don't want to show passwords in your logs
+  no_log: true
+
+- name: Generic question with multiple different responses
+  expect:
+    command: /path/to/custom/command
+    responses:
+      Question:
+        - response1
+        - response2
+        - response3
+
+

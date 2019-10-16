@@ -1,0 +1,88 @@
+EXAMPLES:
+
+# Fetch the IMAGE by id
+- one_image:
+    id: 45
+  register: result
+
+# Print the IMAGE properties
+- debug:
+    msg: result
+
+# Rename existing IMAGE
+- one_image:
+    id: 34
+    state: renamed
+    new_name: bar-image
+
+# Disable the IMAGE by id
+- one_image:
+    id: 37
+    enabled: no
+
+# Enable the IMAGE by name
+- one_image:
+    name: bar-image
+    enabled: yes
+
+# Clone the IMAGE by name
+- one_image:
+    name: bar-image
+    state: cloned
+    new_name: bar-image-clone
+  register: result
+
+# Delete the IMAGE by id
+- one_image:
+    id: '{{ result.id }}'
+    state: absent
+
+
+RETURN VALUES:
+
+id:
+    description: image id
+    type: int
+    returned: success
+    sample: 153
+name:
+    description: image name
+    type: str
+    returned: success
+    sample: app1
+group_id:
+    description: image's group id
+    type: int
+    returned: success
+    sample: 1
+group_name:
+    description: image's group name
+    type: str
+    returned: success
+    sample: one-users
+owner_id:
+    description: image's owner id
+    type: int
+    returned: success
+    sample: 143
+owner_name:
+    description: image's owner name
+    type: str
+    returned: success
+    sample: ansible-test
+state:
+    description: state of image instance
+    type: str
+    returned: success
+    sample: READY
+used:
+    description: is image in use
+    type: bool
+    returned: success
+    sample: true
+running_vms:
+    description: count of running vms that use this image
+    type: int
+    returned: success
+    sample: 7
+

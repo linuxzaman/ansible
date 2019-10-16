@@ -1,0 +1,58 @@
+EXAMPLES:
+
+- name: Upload relative image to the BIG-IP
+  bigip_software_image:
+    image: BIGIP-13.0.0.0.0.1645.iso
+    provider:
+      password: secret
+      server: lb.mydomain.com
+      user: admin
+  delegate_to: localhost
+
+- name: Upload absolute image to the BIG-IP
+  bigip_software_image:
+    image: /path/to/images/BIGIP-13.0.0.0.0.1645.iso
+    provider:
+      password: secret
+      server: lb.mydomain.com
+      user: admin
+  delegate_to: localhost
+
+- name: Upload image in a role to the BIG-IP
+  bigip_software_image:
+    image: "{{ role_path }}/files/BIGIP-13.0.0.0.0.1645.iso"
+    provider:
+      password: secret
+      server: lb.mydomain.com
+      user: admin
+  delegate_to: localhost
+
+
+RETURN VALUES:
+
+image_type:
+  description: Whether the image is a release or hotfix image
+  returned: changed
+  type: str
+  sample: release
+version:
+  description: Version of the software contained in the image.
+  returned: changed
+  type: str
+  sample: 13.1.0.8
+build:
+  description: Build version of the software contained in the image.
+  returned: changed
+  type: str
+  sample: 0.0.3
+checksum:
+  description: MD5 checksum of the ISO.
+  returned: changed
+  type: str
+  sample: 8cdbd094195fab4b2b47ff4285577b70
+file_size:
+  description: Size of the uploaded image in MB.
+  returned: changed
+  type: int
+  sample: 1948
+

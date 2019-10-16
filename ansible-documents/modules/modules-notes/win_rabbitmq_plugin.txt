@@ -1,0 +1,57 @@
+> WIN_RABBITMQ_PLUGIN    (/usr/lib/python2.7/dist-packages/ansible/modules/windows/win_rabbitmq_plugin.py)
+
+        Manage RabbitMQ plugins.
+
+  * This module is maintained by The Ansible Community
+OPTIONS (= is mandatory):
+
+= names
+        Comma-separated list of plugin names.
+        (Aliases: name)
+        type: str
+
+- new_only
+        Only enable missing plugins.
+        Does not disable plugins that are not in the names list.
+        [Default: False]
+        type: bool
+
+- prefix
+        Specify a custom install prefix to a Rabbit.
+        [Default: (null)]
+        type: str
+
+- state
+        Specify if plugins are to be enabled or disabled.
+        (Choices: disabled, enabled)[Default: enabled]
+        type: str
+
+
+AUTHOR: Artem Zinenko (@ar7z1)
+        METADATA:
+          status:
+          - preview
+          supported_by: community
+        
+
+EXAMPLES:
+
+- name: Enables the rabbitmq_management plugin
+  win_rabbitmq_plugin:
+    names: rabbitmq_management
+    state: enabled
+
+
+RETURN VALUES:
+
+enabled:
+  description: List of plugins enabled during task run.
+  returned: always
+  type: list
+  sample: ["rabbitmq_management"]
+disabled:
+  description: List of plugins disabled during task run.
+  returned: always
+  type: list
+  sample: ["rabbitmq_management"]
+

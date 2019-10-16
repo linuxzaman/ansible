@@ -1,0 +1,37 @@
+EXAMPLES:
+
+## List all Topics in a project
+- gcpubsub_facts:
+    view: topics
+    state: list
+
+## List all Subscriptions in a project
+- gcpubsub_facts:
+    view: subscriptions
+    state: list
+
+## List all Subscriptions for a Topic in a project
+- gcpubsub_facts:
+    view: subscriptions
+    topic: my-topic
+    state: list
+
+
+RETURN VALUES:
+
+subscriptions:
+    description: List of subscriptions.
+    returned: When view is set to subscriptions.
+    type: list
+    sample: ["mysubscription", "mysubscription2"]
+topic:
+    description: Name of topic. Used to filter subscriptions.
+    returned: Always
+    type: str
+    sample: "mytopic"
+topics:
+    description: List of topics.
+    returned: When view is set to topics.
+    type: list
+    sample: ["mytopic", "mytopic2"]
+

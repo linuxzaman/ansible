@@ -1,0 +1,162 @@
+> DIGITAL_OCEAN_DROPLET    (/usr/lib/python2.7/dist-packages/ansible/modules/cloud/digital_ocean/digital_ocean_droplet.py)
+
+        Create and delete a droplet in DigitalOcean and optionally wait for it to be active.
+
+  * This module is maintained by The Ansible Community
+OPTIONS (= is mandatory):
+
+- backups
+        indicates whether automated backups should be enabled.
+        [Default: False]
+        type: bool
+
+- id
+        Numeric, the droplet id you want to operate on.
+        (Aliases: droplet_id)[Default: (null)]
+
+- image
+        This is the slug of the image you would like the droplet created with.
+        (Aliases: image_id)[Default: (null)]
+
+- ipv6
+        enable IPv6 for your droplet.
+        [Default: False]
+        type: bool
+
+- monitoring
+        indicates whether to install the DigitalOcean agent for monitoring.
+        [Default: False]
+        type: bool
+
+- name
+        String, this is the name of the droplet - must be formatted by hostname rules.
+        [Default: (null)]
+
+= oauth_token
+        DigitalOcean OAuth token. Can be specified in `DO_API_KEY', `DO_API_TOKEN', or `DO_OAUTH_TOKEN' environment variables
+        (Aliases: API_TOKEN)
+
+- private_networking
+        add an additional, private network interface to droplet for inter-droplet communication.
+        [Default: False]
+        type: bool
+
+- region
+        This is the slug of the region you would like your server to be created in.
+        (Aliases: region_id)[Default: (null)]
+
+- size
+        This is the slug of the size you would like the droplet created with.
+        (Aliases: size_id)[Default: (null)]
+
+- ssh_keys
+        array of SSH key (numeric) ID that you would like to be added to the server.
+        [Default: (null)]
+
+- state
+        Indicate desired state of the target.
+        (Choices: present, absent)[Default: present]
+
+- tags
+        List, A list of tag names as strings to apply to the Droplet after it is created. Tag names can either be existing or new tags.
+        [Default: (null)]
+
+- unique_name
+        require unique hostnames.  By default, DigitalOcean allows multiple hosts with the same name.  Setting this to "yes" allows only
+        one host per name.  Useful for idempotence.
+        [Default: False]
+        type: bool
+
+- user_data
+        opaque blob of data which is made available to the droplet
+        [Default: (null)]
+
+- volumes
+        List, A list including the unique string identifier for each Block Storage volume to be attached to the Droplet.
+        [Default: (null)]
+
+- wait
+        Wait for the droplet to be active before returning.  If wait is "no" an ip_address may not be returned.
+        [Default: True]
+        type: bool
+
+- wait_timeout
+        How long before wait gives up, in seconds, when creating a droplet.
+        [Default: 120]
+
+
+REQUIREMENTS:  python >= 2.6
+
+AUTHOR: Gurchet Rai (@gurch101)
+        METADATA:
+          status:
+          - preview
+          supported_by: community
+        
+
+EXAMPLES:
+
+- name: create a new droplet
+  digital_ocean_droplet:
+    state: present
+    name: mydroplet
+    oauth_token: XXX
+    size: 2gb
+    region: sfo1
+    image: ubuntu-16-04-x64
+    wait_timeout: 500
+  register: my_droplet
+
+- debug:
+    msg: "ID is {{ my_droplet.data.droplet.id }}, IP is {{ my_droplet.data.ip_address }}"
+
+- name: ensure a droplet is present
+  digital_ocean_droplet:
+    state: present
+    id: 123
+    name: mydroplet
+    oauth_token: XXX
+    size: 2gb
+    region: sfo1
+    image: ubuntu-16-04-x64
+    wait_timeout: 500
+
+
+RETURN VALUES:
+
+# Digital Ocean API info https://developers.digitalocean.com/documentation/v2/#droplets
+data:
+    description: a DigitalOcean Droplet
+    returned: changed
+    type: dict
+    sample: {
+        "ip_address": "104.248.118.172",
+        "ipv6_address": "2604:a880:400:d1::90a:6001",
+        "private_ipv4_address": "10.136.122.141",
+        "droplet": {
+            "id": 3164494,
+            "name": "example.com",
+            "memory": 512,
+            "vcpus": 1,
+            "disk": 20,
+            "locked": true,
+            "status": "new",
+            "kernel": {
+                "id": 2233,
+                "name": "Ubuntu 14.04 x64 vmlinuz-3.13.0-37-generic",
+                "version": "3.13.0-37-generic"
+            },
+            "created_at": "2014-11-14T16:36:31Z",
+            "features": ["virtio"],
+            "backup_ids": [],
+            "snapshot_ids": [],
+            "image": {},
+            "volume_ids": [],
+            "size": {},
+            "size_slug": "512mb",
+            "networks": {},
+            "region": {},
+            "tags": ["web"]
+        }
+    }
+

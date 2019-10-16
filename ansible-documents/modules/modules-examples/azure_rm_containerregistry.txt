@@ -1,0 +1,88 @@
+EXAMPLES:
+
+- name: Create an azure container registry
+      azure_rm_containerregistry:
+        name: testacr1
+        location: eastus
+        resource_group: myResourceGroup
+        admin_user_enabled: true
+        sku: Premium
+        tags:
+            Release: beta1
+            Environment: Production
+
+    - name: Remove an azure container registry
+      azure_rm_containerregistry:
+        name: testacr2
+        resource_group: myResourceGroup
+        state: absent
+
+
+RETURN VALUES:
+
+id:
+    description:
+        - Resource ID
+    returned: always
+    type: str
+    sample: /subscriptions/xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx/resourceGroups/myResourceGroup/providers/Microsoft.ContainerRegistry/registries/myRegistry
+name:
+    description:
+        - Registry name
+    returned: always
+    type: str
+    sample: myregistry
+location:
+    description:
+        - Resource location
+    returned: always
+    type: str
+    sample: westus
+admin_user_enabled:
+    description:
+        - Is admin user enabled
+    returned: always
+    type: bool
+    sample: true
+sku:
+    description:
+        - SKU
+    returned: always
+    type: str
+    sample: Standard
+provisioning_state:
+    description:
+        - Provisioning state
+    returned: always
+    type: str
+    sample: Succeeded
+login_server:
+    description:
+        - Registry login server
+    returned: always
+    type: str
+    sample: myregistry.azurecr.io
+credentials:
+    description:
+        - Passwords defined for the registry
+    returned: always
+    type: complex
+    contains:
+        password:
+            description:
+                - password value
+            returned: when registry exists and C(admin_user_enabled) is set
+            type: str
+            sample: pass1value
+        password2:
+            description:
+                - password2 value
+            returned: when registry exists and C(admin_user_enabled) is set
+            type: str
+            sample: pass2value
+tags:
+    description:
+        - Tags
+    returned: always
+    type: dict
+

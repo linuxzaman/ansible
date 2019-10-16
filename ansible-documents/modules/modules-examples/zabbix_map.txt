@@ -1,0 +1,61 @@
+EXAMPLES:
+
+###
+### Example inventory:
+# [web]
+# web[01:03].example.com ansible_host=127.0.0.1
+# [db]
+# db.example.com  ansible_host=127.0.0.1
+# [backup]
+# backup.example.com   ansible_host=127.0.0.1
+###
+### Each inventory host presents in Zabbix with same name.
+###
+### Contents of 'map.j2':
+# digraph G {
+#     graph [layout=dot splines=false overlap=scale]
+#     INTERNET [zbx_url="Google:https://google.com" zbx_image="Cloud_(96)"]
+# {% for web_host in groups.web %}
+#     {% set web_loop = loop %}
+#     web{{ '%03d' % web_loop.index }} [zbx_host="{{ web_host }}"]
+#     INTERNET -> web{{ '%03d' % web_loop.index }} [zbx_trigger="{{ web_host }}:Zabbix agent on {HOST.NAME} is unreachable for 5 minutes"]
+#     {% for db_host in groups.db %}
+#       {% set db_loop = loop %}
+#     web{{ '%03d' % web_loop.index }} -> db{{ '%03d' % db_loop.index }}
+#     {% endfor %}
+# {% endfor %}
+#     { rank=same
+# {% for db_host in groups.db %}
+#     {% set db_loop = loop %}
+#     db{{ '%03d' % db_loop.index }} [zbx_host="{{ db_host }}"]
+#     {% for backup_host in groups.backup %}
+#         {% set backup_loop = loop %}
+#         db{{ '%03d' % db_loop.index }} -> backup{{ '%03d' % backup_loop.index }} [color="blue"]
+#     {% endfor %}
+# {% endfor %}
+# {% for backup_host in groups.backup %}
+#     {% set backup_loop = loop %}
+#         backup{{ '%03d' % backup_loop.index }} [zbx_host="{{ backup_host }}"]
+# {% endfor %}
+#     }
+# }
+###
+### Create Zabbix map "Demo Map" made of template 'map.j2'
+- name: Create Zabbix map
+  zabbix_map:
+    server_url: http://zabbix.example.com
+    login_user: username
+    login_password: password
+    name: Demo map
+    state: present
+    data: "{{ lookup('template', 'map.j2') }}"
+    default_image: Server_(64)
+    expand_problem: no
+    highlight: no
+    label_type: label
+  delegate_to: localhost
+  run_once: yes
+
+
+RETURN VALUES:
+ # 

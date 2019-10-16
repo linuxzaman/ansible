@@ -1,0 +1,274 @@
+> LINEINFILE    (/usr/lib/python2.7/dist-packages/ansible/modules/files/lineinfile.py)
+
+        This module ensures a particular line is in a file, or replace an existing line using a back-referenced regular expression. This
+        is primarily useful when you want to change a single line in a file only. See the [replace] module if you want to change
+        multiple, similar lines or check [blockinfile] if you want to insert/update/remove a block of lines in a file. For other cases,
+        see the [copy] or [template] modules.
+
+  * This module is maintained by The Ansible Core Team
+OPTIONS (= is mandatory):
+
+- attributes
+        The attributes the resulting file or directory should have.
+        To get supported flags look at the man page for `chattr' on the target system.
+        This string should contain the attributes in the same order as the one displayed by `lsattr'.
+        The `=' operator is assumed as default, otherwise `+' or `-' operators need to be included in the string.
+        (Aliases: attr)[Default: (null)]
+        type: str
+        version_added: 2.3
+
+- backrefs
+        Used with `state=present'.
+        If set, `line' can contain backreferences (both positional and named) that will get populated if the `regexp' matches.
+        This parameter changes the operation of the module slightly; `insertbefore' and `insertafter' will be ignored, and if the
+        `regexp' does not match anywhere in the file, the file will be left unchanged.
+        If the `regexp' does match, the last matching line will be replaced by the expanded line parameter.
+        [Default: False]
+        type: bool
+        version_added: 1.1
+
+- backup
+        Create a backup file including the timestamp information so you can get the original file back if you somehow clobbered it
+        incorrectly.
+        [Default: False]
+        type: bool
+
+- create
+        Used with `state=present'.
+        If specified, the file will be created if it does not already exist.
+        By default it will fail if the file is missing.
+        [Default: False]
+        type: bool
+
+- firstmatch
+        Used with `insertafter' or `insertbefore'.
+        If set, `insertafter' and `insertbefore' find a first line has regular expression matches.
+        [Default: False]
+        type: bool
+        version_added: 2.5
+
+- group
+        Name of the group that should own the file/directory, as would be fed to `chown'.
+        [Default: (null)]
+        type: str
+
+- insertafter
+        Used with `state=present'.
+        If specified, the line will be inserted after the last match of specified regular expression.
+        If the first match is required, use(firstmatch=yes).
+        A special value is available; `EOF' for inserting the line at the end of the file.
+        If specified regular expression has no matches, EOF will be used instead.
+        If `insertbefore' is set, default value `EOF' will be ignored.
+        If regular expressions are passed to both `regexp' and `insertafter', `insertafter' is only honored if no match for `regexp' is
+        found.
+        May not be used with `backrefs' or `insertbefore'.
+        (Choices: EOF, *regex*)[Default: EOF]
+        type: str
+
+- insertbefore
+        Used with `state=present'.
+        If specified, the line will be inserted before the last match of specified regular expression.
+        If the first match is required, use `firstmatch=yes'.
+        A value is available; `BOF' for inserting the line at the beginning of the file.
+        If specified regular expression has no matches, the line will be inserted at the end of the file.
+        If regular expressions are passed to both `regexp' and `insertbefore', `insertbefore' is only honored if no match for `regexp' is
+        found.
+        May not be used with `backrefs' or `insertafter'.
+        (Choices: BOF, *regex*)[Default: (null)]
+        type: str
+        version_added: 1.1
+
+- line
+        The line to insert/replace into the file.
+        Required for `state=present'.
+        If `backrefs' is set, may contain backreferences that will get expanded with the `regexp' capture groups if the regexp matches.
+        (Aliases: value)[Default: (null)]
+        type: str
+
+- mode
+        The permissions the resulting file or directory should have.
+        For those used to `/usr/bin/chmod' remember that modes are actually octal numbers. You must either add a leading zero so that
+        Ansible's YAML parser knows it is an octal number (like `0644' or `01777') or quote it (like `'644'' or `'1777'') so Ansible
+        receives a string and can do its own conversion from string into number.
+        Giving Ansible a number without following one of these rules will end up with a decimal number which will have unexpected
+        results.
+        As of Ansible 1.8, the mode may be specified as a symbolic mode (for example, `u+rwx' or `u=rw,g=r,o=r').
+        As of Ansible 2.6, the mode may also be the special string `preserve'.
+        When set to `preserve' the file will be given the same permissions as the source file.
+        [Default: (null)]
+        type: str
+
+- others
+        All arguments accepted by the [file] module also work here.
+        [Default: (null)]
+        type: str
+
+- owner
+        Name of the user that should own the file/directory, as would be fed to `chown'.
+        [Default: (null)]
+        type: str
+
+= path
+        The file to modify.
+        Before Ansible 2.3 this option was only usable as `dest', `destfile' and `name'.
+        (Aliases: dest, destfile, name)
+        type: path
+
+- regexp
+        The regular expression to look for in every line of the file.
+        For `state=present', the pattern to replace if found. Only the last line found will be replaced.
+        For `state=absent', the pattern of the line(s) to remove.
+        If the regular expression is not matched, the line will be added to the file in keeping with `insertbefore' or `insertafter'
+        settings.
+        When modifying a line the regexp should typically match both the initial state of the line as well as its state after replacement
+        by `line' to ensure idempotence.
+        Uses Python regular expressions. See http://docs.python.org/2/library/re.html.
+        (Aliases: regex)[Default: (null)]
+        type: str
+        version_added: 1.7
+
+- selevel
+        The level part of the SELinux file context.
+        This is the MLS/MCS attribute, sometimes known as the `range'.
+        When set to `_default', it will use the `level' portion of the policy if available.
+        [Default: s0]
+        type: str
+
+- serole
+        The role part of the SELinux file context.
+        When set to `_default', it will use the `role' portion of the policy if available.
+        [Default: (null)]
+        type: str
+
+- setype
+        The type part of the SELinux file context.
+        When set to `_default', it will use the `type' portion of the policy if available.
+        [Default: (null)]
+        type: str
+
+- seuser
+        The user part of the SELinux file context.
+        By default it uses the `system' policy, where applicable.
+        When set to `_default', it will use the `user' portion of the policy if available.
+        [Default: (null)]
+        type: str
+
+- state
+        Whether the line should be there or not.
+        (Choices: absent, present)[Default: present]
+        type: str
+
+- unsafe_writes
+        Influence when to use atomic operation to prevent data corruption or inconsistent reads from the target file.
+        By default this module uses atomic operations to prevent data corruption or inconsistent reads from the target files, but
+        sometimes systems are configured or just broken in ways that prevent this. One example is docker mounted files, which cannot be
+        updated atomically from inside the container and can only be written in an unsafe manner.
+        This option allows Ansible to fall back to unsafe methods of updating files when atomic operations fail (however, it doesn't
+        force Ansible to perform unsafe writes).
+        IMPORTANT! Unsafe writes are subject to race conditions and can lead to data corruption.
+        [Default: False]
+        type: bool
+        version_added: 2.2
+
+- validate
+        The validation command to run before copying into place.
+        The path to the file to validate is passed in via '%s' which must be present as in the examples below.
+        The command is passed securely so shell features like expansion and pipes will not work.
+        [Default: (null)]
+        type: str
+
+
+NOTES:
+      * As of Ansible 2.3, the `dest' option has been changed to `path' as default, but `dest' still works as well.
+
+
+SEE ALSO:
+      * Module blockinfile
+           The official documentation on the blockinfile module.
+           https://docs.ansible.com/ansible/latest/modules/blockinfile_module.html
+      * Module copy
+           The official documentation on the copy module.
+           https://docs.ansible.com/ansible/latest/modules/copy_module.html
+      * Module file
+           The official documentation on the file module.
+           https://docs.ansible.com/ansible/latest/modules/file_module.html
+      * Module replace
+           The official documentation on the replace module.
+           https://docs.ansible.com/ansible/latest/modules/replace_module.html
+      * Module template
+           The official documentation on the template module.
+           https://docs.ansible.com/ansible/latest/modules/template_module.html
+      * Module win_lineinfile
+           The official documentation on the win_lineinfile module.
+           https://docs.ansible.com/ansible/latest/modules/win_lineinfile_module.html
+
+
+AUTHOR: Daniel Hokka Zakrissoni (@dhozac), Ahti Kitsik (@ahtik)
+        METADATA:
+          status:
+          - preview
+          supported_by: core
+        
+
+EXAMPLES:
+
+# NOTE: Before 2.3, option 'dest', 'destfile' or 'name' was used instead of 'path'
+- name: Ensure SELinux is set to enforcing mode
+  lineinfile:
+    path: /etc/selinux/config
+    regexp: '^SELINUX='
+    line: SELINUX=enforcing
+
+- name: Make sure group wheel is not in the sudoers configuration
+  lineinfile:
+    path: /etc/sudoers
+    state: absent
+    regexp: '^%wheel'
+
+- name: Replace a localhost entry with our own
+  lineinfile:
+    path: /etc/hosts
+    regexp: '^127\.0\.0\.1'
+    line: 127.0.0.1 localhost
+    owner: root
+    group: root
+    mode: '0644'
+
+- name: Ensure the default Apache port is 8080
+  lineinfile:
+    path: /etc/httpd/conf/httpd.conf
+    regexp: '^Listen '
+    insertafter: '^#Listen '
+    line: Listen 8080
+
+- name: Ensure we have our own comment added to /etc/services
+  lineinfile:
+    path: /etc/services
+    regexp: '^# port for http'
+    insertbefore: '^www.*80/tcp'
+    line: '# port for http by default'
+
+- name: Add a line to a file if the file does not exist, without passing regexp
+  lineinfile:
+    path: /tmp/testfile
+    line: 192.168.1.99 foo.lab.net foo
+    create: yes
+
+# NOTE: Yaml requires escaping backslashes in double quotes but not in single quotes
+- name: Ensure the JBoss memory settings are exactly as needed
+  lineinfile:
+    path: /opt/jboss-as/bin/standalone.conf
+    regexp: '^(.*)Xms(\\d+)m(.*)$'
+    line: '\1Xms${xms}m\3'
+    backrefs: yes
+
+# NOTE: Fully quoted because of the ': ' on the line. See the Gotchas in the YAML docs.
+- name: Validate the sudoers file before saving
+  lineinfile:
+    path: /etc/sudoers
+    state: present
+    regexp: '^%ADMIN ALL='
+    line: '%ADMIN ALL=(ALL) NOPASSWD: ALL'
+    validate: /usr/sbin/visudo -cf %s
+
+

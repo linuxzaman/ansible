@@ -1,0 +1,154 @@
+> CS_SSHKEYPAIR    (/usr/lib/python2.7/dist-packages/ansible/modules/cloud/cloudstack/cs_sshkeypair.py)
+
+        Create, register and remove SSH keys. If no key was found and no public key was provided and a new SSH private/public key pair
+        will be created and the private key will be returned.
+
+  * This module is maintained by The Ansible Community
+OPTIONS (= is mandatory):
+
+- account
+        Account the public key is related to.
+        [Default: (null)]
+        type: str
+
+- api_http_method
+        HTTP method used to query the API endpoint.
+        If not given, the `CLOUDSTACK_METHOD' env variable is considered.
+        As the last option, the value is taken from the ini config file, also see the notes.
+        Fallback value is `get' if not specified.
+        (Choices: get, post)[Default: (null)]
+        type: str
+
+- api_key
+        API key of the CloudStack API.
+        If not given, the `CLOUDSTACK_KEY' env variable is considered.
+        As the last option, the value is taken from the ini config file, also see the notes.
+        [Default: (null)]
+        type: str
+
+- api_region
+        Name of the ini section in the `cloustack.ini' file.
+        If not given, the `CLOUDSTACK_REGION' env variable is considered.
+        [Default: cloudstack]
+        type: str
+
+- api_secret
+        Secret key of the CloudStack API.
+        If not set, the `CLOUDSTACK_SECRET' env variable is considered.
+        As the last option, the value is taken from the ini config file, also see the notes.
+        [Default: (null)]
+        type: str
+
+- api_timeout
+        HTTP timeout in seconds.
+        If not given, the `CLOUDSTACK_TIMEOUT' env variable is considered.
+        As the last option, the value is taken from the ini config file, also see the notes.
+        Fallback value is 10 seconds if not specified.
+        [Default: (null)]
+        type: int
+
+- api_url
+        URL of the CloudStack API e.g. https://cloud.example.com/client/api.
+        If not given, the `CLOUDSTACK_ENDPOINT' env variable is considered.
+        As the last option, the value is taken from the ini config file, also see the notes.
+        [Default: (null)]
+        type: str
+
+- domain
+        Domain the public key is related to.
+        [Default: (null)]
+        type: str
+
+= name
+        Name of public key.
+
+        type: str
+
+- project
+        Name of the project the public key to be registered in.
+        [Default: (null)]
+        type: str
+
+- public_key
+        String of the public key.
+        [Default: (null)]
+        type: str
+
+- state
+        State of the public key.
+        (Choices: present, absent)[Default: present]
+        type: str
+
+
+NOTES:
+      * Ansible uses the `cs' library's configuration method if credentials are not provided by the arguments `api_url', `api_key',
+        `api_secret'. Configuration is read from several locations, in the following order. The `CLOUDSTACK_ENDPOINT',
+        `CLOUDSTACK_KEY', `CLOUDSTACK_SECRET' and `CLOUDSTACK_METHOD'. `CLOUDSTACK_TIMEOUT' environment variables. A
+        `CLOUDSTACK_CONFIG' environment variable pointing to an `.ini' file. A `cloudstack.ini' file in the current working
+        directory. A `.cloudstack.ini' file in the users home directory. Optionally multiple credentials and endpoints can be
+        specified using ini sections in `cloudstack.ini'. Use the argument `api_region' to select the section name, default section
+        is `cloudstack'. See https://github.com/exoscale/cs for more information.
+      * A detailed guide about cloudstack modules can be found in the L(CloudStack Cloud
+        Guide,../scenario_guides/guide_cloudstack.html).
+      * This module supports check mode.
+
+
+REQUIREMENTS:  python >= 2.6, cs >= 0.6.10
+
+AUTHOR: René Moser (@resmo)
+        METADATA:
+          status:
+          - stableinterface
+          supported_by: community
+        
+
+EXAMPLES:
+
+- name: create a new private / public key pair
+  cs_sshkeypair:
+    name: linus@example.com
+  delegate_to: localhost
+  register: key
+- debug:
+    msg: 'Private key is {{ key.private_key }}'
+
+- name: remove a public key by its name
+  cs_sshkeypair:
+    name: linus@example.com
+    state: absent
+  delegate_to: localhost
+
+- name: register your existing local public key
+  cs_sshkeypair:
+    name: linus@example.com
+    public_key: "{{ lookup('file', '~/.ssh/id_rsa.pub') }}"
+  delegate_to: localhost
+
+
+RETURN VALUES:
+
+---
+id:
+  description: UUID of the SSH public key.
+  returned: success
+  type: str
+  sample: a6f7a5fc-43f8-11e5-a151-feff819cdc9f
+name:
+  description: Name of the SSH public key.
+  returned: success
+  type: str
+  sample: linus@example.com
+fingerprint:
+  description: Fingerprint of the SSH public key.
+  returned: success
+  type: str
+  sample: "86:5e:a3:e8:bd:95:7b:07:7c:c2:5c:f7:ad:8b:09:28"
+private_key:
+  description: Private key of generated SSH keypair.
+  returned: changed
+  type: str
+  sample: "-----BEGIN RSA PRIVATE KEY-----
+MII...8tO
+-----END RSA PRIVATE KEY-----
+"
+

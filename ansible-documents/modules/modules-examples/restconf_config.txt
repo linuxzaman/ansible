@@ -1,0 +1,59 @@
+EXAMPLES:
+
+- name: create l3vpn services
+  restconf_config:
+    path: /config/ietf-l3vpn-svc:l3vpn-svc/vpn-services
+    content: |
+          {
+            "vpn-service":[
+                            {
+                              "vpn-id": "red_vpn2",
+                              "customer-name": "blue",
+                              "vpn-service-topology": "ietf-l3vpn-svc:any-to-any"
+                            },
+                            {
+                              "vpn-id": "blue_vpn1",
+                              "customer-name": "red",
+                              "vpn-service-topology": "ietf-l3vpn-svc:any-to-any"
+                            }
+                          ]
+           }
+
+
+RETURN VALUES:
+
+candidate:
+  description: The configuration sent to the device.
+  returned: When the method is not delete
+  type: dict
+  sample: |
+        {
+            "vpn-service": [
+                {
+                    "customer-name": "red",
+                    "vpn-id": "blue_vpn1",
+                    "vpn-service-topology": "ietf-l3vpn-svc:any-to-any"
+                }
+            ]
+        }
+running:
+  description: The current running configuration on the device.
+  returned: When the method is not delete
+  type: dict
+  sample: |
+        {
+            "vpn-service": [
+                {
+                  "vpn-id": "red_vpn2",
+                  "customer-name": "blue",
+                  "vpn-service-topology": "ietf-l3vpn-svc:any-to-any"
+                },
+                {
+                  "vpn-id": "blue_vpn1",
+                  "customer-name": "red",
+                  "vpn-service-topology": "ietf-l3vpn-svc:any-to-any"
+                }
+            ]
+        }
+
+

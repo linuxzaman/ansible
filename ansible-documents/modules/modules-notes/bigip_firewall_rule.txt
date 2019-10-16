@@ -1,0 +1,556 @@
+> BIGIP_FIREWALL_RULE    (/usr/lib/python2.7/dist-packages/ansible/modules/network/f5/bigip_firewall_rule.py)
+
+        Manages firewall rules in an AFM firewall policy. New rules will always be added to the end of the policy. Rules can be re-
+        ordered using the `bigip_security_policy' module. Rules can also be pre-ordered using the `bigip_security_policy' module and then
+        later updated using the `bigip_firewall_rule' module.
+
+  * This module is maintained by an Ansible Partner
+OPTIONS (= is mandatory):
+
+- action
+        Specifies the action for the firewall rule.
+        When `accept', allows packets with the specified source, destination, and protocol to pass through the firewall. Packets that
+        match the rule, and are accepted, traverse the system as if the firewall is not present.
+        When `drop', drops packets with the specified source, destination, and protocol. Dropping a packet is a silent action with no
+        notification to the source or destination systems. Dropping the packet causes the connection to be retried until the retry
+        threshold is reached.
+        When `reject', rejects packets with the specified source, destination, and protocol. When a packet is rejected the firewall sends
+        a destination unreachable message to the sender.
+        When `accept-decisively', allows packets with the specified source, destination, and protocol to pass through the firewall, and
+        does not require any further processing by any of the further firewalls. Packets that match the rule, and are accepted, traverse
+        the system as if the firewall is not present. If the Rule List is applied to a virtual server, management IP, or self IP firewall
+        rule, then Accept Decisively is equivalent to Accept.
+        When creating a new rule, if this parameter is not provided, the default is `reject'.
+        (Choices: accept, drop, reject, accept-decisively)[Default: (null)]
+        type: str
+
+- description
+        The rule description.
+        [Default: (null)]
+        type: str
+
+- destination
+        Specifies packet destinations to which the rule applies.
+        Leaving this field blank applies the rule to all addresses and all ports.
+        You can specify the following destination items. An IPv4 or IPv6 address, an IPv4 or IPv6 address range, geographic location,
+        VLAN, address list, port, port range, port list or address list.
+        You can specify a mix of different types of items for the source address.
+        [Default: (null)]
+        suboptions:
+          address:
+            description:
+            - Specifies a specific IP address.
+            type: str
+          address_list:
+            description:
+            - Specifies an existing address list.
+            type: str
+          address_range:
+            description:
+            - Specifies an address range.
+            type: str
+          country:
+            description:
+            - Specifies a country code.
+            type: str
+          port:
+            description:
+            - Specifies a single numeric port.
+            - This option is only valid when `protocol' is `tcp'(6) or `udp'(17).
+            type: int
+          port_list:
+            description:
+            - Specifes an existing port list.
+            - This option is only valid when `protocol' is `tcp'(6) or `udp'(17).
+            type: str
+          port_range:
+            description:
+            - Specifies a range of ports, which is two port values separated by a hyphen.
+              The port to the left of the hyphen should be less than the port to the right.
+            - This option is only valid when `protocol' is `tcp'(6) or `udp'(17).
+            type: str
+        
+        type: list
+
+- icmp_message
+        Specifies the Internet Control Message Protocol (ICMP) or ICMPv6 message `type' and `code' that the rule uses.
+        This parameter is only relevant when `protocol' is either `icmp'(1) or `icmpv6'(58).
+        [Default: (null)]
+        suboptions:
+          code:
+            description:
+            - Specifies the code returned in response to the specified ICMP message type.
+            - You can specify codes, each set appropriate to the associated type, such as
+              No Code (0) (associated with Echo Reply (0)) and Host Unreachable (1) (associated
+              with Destination Unreachable (3)), or you can specify `any' to indicate that
+              the system applies the rule for all codes in response to that specific ICMP
+              message.
+            - You can also specify an arbitrary code.
+            - The ICMP protocol contains definitions for the existing message code and number
+              pairs.
+            type: str
+          type:
+            description:
+            - Specifies the type of ICMP message.
+            - You can specify control messages, such as Echo Reply (0) and Destination Unreachable
+              (3), or you can specify `any' to indicate that the system applies the rule
+              for all ICMP messages.
+            - You can also specify an arbitrary ICMP message.
+            - The ICMP protocol contains definitions for the existing message type and number
+              pairs.
+            type: str
+        
+        type: list
+
+- irule
+        Specifies an iRule that is applied to the firewall rule.
+        An iRule can be started when the firewall rule matches traffic.
+        [Default: (null)]
+        type: str
+
+- logging
+        Specifies whether logging is enabled or disabled for the firewall rule.
+        When creating a new rule, if this parameter is not specified, the default if `no'.
+        [Default: (null)]
+        type: bool
+
+= name
+        Specifies the name of the rule.
+
+        type: str
+
+- parent_policy
+        The policy which contains the rule to be managed.
+        One of either `parent_policy' or `parent_rule_list' is required.
+        [Default: (null)]
+        type: str
+
+- parent_rule_list
+        The rule list which contains the rule to be managed.
+        One of either `parent_policy' or `parent_rule_list' is required.
+        [Default: (null)]
+        type: str
+
+- partition
+        Device partition to manage resources on.
+        [Default: Common]
+        type: str
+
+= password
+        The password for the user account used to connect to the BIG-IP.
+        You may omit this option by setting the environment variable `F5_PASSWORD'.
+        (Aliases: pass, pwd)
+        type: str
+
+- protocol
+        Specifies the protocol to which the rule applies.
+        Protocols may be specified by either their name or numeric value.
+        A special protocol value `any' can be specified to match any protocol. The numeric equivalent of this protocol is `255'.
+        [Default: (null)]
+        type: str
+
+- provider
+        A dict object containing connection details.
+        [Default: (null)]
+        suboptions:
+          password:
+            aliases:
+            - pass
+            - pwd
+            description:
+            - The password for the user account used to connect to the BIG-IP.
+            - You may omit this option by setting the environment variable `F5_PASSWORD'.
+            required: true
+            type: str
+          server:
+            description:
+            - The BIG-IP host.
+            - You may omit this option by setting the environment variable `F5_SERVER'.
+            required: true
+            type: str
+          server_port:
+            default: 443
+            description:
+            - The BIG-IP server port.
+            - You may omit this option by setting the environment variable `F5_SERVER_PORT'.
+            type: int
+          ssh_keyfile:
+            description:
+            - Specifies the SSH keyfile to use to authenticate the connection to the remote
+              device.  This argument is only used for `cli' transports.
+            - You may omit this option by setting the environment variable `ANSIBLE_NET_SSH_KEYFILE'.
+            type: path
+          timeout:
+            default: 10
+            description:
+            - Specifies the timeout in seconds for communicating with the network device for
+              either connecting or sending commands.  If the timeout is exceeded before the
+              operation is completed, the module will error.
+            type: int
+          transport:
+            choices:
+            - cli
+            - rest
+            default: rest
+            description:
+            - Configures the transport connection to use when connecting to the remote device.
+            type: str
+          user:
+            description:
+            - The username to connect to the BIG-IP with. This user must have administrative
+              privileges on the device.
+            - You may omit this option by setting the environment variable `F5_USER'.
+            required: true
+            type: str
+          validate_certs:
+            default: true
+            description:
+            - If `no', SSL certificates are not validated. Use this only on personally controlled
+              sites using self-signed certificates.
+            - You may omit this option by setting the environment variable `F5_VALIDATE_CERTS'.
+            type: bool
+        
+        type: dict
+        version_added: 2.5
+
+- rule_list
+        Specifies an existing rule list to use in the rule.
+        This parameter is mutually exclusive with many of the other individual-rule specific settings. This includes `logging', `action',
+        `source', `destination', `irule'', `protocol' and `logging'.
+        [Default: (null)]
+        type: str
+
+- schedule
+        Specifies a schedule for the firewall rule.
+        You configure schedules to define days and times when the firewall rule is made active.
+        [Default: (null)]
+        type: str
+
+= server
+        The BIG-IP host.
+        You may omit this option by setting the environment variable `F5_SERVER'.
+
+        type: str
+
+- server_port
+        The BIG-IP server port.
+        You may omit this option by setting the environment variable `F5_SERVER_PORT'.
+        [Default: 443]
+        type: int
+        version_added: 2.2
+
+- source
+        Specifies packet sources to which the rule applies.
+        Leaving this field blank applies the rule to all addresses and all ports.
+        You can specify the following source items. An IPv4 or IPv6 address, an IPv4 or IPv6 address range, geographic location, VLAN,
+        address list, port, port range, port list or address list.
+        You can specify a mix of different types of items for the source address.
+        [Default: (null)]
+        suboptions:
+          address:
+            description:
+            - Specifies a specific IP address.
+            type: str
+          address_list:
+            description:
+            - Specifies an existing address list.
+            type: str
+          address_range:
+            description:
+            - Specifies an address range.
+            type: str
+          country:
+            description:
+            - Specifies a country code.
+            type: str
+          port:
+            description:
+            - Specifies a single numeric port.
+            - This option is only valid when `protocol' is `tcp'(6) or `udp'(17).
+            type: int
+          port_list:
+            description:
+            - Specifes an existing port list.
+            - This option is only valid when `protocol' is `tcp'(6) or `udp'(17).
+            type: str
+          port_range:
+            description:
+            - Specifies a range of ports, which is two port values separated by a hyphen.
+              The port to the left of the hyphen should be less than the port to the right.
+            - This option is only valid when `protocol' is `tcp'(6) or `udp'(17).
+            type: str
+          vlan:
+            description:
+            - Specifies VLANs to which the rule applies.
+            - The VLAN source refers to the packet's source.
+            type: str
+        
+        type: list
+
+- state
+        When `state' is `present', ensures that the rule exists.
+        When `state' is `absent', ensures that the rule is removed.
+        (Choices: present, absent)[Default: present]
+        type: str
+
+- status
+        Indicates the activity state of the rule or rule list.
+        When `disabled', specifies that the rule or rule list does not apply at all.
+        When `enabled', specifies that the system applies the firewall rule or rule list to the given context and addresses.
+        When `scheduled', specifies that the system applies the rule or rule list according to the specified schedule.
+        When creating a new rule, if this parameter is not provided, the default is `enabled'.
+        (Choices: enabled, disabled, scheduled)[Default: (null)]
+        type: str
+
+= user
+        The username to connect to the BIG-IP with. This user must have administrative privileges on the device.
+        You may omit this option by setting the environment variable `F5_USER'.
+
+        type: str
+
+- validate_certs
+        If `no', SSL certificates are not validated. Use this only on personally controlled sites using self-signed certificates.
+        You may omit this option by setting the environment variable `F5_VALIDATE_CERTS'.
+        [Default: True]
+        type: bool
+        version_added: 2.0
+
+
+NOTES:
+      * For more information on using Ansible to manage F5 Networks devices see https://www.ansible.com/integrations/networks/f5.
+      * Requires BIG-IP software version >= 12.
+      * The F5 modules only manipulate the running configuration of the F5 product. To ensure that BIG-IP specific configuration
+        persists to disk, be sure to include at least one task that uses the [bigip_config] module to save the running
+        configuration. Refer to the module's documentation for the correct usage of the module to save your running configuration.
+
+
+AUTHOR: Tim Rupp (@caphrim007), Wojciech Wypior (@wojtek0806)
+        METADATA:
+          status:
+          - preview
+          supported_by: certified
+        
+
+EXAMPLES:
+
+- name: Create a new rule in the foo firewall policy
+  bigip_firewall_rule:
+    name: foo
+    parent_policy: policy1
+    protocol: tcp
+    source:
+      - address: 1.2.3.4
+      - address: "::1"
+      - address_list: foo-list1
+      - address_range: 1.1.1.1-2.2.2.2
+      - vlan: vlan1
+      - country: US
+      - port: 22
+      - port_list: port-list1
+      - port_range: 80-443
+    destination:
+      - address: 1.2.3.4
+      - address: "::1"
+      - address_list: foo-list1
+      - address_range: 1.1.1.1-2.2.2.2
+      - country: US
+      - port: 22
+      - port_list: port-list1
+      - port_range: 80-443
+    irule: irule1
+    action: accept
+    logging: yes
+    provider:
+      password: secret
+      server: lb.mydomain.com
+      user: admin
+  delegate_to: localhost
+
+- name: Create an ICMP specific rule
+  bigip_firewall_rule:
+    name: foo
+    protocol: icmp
+    icmp_message:
+      type: 0
+    source:
+      - country: US
+    action: drop
+    logging: yes
+    provider:
+      password: secret
+      server: lb.mydomain.com
+      user: admin
+  delegate_to: localhost
+
+- name: Add a new rule that is uses an existing rule list
+  bigip_firewall_rule:
+    name: foo
+    rule_list: rule-list1
+    provider:
+      password: secret
+      server: lb.mydomain.com
+      user: admin
+  delegate_to: localhost
+
+
+RETURN VALUES:
+
+name:
+  description: Name of the rule.
+  returned: changed
+  type: str
+  sample: FooRule
+parent_policy:
+  description: The policy which contains the rule to be managed.
+  returned: changed
+  type: str
+  sample: FooPolicy
+parent_rule_list:
+  description: The rule list which contains the rule to be managed.
+  returned: changed
+  type: str
+  sample: FooRuleList
+action:
+  description: The action for the firewall rule.
+  returned: changed
+  type: str
+  sample: drop
+status:
+  description: The activity state of the rule or rule list.
+  returned: changed
+  type: str
+  sample: scheduled
+schedule:
+  description: The schedule for the firewall rule.
+  returned: changed
+  type: str
+  sample: Foo_schedule
+description:
+  description: The rule description.
+  returned: changed
+  type: str
+  sample: MyRule
+irule:
+  description: The iRule that is applied to the firewall rule.
+  returned: changed
+  type: str
+  sample: _sys_auth_radius
+protocol:
+  description: The protocol to which the rule applies.
+  returned: changed
+  type: str
+  sample: any
+source:
+  description: The packet sources to which the rule applies
+  returned: changed
+  type: complex
+  contains:
+    address:
+      description: A specific IP address.
+      returned: changed
+      type: str
+      sample: 192.168.1.1
+    address_list:
+      description: An existing address list.
+      returned: changed
+      type: str
+      sample: foo-list1
+    address_range:
+      description: The address range.
+      returned: changed
+      type: str
+      sample: 1.1.1.1-2.2.2.2
+    country:
+      description: A country code.
+      returned: changed
+      type: str
+      sample: US
+    port:
+      description: Single numeric port.
+      returned: changed
+      type: int
+      sample: 8080
+    port_list:
+      description: An existing port list.
+      returned: changed
+      type: str
+      sample: port-list1
+    port_range:
+      description: The port range.
+      returned: changed
+      type: str
+      sample: 80-443
+    vlan:
+      description: Source VLANs for the packets.
+      returned: changed
+      type: str
+      sample: vlan1
+  sample: hash/dictionary of values
+destination:
+  description: The packet destinations to which the rule applies.
+  returned: changed
+  type: complex
+  contains:
+    address:
+      description: A specific IP address.
+      returned: changed
+      type: str
+      sample: 192.168.1.1
+    address_list:
+      description: An existing address list.
+      returned: changed
+      type: str
+      sample: foo-list1
+    address_range:
+      description: The address range.
+      returned: changed
+      type: str
+      sample: 1.1.1.1-2.2.2.2
+    country:
+      description: A country code.
+      returned: changed
+      type: str
+      sample: US
+    port:
+      description: Single numeric port.
+      returned: changed
+      type: int
+      sample: 8080
+    port_list:
+      description: An existing port list.
+      returned: changed
+      type: str
+      sample: port-list1
+    port_range:
+      description: The port range.
+      returned: changed
+      type: str
+      sample: 80-443
+  sample: hash/dictionary of values
+logging:
+  description: Enable or Disable logging for the firewall rule.
+  returned: changed
+  type: bool
+  sample: yes
+rule_list:
+  description: An existing rule list to use in the rule.
+  returned: changed
+  type: str
+  sample: rule-list-1
+icmp_message:
+  description: The (ICMP) or ICMPv6 message C(type) and C(code) that the rule uses.
+  returned: changed
+  type: complex
+  contains:
+    type:
+      description: The type of ICMP message.
+      returned: changed
+      type: str
+      sample: 0
+    code:
+      description: The code returned in response to the specified ICMP message type.
+      returned: changed
+      type: str
+      sample: 1
+  sample: hash/dictionary of values
+

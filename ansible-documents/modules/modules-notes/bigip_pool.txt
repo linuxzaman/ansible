@@ -1,0 +1,463 @@
+> BIGIP_POOL    (/usr/lib/python2.7/dist-packages/ansible/modules/network/f5/bigip_pool.py)
+
+        Manages F5 BIG-IP LTM pools via iControl REST API.
+
+  * This module is maintained by an Ansible Partner
+OPTIONS (= is mandatory):
+
+- aggregate
+        List of pool definitions to be created, modified or removed.
+        (Aliases: pools)[Default: (null)]
+        type: list
+        version_added: 2.8
+        
+
+- description
+        Specifies descriptive text that identifies the pool.
+        [Default: (null)]
+        type: str
+        version_added: 2.3
+        
+
+- lb_method
+        Load balancing method. When creating a new pool, if this value is not specified, the default of `round-robin' will be used.
+        (Choices: dynamic-ratio-member, dynamic-ratio-node, fastest-app-response, fastest-node, least-connections-member, least-
+        connections-node, least-sessions, observed-member, observed-node, predictive-member, predictive-node, ratio-least-connections-
+        member, ratio-least-connections-node, ratio-member, ratio-node, ratio-session, round-robin, weighted-least-connections-member,
+        weighted-least-connections-node)[Default: (null)]
+        type: str
+        version_added: 1.3
+        
+
+- metadata
+        Arbitrary key/value pairs that you can attach to a pool. This is useful in situations where you might want to annotate a pool to
+        me managed by Ansible.
+        Key names will be stored as strings; this includes names that are numbers.
+        Values for all of the keys will be stored as strings; this includes values that are numbers.
+        Data will be persisted, not ephemeral.
+        [Default: (null)]
+        type: raw
+        version_added: 2.5
+        
+
+- monitor_type
+        Monitor rule type when `monitors' is specified.
+        When creating a new pool, if this value is not specified, the default of 'and_list' will be used.
+        When `single' ensures that all specified monitors are checked, but additionally includes checks to make sure you only specified a
+        single monitor.
+        When `and_list' ensures that *all* monitors are checked.
+        When `m_of_n' ensures that `quorum' of `monitors' are checked. `m_of_n' *requires* that a `quorum' of 1 or greater be set either
+        in the playbook, or already existing on the device.
+        Both `single' and `and_list' are functionally identical since BIG-IP considers all monitors as "a list".
+        (Choices: and_list, m_of_n, single)[Default: (null)]
+        type: str
+        version_added: 1.3
+        
+
+- monitors
+        Monitor template name list. If the partition is not provided as part of the monitor name, then the `partition' option will be
+        used instead.
+        [Default: (null)]
+        type: list
+        version_added: 1.3
+        
+
+= name
+        Pool name
+        (Aliases: pool)
+        type: str
+
+- partition
+        Device partition to manage resources on.
+        [Default: Common]
+        type: str
+        version_added: 2.5
+        
+
+= password
+        The password for the user account used to connect to the BIG-IP.
+        You may omit this option by setting the environment variable `F5_PASSWORD'.
+        (Aliases: pass, pwd)
+        type: str
+
+- priority_group_activation
+        Specifies whether the system load balances traffic according to the priority number assigned to the pool member.
+        When creating a new pool, if this parameter is not specified, the default of `0' will be used.
+        To disable this setting, provide the value `0'.
+        Once you enable this setting, you can specify pool member priority when you create a new pool or on a pool member's properties
+        screen.
+        The system treats same-priority pool members as a group.
+        To enable priority group activation, provide a number from `0' to `65535' that represents the minimum number of members that must
+        be available in one priority group before the system directs traffic to members in a lower priority group.
+        When a sufficient number of members become available in the higher priority group, the system again directs traffic to the higher
+        priority group.
+        (Aliases: minimum_active_members)[Default: (null)]
+        type: int
+        version_added: 2.6
+        
+
+- provider
+        A dict object containing connection details.
+        [Default: (null)]
+        suboptions:
+          password:
+            aliases:
+            - pass
+            - pwd
+            description:
+            - The password for the user account used to connect to the BIG-IP.
+            - You may omit this option by setting the environment variable `F5_PASSWORD'.
+            required: true
+            type: str
+          server:
+            description:
+            - The BIG-IP host.
+            - You may omit this option by setting the environment variable `F5_SERVER'.
+            required: true
+            type: str
+          server_port:
+            default: 443
+            description:
+            - The BIG-IP server port.
+            - You may omit this option by setting the environment variable `F5_SERVER_PORT'.
+            type: int
+          ssh_keyfile:
+            description:
+            - Specifies the SSH keyfile to use to authenticate the connection to the remote
+              device.  This argument is only used for `cli' transports.
+            - You may omit this option by setting the environment variable `ANSIBLE_NET_SSH_KEYFILE'.
+            type: path
+          timeout:
+            default: 10
+            description:
+            - Specifies the timeout in seconds for communicating with the network device for
+              either connecting or sending commands.  If the timeout is exceeded before the
+              operation is completed, the module will error.
+            type: int
+          transport:
+            choices:
+            - cli
+            - rest
+            default: rest
+            description:
+            - Configures the transport connection to use when connecting to the remote device.
+            type: str
+          user:
+            description:
+            - The username to connect to the BIG-IP with. This user must have administrative
+              privileges on the device.
+            - You may omit this option by setting the environment variable `F5_USER'.
+            required: true
+            type: str
+          validate_certs:
+            default: true
+            description:
+            - If `no', SSL certificates are not validated. Use this only on personally controlled
+              sites using self-signed certificates.
+            - You may omit this option by setting the environment variable `F5_VALIDATE_CERTS'.
+            type: bool
+        
+        type: dict
+        version_added: 2.5
+
+- quorum
+        Monitor quorum value when `monitor_type' is `m_of_n'.
+        Quorum must be a value of 1 or greater when `monitor_type' is `m_of_n'.
+        [Default: (null)]
+        type: int
+        version_added: 1.3
+        
+
+- replace_all_with
+        Remove pools not defined in the `aggregate' parameter.
+        This operation is all or none, meaning that it will stop if there are some pools that cannot be removed.
+        (Aliases: purge)[Default: False]
+        type: bool
+        version_added: 2.8
+        
+
+- reselect_tries
+        Sets the number of times the system tries to contact a pool member after a passive failure.
+        [Default: (null)]
+        type: int
+        version_added: 2.2
+        
+
+= server
+        The BIG-IP host.
+        You may omit this option by setting the environment variable `F5_SERVER'.
+
+        type: str
+
+- server_port
+        The BIG-IP server port.
+        You may omit this option by setting the environment variable `F5_SERVER_PORT'.
+        [Default: 443]
+        type: int
+        version_added: 2.2
+
+- service_down_action
+        Sets the action to take when node goes down in pool.
+        (Choices: none, reset, drop, reselect)[Default: (null)]
+        type: str
+        version_added: 1.3
+        
+
+- slow_ramp_time
+        Sets the ramp-up time (in seconds) to gradually ramp up the load on newly added or freshly detected up pool members.
+        [Default: (null)]
+        type: int
+        version_added: 1.3
+        
+
+- state
+        When `present', guarantees that the pool exists with the provided attributes.
+        When `absent', removes the pool from the system.
+        (Choices: absent, present)[Default: present]
+        type: str
+        version_added: 2.5
+        
+
+= user
+        The username to connect to the BIG-IP with. This user must have administrative privileges on the device.
+        You may omit this option by setting the environment variable `F5_USER'.
+
+        type: str
+
+- validate_certs
+        If `no', SSL certificates are not validated. Use this only on personally controlled sites using self-signed certificates.
+        You may omit this option by setting the environment variable `F5_VALIDATE_CERTS'.
+        [Default: True]
+        type: bool
+        version_added: 2.0
+
+
+NOTES:
+      * To add members to a pool, use the `bigip_pool_member' module. Previously, the `bigip_pool' module allowed the management of
+        members, but this has been removed in version 2.5 of Ansible.
+      * For more information on using Ansible to manage F5 Networks devices see https://www.ansible.com/integrations/networks/f5.
+      * Requires BIG-IP software version >= 12.
+      * The F5 modules only manipulate the running configuration of the F5 product. To ensure that BIG-IP specific configuration
+        persists to disk, be sure to include at least one task that uses the [bigip_config] module to save the running
+        configuration. Refer to the module's documentation for the correct usage of the module to save your running configuration.
+
+
+AUTHOR: Tim Rupp (@caphrim007), Wojciech Wypior (@wojtek0806)
+        METADATA:
+          status:
+          - preview
+          supported_by: certified
+        
+
+EXAMPLES:
+
+- name: Create pool
+  bigip_pool:
+    state: present
+    name: my-pool
+    partition: Common
+    lb_method: least-connections-member
+    slow_ramp_time: 120
+    provider:
+      server: lb.mydomain.com
+      user: admin
+      password: secret
+  delegate_to: localhost
+
+- name: Modify load balancer method
+  bigip_pool:
+    state: present
+    name: my-pool
+    partition: Common
+    lb_method: round-robin
+    provider:
+      server: lb.mydomain.com
+      user: admin
+      password: secret
+  delegate_to: localhost
+
+- name: Set a single monitor (with enforcement)
+  bigip_pool:
+    state: present
+    name: my-pool
+    partition: Common
+    monitor_type: single
+    monitors:
+      - http
+    provider:
+      server: lb.mydomain.com
+      user: admin
+      password: secret
+  delegate_to: localhost
+
+- name: Set a single monitor (without enforcement)
+  bigip_pool:
+    state: present
+    name: my-pool
+    partition: Common
+    monitors:
+      - http
+    provider:
+      server: lb.mydomain.com
+      user: admin
+      password: secret
+  delegate_to: localhost
+
+- name: Set multiple monitors (all must succeed)
+  bigip_pool:
+    state: present
+    name: my-pool
+    partition: Common
+    monitor_type: and_list
+    monitors:
+      - http
+      - tcp
+    provider:
+      server: lb.mydomain.com
+      user: admin
+      password: secret
+  delegate_to: localhost
+
+- name: Set multiple monitors (at least 1 must succeed)
+  bigip_pool:
+    state: present
+    name: my-pool
+    partition: Common
+    monitor_type: m_of_n
+    quorum: 1
+    monitors:
+      - http
+      - tcp
+    provider:
+      server: lb.mydomain.com
+      user: admin
+      password: secret
+  delegate_to: localhost
+
+- name: Delete pool
+  bigip_pool:
+    state: absent
+    name: my-pool
+    partition: Common
+    provider:
+      server: lb.mydomain.com
+      user: admin
+      password: secret
+  delegate_to: localhost
+
+- name: Add metadata to pool
+  bigip_pool:
+    state: absent
+    name: my-pool
+    partition: Common
+    metadata:
+      ansible: 2.4
+      updated_at: 2017-12-20T17:50:46Z
+    provider:
+      server: lb.mydomain.com
+      user: admin
+      password: secret
+  delegate_to: localhost
+
+- name: Add pools Aggregate
+  bigip_pool:
+    aggregate:
+      - name: my-pool
+        partition: Common
+        lb_method: least-connections-member
+        slow_ramp_time: 120
+      - name: my-pool2
+        partition: Common
+        lb_method: least-sessions
+        slow_ramp_time: 120
+      - name: my-pool3
+        partition: Common
+        lb_method: round-robin
+        slow_ramp_time: 120
+    provider:
+      server: lb.mydomain.com
+      user: admin
+      password: secret
+  delegate_to: localhost
+
+- name: Add pools Aggregate, purge others
+  bigip_pool:
+    aggregate:
+      - name: my-pool
+        partition: Common
+        lb_method: least-connections-member
+        slow_ramp_time: 120
+      - name: my-pool2
+        partition: Common
+        lb_method: least-sessions
+        slow_ramp_time: 120
+      - name: my-pool3
+        partition: Common
+        lb_method: round-robin
+        slow_ramp_time: 120
+    replace_all_with: yes
+    provider:
+      server: lb.mydomain.com
+      user: admin
+      password: secret
+  delegate_to: localhost
+
+
+RETURN VALUES:
+
+monitor_type:
+  description: The contact that was set on the datacenter.
+  returned: changed
+  type: str
+  sample: admin@root.local
+quorum:
+  description: The quorum that was set on the pool.
+  returned: changed
+  type: int
+  sample: 2
+monitors:
+  description: Monitors set on the pool.
+  returned: changed
+  type: list
+  sample: ['/Common/http', '/Common/gateway_icmp']
+service_down_action:
+  description: Service down action that is set on the pool.
+  returned: changed
+  type: str
+  sample: reset
+description:
+  description: Description set on the pool.
+  returned: changed
+  type: str
+  sample: Pool of web servers
+lb_method:
+  description: The LB method set for the pool.
+  returned: changed
+  type: str
+  sample: round-robin
+slow_ramp_time:
+  description: The new value that is set for the slow ramp-up time.
+  returned: changed
+  type: int
+  sample: 500
+reselect_tries:
+  description: The new value that is set for the number of tries to contact member.
+  returned: changed
+  type: int
+  sample: 10
+metadata:
+  description: The new value of the pool.
+  returned: changed
+  type: dict
+  sample: {'key1': 'foo', 'key2': 'bar'}
+priority_group_activation:
+  description: The new minimum number of members to activate the priority group.
+  returned: changed
+  type: int
+  sample: 10
+replace_all_with:
+  description: Purges all non-aggregate pools from device
+  returned: changed
+  type: bool
+  sample: yes
+

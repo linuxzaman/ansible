@@ -1,0 +1,115 @@
+> LXCA_NODES    (/usr/lib/python2.7/dist-packages/ansible/modules/remote_management/lxca/lxca_nodes.py)
+
+        This module returns/displays a inventory details of nodes
+
+  * This module is maintained by The Ansible Community
+OPTIONS (= is mandatory):
+
+= auth_url
+        lxca https full web address
+
+        type: str
+
+- chassis
+        uuid of chassis, this is string with length greater than 16.
+        [Default: (null)]
+
+- command_options
+        options to filter nodes information
+        (Choices: nodes, nodes_by_uuid, nodes_by_chassis_uuid, nodes_status_managed, nodes_status_unmanaged)[Default: nodes]
+
+= login_password
+        The password for use in HTTP basic authentication.
+
+        type: str
+
+= login_user
+        The username for use in HTTP basic authentication.
+
+        type: str
+
+- uuid
+        uuid of device, this is string with length greater than 16.
+        [Default: (null)]
+
+
+NOTES:
+      * Additional detail about pylxca can be found at https://github.com/lenovo/pylxca
+      * Playbooks using these modules can be found at https://github.com/lenovo/ansible.lenovo-lxca
+      * Check mode is not supported.
+
+
+REQUIREMENTS:  pylxca
+
+AUTHOR: Naval Patel (@navalkp), Prashant Bhosale (@prabhosa)
+        METADATA:
+          status:
+          - preview
+          supported_by: community
+        
+
+EXAMPLES:
+
+# get all nodes info
+- name: get nodes data from LXCA
+  lxca_nodes:
+    login_user: USERID
+    login_password: Password
+    auth_url: "https://10.243.15.168"
+    command_options: nodes
+
+# get specific nodes info by uuid
+- name: get nodes data from LXCA
+  lxca_nodes:
+    login_user: USERID
+    login_password: Password
+    auth_url: "https://10.243.15.168"
+    uuid: "3C737AA5E31640CE949B10C129A8B01F"
+    command_options: nodes_by_uuid
+
+# get specific nodes info by chassis uuid
+- name: get nodes data from LXCA
+  lxca_nodes:
+    login_user: USERID
+    login_password: Password
+    auth_url: "https://10.243.15.168"
+    chassis: "3C737AA5E31640CE949B10C129A8B01F"
+    command_options: nodes_by_chassis_uuid
+
+# get managed nodes
+- name: get nodes data from LXCA
+  lxca_nodes:
+    login_user: USERID
+    login_password: Password
+    auth_url: "https://10.243.15.168"
+    command_options: nodes_status_managed
+
+# get unmanaged nodes
+- name: get nodes data from LXCA
+  lxca_nodes:
+    login_user: USERID
+    login_password: Password
+    auth_url: "https://10.243.15.168"
+    command_options: nodes_status_unmanaged
+
+
+RETURN VALUES:
+
+result:
+    description: nodes detail from lxca
+    returned: always
+    type: dict
+    sample:
+      nodeList:
+        - machineType: '6241'
+          model: 'AC1'
+          type: 'Rack-TowerServer'
+          uuid: '118D2C88C8FD11E4947B6EAE8B4BDCDF'
+          # bunch of properties
+        - machineType: '8871'
+          model: 'AC1'
+          type: 'Rack-TowerServer'
+          uuid: '223D2C88C8FD11E4947B6EAE8B4BDCDF'
+          # bunch of properties
+        # Multiple nodes details
+

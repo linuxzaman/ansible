@@ -1,0 +1,124 @@
+> SS_3PAR_CPG    (/usr/lib/python2.7/dist-packages/ansible/modules/storage/hpe3par/ss_3par_cpg.py)
+
+        Create and delete CPG on HPE 3PAR.
+
+  * This module is maintained by The Ansible Community
+OPTIONS (= is mandatory):
+
+= cpg_name
+        Name of the CPG.
+
+        type: str
+
+- disk_type
+        Specifies that physical disks must have the specified device type.
+        (Choices: FC, NL, SSD)[Default: (null)]
+        type: str
+
+- domain
+        Specifies the name of the domain in which the object will reside.
+        [Default: (null)]
+        type: str
+
+- growth_increment
+        Specifies the growth increment(in MiB, GiB or TiB) the amount of logical disk storage created on each auto-grow operation.
+        [Default: (null)]
+        type: str
+
+- growth_limit
+        Specifies that the autogrow operation is limited to the specified storage amount that sets the growth limit(in MiB, GiB or TiB).
+        [Default: (null)]
+        type: str
+
+- growth_warning
+        Specifies that the threshold(in MiB, GiB or TiB) of used logical disk space when exceeded results in a warning alert.
+        [Default: (null)]
+        type: str
+
+- high_availability
+        Specifies that the layout must support the failure of one port pair, one cage, or one magazine.
+        (Choices: PORT, CAGE, MAG)[Default: (null)]
+        type: str
+
+- raid_type
+        Specifies the RAID type for the logical disk.
+        (Choices: R0, R1, R5, R6)[Default: (null)]
+        type: str
+
+- secure
+        Specifies whether the certificate needs to be validated while communicating.
+        [Default: False]
+        type: bool
+
+- set_size
+        Specifies the set size in the number of chunklets.
+        [Default: (null)]
+        type: int
+
+= state
+        Whether the specified CPG should exist or not.
+        (Choices: present, absent)
+        type: str
+
+= storage_system_ip
+        The storage system IP address.
+
+        type: str
+
+= storage_system_password
+        The storage system password.
+
+        type: str
+
+= storage_system_username
+        The storage system user name.
+
+        type: str
+
+
+NOTES:
+      * check_mode not supported
+
+
+REQUIREMENTS:  hpe3par_sdk >= 1.0.2. Install using 'pip install hpe3par_sdk', WSAPI service should be enabled on the 3PAR storage
+        array.
+
+AUTHOR: Farhan Nomani (@farhan7500), Gautham P Hegde (@gautamphegde)
+        METADATA:
+          status:
+          - preview
+          supported_by: community
+        
+
+EXAMPLES:
+
+- name: Create CPG sample_cpg
+      ss_3par_cpg:
+        storage_system_ip: 10.10.10.1
+        storage_system_username: username
+        storage_system_password: password
+        state: present
+        cpg_name: sample_cpg
+        domain: sample_domain
+        growth_increment: 32000 MiB
+        growth_limit: 64000 MiB
+        growth_warning: 48000 MiB
+        raid_type: R6
+        set_size: 8
+        high_availability: MAG
+        disk_type: FC
+        secure: no
+
+    - name: Delete CPG sample_cpg
+      ss_3par_cpg:
+        storage_system_ip: 10.10.10.1
+        storage_system_username: username
+        storage_system_password: password
+        state: absent
+        cpg_name: sample_cpg
+        secure: no
+
+
+RETURN VALUES:
+
+

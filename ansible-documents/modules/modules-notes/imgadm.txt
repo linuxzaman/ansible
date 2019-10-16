@@ -1,0 +1,100 @@
+> IMGADM    (/usr/lib/python2.7/dist-packages/ansible/modules/cloud/smartos/imgadm.py)
+
+        Manage SmartOS virtual machine images through imgadm(1M)
+
+  * This module is maintained by The Ansible Community
+OPTIONS (= is mandatory):
+
+- force
+        Force a given operation (where supported by imgadm(1M)).
+        [Default: (null)]
+        type: bool
+
+- pool
+        zpool to import to or delete images from.
+        [Default: zones]
+
+- source
+        URI for the image source.
+        [Default: (null)]
+
+= state
+        State the object operated on should be in. `imported' is an alias for for `present' and `deleted' for `absent'. When set to
+        `vacuumed' and `uuid' to `*', it will remove all unused images.
+        (Choices: present, absent, deleted, imported, updated, vacuumed)
+
+- type
+        Type for image sources.
+        (Choices: imgapi, docker, dsapi)[Default: imgapi]
+
+- uuid
+        Image UUID. Can either be a full UUID or `*' for all images.
+        [Default: (null)]
+
+
+REQUIREMENTS:  python >= 2.6
+
+AUTHOR: Jasper Lievisse Adriaanse (@jasperla)
+        METADATA:
+          status:
+          - preview
+          supported_by: community
+        
+
+EXAMPLES:
+
+- name: Import an image
+  imgadm:
+    uuid: '70e3ae72-96b6-11e6-9056-9737fd4d0764'
+    state: imported
+
+- name: Delete an image
+  imgadm:
+    uuid: '70e3ae72-96b6-11e6-9056-9737fd4d0764'
+    state: deleted
+
+- name: Update all images
+  imgadm:
+    uuid: '*'
+    state: updated
+
+- name: Update a single image
+  imgadm:
+    uuid: '70e3ae72-96b6-11e6-9056-9737fd4d0764'
+    state: updated
+
+- name: Add a source
+  imgadm:
+    source: 'https://datasets.project-fifo.net'
+    state: present
+
+- name: Add a Docker source
+  imgadm:
+    source: 'https://docker.io'
+    type: docker
+    state: present
+
+- name: Remove a source
+  imgadm:
+    source: 'https://docker.io'
+    state: absent
+
+
+RETURN VALUES:
+
+source:
+    description: Source that is managed.
+    returned: When not managing an image.
+    type: str
+    sample: https://datasets.project-fifo.net
+uuid:
+    description: UUID for an image operated on.
+    returned: When not managing an image source.
+    type: str
+    sample: 70e3ae72-96b6-11e6-9056-9737fd4d0764
+state:
+    description: State of the target, after execution.
+    returned: success
+    type: str
+    sample: 'present'
+

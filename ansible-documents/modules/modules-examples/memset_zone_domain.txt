@@ -1,0 +1,30 @@
+EXAMPLES:
+
+# Create the zone domain 'test.com'
+- name: create zone domain
+  memset_zone_domain:
+    domain: test.com
+    zone: testzone
+    state: present
+    api_key: 5eb86c9196ab03919abcf03857163741
+  delegate_to: localhost
+
+
+RETURN VALUES:
+
+memset_api:
+  description: Domain info from the Memset API
+  returned: when changed or state == present
+  type: complex
+  contains:
+    domain:
+      description: Domain name
+      returned: always
+      type: str
+      sample: "example.com"
+    id:
+      description: Domain ID
+      returned: always
+      type: str
+      sample: "b0bb1ce851aeea6feeb2dc32fe83bf9c"
+

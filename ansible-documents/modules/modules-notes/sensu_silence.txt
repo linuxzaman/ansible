@@ -1,0 +1,84 @@
+> SENSU_SILENCE    (/usr/lib/python2.7/dist-packages/ansible/modules/monitoring/sensu_silence.py)
+
+        Create and clear (delete) a silence entries via the Sensu API for subscriptions and checks.
+
+  * This module is maintained by The Ansible Community
+OPTIONS (= is mandatory):
+
+- check
+        Specifies the check which the silence entry applies to.
+        [Default: (null)]
+
+- creator
+        Specifies the entity responsible for this entry.
+        [Default: (null)]
+
+- expire
+        If specified, the silence entry will be automatically cleared after this number of seconds.
+        [Default: (null)]
+
+- expire_on_resolve
+        If specified as true, the silence entry will be automatically cleared once the condition it is silencing is resolved.
+        [Default: (null)]
+        type: bool
+
+- reason
+        If specified, this free-form string is used to provide context or rationale for the reason this silence entry was created.
+        [Default: (null)]
+
+= state
+        Specifies to create or clear (delete) a silence entry via the Sensu API
+        (Choices: present, absent)[Default: present]
+
+= subscription
+        Specifies the subscription which the silence entry applies to.
+        To create a silence entry for a client prepend `client:' to client name. Example - `client:server1.example.dev'
+        [Default: []]
+
+- url
+        Specifies the URL of the Sensu monitoring host server.
+        [Default: http://127.0.01:4567]
+
+
+AUTHOR: Steven Bambling (@smbambling)
+        METADATA:
+          status:
+          - preview
+          supported_by: community
+        
+
+EXAMPLES:
+
+# Silence ALL checks for a given client
+- name: Silence server1.example.dev
+  sensu_silence:
+    subscription: client:server1.example.dev
+    creator: "{{ ansible_user_id }}"
+    reason: Performing maintenance
+
+# Silence specific check for a client
+- name: Silence CPU_Usage check for server1.example.dev
+  sensu_silence:
+    subscription: client:server1.example.dev
+    check: CPU_Usage
+    creator: "{{ ansible_user_id }}"
+    reason: Investigation alert issue
+
+# Silence multiple clients from a dict
+  silence:
+    server1.example.dev:
+      reason: 'Deployment in progress'
+    server2.example.dev:
+      reason: 'Deployment in progress'
+
+- name: Silence several clients from a dict
+  sensu_silence:
+    subscription: "client:{{ item.key }}"
+    reason: "{{ item.value.reason }}"
+    creator: "{{ ansible_user_id }}"
+  with_dict: "{{ silence }}"
+
+
+RETURN VALUES:
+
+

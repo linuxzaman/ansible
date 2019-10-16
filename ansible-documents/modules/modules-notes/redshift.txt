@@ -1,0 +1,268 @@
+> REDSHIFT    (/usr/lib/python2.7/dist-packages/ansible/modules/cloud/amazon/redshift.py)
+
+        Creates, deletes, or modifies amazon Redshift cluster instances.
+
+  * This module is maintained by The Ansible Community
+OPTIONS (= is mandatory):
+
+- allow_version_upgrade
+        flag to determinate if upgrade of version is possible
+        (Aliases: version_upgrade)[Default: yes]
+
+- automated_snapshot_retention_period
+        period when the snapshot take place
+        (Aliases: retention_period)[Default: (null)]
+
+- availability_zone
+        availability zone in which to launch cluster
+        (Aliases: zone, aws_zone)[Default: (null)]
+
+- aws_access_key
+        AWS access key. If not set then the value of the AWS_ACCESS_KEY_ID, AWS_ACCESS_KEY or EC2_ACCESS_KEY environment variable is
+        used.
+        (Aliases: ec2_access_key, access_key)[Default: (null)]
+        type: str
+
+- aws_secret_key
+        AWS secret key. If not set then the value of the AWS_SECRET_ACCESS_KEY, AWS_SECRET_KEY, or EC2_SECRET_KEY environment variable is
+        used.
+        (Aliases: ec2_secret_key, secret_key)[Default: (null)]
+        type: str
+
+- cluster_parameter_group_name
+        name of the cluster parameter group
+        (Aliases: param_group_name)[Default: (null)]
+
+- cluster_security_groups
+        in which security group the cluster belongs
+        (Aliases: security_groups)[Default: (null)]
+
+- cluster_subnet_group_name
+        which subnet to place the cluster
+        (Aliases: subnet)[Default: (null)]
+
+- cluster_type
+        The type of cluster.
+        (Choices: multi-node, single-node)[Default: single-node]
+
+- cluster_version
+        which version the cluster should have
+        (Aliases: version)(Choices: 1.0)[Default: (null)]
+
+= command
+        Specifies the action to take.
+        (Choices: create, facts, delete, modify)
+
+- db_name
+        Name of the database.
+        [Default: (null)]
+
+- debug_botocore_endpoint_logs
+        Use a botocore.endpoint logger to parse the unique (rather than total) "resource:action" API calls made during a task, outputing
+        the set to the resource_actions key in the task results. Use the aws_resource_action callback to output to total list made during
+        a playbook. The ANSIBLE_DEBUG_BOTOCORE_LOGS environment variable may also be used.
+        [Default: no]
+        type: bool
+        version_added: 2.8
+
+- ec2_url
+        Url to use to connect to EC2 or your Eucalyptus cloud (by default the module will use EC2 endpoints). Ignored for modules where
+        region is required. Must be specified for all other modules if region is not used. If not set then the value of the EC2_URL
+        environment variable, if any, is used.
+        [Default: (null)]
+        type: str
+
+- elastic_ip
+        if the cluster has an elastic IP or not
+        [Default: (null)]
+
+- encrypted
+        if the cluster is encrypted or not
+        [Default: no]
+
+- final_cluster_snapshot_identifier
+        identifier of the final snapshot to be created before deleting the cluster. If this parameter is provided,
+        final_cluster_snapshot_identifier must be false. Used only when command=delete.
+        (Aliases: final_snapshot_id)[Default: (null)]
+        version_added: 2.4
+
+= identifier
+        Redshift cluster identifier.
+
+
+- new_cluster_identifier
+        Only used when command=modify.
+        (Aliases: new_identifier)[Default: (null)]
+
+- node_type
+        The node type of the cluster. Must be specified when command=create.
+        (Choices: ds1.xlarge, ds1.8xlarge, ds2.xlarge, ds2.8xlarge, dc1.large, dc1.8xlarge, dc2.large, dc2.8xlarge, dw1.xlarge,
+        dw1.8xlarge, dw2.large, dw2.8xlarge)[Default: (null)]
+
+- number_of_nodes
+        Number of nodes. Only used when cluster_type=multi-node.
+        [Default: (null)]
+
+- password
+        Master database password. Used only when command=create.
+        [Default: (null)]
+
+- port
+        which port the cluster is listining
+        [Default: (null)]
+
+- preferred_maintenance_window
+        maintenance window
+        (Aliases: maintance_window, maint_window)[Default: (null)]
+
+- profile
+        Uses a boto profile. Only works with boto >= 2.24.0.
+        [Default: (null)]
+        type: str
+        version_added: 1.6
+
+- publicly_accessible
+        if the cluster is accessible publicly or not
+        [Default: no]
+
+- region
+        The AWS region to use. If not specified then the value of the AWS_REGION or EC2_REGION environment variable, if any, is used. See
+        http://docs.aws.amazon.com/general/latest/gr/rande.html#ec2_region
+        (Aliases: aws_region, ec2_region)[Default: (null)]
+        type: str
+
+- security_token
+        AWS STS security token. If not set then the value of the AWS_SECURITY_TOKEN or EC2_SECURITY_TOKEN environment variable is used.
+        (Aliases: access_token)[Default: (null)]
+        type: str
+        version_added: 1.6
+
+- skip_final_cluster_snapshot
+        skip a final snapshot before deleting the cluster. Used only when command=delete.
+        (Aliases: skip_final_snapshot)[Default: no]
+        version_added: 2.4
+
+- username
+        Master database username. Used only when command=create.
+        [Default: (null)]
+
+- validate_certs
+        When set to "no", SSL certificates will not be validated for boto versions >= 2.6.0.
+        [Default: True]
+        type: bool
+        version_added: 1.5
+
+- vpc_security_group_ids
+        VPC security group
+        (Aliases: vpc_security_groups)[Default: (null)]
+
+- wait
+        When command=create, modify or restore then wait for the database to enter the 'available' state. When command=delete wait for
+        the database to be terminated.
+        [Default: no]
+        type: bool
+
+- wait_timeout
+        how long before wait gives up, in seconds
+        [Default: 300]
+
+
+NOTES:
+      * If parameters are not set within the module, the following environment variables can be used in decreasing order of
+        precedence `AWS_URL' or `EC2_URL', `AWS_ACCESS_KEY_ID' or `AWS_ACCESS_KEY' or `EC2_ACCESS_KEY', `AWS_SECRET_ACCESS_KEY' or
+        `AWS_SECRET_KEY' or `EC2_SECRET_KEY', `AWS_SECURITY_TOKEN' or `EC2_SECURITY_TOKEN', `AWS_REGION' or `EC2_REGION'
+      * Ansible uses the boto configuration file (typically ~/.boto) if no credentials are provided. See
+        https://boto.readthedocs.io/en/latest/boto_config_tut.html
+      * `AWS_REGION' or `EC2_REGION' can be typically be used to specify the AWS region, when required, but this can also be
+        configured in the boto config file
+
+
+REQUIREMENTS:  boto, boto3, python >= 2.6
+
+AUTHOR: Jens Carl (@j-carl), Hothead Games Inc., Rafael Driutti (@rafaeldriutti)
+        METADATA:
+          status:
+          - preview
+          supported_by: community
+        
+
+EXAMPLES:
+
+# Basic cluster provisioning example
+- redshift: >
+    command=create
+    node_type=ds1.xlarge
+    identifier=new_cluster
+    username=cluster_admin
+    password=1nsecure
+
+# Cluster delete example
+- redshift:
+    command: delete
+    identifier: new_cluster
+    skip_final_cluster_snapshot: true
+    wait: true
+
+
+RETURN VALUES:
+
+cluster:
+    description: dictionary containing all the cluster information
+    returned: success
+    type: complex
+    contains:
+        identifier:
+            description: Id of the cluster.
+            returned: success
+            type: str
+            sample: "new_redshift_cluster"
+        create_time:
+            description: Time of the cluster creation as timestamp.
+            returned: success
+            type: float
+            sample: 1430158536.308
+        status:
+            description: Stutus of the cluster.
+            returned: success
+            type: str
+            sample: "available"
+        db_name:
+            description: Name of the database.
+            returned: success
+            type: str
+            sample: "new_db_name"
+        availability_zone:
+            description: Amazon availability zone where the cluster is located. "None" until cluster is available.
+            returned: success
+            type: str
+            sample: "us-east-1b"
+        maintenance_window:
+            description: Time frame when maintenance/upgrade are done.
+            returned: success
+            type: str
+            sample: "sun:09:30-sun:10:00"
+        private_ip_address:
+            description: Private IP address of the main node.
+            returned: success
+            type: str
+            sample: "10.10.10.10"
+        public_ip_address:
+            description: Public IP address of the main node. "None" when enhanced_vpc_routing is enabled.
+            returned: success
+            type: str
+            sample: "0.0.0.0"
+        port:
+            description: Port of the cluster. "None" until cluster is available.
+            returned: success
+            type: int
+            sample: 5439
+        url:
+            description: FQDN of the main cluster node. "None" until cluster is available.
+            returned: success
+            type: str
+            sample: "new-redshift_cluster.jfkdjfdkj.us-east-1.redshift.amazonaws.com"
+        enhanced_vpc_routing:
+            description: status of the enhanced vpc routing feature.
+            returned: success
+            type: boolean
+

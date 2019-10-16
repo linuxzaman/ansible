@@ -1,0 +1,43 @@
+EXAMPLES:
+
+- name: Create virtual machine replica set 'myvmir'
+  kubevirt_rs:
+      state: presnet
+      name: myvmir
+      namespace: vms
+      wait: true
+      replicas: 3
+      memory: 64M
+      labels:
+        myvmi: myvmi
+      selector:
+        matchLabels:
+            myvmi: myvmi
+      disks:
+         - name: containerdisk
+           volume:
+             containerDisk:
+               image: kubevirt/cirros-container-disk-demo:latest
+               path: /custom-disk/cirros.img
+           disk:
+             bus: virtio
+
+- name: Remove virtual machine replica set 'myvmir'
+  kubevirt_rs:
+      state: absent
+      name: myvmir
+      namespace: vms
+      wait: true
+
+
+RETURN VALUES:
+
+kubevirt_rs:
+  description:
+    - The virtual machine virtual machine replica set managed by the user.
+    - "This dictionary contains all values returned by the KubeVirt API all options
+       are described here U(https://kubevirt.io/api-reference/master/definitions.html#_v1_virtualmachineinstance)"
+  returned: success
+  type: complex
+  contains: {}
+

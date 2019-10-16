@@ -1,0 +1,104 @@
+EXAMPLES:
+
+- name: Configure Network Control Policy
+  ucs_managed_objects:
+    hostname: 172.16.143.150
+    username: admin
+    password: password
+    objects:
+    - module: ucsmsdk.mometa.nwctrl.NwctrlDefinition
+      class: NwctrlDefinition
+      properties:
+        parent_mo_or_dn: org-root
+        cdp: enabled
+        descr: ''
+        lldp_receive: enabled
+        lldp_transmit: enabled
+        name: Enable-CDP-LLDP
+
+- name: Remove Network Control Policy
+  ucs_managed_objects:
+    hostname: 172.16.143.150
+    username: admin
+    password: password
+    objects:
+    - module: ucsmsdk.mometa.nwctrl.NwctrlDefinition
+      class: NwctrlDefinition
+      properties:
+        parent_mo_or_dn: org-root
+        name: Enable-CDP-LLDP
+    state: absent
+
+- name: Configure Boot Policy Using JSON objects list with children
+  ucs_managed_objects:
+    hostname: 172.16.143.150
+    username: admin
+    password: password
+    objects:
+    - {
+          "module": "ucsmsdk.mometa.lsboot.LsbootPolicy",
+          "class": "LsbootPolicy",
+          "properties": {
+              "parent_mo_or_dn": "org-root",
+              "name": "Python_SDS",
+              "enforce_vnic_name": "yes",
+              "boot_mode": "legacy",
+              "reboot_on_update": "no"
+          },
+          "children": [
+              {
+                  "module": "ucsmsdk.mometa.lsboot.LsbootVirtualMedia",
+                  "class": "LsbootVirtualMedia",
+                  "properties": {
+                      "access": "read-only-local",
+                      "lun_id": "0",
+                      "order": "2"
+                  }
+              },
+              {
+                  "module": "ucsmsdk.mometa.lsboot.LsbootStorage",
+                  "class": "LsbootStorage",
+                  "properties": {
+                      "order": "1"
+                  },
+                  "children": [
+                      {
+                          "module": "ucsmsdk.mometa.lsboot.LsbootLocalStorage",
+                          "class": "LsbootLocalStorage",
+                          "properties": {},
+                          "children": [
+                              {
+                                  "module": "ucsmsdk.mometa.lsboot.LsbootDefaultLocalImage",
+                                  "class": "LsbootDefaultLocalImage",
+                                  "properties": {
+                                      "order": "1"
+                                  }
+                              }
+                          ]
+                      }
+                  ]
+              }
+          ]
+      }
+
+- name: Remove Boot Policy Using JSON objects list
+  ucs_managed_objects:
+    hostname: 172.16.143.150
+    username: admin
+    password: password
+    objects:
+    - {
+          "module": "ucsmsdk.mometa.lsboot.LsbootPolicy",
+          "class": "LsbootPolicy",
+          "properties": {
+              "parent_mo_or_dn": "org-root",
+              "name": "Python_SDS"
+          }
+      }
+    state: absent
+
+
+RETURN VALUES:
+
+#
+

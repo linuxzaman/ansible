@@ -1,0 +1,148 @@
+> CE_INTERFACE_OSPF    (/usr/lib/python2.7/dist-packages/ansible/modules/network/cloudengine/ce_interface_ospf.py)
+
+        Manages configuration of an OSPF interface instanceon HUAWEI CloudEngine switches.
+
+  * This module is maintained by The Ansible Community
+OPTIONS (= is mandatory):
+
+= area
+        Ospf area associated with this ospf process. Valid values are a string, formatted as an IP address (i.e. "0.0.0.0") or as an
+        integer between 1 and 4294967295.
+
+
+- auth_key_id
+        Authentication key id when `auth_mode' is 'hmac-sha256', 'md5' or 'hmac-md5. Valid value is an integer is in the range from 1 to
+        255.
+        [Default: (null)]
+
+- auth_mode
+        Specifies the authentication type.
+        (Choices: none, null, hmac-sha256, md5, hmac-md5, simple)[Default: (null)]
+
+- auth_text_md5
+        Specifies a password for MD5, HMAC-MD5, or HMAC-SHA256 authentication. The value is a string of 1 to 255 case-sensitive
+        characters, spaces not supported.
+        [Default: (null)]
+
+- auth_text_simple
+        Specifies a password for simple authentication. The value is a string of 1 to 8 characters.
+        [Default: (null)]
+
+- cost
+        The cost associated with this interface. Valid values are an integer in the range from 1 to 65535.
+        [Default: (null)]
+
+- dead_interval
+        Time interval an ospf neighbor waits for a hello packet before tearing down adjacencies. Valid values are an integer in the range
+        from 1 to 235926000.
+        [Default: (null)]
+
+- hello_interval
+        Time between sending successive hello packets. Valid values are an integer in the range from 1 to 65535.
+        [Default: (null)]
+
+= interface
+        Full name of interface, i.e. 40GE1/0/10.
+
+
+= process_id
+        Specifies a process ID. The value is an integer ranging from 1 to 4294967295.
+
+
+- silent_interface
+        Setting to true will prevent this interface from receiving HELLO packets. Valid values are 'true' and 'false'.
+        [Default: no]
+        type: bool
+
+- state
+        Determines whether the config should be present or not on the device.
+        (Choices: present, absent)[Default: present]
+
+
+AUTHOR: QijunPan (@QijunPan)
+        METADATA:
+          status:
+          - preview
+          supported_by: community
+        
+
+EXAMPLES:
+
+- name: eth_trunk module test
+  hosts: cloudengine
+  connection: local
+  gather_facts: no
+  vars:
+    cli:
+      host: "{{ inventory_hostname }}"
+      port: "{{ ansible_ssh_port }}"
+      username: "{{ username }}"
+      password: "{{ password }}"
+      transport: cli
+
+  tasks:
+  - name: Enables OSPF and sets the cost on an interface
+    ce_interface_ospf:
+      interface: 10GE1/0/30
+      process_id: 1
+      area: 100
+      cost: 100
+      provider: '{{ cli }}'
+
+  - name: Sets the dead interval of the OSPF neighbor
+    ce_interface_ospf:
+      interface: 10GE1/0/30
+      process_id: 1
+      area: 100
+      dead_interval: 100
+      provider: '{{ cli }}'
+
+  - name: Sets the interval for sending Hello packets on an interface
+    ce_interface_ospf:
+      interface: 10GE1/0/30
+      process_id: 1
+      area: 100
+      hello_interval: 2
+      provider: '{{ cli }}'
+
+  - name: Disables an interface from receiving and sending OSPF packets
+    ce_interface_ospf:
+      interface: 10GE1/0/30
+      process_id: 1
+      area: 100
+      silent_interface: true
+      provider: '{{ cli }}'
+
+
+RETURN VALUES:
+
+proposed:
+    description: k/v pairs of parameters passed into module
+    returned: verbose mode
+    type: dict
+    sample: {"process_id": "1", "area": "0.0.0.100", "interface": "10GE1/0/30", "cost": "100"}
+existing:
+    description: k/v pairs of existing configuration
+    returned: verbose mode
+    type: dict
+    sample: {"process_id": "1", "area": "0.0.0.100"}
+end_state:
+    description: k/v pairs of configuration after module execution
+    returned: verbose mode
+    type: dict
+    sample: {"process_id": "1", "area": "0.0.0.100", "interface": "10GE1/0/30",
+             "cost": "100", "dead_interval": "40", "hello_interval": "10",
+             "silent_interface": "false", "auth_mode": "none"}
+updates:
+    description: commands sent to the device
+    returned: always
+    type: list
+    sample: ["interface 10GE1/0/30",
+             "ospf enable 1 area 0.0.0.100",
+             "ospf cost 100"]
+changed:
+    description: check to see if a change was made on the device
+    returned: always
+    type: bool
+    sample: true
+

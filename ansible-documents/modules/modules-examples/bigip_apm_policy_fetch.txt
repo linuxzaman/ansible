@@ -1,0 +1,61 @@
+EXAMPLES:
+
+- name: Export APM access profile
+  bigip_apm_policy_fetch:
+    name: foobar
+    file: export_foo
+    dest: /root/download
+    provider:
+      password: secret
+      server: lb.mydomain.com
+      user: admin
+  delegate_to: localhost
+
+- name: Export APM access policy
+  bigip_apm_policy_fetch:
+    name: foobar
+    file: export_foo
+    dest: /root/download
+    type: access_policy
+    provider:
+      password: secret
+      server: lb.mydomain.com
+      user: admin
+  delegate_to: localhost
+
+- name: Export APM access profile, autogenerate name
+  bigip_apm_policy_fetch:
+    name: foobar
+    dest: /root/download
+    provider:
+      password: secret
+      server: lb.mydomain.com
+      user: admin
+  delegate_to: localhost
+
+
+RETURN VALUES:
+
+name:
+  description: Name of the APM policy or APM access profile to be exported.
+  returned: changed
+  type: str
+  sample: APM_policy_global
+file:
+  description:
+    - Name of the exported file on the remote BIG-IP to download. If not
+      specified, then this will be a randomly generated filename.
+  returned: changed
+  type: str
+  sample: foobar_file
+dest:
+  description: Local path to download exported APM policy.
+  returned: changed
+  type: str
+  sample: /root/downloads/profile-foobar_file.conf.tar.gz
+type:
+  description: Set to specify type of item to export.
+  returned: changed
+  type: str
+  sample: access_policy
+

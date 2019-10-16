@@ -1,0 +1,58 @@
+EXAMPLES:
+
+- name: Create a new organization named YourOrg
+  meraki_organization:
+    auth_key: abc12345
+    org_name: YourOrg
+    state: present
+  delegate_to: localhost
+
+- name: Query information about all organizations associated to the user
+  meraki_organization:
+    auth_key: abc12345
+    state: query
+  delegate_to: localhost
+
+- name: Query information about a single organization named YourOrg
+  meraki_organization:
+    auth_key: abc12345
+    org_name: YourOrg
+    state: query
+  delegate_to: localhost
+
+- name: Rename an organization to RenamedOrg
+  meraki_organization:
+    auth_key: abc12345
+    org_id: 987654321
+    org_name: RenamedOrg
+    state: present
+  delegate_to: localhost
+
+- name: Clone an organization named Org to a new one called ClonedOrg
+  meraki_organization:
+    auth_key: abc12345
+    clone: Org
+    org_name: ClonedOrg
+    state: present
+  delegate_to: localhost
+
+
+RETURN VALUES:
+
+data:
+  description: Information about the organization which was created or modified
+  returned: success
+  type: complex
+  contains:
+    id:
+      description: Unique identification number of organization
+      returned: success
+      type: int
+      sample: 2930418
+    name:
+      description: Name of organization
+      returned: success
+      type: str
+      sample: YourOrg
+
+

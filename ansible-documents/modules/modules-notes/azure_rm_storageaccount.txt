@@ -1,0 +1,283 @@
+> AZURE_RM_STORAGEACCOUNT    (/usr/lib/python2.7/dist-packages/ansible/modules/cloud/azure/azure_rm_storageaccount.py)
+
+        Create, update or delete a storage account.
+
+  * This module is maintained by The Ansible Community
+OPTIONS (= is mandatory):
+
+- access_tier
+        The access tier for this storage account. Required for a storage account of kind 'BlobStorage'.
+        (Choices: Hot, Cool)[Default: (null)]
+        version_added: 2.4
+
+- account_type
+        Type of storage account. Required when creating a storage account. NOTE: Standard_ZRS and Premium_LRS accounts cannot be changed
+        to other account types, and other account types cannot be changed to Standard_ZRS or Premium_LRS.
+        (Aliases: type)(Choices: Premium_LRS, Standard_GRS, Standard_LRS, StandardSSD_LRS, Standard_RAGRS, Standard_ZRS,
+        Premium_ZRS)[Default: (null)]
+
+- ad_user
+        Active Directory username. Use when authenticating with an Active Directory user rather than service principal.
+        [Default: (null)]
+        type: str
+
+- adfs_authority_url
+        Azure AD authority url. Use when authenticating with Username/password, and has your own ADFS authority.
+        [Default: (null)]
+        type: str
+        version_added: 2.6
+
+- api_profile
+        Selects an API profile to use when communicating with Azure services. Default value of `latest' is appropriate for public clouds;
+        future values will allow use with Azure Stack.
+        [Default: latest]
+        type: str
+        version_added: 2.5
+
+- append_tags
+        Use to control if tags field is canonical or just appends to existing tags.
+        When canonical, any tags not found in the tags parameter will be removed from the object's metadata.
+        [Default: True]
+        type: bool
+
+- auth_source
+        Controls the source of the credentials to use for authentication.
+        If not specified, ANSIBLE_AZURE_AUTH_SOURCE environment variable will be used and default to `auto' if variable is not defined.
+        `auto' will follow the default precedence of module parameters -> environment variables -> default profile in credential file
+        `~/.azure/credentials'.
+        When set to `cli', the credentials will be sources from the default Azure CLI profile.
+        Can also be set via the `ANSIBLE_AZURE_AUTH_SOURCE' environment variable.
+        When set to `msi', the host machine must be an azure resource with an enabled MSI extension. `subscription_id' or the environment
+        variable `AZURE_SUBSCRIPTION_ID' can be used to identify the subscription ID if the resource is granted access to more than one
+        subscription, otherwise the first subscription is chosen.
+        The `msi' was added in Ansible 2.6.
+        (Choices: auto, cli, credential_file, env, msi)[Default: (null)]
+        type: str
+        version_added: 2.5
+
+- blob_cors
+        Specifies CORS rules for the Blob service.
+        You can include up to five CorsRule elements in the request.
+        If no blob_cors elements are included in the argument list, nothing about CORS will be changed.
+        If you want to delete all CORS rules and disable CORS for the Blob service, explicitly set blob_cors: [].
+        [Default: (null)]
+        suboptions:
+          allowed_headers:
+            description:
+            - A list of headers allowed to be part of the cross-origin request.
+            required: true
+            type: list
+          allowed_methods:
+            description:
+            - A list of HTTP methods that are allowed to be executed by the origin.
+            required: true
+            type: list
+          allowed_origins:
+            description:
+            - A list of origin domains that will be allowed via CORS, or "*" to allow all
+              domains.
+            required: true
+            type: list
+          exposed_headers:
+            description:
+            - A list of response headers to expose to CORS clients.
+            required: true
+            type: list
+          max_age_in_seconds:
+            description:
+            - The number of seconds that the client/browser should cache a preflight response.
+            required: true
+            type: int
+        
+        type: list
+        version_added: 2.8
+
+- cert_validation_mode
+        Controls the certificate validation behavior for Azure endpoints. By default, all modules will validate the server certificate,
+        but when an HTTPS proxy is in use, or against Azure Stack, it may be necessary to disable this behavior by passing `ignore'. Can
+        also be set via credential file profile or the `AZURE_CERT_VALIDATION' environment variable.
+        (Choices: ignore, validate)[Default: (null)]
+        type: str
+        version_added: 2.5
+
+- client_id
+        Azure client ID. Use when authenticating with a Service Principal.
+        [Default: (null)]
+        type: str
+
+- cloud_environment
+        For cloud environments other than the US public cloud, the environment name (as defined by Azure Python SDK, eg,
+        `AzureChinaCloud', `AzureUSGovernment'), or a metadata discovery endpoint URL (required for Azure Stack). Can also be set via
+        credential file profile or the `AZURE_CLOUD_ENVIRONMENT' environment variable.
+        [Default: AzureCloud]
+        type: str
+        version_added: 2.4
+
+- custom_domain
+        User domain assigned to the storage account. Must be a dictionary with 'name' and 'use_sub_domain' keys where 'name' is the CNAME
+        source. Only one custom domain is supported per storage account at this time. To clear the existing custom domain, use an empty
+        string for the custom domain name property.
+        Can be added to an existing storage account. Will be ignored during storage account creation.
+        (Aliases: custom_dns_domain_suffix)[Default: (null)]
+
+- force_delete_nonempty
+        Attempt deletion if resource already exists and cannot be updated
+        (Aliases: force)[Default: (null)]
+        type: bool
+
+- https_only
+        Allows https traffic only to storage service if sets to true.
+        [Default: (null)]
+        type: bool
+        version_added: 2.8
+
+- kind
+        The 'kind' of storage.
+        (Choices: Storage, StorageV2, BlobStorage)[Default: Storage]
+        version_added: 2.2
+
+- location
+        Valid azure location. Defaults to location of the resource group.
+        [Default: (null)]
+
+- name
+        Name of the storage account to update or create.
+        [Default: (null)]
+
+- password
+        Active Directory user password. Use when authenticating with an Active Directory user rather than service principal.
+        [Default: (null)]
+
+- profile
+        Security profile found in ~/.azure/credentials file.
+        [Default: (null)]
+        type: str
+
+= resource_group
+        Name of the resource group to use.
+        (Aliases: resource_group_name)
+
+- secret
+        Azure client secret. Use when authenticating with a Service Principal.
+        [Default: (null)]
+        type: str
+
+- state
+        Assert the state of the storage account. Use `present' to create or update a storage account and `absent' to delete an account.
+        (Choices: absent, present)[Default: present]
+
+- subscription_id
+        Your Azure subscription Id.
+        [Default: (null)]
+        type: str
+
+- tags
+        Dictionary of string:string pairs to assign as metadata to the object.
+        Metadata tags on the object will be updated with any provided values.
+        To remove tags set append_tags option to false.
+        [Default: (null)]
+        type: dict
+
+- tenant
+        Azure tenant ID. Use when authenticating with a Service Principal.
+        [Default: (null)]
+        type: str
+
+
+NOTES:
+      * For authentication with Azure you can pass parameters, set environment variables, use a profile stored in
+        ~/.azure/credentials, or log in before you run your tasks or playbook with `az login'.
+      * Authentication is also possible using a service principal or Active Directory user.
+      * To authenticate via service principal, pass subscription_id, client_id, secret and tenant or set environment variables
+        AZURE_SUBSCRIPTION_ID, AZURE_CLIENT_ID, AZURE_SECRET and AZURE_TENANT.
+      * To authenticate via Active Directory user, pass ad_user and password, or set AZURE_AD_USER and AZURE_PASSWORD in the
+        environment.
+      * Alternatively, credentials can be stored in ~/.azure/credentials. This is an ini file containing a [default] section and
+        the following keys: subscription_id, client_id, secret and tenant or subscription_id, ad_user and password. It is also
+        possible to add additional profiles. Specify the profile by passing profile or setting AZURE_PROFILE in the environment.
+
+
+SEE ALSO:
+      * Sign in with Azure CLI
+           How to authenticate using the `az login' command.
+           https://docs.microsoft.com/en-us/cli/azure/authenticate-azure-cli?view=azure-cli-latest
+
+
+REQUIREMENTS:  python >= 2.7, azure >= 2.0.0
+
+AUTHOR: Chris Houseknecht (@chouseknecht), Matt Davis (@nitzmahone)
+        METADATA:
+          status:
+          - preview
+          supported_by: community
+        
+
+EXAMPLES:
+
+- name: remove account, if it exists
+      azure_rm_storageaccount:
+        resource_group: myResourceGroup
+        name: clh0002
+        state: absent
+
+    - name: create an account
+      azure_rm_storageaccount:
+        resource_group: myResourceGroup
+        name: clh0002
+        type: Standard_RAGRS
+        tags:
+          testing: testing
+          delete: on-exit
+
+    - name: create an account with blob CORS
+      azure_rm_storageaccount:
+        resource_group: myResourceGroup
+        name: clh002
+        type: Standard_RAGRS
+        blob_cors:
+            - allowed_origins:
+                - http://www.example.com/
+              allowed_methods:
+                - GET
+                - POST
+              allowed_headers:
+                - x-ms-meta-data*
+                - x-ms-meta-target*
+                - x-ms-meta-abc
+              exposed_headers:
+                - x-ms-meta-*
+              max_age_in_seconds: 200
+
+
+RETURN VALUES:
+
+state:
+    description: Current state of the storage account.
+    returned: always
+    type: dict
+    sample: {
+        "account_type": "Standard_RAGRS",
+        "custom_domain": null,
+        "id": "/subscriptions/xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx/resourceGroups/myResourceGroup/providers/Microsoft.Storage/storageAccounts/clh0003",
+        "location": "eastus2",
+        "name": "clh0003",
+        "primary_endpoints": {
+            "blob": "https://clh0003.blob.core.windows.net/",
+            "queue": "https://clh0003.queue.core.windows.net/",
+            "table": "https://clh0003.table.core.windows.net/"
+        },
+        "primary_location": "eastus2",
+        "provisioning_state": "Succeeded",
+        "resource_group": "Testing",
+        "secondary_endpoints": {
+            "blob": "https://clh0003-secondary.blob.core.windows.net/",
+            "queue": "https://clh0003-secondary.queue.core.windows.net/",
+            "table": "https://clh0003-secondary.table.core.windows.net/"
+        },
+        "secondary_location": "centralus",
+        "status_of_primary": "Available",
+        "status_of_secondary": "Available",
+        "tags": null,
+        "type": "Microsoft.Storage/storageAccounts"
+    }
+

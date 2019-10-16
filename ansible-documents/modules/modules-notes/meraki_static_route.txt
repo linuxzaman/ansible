@@ -1,0 +1,268 @@
+> MERAKI_STATIC_ROUTE    (/usr/lib/python2.7/dist-packages/ansible/modules/network/meraki/meraki_static_route.py)
+
+        Allows for creation, management, and visibility into static routes within Meraki.
+
+  * This module is maintained by The Ansible Community
+OPTIONS (= is mandatory):
+
+- auth_key
+        Authentication key provided by the dashboard.
+        Required if environmental variable MERAKI_KEY is not set.
+        [Default: (null)]
+        type: str
+
+- enabled
+        Indicates whether static route is enabled within a network.
+        [Default: (null)]
+        type: bool
+
+- fixed_ip_assignments
+        List of fixed MAC to IP bindings for DHCP.
+        [Default: (null)]
+        suboptions:
+          ip:
+            description:
+            - IP address of endpoint.
+            type: str
+          mac:
+            description:
+            - MAC address of endpoint.
+            type: str
+          name:
+            description:
+            - Hostname of endpoint.
+            type: str
+        
+        type: list
+
+- gateway_ip
+        IP address of the gateway for the subnet.
+        [Default: (null)]
+        type: str
+
+- host
+        Hostname for Meraki dashboard.
+        Only useful for internal Meraki developers.
+        [Default: api.meraki.com]
+        type: str
+
+- name
+        Descriptive name of the static route.
+        [Default: (null)]
+        type: str
+
+- net_id
+        ID number of a network.
+        [Default: (null)]
+        type: str
+
+- net_name
+        Name of a network.
+        [Default: (null)]
+        type: str
+
+- org_id
+        ID of organization associated to a network.
+        [Default: (null)]
+        type: str
+
+- org_name
+        Name of organization associated to a network.
+        (Aliases: organization)[Default: (null)]
+        type: str
+
+- output_level
+        Set amount of debug output during module execution.
+        (Choices: debug, normal)[Default: normal]
+        type: str
+
+- reserved_ip_ranges
+        List of IP ranges reserved for static IP assignments.
+        [Default: (null)]
+        suboptions:
+          comment:
+            description:
+            - Human readable description of reservation range.
+            type: str
+          end:
+            description:
+            - Last IP address of reserved range.
+            type: str
+          start:
+            description:
+            - First IP address of reserved range.
+            type: str
+        
+        type: list
+
+- route_id
+        Unique ID of static route.
+        [Default: (null)]
+        type: str
+
+- state
+        Create or modify an organization.
+        (Choices: absent, query, present)[Default: present]
+        type: str
+
+- subnet
+        CIDR notation based subnet for static route.
+        [Default: (null)]
+        type: str
+
+- timeout
+        Time to timeout for HTTP requests.
+        [Default: 30]
+        type: int
+
+- use_https
+        If `no', it will use HTTP. Otherwise it will use HTTPS.
+        Only useful for internal Meraki developers.
+        [Default: True]
+        type: bool
+
+- use_proxy
+        If `no', it will not use a proxy, even if one is defined in an environment variable on the target hosts.
+        [Default: (null)]
+        type: bool
+
+- validate_certs
+        Whether to validate HTTP certificates.
+        [Default: True]
+        type: bool
+
+
+NOTES:
+      * More information about the Meraki API can be found at https://dashboard.meraki.com/api_docs.
+      * Some of the options are likely only used for developers within Meraki.
+
+
+AUTHOR: Kevin Breit (@kbreit)
+        METADATA:
+          status:
+          - preview
+          supported_by: community
+        
+
+EXAMPLES:
+
+- name: Create static_route
+  meraki_static_route:
+    auth_key: abc123
+    state: present
+    org_name: YourOrg
+    net_name: YourNet
+    name: Test Route
+    subnet: 192.0.1.0/24
+    gateway_ip: 192.168.128.1
+  delegate_to: localhost
+
+- name: Update static route with fixed IP assignment
+  meraki_static_route:
+    auth_key: abc123
+    state: present
+    org_name: YourOrg
+    net_name: YourNet
+    route_id: d6fa4821-1234-4dfa-af6b-ae8b16c20c39
+    fixed_ip_assignments:
+      - mac: aa:bb:cc:dd:ee:ff
+        ip: 192.0.1.11
+        comment: Server
+  delegate_to: localhost
+
+- name: Query static routes
+  meraki_static_route:
+    auth_key: abc123
+    state: query
+    org_name: YourOrg
+    net_name: YourNet
+  delegate_to: localhost
+
+- name: Delete static routes
+  meraki_static_route:
+    auth_key: abc123
+    state: absent
+    org_name: YourOrg
+    net_name: YourNet
+    route_id: '{{item}}'
+  delegate_to: localhost
+
+
+RETURN VALUES:
+
+data:
+  description: Information about the created or manipulated object.
+  returned: info
+  type: complex
+  contains:
+    id:
+      description: Unique identification string assigned to each static route.
+      returned: success
+      type: string
+      sample: d6fa4821-1234-4dfa-af6b-ae8b16c20c39
+    net_id:
+      description: Identification string of network.
+      returned: query or update
+      type: string
+      sample: N_12345
+    name:
+      description: Name of static route.
+      returned: success
+      type: string
+      sample: Data Center static route
+    subnet:
+      description: CIDR notation subnet for static route.
+      returned: success
+      type: string
+      sample: 192.0.1.0/24
+    gatewayIp:
+      description: Next hop IP address.
+      returned: success
+      type: string
+      sample: 192.1.1.1
+    enabled:
+      description: Enabled state of static route.
+      returned: query or update
+      type: bool
+      sample: True
+    reservedIpRanges:
+      description: List of IP address ranges which are reserved for static assignment.
+      returned: query or update
+      type: complex
+      contains:
+        start:
+          description: First address in reservation range, inclusive.
+          returned: query or update
+          type: string
+          sample: 192.0.1.2
+        end:
+          description: Last address in reservation range, inclusive.
+          returned: query or update
+          type: string
+          sample: 192.0.1.10
+        comment:
+          description: Human readable description of range.
+          returned: query or update
+          type: string
+          sample: Server range
+    fixedIpAssignments:
+      description: List of static MAC to IP address bindings.
+      returned: query or update
+      type: complex
+      contains:
+        mac:
+          description: Key is MAC address of endpoint.
+          returned: query or update
+          type: complex
+          contains:
+            ip:
+              description: IP address to be bound to the endpoint.
+              returned: query or update
+              type: string
+              sample: 192.0.1.11
+            name:
+              description: Hostname given to the endpoint.
+              returned: query or update
+              type: string
+              sample: JimLaptop
+

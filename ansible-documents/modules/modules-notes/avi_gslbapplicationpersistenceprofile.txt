@@ -1,0 +1,109 @@
+> AVI_GSLBAPPLICATIONPERSISTENCEPROFILE    (/usr/lib/python2.7/dist-packages/ansible/modules/network/avi/avi_gslbapplicationpersistenceprofile.py)
+
+        This module is used to configure GslbApplicationPersistenceProfile object more examples at https://github.com/avinetworks/devops
+
+  * This module is maintained by The Ansible Community
+OPTIONS (= is mandatory):
+
+- api_context
+        Avi API context that includes current session ID and CSRF Token.
+        This allows user to perform single login and re-use the session.
+        [Default: (null)]
+        type: dict
+        version_added: 2.5
+
+- api_version
+        Avi API version of to use for Avi API and objects.
+        [Default: 16.4.4]
+        type: str
+
+- avi_credentials
+        Avi Credentials dictionary which can be used in lieu of enumerating Avi Controller login details.
+        [Default: (null)]
+        type: dict
+        version_added: 2.5
+
+- controller
+        IP address or hostname of the controller. The default value is the environment variable `AVI_CONTROLLER'.
+        [Default: ]
+        type: str
+
+- description
+        Field introduced in 17.1.1.
+        [Default: (null)]
+
+= name
+        A user-friendly name for the persistence profile.
+        Field introduced in 17.1.1.
+
+
+- password
+        Password of Avi user in Avi controller. The default value is the environment variable `AVI_PASSWORD'.
+        [Default: ]
+        type: str
+
+- state
+        The state that should be applied on the entity.
+        (Choices: absent, present)[Default: present]
+
+- tenant
+        Name of tenant used for all Avi API calls and context of object.
+        [Default: admin]
+        type: str
+
+- tenant_ref
+        It is a reference to an object of type tenant.
+        Field introduced in 17.1.1.
+        [Default: (null)]
+
+- tenant_uuid
+        UUID of tenant used for all Avi API calls and context of object.
+        [Default: ]
+        type: str
+
+- url
+        Avi controller URL of the object.
+        [Default: (null)]
+
+- username
+        Username used for accessing Avi controller. The default value is the environment variable `AVI_USERNAME'.
+        [Default: ]
+        type: str
+
+- uuid
+        Uuid of the persistence profile.
+        Field introduced in 17.1.1.
+        [Default: (null)]
+
+
+NOTES:
+      * For more information on using Ansible to manage Avi Network devices see https://www.ansible.com/ansible-avi-networks.
+
+
+REQUIREMENTS:  avisdk
+
+AUTHOR: Gaurav Rastogi (@grastogi23) <grastogi@avinetworks.com>
+        METADATA:
+          status:
+          - preview
+          supported_by: community
+        
+
+EXAMPLES:
+
+- name: Example to create GslbApplicationPersistenceProfile object
+  avi_gslbapplicationpersistenceprofile:
+    controller: 10.10.25.42
+    username: admin
+    password: something
+    state: present
+    name: sample_gslbapplicationpersistenceprofile
+
+
+RETURN VALUES:
+
+obj:
+    description: GslbApplicationPersistenceProfile (api/gslbapplicationpersistenceprofile) object
+    returned: success, changed
+    type: dict
+

@@ -1,0 +1,126 @@
+> VMWARE_HOST_HYPERTHREADING    (/usr/lib/python2.7/dist-packages/ansible/modules/cloud/vmware/vmware_host_hyperthreading.py)
+
+        This module can be used to enable or disable Hyperthreading optimization for ESXi host systems in given vCenter infrastructure.
+        It also checks if Hyperthreading is activated/deactivated and if the host needs to be restarted. The module informs the user if
+        Hyperthreading is enabled but inactive because the processor is vulnerable to L1 Terminal Fault (L1TF).
+
+  * This module is maintained by The Ansible Community
+OPTIONS (= is mandatory):
+
+- cluster_name
+        Name of the cluster from which all host systems will be used.
+        This parameter is required if `esxi_hostname' is not specified.
+        [Default: (null)]
+        type: str
+
+- esxi_hostname
+        Name of the host system to work with.
+        This parameter is required if `cluster_name' is not specified.
+        [Default: (null)]
+        type: str
+
+- hostname
+        The hostname or IP address of the vSphere vCenter or ESXi server.
+        If the value is not specified in the task, the value of environment variable `VMWARE_HOST' will be used instead.
+        Environment variable support added in Ansible 2.6.
+        [Default: (null)]
+        type: str
+
+- password
+        The password of the vSphere vCenter or ESXi server.
+        If the value is not specified in the task, the value of environment variable `VMWARE_PASSWORD' will be used instead.
+        Environment variable support added in Ansible 2.6.
+        (Aliases: pass, pwd)[Default: (null)]
+        type: str
+
+- port
+        The port number of the vSphere vCenter or ESXi server.
+        If the value is not specified in the task, the value of environment variable `VMWARE_PORT' will be used instead.
+        Environment variable support added in Ansible 2.6.
+        [Default: 443]
+        type: int
+        version_added: 2.5
+
+- state
+        Enable or disable Hyperthreading.
+        You need to reboot the ESXi host if you change the configuration.
+        Make sure that Hyperthreading is enabled in the BIOS. Otherwise, it will be enabled, but never activated.
+        (Choices: enabled, disabled)[Default: enabled]
+        type: str
+
+- username
+        The username of the vSphere vCenter or ESXi server.
+        If the value is not specified in the task, the value of environment variable `VMWARE_USER' will be used instead.
+        Environment variable support added in Ansible 2.6.
+        (Aliases: admin, user)[Default: (null)]
+        type: str
+
+- validate_certs
+        Allows connection when SSL certificates are not valid. Set to `false' when certificates are not trusted.
+        If the value is not specified in the task, the value of environment variable `VMWARE_VALIDATE_CERTS' will be used instead.
+        Environment variable support added in Ansible 2.6.
+        If set to `yes', please make sure Python >= 2.7.9 is installed on the given machine.
+        [Default: True]
+        type: bool
+
+
+NOTES:
+      * Tested on vSphere 6.5
+
+
+REQUIREMENTS:  python >= 2.6, PyVmomi
+
+AUTHOR: Christian Kotte (@ckotte)
+        METADATA:
+          status:
+          - preview
+          supported_by: community
+        
+
+EXAMPLES:
+
+- name: Enable Hyperthreading for an host system
+  vmware_host_hyperthreading:
+    hostname: '{{ vcenter_hostname }}'
+    username: '{{ vcenter_username }}'
+    password: '{{ vcenter_password }}'
+    esxi_hostname: '{{ esxi_hostname }}'
+    state: enabled
+    validate_certs: no
+  delegate_to: localhost
+
+- name: Disable Hyperthreading for an host system
+  vmware_host_hyperthreading:
+    hostname: '{{ vcenter_hostname }}'
+    username: '{{ vcenter_username }}'
+    password: '{{ vcenter_password }}'
+    esxi_hostname: '{{ esxi_hostname }}'
+    state: disabled
+    validate_certs: no
+  delegate_to: localhost
+
+- name: Disable Hyperthreading for all host systems from cluster
+  vmware_host_hyperthreading:
+    hostname: '{{ vcenter_hostname }}'
+    username: '{{ vcenter_username }}'
+    password: '{{ vcenter_password }}'
+    cluster_name: '{{ cluster_name }}'
+    state: disabled
+    validate_certs: no
+  delegate_to: localhost
+
+
+RETURN VALUES:
+
+results:
+    description: metadata about host system's Hyperthreading configuration
+    returned: always
+    type: dict
+    sample: {
+        "esxi01": {
+            "msg": "Hyperthreading is already enabled and active for host 'esxi01'",
+            "state_current": "active",
+            "state": "enabled",
+        },
+    }
+

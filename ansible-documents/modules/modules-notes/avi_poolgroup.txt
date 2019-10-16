@@ -1,0 +1,166 @@
+> AVI_POOLGROUP    (/usr/lib/python2.7/dist-packages/ansible/modules/network/avi/avi_poolgroup.py)
+
+        This module is used to configure PoolGroup object more examples at https://github.com/avinetworks/devops
+
+  * This module is maintained by The Ansible Community
+OPTIONS (= is mandatory):
+
+- api_context
+        Avi API context that includes current session ID and CSRF Token.
+        This allows user to perform single login and re-use the session.
+        [Default: (null)]
+        type: dict
+        version_added: 2.5
+
+- api_version
+        Avi API version of to use for Avi API and objects.
+        [Default: 16.4.4]
+        type: str
+
+- avi_api_patch_op
+        Patch operation to use when using avi_api_update_method as patch.
+        (Choices: add, replace, delete)[Default: (null)]
+        version_added: 2.5
+
+- avi_api_update_method
+        Default method for object update is HTTP PUT.
+        Setting to patch will override that behavior to use HTTP PATCH.
+        (Choices: put, patch)[Default: put]
+        version_added: 2.5
+
+- avi_credentials
+        Avi Credentials dictionary which can be used in lieu of enumerating Avi Controller login details.
+        [Default: (null)]
+        type: dict
+        version_added: 2.5
+
+- cloud_config_cksum
+        Checksum of cloud configuration for poolgroup.
+        Internally set by cloud connector.
+        [Default: (null)]
+
+- cloud_ref
+        It is a reference to an object of type cloud.
+        [Default: (null)]
+
+- controller
+        IP address or hostname of the controller. The default value is the environment variable `AVI_CONTROLLER'.
+        [Default: ]
+        type: str
+
+- created_by
+        Name of the user who created the object.
+        [Default: (null)]
+
+- deployment_policy_ref
+        When setup autoscale manager will automatically promote new pools into production when deployment goals are met.
+        It is a reference to an object of type poolgroupdeploymentpolicy.
+        [Default: (null)]
+
+- description
+        Description of pool group.
+        [Default: (null)]
+
+- fail_action
+        Enable an action - close connection, http redirect, or local http response - when a pool group failure happens.
+        By default, a connection will be closed, in case the pool group experiences a failure.
+        [Default: (null)]
+
+- implicit_priority_labels
+        Whether an implicit set of priority labels is generated.
+        Field introduced in 17.1.9,17.2.3.
+        Default value when not specified in API or module is interpreted by Avi Controller as False.
+        [Default: (null)]
+        type: bool
+        version_added: 2.5
+
+- members
+        List of pool group members object of type poolgroupmember.
+        [Default: (null)]
+
+- min_servers
+        The minimum number of servers to distribute traffic to.
+        Allowed values are 1-65535.
+        Special values are 0 - 'disable'.
+        Default value when not specified in API or module is interpreted by Avi Controller as 0.
+        [Default: (null)]
+
+= name
+        The name of the pool group.
+
+
+- password
+        Password of Avi user in Avi controller. The default value is the environment variable `AVI_PASSWORD'.
+        [Default: ]
+        type: str
+
+- priority_labels_ref
+        Uuid of the priority labels.
+        If not provided, pool group member priority label will be interpreted as a number with a larger number considered higher
+        priority.
+        It is a reference to an object of type prioritylabels.
+        [Default: (null)]
+
+- state
+        The state that should be applied on the entity.
+        (Choices: absent, present)[Default: present]
+
+- tenant
+        Name of tenant used for all Avi API calls and context of object.
+        [Default: admin]
+        type: str
+
+- tenant_ref
+        It is a reference to an object of type tenant.
+        [Default: (null)]
+
+- tenant_uuid
+        UUID of tenant used for all Avi API calls and context of object.
+        [Default: ]
+        type: str
+
+- url
+        Avi controller URL of the object.
+        [Default: (null)]
+
+- username
+        Username used for accessing Avi controller. The default value is the environment variable `AVI_USERNAME'.
+        [Default: ]
+        type: str
+
+- uuid
+        Uuid of the pool group.
+        [Default: (null)]
+
+
+NOTES:
+      * For more information on using Ansible to manage Avi Network devices see https://www.ansible.com/ansible-avi-networks.
+
+
+REQUIREMENTS:  avisdk
+
+AUTHOR: Gaurav Rastogi (@grastogi23) <grastogi@avinetworks.com>
+        METADATA:
+          status:
+          - preview
+          supported_by: community
+        
+
+EXAMPLES:
+
+- name: Example to create PoolGroup object
+  avi_poolgroup:
+    controller: 10.10.25.42
+    username: admin
+    password: something
+    state: present
+    name: sample_poolgroup
+
+
+RETURN VALUES:
+
+obj:
+    description: PoolGroup (api/poolgroup) object
+    returned: success, changed
+    type: dict
+

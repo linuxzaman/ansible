@@ -1,0 +1,40 @@
+EXAMPLES:
+
+- name: Enable automatic update checking
+  bigip_software_update:
+    auto_check: yes
+    provider:
+      password: secret
+      server: lb.mydomain.com
+      user: admin
+  delegate_to: localhost
+
+- name: Disable automatic update checking and phoning home
+  bigip_software_update:
+    auto_check: no
+    auto_phone_home: no
+    provider:
+      password: secret
+      server: lb.mydomain.com
+      user: admin
+  delegate_to: localhost
+
+
+RETURN VALUES:
+
+auto_check:
+  description: Whether the system checks for updates automatically.
+  returned: changed
+  type: bool
+  sample: True
+auto_phone_home:
+  description: Whether the system automatically sends phone home data.
+  returned: changed
+  type: bool
+  sample: True
+frequency:
+  description: Frequency of auto update checks
+  returned: changed
+  type: str
+  sample: weekly
+

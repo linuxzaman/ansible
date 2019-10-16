@@ -1,0 +1,81 @@
+> PANOS_OP    (/usr/lib/python2.7/dist-packages/ansible/modules/network/panos/_panos_op.py)
+
+        This module will allow user to pass and execute any supported OP command on the PANW device.
+
+DEPRECATED: 
+
+	Reason: Consolidating code base.
+	Will be removed in: Ansible 2.12
+	Alternatives: Use U(https://galaxy.ansible.com/PaloAltoNetworks/paloaltonetworks) instead.
+
+
+  * This module is maintained by The Ansible Community
+OPTIONS (= is mandatory):
+
+- api_key
+        API key that can be used instead of `username'/`password' credentials.
+        [Default: (null)]
+
+= cmd
+        The OP command to be performed.
+
+
+= ip_address
+        IP address (or hostname) of PAN-OS device or Panorama management console being configured.
+
+
+= password
+        Password credentials to use for authentication.
+
+
+- username
+        Username credentials to use for authentication.
+        [Default: admin]
+
+
+NOTES:
+      * Checkmode is NOT supported.
+      * Panorama is NOT supported.
+
+
+REQUIREMENTS:  pan-python can be obtained from PyPI https://pypi.org/project/pan-python/, pandevice can be obtained from PyPI
+        https://pypi.org/project/pandevice/
+
+AUTHOR: Ivan Bojer (@ivanbojer)
+        METADATA:
+          status:
+          - deprecated
+          supported_by: community
+        
+
+EXAMPLES:
+
+- name: show list of all interfaces
+  panos_op:
+    ip_address: '{{ ip_address }}'
+    username: '{{ username }}'
+    password: '{{ password }}'
+    cmd: 'show interfaces all'
+
+- name: show system info
+  panos_op:
+    ip_address: '{{ ip_address }}'
+    username: '{{ username }}'
+    password: '{{ password }}'
+    cmd: 'show system info'
+
+
+RETURN VALUES:
+
+stdout:
+    description: output of the given OP command as JSON formatted string
+    returned: success
+    type: str
+    sample: "{system: {app-release-date: 2017/05/01  15:09:12}}"
+
+stdout_xml:
+    description: output of the given OP command as JSON formatted string
+    returned: success
+    type: str
+    sample: "<response status=success><result><system><hostname>fw2</hostname>"
+

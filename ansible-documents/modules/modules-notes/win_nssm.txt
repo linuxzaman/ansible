@@ -1,0 +1,172 @@
+> WIN_NSSM    (/usr/lib/python2.7/dist-packages/ansible/modules/windows/win_nssm.py)
+
+        Install a Windows service using the NSSM wrapper. NSSM is a service helper which doesn't suck. See https://nssm.cc/ for more
+        information.
+
+  * This module is maintained by The Ansible Community
+OPTIONS (= is mandatory):
+
+- app_parameters
+        A string representing a dictionary of parameters to be passed to the application when it starts.
+        DEPRECATED since v2.8, please use `arguments' instead.
+        This is mutually exclusive with `arguments'.
+        [Default: (null)]
+        type: str
+
+- application
+        The application binary to run as a service
+        Required when `state' is `present', `started', `stopped', or `restarted'.
+        [Default: (null)]
+        type: path
+
+- arguments
+        Parameters to be passed to the application when it starts.
+        This can be either a simple string or a list.
+        This parameter was renamed from `app_parameters_free_form' in 2.8.
+        This is mutually exclusive with `app_parameters'.
+        (Aliases: app_parameters_free_form)[Default: (null)]
+        type: str
+        version_added: 2.3
+
+- dependencies
+        Service dependencies that has to be started to trigger startup, separated by comma.
+        DEPRECATED since v2.8, please use the [win_service] module instead.
+        [Default: (null)]
+        type: list
+
+- description
+        The description to set for the service.
+        [Default: (null)]
+        type: str
+        version_added: 2.8.0
+
+- display_name
+        The display name to set for the service.
+        [Default: (null)]
+        type: str
+        version_added: 2.8.0
+
+- executable
+        The location of the NSSM utility (in case it is not located in your PATH).
+        [Default: nssm.exe]
+        type: path
+        version_added: 2.8.0
+
+= name
+        Name of the service to operate on.
+
+        type: str
+
+- password
+        Password to be used for service startup.
+        DEPRECATED since v2.8, please use the [win_service] module instead.
+        [Default: (null)]
+        type: str
+
+- start_mode
+        If `auto' is selected, the service will start at bootup.
+        `delayed' causes a delayed but automatic start after boot (added in version 2.5).
+        `manual' means that the service will start only when another service needs it.
+        `disabled' means that the service will stay off, regardless if it is needed or not.
+        DEPRECATED since v2.8, please use the [win_service] module instead.
+        (Choices: auto, delayed, disabled, manual)[Default: auto]
+        type: str
+
+- state
+        State of the service on the system.
+        Values `started', `stopped', and `restarted' are deprecated since v2.8, please use the [win_service] module instead to start,
+        stop or restart the service.
+        (Choices: absent, present, started, stopped, restarted)[Default: present]
+        type: str
+
+- stderr_file
+        Path to receive error output.
+        [Default: (null)]
+        type: path
+
+- stdout_file
+        Path to receive output.
+        [Default: (null)]
+        type: path
+
+- user
+        User to be used for service startup.
+        DEPRECATED since v2.8, please use the [win_service] module instead.
+        [Default: (null)]
+        type: str
+
+- working_directory
+        The working directory to run the service executable from (defaults to the directory containing the application binary)
+        (Aliases: app_directory, chdir)[Default: (null)]
+        type: path
+        version_added: 2.8.0
+
+
+NOTES:
+      * The service will NOT be started after its creation when `state=present'.
+      * Once the service is created, you can use the [win_service] module to start it or configure some additionals properties,
+        such as its startup type, dependencies, service account, and so on.
+
+
+SEE ALSO:
+      * Module win_service
+           The official documentation on the win_service module.
+           https://docs.ansible.com/ansible/latest/modules/win_service_module.html
+
+
+REQUIREMENTS:  nssm >= 2.24.0 # (install via [win_chocolatey]) `win_chocolatey: name=nssm'
+
+AUTHOR: Adam Keech (@smadam813), George Frank (@georgefrank), Hans-Joachim Kliemeck (@h0nIg), Michael Wild (@themiwi), Kevin Subileau (@ksubileau)
+        METADATA:
+          status:
+          - preview
+          supported_by: community
+        
+
+EXAMPLES:
+
+- name: Install the foo service
+  win_nssm:
+    name: foo
+    application: C:\windows\foo.exe
+
+# This will yield the following command: C:\windows\foo.exe bar "true"
+- name: Install the Consul service with a list of parameters
+  win_nssm:
+    name: Consul
+    application: C:\consul\consul.exe
+    arguments:
+      - agent
+      - -config-dir=C:\consul\config
+
+# This is strictly equivalent to the previous example
+- name: Install the Consul service with an arbitrary string of parameters
+  win_nssm:
+    name: Consul
+    application: C:\consul\consul.exe
+    arguments: agent -config-dir=C:\consul\config
+
+
+# Install the foo service, and then configure and start it with win_service
+- name: Install the foo service, redirecting stdout and stderr to the same file
+  win_nssm:
+    name: foo
+    application: C:\windows\foo.exe
+    stdout_file: C:\windows\foo.log
+    stderr_file: C:\windows\foo.log
+
+- name: Configure and start the foo service using win_service
+  win_service:
+    name: foo
+    dependencies: [ adf, tcpip ]
+    user: foouser
+    password: secret
+    start_mode: manual
+    state: started
+
+- name: Remove the foo service
+  win_nssm:
+    name: foo
+    state: absent
+
+

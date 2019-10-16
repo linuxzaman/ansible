@@ -1,0 +1,163 @@
+> AVI_WAFPOLICY    (/usr/lib/python2.7/dist-packages/ansible/modules/network/avi/avi_wafpolicy.py)
+
+        This module is used to configure WafPolicy object more examples at https://github.com/avinetworks/devops
+
+  * This module is maintained by The Ansible Community
+OPTIONS (= is mandatory):
+
+- api_context
+        Avi API context that includes current session ID and CSRF Token.
+        This allows user to perform single login and re-use the session.
+        [Default: (null)]
+        type: dict
+        version_added: 2.5
+
+- api_version
+        Avi API version of to use for Avi API and objects.
+        [Default: 16.4.4]
+        type: str
+
+- avi_api_patch_op
+        Patch operation to use when using avi_api_update_method as patch.
+        (Choices: add, replace, delete)[Default: (null)]
+        version_added: 2.5
+
+- avi_api_update_method
+        Default method for object update is HTTP PUT.
+        Setting to patch will override that behavior to use HTTP PATCH.
+        (Choices: put, patch)[Default: put]
+        version_added: 2.5
+
+- avi_credentials
+        Avi Credentials dictionary which can be used in lieu of enumerating Avi Controller login details.
+        [Default: (null)]
+        type: dict
+        version_added: 2.5
+
+- controller
+        IP address or hostname of the controller. The default value is the environment variable `AVI_CONTROLLER'.
+        [Default: ]
+        type: str
+
+- created_by
+        Creator name.
+        Field introduced in 17.2.4.
+        [Default: (null)]
+
+- crs_groups
+        Waf rules are categorized in to groups based on their characterization.
+        These groups are system created with crs groups.
+        Field introduced in 17.2.1.
+        [Default: (null)]
+
+- description
+        Field introduced in 17.2.1.
+        [Default: (null)]
+
+= mode
+        Waf policy mode.
+        This can be detection or enforcement.
+        Enum options - WAF_MODE_DETECTION_ONLY, WAF_MODE_ENFORCEMENT.
+        Field introduced in 17.2.1.
+        Default value when not specified in API or module is interpreted by Avi Controller as WAF_MODE_DETECTION_ONLY.
+
+
+= name
+        Field introduced in 17.2.1.
+
+
+- paranoia_level
+        Waf ruleset paranoia  mode.
+        This is used to select rules based on the paranoia-level tag.
+        Enum options - WAF_PARANOIA_LEVEL_LOW, WAF_PARANOIA_LEVEL_MEDIUM, WAF_PARANOIA_LEVEL_HIGH, WAF_PARANOIA_LEVEL_EXTREME.
+        Field introduced in 17.2.1.
+        Default value when not specified in API or module is interpreted by Avi Controller as WAF_PARANOIA_LEVEL_LOW.
+        [Default: (null)]
+
+- password
+        Password of Avi user in Avi controller. The default value is the environment variable `AVI_PASSWORD'.
+        [Default: ]
+        type: str
+
+- post_crs_groups
+        Waf rules are categorized in to groups based on their characterization.
+        These groups are created by the user and will be enforced after the crs groups.
+        Field introduced in 17.2.1.
+        [Default: (null)]
+
+- pre_crs_groups
+        Waf rules are categorized in to groups based on their characterization.
+        These groups are created by the user and will be  enforced before the crs groups.
+        Field introduced in 17.2.1.
+        [Default: (null)]
+
+- state
+        The state that should be applied on the entity.
+        (Choices: absent, present)[Default: present]
+
+- tenant
+        Name of tenant used for all Avi API calls and context of object.
+        [Default: admin]
+        type: str
+
+- tenant_ref
+        It is a reference to an object of type tenant.
+        Field introduced in 17.2.1.
+        [Default: (null)]
+
+- tenant_uuid
+        UUID of tenant used for all Avi API calls and context of object.
+        [Default: ]
+        type: str
+
+- url
+        Avi controller URL of the object.
+        [Default: (null)]
+
+- username
+        Username used for accessing Avi controller. The default value is the environment variable `AVI_USERNAME'.
+        [Default: ]
+        type: str
+
+- uuid
+        Field introduced in 17.2.1.
+        [Default: (null)]
+
+= waf_profile_ref
+        Waf profile for waf policy.
+        It is a reference to an object of type wafprofile.
+        Field introduced in 17.2.1.
+
+
+
+NOTES:
+      * For more information on using Ansible to manage Avi Network devices see https://www.ansible.com/ansible-avi-networks.
+
+
+REQUIREMENTS:  avisdk
+
+AUTHOR: Gaurav Rastogi (@grastogi23) <grastogi@avinetworks.com>
+        METADATA:
+          status:
+          - preview
+          supported_by: community
+        
+
+EXAMPLES:
+
+- name: Example to create WafPolicy object
+  avi_wafpolicy:
+    controller: 10.10.25.42
+    username: admin
+    password: something
+    state: present
+    name: sample_wafpolicy
+
+
+RETURN VALUES:
+
+obj:
+    description: WafPolicy (api/wafpolicy) object
+    returned: success, changed
+    type: dict
+

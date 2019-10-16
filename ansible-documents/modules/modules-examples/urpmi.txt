@@ -1,0 +1,24 @@
+EXAMPLES:
+
+- name: Install package foo
+  urpmi:
+    pkg: foo
+    state: present
+
+- name: Remove package foo
+  urpmi:
+    pkg: foo
+    state: absent
+
+- name: Remove packages foo and bar
+  urpmi:
+    pkg: foo,bar
+    state: absent
+
+- name: Update the package database (urpmi.update -a -q) and install bar (bar will be the updated if a newer version exists)
+- urpmi:
+    name: bar
+    state: present
+    update_cache: yes
+
+

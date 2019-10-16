@@ -1,0 +1,165 @@
+> PROXYSQL_BACKEND_SERVERS    (/usr/lib/python2.7/dist-packages/ansible/modules/database/proxysql/proxysql_backend_servers.py)
+
+        The [proxysql_backend_servers] module adds or removes mysql hosts using the proxysql admin interface.
+
+  * This module is maintained by The Ansible Community
+OPTIONS (= is mandatory):
+
+- comment
+        Text field that can be used for any purposed defined by the user. Could be a description of what the host stores, a reminder of
+        when the host was added or disabled, or a JSON processed by some checker script.
+        [Default: ]
+
+- compression
+        If the value of `compression' is greater than 0, new connections to that server will use compression. If omitted the proxysql
+        database default for `compression' is 0.
+        [Default: (null)]
+
+- config_file
+        Specify a config file from which `login_user' and `login_password' are to be read.
+        [Default: ]
+        type: path
+
+- hostgroup_id
+        The hostgroup in which this mysqld instance is included. An instance can be part of one or more hostgroups.
+        [Default: 0]
+
+= hostname
+        The ip address at which the mysqld instance can be contacted.
+
+
+- load_to_runtime
+        Dynamically load config to runtime memory.
+        [Default: yes]
+        type: bool
+
+- login_host
+        The host used to connect to ProxySQL admin interface.
+        [Default: 127.0.0.1]
+        type: str
+
+- login_password
+        The password used to authenticate to ProxySQL admin interface.
+        [Default: (null)]
+        type: str
+
+- login_port
+        The port used to connect to ProxySQL admin interface.
+        [Default: 6032]
+        type: int
+
+- login_user
+        The username used to authenticate to ProxySQL admin interface.
+        [Default: (null)]
+        type: str
+
+- max_connections
+        The maximum number of connections ProxySQL will open to this backend server. If omitted the proxysql database default for
+        `max_connections' is 1000.
+        [Default: (null)]
+
+- max_latency_ms
+        Ping time is monitored regularly. If a host has a ping time greater than `max_latency_ms' it is excluded from the connection pool
+        (although the server stays ONLINE). If omitted the proxysql database default for `max_latency_ms' is 0.
+        [Default: (null)]
+
+- max_replication_lag
+        If greater than 0, ProxySQL will reguarly monitor replication lag. If replication lag goes above `max_replication_lag', proxysql
+        will temporarily shun the server until replication catches up. If omitted the proxysql database default for `max_replication_lag'
+        is 0.
+        [Default: (null)]
+
+- port
+        The port at which the mysqld instance can be contacted.
+        [Default: 3306]
+
+- save_to_disk
+        Save config to sqlite db on disk to persist the configuration.
+        [Default: yes]
+        type: bool
+
+- state
+        When `present' - adds the host, when `absent' - removes the host.
+        (Choices: present, absent)[Default: present]
+
+- status
+        ONLINE - Backend server is fully operational. OFFLINE_SOFT - When a server is put into `OFFLINE_SOFT' mode, connections are kept
+        in use until the current transaction is completed. This allows to gracefully detach a backend. OFFLINE_HARD - When a server is
+        put into `OFFLINE_HARD' mode, the existing connections are dropped, while new incoming connections aren't accepted either. If
+        omitted the proxysql database default for `status' is `ONLINE'.
+        (Choices: ONLINE, OFFLINE_SOFT, OFFLINE_HARD)[Default: (null)]
+
+- use_ssl
+        If `use_ssl' is set to `True', connections to this server will be made using SSL connections. If omitted the proxysql database
+        default for `use_ssl' is `False'.
+        [Default: (null)]
+        type: bool
+
+- weight
+        The bigger the weight of a server relative to other weights, the higher the probability of the server being chosen from the
+        hostgroup. If omitted the proxysql database default for `weight' is 1.
+        [Default: (null)]
+
+
+REQUIREMENTS:  PyMySQL (Python 2.7 and Python 3.X), or, MySQLdb (Python 2.x)
+
+AUTHOR: Ben Mildren (@bmildren)
+        METADATA:
+          status:
+          - stableinterface
+          supported_by: community
+        
+
+EXAMPLES:
+
+---
+# This example adds a server, it saves the mysql server config to disk, but
+# avoids loading the mysql server config to runtime (this might be because
+# several servers are being added and the user wants to push the config to
+# runtime in a single batch using the M(proxysql_manage_config) module).  It
+# uses supplied credentials to connect to the proxysql admin interface.
+
+- proxysql_backend_servers:
+    login_user: 'admin'
+    login_password: 'admin'
+    hostname: 'mysql01'
+    state: present
+    load_to_runtime: False
+
+# This example removes a server, saves the mysql server config to disk, and
+# dynamically loads the mysql server config to runtime.  It uses credentials
+# in a supplied config file to connect to the proxysql admin interface.
+
+- proxysql_backend_servers:
+    config_file: '~/proxysql.cnf'
+    hostname: 'mysql02'
+    state: absent
+
+
+RETURN VALUES:
+
+stdout:
+    description: The mysql host modified or removed from proxysql
+    returned: On create/update will return the newly modified host, on delete
+              it will return the deleted record.
+    type: dict
+    "sample": {
+        "changed": true,
+        "hostname": "192.168.52.1",
+        "msg": "Added server to mysql_hosts",
+        "server": {
+            "comment": "",
+            "compression": "0",
+            "hostgroup_id": "1",
+            "hostname": "192.168.52.1",
+            "max_connections": "1000",
+            "max_latency_ms": "0",
+            "max_replication_lag": "0",
+            "port": "3306",
+            "status": "ONLINE",
+            "use_ssl": "0",
+            "weight": "1"
+        },
+        "state": "present"
+    }
+

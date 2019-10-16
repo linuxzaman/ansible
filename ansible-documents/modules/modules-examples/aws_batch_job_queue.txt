@@ -1,0 +1,43 @@
+EXAMPLES:
+
+---
+- hosts: localhost
+  gather_facts: no
+  vars:
+    state: present
+  tasks:
+  - name: My Batch Job Queue
+    batch_job_queue:
+      job_queue_name: jobQueueName
+      state: present
+      region: us-east-1
+      job_queue_state: ENABLED
+      priority: 1
+      compute_environment_order:
+        - order: 1
+          compute_environment: my_compute_env1
+        - order: 2
+          compute_environment: my_compute_env2
+
+  - name: show results
+    debug: var=batch_job_queue_action
+
+
+RETURN VALUES:
+
+---
+output:
+  description: "returns what action was taken, whether something was changed, invocation and response"
+  returned: always
+  sample:
+    batch_job_queue_action: updated
+    changed: false
+    response:
+      job_queue_arn: "arn:aws:batch:...."
+      job_queue_name: <name>
+      priority: 1
+      state: DISABLED
+      status: UPDATING
+      status_reason: "JobQueue Healthy"
+  type: dict
+

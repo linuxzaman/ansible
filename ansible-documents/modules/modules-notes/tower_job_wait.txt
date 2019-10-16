@@ -1,0 +1,106 @@
+> TOWER_JOB_WAIT    (/usr/lib/python2.7/dist-packages/ansible/modules/web_infrastructure/ansible_tower/tower_job_wait.py)
+
+        Wait for Ansible Tower job to finish and report success or failure. See https://www.ansible.com/tower for an overview.
+
+  * This module is maintained by The Ansible Community
+OPTIONS (= is mandatory):
+
+= job_id
+        ID of the job to monitor.
+
+
+- max_interval
+        Maximum interval in seconds, to request an update from Tower.
+        [Default: 30]
+
+- min_interval
+        Minimum interval in seconds, to request an update from Tower.
+        [Default: 1]
+
+- timeout
+        Maximum time in seconds to wait for a job to finish.
+        [Default: (null)]
+
+- tower_config_file
+        Path to the Tower config file.
+        [Default: (null)]
+        type: path
+
+- tower_host
+        URL to your Tower instance.
+        [Default: (null)]
+        type: str
+
+- tower_password
+        Password for your Tower instance.
+        [Default: (null)]
+        type: str
+
+- tower_username
+        Username for your Tower instance.
+        [Default: (null)]
+        type: str
+
+- validate_certs
+        Whether to allow insecure connections to Tower.
+        If `no', SSL certificates will not be validated.
+        This should only be used on personally controlled sites using self-signed certificates.
+        (Aliases: tower_verify_ssl)[Default: (null)]
+        type: bool
+
+
+NOTES:
+      * If no `config_file' is provided we will attempt to use the tower-cli library defaults to find your Tower host information.
+      * `config_file' should contain Tower configuration in the following format host=hostname username=username password=password
+
+
+REQUIREMENTS:  ansible-tower-cli >= 3.0.2
+
+AUTHOR: Wayne Witzel III (@wwitzel3)
+        METADATA:
+          status:
+          - preview
+          supported_by: community
+        
+
+EXAMPLES:
+
+- name: Launch a job
+  tower_job_launch:
+    job_template: "My Job Template"
+    register: job
+
+- name: Wait for job max 120s
+  tower_job_wait:
+    job_id: "{{ job.id }}"
+    timeout: 120
+
+
+RETURN VALUES:
+
+id:
+    description: job id that is being waited on
+    returned: success
+    type: int
+    sample: 99
+elapsed:
+    description: total time in seconds the job took to run
+    returned: success
+    type: float
+    sample: 10.879
+started:
+    description: timestamp of when the job started running
+    returned: success
+    type: str
+    sample: "2017-03-01T17:03:53.200234Z"
+finished:
+    description: timestamp of when the job finished running
+    returned: success
+    type: str
+    sample: "2017-03-01T17:04:04.078782Z"
+status:
+    description: current status of job
+    returned: success
+    type: str
+    sample: successful
+

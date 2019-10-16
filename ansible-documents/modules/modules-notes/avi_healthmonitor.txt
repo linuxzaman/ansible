@@ -1,0 +1,203 @@
+> AVI_HEALTHMONITOR    (/usr/lib/python2.7/dist-packages/ansible/modules/network/avi/avi_healthmonitor.py)
+
+        This module is used to configure HealthMonitor object more examples at https://github.com/avinetworks/devops
+
+  * This module is maintained by The Ansible Community
+OPTIONS (= is mandatory):
+
+- api_context
+        Avi API context that includes current session ID and CSRF Token.
+        This allows user to perform single login and re-use the session.
+        [Default: (null)]
+        type: dict
+        version_added: 2.5
+
+- api_version
+        Avi API version of to use for Avi API and objects.
+        [Default: 16.4.4]
+        type: str
+
+- avi_api_patch_op
+        Patch operation to use when using avi_api_update_method as patch.
+        (Choices: add, replace, delete)[Default: (null)]
+        version_added: 2.5
+
+- avi_api_update_method
+        Default method for object update is HTTP PUT.
+        Setting to patch will override that behavior to use HTTP PATCH.
+        (Choices: put, patch)[Default: put]
+        version_added: 2.5
+
+- avi_credentials
+        Avi Credentials dictionary which can be used in lieu of enumerating Avi Controller login details.
+        [Default: (null)]
+        type: dict
+        version_added: 2.5
+
+- controller
+        IP address or hostname of the controller. The default value is the environment variable `AVI_CONTROLLER'.
+        [Default: ]
+        type: str
+
+- description
+        User defined description for the object.
+        [Default: (null)]
+
+- dns_monitor
+        Healthmonitordns settings for healthmonitor.
+        [Default: (null)]
+
+- external_monitor
+        Healthmonitorexternal settings for healthmonitor.
+        [Default: (null)]
+
+- failed_checks
+        Number of continuous failed health checks before the server is marked down.
+        Allowed values are 1-50.
+        Default value when not specified in API or module is interpreted by Avi Controller as 2.
+        [Default: (null)]
+
+- http_monitor
+        Healthmonitorhttp settings for healthmonitor.
+        [Default: (null)]
+
+- https_monitor
+        Healthmonitorhttp settings for healthmonitor.
+        [Default: (null)]
+
+- is_federated
+        This field describes the object's replication scope.
+        If the field is set to false, then the object is visible within the controller-cluster and its associated service-engines.
+        If the field is set to true, then the object is replicated across the federation.
+        Field introduced in 17.1.3.
+        Default value when not specified in API or module is interpreted by Avi Controller as False.
+        [Default: (null)]
+        type: bool
+        version_added: 2.4
+
+- monitor_port
+        Use this port instead of the port defined for the server in the pool.
+        If the monitor succeeds to this port, the load balanced traffic will still be sent to the port of the server defined within the
+        pool.
+        Allowed values are 1-65535.
+        Special values are 0 - 'use server port'.
+        [Default: (null)]
+
+= name
+        A user friendly name for this health monitor.
+
+
+- password
+        Password of Avi user in Avi controller. The default value is the environment variable `AVI_PASSWORD'.
+        [Default: ]
+        type: str
+
+- receive_timeout
+        A valid response from the server is expected within the receive timeout window.
+        This timeout must be less than the send interval.
+        If server status is regularly flapping up and down, consider increasing this value.
+        Allowed values are 1-2400.
+        Default value when not specified in API or module is interpreted by Avi Controller as 4.
+        Units(SEC).
+        [Default: (null)]
+
+- send_interval
+        Frequency, in seconds, that monitors are sent to a server.
+        Allowed values are 1-3600.
+        Default value when not specified in API or module is interpreted by Avi Controller as 10.
+        Units(SEC).
+        [Default: (null)]
+
+- state
+        The state that should be applied on the entity.
+        (Choices: absent, present)[Default: present]
+
+- successful_checks
+        Number of continuous successful health checks before server is marked up.
+        Allowed values are 1-50.
+        Default value when not specified in API or module is interpreted by Avi Controller as 2.
+        [Default: (null)]
+
+- tcp_monitor
+        Healthmonitortcp settings for healthmonitor.
+        [Default: (null)]
+
+- tenant
+        Name of tenant used for all Avi API calls and context of object.
+        [Default: admin]
+        type: str
+
+- tenant_ref
+        It is a reference to an object of type tenant.
+        [Default: (null)]
+
+- tenant_uuid
+        UUID of tenant used for all Avi API calls and context of object.
+        [Default: ]
+        type: str
+
+= type
+        Type of the health monitor.
+        Enum options - HEALTH_MONITOR_PING, HEALTH_MONITOR_TCP, HEALTH_MONITOR_HTTP, HEALTH_MONITOR_HTTPS, HEALTH_MONITOR_EXTERNAL,
+        HEALTH_MONITOR_UDP,
+        HEALTH_MONITOR_DNS, HEALTH_MONITOR_GSLB.
+
+
+- udp_monitor
+        Healthmonitorudp settings for healthmonitor.
+        [Default: (null)]
+
+- url
+        Avi controller URL of the object.
+        [Default: (null)]
+
+- username
+        Username used for accessing Avi controller. The default value is the environment variable `AVI_USERNAME'.
+        [Default: ]
+        type: str
+
+- uuid
+        Uuid of the health monitor.
+        [Default: (null)]
+
+
+NOTES:
+      * For more information on using Ansible to manage Avi Network devices see https://www.ansible.com/ansible-avi-networks.
+
+
+REQUIREMENTS:  avisdk
+
+AUTHOR: Gaurav Rastogi (@grastogi23) <grastogi@avinetworks.com>
+        METADATA:
+          status:
+          - preview
+          supported_by: community
+        
+
+EXAMPLES:
+
+- name: Create a HTTPS health monitor
+  avi_healthmonitor:
+    controller: 10.10.27.90
+    username: admin
+    password: AviNetworks123!
+    https_monitor:
+      http_request: HEAD / HTTP/1.0
+      http_response_code:
+        - HTTP_2XX
+        - HTTP_3XX
+    receive_timeout: 4
+    failed_checks: 3
+    send_interval: 10
+    successful_checks: 3
+    type: HEALTH_MONITOR_HTTPS
+    name: MyWebsite-HTTPS
+
+
+RETURN VALUES:
+
+obj:
+    description: HealthMonitor (api/healthmonitor) object
+    returned: success, changed
+    type: dict
+

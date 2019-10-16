@@ -1,0 +1,37 @@
+> MONIT    (/usr/lib/python2.7/dist-packages/ansible/modules/monitoring/monit.py)
+
+        Manage the state of a program monitored via `Monit'
+
+  * This module is maintained by The Ansible Community
+OPTIONS (= is mandatory):
+
+= name
+        The name of the `monit' program/process to manage
+
+
+= state
+        The state of service
+        (Choices: present, started, stopped, restarted, monitored, unmonitored, reloaded)
+
+- timeout
+        If there are pending actions for the service monitored by monit, then Ansible will check for up to this many seconds to verify
+        the requested action has been performed. Ansible will sleep for five seconds between each check.
+        [Default: 300]
+        version_added: 2.1
+
+
+AUTHOR: Darryl Stoflet (@dstoflet)
+        METADATA:
+          status:
+          - preview
+          supported_by: community
+        
+
+EXAMPLES:
+
+# Manage the state of program "httpd" to be in "started" state.
+- monit:
+    name: httpd
+    state: started
+
+

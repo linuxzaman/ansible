@@ -1,0 +1,86 @@
+EXAMPLES:
+
+- name: Get instance of Deployment
+    azure_rm_deployment_facts:
+      resource_group: myResourceGroup
+      name: myDeployment
+
+
+RETURN VALUES:
+
+deployments:
+    description: A list of dictionaries containing facts for deployments.
+    returned: always
+    type: complex
+    contains:
+        id:
+            description:
+                - The identifier of the resource.
+            returned: always
+            type: str
+            sample: "/subscriptions/xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx/resourceGroups/myResourceGroup/providers/Microsoft.Resources/deployments/myD
+                     eployment"
+        resource_group:
+            description:
+                - Resource group name.
+            returned: always
+            sample: myResourceGroup
+        name:
+            description:
+                - Deployment name.
+            returned: always
+            sample: myDeployment
+        provisioning_state:
+            description:
+                - Provisioning state of the deployment.
+            returned: always
+            sample: Succeeded
+        template_link:
+            description:
+                - Link to the template.
+            returned: always
+            sample: "https://raw.githubusercontent.com/Azure/azure-quickstart-templates/d01a5c06f4f1bc03a049ca17bbbd6e06d62657b3/101-vm-simple-linux/
+                     azuredeploy.json"
+        parameters:
+            description:
+                - Dictionary containing deployment parameters.
+            returned: always
+            type: complex
+        outputs:
+            description:
+                - Dictionary containing deployment outputs.
+            returned: always
+        output_resources:
+            description:
+                - List of resources.
+            returned: always
+            type: complex
+            contains:
+                id:
+                    description:
+                        - Resource id.
+                    returned: always
+                    type: str
+                    sample: "/subscriptions/xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxxx/resourceGroups/myResourceGroup/providers/Microsoft.Network/networkI
+                             nterfaces/myNetworkInterface"
+                name:
+                    description:
+                        - Resource name.
+                    returned: always
+                    type: str
+                    sample: myNetworkInterface
+                type:
+                    description:
+                        - Resource type.
+                    returned: always
+                    type: str
+                    sample: Microsoft.Network/networkInterfaces
+                depends_on:
+                    description:
+                        - List of resource ids.
+                    type: list
+                    returned: always
+                    sample:
+                        - "/subscriptions/xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx/resourceGroups/myResourceGropup/providers/Microsoft.Network/virtualNet
+                           works/myVirtualNetwork"
+

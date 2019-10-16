@@ -1,0 +1,73 @@
+EXAMPLES:
+
+---
+- name: Create Firewall Policy
+  hosts: localhost
+  gather_facts: False
+  connection: local
+  tasks:
+    - name: Create / Verify an Firewall Policy at CenturyLink Cloud
+      clc_firewall:
+        source_account_alias: WFAD
+        location: VA1
+        state: present
+        source: 10.128.216.0/24
+        destination: 10.128.216.0/24
+        ports: Any
+        destination_account_alias: WFAD
+
+---
+- name: Delete Firewall Policy
+  hosts: localhost
+  gather_facts: False
+  connection: local
+  tasks:
+    - name: Delete an Firewall Policy at CenturyLink Cloud
+      clc_firewall:
+        source_account_alias: WFAD
+        location: VA1
+        state: absent
+        firewall_policy_id: c62105233d7a4231bd2e91b9c791e43e1
+
+
+RETURN VALUES:
+
+firewall_policy_id:
+    description: The fire wall policy id
+    returned: success
+    type: str
+    sample: fc36f1bfd47242e488a9c44346438c05
+firewall_policy:
+    description: The fire wall policy information
+    returned: success
+    type: dict
+    sample:
+        {
+           "destination":[
+              "10.1.1.0/24",
+              "10.2.2.0/24"
+           ],
+           "destinationAccount":"wfad",
+           "enabled":true,
+           "id":"fc36f1bfd47242e488a9c44346438c05",
+           "links":[
+              {
+                 "href":"http://api.ctl.io/v2-experimental/firewallPolicies/wfad/uc1/fc36f1bfd47242e488a9c44346438c05",
+                 "rel":"self",
+                 "verbs":[
+                    "GET",
+                    "PUT",
+                    "DELETE"
+                 ]
+              }
+           ],
+           "ports":[
+              "any"
+           ],
+           "source":[
+              "10.1.1.0/24",
+              "10.2.2.0/24"
+           ],
+           "status":"active"
+        }
+

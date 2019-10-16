@@ -1,0 +1,64 @@
+EXAMPLES:
+
+- name: Create gce snapshot
+  gce_snapshot:
+    instance_name: example-instance
+    snapshot_name: example-snapshot
+    state: present
+    service_account_email: project_name@appspot.gserviceaccount.com
+    credentials_file: /path/to/credentials
+    project_id: project_name
+  delegate_to: localhost
+
+- name: Delete gce snapshot
+  gce_snapshot:
+    instance_name: example-instance
+    snapshot_name: example-snapshot
+    state: absent
+    service_account_email: project_name@appspot.gserviceaccount.com
+    credentials_file: /path/to/credentials
+    project_id: project_name
+  delegate_to: localhost
+
+# This example creates snapshots for only two of the available disks as
+# disk0-example-snapshot and disk1-example-snapshot
+- name: Create snapshots of specific disks
+  gce_snapshot:
+    instance_name: example-instance
+    snapshot_name: example-snapshot
+    state: present
+    disks:
+      - disk0
+      - disk1
+    service_account_email: project_name@appspot.gserviceaccount.com
+    credentials_file: /path/to/credentials
+    project_id: project_name
+  delegate_to: localhost
+
+
+RETURN VALUES:
+
+snapshots_created:
+    description: List of newly created snapshots
+    returned: When snapshots are created
+    type: list
+    sample: "[disk0-example-snapshot, disk1-example-snapshot]"
+
+snapshots_deleted:
+    description: List of destroyed snapshots
+    returned: When snapshots are deleted
+    type: list
+    sample: "[disk0-example-snapshot, disk1-example-snapshot]"
+
+snapshots_existing:
+    description: List of snapshots that already existed (no-op)
+    returned: When snapshots were already present
+    type: list
+    sample: "[disk0-example-snapshot, disk1-example-snapshot]"
+
+snapshots_absent:
+    description: List of snapshots that were already absent (no-op)
+    returned: When snapshots were already absent
+    type: list
+    sample: "[disk0-example-snapshot, disk1-example-snapshot]"
+

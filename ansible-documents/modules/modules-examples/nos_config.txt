@@ -1,0 +1,67 @@
+EXAMPLES:
+
+- name: configure top level configuration
+  nos_config:
+    lines: logging raslog console INFO
+
+- name: configure interface settings
+  nos_config:
+    lines:
+      - description test interface
+      - ip address 172.31.1.1/24
+    parents:
+      - interface TenGigabitEthernet 104/0/1
+
+- name: configure multiple interfaces
+  nos_config:
+    lines:
+      - lacp timeout long
+    parents: "{{ item }}"
+  with_items:
+    - interface TenGigabitEthernet 104/0/1
+    - interface TenGigabitEthernet 104/0/2
+
+- name: load new acl into device
+  nos_config:
+    lines:
+      - seq 10 permit ip host 1.1.1.1 any log
+      - seq 20 permit ip host 2.2.2.2 any log
+      - seq 30 permit ip host 3.3.3.3 any log
+      - seq 40 permit ip host 4.4.4.4 any log
+      - seq 50 permit ip host 5.5.5.5 any log
+    parents: ip access-list extended test
+    before: no ip access-list extended test
+    match: exact
+
+- name: check the running-config against master config
+  nos_config:
+    diff_against: intended
+    intended_config: "{{ lookup('file', 'master.cfg') }}"
+
+- name: configurable backup path
+  nos_config:
+    lines: logging raslog console INFO
+    backup: yes
+    backup_options:
+      filename: backup.cfg
+      dir_path: /home/user
+
+
+RETURN VALUES:
+
+updates:
+  description: The set of commands that will be pushed to the remote device
+  returned: always
+  type: list
+  sample: ['switch-attributes hostname foo', 'router ospf', 'area 0']
+commands:
+  description: The set of commands that will be pushed to the remote device
+  returned: always
+  type: list
+  sample: ['switch-attributes hostname foo', 'router ospf', 'area 0']
+backup_path:
+  description: The full path to the backup file
+  returned: when backup is yes
+  type: str
+  sample: /playbooks/ansible/backup/nos_config.2018-02-12@18:26:34
+

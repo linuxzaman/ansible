@@ -1,0 +1,586 @@
+> FMGR_SECPROF_WEB    (/usr/lib/python2.7/dist-packages/ansible/modules/network/fortimanager/fmgr_secprof_web.py)
+
+        Manage web filter security profiles in FortiManager through playbooks using the FMG API
+
+  * This module is maintained by The Ansible Community
+OPTIONS (= is mandatory):
+
+- adom
+        The ADOM the configuration should belong to.
+        [Default: root]
+
+- comment
+        Optional comments.
+        [Default: (null)]
+
+- extended_log
+        Enable/disable extended logging for web filtering.
+        choice | disable | Disable setting.
+        choice | enable | Enable setting.
+        (Choices: disable, enable)[Default: (null)]
+
+- ftgd_wf
+        EXPERTS ONLY! KNOWLEDGE OF FMGR JSON API IS REQUIRED!
+        List of multiple child objects to be added. Expects a list of dictionaries.
+        Dictionaries must use FortiManager API parameters, not the ansible ones listed below.
+        If submitted, all other prefixed sub-parameters ARE IGNORED.
+        This object is MUTUALLY EXCLUSIVE with its options.
+        We expect that you know what you are doing with these list parameters, and are leveraging the JSON API Guide.
+        WHEN IN DOUBT, USE THE SUB OPTIONS BELOW INSTEAD TO CREATE OBJECTS WITH MULTIPLE TASKS
+        [Default: (null)]
+
+- ftgd_wf_exempt_quota
+        Do not stop quota for these categories.
+        [Default: (null)]
+
+- ftgd_wf_filters_action
+        Action to take for matches.
+        choice | block | Block access.
+        choice | monitor | Allow access while logging the action.
+        choice | warning | Allow access after warning the user.
+        choice | authenticate | Authenticate user before allowing access.
+        (Choices: block, monitor, warning, authenticate)[Default: (null)]
+
+- ftgd_wf_filters_auth_usr_grp
+        Groups with permission to authenticate.
+        [Default: (null)]
+
+- ftgd_wf_filters_category
+        Categories and groups the filter examines.
+        [Default: (null)]
+
+- ftgd_wf_filters_log
+        Enable/disable logging.
+        choice | disable | Disable setting.
+        choice | enable | Enable setting.
+        (Choices: disable, enable)[Default: (null)]
+
+- ftgd_wf_filters_override_replacemsg
+        Override replacement message.
+        [Default: (null)]
+
+- ftgd_wf_filters_warn_duration
+        Duration of warnings.
+        [Default: (null)]
+
+- ftgd_wf_filters_warning_duration_type
+        Re-display warning after closing browser or after a timeout.
+        choice | session | After session ends.
+        choice | timeout | After timeout occurs.
+        (Choices: session, timeout)[Default: (null)]
+
+- ftgd_wf_filters_warning_prompt
+        Warning prompts in each category or each domain.
+        choice | per-domain | Per-domain warnings.
+        choice | per-category | Per-category warnings.
+        (Choices: per-domain, per-category)[Default: (null)]
+
+- ftgd_wf_max_quota_timeout
+        Maximum FortiGuard quota used by single page view in seconds (excludes streams).
+        [Default: (null)]
+
+- ftgd_wf_options
+        Options for FortiGuard Web Filter.
+        FLAG Based Options. Specify multiple in list form.
+        flag | error-allow | Allow web pages with a rating error to pass through.
+        flag | rate-server-ip | Rate the server IP in addition to the domain name.
+        flag | connect-request-bypass | Bypass connection which has CONNECT request.
+        flag | ftgd-disable | Disable FortiGuard scanning.
+        (Choices: error-allow, rate-server-ip, connect-request-bypass, ftgd-disable)[Default: (null)]
+
+- ftgd_wf_ovrd
+        Allow web filter profile overrides.
+        [Default: (null)]
+
+- ftgd_wf_quota_category
+        FortiGuard categories to apply quota to (category action must be set to monitor).
+        [Default: (null)]
+
+- ftgd_wf_quota_duration
+        Duration of quota.
+        [Default: (null)]
+
+- ftgd_wf_quota_override_replacemsg
+        Override replacement message.
+        [Default: (null)]
+
+- ftgd_wf_quota_type
+        Quota type.
+        choice | time | Use a time-based quota.
+        choice | traffic | Use a traffic-based quota.
+        (Choices: time, traffic)[Default: (null)]
+
+- ftgd_wf_quota_unit
+        Traffic quota unit of measurement.
+        choice | B | Quota in bytes.
+        choice | KB | Quota in kilobytes.
+        choice | MB | Quota in megabytes.
+        choice | GB | Quota in gigabytes.
+        (Choices: B, KB, MB, GB)[Default: (null)]
+
+- ftgd_wf_quota_value
+        Traffic quota value.
+        [Default: (null)]
+
+- ftgd_wf_rate_crl_urls
+        Enable/disable rating CRL by URL.
+        choice | disable | Disable rating CRL by URL.
+        choice | enable | Enable rating CRL by URL.
+        (Choices: disable, enable)[Default: (null)]
+
+- ftgd_wf_rate_css_urls
+        Enable/disable rating CSS by URL.
+        choice | disable | Disable rating CSS by URL.
+        choice | enable | Enable rating CSS by URL.
+        (Choices: disable, enable)[Default: (null)]
+
+- ftgd_wf_rate_image_urls
+        Enable/disable rating images by URL.
+        choice | disable | Disable rating images by URL (blocked images are replaced with blanks).
+        choice | enable | Enable rating images by URL (blocked images are replaced with blanks).
+        (Choices: disable, enable)[Default: (null)]
+
+- ftgd_wf_rate_javascript_urls
+        Enable/disable rating JavaScript by URL.
+        choice | disable | Disable rating JavaScript by URL.
+        choice | enable | Enable rating JavaScript by URL.
+        (Choices: disable, enable)[Default: (null)]
+
+- https_replacemsg
+        Enable replacement messages for HTTPS.
+        choice | disable | Disable setting.
+        choice | enable | Enable setting.
+        (Choices: disable, enable)[Default: (null)]
+
+- inspection_mode
+        Web filtering inspection mode.
+        choice | proxy | Proxy.
+        choice | flow-based | Flow based.
+        (Choices: proxy, flow-based)[Default: (null)]
+
+- log_all_url
+        Enable/disable logging all URLs visited.
+        choice | disable | Disable setting.
+        choice | enable | Enable setting.
+        (Choices: disable, enable)[Default: (null)]
+
+- mode
+        Sets one of three modes for managing the object.
+        Allows use of soft-adds instead of overwriting existing values
+        (Choices: add, set, delete, update)[Default: add]
+
+- name
+        Profile name.
+        [Default: (null)]
+
+- options
+        FLAG Based Options. Specify multiple in list form.
+        flag | block-invalid-url | Block sessions contained an invalid domain name.
+        flag | jscript | Javascript block.
+        flag | js | JS block.
+        flag | vbs | VB script block.
+        flag | unknown | Unknown script block.
+        flag | wf-referer | Referring block.
+        flag | intrinsic | Intrinsic script block.
+        flag | wf-cookie | Cookie block.
+        flag | per-user-bwl | Per-user black/white list filter
+        flag | activexfilter | ActiveX filter.
+        flag | cookiefilter | Cookie filter.
+        flag | javafilter | Java applet filter.
+        (Choices: block-invalid-url, jscript, js, vbs, unknown, wf-referer, intrinsic, wf-cookie, per-user-bwl, activexfilter,
+        cookiefilter, javafilter)[Default: (null)]
+
+- override
+        EXPERTS ONLY! KNOWLEDGE OF FMGR JSON API IS REQUIRED!
+        List of multiple child objects to be added. Expects a list of dictionaries.
+        Dictionaries must use FortiManager API parameters, not the ansible ones listed below.
+        If submitted, all other prefixed sub-parameters ARE IGNORED.
+        This object is MUTUALLY EXCLUSIVE with its options.
+        We expect that you know what you are doing with these list parameters, and are leveraging the JSON API Guide.
+        WHEN IN DOUBT, USE THE SUB OPTIONS BELOW INSTEAD TO CREATE OBJECTS WITH MULTIPLE TASKS
+        [Default: (null)]
+
+- override_ovrd_cookie
+        Allow/deny browser-based (cookie) overrides.
+        choice | deny | Deny browser-based (cookie) override.
+        choice | allow | Allow browser-based (cookie) override.
+        (Choices: deny, allow)[Default: (null)]
+
+- override_ovrd_dur
+        Override duration.
+        [Default: (null)]
+
+- override_ovrd_dur_mode
+        Override duration mode.
+        choice | constant | Constant mode.
+        choice | ask | Prompt for duration when initiating an override.
+        (Choices: constant, ask)[Default: (null)]
+
+- override_ovrd_scope
+        Override scope.
+        choice | user | Override for the user.
+        choice | user-group | Override for the user's group.
+        choice | ip | Override for the initiating IP.
+        choice | ask | Prompt for scope when initiating an override.
+        choice | browser | Create browser-based (cookie) override.
+        (Choices: user, user-group, ip, ask, browser)[Default: (null)]
+
+- override_ovrd_user_group
+        User groups with permission to use the override.
+        [Default: (null)]
+
+- override_profile
+        Web filter profile with permission to create overrides.
+        [Default: (null)]
+
+- override_profile_attribute
+        Profile attribute to retrieve from the RADIUS server.
+        choice | User-Name | Use this attribute.
+        choice | NAS-IP-Address | Use this attribute.
+        choice | Framed-IP-Address | Use this attribute.
+        choice | Framed-IP-Netmask | Use this attribute.
+        choice | Filter-Id | Use this attribute.
+        choice | Login-IP-Host | Use this attribute.
+        choice | Reply-Message | Use this attribute.
+        choice | Callback-Number | Use this attribute.
+        choice | Callback-Id | Use this attribute.
+        choice | Framed-Route | Use this attribute.
+        choice | Framed-IPX-Network | Use this attribute.
+        choice | Class | Use this attribute.
+        choice | Called-Station-Id | Use this attribute.
+        choice | Calling-Station-Id | Use this attribute.
+        choice | NAS-Identifier | Use this attribute.
+        choice | Proxy-State | Use this attribute.
+        choice | Login-LAT-Service | Use this attribute.
+        choice | Login-LAT-Node | Use this attribute.
+        choice | Login-LAT-Group | Use this attribute.
+        choice | Framed-AppleTalk-Zone | Use this attribute.
+        choice | Acct-Session-Id | Use this attribute.
+        choice | Acct-Multi-Session-Id | Use this attribute.
+        (Choices: User-Name, NAS-IP-Address, Framed-IP-Address, Framed-IP-Netmask, Filter-Id, Login-IP-Host, Reply-Message, Callback-
+        Number, Callback-Id, Framed-Route, Framed-IPX-Network, Class, Called-Station-Id, Calling-Station-Id, NAS-Identifier, Proxy-State,
+        Login-LAT-Service, Login-LAT-Node, Login-LAT-Group, Framed-AppleTalk-Zone, Acct-Session-Id, Acct-Multi-Session-Id)[Default:
+        (null)]
+
+- override_profile_type
+        Override profile type.
+        choice | list | Profile chosen from list.
+        choice | radius | Profile determined by RADIUS server.
+        (Choices: list, radius)[Default: (null)]
+
+- ovrd_perm
+        FLAG Based Options. Specify multiple in list form.
+        flag | bannedword-override | Banned word override.
+        flag | urlfilter-override | URL filter override.
+        flag | fortiguard-wf-override | FortiGuard Web Filter override.
+        flag | contenttype-check-override | Content-type header override.
+        (Choices: bannedword-override, urlfilter-override, fortiguard-wf-override, contenttype-check-override)[Default: (null)]
+
+- post_action
+        Action taken for HTTP POST traffic.
+        choice | normal | Normal, POST requests are allowed.
+        choice | block | POST requests are blocked.
+        (Choices: normal, block)[Default: (null)]
+
+- replacemsg_group
+        Replacement message group.
+        [Default: (null)]
+
+- url_extraction
+        EXPERTS ONLY! KNOWLEDGE OF FMGR JSON API IS REQUIRED!
+        List of multiple child objects to be added. Expects a list of dictionaries.
+        Dictionaries must use FortiManager API parameters, not the ansible ones listed below.
+        If submitted, all other prefixed sub-parameters ARE IGNORED.
+        This object is MUTUALLY EXCLUSIVE with its options.
+        We expect that you know what you are doing with these list parameters, and are leveraging the JSON API Guide.
+        WHEN IN DOUBT, USE THE SUB OPTIONS BELOW INSTEAD TO CREATE OBJECTS WITH MULTIPLE TASKS
+        [Default: (null)]
+
+- url_extraction_redirect_header
+        HTTP header name to use for client redirect on blocked requests
+        [Default: (null)]
+
+- url_extraction_redirect_no_content
+        Enable / Disable empty message-body entity in HTTP response
+        choice | disable | Disable setting.
+        choice | enable | Enable setting.
+        (Choices: disable, enable)[Default: (null)]
+
+- url_extraction_redirect_url
+        HTTP header value to use for client redirect on blocked requests
+        [Default: (null)]
+
+- url_extraction_server_fqdn
+        URL extraction server FQDN (fully qualified domain name)
+        [Default: (null)]
+
+- url_extraction_status
+        Enable URL Extraction
+        choice | disable | Disable setting.
+        choice | enable | Enable setting.
+        (Choices: disable, enable)[Default: (null)]
+
+- web
+        EXPERTS ONLY! KNOWLEDGE OF FMGR JSON API IS REQUIRED!
+        List of multiple child objects to be added. Expects a list of dictionaries.
+        Dictionaries must use FortiManager API parameters, not the ansible ones listed below.
+        If submitted, all other prefixed sub-parameters ARE IGNORED.
+        This object is MUTUALLY EXCLUSIVE with its options.
+        We expect that you know what you are doing with these list parameters, and are leveraging the JSON API Guide.
+        WHEN IN DOUBT, USE THE SUB OPTIONS BELOW INSTEAD TO CREATE OBJECTS WITH MULTIPLE TASKS
+        [Default: (null)]
+
+- web_blacklist
+        Enable/disable automatic addition of URLs detected by FortiSandbox to blacklist.
+        choice | disable | Disable setting.
+        choice | enable | Enable setting.
+        (Choices: disable, enable)[Default: (null)]
+
+- web_bword_table
+        Banned word table ID.
+        [Default: (null)]
+
+- web_bword_threshold
+        Banned word score threshold.
+        [Default: (null)]
+
+- web_content_header_list
+        Content header list.
+        [Default: (null)]
+
+- web_content_log
+        Enable/disable logging logging blocked web content.
+        choice | disable | Disable setting.
+        choice | enable | Enable setting.
+        (Choices: disable, enable)[Default: (null)]
+
+- web_extended_all_action_log
+        Enable/disable extended any filter action logging for web filtering.
+        choice | disable | Disable setting.
+        choice | enable | Enable setting.
+        (Choices: disable, enable)[Default: (null)]
+
+- web_filter_activex_log
+        Enable/disable logging ActiveX.
+        choice | disable | Disable setting.
+        choice | enable | Enable setting.
+        (Choices: disable, enable)[Default: (null)]
+
+- web_filter_applet_log
+        Enable/disable logging Java applets.
+        choice | disable | Disable setting.
+        choice | enable | Enable setting.
+        (Choices: disable, enable)[Default: (null)]
+
+- web_filter_command_block_log
+        Enable/disable logging blocked commands.
+        choice | disable | Disable setting.
+        choice | enable | Enable setting.
+        (Choices: disable, enable)[Default: (null)]
+
+- web_filter_cookie_log
+        Enable/disable logging cookie filtering.
+        choice | disable | Disable setting.
+        choice | enable | Enable setting.
+        (Choices: disable, enable)[Default: (null)]
+
+- web_filter_cookie_removal_log
+        Enable/disable logging blocked cookies.
+        choice | disable | Disable setting.
+        choice | enable | Enable setting.
+        (Choices: disable, enable)[Default: (null)]
+
+- web_filter_js_log
+        Enable/disable logging Java scripts.
+        choice | disable | Disable setting.
+        choice | enable | Enable setting.
+        (Choices: disable, enable)[Default: (null)]
+
+- web_filter_jscript_log
+        Enable/disable logging JScripts.
+        choice | disable | Disable setting.
+        choice | enable | Enable setting.
+        (Choices: disable, enable)[Default: (null)]
+
+- web_filter_referer_log
+        Enable/disable logging referrers.
+        choice | disable | Disable setting.
+        choice | enable | Enable setting.
+        (Choices: disable, enable)[Default: (null)]
+
+- web_filter_unknown_log
+        Enable/disable logging unknown scripts.
+        choice | disable | Disable setting.
+        choice | enable | Enable setting.
+        (Choices: disable, enable)[Default: (null)]
+
+- web_filter_vbs_log
+        Enable/disable logging VBS scripts.
+        choice | disable | Disable setting.
+        choice | enable | Enable setting.
+        (Choices: disable, enable)[Default: (null)]
+
+- web_ftgd_err_log
+        Enable/disable logging rating errors.
+        choice | disable | Disable setting.
+        choice | enable | Enable setting.
+        (Choices: disable, enable)[Default: (null)]
+
+- web_ftgd_quota_usage
+        Enable/disable logging daily quota usage.
+        choice | disable | Disable setting.
+        choice | enable | Enable setting.
+        (Choices: disable, enable)[Default: (null)]
+
+- web_invalid_domain_log
+        Enable/disable logging invalid domain names.
+        choice | disable | Disable setting.
+        choice | enable | Enable setting.
+        (Choices: disable, enable)[Default: (null)]
+
+- web_keyword_match
+        Search keywords to log when match is found.
+        [Default: (null)]
+
+- web_log_search
+        Enable/disable logging all search phrases.
+        choice | disable | Disable setting.
+        choice | enable | Enable setting.
+        (Choices: disable, enable)[Default: (null)]
+
+- web_safe_search
+        Safe search type.
+        FLAG Based Options. Specify multiple in list form.
+        flag | url | Insert safe search string into URL.
+        flag | header | Insert safe search header.
+        (Choices: url, header)[Default: (null)]
+
+- web_url_log
+        Enable/disable logging URL filtering.
+        choice | disable | Disable setting.
+        choice | enable | Enable setting.
+        (Choices: disable, enable)[Default: (null)]
+
+- web_urlfilter_table
+        URL filter table ID.
+        [Default: (null)]
+
+- web_whitelist
+        FortiGuard whitelist settings.
+        FLAG Based Options. Specify multiple in list form.
+        flag | exempt-av | Exempt antivirus.
+        flag | exempt-webcontent | Exempt web content.
+        flag | exempt-activex-java-cookie | Exempt ActiveX-JAVA-Cookie.
+        flag | exempt-dlp | Exempt DLP.
+        flag | exempt-rangeblock | Exempt RangeBlock.
+        flag | extended-log-others | Support extended log.
+        (Choices: exempt-av, exempt-webcontent, exempt-activex-java-cookie, exempt-dlp, exempt-rangeblock, extended-log-others)[Default:
+        (null)]
+
+- web_youtube_restrict
+        YouTube EDU filter level.
+        choice | strict | Strict access for YouTube.
+        choice | none | Full access for YouTube.
+        choice | moderate | Moderate access for YouTube.
+        (Choices: strict, none, moderate)[Default: (null)]
+
+- wisp
+        Enable/disable web proxy WISP.
+        choice | disable | Disable web proxy WISP.
+        choice | enable | Enable web proxy WISP.
+        (Choices: disable, enable)[Default: (null)]
+
+- wisp_algorithm
+        WISP server selection algorithm.
+        choice | auto-learning | Select the lightest loading healthy server.
+        choice | primary-secondary | Select the first healthy server in order.
+        choice | round-robin | Select the next healthy server.
+        (Choices: auto-learning, primary-secondary, round-robin)[Default: (null)]
+
+- wisp_servers
+        WISP servers.
+        [Default: (null)]
+
+- youtube_channel_filter
+        EXPERTS ONLY! KNOWLEDGE OF FMGR JSON API IS REQUIRED!
+        List of multiple child objects to be added. Expects a list of dictionaries.
+        Dictionaries must use FortiManager API parameters, not the ansible ones listed below.
+        If submitted, all other prefixed sub-parameters ARE IGNORED.
+        This object is MUTUALLY EXCLUSIVE with its options.
+        We expect that you know what you are doing with these list parameters, and are leveraging the JSON API Guide.
+        WHEN IN DOUBT, USE THE SUB OPTIONS BELOW INSTEAD TO CREATE OBJECTS WITH MULTIPLE TASKS
+        [Default: (null)]
+
+- youtube_channel_filter_channel_id
+        YouTube channel ID to be filtered.
+        [Default: (null)]
+
+- youtube_channel_filter_comment
+        Comment.
+        [Default: (null)]
+
+- youtube_channel_status
+        YouTube channel filter status.
+        choice | disable | Disable YouTube channel filter.
+        choice | blacklist | Block matches.
+        choice | whitelist | Allow matches.
+        (Choices: disable, blacklist, whitelist)[Default: (null)]
+
+
+NOTES:
+      * Full Documentation at https://ftnt-ansible-docs.readthedocs.io/en/latest/.
+
+
+AUTHOR: Luke Weighall (@lweighall), Andrew Welsh (@Ghilli3), Jim Huber (@p4r4n0y1ng)
+        METADATA:
+          status:
+          - preview
+          supported_by: community
+        
+
+EXAMPLES:
+
+- name: DELETE Profile
+    fmgr_secprof_web:
+      name: "Ansible_Web_Filter_Profile"
+      mode: "delete"
+
+  - name: CREATE Profile
+    fmgr_secprof_web:
+      name: "Ansible_Web_Filter_Profile"
+      comment: "Created by Ansible Module TEST"
+      mode: "set"
+      extended_log: "enable"
+      inspection_mode: "proxy"
+      log_all_url: "enable"
+      options: "js"
+      ovrd_perm: "bannedword-override"
+      post_action: "block"
+      web_content_log: "enable"
+      web_extended_all_action_log: "enable"
+      web_filter_activex_log: "enable"
+      web_filter_applet_log: "enable"
+      web_filter_command_block_log: "enable"
+      web_filter_cookie_log: "enable"
+      web_filter_cookie_removal_log: "enable"
+      web_filter_js_log: "enable"
+      web_filter_jscript_log: "enable"
+      web_filter_referer_log: "enable"
+      web_filter_unknown_log: "enable"
+      web_filter_vbs_log: "enable"
+      web_ftgd_err_log: "enable"
+      web_ftgd_quota_usage: "enable"
+      web_invalid_domain_log: "enable"
+      web_url_log: "enable"
+      wisp: "enable"
+      wisp_algorithm: "auto-learning"
+      youtube_channel_status: "blacklist"
+
+
+RETURN VALUES:
+
+api_result:
+  description: full API response, includes status code and message
+  returned: always
+  type: str
+

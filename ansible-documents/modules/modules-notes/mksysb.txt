@@ -1,0 +1,91 @@
+> MKSYSB    (/usr/lib/python2.7/dist-packages/ansible/modules/system/mksysb.py)
+
+        This module manages a basic AIX mksysb (image) of rootvg.
+
+  * This module is maintained by The Ansible Community
+OPTIONS (= is mandatory):
+
+- backup_crypt_files
+        Backup encrypted files.
+        [Default: yes]
+        type: bool
+
+- backup_dmapi_fs
+        Back up DMAPI filesystem files.
+        [Default: yes]
+        type: bool
+
+- create_map_files
+        Creates a new MAP files.
+        [Default: no]
+        type: bool
+
+- exclude_files
+        Excludes files using `/etc/rootvg.exclude'.
+        [Default: no]
+        type: bool
+
+- exclude_wpar_files
+        Excludes WPAR files.
+        [Default: no]
+        type: bool
+
+- extended_attrs
+        Backup extended attributes.
+        [Default: yes]
+        type: bool
+
+= name
+        Backup name
+
+
+- new_image_data
+        Creates a new file data.
+        [Default: yes]
+        type: bool
+
+- software_packing
+        Exclude files from packing option listed in `/etc/exclude_packing.rootvg'.
+        [Default: no]
+        type: bool
+
+= storage_path
+        Storage path where the mksysb will stored.
+
+
+- use_snapshot
+        Creates backup using snapshots.
+        [Default: no]
+        type: bool
+
+
+AUTHOR: Kairo Araujo (@kairoaraujo)
+        METADATA:
+          status:
+          - preview
+          supported_by: community
+        
+
+EXAMPLES:
+
+- name: Running a backup image mksysb
+  mksysb:
+    name: myserver
+    storage_path: /repository/images
+    exclude_files: yes
+    exclude_wpar_files: yes
+
+
+RETURN VALUES:
+
+changed:
+  description: Return changed for mksysb actions as true or false.
+  returned: always
+  type: bool
+  version_added: 2.5
+msg:
+  description: Return message regarding the action.
+  returned: always
+  type: str
+  version_added: 2.5
+

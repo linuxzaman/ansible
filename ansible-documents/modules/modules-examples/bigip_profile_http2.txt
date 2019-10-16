@@ -1,0 +1,69 @@
+EXAMPLES:
+
+- name: Create HTTP2 profile
+  bigip_profile_http2:
+    name: my_profile
+    insert_header: yes
+    insert_header_name: FOO
+    state: present
+    provider:
+      user: admin
+      password: secret
+      server: lb.mydomain.com
+  delegate_to: localhost
+
+- name: Remove HTTP profile
+  bigip_profile_http2:
+    name: my_profile
+    state: absent
+    provider:
+      server: lb.mydomain.com
+      user: admin
+      password: secret
+  delegate_to: localhost
+
+- name: Add HTTP profile set activation modes
+  bigip_profile_http:
+    name: my_profile
+    activation_modes:
+      - always
+    provider:
+      password: secret
+      server: lb.mydomain.com
+      user: admin
+  delegate_to: localhost
+
+
+RETURN VALUES:
+
+description:
+  description: Description of the profile.
+  returned: changed
+  type: str
+  sample: My profile
+insert_header_name:
+  description: Specifies the name of the HTTP2 header
+  returned: changed
+  type: str
+  sample: X-HTTP2
+streams:
+  description: The number of outstanding concurrent requests allowed on a single HTTP/2 connection
+  returned: changed
+  type: int
+  sample: 30
+enforce_tls_requirements:
+  description: pecifies whether the system requires TLS for communications.
+  returned: changed
+  type: bool
+  sample: yes
+frame_size:
+  description: The size of the data frames
+  returned: changed
+  type: int
+  sample: 30
+activation_modes:
+  description: Specifies HTTP/2 connection handling modes
+  returned: changed
+  type: list
+  sample: ['always']
+

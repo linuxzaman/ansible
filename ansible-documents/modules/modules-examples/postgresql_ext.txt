@@ -1,0 +1,39 @@
+EXAMPLES:
+
+- name: Adds postgis extension to the database acme in the schema foo
+  postgresql_ext:
+    name: postgis
+    db: acme
+    schema: foo
+
+- name: Removes postgis extension to the database acme
+  postgresql_ext:
+    name: postgis
+    db: acme
+    state: absent
+
+- name: Adds earthdistance extension to the database template1 cascade
+  postgresql_ext:
+    name: earthdistance
+    db: template1
+    cascade: true
+
+# In the example below, if earthdistance extension is installed,
+# it will be removed too because it depends on cube:
+- name: Removes cube extension from the database acme cascade
+  postgresql_ext:
+    name: cube
+    db: acme
+    cascade: yes
+    state: absent
+
+
+RETURN VALUES:
+
+query:
+  description: List of executed queries.
+  returned: always
+  type: list
+  sample: ["DROP EXTENSION \"acme\""]
+
+

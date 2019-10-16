@@ -1,0 +1,48 @@
+> SLACKPKG    (/usr/lib/python2.7/dist-packages/ansible/modules/packaging/os/slackpkg.py)
+
+        Manage binary packages for Slackware using 'slackpkg' which is available in versions after 12.2.
+
+  * This module is maintained by The Ansible Community
+OPTIONS (= is mandatory):
+
+= name
+        name of package to install/remove
+
+
+- state
+        state of the package, you can use "installed" as an alias for `present' and removed as one for `absent'.
+        (Choices: present, absent, latest)[Default: present]
+
+- update_cache
+        update the package database first
+        [Default: False]
+        type: bool
+
+
+REQUIREMENTS:  Slackware >= 12.2
+
+AUTHOR: Kim Nørgaard (@KimNorgaard)
+        METADATA:
+          status:
+          - preview
+          supported_by: community
+        
+
+EXAMPLES:
+
+# Install package foo
+- slackpkg:
+    name: foo
+    state: present
+
+# Remove packages foo and bar
+- slackpkg:
+    name: foo,bar
+    state: absent
+
+# Make sure that it is the most updated package
+- slackpkg:
+    name: foo
+    state: latest
+
+

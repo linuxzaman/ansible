@@ -1,0 +1,50 @@
+> SWDEPOT    (/usr/lib/python2.7/dist-packages/ansible/modules/packaging/os/swdepot.py)
+
+        Will install, upgrade and remove packages with swdepot package manager (HP-UX)
+
+  * This module is maintained by The Ansible Community
+OPTIONS (= is mandatory):
+
+- depot
+        The source repository from which install or upgrade a package.
+        [Default: (null)]
+        version_added: 1.4
+        
+
+= name
+        package name.
+
+        version_added: 1.4
+        
+
+= state
+        whether to install (`present', `latest'), or remove (`absent') a package.
+        (Choices: present, latest, absent)
+        version_added: 1.4
+        
+
+
+AUTHOR: Raul Melo (@melodous)
+        METADATA:
+          status:
+          - preview
+          supported_by: community
+        
+
+EXAMPLES:
+
+- swdepot:
+    name: unzip-6.0
+    state: present
+    depot: 'repository:/path'
+
+- swdepot:
+    name: unzip
+    state: latest
+    depot: 'repository:/path'
+
+- swdepot:
+    name: unzip
+    state: absent
+
+

@@ -1,0 +1,135 @@
+> ZABBIX_SCREEN    (/usr/lib/python2.7/dist-packages/ansible/modules/monitoring/zabbix/zabbix_screen.py)
+
+        This module allows you to create, modify and delete Zabbix screens and associated graph data.
+
+  * This module is maintained by The Ansible Community
+OPTIONS (= is mandatory):
+
+- http_login_password
+        Basic Auth password
+        [Default: (null)]
+        type: str
+        version_added: 2.1
+
+= http_login_user
+        Basic Auth login
+
+        type: str
+        version_added: 2.1
+
+= login_password
+        Zabbix user password.
+
+        type: str
+
+= login_user
+        Zabbix user name.
+
+        type: str
+
+= screens
+        List of screens to be created/updated/deleted (see example).
+        If a screen has already been added, the screen name won't be updated.
+        When creating or updating a screen, `screen_name' and `host_group' are required.
+        When deleting a screen, the `screen_name' is required.
+        Option `graphs_in_row' will limit columns of a screen and make multiple rows (default 3).
+        The available states are: `present' (default) and `absent'. If the screen already exists, and the state is not `absent', the
+        screen will be updated as needed.
+
+
+= server_url
+        URL of Zabbix server, with protocol (http or https). `url' is an alias for `server_url'.
+        (Aliases: url)
+        type: str
+
+- timeout
+        The timeout of API request (seconds).
+        [Default: 10]
+        type: int
+
+- validate_certs
+        If set to False, SSL certificates will not be validated. This should only be used on personally controlled sites using self-
+        signed certificates.
+        [Default: True]
+        type: bool
+        version_added: 2.5
+
+
+NOTES:
+      * Too many concurrent updates to the same screen may cause Zabbix to return errors, see examples for a workaround if needed.
+
+
+REQUIREMENTS:  python >= 2.6, zabbix-api
+
+AUTHOR: Cove (@cove), Tony Minfei Ding (!UNKNOWN), Harrison Gu (@harrisongu)
+        METADATA:
+          status:
+          - preview
+          supported_by: community
+        
+
+EXAMPLES:
+
+# Create/update a screen.
+- name: Create a new screen or update an existing screen's items 5 in a row
+  local_action:
+    module: zabbix_screen
+    server_url: http://monitor.example.com
+    login_user: username
+    login_password: password
+    screens:
+      - screen_name: ExampleScreen1
+        host_group: Example group1
+        state: present
+        graph_names:
+          - Example graph1
+          - Example graph2
+        graph_width: 200
+        graph_height: 100
+        graphs_in_row: 5
+
+# Create/update multi-screen
+- name: Create two of new screens or update the existing screens' items
+  local_action:
+    module: zabbix_screen
+    server_url: http://monitor.example.com
+    login_user: username
+    login_password: password
+    screens:
+      - screen_name: ExampleScreen1
+        host_group: Example group1
+        state: present
+        graph_names:
+          - Example graph1
+          - Example graph2
+        graph_width: 200
+        graph_height: 100
+      - screen_name: ExampleScreen2
+        host_group: Example group2
+        state: present
+        graph_names:
+          - Example graph1
+          - Example graph2
+        graph_width: 200
+        graph_height: 100
+
+# Limit the Zabbix screen creations to one host since Zabbix can return an error when doing concurrent updates
+- name: Create a new screen or update an existing screen's items
+  local_action:
+    module: zabbix_screen
+    server_url: http://monitor.example.com
+    login_user: username
+    login_password: password
+    state: present
+    screens:
+      - screen_name: ExampleScreen
+        host_group: Example group
+        state: present
+        graph_names:
+          - Example graph1
+          - Example graph2
+        graph_width: 200
+        graph_height: 100
+  when: inventory_hostname==groups['group_name'][0]
+
+

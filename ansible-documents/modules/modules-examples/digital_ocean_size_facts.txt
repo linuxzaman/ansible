@@ -1,0 +1,52 @@
+EXAMPLES:
+
+- name: Gather facts about all droplet sizes
+  digital_ocean_size_facts:
+    oauth_token: "{{ oauth_token }}"
+
+- name: Get droplet Size Slug where vcpus is 1
+  digital_ocean_size_facts:
+    oauth_token: "{{ oauth_token }}"
+  register: resp_out
+- debug: var=resp_out
+- set_fact:
+    size_slug: "{{ item.slug }}"
+  loop: "{{ resp_out.data|json_query(name) }}"
+  vars:
+    name: "[?vcpus==`1`]"
+- debug: var=size_slug
+
+
+RETURN VALUES:
+
+data:
+    description: DigitalOcean droplet size facts
+    returned: success
+    type: list
+    sample: [
+        {
+            "available": true,
+            "disk": 20,
+            "memory": 512,
+            "price_hourly": 0.00744,
+            "price_monthly": 5.0,
+            "regions": [
+                "ams2",
+                "ams3",
+                "blr1",
+                "fra1",
+                "lon1",
+                "nyc1",
+                "nyc2",
+                "nyc3",
+                "sfo1",
+                "sfo2",
+                "sgp1",
+                "tor1"
+            ],
+            "slug": "512mb",
+            "transfer": 1.0,
+            "vcpus": 1
+        },
+    ]
+

@@ -1,0 +1,69 @@
+EXAMPLES:
+
+- name: configure top level configuration
+  iosxr_config:
+    lines: hostname {{ inventory_hostname }}
+
+- name: configure interface settings
+  iosxr_config:
+    lines:
+      - description test interface
+      - ip address 172.31.1.1 255.255.255.0
+    parents: interface GigabitEthernet0/0/0/0
+
+- name: load a config from disk and replace the current config
+  iosxr_config:
+    src: config.cfg
+    replace: config
+    backup: yes
+
+- name: for idempotency, use full-form commands
+  iosxr_config:
+    lines:
+      # - shut
+      - shutdown
+    # parents: int g0/0/0/1
+    parents: interface GigabitEthernet0/0/0/1
+
+- name: configurable backup path
+  iosxr_config:
+    src: config.cfg
+    backup: yes
+    backup_options:
+      filename: backup.cfg
+      dir_path: /home/user
+
+
+RETURN VALUES:
+
+commands:
+  description: The set of commands that will be pushed to the remote device
+  returned: If there are commands to run against the host
+  type: list
+  sample: ['hostname foo', 'router ospf 1', 'router-id 1.1.1.1']
+backup_path:
+  description: The full path to the backup file
+  returned: when backup is yes
+  type: str
+  sample: /playbooks/ansible/backup/iosxr01_config.2016-07-16@22:28:34
+filename:
+  description: The name of the backup file
+  returned: when backup is yes and filename is not specified in backup options
+  type: str
+  sample: iosxr01_config.2016-07-16@22:28:34
+shortname:
+  description: The full path to the backup file excluding the timestamp
+  returned: when backup is yes and filename is not specified in backup options
+  type: str
+  sample: /playbooks/ansible/backup/iosxr01_config
+date:
+  description: The date extracted from the backup file name
+  returned: when backup is yes
+  type: str
+  sample: "2016-07-16"
+time:
+  description: The time extracted from the backup file name
+  returned: when backup is yes
+  type: str
+  sample: "22:28:34"
+

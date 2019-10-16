@@ -1,0 +1,60 @@
+> ROLLBAR_DEPLOYMENT    (/usr/lib/python2.7/dist-packages/ansible/modules/monitoring/rollbar_deployment.py)
+
+        Notify Rollbar about app deployments (see https://rollbar.com/docs/deploys_other/)
+
+  * This module is maintained by The Ansible Community
+OPTIONS (= is mandatory):
+
+- comment
+        Deploy comment (e.g. what is being deployed).
+        [Default: (null)]
+
+= environment
+        Name of the environment being deployed, e.g. 'production'.
+
+
+= revision
+        Revision number/sha being deployed.
+
+
+- rollbar_user
+        Rollbar username of the user who deployed.
+        [Default: (null)]
+
+= token
+        Your project access token.
+
+
+- url
+        Optional URL to submit the notification to.
+        [Default: https://api.rollbar.com/api/1/deploy/]
+
+- user
+        User who deployed.
+        [Default: (null)]
+
+- validate_certs
+        If `no', SSL certificates for the target url will not be validated. This should only be used on personally controlled sites using
+        self-signed certificates.
+        [Default: yes]
+        type: bool
+
+
+AUTHOR: Max Riveiro (@kavu)
+        METADATA:
+          status:
+          - preview
+          supported_by: community
+        
+
+EXAMPLES:
+
+- rollbar_deployment:
+    token: AAAAAA
+    environment: staging
+    user: ansible
+    revision: '4.2'
+    rollbar_user: admin
+    comment: Test Deploy
+
+

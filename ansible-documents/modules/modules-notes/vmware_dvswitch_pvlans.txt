@@ -1,0 +1,157 @@
+> VMWARE_DVSWITCH_PVLANS    (/usr/lib/python2.7/dist-packages/ansible/modules/cloud/vmware/vmware_dvswitch_pvlans.py)
+
+        This module can be used to configure Private VLANs (PVLANs) on a Distributed Switch.
+
+  * This module is maintained by The Ansible Community
+OPTIONS (= is mandatory):
+
+- hostname
+        The hostname or IP address of the vSphere vCenter or ESXi server.
+        If the value is not specified in the task, the value of environment variable `VMWARE_HOST' will be used instead.
+        Environment variable support added in Ansible 2.6.
+        [Default: (null)]
+        type: str
+
+- password
+        The password of the vSphere vCenter or ESXi server.
+        If the value is not specified in the task, the value of environment variable `VMWARE_PASSWORD' will be used instead.
+        Environment variable support added in Ansible 2.6.
+        (Aliases: pass, pwd)[Default: (null)]
+        type: str
+
+- port
+        The port number of the vSphere vCenter or ESXi server.
+        If the value is not specified in the task, the value of environment variable `VMWARE_PORT' will be used instead.
+        Environment variable support added in Ansible 2.6.
+        [Default: 443]
+        type: int
+        version_added: 2.5
+
+- primary_pvlans
+        A list of VLAN IDs that should be configured as Primary PVLANs.
+        If `primary_pvlans' isn't specified, all PVLANs will be deleted if present.
+        Each member of the list requires primary_pvlan_id (int) set.
+        The secondary promiscuous PVLAN will be created automatically.
+        If `secondary_pvlans' isn't specified, the primary PVLANs and each secondary promiscuous PVLAN will be created.
+        Please see examples for more information.
+        [Default: []]
+        type: list
+
+- secondary_pvlans
+        A list of VLAN IDs that should be configured as Secondary PVLANs.
+        `primary_pvlans' need to be specified to create any Secodary PVLAN.
+        If `primary_pvlans' isn't specified, all PVLANs will be deleted if present.
+        Each member of the list requires primary_pvlan_id (int), secondary_pvlan_id (int), and pvlan_type (str) to be set.
+        The type of the secondary PVLAN can be isolated or community. The secondary promiscuous PVLAN will be created automatically.
+        Please see examples for more information.
+        [Default: []]
+        type: list
+
+= switch
+        The name of the Distributed Switch.
+        (Aliases: dvswitch)
+        type: str
+
+- username
+        The username of the vSphere vCenter or ESXi server.
+        If the value is not specified in the task, the value of environment variable `VMWARE_USER' will be used instead.
+        Environment variable support added in Ansible 2.6.
+        (Aliases: admin, user)[Default: (null)]
+        type: str
+
+- validate_certs
+        Allows connection when SSL certificates are not valid. Set to `false' when certificates are not trusted.
+        If the value is not specified in the task, the value of environment variable `VMWARE_VALIDATE_CERTS' will be used instead.
+        Environment variable support added in Ansible 2.6.
+        If set to `yes', please make sure Python >= 2.7.9 is installed on the given machine.
+        [Default: True]
+        type: bool
+
+
+NOTES:
+      * Tested on vSphere 6.5 and 6.7
+
+
+REQUIREMENTS:  python >= 2.6, PyVmomi
+
+AUTHOR: Christian Kotte (@ckotte)
+        METADATA:
+          status:
+          - preview
+          supported_by: community
+        
+
+EXAMPLES:
+
+- name: Create PVLANs on a Distributed Switch
+  vmware_dvswitch_pvlans:
+    hostname: '{{ inventory_hostname }}'
+    username: '{{ vcenter_username }}'
+    password: '{{ vcenter_password }}'
+    switch: dvSwitch
+    primary_pvlans:
+      - primary_pvlan_id: 1
+      - primary_pvlan_id: 4
+    secondary_pvlans:
+      - primary_pvlan_id: 1
+        secondary_pvlan_id: 2
+        pvlan_type: isolated
+      - primary_pvlan_id: 1
+        secondary_pvlan_id: 3
+        pvlan_type: community
+      - primary_pvlan_id: 4
+        secondary_pvlan_id: 5
+        pvlan_type: community
+  delegate_to: localhost
+
+- name: Create primary PVLAN and secondary promiscuous PVLAN on a Distributed Switch
+  vmware_dvswitch_pvlans:
+    hostname: '{{ inventory_hostname }}'
+    username: '{{ vcenter_username }}'
+    password: '{{ vcenter_password }}'
+    switch: dvSwitch
+    primary_pvlans:
+      - primary_pvlan_id: 1
+  delegate_to: localhost
+
+- name: Remove all PVLANs from a Distributed Switch
+  vmware_dvswitch_pvlans:
+    hostname: '{{ inventory_hostname }}'
+    username: '{{ vcenter_username }}'
+    password: '{{ vcenter_password }}'
+    switch: dvSwitch
+    primary_pvlans: []
+    secondary_pvlans: []
+  delegate_to: localhost
+
+
+RETURN VALUES:
+
+result:
+    description: information about performed operation
+    returned: always
+    type: str
+    sample: {
+        "changed": true,
+        "dvswitch": "dvSwitch",
+        "private_vlans": [
+            {
+                "primary_pvlan_id": 1,
+                "pvlan_type": "promiscuous",
+                "secondary_pvlan_id": 1
+            },
+            {
+                "primary_pvlan_id": 1,
+                "pvlan_type": "isolated",
+                "secondary_pvlan_id": 2
+            },
+            {
+                "primary_pvlan_id": 1,
+                "pvlan_type": "community",
+                "secondary_pvlan_id": 3
+            }
+        ],
+        "private_vlans_previous": [],
+        "result": "All private VLANs added"
+    }
+

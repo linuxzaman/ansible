@@ -1,0 +1,92 @@
+> PUREFB_SNAP    (/usr/lib/python2.7/dist-packages/ansible/modules/storage/purestorage/purefb_snap.py)
+
+        Create or delete volumes and filesystem snapshots on Pure Storage FlashBlades.
+
+  * This module is maintained by The Ansible Community
+OPTIONS (= is mandatory):
+
+- api_token
+        FlashBlade API token for admin privileged user.
+        [Default: (null)]
+        type: str
+
+- eradicate
+        Define whether to eradicate the snapshot on delete or leave in trash.
+        [Default: no]
+        type: bool
+
+- fb_url
+        FlashBlade management IP address or Hostname.
+        [Default: (null)]
+        type: str
+
+= name
+        The name of the source filesystem.
+
+        type: str
+
+- state
+        Define whether the filesystem snapshot should exist or not.
+        (Choices: absent, present)[Default: present]
+        type: str
+
+- suffix
+        Suffix of snapshot name.
+        [Default: (null)]
+        type: str
+
+
+NOTES:
+      * This module requires the `purity_fb' Python library
+      * You must set `PUREFB_URL' and `PUREFB_API' environment variables if `fb_url' and `api_token' arguments are not passed to
+        the module directly
+
+
+REQUIREMENTS:  python >= 2.7, purity_fb >= 1.1
+
+AUTHOR: Pure Storage Ansible Team (@sdodsley) <pure-ansible-team@purestorage.com>
+        METADATA:
+          status:
+          - preview
+          supported_by: community
+        
+
+EXAMPLES:
+
+- name: Create snapshot foo.ansible
+  purefb_snap:
+    name: foo
+    suffix: ansible
+    fb_url: 10.10.10.2
+    fb_api_token: e31060a7-21fc-e277-6240-25983c6c4592
+    state: present
+
+- name: Delete snapshot named foo.snap
+  purefb_snap:
+    name: foo
+    suffix: snap
+    fb_url: 10.10.10.2
+    fb_api_token: e31060a7-21fc-e277-6240-25983c6c4592
+    state: absent
+
+- name: Recover deleted snapshot foo.ansible
+  purefb_snap:
+    name: foo
+    suffix: ansible
+    fb_url: 10.10.10.2
+    fb_api_token: e31060a7-21fc-e277-6240-25983c6c4592
+    state: present
+
+- name: Eradicate snapshot named foo.snap
+  purefb_snap:
+    name: foo
+    suffix: snap
+    eradicate: true
+    fb_url: 10.10.10.2
+    fb_api_token: e31060a7-21fc-e277-6240-25983c6c4592
+    state: absent
+
+
+RETURN VALUES:
+
+

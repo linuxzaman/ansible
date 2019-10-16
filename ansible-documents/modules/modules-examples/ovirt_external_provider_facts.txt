@@ -1,0 +1,36 @@
+EXAMPLES:
+
+# Examples don't contain auth parameter for simplicity,
+# look at ovirt_auth module to see how to reuse authentication:
+
+# Gather facts about all image external providers named C<glance>:
+- ovirt_external_provider_facts:
+    type: os_image
+    name: glance
+- debug:
+    var: ovirt_external_providers
+
+
+RETURN VALUES:
+
+external_host_providers:
+    description: "List of dictionaries of all the external_host_provider attributes. External provider attributes can be found on your oVirt/RHV instance
+                  at following url: http://ovirt.github.io/ovirt-engine-api-model/master/#types/external_host_provider."
+    returned: "On success and if parameter 'type: foreman' is used."
+    type: list
+openstack_image_providers:
+    description: "List of dictionaries of all the openstack_image_provider attributes. External provider attributes can be found on your oVirt/RHV instance
+                  at following url: http://ovirt.github.io/ovirt-engine-api-model/master/#types/openstack_image_provider."
+    returned: "On success and if parameter 'type: os_image' is used."
+    type: list
+openstack_volume_providers:
+    description: "List of dictionaries of all the openstack_volume_provider attributes. External provider attributes can be found on your oVirt/RHV instance
+                  at following url: http://ovirt.github.io/ovirt-engine-api-model/master/#types/openstack_volume_provider."
+    returned: "On success and if parameter 'type: os_volume' is used."
+    type: list
+openstack_network_providers:
+    description: "List of dictionaries of all the openstack_network_provider attributes. External provider attributes can be found on your oVirt/RHV instance
+                  at following url: http://ovirt.github.io/ovirt-engine-api-model/master/#types/openstack_network_provider."
+    returned: "On success and if parameter 'type: os_network' is used."
+    type: list
+

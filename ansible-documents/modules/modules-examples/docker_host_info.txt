@@ -1,0 +1,82 @@
+EXAMPLES:
+
+- name: Get info on docker host
+  docker_host_info:
+  register: result
+
+- name: Get info on docker host and list images
+  docker_host_info:
+    images: yes
+  register: result
+
+- name: Get info on docker host and list images matching the filter
+  docker_host_info:
+    images: yes
+    images_filters:
+      label: "mylabel"
+  register: result
+
+- name: Get info on docker host and verbose list images
+  docker_host_info:
+    images: yes
+    verbose_output: yes
+  register: result
+
+- name: Get info on docker host and used disk space
+  docker_host_info:
+    disk_usage: yes
+  register: result
+
+- debug:
+    var: result.host_info
+
+
+RETURN VALUES:
+
+can_talk_to_docker:
+    description:
+      - Will be C(true) if the module can talk to the docker daemon.
+    returned: both on success and on error
+    type: bool
+
+host_info:
+    description:
+      - Facts representing the basic state of the docker host. Matches the C(docker system info) output.
+    returned: always
+    type: dict
+volumes:
+    description:
+      - List of dict objects containing the basic information about each volume.
+        Keys matches the C(docker volume ls) output unless I(verbose_output=yes).
+        See description for I(verbose_output).
+    returned: When I(volumes) is C(yes)
+    type: list
+networks:
+    description:
+      - List of dict objects containing the basic information about each network.
+        Keys matches the C(docker network ls) output unless I(verbose_output=yes).
+        See description for I(verbose_output).
+    returned: When I(networks) is C(yes)
+    type: list
+containers:
+    description:
+      - List of dict objects containing the basic information about each container.
+        Keys matches the C(docker container ls) output unless I(verbose_output=yes).
+        See description for I(verbose_output).
+    returned: When I(containers) is C(yes)
+    type: list
+images:
+    description:
+      - List of dict objects containing the basic information about each image.
+        Keys matches the C(docker image ls) output unless I(verbose_output=yes).
+        See description for I(verbose_output).
+    returned: When I(images) is C(yes)
+    type: list
+disk_usage:
+    description:
+      - Information on summary disk usage by images, containers and volumes on docker host
+        unless I(verbose_output=yes). See description for I(verbose_output).
+    returned: When I(disk_usage) is C(yes)
+    type: dict
+
+

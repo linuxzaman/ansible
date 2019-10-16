@@ -1,0 +1,47 @@
+EXAMPLES:
+
+- name: File copy test
+  hosts: cloudengine
+  connection: local
+  gather_facts: no
+  vars:
+    cli:
+      host: "{{ inventory_hostname }}"
+      port: "{{ ansible_ssh_port }}"
+      username: "{{ username }}"
+      password: "{{ password }}"
+      transport: cli
+
+  tasks:
+
+  - name: "Copy a local file to remote device"
+    ce_file_copy:
+      local_file: /usr/vrpcfg.cfg
+      remote_file: /vrpcfg.cfg
+      file_system: 'flash:'
+      provider: "{{ cli }}"
+
+
+RETURN VALUES:
+
+changed:
+    description: check to see if a change was made on the device
+    returned: always
+    type: bool
+    sample: true
+transfer_result:
+    description: information about transfer result.
+    returned: always
+    type: str
+    sample: 'The local file has been successfully transferred to the device.'
+local_file:
+    description: The path of the local file.
+    returned: always
+    type: str
+    sample: '/usr/work/vrpcfg.zip'
+remote_file:
+    description: The path of the remote file.
+    returned: always
+    type: str
+    sample: '/vrpcfg.zip'
+

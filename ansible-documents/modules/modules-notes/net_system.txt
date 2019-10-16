@@ -1,0 +1,89 @@
+> NET_SYSTEM    (/usr/lib/python2.7/dist-packages/ansible/modules/network/system/net_system.py)
+
+        This module provides declarative management of node system attributes on network devices.  It provides an option to configure
+        host system parameters or remove those parameters from the device active configuration.
+
+  * This module is maintained by The Ansible Network Team
+  * note: This module has a corresponding action plugin.
+
+OPTIONS (= is mandatory):
+
+- domain_name
+        Configure the IP domain name on the remote device to the provided value. Value should be in the dotted name form and will be
+        appended to the `hostname' to create a fully-qualified domain name.
+        [Default: (null)]
+
+- domain_search
+        Provides the list of domain suffixes to append to the hostname for the purpose of doing name resolution. This argument accepts a
+        list of names and will be reconciled with the current active configuration on the running node.
+        [Default: (null)]
+
+- hostname
+        Configure the device hostname parameter. This option takes an ASCII string value.
+        [Default: (null)]
+
+- lookup_source
+        Provides one or more source interfaces to use for performing DNS lookups.  The interface provided in `lookup_source' must be a
+        valid interface configured on the device.
+        [Default: (null)]
+
+- name_servers
+        List of DNS name servers by IP address to use to perform name resolution lookups.  This argument accepts either a list of DNS
+        servers See examples.
+        [Default: (null)]
+
+- state
+        State of the configuration values in the device's current active configuration.  When set to `present', the values should be
+        configured in the device active configuration and when set to `absent' the values should not be in the device active
+        configuration
+        (Choices: present, absent)[Default: present]
+
+
+NOTES:
+      * This module is supported on `ansible_network_os' network platforms. See the :ref:`Network Platform Options
+        <platform_options>` for details.
+
+
+AUTHOR: Ricardo Carrillo Cruz (@rcarrillocruz)
+        METADATA:
+          status:
+          - preview
+          supported_by: network
+        
+
+EXAMPLES:
+
+- name: configure hostname and domain name
+  net_system:
+    hostname: ios01
+    domain_name: test.example.com
+    domain-search:
+      - ansible.com
+      - redhat.com
+      - cisco.com
+
+- name: remove configuration
+  net_system:
+    state: absent
+
+- name: configure DNS lookup sources
+  net_system:
+    lookup_source: MgmtEth0/0/CPU0/0
+
+- name: configure name servers
+  net_system:
+    name_servers:
+      - 8.8.8.8
+      - 8.8.4.4
+
+
+RETURN VALUES:
+
+commands:
+  description: The list of configuration mode commands to send to the device
+  returned: always, except for the platforms that use Netconf transport to manage the device.
+  type: list
+  sample:
+    - hostname ios01
+    - ip domain name test.example.com
+

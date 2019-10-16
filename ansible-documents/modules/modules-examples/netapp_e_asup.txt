@@ -1,0 +1,57 @@
+EXAMPLES:
+
+- name: Enable ASUP and allow pro-active retrieval of bundles
+      netapp_e_asup:
+        state: enabled
+        active: yes
+        api_url: "10.1.1.1:8443"
+        api_username: "admin"
+        api_password: "myPass"
+
+    - name: Set the ASUP schedule to only send bundles from 12 AM CST to 3 AM CST.
+      netapp_e_asup:
+        start: 17
+        end: 20
+        api_url: "10.1.1.1:8443"
+        api_username: "admin"
+        api_password: "myPass"
+
+
+RETURN VALUES:
+
+msg:
+    description: Success message
+    returned: on success
+    type: str
+    sample: The settings have been updated.
+asup:
+    description:
+        - True if ASUP is enabled.
+    returned: on success
+    sample: True
+    type: bool
+active:
+    description:
+        - True if the active option has been enabled.
+    returned: on success
+    sample: True
+    type: bool
+cfg:
+    description:
+        - Provide the full ASUP configuration.
+    returned: on success when I(verbose=true).
+    type: complex
+    contains:
+        asupEnabled:
+            description:
+                    - True if ASUP has been enabled.
+            type: bool
+        onDemandEnabled:
+            description:
+                    - True if ASUP active monitoring has been enabled.
+            type: bool
+        daysOfWeek:
+            description:
+                - The days of the week that ASUP bundles will be sent.
+            type: list
+

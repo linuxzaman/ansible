@@ -1,0 +1,78 @@
+> DIGITAL_OCEAN_SSHKEY    (/usr/lib/python2.7/dist-packages/ansible/modules/cloud/digital_ocean/digital_ocean_sshkey.py)
+
+        Create/delete DigitalOcean SSH keys.
+
+  * This module is maintained by The Ansible Community
+OPTIONS (= is mandatory):
+
+- fingerprint
+        This is a unique identifier for the SSH key used to delete a key
+        (Aliases: id)[Default: (null)]
+        version_added: 2.4
+        
+
+- name
+        The name for the SSH key
+        [Default: (null)]
+
+= oauth_token
+        DigitalOcean OAuth token.
+
+        version_added: 2.4
+        
+
+- ssh_pub_key
+        The Public SSH key to add.
+        [Default: (null)]
+
+- state
+        Indicate desired state of the target.
+        (Choices: present, absent)[Default: present]
+
+
+NOTES:
+      * Version 2 of DigitalOcean API is used.
+
+
+REQUIREMENTS:  python >= 2.6
+
+AUTHOR: Patrick Marques (@pmarques)
+        METADATA:
+          status:
+          - preview
+          supported_by: community
+        
+
+EXAMPLES:
+
+- name: "Create ssh key"
+  digital_ocean_sshkey:
+    oauth_token: "{{ oauth_token }}"
+    name: "My SSH Public Key"
+    ssh_pub_key: "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAAAQQDDHr/jh2Jy4yALcK4JyWbVkPRaWmhck3IgCoeOO3z1e2dBowLh64QAM+Qb72pxekALga2oi4GvT+TlWNhzPH4V example"
+    state: present
+  register: result
+
+- name: "Delete ssh key"
+  digital_ocean_sshkey:
+    oauth_token: "{{ oauth_token }}"
+    state: "absent"
+    fingerprint: "3b:16:bf:e4:8b:00:8b:b8:59:8c:a9:d3:f0:19:45:fa"
+
+
+RETURN VALUES:
+
+# Digital Ocean API info https://developers.digitalocean.com/documentation/v2/#list-all-keys
+data:
+    description: This is only present when C(state=present)
+    returned: when C(state=present)
+    type: dict
+    sample: {
+        "ssh_key": {
+            "id": 512189,
+            "fingerprint": "3b:16:bf:e4:8b:00:8b:b8:59:8c:a9:d3:f0:19:45:fa",
+            "name": "My SSH Public Key",
+            "public_key": "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAAAQQDDHr/jh2Jy4yALcK4JyWbVkPRaWmhck3IgCoeOO3z1e2dBowLh64QAM+Qb72pxekALga2oi4GvT+TlWNhzPH4V example"
+        }
+    }
+

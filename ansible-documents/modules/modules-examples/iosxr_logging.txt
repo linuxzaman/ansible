@@ -1,0 +1,97 @@
+EXAMPLES:
+
+- name: configure logging for syslog server host
+  iosxr_logging:
+    dest: host
+    name: 10.10.10.1
+    level: critical
+    state: present
+
+- name: add hostnameprefix configuration
+  iosxr_logging:
+    hostnameprefix: host1
+    state: absent
+
+- name: add facility configuration
+  iosxr_logging:
+    facility: local1
+    state: present
+
+- name: configure console logging level
+  iosxr_logging:
+    dest: console
+    level: debugging
+    state: present
+
+- name: configure monitor logging level
+  iosxr_logging:
+    dest: monitor
+    level: errors
+    state: present
+
+- name: configure syslog to a file
+  iosxr_logging:
+    dest: file
+    name: file_name
+    size: 2048
+    level: errors
+    state: present
+
+- name: configure buffered logging with size
+  iosxr_logging:
+    dest: buffered
+    size: 5100000
+
+- name: Configure logging using aggregate
+  iosxr_logging:
+    aggregate:
+      - { dest: console, level: warning }
+      - { dest: buffered, size: 4800000 }
+      - { dest: file, name: file3, size: 2048}
+      - { dest: host, name: host3, level: critical}
+
+- name: Delete logging using aggregate
+  iosxr_logging:
+    aggregate:
+      - { dest: console, level: warning }
+      - { dest: buffered, size: 4800000 }
+      - { dest: file, name: file3, size: 2048}
+      - { dest: host, name: host3, level: critical}
+    state: absent
+
+
+RETURN VALUES:
+
+commands:
+  description: The list of configuration mode commands to send to the device
+  returned: always (empty list when no commands to send)
+  type: list
+  sample:
+    - logging 10.10.10.1 vrf default severity debugging
+    - logging facility local7
+    - logging hostnameprefix host1
+    - logging console critical
+    - logging buffered 2097153
+    - logging buffered warnings
+    - logging monitor errors
+    - logging file log_file maxfilesize 1024 severity info
+xml:
+  description: NetConf rpc xml sent to device with transport C(netconf)
+  returned: always (empty list when no xml rpc to send)
+  type: list
+  version_added: 2.5
+  sample:
+    - '<config xmlns:xc="urn:ietf:params:xml:ns:netconf:base:1.0">
+    <syslog xmlns="http://cisco.com/ns/yang/Cisco-IOS-XR-infra-syslog-cfg">
+    <files>
+    <file xc:operation="delete">
+    <file-name>file1</file-name>
+    <file-log-attributes>
+    <max-file-size>2097152</max-file-size>
+    <severity>2</severity>
+    </file-log-attributes>
+    </file>
+    </files>
+    </syslog>
+    </config>'
+

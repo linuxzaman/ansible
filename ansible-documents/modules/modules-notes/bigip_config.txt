@@ -1,0 +1,193 @@
+> BIGIP_CONFIG    (/usr/lib/python2.7/dist-packages/ansible/modules/network/f5/bigip_config.py)
+
+        Manages a BIG-IP configuration by allowing TMSH commands that modify running configuration, or merge SCF formatted files into the
+        running configuration. Additionally, this module is of significant importance because it allows you to save your running
+        configuration to disk. Since the F5 module only manipulate running configuration, it is important that you utilize this module to
+        save that running config.
+
+  * This module is maintained by an Ansible Partner
+OPTIONS (= is mandatory):
+
+- merge_content
+        Loads the specified configuration that you want to merge into the running configuration. This is equivalent to using the `tmsh'
+        command `load sys config from-terminal merge'.
+        If you need to read configuration from a file or template, use Ansible's `file' or `template' lookup plugins respectively.
+        [Default: (null)]
+
+= password
+        The password for the user account used to connect to the BIG-IP.
+        You may omit this option by setting the environment variable `F5_PASSWORD'.
+        (Aliases: pass, pwd)
+        type: str
+
+- provider
+        A dict object containing connection details.
+        [Default: (null)]
+        suboptions:
+          password:
+            aliases:
+            - pass
+            - pwd
+            description:
+            - The password for the user account used to connect to the BIG-IP.
+            - You may omit this option by setting the environment variable `F5_PASSWORD'.
+            required: true
+            type: str
+          server:
+            description:
+            - The BIG-IP host.
+            - You may omit this option by setting the environment variable `F5_SERVER'.
+            required: true
+            type: str
+          server_port:
+            default: 443
+            description:
+            - The BIG-IP server port.
+            - You may omit this option by setting the environment variable `F5_SERVER_PORT'.
+            type: int
+          ssh_keyfile:
+            description:
+            - Specifies the SSH keyfile to use to authenticate the connection to the remote
+              device.  This argument is only used for `cli' transports.
+            - You may omit this option by setting the environment variable `ANSIBLE_NET_SSH_KEYFILE'.
+            type: path
+          timeout:
+            default: 10
+            description:
+            - Specifies the timeout in seconds for communicating with the network device for
+              either connecting or sending commands.  If the timeout is exceeded before the
+              operation is completed, the module will error.
+            type: int
+          transport:
+            choices:
+            - cli
+            - rest
+            default: rest
+            description:
+            - Configures the transport connection to use when connecting to the remote device.
+            type: str
+          user:
+            description:
+            - The username to connect to the BIG-IP with. This user must have administrative
+              privileges on the device.
+            - You may omit this option by setting the environment variable `F5_USER'.
+            required: true
+            type: str
+          validate_certs:
+            default: true
+            description:
+            - If `no', SSL certificates are not validated. Use this only on personally controlled
+              sites using self-signed certificates.
+            - You may omit this option by setting the environment variable `F5_VALIDATE_CERTS'.
+            type: bool
+        
+        type: dict
+        version_added: 2.5
+
+- reset
+        Loads the default configuration on the device.
+        If this option is specified, the default configuration will be loaded before any commands or other provided configuration is run.
+        [Default: False]
+        type: bool
+
+- save
+        The `save' argument instructs the module to save the running-config to startup-config.
+        This operation is performed after any changes are made to the current running config. If no changes are made, the configuration
+        is still saved to the startup config.
+        This option will always cause the module to return changed.
+        [Default: True]
+        type: bool
+
+= server
+        The BIG-IP host.
+        You may omit this option by setting the environment variable `F5_SERVER'.
+
+        type: str
+
+- server_port
+        The BIG-IP server port.
+        You may omit this option by setting the environment variable `F5_SERVER_PORT'.
+        [Default: 443]
+        type: int
+        version_added: 2.2
+
+= user
+        The username to connect to the BIG-IP with. This user must have administrative privileges on the device.
+        You may omit this option by setting the environment variable `F5_USER'.
+
+        type: str
+
+- validate_certs
+        If `no', SSL certificates are not validated. Use this only on personally controlled sites using self-signed certificates.
+        You may omit this option by setting the environment variable `F5_VALIDATE_CERTS'.
+        [Default: True]
+        type: bool
+        version_added: 2.0
+
+- verify
+        Validates the specified configuration to see whether they are valid to replace the running configuration.
+        The running configuration will not be changed.
+        When this parameter is set to `yes', no change will be reported by the module.
+        [Default: False]
+        type: bool
+
+
+NOTES:
+      * For more information on using Ansible to manage F5 Networks devices see https://www.ansible.com/integrations/networks/f5.
+      * Requires BIG-IP software version >= 12.
+      * The F5 modules only manipulate the running configuration of the F5 product. To ensure that BIG-IP specific configuration
+        persists to disk, be sure to include at least one task that uses the [bigip_config] module to save the running
+        configuration. Refer to the module's documentation for the correct usage of the module to save your running configuration.
+
+
+AUTHOR: Tim Rupp (@caphrim007)
+        METADATA:
+          status:
+          - preview
+          supported_by: certified
+        
+
+EXAMPLES:
+
+- name: Save the running configuration of the BIG-IP
+  bigip_config:
+    save: yes
+    provider:
+      server: lb.mydomain.com
+      password: secret
+      user: admin
+  delegate_to: localhost
+
+- name: Reset the BIG-IP configuration, for example, to RMA the device
+  bigip_config:
+    reset: yes
+    save: yes
+    provider:
+      server: lb.mydomain.com
+      password: secret
+      user: admin
+  delegate_to: localhost
+
+- name: Load an SCF configuration
+  bigip_config:
+    merge_content: "{{ lookup('file', '/path/to/config.scf') }}"
+    provider:
+      server: lb.mydomain.com
+      password: secret
+      user: admin
+  delegate_to: localhost
+
+
+RETURN VALUES:
+
+stdout:
+  description: The set of responses from the options
+  returned: always
+  type: list
+  sample: ['...', '...']
+stdout_lines:
+  description: The value of stdout split into a list
+  returned: always
+  type: list
+  sample: [['...', '...'], ['...'], ['...']]
+

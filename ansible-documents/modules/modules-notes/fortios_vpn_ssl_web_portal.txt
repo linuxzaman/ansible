@@ -1,0 +1,765 @@
+> FORTIOS_VPN_SSL_WEB_PORTAL    (/usr/lib/python2.7/dist-packages/ansible/modules/network/fortios/fortios_vpn_ssl_web_portal.py)
+
+        This module is able to configure a FortiGate or FortiOS by allowing the user to set and modify vpn_ssl_web feature and portal
+        category. Examples include all parameters and values need to be adjusted to datasources before usage. Tested with FOS v6.0.2
+
+  * This module is maintained by The Ansible Community
+OPTIONS (= is mandatory):
+
+= host
+        FortiOS or FortiGate ip address.
+
+
+- https
+        Indicates if the requests towards FortiGate must use HTTPS protocol
+        [Default: True]
+        type: bool
+
+- password
+        FortiOS or FortiGate password.
+        [Default: ]
+
+= username
+        FortiOS or FortiGate username.
+
+
+- vdom
+        Virtual domain, among those defined previously. A vdom is a virtual instance of the FortiGate that can be configured and used as
+        a different unit.
+        [Default: root]
+
+- vpn_ssl_web_portal
+        Portal.
+        [Default: None]
+        suboptions:
+          allow-user-access:
+            choices:
+            - web
+            - ftp
+            - smb
+            - telnet
+            - ssh
+            - vnc
+            - rdp
+            - ping
+            - citrix
+            - portforward
+            description:
+            - Allow user access to SSL-VPN applications.
+          auto-connect:
+            choices:
+            - enable
+            - disable
+            description:
+            - Enable/disable automatic connect by client when system is up.
+          bookmark-group:
+            description:
+            - Portal bookmark group.
+            suboptions:
+              bookmarks:
+                description:
+                - Bookmark table.
+                suboptions:
+                  additional-params:
+                    description:
+                    - Additional parameters.
+                  apptype:
+                    choices:
+                    - citrix
+                    - ftp
+                    - portforward
+                    - rdp
+                    - smb
+                    - ssh
+                    - telnet
+                    - vnc
+                    - web
+                    description:
+                    - Application type.
+                  description:
+                    description:
+                    - Description.
+                  folder:
+                    description:
+                    - Network shared file folder parameter.
+                  form-data:
+                    description:
+                    - Form data.
+                    suboptions:
+                      name:
+                        description:
+                        - Name.
+                        required: true
+                      value:
+                        description:
+                        - Value.
+                  host:
+                    description:
+                    - Host name/IP parameter.
+                  listening-port:
+                    description:
+                    - Listening port (0 - 65535).
+                  load-balancing-info:
+                    description:
+                    - The load balancing information or cookie which should be provided to
+                      the connection broker.
+                  logon-password:
+                    description:
+                    - Logon password.
+                  logon-user:
+                    description:
+                    - Logon user.
+                  name:
+                    description:
+                    - Bookmark name.
+                    required: true
+                  port:
+                    description:
+                    - Remote port.
+                  preconnection-blob:
+                    description:
+                    - An arbitrary string which identifies the RDP source.
+                  preconnection-id:
+                    description:
+                    - The numeric ID of the RDP source (0-2147483648).
+                  remote-port:
+                    description:
+                    - Remote port (0 - 65535).
+                  security:
+                    choices:
+                    - rdp
+                    - nla
+                    - tls
+                    - any
+                    description:
+                    - Security mode for RDP connection.
+                  server-layout:
+                    choices:
+                    - de-de-qwertz
+                    - en-gb-qwerty
+                    - en-us-qwerty
+                    - es-es-qwerty
+                    - fr-fr-azerty
+                    - fr-ch-qwertz
+                    - it-it-qwerty
+                    - ja-jp-qwerty
+                    - pt-br-qwerty
+                    - sv-se-qwerty
+                    - tr-tr-qwerty
+                    - failsafe
+                    description:
+                    - Server side keyboard layout.
+                  show-status-window:
+                    choices:
+                    - enable
+                    - disable
+                    description:
+                    - Enable/disable showing of status window.
+                  sso:
+                    choices:
+                    - disable
+                    - static
+                    - auto
+                    description:
+                    - Single Sign-On.
+                  sso-credential:
+                    choices:
+                    - sslvpn-login
+                    - alternative
+                    description:
+                    - Single sign-on credentials.
+                  sso-credential-sent-once:
+                    choices:
+                    - enable
+                    - disable
+                    description:
+                    - Single sign-on credentials are only sent once to remote server.
+                  sso-password:
+                    description:
+                    - SSO password.
+                  sso-username:
+                    description:
+                    - SSO user name.
+                  url:
+                    description:
+                    - URL parameter.
+              name:
+                description:
+                - Bookmark group name.
+                required: true
+          custom-lang:
+            description:
+            - Change the web portal display language. Overrides config system global set language.
+              You can use config system custom-language and execute system custom-language
+              to add custom language files. Source system.custom-language.name.
+          customize-forticlient-download-url:
+            choices:
+            - enable
+            - disable
+            description:
+            - Enable support of customized download URL for FortiClient.
+          display-bookmark:
+            choices:
+            - enable
+            - disable
+            description:
+            - Enable to display the web portal bookmark widget.
+          display-connection-tools:
+            choices:
+            - enable
+            - disable
+            description:
+            - Enable to display the web portal connection tools widget.
+          display-history:
+            choices:
+            - enable
+            - disable
+            description:
+            - Enable to display the web portal user login history widget.
+          display-status:
+            choices:
+            - enable
+            - disable
+            description:
+            - Enable to display the web portal status widget.
+          dns-server1:
+            description:
+            - IPv4 DNS server 1.
+          dns-server2:
+            description:
+            - IPv4 DNS server 2.
+          dns-suffix:
+            description:
+            - DNS suffix.
+          exclusive-routing:
+            choices:
+            - enable
+            - disable
+            description:
+            - Enable/disable all traffic go through tunnel only.
+          forticlient-download:
+            choices:
+            - enable
+            - disable
+            description:
+            - Enable/disable download option for FortiClient.
+          forticlient-download-method:
+            choices:
+            - direct
+            - ssl-vpn
+            description:
+            - FortiClient download method.
+          heading:
+            description:
+            - Web portal heading message.
+          hide-sso-credential:
+            choices:
+            - enable
+            - disable
+            description:
+            - Enable to prevent SSO credential being sent to client.
+          host-check:
+            choices:
+            - none
+            - av
+            - fw
+            - av-fw
+            - custom
+            description:
+            - Type of host checking performed on endpoints.
+          host-check-interval:
+            description:
+            - Periodic host check interval. Value of 0 means disabled and host checking only
+              happens when the endpoint connects.
+          host-check-policy:
+            description:
+            - One or more policies to require the endpoint to have specific security software.
+            suboptions:
+              name:
+                description:
+                - Host check software list name. Source vpn.ssl.web.host-check-software.name.
+                required: true
+          ip-mode:
+            choices:
+            - range
+            - user-group
+            description:
+            - Method by which users of this SSL-VPN tunnel obtain IP addresses.
+          ip-pools:
+            description:
+            - IPv4 firewall source address objects reserved for SSL-VPN tunnel mode clients.
+            suboptions:
+              name:
+                description:
+                - Address name. Source firewall.address.name firewall.addrgrp.name.
+                required: true
+          ipv6-dns-server1:
+            description:
+            - IPv6 DNS server 1.
+          ipv6-dns-server2:
+            description:
+            - IPv6 DNS server 2.
+          ipv6-exclusive-routing:
+            choices:
+            - enable
+            - disable
+            description:
+            - Enable/disable all IPv6 traffic go through tunnel only.
+          ipv6-pools:
+            description:
+            - IPv4 firewall source address objects reserved for SSL-VPN tunnel mode clients.
+            suboptions:
+              name:
+                description:
+                - Address name. Source firewall.address6.name firewall.addrgrp6.name.
+                required: true
+          ipv6-service-restriction:
+            choices:
+            - enable
+            - disable
+            description:
+            - Enable/disable IPv6 tunnel service restriction.
+          ipv6-split-tunneling:
+            choices:
+            - enable
+            - disable
+            description:
+            - Enable/disable IPv6 split tunneling.
+          ipv6-split-tunneling-routing-address:
+            description:
+            - IPv6 SSL-VPN tunnel mode firewall address objects that override firewall policy
+              destination addresses to control split-tunneling access.
+            suboptions:
+              name:
+                description:
+                - Address name. Source firewall.address6.name firewall.addrgrp6.name.
+                required: true
+          ipv6-tunnel-mode:
+            choices:
+            - enable
+            - disable
+            description:
+            - Enable/disable IPv6 SSL-VPN tunnel mode.
+          ipv6-wins-server1:
+            description:
+            - IPv6 WINS server 1.
+          ipv6-wins-server2:
+            description:
+            - IPv6 WINS server 2.
+          keep-alive:
+            choices:
+            - enable
+            - disable
+            description:
+            - Enable/disable automatic reconnect for FortiClient connections.
+          limit-user-logins:
+            choices:
+            - enable
+            - disable
+            description:
+            - Enable to limit each user to one SSL-VPN session at a time.
+          mac-addr-action:
+            choices:
+            - allow
+            - deny
+            description:
+            - Client MAC address action.
+          mac-addr-check:
+            choices:
+            - enable
+            - disable
+            description:
+            - Enable/disable MAC address host checking.
+          mac-addr-check-rule:
+            description:
+            - Client MAC address check rule.
+            suboptions:
+              mac-addr-list:
+                description:
+                - Client MAC address list.
+                suboptions:
+                  addr:
+                    description:
+                    - Client MAC address.
+                    required: true
+              mac-addr-mask:
+                description:
+                - Client MAC address mask.
+              name:
+                description:
+                - Client MAC address check rule name.
+                required: true
+          macos-forticlient-download-url:
+            description:
+            - Download URL for Mac FortiClient.
+          name:
+            description:
+            - Portal name.
+            required: true
+          os-check:
+            choices:
+            - enable
+            - disable
+            description:
+            - Enable to let the FortiGate decide action based on client OS.
+          os-check-list:
+            description:
+            - SSL VPN OS checks.
+            suboptions:
+              action:
+                choices:
+                - deny
+                - allow
+                - check-up-to-date
+                description:
+                - OS check options.
+              latest-patch-level:
+                description:
+                - Latest OS patch level.
+              name:
+                description:
+                - Name.
+                required: true
+              tolerance:
+                description:
+                - OS patch level tolerance.
+          redir-url:
+            description:
+            - Client login redirect URL.
+          save-password:
+            choices:
+            - enable
+            - disable
+            description:
+            - Enable/disable FortiClient saving the user's password.
+          service-restriction:
+            choices:
+            - enable
+            - disable
+            description:
+            - Enable/disable tunnel service restriction.
+          skip-check-for-unsupported-browser:
+            choices:
+            - enable
+            - disable
+            description:
+            - Enable to skip host check if browser does not support it.
+          skip-check-for-unsupported-os:
+            choices:
+            - enable
+            - disable
+            description:
+            - Enable to skip host check if client OS does not support it.
+          smb-ntlmv1-auth:
+            choices:
+            - enable
+            - disable
+            description:
+            - Enable support of NTLMv1 for Samba authentication.
+          smbv1:
+            choices:
+            - enable
+            - disable
+            description:
+            - Enable/disable support of SMBv1 for Samba.
+          split-dns:
+            description:
+            - Split DNS for SSL VPN.
+            suboptions:
+              dns-server1:
+                description:
+                - DNS server 1.
+              dns-server2:
+                description:
+                - DNS server 2.
+              domains:
+                description:
+                - Split DNS domains used for SSL-VPN clients separated by comma(,).
+              id:
+                description:
+                - ID.
+                required: true
+              ipv6-dns-server1:
+                description:
+                - IPv6 DNS server 1.
+              ipv6-dns-server2:
+                description:
+                - IPv6 DNS server 2.
+          split-tunneling:
+            choices:
+            - enable
+            - disable
+            description:
+            - Enable/disable IPv4 split tunneling.
+          split-tunneling-routing-address:
+            description:
+            - IPv4 SSL-VPN tunnel mode firewall address objects that override firewall policy
+              destination addresses to control split-tunneling access.
+            suboptions:
+              name:
+                description:
+                - Address name. Source firewall.address.name firewall.addrgrp.name.
+                required: true
+          state:
+            choices:
+            - present
+            - absent
+            description:
+            - Indicates whether to create or remove the object
+          theme:
+            choices:
+            - blue
+            - green
+            - red
+            - melongene
+            - mariner
+            description:
+            - Web portal color scheme.
+          tunnel-mode:
+            choices:
+            - enable
+            - disable
+            description:
+            - Enable/disable IPv4 SSL-VPN tunnel mode.
+          user-bookmark:
+            choices:
+            - enable
+            - disable
+            description:
+            - Enable to allow web portal users to create their own bookmarks.
+          user-group-bookmark:
+            choices:
+            - enable
+            - disable
+            description:
+            - Enable to allow web portal users to create bookmarks for all users in the same
+              user group.
+          web-mode:
+            choices:
+            - enable
+            - disable
+            description:
+            - Enable/disable SSL VPN web mode.
+          windows-forticlient-download-url:
+            description:
+            - Download URL for Windows FortiClient.
+          wins-server1:
+            description:
+            - IPv4 WINS server 1.
+          wins-server2:
+            description:
+            - IPv4 WINS server 1.
+        
+
+
+NOTES:
+      * Requires fortiosapi library developed by Fortinet
+      * Run as a local_action in your playbook
+
+
+REQUIREMENTS:  fortiosapi>=0.9.8
+
+AUTHOR: Miguel Angel Munoz (@mamunozgonzalez), Nicolas Thomas (@thomnico)
+        METADATA:
+          status:
+          - preview
+          supported_by: community
+        
+
+EXAMPLES:
+
+- hosts: localhost
+  vars:
+   host: "192.168.122.40"
+   username: "admin"
+   password: ""
+   vdom: "root"
+  tasks:
+  - name: Portal.
+    fortios_vpn_ssl_web_portal:
+      host:  "{{ host }}"
+      username: "{{ username }}"
+      password: "{{ password }}"
+      vdom:  "{{ vdom }}"
+      https: "False"
+      vpn_ssl_web_portal:
+        state: "present"
+        allow-user-access: "web"
+        auto-connect: "enable"
+        bookmark-group:
+         -
+            bookmarks:
+             -
+                additional-params: "<your_own_value>"
+                apptype: "citrix"
+                description: "<your_own_value>"
+                folder: "<your_own_value>"
+                form-data:
+                 -
+                    name: "default_name_12"
+                    value: "<your_own_value>"
+                host: "<your_own_value>"
+                listening-port: "15"
+                load-balancing-info: "<your_own_value>"
+                logon-password: "<your_own_value>"
+                logon-user: "<your_own_value>"
+                name: "default_name_19"
+                port: "20"
+                preconnection-blob: "<your_own_value>"
+                preconnection-id: "22"
+                remote-port: "23"
+                security: "rdp"
+                server-layout: "de-de-qwertz"
+                show-status-window: "enable"
+                sso: "disable"
+                sso-credential: "sslvpn-login"
+                sso-credential-sent-once: "enable"
+                sso-password: "<your_own_value>"
+                sso-username: "<your_own_value>"
+                url: "myurl.com"
+            name: "default_name_33"
+        custom-lang: "<your_own_value> (source system.custom-language.name)"
+        customize-forticlient-download-url: "enable"
+        display-bookmark: "enable"
+        display-connection-tools: "enable"
+        display-history: "enable"
+        display-status: "enable"
+        dns-server1: "<your_own_value>"
+        dns-server2: "<your_own_value>"
+        dns-suffix: "<your_own_value>"
+        exclusive-routing: "enable"
+        forticlient-download: "enable"
+        forticlient-download-method: "direct"
+        heading: "<your_own_value>"
+        hide-sso-credential: "enable"
+        host-check: "none"
+        host-check-interval: "49"
+        host-check-policy:
+         -
+            name: "default_name_51 (source vpn.ssl.web.host-check-software.name)"
+        ip-mode: "range"
+        ip-pools:
+         -
+            name: "default_name_54 (source firewall.address.name firewall.addrgrp.name)"
+        ipv6-dns-server1: "<your_own_value>"
+        ipv6-dns-server2: "<your_own_value>"
+        ipv6-exclusive-routing: "enable"
+        ipv6-pools:
+         -
+            name: "default_name_59 (source firewall.address6.name firewall.addrgrp6.name)"
+        ipv6-service-restriction: "enable"
+        ipv6-split-tunneling: "enable"
+        ipv6-split-tunneling-routing-address:
+         -
+            name: "default_name_63 (source firewall.address6.name firewall.addrgrp6.name)"
+        ipv6-tunnel-mode: "enable"
+        ipv6-wins-server1: "<your_own_value>"
+        ipv6-wins-server2: "<your_own_value>"
+        keep-alive: "enable"
+        limit-user-logins: "enable"
+        mac-addr-action: "allow"
+        mac-addr-check: "enable"
+        mac-addr-check-rule:
+         -
+            mac-addr-list:
+             -
+                addr: "<your_own_value>"
+            mac-addr-mask: "74"
+            name: "default_name_75"
+        macos-forticlient-download-url: "<your_own_value>"
+        name: "default_name_77"
+        os-check: "enable"
+        os-check-list:
+         -
+            action: "deny"
+            latest-patch-level: "<your_own_value>"
+            name: "default_name_82"
+            tolerance: "83"
+        redir-url: "<your_own_value>"
+        save-password: "enable"
+        service-restriction: "enable"
+        skip-check-for-unsupported-browser: "enable"
+        skip-check-for-unsupported-os: "enable"
+        smb-ntlmv1-auth: "enable"
+        smbv1: "enable"
+        split-dns:
+         -
+            dns-server1: "<your_own_value>"
+            dns-server2: "<your_own_value>"
+            domains: "<your_own_value>"
+            id:  "95"
+            ipv6-dns-server1: "<your_own_value>"
+            ipv6-dns-server2: "<your_own_value>"
+        split-tunneling: "enable"
+        split-tunneling-routing-address:
+         -
+            name: "default_name_100 (source firewall.address.name firewall.addrgrp.name)"
+        theme: "blue"
+        tunnel-mode: "enable"
+        user-bookmark: "enable"
+        user-group-bookmark: "enable"
+        web-mode: "enable"
+        windows-forticlient-download-url: "<your_own_value>"
+        wins-server1: "<your_own_value>"
+        wins-server2: "<your_own_value>"
+
+
+RETURN VALUES:
+
+build:
+  description: Build number of the fortigate image
+  returned: always
+  type: str
+  sample: '1547'
+http_method:
+  description: Last method used to provision the content into FortiGate
+  returned: always
+  type: str
+  sample: 'PUT'
+http_status:
+  description: Last result given by FortiGate on last operation applied
+  returned: always
+  type: str
+  sample: "200"
+mkey:
+  description: Master key (id) used in the last call to FortiGate
+  returned: success
+  type: str
+  sample: "id"
+name:
+  description: Name of the table used to fulfill the request
+  returned: always
+  type: str
+  sample: "urlfilter"
+path:
+  description: Path of the table used to fulfill the request
+  returned: always
+  type: str
+  sample: "webfilter"
+revision:
+  description: Internal revision number
+  returned: always
+  type: str
+  sample: "17.0.2.10658"
+serial:
+  description: Serial number of the unit
+  returned: always
+  type: str
+  sample: "FGVMEVYYQT3AB5352"
+status:
+  description: Indication of the operation's result
+  returned: always
+  type: str
+  sample: "success"
+vdom:
+  description: Virtual domain used
+  returned: always
+  type: str
+  sample: "root"
+version:
+  description: Version of the FortiGate
+  returned: always
+  type: str
+  sample: "v5.6.3"
+
+

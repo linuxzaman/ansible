@@ -1,0 +1,40 @@
+EXAMPLES:
+
+- name: " a database facts"
+  gcp_sql_database_facts:
+    instance: "{{ instance }}"
+    project: test_project
+    auth_kind: serviceaccount
+    service_account_file: "/tmp/auth.pem"
+    state: facts
+
+
+RETURN VALUES:
+
+items:
+  description: List of items
+  returned: always
+  type: complex
+  contains:
+    charset:
+      description:
+      - The MySQL charset value.
+      returned: success
+      type: str
+    collation:
+      description:
+      - The MySQL collation value.
+      returned: success
+      type: str
+    name:
+      description:
+      - The name of the database in the Cloud SQL instance.
+      - This does not include the project ID or instance name.
+      returned: success
+      type: str
+    instance:
+      description:
+      - The name of the Cloud SQL instance. This does not include the project ID.
+      returned: success
+      type: dict
+

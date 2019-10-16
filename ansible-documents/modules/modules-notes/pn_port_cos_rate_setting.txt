@@ -1,0 +1,112 @@
+> PN_PORT_COS_RATE_SETTING    (/usr/lib/python2.7/dist-packages/ansible/modules/network/netvisor/pn_port_cos_rate_setting.py)
+
+        This modules can be used to update the port cos rate limit.
+
+  * This module is maintained by The Ansible Community
+OPTIONS (= is mandatory):
+
+- pn_cliswitch
+        Target switch to run the CLI on.
+        [Default: (null)]
+        type: str
+
+- pn_cos0_rate
+        cos0 rate limit (pps) unlimited or 0 to 10000000.
+        [Default: (null)]
+        type: str
+
+- pn_cos1_rate
+        cos1 rate limit (pps) unlimited or 0 to 10000000.
+        [Default: (null)]
+        type: str
+
+- pn_cos2_rate
+        cos2 rate limit (pps) unlimited or 0 to 10000000.
+        [Default: (null)]
+        type: str
+
+- pn_cos3_rate
+        cos3 rate limit (pps) unlimited or 0 to 10000000.
+        [Default: (null)]
+        type: str
+
+- pn_cos4_rate
+        cos4 rate limit (pps) unlimited or 0 to 10000000.
+        [Default: (null)]
+        type: str
+
+- pn_cos5_rate
+        cos5 rate limit (pps) unlimited or 0 to 10000000.
+        [Default: (null)]
+        type: str
+
+- pn_cos6_rate
+        cos6 rate limit (pps) unlimited or 0 to 10000000.
+        [Default: (null)]
+        type: str
+
+- pn_cos7_rate
+        cos7 rate limit (pps) unlimited or 0 to 10000000.
+        [Default: (null)]
+        type: str
+
+- pn_port
+        port.
+        (Choices: control-port, data-port, span-ports)[Default: (null)]
+        type: str
+
+= state
+        State the action to perform. Use `update' to modify the port-cos-rate-setting.
+        (Choices: update)
+        type: str
+
+
+AUTHOR: Pluribus Networks (@rajaspachipulusu17)
+        METADATA:
+          status:
+          - preview
+          supported_by: community
+        
+
+EXAMPLES:
+
+- name: port cos rate modify
+  pn_port_cos_rate_setting:
+    pn_cliswitch: "sw01"
+    state: "update"
+    pn_port: "control-port"
+    pn_cos1_rate: "1000"
+    pn_cos5_rate: "1000"
+    pn_cos2_rate: "1000"
+    pn_cos0_rate: "1000"
+
+- name: port cos rate modify
+  pn_port_cos_rate_setting:
+    pn_cliswitch: "sw01"
+    state: "update"
+    pn_port: "data-port"
+    pn_cos1_rate: "2000"
+    pn_cos5_rate: "2000"
+    pn_cos2_rate: "2000"
+    pn_cos0_rate: "2000"
+
+
+RETURN VALUES:
+
+command:
+  description: the CLI command run on the target node.
+  returned: always
+  type: str
+stdout:
+  description: set of responses from the port-cos-rate-setting command.
+  returned: always
+  type: list
+stderr:
+  description: set of error responses from the port-cos-rate-setting command.
+  returned: on error
+  type: list
+changed:
+  description: indicates whether the CLI caused changes on the target.
+  returned: always
+  type: bool
+

@@ -1,0 +1,51 @@
+> PEAR    (/usr/lib/python2.7/dist-packages/ansible/modules/packaging/language/pear.py)
+
+        Manage PHP packages with the pear package manager.
+
+  * This module is maintained by The Ansible Community
+OPTIONS (= is mandatory):
+
+- executable
+        Path to the pear executable
+        [Default: (null)]
+        version_added: 2.4
+
+= name
+        Name of the package to install, upgrade, or remove.
+
+
+- state
+        Desired state of the package.
+        (Choices: present, absent, latest)[Default: present]
+
+
+AUTHOR: Jonathan Lestrelin (@jle64) <jonathan.lestrelin@gmail.com>
+        METADATA:
+          status:
+          - preview
+          supported_by: community
+        
+
+EXAMPLES:
+
+# Install pear package
+- pear:
+    name: Net_URL2
+    state: present
+
+# Install pecl package
+- pear:
+    name: pecl/json_post
+    state: present
+
+# Upgrade package
+- pear:
+    name: Net_URL2
+    state: latest
+
+# Remove packages
+- pear:
+    name: Net_URL2,pecl/json_post
+    state: absent
+
+

@@ -1,0 +1,52 @@
+> PKGUTIL    (/usr/lib/python2.7/dist-packages/ansible/modules/packaging/os/pkgutil.py)
+
+        Manages CSW packages (SVR4 format) on Solaris 10 and 11. These were the native packages on Solaris <= 10 and are available as a
+        legacy feature in Solaris 11. Pkgutil is an advanced packaging system, which resolves dependency on installation. It is designed
+        for CSW packages.
+
+  * This module is maintained by The Ansible Community
+OPTIONS (= is mandatory):
+
+= name
+        Package name, e.g. (`CSWnrpe')
+
+
+- site
+        Specifies the repository path to install the package from.
+        Its global definition is done in `/etc/opt/csw/pkgutil.conf'.
+        [Default: (null)]
+
+= state
+        Whether to install (`present'), or remove (`absent') a package.
+        The upgrade (`latest') operation will update/install the package to the latest version available.
+        Note: The module has a limitation that (`latest') only works for one package, not lists of them.
+        (Choices: present, absent, latest)
+
+- update_catalog
+        If you want to refresh your catalog from the mirror, set this to (`yes').
+        [Default: False]
+        type: bool
+        version_added: 2.1
+
+
+AUTHOR: Alexander Winkler (@dermute)
+        METADATA:
+          status:
+          - stableinterface
+          supported_by: community
+        
+
+EXAMPLES:
+
+# Install a package
+- pkgutil:
+    name: CSWcommon
+    state: present
+
+# Install a package from a specific repository
+- pkgutil:
+    name: CSWnrpe
+    site: 'ftp://myinternal.repo/opencsw/kiel'
+    state: latest
+
+

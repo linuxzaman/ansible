@@ -1,0 +1,124 @@
+EXAMPLES:
+
+- name: Create server "GTM_Server"
+  bigip_gtm_server:
+    name: GTM_Server
+    datacenter: /Common/New York
+    server_type: bigip
+    link_discovery: disabled
+    virtual_server_discovery: disabled
+    devices:
+      - name: server_1
+        address: 1.1.1.1
+      - name: server_2
+        address: 2.2.2.1
+        translation: 192.168.2.1
+      - name: server_2
+        address: 2.2.2.2
+      - name: server_3
+        addresses:
+          - address: 3.3.3.1
+          - address: 3.3.3.2
+      - name: server_4
+        addresses:
+          - address: 4.4.4.1
+            translation: 192.168.14.1
+          - address: 4.4.4.2
+    provider:
+      user: admin
+      password: secret
+      server: lb.mydomain.com
+  delegate_to: localhost
+
+- name: Create server "GTM_Server" with expanded keys
+  bigip_gtm_server:
+    server: lb.mydomain.com
+    user: admin
+    password: secret
+    name: GTM_Server
+    datacenter: /Common/New York
+    server_type: bigip
+    link_discovery: disabled
+    virtual_server_discovery: disabled
+    devices:
+      - name: server_1
+        address: 1.1.1.1
+      - name: server_2
+        address: 2.2.2.1
+        translation: 192.168.2.1
+      - name: server_2
+        address: 2.2.2.2
+      - name: server_3
+        addresses:
+          - address: 3.3.3.1
+          - address: 3.3.3.2
+      - name: server_4
+        addresses:
+          - address: 4.4.4.1
+            translation: 192.168.14.1
+          - address: 4.4.4.2
+    provider:
+      user: admin
+      password: secret
+      server: lb.mydomain.com
+  delegate_to: localhost
+
+
+RETURN VALUES:
+
+bits_enabled:
+  description: Whether the bits limit is enabled.
+  returned: changed
+  type: bool
+  sample: yes
+bits_limit:
+  description: The new bits_enabled limit.
+  returned: changed
+  type: int
+  sample: 100
+connections_enabled:
+  description: Whether the connections limit is enabled.
+  returned: changed
+  type: bool
+  sample: yes
+connections_limit:
+  description: The new connections_limit limit.
+  returned: changed
+  type: int
+  sample: 100
+monitors:
+  description: The new list of monitors for the resource.
+  returned: changed
+  type: list
+  sample: ['/Common/monitor1', '/Common/monitor2']
+link_discovery:
+  description: The new C(link_discovery) configured on the remote device.
+  returned: changed
+  type: str
+  sample: enabled
+virtual_server_discovery:
+  description: The new C(virtual_server_discovery) name for the trap destination.
+  returned: changed
+  type: str
+  sample: disabled
+server_type:
+  description: The new type of the server.
+  returned: changed
+  type: str
+  sample: bigip
+datacenter:
+  description: The new C(datacenter) which the server is part of.
+  returned: changed
+  type: str
+  sample: datacenter01
+packets_enabled:
+  description: Whether the packets limit is enabled.
+  returned: changed
+  type: bool
+  sample: yes
+packets_limit:
+  description: The new packets_limit limit.
+  returned: changed
+  type: int
+  sample: 100
+

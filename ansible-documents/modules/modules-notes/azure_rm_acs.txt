@@ -1,0 +1,332 @@
+> AZURE_RM_ACS    (/usr/lib/python2.7/dist-packages/ansible/modules/cloud/azure/azure_rm_acs.py)
+
+        Create, update and delete an Azure Container Service Instance.
+
+  * This module is maintained by The Ansible Community
+OPTIONS (= is mandatory):
+
+- ad_user
+        Active Directory username. Use when authenticating with an Active Directory user rather than service principal.
+        [Default: (null)]
+        type: str
+
+- adfs_authority_url
+        Azure AD authority url. Use when authenticating with Username/password, and has your own ADFS authority.
+        [Default: (null)]
+        type: str
+        version_added: 2.6
+
+= agent_pool_profiles
+        The agent pool profile suboptions.
+
+        suboptions:
+          count:
+            description:
+            - Number of agents (VMs) to host docker containers. Allowed values must be in
+              the range of 1 to 100 (inclusive).
+            required: true
+          dns_prefix:
+            description:
+            - The DNS Prefix given to Agents in this Agent Pool.
+            required: true
+          name:
+            description:
+            - Unique name of the agent pool profile in the context of the subscription and
+              resource group.
+            required: true
+          vm_size:
+            description:
+            - The VM Size of each of the Agent Pool VM's (e.g. Standard_F1 / Standard_D2v2).
+            required: true
+        
+
+- api_profile
+        Selects an API profile to use when communicating with Azure services. Default value of `latest' is appropriate for public clouds;
+        future values will allow use with Azure Stack.
+        [Default: latest]
+        type: str
+        version_added: 2.5
+
+- append_tags
+        Use to control if tags field is canonical or just appends to existing tags.
+        When canonical, any tags not found in the tags parameter will be removed from the object's metadata.
+        [Default: True]
+        type: bool
+
+- auth_source
+        Controls the source of the credentials to use for authentication.
+        If not specified, ANSIBLE_AZURE_AUTH_SOURCE environment variable will be used and default to `auto' if variable is not defined.
+        `auto' will follow the default precedence of module parameters -> environment variables -> default profile in credential file
+        `~/.azure/credentials'.
+        When set to `cli', the credentials will be sources from the default Azure CLI profile.
+        Can also be set via the `ANSIBLE_AZURE_AUTH_SOURCE' environment variable.
+        When set to `msi', the host machine must be an azure resource with an enabled MSI extension. `subscription_id' or the environment
+        variable `AZURE_SUBSCRIPTION_ID' can be used to identify the subscription ID if the resource is granted access to more than one
+        subscription, otherwise the first subscription is chosen.
+        The `msi' was added in Ansible 2.6.
+        (Choices: auto, cli, credential_file, env, msi)[Default: (null)]
+        type: str
+        version_added: 2.5
+
+- cert_validation_mode
+        Controls the certificate validation behavior for Azure endpoints. By default, all modules will validate the server certificate,
+        but when an HTTPS proxy is in use, or against Azure Stack, it may be necessary to disable this behavior by passing `ignore'. Can
+        also be set via credential file profile or the `AZURE_CERT_VALIDATION' environment variable.
+        (Choices: ignore, validate)[Default: (null)]
+        type: str
+        version_added: 2.5
+
+- client_id
+        Azure client ID. Use when authenticating with a Service Principal.
+        [Default: (null)]
+        type: str
+
+- cloud_environment
+        For cloud environments other than the US public cloud, the environment name (as defined by Azure Python SDK, eg,
+        `AzureChinaCloud', `AzureUSGovernment'), or a metadata discovery endpoint URL (required for Azure Stack). Can also be set via
+        credential file profile or the `AZURE_CLOUD_ENVIRONMENT' environment variable.
+        [Default: AzureCloud]
+        type: str
+        version_added: 2.4
+
+= diagnostics_profile
+        Should VM Diagnostics be enabled for the Container Service VM's.
+
+        type: bool
+
+= linux_profile
+        The linux profile suboptions.
+
+        suboptions:
+          admin_username:
+            description:
+            - The Admin Username for the Cluster.
+            required: true
+          ssh_key:
+            description:
+            - The Public SSH Key used to access the cluster.
+            required: true
+        
+
+- location
+        Valid azure location. Defaults to location of the resource group.
+        [Default: (null)]
+
+= master_profile
+        Master profile suboptions.
+
+        suboptions:
+          count:
+            choices:
+            - 1
+            - 3
+            - 5
+            description:
+            - Number of masters (VMs) in the container service cluster. Allowed values are
+              1, 3, and 5.
+            required: true
+          dns_prefix:
+            description:
+            - The DNS Prefix to use for the Container Service master nodes.
+            required: true
+          vm_size:
+            description:
+            - The VM Size of each of the Agent Pool VM's (e.g. Standard_F1 / Standard_D2v2).
+            required: true
+            version_added: 2.5
+        
+
+= name
+        Name of the Container Services instance.
+
+
+= orchestration_platform
+        Specifies the Container Orchestration Platform to use. Currently can be either DCOS, Kubernetes or Swarm.
+        (Choices: DCOS, Kubernetes, Swarm)
+
+- password
+        Active Directory user password. Use when authenticating with an Active Directory user rather than service principal.
+        [Default: (null)]
+
+- profile
+        Security profile found in ~/.azure/credentials file.
+        [Default: (null)]
+        type: str
+
+= resource_group
+        Name of a resource group where the Container Services exists or will be created.
+
+
+- secret
+        Azure client secret. Use when authenticating with a Service Principal.
+        [Default: (null)]
+        type: str
+
+- service_principal
+        The service principal suboptions.
+        [Default: (null)]
+        suboptions:
+          client_id:
+            description:
+            - The ID for the Service Principal.
+          client_secret:
+            description:
+            - The secret password associated with the service principal.
+        
+
+- state
+        Assert the state of the ACS. Use `present' to create or update an ACS and `absent' to delete it.
+        (Choices: absent, present)[Default: present]
+
+- subscription_id
+        Your Azure subscription Id.
+        [Default: (null)]
+        type: str
+
+- tags
+        Dictionary of string:string pairs to assign as metadata to the object.
+        Metadata tags on the object will be updated with any provided values.
+        To remove tags set append_tags option to false.
+        [Default: (null)]
+        type: dict
+
+- tenant
+        Azure tenant ID. Use when authenticating with a Service Principal.
+        [Default: (null)]
+        type: str
+
+
+NOTES:
+      * For authentication with Azure you can pass parameters, set environment variables, use a profile stored in
+        ~/.azure/credentials, or log in before you run your tasks or playbook with `az login'.
+      * Authentication is also possible using a service principal or Active Directory user.
+      * To authenticate via service principal, pass subscription_id, client_id, secret and tenant or set environment variables
+        AZURE_SUBSCRIPTION_ID, AZURE_CLIENT_ID, AZURE_SECRET and AZURE_TENANT.
+      * To authenticate via Active Directory user, pass ad_user and password, or set AZURE_AD_USER and AZURE_PASSWORD in the
+        environment.
+      * Alternatively, credentials can be stored in ~/.azure/credentials. This is an ini file containing a [default] section and
+        the following keys: subscription_id, client_id, secret and tenant or subscription_id, ad_user and password. It is also
+        possible to add additional profiles. Specify the profile by passing profile or setting AZURE_PROFILE in the environment.
+
+
+SEE ALSO:
+      * Sign in with Azure CLI
+           How to authenticate using the `az login' command.
+           https://docs.microsoft.com/en-us/cli/azure/authenticate-azure-cli?view=azure-cli-latest
+
+
+REQUIREMENTS:  python >= 2.7, azure >= 2.0.0
+
+AUTHOR: Julien Stroheker (@julienstroheker)
+        METADATA:
+          status:
+          - preview
+          supported_by: community
+        
+
+EXAMPLES:
+
+- name: Create an azure container services instance running Kubernetes
+      azure_rm_acs:
+        name: acctestcontservice1
+        location: eastus
+        resource_group: myResourceGroup
+        orchestration_platform: Kubernetes
+        master_profile:
+            - count: 3
+              dns_prefix: acsk8smasterdns
+              vm_size: Standard_D2_v2
+        linux_profile:
+            - admin_username: azureuser
+              ssh_key: ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAA...
+        service_principal:
+            - client_id: "cf72ca99-f6b9-4004-b0e0-bee10c521948"
+              client_secret: "mySPNp@ssw0rd!"
+        agent_pool_profiles:
+            - name: default
+              count: 5
+              dns_prefix: acsk8sagent
+              vm_size: Standard_D2_v2
+        diagnostics_profile: false
+        tags:
+            Environment: Production
+
+    - name: Create an azure container services instance running DCOS
+      azure_rm_acs:
+        name: acctestcontservice2
+        location: eastus
+        resource_group: myResourceGroup
+        orchestration_platform: DCOS
+        master_profile:
+            - count: 3
+              dns_prefix: acsdcosmasterdns
+              vm_size: Standard_D2_v2
+        linux_profile:
+            - admin_username: azureuser
+              ssh_key: ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAA...
+        agent_pool_profiles:
+            - name: default
+              count: 5
+              dns_prefix: acscdcosagent
+              vm_size: Standard_D2_v2
+        diagnostics_profile: false
+        tags:
+            Environment: Production
+
+    - name: Create an azure container services instance running Swarm
+      azure_rm_acs:
+        name: acctestcontservice3
+        location: eastus
+        resource_group: myResourceGroup
+        orchestration_platform: Swarm
+        master_profile:
+            - count: 3
+              dns_prefix: acsswarmmasterdns
+              vm_size: Standard_D2_v2
+        linux_profile:
+            - admin_username: azureuser
+              ssh_key: ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAA...
+        agent_pool_profiles:
+            - name: default
+              count: 5
+              dns_prefix: acsswarmagent
+              vm_size: Standard_D2_v2
+        diagnostics_profile: false
+        tags:
+            Environment: Production
+
+# Deletes the specified container service in the specified subscription and resource group.
+# The operation does not delete other resources created as part of creating a container service,
+# including storage accounts, VMs, and availability sets. All the other resources created with the container
+# service are part of the same resource group and can be deleted individually.
+    - name: Remove an azure container services instance
+      azure_rm_acs:
+        name: acctestcontservice3
+        location: eastus
+        resource_group: myResourceGroup
+        state: absent
+        orchestration_platform: Swarm
+        master_profile:
+            - count: 1
+              vm_size: Standard_A0
+              dns_prefix: acstestingmasterdns5
+        linux_profile:
+            - admin_username: azureuser
+              ssh_key: ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAA...
+        agent_pool_profiles:
+            - name: default
+              count: 4
+              dns_prefix: acctestagent15
+              vm_size: Standard_A0
+        diagnostics_profile: false
+        tags:
+            Ansible: azure_rm_acs
+
+
+RETURN VALUES:
+
+state:
+    description: Current state of the azure container service
+    returned: always
+    type: dict
+

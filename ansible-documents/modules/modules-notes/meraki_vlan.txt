@@ -1,0 +1,309 @@
+> MERAKI_VLAN    (/usr/lib/python2.7/dist-packages/ansible/modules/network/meraki/meraki_vlan.py)
+
+        Create, edit, query, or delete VLANs in a Meraki environment.
+
+  * This module is maintained by The Ansible Community
+OPTIONS (= is mandatory):
+
+- appliance_ip
+        IP address of appliance.
+        Address must be within subnet specified in `subnet' parameter.
+        [Default: (null)]
+
+- auth_key
+        Authentication key provided by the dashboard. Required if environmental variable `MERAKI_KEY' is not set.
+        [Default: (null)]
+        type: str
+
+- dns_nameservers
+        Semi-colon delimited list of DNS IP addresses.
+        Specify one of the following options for preprogrammed DNS entries opendns, google_dns, upstream_dns
+        [Default: (null)]
+
+- fixed_ip_assignments
+        Static IP address assignements to be distributed via DHCP by MAC address.
+        [Default: (null)]
+
+- host
+        Hostname for Meraki dashboard.
+        Only useful for internal Meraki developers.
+        [Default: api.meraki.com]
+        type: str
+
+- name
+        Name of VLAN.
+        (Aliases: vlan_name)[Default: (null)]
+
+- net_id
+        ID of network which VLAN is in or should be in.
+        [Default: (null)]
+
+- net_name
+        Name of network which VLAN is in or should be in.
+        (Aliases: network)[Default: (null)]
+
+- org_id
+        ID of organization.
+        [Default: (null)]
+        type: int
+
+- org_name
+        Name of organization.
+        (Aliases: organization)[Default: (null)]
+        type: str
+
+- output_level
+        Set amount of debug output during module execution.
+        (Choices: debug, normal)[Default: normal]
+        type: str
+
+- reserved_ip_range
+        IP address ranges which should be reserve and not distributed via DHCP.
+        [Default: (null)]
+
+- state
+        Specifies whether object should be queried, created/modified, or removed.
+        (Choices: absent, present, query)[Default: query]
+
+- subnet
+        CIDR notation of network subnet.
+        [Default: (null)]
+
+- timeout
+        Time to timeout for HTTP requests.
+        [Default: 30]
+        type: int
+
+- use_https
+        If `no', it will use HTTP. Otherwise it will use HTTPS.
+        Only useful for internal Meraki developers.
+        [Default: True]
+        type: bool
+
+- use_proxy
+        If `no', it will not use a proxy, even if one is defined in an environment variable on the target hosts.
+        [Default: (null)]
+        type: bool
+
+- validate_certs
+        Whether to validate HTTP certificates.
+        [Default: True]
+        type: bool
+
+- vlan_id
+        ID number of VLAN.
+        ID should be between 1-4096.
+        [Default: (null)]
+
+- vpn_nat_subnet
+        The translated VPN subnet if VPN and VPN subnet translation are enabled on the VLAN.
+        [Default: (null)]
+
+
+NOTES:
+      * Meraki's API will return an error if VLANs aren't enabled on a network. VLANs are returned properly if VLANs are enabled on
+        a network.
+      * Some of the options are likely only used for developers within Meraki.
+      * Meraki's API defaults to networks having VLAN support disabled and there is no way to enable VLANs support in the API. VLAN
+        support must be enabled manually.
+      * More information about the Meraki API can be found at https://dashboard.meraki.com/api_docs.
+      * Some of the options are likely only used for developers within Meraki.
+
+
+AUTHOR: Kevin Breit (@kbreit)
+        METADATA:
+          status:
+          - preview
+          supported_by: community
+        
+
+EXAMPLES:
+
+- name: Query all VLANs in a network.
+  meraki_vlan:
+    auth_key: abc12345
+    org_name: YourOrg
+    net_name: YourNet
+    state: query
+  delegate_to: localhost
+
+- name: Query information about a single VLAN by ID.
+  meraki_vlan:
+    auth_key: abc12345
+    org_name: YourOrg
+    net_name: YourNet
+    vlan_id: 2
+    state: query
+  delegate_to: localhost
+
+- name: Create a VLAN.
+  meraki_vlan:
+    auth_key: abc12345
+    org_name: YourOrg
+    net_name: YourNet
+    state: present
+    vlan_id: 2
+    name: TestVLAN
+    subnet: 192.0.1.0/24
+    appliance_ip: 192.0.1.1
+  delegate_to: localhost
+
+- name: Update a VLAN.
+  meraki_vlan:
+    auth_key: abc12345
+    org_name: YourOrg
+    net_name: YourNet
+    state: present
+    vlan_id: 2
+    name: TestVLAN
+    subnet: 192.0.1.0/24
+    appliance_ip: 192.168.250.2
+    fixed_ip_assignments:
+      - mac: "13:37:de:ad:be:ef"
+        ip: 192.168.250.10
+        name: fixed_ip
+    reserved_ip_range:
+      - start: 192.168.250.10
+        end: 192.168.250.20
+        comment: reserved_range
+    dns_nameservers: opendns
+  delegate_to: localhost
+
+- name: Delete a VLAN.
+  meraki_vlan:
+    auth_key: abc12345
+    org_name: YourOrg
+    net_name: YourNet
+    state: absent
+    vlan_id: 2
+  delegate_to: localhost
+
+
+RETURN VALUES:
+
+
+response:
+  description: Information about the organization which was created or modified
+  returned: success
+  type: complex
+  contains:
+    applianceIp:
+      description: IP address of Meraki appliance in the VLAN
+      returned: success
+      type: str
+      sample: 192.0.1.1
+    dnsnamservers:
+      description: IP address or Meraki defined DNS servers which VLAN should use by default
+      returned: success
+      type: str
+      sample: upstream_dns
+    fixedIpAssignments:
+      description: List of MAC addresses which have IP addresses assigned.
+      returned: success
+      type: complex
+      contains:
+        macaddress:
+          description: MAC address which has IP address assigned to it. Key value is the actual MAC address.
+          returned: success
+          type: complex
+          contains:
+            ip:
+              description: IP address which is assigned to the MAC address.
+              returned: success
+              type: str
+              sample: 192.0.1.4
+            name:
+              description: Descriptive name for binding.
+              returned: success
+              type: str
+              sample: fixed_ip
+    reservedIpRanges:
+      description: List of IP address ranges which are reserved for static assignment.
+      returned: success
+      type: complex
+      contains:
+        comment:
+          description: Description for IP address reservation.
+          returned: success
+          type: str
+          sample: reserved_range
+        end:
+          description: Last IP address in reservation range.
+          returned: success
+          type: str
+          sample: 192.0.1.10
+        start:
+          description: First IP address in reservation range.
+          returned: success
+          type: str
+          sample: 192.0.1.5
+    id:
+      description: VLAN ID number.
+      returned: success
+      type: int
+      sample: 2
+    name:
+      description: Descriptive name of VLAN.
+      returned: success
+      type: str
+      sample: TestVLAN
+    networkId:
+      description: ID number of Meraki network which VLAN is associated to.
+      returned: success
+      type: str
+      sample: N_12345
+    subnet:
+      description: CIDR notation IP subnet of VLAN.
+      returned: success
+      type: str
+      sample: "192.0.1.0/24"
+    dhcpHandling:
+      description: Status of DHCP server on VLAN.
+      returned: success
+      type: str
+      sample: Run a DHCP server
+    dhcpLeaseTime:
+      description: DHCP lease time when server is active.
+      returned: success
+      type: str
+      sample: 1 day
+    dhcpBootOptionsEnabled:
+      description: Whether DHCP boot options are enabled.
+      returned: success
+      type: bool
+      sample: no
+    dhcpBootNextServer:
+      description: DHCP boot option to direct boot clients to the server to load the boot file from.
+      returned: success
+      type: str
+      sample: 192.0.1.2
+    dhcpBootFilename:
+      description: Filename for boot file.
+      returned: success
+      type: str
+      sample: boot.txt
+    dhcpOptions:
+      description: DHCP options.
+      returned: success
+      type: complex
+      contains:
+        code:
+          description:
+            - Code for DHCP option.
+            - Integer between 2 and 254.
+          returned: success
+          type: int
+          sample: 43
+        type:
+          description:
+            - Type for DHCP option.
+            - Choices are C(text), C(ip), C(hex), C(integer).
+          returned: success
+          type: str
+          sample: text
+        value:
+          description: Value for the DHCP option.
+          returned: success
+          type: str
+          sample: 192.0.1.2
+

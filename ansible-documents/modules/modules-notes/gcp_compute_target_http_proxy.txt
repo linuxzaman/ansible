@@ -1,0 +1,176 @@
+> GCP_COMPUTE_TARGET_HTTP_PROXY    (/usr/lib/python2.7/dist-packages/ansible/modules/cloud/google/gcp_compute_target_http_proxy.py)
+
+        Represents a TargetHttpProxy resource, which is used by one or more global forwarding rule to route incoming HTTP requests to a
+        URL map.
+
+  * This module is maintained by The Ansible Community
+OPTIONS (= is mandatory):
+
+= auth_kind
+        The type of credential used.
+        (Choices: application, machineaccount, serviceaccount)
+        type: str
+
+- description
+        An optional description of this resource.
+        [Default: (null)]
+
+= name
+        Name of the resource. Provided by the client when the resource is created. The name must be 1-63 characters long, and comply with
+        RFC1035. Specifically, the name must be 1-63 characters long and match the regular expression `[a-z]([-a-z0-9]*[a-z0-9])?` which
+        means the first character must be a lowercase letter, and all following characters must be a dash, lowercase letter, or digit,
+        except the last character, which cannot be a dash.
+
+
+- project
+        The Google Cloud Platform project to use.
+        [Default: (null)]
+        type: str
+
+- scopes
+        Array of scopes to be used.
+        [Default: (null)]
+        type: list
+
+- service_account_contents
+        A string representing the contents of a Service Account JSON file.
+        This should not be passed in as a dictionary, but a string that has the exact contents of a service account json file (valid
+        JSON)
+        [Default: (null)]
+        type: str
+
+- service_account_email
+        An optional service account email address if machineaccount is selected and the user does not wish to use the default email.
+        [Default: (null)]
+        type: str
+
+- service_account_file
+        The path of a Service Account JSON file if serviceaccount is selected as type.
+        [Default: (null)]
+        type: path
+
+- state
+        Whether the given object should exist in GCP
+        (Choices: present, absent)[Default: present]
+
+= url_map
+        A reference to the UrlMap resource that defines the mapping from URL to the BackendService.
+        This field represents a link to a UrlMap resource in GCP. It can be specified in two ways. First, you can place a dictionary with
+        key 'selfLink' and value of your resource's selfLink Alternatively, you can add `register: name-of-resource` to a
+        gcp_compute_url_map task and then set this url_map field to "{{ name-of-resource }}"
+
+
+
+NOTES:
+      * API Reference: https://cloud.google.com/compute/docs/reference/v1/targetHttpProxies
+      * Official Documentation: https://cloud.google.com/compute/docs/load-balancing/http/target-proxies
+      * For authentication, you can set service_account_file using the `GCP_SERVICE_ACCOUNT_FILE' env variable.
+      * For authentication, you can set service_account_email using the `GCP_SERVICE_ACCOUNT_EMAIL' env variable.
+      * For authentication, you can set service_account_contents using the `GCP_SERVICE_ACCOUNT_CONTENTS' env variable.
+      * For authentication, you can set auth_kind using the `GCP_AUTH_KIND' env variable.
+      * For authentication, you can set scopes using the `GCP_SCOPES' env variable.
+      * Environment variables values will only be used if the playbook values are not set.
+      * The `service_account_email' and `service_account_file' options are mutually exclusive.
+
+
+REQUIREMENTS:  python >= 2.6, requests >= 2.18.4, google-auth >= 1.3.0
+
+AUTHOR: Google Inc. (@googlecloudplatform)
+        METADATA:
+          status:
+          - preview
+          supported_by: community
+        
+
+EXAMPLES:
+
+- name: create a instance group
+  gcp_compute_instance_group:
+    name: instancegroup-targethttpproxy
+    zone: us-central1-a
+    project: "{{ gcp_project }}"
+    auth_kind: "{{ gcp_cred_kind }}"
+    service_account_file: "{{ gcp_cred_file }}"
+    state: present
+  register: instancegroup
+
+- name: create a http health check
+  gcp_compute_http_health_check:
+    name: httphealthcheck-targethttpproxy
+    healthy_threshold: 10
+    port: 8080
+    timeout_sec: 2
+    unhealthy_threshold: 5
+    project: "{{ gcp_project }}"
+    auth_kind: "{{ gcp_cred_kind }}"
+    service_account_file: "{{ gcp_cred_file }}"
+    state: present
+  register: healthcheck
+
+- name: create a backend service
+  gcp_compute_backend_service:
+    name: backendservice-targethttpproxy
+    backends:
+    - group: "{{ instancegroup }}"
+    health_checks:
+    - "{{ healthcheck.selfLink }}"
+    enable_cdn: 'true'
+    project: "{{ gcp_project }}"
+    auth_kind: "{{ gcp_cred_kind }}"
+    service_account_file: "{{ gcp_cred_file }}"
+    state: present
+  register: backendservice
+
+- name: create a url map
+  gcp_compute_url_map:
+    name: urlmap-targethttpproxy
+    default_service: "{{ backendservice }}"
+    project: "{{ gcp_project }}"
+    auth_kind: "{{ gcp_cred_kind }}"
+    service_account_file: "{{ gcp_cred_file }}"
+    state: present
+  register: urlmap
+
+- name: create a target http proxy
+  gcp_compute_target_http_proxy:
+    name: test_object
+    url_map: "{{ urlmap }}"
+    project: test_project
+    auth_kind: serviceaccount
+    service_account_file: "/tmp/auth.pem"
+    state: present
+
+
+RETURN VALUES:
+
+creationTimestamp:
+  description:
+  - Creation timestamp in RFC3339 text format.
+  returned: success
+  type: str
+description:
+  description:
+  - An optional description of this resource.
+  returned: success
+  type: str
+id:
+  description:
+  - The unique identifier for the resource.
+  returned: success
+  type: int
+name:
+  description:
+  - Name of the resource. Provided by the client when the resource is created. The
+    name must be 1-63 characters long, and comply with RFC1035. Specifically, the
+    name must be 1-63 characters long and match the regular expression `[a-z]([-a-z0-9]*[a-z0-9])?`
+    which means the first character must be a lowercase letter, and all following
+    characters must be a dash, lowercase letter, or digit, except the last character,
+    which cannot be a dash.
+  returned: success
+  type: str
+urlMap:
+  description:
+  - A reference to the UrlMap resource that defines the mapping from URL to the BackendService.
+  returned: success
+  type: dict
+

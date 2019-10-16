@@ -1,0 +1,224 @@
+> MSO_SCHEMA_TEMPLATE_FILTER_ENTRY    (/usr/lib/python2.7/dist-packages/ansible/modules/network/aci/mso_schema_template_filter_entry.py)
+
+        Manage filter entries in schema templates on Cisco ACI Multi-Site.
+
+  * This module is maintained by The Ansible Community
+OPTIONS (= is mandatory):
+
+- arp_flag
+        The ARP flag to use for this filter entry.
+        (Choices: reply, request, unspecified)[Default: (null)]
+        type: str
+
+- description
+        The description of this filer entry.
+        (Aliases: entry_description)[Default: (null)]
+        type: str
+
+- destination_from
+        The destination port range from.
+        [Default: (null)]
+        type: str
+
+- destination_to
+        The destination port range to.
+        [Default: (null)]
+        type: str
+
+- display_name
+        The name as displayed on the MSO web interface.
+        (Aliases: entry_display_name)[Default: (null)]
+        type: str
+
+- entry
+        The filter entry name to manage.
+        (Aliases: name)[Default: (null)]
+        type: str
+
+- ethertype
+        The ethernet type to use for this filter entry.
+        (Choices: arp, fcoe, ip, ipv4, ipv6, mac-security, mpls-unicast, trill, unspecified)[Default: (null)]
+        type: str
+
+= filter
+        The name of the filter to manage.
+
+        type: str
+
+- filter_display_name
+        The name as displayed on the MSO web interface.
+        [Default: (null)]
+        type: str
+
+- fragments_only
+        Whether this filter entry only matches fragments.
+        [Default: False]
+        type: bool
+
+= host
+        IP Address or hostname of the ACI Multi Site Orchestrator host.
+        (Aliases: hostname)
+        type: str
+
+- ip_protocol
+        The IP protocol to use for this filter entry.
+        (Choices: eigrp, egp, icmp, icmpv6, igmp, igp, l2tp, ospfigp, pim, tcp, udp, unspecified)[Default: (null)]
+        type: str
+
+- output_level
+        Influence the output of this ACI module.
+        `normal' means the standard output, incl. `current' dict
+        `info' adds informational output, incl. `previous', `proposed' and `sent' dicts
+        `debug' adds debugging output, incl. `filter_string', `method', `response', `status' and `url' information
+        (Choices: debug, info, normal)[Default: normal]
+        type: str
+
+= password
+        The password to use for authentication.
+        This option is mutual exclusive with `private_key'. If `private_key' is provided too, it will be used instead.
+
+        type: str
+
+- port
+        Port number to be used for the REST connection.
+        The default value depends on parameter `use_ssl`.
+        [Default: (null)]
+        type: int
+
+= schema
+        The name of the schema.
+
+        type: str
+
+- source_from
+        The source port range from.
+        [Default: (null)]
+        type: str
+
+- source_to
+        The source port range to.
+        [Default: (null)]
+        type: str
+
+- state
+        Use `present' or `absent' for adding or removing.
+        Use `query' for listing an object or multiple objects.
+        (Choices: absent, present, query)[Default: present]
+        type: str
+
+- stateful
+        Whether this filter entry is stateful.
+        [Default: False]
+        type: bool
+
+- tcp_session_rules
+        A list of TCP session rules.
+        (Choices: acknowledgement, established, finish, synchronize, reset, unspecified)[Default: (null)]
+        type: list
+
+= template
+        The name of the template.
+
+        type: str
+
+- timeout
+        The socket level timeout in seconds.
+        [Default: 30]
+        type: int
+
+- use_proxy
+        If `no', it will not use a proxy, even if one is defined in an environment variable on the target hosts.
+        [Default: True]
+        type: bool
+
+- use_ssl
+        If `no', an HTTP connection will be used instead of the default HTTPS connection.
+        [Default: True]
+        type: bool
+
+- username
+        The username to use for authentication.
+        [Default: admin]
+        type: str
+
+- validate_certs
+        If `no', SSL certificates will not be validated.
+        This should only set to `no' when used on personally controlled sites using self-signed certificates.
+        [Default: True]
+        type: bool
+
+
+NOTES:
+      * Due to restrictions of the MSO REST API this module creates filters when needed, and removes them when the last entry has
+        been removed.
+      * Please read the :ref:`aci_guide` for more detailed information on how to manage your ACI infrastructure using Ansible.
+      * This module was written to support ACI Multi Site Orchestrator v2.1 or newer. Some or all functionality may not work on
+        earlier versions.
+
+
+SEE ALSO:
+      * Module mso_schema_template_contract_filter
+           The official documentation on the mso_schema_template_contract_filter module.
+           https://docs.ansible.com/ansible/latest/modules/mso_schema_template_contract_filter_module.html
+
+
+REQUIREMENTS:  Multi Site Orchestrator v2.1 or newer
+
+AUTHOR: Dag Wieers (@dagwieers)
+        METADATA:
+          status:
+          - preview
+          supported_by: community
+        
+
+EXAMPLES:
+
+- name: Add a new filter entry
+  mso_schema_template_filter_entry:
+    host: mso_host
+    username: admin
+    password: SomeSecretPassword
+    schema: Schema 1
+    template: Template 1
+    filter: Filter 1
+    state: present
+  delegate_to: localhost
+
+- name: Remove a filter entry
+  mso_schema_template_filter_entry:
+    host: mso_host
+    username: admin
+    password: SomeSecretPassword
+    schema: Schema 1
+    template: Template 1
+    filter: Filter 1
+    state: absent
+  delegate_to: localhost
+
+- name: Query a specific filter entry
+  mso_schema_template_filter_entry:
+    host: mso_host
+    username: admin
+    password: SomeSecretPassword
+    schema: Schema 1
+    template: Template 1
+    filter: Filter 1
+    state: query
+  delegate_to: localhost
+  register: query_result
+
+- name: Query all filter entries
+  mso_schema_template_filter_entry:
+    host: mso_host
+    username: admin
+    password: SomeSecretPassword
+    schema: Schema 1
+    template: Template 1
+    state: query
+  delegate_to: localhost
+  register: query_result
+
+
+RETURN VALUES:
+
+

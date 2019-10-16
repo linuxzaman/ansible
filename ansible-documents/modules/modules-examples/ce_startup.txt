@@ -1,0 +1,78 @@
+EXAMPLES:
+
+- name: startup module test
+  hosts: cloudengine
+  connection: local
+  gather_facts: no
+  vars:
+    cli:
+      host: "{{ inventory_hostname }}"
+      port: "{{ ansible_ssh_port }}"
+      username: "{{ username }}"
+      password: "{{ password }}"
+      transport: cli
+
+  tasks:
+
+  - name: Display startup information
+    ce_startup:
+      action: display
+      provider: "{{ cli }}"
+
+  - name: Set startup patch file
+    ce_startup:
+      patch_file: 2.PAT
+      slot: all
+      provider: "{{ cli }}"
+
+  - name: Set startup software file
+    ce_startup:
+      software_file: aa.cc
+      slot: 1
+      provider: "{{ cli }}"
+
+  - name: Set startup cfg file
+    ce_startup:
+      cfg_file: 2.cfg
+      slot: 1
+      provider: "{{ cli }}"
+
+
+RETURN VALUES:
+
+changed:
+    description: check to see if a change was made on the device
+    returned: always
+    type: bool
+    sample: true
+proposed:
+    description: k/v pairs of parameters passed into module
+    returned: always
+    type: dict
+    sample: {"patch_file": "2.PAT",
+             "slot": "all"}
+existing:
+    description: k/v pairs of existing aaa server
+    returned: always
+    type: dict
+    sample: {
+                "configSysSoft": "flash:/CE12800-V200R002C20_issuB071.cc",
+                "curentPatchFile": "NULL",
+                "curentStartupFile": "NULL",
+                "curentSysSoft": "flash:/CE12800-V200R002C20_issuB071.cc",
+                "nextPatchFile": "flash:/1.PAT",
+                "nextStartupFile": "flash:/1.cfg",
+                "nextSysSoft": "flash:/CE12800-V200R002C20_issuB071.cc",
+                "position": "5"
+            }
+end_state:
+    description: k/v pairs of aaa params after module execution
+    returned: always
+    type: dict
+    sample: {"StartupInfos": null}
+updates:
+    description: command sent to the device
+    returned: always
+    type: list
+    sample: {"startup patch 2.PAT all"}
+

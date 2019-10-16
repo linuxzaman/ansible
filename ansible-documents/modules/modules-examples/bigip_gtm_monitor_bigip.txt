@@ -1,0 +1,67 @@
+EXAMPLES:
+
+- name: Create BIG-IP Monitor
+  bigip_gtm_monitor_bigip:
+    state: present
+    ip: 10.10.10.10
+    name: my_monitor
+    provider:
+      user: admin
+      password: secret
+      server: lb.mydomain.com
+  delegate_to: localhost
+
+- name: Remove BIG-IP Monitor
+  bigip_gtm_monitor_bigip:
+    state: absent
+    name: my_monitor
+    provider:
+      user: admin
+      password: secret
+      server: lb.mydomain.com
+  delegate_to: localhost
+
+- name: Add BIG-IP monitor for all addresses, port 514
+  bigip_gtm_monitor_bigip:
+    port: 514
+    name: my_monitor
+    provider:
+      user: admin
+      password: secret
+      server: lb.mydomain.com
+  delegate_to: localhost
+
+
+RETURN VALUES:
+
+parent:
+  description: New parent template of the monitor.
+  returned: changed
+  type: str
+  sample: bigip
+ip:
+  description: The new IP of IP/port definition.
+  returned: changed
+  type: str
+  sample: 10.12.13.14
+interval:
+  description: The new interval in which to run the monitor check.
+  returned: changed
+  type: int
+  sample: 2
+timeout:
+  description: The new timeout in which the remote system must respond to the monitor.
+  returned: changed
+  type: int
+  sample: 10
+aggregate_dynamic_ratios:
+  description: The new aggregate of to the monitor.
+  returned: changed
+  type: str
+  sample: sum-members
+ignore_down_response:
+  description: Whether to ignore the down response or not.
+  returned: changed
+  type: bool
+  sample: True
+

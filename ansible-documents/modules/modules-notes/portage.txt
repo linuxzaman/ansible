@@ -1,0 +1,188 @@
+> PORTAGE    (/usr/lib/python2.7/dist-packages/ansible/modules/packaging/os/portage.py)
+
+        Manages Gentoo packages
+
+  * This module is maintained by The Ansible Community
+OPTIONS (= is mandatory):
+
+- changed_use
+        Include installed packages where USE flags have changed, except when
+        flags that the user has not enabled are added or removed
+        (--changed-use)
+        [Default: no]
+        type: bool
+        version_added: 1.8
+        
+
+- deep
+        Consider the entire dependency tree of packages (--deep)
+        [Default: no]
+        type: bool
+
+- depclean
+        Remove packages not needed by explicitly merged packages (--depclean)
+        If no package is specified, clean up the world's dependencies
+        Otherwise, --depclean serves as a dependency aware version of --unmerge
+        [Default: no]
+        type: bool
+
+- getbinpkg
+        Prefer packages specified at PORTAGE_BINHOST in make.conf
+        [Default: no]
+        type: bool
+
+- jobs
+        Specifies the number of packages to build simultaneously.
+        Since version 2.6: Value of 0 or False resets any previously added
+        --jobs setting values
+        [Default: (null)]
+        version_added: 2.3
+        
+
+- keepgoing
+        Continue as much as possible after an error.
+        [Default: no]
+        type: bool
+        version_added: 2.3
+        
+
+- loadavg
+        Specifies that no new builds should be started if there are
+        other builds running and the load average is at least LOAD
+        Since version 2.6: Value of 0 or False resets any previously added
+        --load-average setting values
+        [Default: (null)]
+        version_added: 2.3
+        
+
+- newuse
+        Include installed packages where USE flags have changed (--newuse)
+        [Default: no]
+        type: bool
+
+- nodeps
+        Only merge packages but not their dependencies (--nodeps)
+        [Default: no]
+        type: bool
+
+- noreplace
+        Do not re-emerge installed packages (--noreplace)
+        [Default: no]
+        type: bool
+
+- oneshot
+        Do not add the packages to the world file (--oneshot)
+        [Default: no]
+        type: bool
+
+- onlydeps
+        Only merge packages' dependencies but not the packages (--onlydeps)
+        [Default: no]
+        type: bool
+
+- package
+        Package atom or set, e.g. `sys-apps/foo' or `>foo-2.13' or `@world'
+        [Default: (null)]
+
+- quiet
+        Run emerge in quiet mode (--quiet)
+        [Default: no]
+        type: bool
+
+- quietbuild
+        Redirect all build output to logs alone, and do not display it
+        on stdout (--quiet-build)
+        [Default: no]
+        type: bool
+        version_added: 2.6
+        
+
+- quietfail
+        Suppresses display of the build log on stdout (--quiet-fail)
+        Only the die message and the path of the build log will be
+        displayed on stdout.
+        [Default: no]
+        type: bool
+        version_added: 2.6
+        
+
+- state
+        State of the package atom
+        (Choices: present, installed, emerged, absent, removed, unmerged, latest)[Default: present]
+
+- sync
+        Sync package repositories first
+        If yes, perform "emerge --sync"
+        If web, perform "emerge-webrsync"
+        (Choices: web, yes, no)[Default: (null)]
+
+- update
+        Update packages to the best version available (--update)
+        [Default: no]
+        type: bool
+
+- usepkgonly
+        Merge only binaries (no compiling). This sets getbinpkg=yes.
+        [Default: no]
+        type: bool
+
+- verbose
+        Run emerge in verbose mode (--verbose)
+        [Default: no]
+        type: bool
+
+
+REQUIREMENTS:  gentoolkit
+
+AUTHOR: William L Thomson Jr (@wltjr), Yap Sok Ann (@sayap), Andrew Udvare (@Tatsh)
+        METADATA:
+          status:
+          - preview
+          supported_by: community
+        
+
+EXAMPLES:
+
+# Make sure package foo is installed
+- portage:
+    package: foo
+    state: present
+
+# Make sure package foo is not installed
+- portage:
+    package: foo
+    state: absent
+
+# Update package foo to the "latest" version ( os specific alternative to latest )
+- portage:
+    package: foo
+    update: yes
+
+# Install package foo using PORTAGE_BINHOST setup
+- portage:
+    package: foo
+    getbinpkg: yes
+
+# Re-install world from binary packages only and do not allow any compiling
+- portage:
+    package: '@world'
+    usepkgonly: yes
+
+# Sync repositories and update world
+- portage:
+    package: '@world'
+    update: yes
+    deep: yes
+    sync: yes
+
+# Remove unneeded packages
+- portage:
+    depclean: yes
+
+# Remove package foo if it is not explicitly needed
+- portage:
+    package: foo
+    state: absent
+    depclean: yes
+
+

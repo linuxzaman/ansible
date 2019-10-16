@@ -1,0 +1,115 @@
+> SCALEWAY_SECURITY_GROUP_RULE    (/usr/lib/python2.7/dist-packages/ansible/modules/cloud/scaleway/scaleway_security_group_rule.py)
+
+        This module manages Security Group Rule on Scaleway account https://developer.scaleway.com
+
+  * This module is maintained by The Ansible Community
+OPTIONS (= is mandatory):
+
+= action
+        Rule action
+        (Choices: accept, drop)
+
+- api_timeout
+        HTTP timeout to Scaleway API in seconds.
+        (Aliases: timeout)[Default: 30]
+        type: int
+
+- api_token
+        Scaleway OAuth token.
+        (Aliases: oauth_token)[Default: (null)]
+        type: str
+
+- api_url
+        Scaleway API URL.
+        (Aliases: base_url)[Default: https://api.scaleway.com]
+        type: str
+
+= direction
+        Rule direction
+        (Choices: inbound, outbound)
+
+- ip_range
+        IPV4 CIDR notation to apply to the rule
+        [Default: 0.0.0.0/0]
+
+= port
+        Port related to the rule, null value for all the ports
+
+        type: int
+
+= protocol
+        Network protocol to use
+        (Choices: TCP, UDP, ICMP)
+
+- query_parameters
+        List of parameters passed to the query string.
+        [Default: {}]
+        type: dict
+
+= region
+        Scaleway region to use (for example `par1').
+        (Choices: ams1, EMEA-NL-EVS, par1, EMEA-FR-PAR1)
+
+= security_group
+        Security Group unique identifier
+
+
+- state
+        Indicate desired state of the Security Group Rule.
+        (Choices: present, absent)[Default: present]
+
+- validate_certs
+        Validate SSL certs of the Scaleway API.
+        [Default: True]
+        type: bool
+
+
+NOTES:
+      * Also see the API documentation on https://developer.scaleway.com/
+      * If `api_token' is not set within the module, the following environment variables can be used in decreasing order of
+        precedence `SCW_TOKEN', `SCW_API_KEY', `SCW_OAUTH_TOKEN' or `SCW_API_TOKEN'.
+      * If one wants to use a different `api_url' one can also set the `SCW_API_URL' environment variable.
+
+
+AUTHOR: Antoine Barbare (@abarbare)
+        METADATA:
+          status:
+          - preview
+          supported_by: community
+        
+
+EXAMPLES:
+
+- name: Create a Security Group Rule
+    scaleway_security_group_rule:
+      state: present
+      region: par1
+      protocol: TCP
+      port: 80
+      ip_range: 0.0.0.0/0
+      direction: inbound
+      action: accept
+      security_group: b57210ee-1281-4820-a6db-329f78596ecb
+    register: security_group_rule_creation_task
+
+
+RETURN VALUES:
+
+data:
+    description: This is only present when C(state=present)
+    returned: when C(state=present)
+    type: dict
+    sample: {
+        "scaleway_security_group_rule": {
+            "direction": "inbound",
+            "protocol": "TCP",
+            "ip_range": "0.0.0.0/0",
+            "dest_port_from": 80,
+            "action": "accept",
+            "position": 2,
+            "dest_port_to": null,
+            "editable": null,
+            "id": "10cb0b9a-80f6-4830-abd7-a31cd828b5e9"
+        }
+    }
+

@@ -1,0 +1,96 @@
+> ZABBIX_GROUP    (/usr/lib/python2.7/dist-packages/ansible/modules/monitoring/zabbix/zabbix_group.py)
+
+        Create host groups if they do not exist. Delete existing host groups if they exist.
+
+  * This module is maintained by The Ansible Community
+OPTIONS (= is mandatory):
+
+= host_groups
+        List of host groups to create or delete.
+        (Aliases: host_group)
+
+- http_login_password
+        Basic Auth password
+        [Default: (null)]
+        type: str
+        version_added: 2.1
+
+= http_login_user
+        Basic Auth login
+
+        type: str
+        version_added: 2.1
+
+= login_password
+        Zabbix user password.
+
+        type: str
+
+= login_user
+        Zabbix user name.
+
+        type: str
+
+= server_url
+        URL of Zabbix server, with protocol (http or https). `url' is an alias for `server_url'.
+        (Aliases: url)
+        type: str
+
+- state
+        Create or delete host group.
+        (Choices: present, absent)[Default: present]
+
+- timeout
+        The timeout of API request (seconds).
+        [Default: 10]
+        type: int
+
+- validate_certs
+        If set to False, SSL certificates will not be validated. This should only be used on personally controlled sites using self-
+        signed certificates.
+        [Default: True]
+        type: bool
+        version_added: 2.5
+
+
+NOTES:
+      * Too many concurrent updates to the same group may cause Zabbix to return errors, see examples for a workaround if needed.
+
+
+REQUIREMENTS:  python >= 2.6, zabbix-api
+
+AUTHOR: Cove (@cove), Tony Minfei Ding (!UNKNOWN), Harrison Gu (@harrisongu)
+        METADATA:
+          status:
+          - preview
+          supported_by: community
+        
+
+EXAMPLES:
+
+# Base create host groups example
+- name: Create host groups
+  local_action:
+    module: zabbix_group
+    server_url: http://monitor.example.com
+    login_user: username
+    login_password: password
+    state: present
+    host_groups:
+      - Example group1
+      - Example group2
+
+# Limit the Zabbix group creations to one host since Zabbix can return an error when doing concurrent updates
+- name: Create host groups
+  local_action:
+    module: zabbix_group
+    server_url: http://monitor.example.com
+    login_user: username
+    login_password: password
+    state: present
+    host_groups:
+      - Example group1
+      - Example group2
+  when: inventory_hostname==groups['group_name'][0]
+
+

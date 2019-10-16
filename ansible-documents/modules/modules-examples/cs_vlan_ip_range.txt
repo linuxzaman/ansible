@@ -1,0 +1,117 @@
+EXAMPLES:
+
+- name: create a VLAN IP range for network test
+  cs_vlan_ip_range:
+    network: test
+    vlan: 98
+    start_ip: 10.2.4.10
+    end_ip: 10.2.4.100
+    gateway: 10.2.4.1
+    netmask: 255.255.255.0
+    zone: zone-02
+  delegate_to: localhost
+
+- name: remove a VLAN IP range for network test
+  cs_vlan_ip_range:
+    state: absent
+    network: test
+    start_ip: 10.2.4.10
+    end_ip: 10.2.4.100
+    zone: zone-02
+  delegate_to: localhost
+
+
+RETURN VALUES:
+
+---
+id:
+  description: UUID of the VLAN IP range.
+  returned: success
+  type: str
+  sample: 04589590-ac63-4ffc-93f5-b698b8ac38b6
+network:
+  description: The network of vlan range
+  returned: if available
+  type: str
+  sample: test
+vlan:
+  description: The ID or VID of the VLAN.
+  returned: success
+  type: str
+  sample: vlan://98
+gateway:
+  description: IPv4 gateway.
+  returned: success
+  type: str
+  sample: 10.2.4.1
+netmask:
+  description: IPv4 netmask.
+  returned: success
+  type: str
+  sample: 255.255.255.0
+gateway_ipv6:
+  description: IPv6 gateway.
+  returned: if available
+  type: str
+  sample: 2001:db8::1
+cidr_ipv6:
+  description: The CIDR of IPv6 network.
+  returned: if available
+  type: str
+  sample: 2001:db8::/64
+zone:
+  description: Name of zone.
+  returned: success
+  type: str
+  sample: zone-02
+domain:
+  description: Domain name of the VLAN IP range.
+  returned: success
+  type: str
+  sample: ROOT
+account:
+  description: Account who owns the network.
+  returned: if available
+  type: str
+  sample: example account
+project:
+  description: Project who owns the network.
+  returned: if available
+  type: str
+  sample: example project
+for_systemvms:
+  description: Whether VLAN IP range is dedicated to system vms or not.
+  returned: success
+  type: bool
+  sample: false
+for_virtual_network:
+  description: Whether VLAN IP range is of Virtual type or not.
+  returned: success
+  type: bool
+  sample: false
+physical_network:
+  description: The physical network VLAN IP range belongs to.
+  returned: success
+  type: str
+  sample: 04589590-ac63-4ffc-93f5-b698b8ac38b6
+start_ip:
+  description: The start ip of the VLAN IP range.
+  returned: success
+  type: str
+  sample: 10.2.4.10
+end_ip:
+  description: The end ip of the VLAN IP range.
+  returned: success
+  type: str
+  sample: 10.2.4.100
+start_ipv6:
+  description: The start ipv6 of the VLAN IP range.
+  returned: if available
+  type: str
+  sample: 2001:db8::10
+end_ipv6:
+  description: The end ipv6 of the VLAN IP range.
+  returned: if available
+  type: str
+  sample: 2001:db8::50
+

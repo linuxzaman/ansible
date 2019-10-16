@@ -1,0 +1,217 @@
+> CS_ROUTER    (/usr/lib/python2.7/dist-packages/ansible/modules/cloud/cloudstack/cs_router.py)
+
+        Start, restart, stop and destroy routers. `state=present' is not able to create routers, use [cs_network] instead.
+
+  * This module is maintained by The Ansible Community
+OPTIONS (= is mandatory):
+
+- account
+        Account the router is related to.
+        [Default: (null)]
+        type: str
+
+- api_http_method
+        HTTP method used to query the API endpoint.
+        If not given, the `CLOUDSTACK_METHOD' env variable is considered.
+        As the last option, the value is taken from the ini config file, also see the notes.
+        Fallback value is `get' if not specified.
+        (Choices: get, post)[Default: (null)]
+        type: str
+
+- api_key
+        API key of the CloudStack API.
+        If not given, the `CLOUDSTACK_KEY' env variable is considered.
+        As the last option, the value is taken from the ini config file, also see the notes.
+        [Default: (null)]
+        type: str
+
+- api_region
+        Name of the ini section in the `cloustack.ini' file.
+        If not given, the `CLOUDSTACK_REGION' env variable is considered.
+        [Default: cloudstack]
+        type: str
+
+- api_secret
+        Secret key of the CloudStack API.
+        If not set, the `CLOUDSTACK_SECRET' env variable is considered.
+        As the last option, the value is taken from the ini config file, also see the notes.
+        [Default: (null)]
+        type: str
+
+- api_timeout
+        HTTP timeout in seconds.
+        If not given, the `CLOUDSTACK_TIMEOUT' env variable is considered.
+        As the last option, the value is taken from the ini config file, also see the notes.
+        Fallback value is 10 seconds if not specified.
+        [Default: (null)]
+        type: int
+
+- api_url
+        URL of the CloudStack API e.g. https://cloud.example.com/client/api.
+        If not given, the `CLOUDSTACK_ENDPOINT' env variable is considered.
+        As the last option, the value is taken from the ini config file, also see the notes.
+        [Default: (null)]
+        type: str
+
+- domain
+        Domain the router is related to.
+        [Default: (null)]
+        type: str
+
+= name
+        Name of the router.
+
+        type: str
+
+- poll_async
+        Poll async jobs until job has finished.
+        [Default: True]
+        type: bool
+
+- project
+        Name of the project the router is related to.
+        [Default: (null)]
+        type: str
+
+- service_offering
+        Name or id of the service offering of the router.
+        [Default: (null)]
+        type: str
+
+- state
+        State of the router.
+        (Choices: present, absent, started, stopped, restarted)[Default: present]
+        type: str
+
+- zone
+        Name of the zone the router is deployed in.
+        If not set, all zones are used.
+        [Default: (null)]
+        type: str
+        version_added: 2.4
+
+
+NOTES:
+      * Ansible uses the `cs' library's configuration method if credentials are not provided by the arguments `api_url', `api_key',
+        `api_secret'. Configuration is read from several locations, in the following order. The `CLOUDSTACK_ENDPOINT',
+        `CLOUDSTACK_KEY', `CLOUDSTACK_SECRET' and `CLOUDSTACK_METHOD'. `CLOUDSTACK_TIMEOUT' environment variables. A
+        `CLOUDSTACK_CONFIG' environment variable pointing to an `.ini' file. A `cloudstack.ini' file in the current working
+        directory. A `.cloudstack.ini' file in the users home directory. Optionally multiple credentials and endpoints can be
+        specified using ini sections in `cloudstack.ini'. Use the argument `api_region' to select the section name, default section
+        is `cloudstack'. See https://github.com/exoscale/cs for more information.
+      * A detailed guide about cloudstack modules can be found in the L(CloudStack Cloud
+        Guide,../scenario_guides/guide_cloudstack.html).
+      * This module supports check mode.
+
+
+REQUIREMENTS:  python >= 2.6, cs >= 0.6.10
+
+AUTHOR: René Moser (@resmo)
+        METADATA:
+          status:
+          - stableinterface
+          supported_by: community
+        
+
+EXAMPLES:
+
+# Ensure the router has the desired service offering, no matter if
+# the router is running or not.
+- name: Present router
+  cs_router:
+    name: r-40-VM
+    service_offering: System Offering for Software Router
+  delegate_to: localhost
+
+- name: Ensure started
+  cs_router:
+    name: r-40-VM
+    state: started
+  delegate_to: localhost
+
+# Ensure started with desired service offering.
+# If the service offerings changes, router will be rebooted.
+- name: Ensure started with desired service offering
+  cs_router:
+    name: r-40-VM
+    service_offering: System Offering for Software Router
+    state: started
+  delegate_to: localhost
+
+- name: Ensure stopped
+  cs_router:
+    name: r-40-VM
+    state: stopped
+  delegate_to: localhost
+
+- name: Remove a router
+  cs_router:
+    name: r-40-VM
+    state: absent
+  delegate_to: localhost
+
+
+RETURN VALUES:
+
+---
+id:
+  description: UUID of the router.
+  returned: success
+  type: str
+  sample: 04589590-ac63-4ffc-93f5-b698b8ac38b6
+name:
+  description: Name of the router.
+  returned: success
+  type: str
+  sample: r-40-VM
+created:
+  description: Date of the router was created.
+  returned: success
+  type: str
+  sample: 2014-12-01T14:57:57+0100
+template_version:
+  description: Version of the system VM template.
+  returned: success
+  type: str
+  sample: 4.5.1
+requires_upgrade:
+  description: Whether the router needs to be upgraded to the new template.
+  returned: success
+  type: bool
+  sample: false
+redundant_state:
+  description: Redundant state of the router.
+  returned: success
+  type: str
+  sample: UNKNOWN
+role:
+  description: Role of the router.
+  returned: success
+  type: str
+  sample: VIRTUAL_ROUTER
+zone:
+  description: Name of zone the router is in.
+  returned: success
+  type: str
+  sample: ch-gva-2
+service_offering:
+  description: Name of the service offering the router has.
+  returned: success
+  type: str
+  sample: System Offering For Software Router
+state:
+  description: State of the router.
+  returned: success
+  type: str
+  sample: Active
+domain:
+  description: Domain the router is related to.
+  returned: success
+  type: str
+  sample: ROOT
+account:
+  description: Account the router is related to.
+  returned: success
+  type: str
+  sample: admin
+

@@ -1,0 +1,79 @@
+EXAMPLES:
+
+- name: Obtain information about a registry key using short form
+  win_reg_stat:
+    path: HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion
+  register: current_version
+
+- name: Obtain information about a registry key property
+  win_reg_stat:
+    path: HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion
+    name: CommonFilesDir
+  register: common_files_dir
+
+- name: Obtain the registry key's (Default) property
+  win_reg_stat:
+    path: HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion
+    name: ''
+  register: current_version_default
+
+
+RETURN VALUES:
+
+changed:
+  description: Whether anything was changed.
+  returned: always
+  type: bool
+  sample: true
+exists:
+  description: States whether the registry key/property exists.
+  returned: success and path/property exists
+  type: bool
+  sample: true
+properties:
+  description: A dictionary containing all the properties and their values in the registry key.
+  returned: success, path exists and property not specified
+  type: dict
+  sample: {
+    "" : {
+      "raw_value": "",
+      "type": "REG_SZ",
+      "value": ""
+    },
+    "binary_property" : {
+      "raw_value": ["0x01", "0x16"],
+      "type": "REG_BINARY",
+      "value": [1, 22]
+    },
+    "multi_string_property" : {
+      "raw_value": ["a", "b"],
+      "type": "REG_MULTI_SZ",
+      "value": ["a", "b"]
+    }
+  }
+sub_keys:
+  description: A list of all the sub keys of the key specified.
+  returned: success, path exists and property not specified
+  type: list
+  sample: [
+    "AppHost",
+    "Casting",
+    "DateTime"
+  ]
+raw_value:
+  description: Returns the raw value of the registry property, REG_EXPAND_SZ has no string expansion, REG_BINARY or REG_NONE is in hex 0x format.
+    REG_NONE, this value is a hex string in the 0x format.
+  returned: success, path/property exists and property specified
+  type: str
+  sample: '%ProgramDir%\\Common Files'
+type:
+  description: The property type.
+  returned: success, path/property exists and property specified
+  type: str
+  sample: "REG_EXPAND_SZ"
+value:
+  description: The value of the property.
+  returned: success, path/property exists and property specified
+  type: str
+  sample: 'C:\\Program Files\\Common Files'
+

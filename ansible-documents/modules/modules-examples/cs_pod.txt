@@ -1,0 +1,77 @@
+EXAMPLES:
+
+- name: Ensure a pod is present
+  cs_pod:
+    name: pod1
+    zone: ch-zrh-ix-01
+    start_ip: 10.100.10.101
+    gateway: 10.100.10.1
+    netmask: 255.255.255.0
+  delegate_to: localhost
+
+- name: Ensure a pod is disabled
+  cs_pod:
+    name: pod1
+    zone: ch-zrh-ix-01
+    state: disabled
+  delegate_to: localhost
+
+- name: Ensure a pod is enabled
+  cs_pod:
+    name: pod1
+    zone: ch-zrh-ix-01
+    state: enabled
+  delegate_to: localhost
+
+- name: Ensure a pod is absent
+  cs_pod:
+    name: pod1
+    zone: ch-zrh-ix-01
+    state: absent
+  delegate_to: localhost
+
+
+RETURN VALUES:
+
+---
+id:
+  description: UUID of the pod.
+  returned: success
+  type: str
+  sample: 04589590-ac63-4ffc-93f5-b698b8ac38b6
+name:
+  description: Name of the pod.
+  returned: success
+  type: str
+  sample: pod01
+start_ip:
+  description: Starting IP of the pod.
+  returned: success
+  type: str
+  sample: 10.100.1.101
+end_ip:
+  description: Ending IP of the pod.
+  returned: success
+  type: str
+  sample: 10.100.1.254
+netmask:
+  description: Netmask of the pod.
+  returned: success
+  type: str
+  sample: 255.255.255.0
+gateway:
+  description: Gateway of the pod.
+  returned: success
+  type: str
+  sample: 10.100.1.1
+allocation_state:
+  description: State of the pod.
+  returned: success
+  type: str
+  sample: Enabled
+zone:
+  description: Name of zone the pod is in.
+  returned: success
+  type: str
+  sample: ch-gva-2
+

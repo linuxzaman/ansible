@@ -1,0 +1,41 @@
+EXAMPLES:
+
+- name: create a network ACL
+  cs_network_acl:
+    name: Webserver ACL
+    description: a more detailed description of the ACL
+    vpc: customers
+  delegate_to: localhost
+
+- name: remove a network ACL
+  cs_network_acl:
+    name: Webserver ACL
+    vpc: customers
+    state: absent
+  delegate_to: localhost
+
+
+RETURN VALUES:
+
+---
+name:
+  description: Name of the network ACL.
+  returned: success
+  type: str
+  sample: customer acl
+description:
+  description: Description of the network ACL.
+  returned: success
+  type: str
+  sample: Example description of a network ACL
+vpc:
+  description: VPC of the network ACL.
+  returned: success
+  type: str
+  sample: customer vpc
+zone:
+  description: Zone the VPC is related to.
+  returned: success
+  type: str
+  sample: ch-gva-2
+

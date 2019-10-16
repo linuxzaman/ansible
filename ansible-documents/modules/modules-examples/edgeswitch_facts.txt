@@ -1,0 +1,49 @@
+EXAMPLES:
+
+# Collect all facts from the device
+- edgeswitch_facts:
+    gather_subset: all
+
+# Collect only the config and default facts
+- edgeswitch_facts:
+    gather_subset:
+      - config
+
+
+RETURN VALUES:
+
+ansible_net_gather_subset:
+  description: The list of fact subsets collected from the device
+  returned: always
+  type: list
+
+# default
+ansible_net_model:
+  description: The model name returned from the device
+  returned: always
+  type: str
+ansible_net_serialnum:
+  description: The serial number of the remote device
+  returned: always
+  type: str
+ansible_net_version:
+  description: The operating system version running on the remote device
+  returned: always
+  type: str
+ansible_net_hostname:
+  description: The configured hostname of the device
+  returned: always
+  type: str
+
+# config
+ansible_net_config:
+  description: The current active config from the device
+  returned: when config is configured
+  type: str
+
+# interfaces
+ansible_net_interfaces:
+  description: A hash of all interfaces running on the system
+  returned: when interfaces is configured
+  type: dict
+

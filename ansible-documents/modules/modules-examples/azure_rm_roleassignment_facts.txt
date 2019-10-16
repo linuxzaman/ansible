@@ -1,0 +1,55 @@
+EXAMPLES:
+
+- name: Get role assignments for specific service principal
+      azure_rm_roleassignment_facts:
+        assignee: xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx
+
+    - name: Get role assignments for specific scope
+      azure_rm_roleassignment_facts:
+        scope: /subscriptions/xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx
+
+
+RETURN VALUES:
+
+roleassignments:
+    description: List of role assignments.
+    returned: always
+    type: complex
+    contains:
+        id:
+            description:
+                - Id of role assignment.
+            type: str
+            returned: always
+            sample: "/subscriptions/xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx/providers/Microsoft.Authorization/roleAssignments/xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx"
+        name:
+            description:
+                - Name of role assignment.
+            type: str
+            returned: always
+            sample: myRoleAssignment
+        type:
+            descripition:
+                - Type of role assignment.
+            type: str
+            returned: always
+            sample: custom
+        principal_id:
+            description:
+                - Principal Id of the role assigned to.
+            type: str
+            returned: always
+            sample: xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx
+        role_definition_id:
+            description:
+                - Role definition id that was assigned to principal_id.
+            type: str
+            returned: always
+            sample: xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx
+        scope:
+            description:
+                - The role assignment scope
+            type: str
+            returned: always
+            sample: /subscriptions/xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx
+

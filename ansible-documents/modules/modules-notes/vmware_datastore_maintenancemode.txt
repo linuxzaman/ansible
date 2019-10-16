@@ -1,0 +1,128 @@
+> VMWARE_DATASTORE_MAINTENANCEMODE    (/usr/lib/python2.7/dist-packages/ansible/modules/cloud/vmware/vmware_datastore_maintenancemode.py)
+
+        This module can be used to manage maintenance mode of a datastore.
+
+  * This module is maintained by The Ansible Community
+OPTIONS (= is mandatory):
+
+- cluster_name
+        Name of the cluster where datastore is connected to.
+        If multiple datastores are connected to the given cluster, then all datastores will be managed by `state'.
+        If `datastore' or `datastore_cluster' are not set, this parameter is required.
+        [Default: (null)]
+
+- datastore
+        Name of datastore to manage.
+        If `datastore_cluster' or `cluster_name' are not set, this parameter is required.
+        [Default: (null)]
+
+- datastore_cluster
+        Name of the datastore cluster from all child datastores to be managed.
+        If `datastore' or `cluster_name' are not set, this parameter is required.
+        [Default: (null)]
+
+- hostname
+        The hostname or IP address of the vSphere vCenter or ESXi server.
+        If the value is not specified in the task, the value of environment variable `VMWARE_HOST' will be used instead.
+        Environment variable support added in Ansible 2.6.
+        [Default: (null)]
+        type: str
+
+- password
+        The password of the vSphere vCenter or ESXi server.
+        If the value is not specified in the task, the value of environment variable `VMWARE_PASSWORD' will be used instead.
+        Environment variable support added in Ansible 2.6.
+        (Aliases: pass, pwd)[Default: (null)]
+        type: str
+
+- port
+        The port number of the vSphere vCenter or ESXi server.
+        If the value is not specified in the task, the value of environment variable `VMWARE_PORT' will be used instead.
+        Environment variable support added in Ansible 2.6.
+        [Default: 443]
+        type: int
+        version_added: 2.5
+
+- state
+        If set to `present', then enter datastore into maintenance mode.
+        If set to `present' and datastore is already in maintenance mode, then no action will be taken.
+        If set to `absent' and datastore is in maintenance mode, then exit maintenance mode.
+        If set to `absent' and datastore is not in maintenance mode, then no action will be taken.
+        (Choices: present, absent)[Default: present]
+
+- username
+        The username of the vSphere vCenter or ESXi server.
+        If the value is not specified in the task, the value of environment variable `VMWARE_USER' will be used instead.
+        Environment variable support added in Ansible 2.6.
+        (Aliases: admin, user)[Default: (null)]
+        type: str
+
+- validate_certs
+        Allows connection when SSL certificates are not valid. Set to `false' when certificates are not trusted.
+        If the value is not specified in the task, the value of environment variable `VMWARE_VALIDATE_CERTS' will be used instead.
+        Environment variable support added in Ansible 2.6.
+        If set to `yes', please make sure Python >= 2.7.9 is installed on the given machine.
+        [Default: True]
+        type: bool
+
+
+NOTES:
+      * Tested on vSphere 5.5, 6.0 and 6.5
+
+
+REQUIREMENTS:  python >= 2.6, PyVmomi
+
+AUTHOR: Abhijeet Kasurde (@Akasurde)
+        METADATA:
+          status:
+          - preview
+          supported_by: community
+        
+
+EXAMPLES:
+
+- name: Enter datastore into Maintenance Mode
+  vmware_datastore_maintenancemode:
+    hostname: '{{ vcenter_hostname }}'
+    username: '{{ vcenter_username }}'
+    password: '{{ vcenter_password }}'
+    datastore: '{{ datastore_name }}'
+    state: present
+  delegate_to: localhost
+
+- name: Enter all datastores under cluster into Maintenance Mode
+  vmware_datastore_maintenancemode:
+    hostname: '{{ vcenter_hostname }}'
+    username: '{{ vcenter_username }}'
+    password: '{{ vcenter_password }}'
+    cluster_name: '{{ cluster_name }}'
+    state: present
+  delegate_to: localhost
+
+- name: Enter all datastores under datastore cluster into Maintenance Mode
+  vmware_datastore_maintenancemode:
+    hostname: '{{ vcenter_hostname }}'
+    username: '{{ vcenter_username }}'
+    password: '{{ vcenter_password }}'
+    datastore_cluster: '{{ datastore_cluster_name }}'
+    state: present
+  delegate_to: localhost
+
+- name: Exit datastore into Maintenance Mode
+  vmware_datastore_maintenancemode:
+    hostname: '{{ vcenter_hostname }}'
+    username: '{{ vcenter_username }}'
+    password: '{{ vcenter_password }}'
+    datastore: '{{ datastore_name }}'
+    state: absent
+  delegate_to: localhost
+
+
+RETURN VALUES:
+
+results:
+    description: Action taken for datastore
+    returned: always
+    type: dict
+    sample:
+

@@ -1,0 +1,515 @@
+> ALI_INSTANCE    (/usr/lib/python2.7/dist-packages/ansible/modules/cloud/alicloud/ali_instance.py)
+
+        Create, start, stop, restart, modify or terminate ecs instances. Add or remove ecs instances to/from security group.
+
+  * This module is maintained by The Ansible Community
+OPTIONS (= is mandatory):
+
+- alicloud_access_key
+        Aliyun Cloud access key.
+        If not set then the value of environment variable `ALICLOUD_ACCESS_KEY', `ALICLOUD_ACCESS_KEY_ID' will be used instead.
+        (Aliases: access_key_id, access_key)[Default: (null)]
+        type: str
+
+- alicloud_region
+        The Aliyun Cloud region to use.
+        If not specified then the value of environment variable `ALICLOUD_REGION', `ALICLOUD_REGION_ID' will be used instead.
+        (Aliases: region, region_id)[Default: (null)]
+        type: str
+
+- alicloud_secret_key
+        Aliyun Cloud secret key.
+        If not set then the value of environment variable `ALICLOUD_SECRET_KEY', `ALICLOUD_SECRET_ACCESS_KEY' will be used instead.
+        (Aliases: secret_access_key, secret_key)[Default: (null)]
+        type: str
+
+- alicloud_security_token
+        The Aliyun Cloud security token.
+        If not specified then the value of environment variable `ALICLOUD_SECURITY_TOKEN' will be used instead.
+        (Aliases: security_token)[Default: (null)]
+        type: str
+
+- allocate_public_ip
+        Whether allocate a public ip for the new instance.
+        (Aliases: assign_public_ip)[Default: False]
+        type: bool
+
+- auto_renew
+        Whether automate renew the charge of the instance.
+        [Default: False]
+        type: bool
+
+- auto_renew_period
+        The duration of the automatic renew the charge of the instance. Required when `auto_renew=True'.
+        (Choices: 1, 2, 3, 6, 12)[Default: (null)]
+
+- availability_zone
+        Aliyun availability zone ID in which to launch the instance. If it is not specified, it will be allocated by system
+        automatically.
+        (Aliases: alicloud_zone)[Default: (null)]
+
+- count
+        The number of the new instance. An integer value which indicates how many instances that match `count_tag' should be running.
+        Instances are either created or terminated based on this value.
+        [Default: 1]
+
+- count_tag
+        `count' determines how many instances based on a specific tag criteria should be present. This can be expressed in multiple ways
+        and is shown in the EXAMPLES section. The specified count_tag must already exist or be passed in as the `instance_tags' option.
+        If it is not specified, it will be replaced by `instance_name'.
+        [Default: (null)]
+
+- description
+        The description of ECS instance, which is a string of 2 to 256 characters. It cannot begin with http:// or https://.
+        [Default: (null)]
+
+- force
+        Whether the current operation needs to be execute forcibly.
+        [Default: False]
+        type: bool
+
+- host_name
+        Instance host name.
+        [Default: (null)]
+
+- image_id
+        Image ID used to launch instances. Required when `state=present' and creating new ECS instances.
+        (Aliases: image)[Default: (null)]
+
+- instance_charge_type
+        The charge type of the instance.
+        (Choices: PrePaid, PostPaid)[Default: PostPaid]
+
+- instance_ids
+        A list of instance ids. It is required when need to operate existing instances. If it is specified, `count' will lose efficacy.
+        [Default: (null)]
+
+- instance_name
+        The name of ECS instance, which is a string of 2 to 128 Chinese or English characters. It must begin with an uppercase/lowercase
+        letter or a Chinese character and can contain numerals, ".", "_" or "-". It cannot begin with http:// or https://.
+        (Aliases: name)[Default: (null)]
+
+- instance_tags
+        A hash/dictionaries of instance tags, to add to the new instance or for starting/stopping instance by tag. `{"key":"value"}'
+        (Aliases: tags)[Default: (null)]
+
+- instance_type
+        Instance type used to launch instances. Required when `state=present' and creating new ECS instances.
+        (Aliases: type)[Default: (null)]
+
+- internet_charge_type
+        Internet charge type of ECS instance.
+        (Choices: PayByBandwidth, PayByTraffic)[Default: PayByBandwidth]
+
+- key_name
+        The name of key pair which is used to access ECS instance in SSH.
+        (Aliases: keypair)[Default: (null)]
+
+- max_bandwidth_in
+        Maximum incoming bandwidth from the public network, measured in Mbps (Megabits per second).
+        [Default: 200]
+
+- max_bandwidth_out
+        Maximum outgoing bandwidth to the public network, measured in Mbps (Megabits per second).
+        [Default: 0]
+
+- password
+        The password to login instance. After rebooting instances, modified password will take effect.
+        [Default: (null)]
+
+- period
+        The charge duration of the instance, in month. Required when `instance_charge_type=PrePaid'.
+        The valid value are [1-9, 12, 24, 36].
+        [Default: 1]
+
+- security_groups
+        A list of security group IDs.
+        [Default: (null)]
+
+- state
+        The state of the instance after operating.
+        (Choices: present, running, stopped, restarted, absent)[Default: present]
+
+- system_disk_category
+        Category of the system disk.
+        (Choices: cloud_efficiency, cloud_ssd)[Default: cloud_efficiency]
+
+- system_disk_description
+        Description of the system disk.
+        [Default: (null)]
+
+- system_disk_name
+        Name of the system disk.
+        [Default: (null)]
+
+- system_disk_size
+        Size of the system disk, in GB. The valid values are 40~500.
+        [Default: 40]
+
+- user_data
+        User-defined data to customize the startup behaviors of an ECS instance and to pass data into an ECS instance. It only will take
+        effect when launching the new ECS instances.
+        [Default: (null)]
+
+- vswitch_id
+        The subnet ID in which to launch the instances (VPC).
+        (Aliases: subnet_id)[Default: (null)]
+
+
+NOTES:
+      * If parameters are not set within the module, the following environment variables can be used in decreasing order of
+        precedence `ALICLOUD_ACCESS_KEY' or `ALICLOUD_ACCESS_KEY_ID', `ALICLOUD_SECRET_KEY' or `ALICLOUD_SECRET_ACCESS_KEY',
+        `ALICLOUD_REGION' or `ALICLOUD_REGION_ID', `ALICLOUD_SECURITY_TOKEN'
+      * `ALICLOUD_REGION' or `ALICLOUD_REGION_ID' can be typically be used to specify the ALICLOUD region, when required, but this
+        can also be configured in the footmark config file
+
+
+REQUIREMENTS:  footmark >= 1.1.16, python >= 2.6
+
+AUTHOR: He Guimin (@xiaozhu36)
+EXTENDS_DOCUMENTATION_FRAGMENT: alicloud
+        METADATA:
+          status:
+          - preview
+          supported_by: community
+        
+
+EXAMPLES:
+
+# basic provisioning example vpc network
+- name: basic provisioning example
+  hosts: localhost
+  vars:
+    alicloud_access_key: <your-alicloud-access-key-id>
+    alicloud_secret_key: <your-alicloud-access-secret-key>
+    alicloud_region: cn-beijing
+    image: ubuntu1404_64_40G_cloudinit_20160727.raw
+    instance_type: ecs.n4.small
+    vswitch_id: vsw-abcd1234
+    assign_public_ip: True
+    max_bandwidth_out: 10
+    host_name: myhost
+    password: mypassword
+    system_disk_category: cloud_efficiency
+    system_disk_size: 100
+    internet_charge_type: PayByBandwidth
+    security_groups: ["sg-f2rwnfh23r"]
+
+    instance_ids: ["i-abcd12346", "i-abcd12345"]
+    force: True
+
+  tasks:
+    - name: launch ECS instance in VPC network
+      ali_instance:
+        alicloud_access_key: '{{ alicloud_access_key }}'
+        alicloud_secret_key: '{{ alicloud_secret_key }}'
+        alicloud_region: '{{ alicloud_region }}'
+        image: '{{ image }}'
+        system_disk_category: '{{ system_disk_category }}'
+        system_disk_size: '{{ system_disk_size }}'
+        instance_type: '{{ instance_type }}'
+        vswitch_id: '{{ vswitch_id }}'
+        assign_public_ip: '{{ assign_public_ip }}'
+        internet_charge_type: '{{ internet_charge_type }}'
+        max_bandwidth_out: '{{ max_bandwidth_out }}'
+        instance_tags:
+            Name: created_one
+        host_name: '{{ host_name }}'
+        password: '{{ password }}'
+
+    - name: with count and count_tag to create a number of instances
+      ali_instance:
+        alicloud_access_key: '{{ alicloud_access_key }}'
+        alicloud_secret_key: '{{ alicloud_secret_key }}'
+        alicloud_region: '{{ alicloud_region }}'
+        image: '{{ image }}'
+        system_disk_category: '{{ system_disk_category }}'
+        system_disk_size: '{{ system_disk_size }}'
+        instance_type: '{{ instance_type }}'
+        assign_public_ip: '{{ assign_public_ip }}'
+        security_groups: '{{ security_groups }}'
+        internet_charge_type: '{{ internet_charge_type }}'
+        max_bandwidth_out: '{{ max_bandwidth_out }}'
+        instance_tags:
+            Name: created_one
+            Version: 0.1
+        count: 2
+        count_tag:
+            Name: created_one
+        host_name: '{{ host_name }}'
+        password: '{{ password }}'
+
+    - name: start instance
+      ali_instance:
+        alicloud_access_key: '{{ alicloud_access_key }}'
+        alicloud_secret_key: '{{ alicloud_secret_key }}'
+        alicloud_region: '{{ alicloud_region }}'
+        instance_ids: '{{ instance_ids }}'
+        state: 'running'
+
+    - name: reboot instance forcibly
+      ecs:
+        alicloud_access_key: '{{ alicloud_access_key }}'
+        alicloud_secret_key: '{{ alicloud_secret_key }}'
+        alicloud_region: '{{ alicloud_region }}'
+        instance_ids: '{{ instance_ids }}'
+        state: 'restarted'
+        force: '{{ force }}'
+
+    - name: Add instances to an security group
+      ecs:
+        alicloud_access_key: '{{ alicloud_access_key }}'
+        alicloud_secret_key: '{{ alicloud_secret_key }}'
+        alicloud_region: '{{ alicloud_region }}'
+        instance_ids: '{{ instance_ids }}'
+        security_groups: '{{ security_groups }}'
+
+
+RETURN VALUES:
+
+instances:
+    description: List of ECS instances
+    returned: always
+    type: complex
+    contains:
+        availability_zone:
+            description: The availability zone of the instance is in.
+            returned: always
+            type: str
+            sample: cn-beijing-a
+        block_device_mappings:
+            description: Any block device mapping entries for the instance.
+            returned: always
+            type: complex
+            contains:
+                device_name:
+                    description: The device name exposed to the instance (for example, /dev/xvda).
+                    returned: always
+                    type: str
+                    sample: /dev/xvda
+                attach_time:
+                    description: The time stamp when the attachment initiated.
+                    returned: always
+                    type: str
+                    sample: "2018-06-25T04:08:26Z"
+                delete_on_termination:
+                    description: Indicates whether the volume is deleted on instance termination.
+                    returned: always
+                    type: bool
+                    sample: true
+                status:
+                    description: The attachment state.
+                    returned: always
+                    type: str
+                    sample: in_use
+                volume_id:
+                    description: The ID of the cloud disk.
+                    returned: always
+                    type: str
+                    sample: d-2zei53pjsi117y6gf9t6
+        cpu:
+            description: The CPU core count of the instance.
+            returned: always
+            type: int
+            sample: 4
+        creation_time:
+            description: The time the instance was created.
+            returned: always
+            type: str
+            sample: "2018-06-25T04:08Z"
+        description:
+            description: The instance description.
+            returned: always
+            type: str
+            sample: "my ansible instance"
+        eip:
+            description: The attribution of EIP associated with the instance.
+            returned: always
+            type: complex
+            contains:
+                allocation_id:
+                    description: The ID of the EIP.
+                    returned: always
+                    type: str
+                    sample: eip-12345
+                internet_charge_type:
+                    description: The internet charge type of the EIP.
+                    returned: always
+                    type: str
+                    sample: "paybybandwidth"
+                ip_address:
+                    description: EIP address.
+                    returned: always
+                    type: str
+                    sample: 42.10.2.2
+        expired_time:
+            description: The time the instance will expire.
+            returned: always
+            type: str
+            sample: "2099-12-31T15:59Z"
+        gpu:
+            description: The attribution of instance GPU.
+            returned: always
+            type: complex
+            contains:
+                amount:
+                    description: The count of the GPU.
+                    returned: always
+                    type: int
+                    sample: 0
+                spec:
+                    description: The specification of the GPU.
+                    returned: always
+                    type: str
+                    sample: ""
+        host_name:
+            description: The host name of the instance.
+            returned: always
+            type: str
+            sample: iZ2zewaoZ
+        id:
+            description: Alias of instance_id.
+            returned: always
+            type: str
+            sample: i-abc12345
+        instance_id:
+            description: ECS instance resource ID.
+            returned: always
+            type: str
+            sample: i-abc12345
+        image_id:
+            description: The ID of the image used to launch the instance.
+            returned: always
+            type: str
+            sample: m-0011223344
+        inner_ip_address:
+            description: The inner IPv4 address of the classic instance.
+            returned: always
+            type: str
+            sample: 10.0.0.2
+        instance_charge_type:
+            description: The instance charge type.
+            returned: always
+            type: str
+            sample: PostPaid
+        instance_name:
+            description: The name of the instance.
+            returned: always
+            type: str
+            sample: my-ecs
+        instance_type:
+            description: The instance type of the running instance.
+            returned: always
+            type: str
+            sample: ecs.sn1ne.xlarge
+        internet_charge_type:
+            description: The billing method of the network bandwidth.
+            returned: always
+            type: str
+            sample: PayByBandwidth
+        internet_max_bandwidth_in:
+            description: Maximum incoming bandwidth from the internet network.
+            returned: always
+            type: int
+            sample: 200
+        internet_max_bandwidth_out:
+            description: Maximum incoming bandwidth from the internet network.
+            returned: always
+            type: int
+            sample: 20
+        io_optimized:
+            description: Indicates whether the instance is optimized for EBS I/O.
+            returned: always
+            type: bool
+            sample: false
+        memory:
+            description: Memory size of the instance.
+            returned: always
+            type: int
+            sample: 8192
+        network_interfaces:
+            description: One or more network interfaces for the instance.
+            returned: always
+            type: complex
+            contains:
+                mac_address:
+                    description: The MAC address.
+                    returned: always
+                    type: str
+                    sample: "00:11:22:33:44:55"
+                network_interface_id:
+                    description: The ID of the network interface.
+                    returned: always
+                    type: str
+                    sample: eni-01234567
+                primary_ip_address:
+                    description: The primary IPv4 address of the network interface within the vswitch.
+                    returned: always
+                    type: str
+                    sample: 10.0.0.1
+        osname:
+            description: The operation system name of the instance owned.
+            returned: always
+            type: str
+            sample: CentOS
+        ostype:
+            description: The operation system type of the instance owned.
+            returned: always
+            type: str
+            sample: linux
+        private_ip_address:
+            description: The IPv4 address of the network interface within the subnet.
+            returned: always
+            type: str
+            sample: 10.0.0.1
+        public_ip_address:
+            description: The public IPv4 address assigned to the instance
+            returned: always
+            type: str
+            sample: 43.0.0.1
+        resource_group_id:
+            description: The id of the resource group to which the instance belongs.
+            returned: always
+            type: str
+            sample: my-ecs-group
+        security_groups:
+            description: One or more security groups for the instance.
+            returned: always
+            type: complex
+            contains:
+                - group_id:
+                      description: The ID of the security group.
+                      returned: always
+                      type: str
+                      sample: sg-0123456
+                - group_name:
+                      description: The name of the security group.
+                      returned: always
+                      type: str
+                      sample: my-security-group
+        status:
+            description: The current status of the instance.
+            returned: always
+            type: str
+            sample: running
+        tags:
+            description: Any tags assigned to the instance.
+            returned: always
+            type: dict
+            sample:
+        vswitch_id:
+            description: The ID of the vswitch in which the instance is running.
+            returned: always
+            type: str
+            sample: vsw-dew00abcdef
+        vpc_id:
+            description: The ID of the VPC the instance is in.
+            returned: always
+            type: dict
+            sample: vpc-0011223344
+ids:
+    description: List of ECS instance IDs
+    returned: always
+    type: list
+    sample: [i-12345er, i-3245fs]
+

@@ -1,0 +1,86 @@
+> CE_EVPN_GLOBAL    (/usr/lib/python2.7/dist-packages/ansible/modules/network/cloudengine/ce_evpn_global.py)
+
+        Manages global configuration of EVPN on HUAWEI CloudEngine switches.
+
+  * This module is maintained by The Ansible Community
+OPTIONS (= is mandatory):
+
+= evpn_overlay_enable
+        Configure EVPN as the VXLAN control plane.
+        (Choices: enable, disable)
+
+
+NOTES:
+      * Before configuring evpn_overlay_enable=disable, delete other EVPN configurations.
+
+
+AUTHOR: Zhijin Zhou (@QijunPan)
+        METADATA:
+          status:
+          - preview
+          supported_by: community
+        
+
+EXAMPLES:
+
+- name: evpn global module test
+  hosts: cloudengine
+  connection: local
+  gather_facts: no
+  vars:
+    cli:
+      host: "{{ inventory_hostname }}"
+      port: "{{ ansible_ssh_port }}"
+      username: "{{ username }}"
+      password: "{{ password }}"
+      transport: cli
+
+  tasks:
+
+  - name: Configure EVPN as the VXLAN control plan
+    ce_evpn_global:
+      evpn_overlay_enable: enable
+      provider: "{{ cli }}"
+
+  - name: Undo EVPN as the VXLAN control plan
+    ce_evpn_global:
+      evpn_overlay_enable: disable
+      provider: "{{ cli }}"
+
+
+RETURN VALUES:
+
+proposed:
+    description: k/v pairs of parameters passed into module
+    returned: always
+    type: dict
+    sample: {
+                "evpn_overlay_enable": "enable"
+            }
+existing:
+    description: k/v pairs of existing attributes on the device
+    returned: always
+    type: dict
+    sample: {
+                "evpn_overlay_enable": "disable"
+            }
+end_state:
+    description: k/v pairs of end attributes on the interface
+    returned: always
+    type: dict
+    sample: {
+                "evpn_overlay_enable": "enable"
+            }
+updates:
+    description: command list sent to the device
+    returned: always
+    type: list
+    sample: [
+                "evpn-overlay enable",
+            ]
+changed:
+    description: check to see if a change was made on the device
+    returned: always
+    type: bool
+    sample: true
+

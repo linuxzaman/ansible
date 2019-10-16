@@ -1,0 +1,81 @@
+EXAMPLES:
+
+- name: vlan module test
+  hosts: cloudengine
+  connection: local
+  gather_facts: no
+  vars:
+    cli:
+      host: "{{ inventory_hostname }}"
+      port: "{{ ansible_ssh_port }}"
+      username: "{{ username }}"
+      password: "{{ password }}"
+      transport: cli
+
+  tasks:
+
+  - name: Ensure a range of VLANs are not present on the switch
+    ce_vlan:
+      vlan_range: "2-10,20,50,55-60,100-150"
+      state: absent
+      provider: "{{ cli }}"
+
+  - name: Ensure VLAN 50 exists with the name WEB
+    ce_vlan:
+      vlan_id: 50
+      name: WEB
+      state: absent
+      provider: "{{ cli }}"
+
+  - name: Ensure VLAN is NOT on the device
+    ce_vlan:
+      vlan_id: 50
+      state: absent
+      provider: "{{ cli }}"
+
+
+RETURN VALUES:
+
+proposed_vlans_list:
+    description: list of VLANs being proposed
+    returned: always
+    type: list
+    sample: ["100"]
+existing_vlans_list:
+    description: list of existing VLANs on the switch prior to making changes
+    returned: always
+    type: list
+    sample: ["1", "2", "3", "4", "5", "20"]
+end_state_vlans_list:
+    description: list of VLANs after the module is executed
+    returned: always
+    type: list
+    sample:  ["1", "2", "3", "4", "5", "20", "100"]
+proposed:
+    description: k/v pairs of parameters passed into module (does not include
+                 vlan_id or vlan_range)
+    returned: always
+    type: dict
+    sample: {"vlan_id":"20", "name": "VLAN_APP", "description": "vlan for app" }
+existing:
+    description: k/v pairs of existing vlan or null when using vlan_range
+    returned: always
+    type: dict
+    sample: {"vlan_id":"20", "name": "VLAN_APP", "description": "" }
+end_state:
+    description: k/v pairs of the VLAN after executing module or null
+                 when using vlan_range
+    returned: always
+    type: dict
+    sample: {"vlan_id":"20", "name": "VLAN_APP", "description": "vlan for app" }
+updates:
+    description: command string sent to the device
+    returned: always
+    type: list
+    sample: ["vlan 20", "name VLAN20"]
+changed:
+    description: check to see if a change was made on the device
+    returned: always
+    type: bool
+    sample: true
+

@@ -1,0 +1,304 @@
+> CS_INSTANCE_FACTS    (/usr/lib/python2.7/dist-packages/ansible/modules/cloud/cloudstack/cs_instance_facts.py)
+
+        Gathering facts from the API of an instance.
+
+  * This module is maintained by The Ansible Community
+OPTIONS (= is mandatory):
+
+- account
+        Account the instance is related to.
+        [Default: (null)]
+        type: str
+
+- api_http_method
+        HTTP method used to query the API endpoint.
+        If not given, the `CLOUDSTACK_METHOD' env variable is considered.
+        As the last option, the value is taken from the ini config file, also see the notes.
+        Fallback value is `get' if not specified.
+        (Choices: get, post)[Default: (null)]
+        type: str
+
+- api_key
+        API key of the CloudStack API.
+        If not given, the `CLOUDSTACK_KEY' env variable is considered.
+        As the last option, the value is taken from the ini config file, also see the notes.
+        [Default: (null)]
+        type: str
+
+- api_region
+        Name of the ini section in the `cloustack.ini' file.
+        If not given, the `CLOUDSTACK_REGION' env variable is considered.
+        [Default: cloudstack]
+        type: str
+
+- api_secret
+        Secret key of the CloudStack API.
+        If not set, the `CLOUDSTACK_SECRET' env variable is considered.
+        As the last option, the value is taken from the ini config file, also see the notes.
+        [Default: (null)]
+        type: str
+
+- api_timeout
+        HTTP timeout in seconds.
+        If not given, the `CLOUDSTACK_TIMEOUT' env variable is considered.
+        As the last option, the value is taken from the ini config file, also see the notes.
+        Fallback value is 10 seconds if not specified.
+        [Default: (null)]
+        type: int
+
+- api_url
+        URL of the CloudStack API e.g. https://cloud.example.com/client/api.
+        If not given, the `CLOUDSTACK_ENDPOINT' env variable is considered.
+        As the last option, the value is taken from the ini config file, also see the notes.
+        [Default: (null)]
+        type: str
+
+- domain
+        Domain the instance is related to.
+        [Default: (null)]
+        type: str
+
+= name
+        Name or display name of the instance.
+
+        type: str
+
+- project
+        Project the instance is related to.
+        [Default: (null)]
+        type: str
+
+
+NOTES:
+      * Ansible uses the `cs' library's configuration method if credentials are not provided by the arguments `api_url', `api_key',
+        `api_secret'. Configuration is read from several locations, in the following order. The `CLOUDSTACK_ENDPOINT',
+        `CLOUDSTACK_KEY', `CLOUDSTACK_SECRET' and `CLOUDSTACK_METHOD'. `CLOUDSTACK_TIMEOUT' environment variables. A
+        `CLOUDSTACK_CONFIG' environment variable pointing to an `.ini' file. A `cloudstack.ini' file in the current working
+        directory. A `.cloudstack.ini' file in the users home directory. Optionally multiple credentials and endpoints can be
+        specified using ini sections in `cloudstack.ini'. Use the argument `api_region' to select the section name, default section
+        is `cloudstack'. See https://github.com/exoscale/cs for more information.
+      * A detailed guide about cloudstack modules can be found in the L(CloudStack Cloud
+        Guide,../scenario_guides/guide_cloudstack.html).
+      * This module supports check mode.
+
+
+REQUIREMENTS:  python >= 2.6, cs >= 0.6.10
+
+AUTHOR: René Moser (@resmo)
+        METADATA:
+          status:
+          - stableinterface
+          supported_by: community
+        
+
+EXAMPLES:
+
+- name: gather instance facts
+  cs_instance_facts:
+    name: web-vm-1
+  delegate_to: localhost
+  register: vm
+
+- debug:
+    var: cloudstack_instance
+
+- debug:
+    var: vm
+
+
+RETURN VALUES:
+
+---
+id:
+  description: UUID of the instance.
+  returned: success
+  type: str
+  sample: 04589590-ac63-4ffc-93f5-b698b8ac38b6
+name:
+  description: Name of the instance.
+  returned: success
+  type: str
+  sample: web-01
+display_name:
+  description: Display name of the instance.
+  returned: success
+  type: str
+  sample: web-01
+group:
+  description: Group name of the instance is related.
+  returned: success
+  type: str
+  sample: web
+created:
+  description: Date of the instance was created.
+  returned: success
+  type: str
+  sample: 2014-12-01T14:57:57+0100
+password_enabled:
+  description: True if password setting is enabled.
+  returned: success
+  type: bool
+  sample: true
+password:
+  description: The password of the instance if exists.
+  returned: success
+  type: str
+  sample: Ge2oe7Do
+ssh_key:
+  description: Name of SSH key deployed to instance.
+  returned: success
+  type: str
+  sample: key@work
+domain:
+  description: Domain the instance is related to.
+  returned: success
+  type: str
+  sample: example domain
+account:
+  description: Account the instance is related to.
+  returned: success
+  type: str
+  sample: example account
+project:
+  description: Name of project the instance is related to.
+  returned: success
+  type: str
+  sample: Production
+default_ip:
+  description: Default IP address of the instance.
+  returned: success
+  type: str
+  sample: 10.23.37.42
+public_ip:
+  description: Public IP address with instance via static NAT rule.
+  returned: success
+  type: str
+  sample: 1.2.3.4
+iso:
+  description: Name of ISO the instance was deployed with.
+  returned: success
+  type: str
+  sample: Debian-8-64bit
+template:
+  description: Name of template the instance was deployed with.
+  returned: success
+  type: str
+  sample: Debian-8-64bit
+service_offering:
+  description: Name of the service offering the instance has.
+  returned: success
+  type: str
+  sample: 2cpu_2gb
+zone:
+  description: Name of zone the instance is in.
+  returned: success
+  type: str
+  sample: ch-gva-2
+state:
+  description: State of the instance.
+  returned: success
+  type: str
+  sample: Running
+security_groups:
+  description: Security groups the instance is in.
+  returned: success
+  type: list
+  sample: '[ "default" ]'
+affinity_groups:
+  description: Affinity groups the instance is in.
+  returned: success
+  type: list
+  sample: '[ "webservers" ]'
+tags:
+  description: List of resource tags associated with the instance.
+  returned: success
+  type: list
+  sample: '[ { "key": "foo", "value": "bar" } ]'
+hypervisor:
+  description: Hypervisor related to this instance.
+  returned: success
+  type: str
+  sample: KVM
+host:
+  description: Host the instance is running on.
+  returned: success and instance is running
+  type: str
+  sample: host01.example.com
+  version_added: '2.6'
+instance_name:
+  description: Internal name of the instance (ROOT admin only).
+  returned: success
+  type: str
+  sample: i-44-3992-VM
+volumes:
+  description: List of dictionaries of the volumes attached to the instance.
+  returned: success
+  type: list
+  sample: '[ { name: "ROOT-1369", type: "ROOT", size: 10737418240 }, { name: "data01, type: "DATADISK", size: 10737418240 } ]'
+nic:
+  description: List of dictionaries of the instance nics.
+  returned: success
+  type: complex
+  version_added: '2.8'
+  contains:
+    broadcasturi:
+      description: The broadcast uri of the nic.
+      returned: success
+      type: str
+      sample: vlan://2250
+    gateway:
+      description: The gateway of the nic.
+      returned: success
+      type: str
+      sample: 10.1.2.1
+    id:
+      description: The ID of the nic.
+      returned: success
+      type: str
+      sample: 5dc74fa3-2ec3-48a0-9e0d-6f43365336a9
+    ipaddress:
+      description: The ip address of the nic.
+      returned: success
+      type: str
+      sample: 10.1.2.3
+    isdefault:
+      description: True if nic is default, false otherwise.
+      returned: success
+      type: bool
+      sample: true
+    isolationuri:
+      description: The isolation uri of the nic.
+      returned: success
+      type: str
+      sample: vlan://2250
+    macaddress:
+      description: The mac address of the nic.
+      returned: success
+      type: str
+      sample: 06:a2:03:00:08:12
+    netmask:
+      description: The netmask of the nic.
+      returned: success
+      type: str
+      sample: 255.255.255.0
+    networkid:
+      description: The ID of the corresponding network.
+      returned: success
+      type: str
+      sample: 432ce27b-c2bb-4e12-a88c-a919cd3a3017
+    networkname:
+      description: The name of the corresponding network.
+      returned: success
+      type: str
+      sample: network1
+    traffictype:
+      description: The traffic type of the nic.
+      returned: success
+      type: str
+      sample: Guest
+    type:
+      description: The type of the network.
+      returned: success
+      type: str
+      sample: Shared
+

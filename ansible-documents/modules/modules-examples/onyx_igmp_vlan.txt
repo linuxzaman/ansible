@@ -1,0 +1,33 @@
+EXAMPLES:
+
+- name: configure igmp vlan
+  onyx_igmp_vlan:
+    state: enabled
+    vlan_id: 10
+    version:
+      V2
+    querier:
+      state: enabled
+      interval: 70
+      address: 10.11.121.13
+    mrouter:
+      state: disabled
+      name: Eth1/2
+    static_groups:
+      - multicast_ip_address: 224.5.5.8
+        name: Eth1/1
+        sources:
+          - 1.1.1.1
+          - 1.1.1.2
+
+
+RETURN VALUES:
+
+commands:
+  description: The list of configuration mode commands to send to the device.
+  returned: always
+  type: list
+  sample:
+    - vlan 10 ip igmp snooping
+    - vlan 10 ip igmp snooping static-group 224.5.5.5 interface ethernet 1/1
+

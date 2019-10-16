@@ -1,0 +1,92 @@
+> NETAPP_E_SNAPSHOT_VOLUME    (/usr/lib/python2.7/dist-packages/ansible/modules/storage/netapp/netapp_e_snapshot_volume.py)
+
+        Create, update, remove snapshot volumes for NetApp E/EF-Series storage arrays.
+
+  * This module is maintained by The Ansible Community
+OPTIONS (= is mandatory):
+
+= api_password
+        The password to authenticate with the SANtricity WebServices Proxy or embedded REST API.
+
+
+= api_url
+        The url to the SANtricity WebServices Proxy or embedded REST API.
+
+
+= api_username
+        The username to authenticate with the SANtricity WebServices Proxy or embedded REST API.
+
+
+- full_threshold
+        The repository utilization warning threshold percentage
+        [Default: 85]
+
+= name
+        The name you wish to give the snapshot volume
+
+
+- repo_percentage
+        The size of the view in relation to the size of the base volume
+        [Default: 20]
+
+= snapshot_image_id
+        The identifier of the snapshot image used to create the new snapshot volume.
+        Note: You'll likely want to use the [netapp_e_facts] module to find the ID of the image you want.
+
+
+= ssid
+        storage array ID
+
+
+= state
+        Whether to create or remove the snapshot volume
+        (Choices: absent, present)
+
+= storage_pool_name
+        Name of the storage pool on which to allocate the repository volume.
+
+
+- validate_certs
+        Should https certificates be validated?
+        [Default: True]
+        type: bool
+
+= view_mode
+        The snapshot volume access mode
+        (Choices: modeUnknown, readWrite, readOnly, __UNDEFINED)
+
+
+NOTES:
+      * Only `full_threshold' is supported for update operations. If the snapshot volume already exists and the threshold matches,
+        then an `ok' status will be returned, no other changes can be made to a pre-existing snapshot volume.
+
+
+AUTHOR: Kevin Hulquest (@hulquest)
+        METADATA:
+          status:
+          - preview
+          supported_by: community
+        
+
+EXAMPLES:
+
+- name: Snapshot volume
+      netapp_e_snapshot_volume:
+        ssid: "{{ ssid }}"
+        api_url: "{{ netapp_api_url }}/"
+        api_username: "{{ netapp_api_username }}"
+        api_password: "{{ netapp_api_password }}"
+        state: present
+        storage_pool_name: "{{ snapshot_volume_storage_pool_name }}"
+        snapshot_image_id: "{{ snapshot_volume_image_id }}"
+        name: "{{ snapshot_volume_name }}"
+
+
+RETURN VALUES:
+
+msg:
+    description: Success message
+    returned: success
+    type: str
+    sample: Json facts for the volume that was created.
+

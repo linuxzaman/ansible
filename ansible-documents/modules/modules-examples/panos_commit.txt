@@ -1,0 +1,38 @@
+EXAMPLES:
+
+# Commit candidate config on 192.168.1.1 in sync mode
+- panos_commit:
+    ip_address: "192.168.1.1"
+    username: "admin"
+    password: "admin"
+
+
+RETURN VALUES:
+
+panos_commit:
+    description: Information about commit job.
+    returned: always
+    type: complex
+    version_added: 2.8
+    contains:
+        job_id:
+            description: Palo Alto job ID for the commit operation. Only returned if commit job is launched on device.
+            returned: always
+            type: str
+            sample: "139"
+        status_code:
+            description: Palo Alto API status code. Null if commit is successful.
+            returned: always
+            type: str
+            sample: 19
+        status_detail:
+            description: Palo Alto API detailed status message.
+            returned: always
+            type: str
+            sample: Configuration committed successfully
+        status_text:
+            description: Palo Alto API status text.
+            returned: always
+            type: str
+            sample: success
+

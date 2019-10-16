@@ -1,0 +1,51 @@
+EXAMPLES:
+
+- name: Gather facts about all domains
+  digital_ocean_domain_facts:
+    oauth_token: "{{ oauth_token }}"
+
+- name: Gather facts about domain with given name
+  digital_ocean_domain_facts:
+    oauth_token: "{{ oauth_token }}"
+    domain_name: "example.com"
+
+- name: Get ttl from domain
+  digital_ocean_domain_facts:
+  register: resp_out
+- set_fact:
+    domain_ttl: "{{ item.ttl }}"
+  loop: "{{ resp_out.data|json_query(name) }}"
+  vars:
+    name: "[?name=='example.com']"
+- debug: var=domain_ttl
+
+
+RETURN VALUES:
+
+data:
+    description: DigitalOcean Domain facts
+    returned: success
+    type: list
+    sample: [
+        {
+            "domain_records": [
+                {
+                    "data": "ns1.digitalocean.com",
+                    "flags": null,
+                    "id": 37826823,
+                    "name": "@",
+                    "port": null,
+                    "priority": null,
+                    "tag": null,
+                    "ttl": 1800,
+                    "type": "NS",
+                    "weight": null
+                },
+            ],
+            "name": "myexample123.com",
+            "ttl": 1800,
+            "zone_file": "myexample123.com. IN SOA ns1.digitalocean.com. hostmaster.myexample123.com. 1520702984 10800 3600 604800 1800
+",
+        },
+    ]
+

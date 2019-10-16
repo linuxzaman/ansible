@@ -1,0 +1,80 @@
+EXAMPLES:
+
+- name: eth_trunk module test
+  hosts: cloudengine
+  connection: local
+  gather_facts: no
+  vars:
+    cli:
+      host: "{{ inventory_hostname }}"
+      port: "{{ ansible_ssh_port }}"
+      username: "{{ username }}"
+      password: "{{ password }}"
+      transport: cli
+
+  tasks:
+  - name: Enables OSPF and sets the cost on an interface
+    ce_interface_ospf:
+      interface: 10GE1/0/30
+      process_id: 1
+      area: 100
+      cost: 100
+      provider: '{{ cli }}'
+
+  - name: Sets the dead interval of the OSPF neighbor
+    ce_interface_ospf:
+      interface: 10GE1/0/30
+      process_id: 1
+      area: 100
+      dead_interval: 100
+      provider: '{{ cli }}'
+
+  - name: Sets the interval for sending Hello packets on an interface
+    ce_interface_ospf:
+      interface: 10GE1/0/30
+      process_id: 1
+      area: 100
+      hello_interval: 2
+      provider: '{{ cli }}'
+
+  - name: Disables an interface from receiving and sending OSPF packets
+    ce_interface_ospf:
+      interface: 10GE1/0/30
+      process_id: 1
+      area: 100
+      silent_interface: true
+      provider: '{{ cli }}'
+
+
+RETURN VALUES:
+
+proposed:
+    description: k/v pairs of parameters passed into module
+    returned: verbose mode
+    type: dict
+    sample: {"process_id": "1", "area": "0.0.0.100", "interface": "10GE1/0/30", "cost": "100"}
+existing:
+    description: k/v pairs of existing configuration
+    returned: verbose mode
+    type: dict
+    sample: {"process_id": "1", "area": "0.0.0.100"}
+end_state:
+    description: k/v pairs of configuration after module execution
+    returned: verbose mode
+    type: dict
+    sample: {"process_id": "1", "area": "0.0.0.100", "interface": "10GE1/0/30",
+             "cost": "100", "dead_interval": "40", "hello_interval": "10",
+             "silent_interface": "false", "auth_mode": "none"}
+updates:
+    description: commands sent to the device
+    returned: always
+    type: list
+    sample: ["interface 10GE1/0/30",
+             "ospf enable 1 area 0.0.0.100",
+             "ospf cost 100"]
+changed:
+    description: check to see if a change was made on the device
+    returned: always
+    type: bool
+    sample: true
+

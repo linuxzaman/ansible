@@ -1,0 +1,242 @@
+> BIGIP_SMTP    (/usr/lib/python2.7/dist-packages/ansible/modules/network/f5/bigip_smtp.py)
+
+        Allows configuring of the BIG-IP to send mail via an SMTP server by configuring the parameters of an SMTP server.
+
+  * This module is maintained by an Ansible Partner
+OPTIONS (= is mandatory):
+
+- authentication
+        Credentials can be set on an SMTP server's configuration even if that authentication is not used (think staging configs or
+        emergency changes). This parameter acts as a switch to make the specified `smtp_server_username' and `smtp_server_password'
+        parameters active or not.
+        When `yes', the authentication parameters will be active.
+        When `no', the authentication parameters will be inactive.
+        [Default: (null)]
+        type: bool
+
+- encryption
+        Specifies whether the SMTP server requires an encrypted connection in order to send mail.
+        (Choices: none, ssl, tls)[Default: (null)]
+        type: str
+
+- from_address
+        Email address that the email is being sent from. This is the "Reply-to" address that the recipient sees.
+        [Default: (null)]
+        type: str
+
+- local_host_name
+        Host name used in SMTP headers in the format of a fully qualified domain name. This setting does not refer to the BIG-IP system's
+        hostname.
+        [Default: (null)]
+        type: str
+
+= name
+        Specifies the name of the SMTP server configuration.
+
+        type: str
+
+- partition
+        Device partition to manage resources on.
+        [Default: Common]
+        type: str
+
+= password
+        The password for the user account used to connect to the BIG-IP.
+        You may omit this option by setting the environment variable `F5_PASSWORD'.
+        (Aliases: pass, pwd)
+        type: str
+
+- provider
+        A dict object containing connection details.
+        [Default: (null)]
+        suboptions:
+          password:
+            aliases:
+            - pass
+            - pwd
+            description:
+            - The password for the user account used to connect to the BIG-IP.
+            - You may omit this option by setting the environment variable `F5_PASSWORD'.
+            required: true
+            type: str
+          server:
+            description:
+            - The BIG-IP host.
+            - You may omit this option by setting the environment variable `F5_SERVER'.
+            required: true
+            type: str
+          server_port:
+            default: 443
+            description:
+            - The BIG-IP server port.
+            - You may omit this option by setting the environment variable `F5_SERVER_PORT'.
+            type: int
+          ssh_keyfile:
+            description:
+            - Specifies the SSH keyfile to use to authenticate the connection to the remote
+              device.  This argument is only used for `cli' transports.
+            - You may omit this option by setting the environment variable `ANSIBLE_NET_SSH_KEYFILE'.
+            type: path
+          timeout:
+            default: 10
+            description:
+            - Specifies the timeout in seconds for communicating with the network device for
+              either connecting or sending commands.  If the timeout is exceeded before the
+              operation is completed, the module will error.
+            type: int
+          transport:
+            choices:
+            - cli
+            - rest
+            default: rest
+            description:
+            - Configures the transport connection to use when connecting to the remote device.
+            type: str
+          user:
+            description:
+            - The username to connect to the BIG-IP with. This user must have administrative
+              privileges on the device.
+            - You may omit this option by setting the environment variable `F5_USER'.
+            required: true
+            type: str
+          validate_certs:
+            default: true
+            description:
+            - If `no', SSL certificates are not validated. Use this only on personally controlled
+              sites using self-signed certificates.
+            - You may omit this option by setting the environment variable `F5_VALIDATE_CERTS'.
+            type: bool
+        
+        type: dict
+        version_added: 2.5
+
+= server
+        The BIG-IP host.
+        You may omit this option by setting the environment variable `F5_SERVER'.
+
+        type: str
+
+- server_port
+        The BIG-IP server port.
+        You may omit this option by setting the environment variable `F5_SERVER_PORT'.
+        [Default: 443]
+        type: int
+        version_added: 2.2
+
+- smtp_server
+        SMTP server host name in the format of a fully qualified domain name.
+        This value is required when create a new SMTP configuration.
+        [Default: (null)]
+        type: str
+
+- smtp_server_password
+        Password that the SMTP server requires when validating a user.
+        [Default: (null)]
+        type: str
+
+- smtp_server_port
+        Specifies the SMTP port number.
+        When creating a new SMTP configuration, the default is `25' when `encryption' is `none' or `tls'. The default is `465' when `ssl'
+        is selected.
+        [Default: (null)]
+        type: int
+
+- smtp_server_username
+        User name that the SMTP server requires when validating a user.
+        [Default: (null)]
+        type: str
+
+- state
+        When `present', ensures that the SMTP configuration exists.
+        When `absent', ensures that the SMTP configuration does not exist.
+        (Choices: present, absent)[Default: present]
+        type: str
+
+- update_password
+        Passwords are stored encrypted, so the module cannot know if the supplied `smtp_server_password' is the same or different than
+        the existing password. This parameter controls the updating of the `smtp_server_password' credential.
+        When `always', will always update the password.
+        When `on_create', will only set the password for newly created SMTP server configurations.
+        (Choices: always, on_create)[Default: always]
+        type: str
+
+= user
+        The username to connect to the BIG-IP with. This user must have administrative privileges on the device.
+        You may omit this option by setting the environment variable `F5_USER'.
+
+        type: str
+
+- validate_certs
+        If `no', SSL certificates are not validated. Use this only on personally controlled sites using self-signed certificates.
+        You may omit this option by setting the environment variable `F5_VALIDATE_CERTS'.
+        [Default: True]
+        type: bool
+        version_added: 2.0
+
+
+NOTES:
+      * For more information on using Ansible to manage F5 Networks devices see https://www.ansible.com/integrations/networks/f5.
+      * Requires BIG-IP software version >= 12.
+      * The F5 modules only manipulate the running configuration of the F5 product. To ensure that BIG-IP specific configuration
+        persists to disk, be sure to include at least one task that uses the [bigip_config] module to save the running
+        configuration. Refer to the module's documentation for the correct usage of the module to save your running configuration.
+
+
+AUTHOR: Tim Rupp (@caphrim007)
+        METADATA:
+          status:
+          - preview
+          supported_by: certified
+        
+
+EXAMPLES:
+
+- name: Create a base SMTP server configuration
+  bigip_smtp:
+    name: my-smtp
+    smtp_server: 1.1.1.1
+    smtp_server_username: mail-admin
+    smtp_server_password: mail-secret
+    local_host_name: smtp.mydomain.com
+    from_address: no-reply@mydomain.com
+    state: present
+    provider:
+      user: admin
+      password: secret
+      server: lb.mydomain.com
+  delegate_to: localhost
+
+
+RETURN VALUES:
+
+smtp_server:
+  description: The new C(smtp_server) value of the SMTP configuration.
+  returned: changed
+  type: str
+  sample: mail.mydomain.com
+smtp_server_port:
+  description: The new C(smtp_server_port) value of the SMTP configuration.
+  returned: changed
+  type: int
+  sample: 25
+local_host_name:
+  description: The new C(local_host_name) value of the SMTP configuration.
+  returned: changed
+  type: str
+  sample: smtp.mydomain.com
+from_address:
+  description: The new C(from_address) value of the SMTP configuration.
+  returned: changed
+  type: str
+  sample: no-reply@mydomain.com
+encryption:
+  description: The new C(encryption) value of the SMTP configuration.
+  returned: changed
+  type: str
+  sample: tls
+authentication:
+  description: Whether the authentication parameters are active or not.
+  returned: changed
+  type: bool
+  sample: yes
+

@@ -1,0 +1,199 @@
+> FORTIOS_WEBFILTER_CONTENT    (/usr/lib/python2.7/dist-packages/ansible/modules/network/fortios/fortios_webfilter_content.py)
+
+        This module is able to configure a FortiGate or FortiOS by allowing the user to configure webfilter feature and content category.
+        Examples includes all options and need to be adjusted to datasources before usage. Tested with FOS v6.0.2
+
+  * This module is maintained by The Ansible Community
+OPTIONS (= is mandatory):
+
+= host
+        FortiOS or FortiGate ip address.
+
+
+- https
+        Indicates if the requests towards FortiGate must use HTTPS protocol
+        [Default: False]
+        type: bool
+
+- password
+        FortiOS or FortiGate password.
+        [Default: ]
+
+= username
+        FortiOS or FortiGate username.
+
+
+- vdom
+        Virtual domain, among those defined previously. A vdom is a virtual instance of the FortiGate that can be configured and used as
+        a different unit.
+        [Default: root]
+
+- webfilter_content
+        Configure Web filter banned word table.
+        [Default: None]
+        suboptions:
+          comment:
+            description:
+            - Optional comments.
+          entries:
+            description:
+            - Configure banned word entries.
+            suboptions:
+              action:
+                choices:
+                - block
+                - exempt
+                description:
+                - Block or exempt word when a match is found.
+              lang:
+                choices:
+                - western
+                - simch
+                - trach
+                - japanese
+                - korean
+                - french
+                - thai
+                - spanish
+                - cyrillic
+                description:
+                - Language of banned word.
+              name:
+                description:
+                - Banned word.
+                required: true
+              pattern-type:
+                choices:
+                - wildcard
+                - regexp
+                description:
+                - 'Banned word pattern type: wildcard pattern or Perl regular expression.'
+              score:
+                description:
+                - Score, to be applied every time the word appears on a web page (0 - 4294967295,
+                  default = 10).
+              status:
+                choices:
+                - enable
+                - disable
+                description:
+                - Enable/disable banned word.
+          id:
+            description:
+            - ID.
+            required: true
+          name:
+            description:
+            - Name of table.
+          state:
+            choices:
+            - present
+            - absent
+            description:
+            - Indicates whether to create or remove the object
+        
+
+
+NOTES:
+      * Requires fortiosapi library developed by Fortinet
+      * Run as a local_action in your playbook
+
+
+REQUIREMENTS:  fortiosapi>=0.9.8
+
+AUTHOR: Miguel Angel Munoz (@mamunozgonzalez), Nicolas Thomas (@thomnico)
+        METADATA:
+          status:
+          - preview
+          supported_by: community
+        
+
+EXAMPLES:
+
+- hosts: localhost
+  vars:
+   host: "192.168.122.40"
+   username: "admin"
+   password: ""
+   vdom: "root"
+  tasks:
+  - name: Configure Web filter banned word table.
+    fortios_webfilter_content:
+      host:  "{{ host }}"
+      username: "{{ username }}"
+      password: "{{ password }}"
+      vdom:  "{{ vdom }}"
+      webfilter_content:
+        state: "present"
+        comment: "Optional comments."
+        entries:
+         -
+            action: "block"
+            lang: "western"
+            name: "default_name_7"
+            pattern-type: "wildcard"
+            score: "9"
+            status: "enable"
+        id:  "11"
+        name: "default_name_12"
+
+
+RETURN VALUES:
+
+build:
+  description: Build number of the fortigate image
+  returned: always
+  type: str
+  sample: '1547'
+http_method:
+  description: Last method used to provision the content into FortiGate
+  returned: always
+  type: str
+  sample: 'PUT'
+http_status:
+  description: Last result given by FortiGate on last operation applied
+  returned: always
+  type: str
+  sample: "200"
+mkey:
+  description: Master key (id) used in the last call to FortiGate
+  returned: success
+  type: str
+  sample: "id"
+name:
+  description: Name of the table used to fulfill the request
+  returned: always
+  type: str
+  sample: "urlfilter"
+path:
+  description: Path of the table used to fulfill the request
+  returned: always
+  type: str
+  sample: "webfilter"
+revision:
+  description: Internal revision number
+  returned: always
+  type: str
+  sample: "17.0.2.10658"
+serial:
+  description: Serial number of the unit
+  returned: always
+  type: str
+  sample: "FGVMEVYYQT3AB5352"
+status:
+  description: Indication of the operation's result
+  returned: always
+  type: str
+  sample: "success"
+vdom:
+  description: Virtual domain used
+  returned: always
+  type: str
+  sample: "root"
+version:
+  description: Version of the FortiGate
+  returned: always
+  type: str
+  sample: "v5.6.3"
+
+

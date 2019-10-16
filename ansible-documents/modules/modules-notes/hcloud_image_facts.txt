@@ -1,0 +1,110 @@
+> HCLOUD_IMAGE_FACTS    (/usr/lib/python2.7/dist-packages/ansible/modules/cloud/hcloud/hcloud_image_facts.py)
+
+        Gather facts about your Hetzner Cloud images.
+
+  * This module is maintained by The Ansible Community
+OPTIONS (= is mandatory):
+
+= api_token
+        This is the API Token for the Hetzner Cloud.
+
+        type: str
+
+- endpoint
+        This is the API Endpoint for the Hetzner Cloud.
+        [Default: https://api.hetzner.cloud/v1]
+        type: str
+
+- id
+        The ID of the image you want to get.
+        [Default: (null)]
+        type: int
+
+- label_selector
+        The label selector for the images you want to get.
+        [Default: (null)]
+        type: str
+
+- name
+        The name of the image you want to get.
+        [Default: (null)]
+        type: str
+
+- type
+        The label selector for the images you want to get.
+        (Choices: system, snapshot, backup)[Default: system]
+
+
+SEE ALSO:
+      * Documentation for Hetzner Cloud API
+           Complete reference for the Hetzner Cloud API.
+           https://docs.hetzner.cloud/
+
+
+REQUIREMENTS:  hcloud-python >= 1.0.0
+
+AUTHOR: Lukas Kaemmerling (@lkaemmerling)
+        METADATA:
+          status:
+          - preview
+          supported_by: community
+        
+
+EXAMPLES:
+
+- name: Gather hcloud image facts
+  local_action:
+    module: hcloud_image_facts
+
+- name: Print the gathered facts
+  debug:
+    var: ansible_facts.hcloud_image_facts
+
+
+RETURN VALUES:
+
+hcloud_image_facts:
+    description: The image facts as list
+    returned: always
+    type: complex
+    contains:
+        id:
+            description: Numeric identifier of the image
+            returned: always
+            type: int
+            sample: 1937415
+        type:
+            description: Type of the image
+            returned: always
+            type: str
+            sample: system
+        status:
+            description: Status of the image
+            returned: always
+            type: str
+            sample: available
+        name:
+            description: Name of the image
+            returned: always
+            type: str
+            sample: ubuntu-18.04
+        description:
+            description: Detail description of the image
+            returned: always
+            type: str
+            sample: Ubuntu 18.04 Standard 64 bit
+        os_flavor:
+            description: OS flavor of the image
+            returned: always
+            type: str
+            sample: ubuntu
+        os_version:
+            description: OS version of the image
+            returned: always
+            type: str
+            sample: 18.04
+        labels:
+            description: User-defined labels (key-value pairs)
+            returned: always
+            type: dict
+

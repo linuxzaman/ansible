@@ -1,0 +1,127 @@
+EXAMPLES:
+
+# Note: These examples do not set authentication details, see the AWS Guide for details.
+
+- name: Ensure example@example.com email identity exists
+  aws_ses_identity:
+    identity: example@example.com
+    state: present
+
+- name: Delete example@example.com email identity
+  aws_ses_identity:
+    email: example@example.com
+    state: absent
+
+- name: Ensure example.com domain identity exists
+  aws_ses_identity:
+    identity: example.com
+    state: present
+
+# Create an SNS topic and send bounce and complaint notifications to it
+# instead of emailing the identity owner
+- name: Ensure complaints-topic exists
+  sns_topic:
+    name: "complaints-topic"
+    state: present
+    purge_subscriptions: False
+  register: topic_info
+
+- name: Deliver feedback to topic instead of owner email
+  aws_ses_identity:
+    identity: example@example.com
+    state: present
+    complaint_notifications:
+      topic: "{{ topic_info.sns_arn }}"
+      include_headers: True
+    bounce_notifications:
+      topic: "{{ topic_info.sns_arn }}"
+      include_headers: False
+    feedback_forwarding: False
+
+# Create an SNS topic for delivery notifications and leave complaints
+# Being forwarded to the identity owner email
+- name: Ensure delivery-notifications-topic exists
+  sns_topic:
+    name: "delivery-notifications-topic"
+    state: present
+    purge_subscriptions: False
+  register: topic_info
+
+- name: Delivery notifications to topic
+  aws_ses_identity:
+    identity: example@example.com
+    state: present
+    delivery_notifications:
+      topic: "{{ topic_info.sns_arn }}"
+
+
+RETURN VALUES:
+
+identity:
+    description: The identity being modified.
+    returned: success
+    type: str
+    sample: example@example.com
+identity_arn:
+    description: The arn of the identity being modified.
+    returned: success
+    type: str
+    sample: arn:aws:ses:us-east-1:12345678:identity/example@example.com
+verification_attributes:
+    description: The verification information for the identity.
+    returned: success
+    type: complex
+    sample: {
+        "verification_status": "Pending",
+        "verification_token": "...."
+    }
+    contains:
+        verification_status:
+            description: The verification status of the identity.
+            type: str
+            sample: "Pending"
+        verification_token:
+            description: The verification token for a domain identity.
+            type: str
+notification_attributes:
+    description: The notification setup for the identity.
+    returned: success
+    type: complex
+    sample: {
+        "bounce_topic": "arn:aws:sns:....",
+        "complaint_topic": "arn:aws:sns:....",
+        "delivery_topic": "arn:aws:sns:....",
+        "forwarding_enabled": false,
+        "headers_in_bounce_notifications_enabled": true,
+        "headers_in_complaint_notifications_enabled": true,
+        "headers_in_delivery_notifications_enabled": true
+    }
+    contains:
+        bounce_topic:
+            description:
+              - The ARN of the topic bounce notifications are delivered to.
+              - Omitted if bounce notifications are not delivered to a topic.
+            type: str
+        complaint_topic:
+            description:
+              - The ARN of the topic complaint notifications are delivered to.
+              - Omitted if complaint notifications are not delivered to a topic.
+            type: str
+        delivery_topic:
+            description:
+              - The ARN of the topic delivery notifications are delivered to.
+              - Omitted if delivery notifications are not delivered to a topic.
+            type: str
+        forwarding_enabled:
+            description: Whether or not feedback forwarding is enabled.
+            type: bool
+        headers_in_bounce_notifications_enabled:
+            description: Whether or not headers are included in messages delivered to the bounce topic.
+            type: bool
+        headers_in_complaint_notifications_enabled:
+            description: Whether or not headers are included in messages delivered to the complaint topic.
+            type: bool
+        headers_in_delivery_notifications_enabled:
+            description: Whether or not headers are included in messages delivered to the delivery topic.
+            type: bool
+

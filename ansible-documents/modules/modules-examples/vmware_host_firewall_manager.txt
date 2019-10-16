@@ -1,0 +1,62 @@
+EXAMPLES:
+
+- name: Enable vvold rule set for all ESXi Host in given Cluster
+  vmware_host_firewall_manager:
+    hostname: '{{ vcenter_hostname }}'
+    username: '{{ vcenter_username }}'
+    password: '{{ vcenter_password }}'
+    cluster_name: cluster_name
+    rules:
+        - name: vvold
+          enabled: True
+  delegate_to: localhost
+
+- name: Enable vvold rule set for an ESXi Host
+  vmware_host_firewall_manager:
+    hostname: '{{ vcenter_hostname }}'
+    username: '{{ vcenter_username }}'
+    password: '{{ vcenter_password }}'
+    esxi_hostname: '{{ esxi_hostname }}'
+    rules:
+        - name: vvold
+          enabled: True
+  delegate_to: localhost
+
+- name: Manage multiple rule set for an ESXi Host
+  vmware_host_firewall_manager:
+    hostname: '{{ vcenter_hostname }}'
+    username: '{{ vcenter_username }}'
+    password: '{{ vcenter_password }}'
+    esxi_hostname: '{{ esxi_hostname }}'
+    rules:
+        - name: vvold
+          enabled: True
+        - name: CIMHttpServer
+          enabled: False
+  delegate_to: localhost
+
+
+RETURN VALUES:
+
+rule_set_state:
+    description:
+    - dict with hostname as key and dict with firewall rule set facts as value
+    returned: success
+    type: dict
+    sample: {
+                "rule_set_state": {
+                    "localhost.localdomain": {
+                        "CIMHttpServer": {
+                            "current_state": true,
+                            "desired_state": true,
+                            "previous_state": true
+                        },
+                        "vvold": {
+                            "current_state": true,
+                            "desired_state": true,
+                            "previous_state": true
+                        }
+                    }
+                }
+            }
+

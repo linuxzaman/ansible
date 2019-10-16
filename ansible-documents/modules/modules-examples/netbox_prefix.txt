@@ -1,0 +1,99 @@
+EXAMPLES:
+
+- name: "Test Netbox prefix module"
+  connection: local
+  hosts: localhost
+  gather_facts: False
+
+  tasks:
+    - name: Create prefix within Netbox with only required information
+      netbox_prefix:
+        netbox_url: http://netbox.local
+        netbox_token: thisIsMyToken
+        data:
+          prefix: 10.156.0.0/19
+        state: present
+
+    - name: Delete prefix within netbox
+      netbox_prefix:
+        netbox_url: http://netbox.local
+        netbox_token: thisIsMyToken
+        data:
+          prefix: 10.156.0.0/19
+        state: absent
+
+    - name: Create prefix with several specified options
+      netbox_prefix:
+        netbox_url: http://netbox.local
+        netbox_token: thisIsMyToken
+        data:
+          family: 4
+          prefix: 10.156.32.0/19
+          site: Test Site
+          vrf: Test VRF
+          tenant: Test Tenant
+          vlan:
+            name: Test VLAN
+            site: Test Site
+            tenant: Test Tenant
+            vlan_group: Test Vlan Group
+          status: Reserved
+          role: Network of care
+          description: Test description
+          is_pool: true
+          tags:
+            - Schnozzberry
+        state: present
+
+    - name: Get a new /24 inside 10.156.0.0/19 within Netbox - Parent doesn't exist
+      netbox_prefix:
+        netbox_url: http://netbox.local
+        netbox_token: thisIsMyToken
+        data:
+          parent: 10.156.0.0/19
+          prefix_length: 24
+        state: present
+        first_available: yes
+
+    - name: Create prefix within Netbox with only required information
+      netbox_prefix:
+        netbox_url: http://netbox.local
+        netbox_token: thisIsMyToken
+        data:
+          prefix: 10.156.0.0/19
+        state: present
+
+    - name: Get a new /24 inside 10.156.0.0/19 within Netbox
+      netbox_prefix:
+        netbox_url: http://netbox.local
+        netbox_token: thisIsMyToken
+        data:
+          parent: 10.156.0.0/19
+          prefix_length: 24
+        state: present
+        first_available: yes
+
+    - name: Get a new /24 inside 10.157.0.0/19 within Netbox with additional values
+      netbox_prefix:
+        netbox_url: http://netbox.local
+        netbox_token: thisIsMyToken
+        data:
+          parent: 10.157.0.0/19
+          prefix_length: 24
+          vrf: Test VRF
+          site: Test Site
+        state: present
+        first_available: yes
+
+
+RETURN VALUES:
+
+prefix:
+  description: Serialized object as created or already existent within Netbox
+  returned: on creation
+  type: dict
+msg:
+  description: Message indicating failure or info about what has been achieved
+  returned: always
+  type: str
+

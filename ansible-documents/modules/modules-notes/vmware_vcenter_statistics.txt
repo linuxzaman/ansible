@@ -1,0 +1,152 @@
+> VMWARE_VCENTER_STATISTICS    (/usr/lib/python2.7/dist-packages/ansible/modules/cloud/vmware/vmware_vcenter_statistics.py)
+
+        This module can be used to configure the vCenter server statistics. The remaining settings can be configured with the module
+        `vmware_vcenter_settings'.
+
+  * This module is maintained by The Ansible Community
+OPTIONS (= is mandatory):
+
+- hostname
+        The hostname or IP address of the vSphere vCenter or ESXi server.
+        If the value is not specified in the task, the value of environment variable `VMWARE_HOST' will be used instead.
+        Environment variable support added in Ansible 2.6.
+        [Default: (null)]
+        type: str
+
+- interval_past_day
+        Settings for vCenter server past day statistic collection.
+        Valid attributes are:
+        - `enabled' (bool): Past day statistics collection enabled. (default: True)
+        - `interval_minutes' (int): Interval duration (minutes). (choices: [1, 2, 3, 4, 5]) (default: 5)
+        - `save_for_days' (int): Save for (days). (choices: [1, 2, 3, 4, 5]) (default: 1)
+        - `level' (int): Statistics level. (choices: [1, 2, 3, 4]) (default: 1)
+        [Default: (null)]
+        type: dict
+
+- interval_past_month
+        Settings for vCenter server past month statistic collection.
+        Valid attributes are:
+        - `enabled' (bool): Past month statistics collection enabled. (default: True)
+        - `interval_hours' (int): Interval duration (hours). (choices: [2]) (default: 2)
+        - `save_for_months' (int): Save for (months). (choices: [1]) (default: 1)
+        - `level' (int): Statistics level. (choices: [1, 2, 3, 4]) (default: 1)
+        [Default: (null)]
+        type: dict
+
+- interval_past_week
+        Settings for vCenter server past week statistic collection.
+        Valid attributes are:
+        - `enabled' (bool): Past week statistics collection enabled. (default: True)
+        - `interval_minutes' (int): Interval duration (minutes). (choices: [30]) (default: 30)
+        - `save_for_weeks' (int): Save for (weeks). (choices: [1]) (default: 1)
+        - `level' (int): Statistics level. (choices: [1, 2, 3, 4]) (default: 1)
+        [Default: (null)]
+        type: dict
+
+- interval_past_year
+        Settings for vCenter server past month statistic collection.
+        Valid attributes are:
+        - `enabled' (bool): Past month statistics collection enabled. (default: True)
+        - `interval_days' (int): Interval duration (days). (choices: [1]) (default: 1)
+        - `save_for_years' (int): Save for (years). (choices: [1, 2, 3, 4, 5]) (default: 1)
+        - `level' (int): Statistics level. (choices: [1, 2, 3, 4]) (default: 1)
+        [Default: (null)]
+        type: dict
+
+- password
+        The password of the vSphere vCenter or ESXi server.
+        If the value is not specified in the task, the value of environment variable `VMWARE_PASSWORD' will be used instead.
+        Environment variable support added in Ansible 2.6.
+        (Aliases: pass, pwd)[Default: (null)]
+        type: str
+
+- port
+        The port number of the vSphere vCenter or ESXi server.
+        If the value is not specified in the task, the value of environment variable `VMWARE_PORT' will be used instead.
+        Environment variable support added in Ansible 2.6.
+        [Default: 443]
+        type: int
+        version_added: 2.5
+
+- username
+        The username of the vSphere vCenter or ESXi server.
+        If the value is not specified in the task, the value of environment variable `VMWARE_USER' will be used instead.
+        Environment variable support added in Ansible 2.6.
+        (Aliases: admin, user)[Default: (null)]
+        type: str
+
+- validate_certs
+        Allows connection when SSL certificates are not valid. Set to `false' when certificates are not trusted.
+        If the value is not specified in the task, the value of environment variable `VMWARE_VALIDATE_CERTS' will be used instead.
+        Environment variable support added in Ansible 2.6.
+        If set to `yes', please make sure Python >= 2.7.9 is installed on the given machine.
+        [Default: True]
+        type: bool
+
+
+NOTES:
+      * Tested with vCenter Server Appliance (vCSA) 6.5 and 6.7
+
+
+REQUIREMENTS:  python >= 2.6, PyVmomi
+
+AUTHOR: Christian Kotte (@ckotte)
+        METADATA:
+          status:
+          - preview
+          supported_by: community
+        
+
+EXAMPLES:
+
+- name: Configure vCenter statistics
+  vmware_vcenter_statistics:
+    hostname: '{{ vcenter_hostname }}'
+    username: '{{ vcenter_username }}'
+    password: '{{ vcenter_password }}'
+    interval_past_day:
+      enabled: true
+      interval_minutes: 5
+      save_for_days: 1
+      level: 1
+    interval_past_week:
+      enabled: true
+      level: 1
+    interval_past_month:
+      enabled: true
+      level: 1
+    interval_past_year:
+      enabled: true
+      save_for_years: 1
+      level: 1
+    validate_certs: no
+  delegate_to: localhost
+
+
+RETURN VALUES:
+
+results:
+    description: metadata about vCenter statistics settings
+    returned: always
+    type: dict
+    sample: {
+        "changed": false,
+        "msg": "vCenter statistics already configured properly",
+        "past_day_enabled": true,
+        "past_day_interval": 5,
+        "past_day_level": 1,
+        "past_day_save_for": 1,
+        "past_month_enabled": true,
+        "past_month_interval": 2,
+        "past_month_level": 1,
+        "past_month_save_for": 1,
+        "past_week_enabled": true,
+        "past_week_interval": 30,
+        "past_week_level": 1,
+        "past_week_save_for": 1,
+        "past_year_enabled": true,
+        "past_year_interval": 1,
+        "past_year_level": 1,
+        "past_year_save_for": 1
+    }
+

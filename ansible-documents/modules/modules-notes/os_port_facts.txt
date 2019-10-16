@@ -1,0 +1,255 @@
+> OS_PORT_FACTS    (/usr/lib/python2.7/dist-packages/ansible/modules/cloud/openstack/os_port_facts.py)
+
+        Retrieve facts about ports from OpenStack.
+
+  * This module is maintained by The Ansible Community
+OPTIONS (= is mandatory):
+
+- api_timeout
+        How long should the socket layer wait before timing out for API calls. If this is omitted, nothing will be passed to the requests
+        library.
+        [Default: (null)]
+        type: int
+
+- auth
+        Dictionary containing auth information as needed by the cloud's auth plugin strategy. For the default `password' plugin, this
+        would contain `auth_url', `username', `password', `project_name' and any information about domains (for example,
+        `os_user_domain_name' or `os_project_domain_name') if the cloud supports them. For other plugins, this param will need to contain
+        whatever parameters that auth plugin requires. This parameter is not needed if a named cloud is provided or OpenStack OS_*
+        environment variables are present.
+        [Default: (null)]
+        type: dict
+
+- auth_type
+        Name of the auth plugin to use. If the cloud uses something other than password authentication, the name of the plugin should be
+        indicated here and the contents of the `auth' parameter should be updated accordingly.
+        [Default: (null)]
+        type: str
+
+- availability_zone
+        Ignored. Present for backwards compatibility
+        [Default: (null)]
+
+- ca_cert
+        A path to a CA Cert bundle that can be used as part of verifying SSL API requests.
+        (Aliases: cacert)[Default: (null)]
+        type: str
+
+- client_cert
+        A path to a client certificate to use as part of the SSL transaction.
+        (Aliases: cert)[Default: (null)]
+        type: str
+
+- client_key
+        A path to a client key to use as part of the SSL transaction.
+        (Aliases: key)[Default: (null)]
+        type: str
+
+- cloud
+        Named cloud or cloud config to operate against. If `cloud' is a string, it references a named cloud config as defined in an
+        OpenStack clouds.yaml file. Provides default values for `auth' and `auth_type'. This parameter is not needed if `auth' is
+        provided or if OpenStack OS_* environment variables are present. If `cloud' is a dict, it contains a complete cloud configuration
+        like would be in a section of clouds.yaml.
+        [Default: (null)]
+        type: raw
+
+- filters
+        A dictionary of meta data to use for further filtering. Elements of this dictionary will be matched against the returned port
+        dictionaries. Matching is currently limited to strings within the port dictionary, or strings within nested dictionaries.
+        [Default: (null)]
+
+- interface
+        Endpoint URL type to fetch from the service catalog.
+        (Aliases: endpoint_type)(Choices: admin, internal, public)[Default: public]
+        type: str
+        version_added: 2.3
+
+- port
+        Unique name or ID of a port.
+        [Default: (null)]
+
+- region_name
+        Name of the region.
+        [Default: (null)]
+        type: str
+
+- timeout
+        How long should ansible wait for the requested resource.
+        [Default: 180]
+        type: int
+
+- validate_certs
+        Whether or not SSL API requests should be verified.
+        Before Ansible 2.3 this defaulted to `yes'.
+        (Aliases: verify)[Default: False]
+        type: bool
+
+- wait
+        Should ansible wait until the requested resource is complete.
+        [Default: True]
+        type: bool
+
+
+NOTES:
+      * Facts are placed in the `openstack_ports' variable.
+      * The standard OpenStack environment variables, such as `OS_USERNAME' may be used instead of providing explicit values.
+      * Auth information is driven by openstacksdk, which means that values can come from a yaml config file in
+        /etc/ansible/openstack.yaml, /etc/openstack/clouds.yaml or ~/.config/openstack/clouds.yaml, then from standard environment
+        variables, then finally by explicit parameters in plays. More information can be found at
+        https://docs.openstack.org/openstacksdk/
+
+
+REQUIREMENTS:  openstacksdk, python >= 2.7
+
+AUTHOR: David Shrewsbury (@Shrews)
+        METADATA:
+          status:
+          - preview
+          supported_by: community
+        
+
+EXAMPLES:
+
+# Gather facts about all ports
+- os_port_facts:
+    cloud: mycloud
+
+# Gather facts about a single port
+- os_port_facts:
+    cloud: mycloud
+    port: 6140317d-e676-31e1-8a4a-b1913814a471
+
+# Gather facts about all ports that have device_id set to a specific value
+# and with a status of ACTIVE.
+- os_port_facts:
+    cloud: mycloud
+    filters:
+      device_id: 1038a010-3a37-4a9d-82ea-652f1da36597
+      status: ACTIVE
+
+
+RETURN VALUES:
+
+openstack_ports:
+    description: List of port dictionaries. A subset of the dictionary keys
+                 listed below may be returned, depending on your cloud provider.
+    returned: always, but can be null
+    type: complex
+    contains:
+        admin_state_up:
+            description: The administrative state of the router, which is
+                         up (true) or down (false).
+            returned: success
+            type: bool
+            sample: true
+        allowed_address_pairs:
+            description: A set of zero or more allowed address pairs. An
+                         address pair consists of an IP address and MAC address.
+            returned: success
+            type: list
+            sample: []
+        "binding:host_id":
+            description: The UUID of the host where the port is allocated.
+            returned: success
+            type: str
+            sample: "b4bd682d-234a-4091-aa5b-4b025a6a7759"
+        "binding:profile":
+            description: A dictionary the enables the application running on
+                         the host to pass and receive VIF port-specific
+                         information to the plug-in.
+            returned: success
+            type: dict
+            sample: {}
+        "binding:vif_details":
+            description: A dictionary that enables the application to pass
+                         information about functions that the Networking API
+                         provides.
+            returned: success
+            type: dict
+            sample: {"port_filter": true}
+        "binding:vif_type":
+            description: The VIF type for the port.
+            returned: success
+            type: dict
+            sample: "ovs"
+        "binding:vnic_type":
+            description: The virtual network interface card (vNIC) type that is
+                         bound to the neutron port.
+            returned: success
+            type: str
+            sample: "normal"
+        device_id:
+            description: The UUID of the device that uses this port.
+            returned: success
+            type: str
+            sample: "b4bd682d-234a-4091-aa5b-4b025a6a7759"
+        device_owner:
+            description: The UUID of the entity that uses this port.
+            returned: success
+            type: str
+            sample: "network:router_interface"
+        dns_assignment:
+            description: DNS assignment information.
+            returned: success
+            type: list
+        dns_name:
+            description: DNS name
+            returned: success
+            type: str
+            sample: ""
+        extra_dhcp_opts:
+            description: A set of zero or more extra DHCP option pairs.
+                         An option pair consists of an option value and name.
+            returned: success
+            type: list
+            sample: []
+        fixed_ips:
+            description: The IP addresses for the port. Includes the IP address
+                         and UUID of the subnet.
+            returned: success
+            type: list
+        id:
+            description: The UUID of the port.
+            returned: success
+            type: str
+            sample: "3ec25c97-7052-4ab8-a8ba-92faf84148de"
+        ip_address:
+            description: The IP address.
+            returned: success
+            type: str
+            sample: "127.0.0.1"
+        mac_address:
+            description: The MAC address.
+            returned: success
+            type: str
+            sample: "00:00:5E:00:53:42"
+        name:
+            description: The port name.
+            returned: success
+            type: str
+            sample: "port_name"
+        network_id:
+            description: The UUID of the attached network.
+            returned: success
+            type: str
+            sample: "dd1ede4f-3952-4131-aab6-3b8902268c7d"
+        port_security_enabled:
+            description: The port security status. The status is enabled (true) or disabled (false).
+            returned: success
+            type: bool
+            sample: false
+        security_groups:
+            description: The UUIDs of any attached security groups.
+            returned: success
+            type: list
+        status:
+            description: The port status.
+            returned: success
+            type: str
+            sample: "ACTIVE"
+        tenant_id:
+            description: The UUID of the tenant who owns the network.
+            returned: success
+            type: str
+            sample: "51fce036d7984ba6af4f6c849f65ef00"
+

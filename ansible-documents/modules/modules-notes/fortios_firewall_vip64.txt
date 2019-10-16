@@ -1,0 +1,298 @@
+> FORTIOS_FIREWALL_VIP64    (/usr/lib/python2.7/dist-packages/ansible/modules/network/fortios/fortios_firewall_vip64.py)
+
+        This module is able to configure a FortiGate or FortiOS by allowing the user to configure firewall feature and vip64 category.
+        Examples includes all options and need to be adjusted to datasources before usage. Tested with FOS v6.0.2
+
+  * This module is maintained by The Ansible Community
+OPTIONS (= is mandatory):
+
+- firewall_vip64
+        Configure IPv6 to IPv4 virtual IPs.
+        [Default: None]
+        suboptions:
+          arp-reply:
+            choices:
+            - disable
+            - enable
+            description:
+            - Enable ARP reply.
+          color:
+            description:
+            - Color of icon on the GUI.
+          comment:
+            description:
+            - Comment.
+          extip:
+            description:
+            - Start-external-IP [-end-external-IP].
+          extport:
+            description:
+            - External service port.
+          id:
+            description:
+            - Custom defined id.
+          ldb-method:
+            choices:
+            - static
+            - round-robin
+            - weighted
+            - least-session
+            - least-rtt
+            - first-alive
+            description:
+            - Load balance method.
+          mappedip:
+            description:
+            - Start-mapped-IP [-end-mapped-IP].
+          mappedport:
+            description:
+            - Mapped service port.
+          monitor:
+            description:
+            - Health monitors.
+            suboptions:
+              name:
+                description:
+                - Health monitor name. Source firewall.ldb-monitor.name.
+                required: true
+          name:
+            description:
+            - VIP64 name.
+            required: true
+          portforward:
+            choices:
+            - disable
+            - enable
+            description:
+            - Enable port forwarding.
+          protocol:
+            choices:
+            - tcp
+            - udp
+            description:
+            - Mapped port protocol.
+          realservers:
+            description:
+            - Real servers.
+            suboptions:
+              client-ip:
+                description:
+                - Restrict server to a client IP in this range.
+              healthcheck:
+                choices:
+                - disable
+                - enable
+                - vip
+                description:
+                - Per server health check.
+              holddown-interval:
+                description:
+                - Hold down interval.
+              id:
+                description:
+                - Real server ID.
+                required: true
+              ip:
+                description:
+                - Mapped server IP.
+              max-connections:
+                description:
+                - Maximum number of connections allowed to server.
+              monitor:
+                description:
+                - Health monitors. Source firewall.ldb-monitor.name.
+              port:
+                description:
+                - Mapped server port.
+              status:
+                choices:
+                - active
+                - standby
+                - disable
+                description:
+                - Server administrative status.
+              weight:
+                description:
+                - weight
+          server-type:
+            choices:
+            - http
+            - tcp
+            - udp
+            - ip
+            description:
+            - Server type.
+          src-filter:
+            description:
+            - Source IP6 filter (x:x:x:x:x:x:x:x/x).
+            suboptions:
+              range:
+                description:
+                - Src-filter range.
+                required: true
+          state:
+            choices:
+            - present
+            - absent
+            description:
+            - Indicates whether to create or remove the object
+          type:
+            choices:
+            - static-nat
+            - server-load-balance
+            description:
+            - 'VIP type: static NAT or server load balance.'
+          uuid:
+            description:
+            - Universally Unique Identifier (UUID; automatically assigned but can be manually
+              reset).
+        
+
+= host
+        FortiOS or FortiGate ip address.
+
+
+- https
+        Indicates if the requests towards FortiGate must use HTTPS protocol
+        [Default: False]
+        type: bool
+
+- password
+        FortiOS or FortiGate password.
+        [Default: ]
+
+= username
+        FortiOS or FortiGate username.
+
+
+- vdom
+        Virtual domain, among those defined previously. A vdom is a virtual instance of the FortiGate that can be configured and used as
+        a different unit.
+        [Default: root]
+
+
+NOTES:
+      * Requires fortiosapi library developed by Fortinet
+      * Run as a local_action in your playbook
+
+
+REQUIREMENTS:  fortiosapi>=0.9.8
+
+AUTHOR: Miguel Angel Munoz (@mamunozgonzalez), Nicolas Thomas (@thomnico)
+        METADATA:
+          status:
+          - preview
+          supported_by: community
+        
+
+EXAMPLES:
+
+- hosts: localhost
+  vars:
+   host: "192.168.122.40"
+   username: "admin"
+   password: ""
+   vdom: "root"
+  tasks:
+  - name: Configure IPv6 to IPv4 virtual IPs.
+    fortios_firewall_vip64:
+      host:  "{{ host }}"
+      username: "{{ username }}"
+      password: "{{ password }}"
+      vdom:  "{{ vdom }}"
+      firewall_vip64:
+        state: "present"
+        arp-reply: "disable"
+        color: "4"
+        comment: "Comment."
+        extip: "<your_own_value>"
+        extport: "<your_own_value>"
+        id:  "8"
+        ldb-method: "static"
+        mappedip: "<your_own_value>"
+        mappedport: "<your_own_value>"
+        monitor:
+         -
+            name: "default_name_13 (source firewall.ldb-monitor.name)"
+        name: "default_name_14"
+        portforward: "disable"
+        protocol: "tcp"
+        realservers:
+         -
+            client-ip: "<your_own_value>"
+            healthcheck: "disable"
+            holddown-interval: "20"
+            id:  "21"
+            ip: "<your_own_value>"
+            max-connections: "23"
+            monitor: "<your_own_value> (source firewall.ldb-monitor.name)"
+            port: "25"
+            status: "active"
+            weight: "27"
+        server-type: "http"
+        src-filter:
+         -
+            range: "<your_own_value>"
+        type: "static-nat"
+        uuid: "<your_own_value>"
+
+
+RETURN VALUES:
+
+build:
+  description: Build number of the fortigate image
+  returned: always
+  type: str
+  sample: '1547'
+http_method:
+  description: Last method used to provision the content into FortiGate
+  returned: always
+  type: str
+  sample: 'PUT'
+http_status:
+  description: Last result given by FortiGate on last operation applied
+  returned: always
+  type: str
+  sample: "200"
+mkey:
+  description: Master key (id) used in the last call to FortiGate
+  returned: success
+  type: str
+  sample: "key1"
+name:
+  description: Name of the table used to fulfill the request
+  returned: always
+  type: str
+  sample: "urlfilter"
+path:
+  description: Path of the table used to fulfill the request
+  returned: always
+  type: str
+  sample: "webfilter"
+revision:
+  description: Internal revision number
+  returned: always
+  type: str
+  sample: "17.0.2.10658"
+serial:
+  description: Serial number of the unit
+  returned: always
+  type: str
+  sample: "FGVMEVYYQT3AB5352"
+status:
+  description: Indication of the operation's result
+  returned: always
+  type: str
+  sample: "success"
+vdom:
+  description: Virtual domain used
+  returned: always
+  type: str
+  sample: "root"
+version:
+  description: Version of the FortiGate
+  returned: always
+  type: str
+  sample: "v5.6.3"
+
+

@@ -1,0 +1,131 @@
+EXAMPLES:
+
+# Create a simple router, not attached to a gateway or subnets.
+- os_router:
+    cloud: mycloud
+    state: present
+    name: simple_router
+
+# Create a simple router, not attached to a gateway or subnets for a given project.
+- os_router:
+    cloud: mycloud
+    state: present
+    name: simple_router
+    project: myproj
+
+# Creates a router attached to ext_network1 on an IPv4 subnet and one
+# internal subnet interface.
+- os_router:
+    cloud: mycloud
+    state: present
+    name: router1
+    network: ext_network1
+    external_fixed_ips:
+      - subnet: public-subnet
+        ip: 172.24.4.2
+    interfaces:
+      - private-subnet
+
+# Create another router with two internal subnet interfaces.One with user defined port
+# ip and another with default gateway.
+- os_router:
+    cloud: mycloud
+    state: present
+    name: router2
+    network: ext_network1
+    interfaces:
+      - net: private-net
+        subnet: private-subnet
+        portip: 10.1.1.10
+      - project-subnet
+
+# Create another router with two internal subnet interface.One with user defined port
+# ip and and another with default gateway.
+- os_router:
+    cloud: mycloud
+    state: present
+    name: router2
+    network: ext_network1
+    interfaces:
+      - net: private-net
+        subnet: private-subnet
+        portip: 10.1.1.10
+      - project-subnet
+
+# Create another router with two internal subnet interface. one with  user defined port
+# ip and and another  with default gateway.
+- os_router:
+    cloud: mycloud
+    state: present
+    name: router2
+    network: ext_network1
+    interfaces:
+      - net: private-net
+        subnet: private-subnet
+        portip: 10.1.1.10
+      - project-subnet
+
+# Update existing router1 external gateway to include the IPv6 subnet.
+# Note that since 'interfaces' is not provided, any existing internal
+# interfaces on an existing router will be left intact.
+- os_router:
+    cloud: mycloud
+    state: present
+    name: router1
+    network: ext_network1
+    external_fixed_ips:
+      - subnet: public-subnet
+        ip: 172.24.4.2
+      - subnet: ipv6-public-subnet
+        ip: 2001:db8::3
+
+# Delete router1
+- os_router:
+    cloud: mycloud
+    state: absent
+    name: router1
+
+
+RETURN VALUES:
+
+router:
+    description: Dictionary describing the router.
+    returned: On success when I(state) is 'present'
+    type: complex
+    contains:
+        id:
+            description: Router ID.
+            type: str
+            sample: "474acfe5-be34-494c-b339-50f06aa143e4"
+        name:
+            description: Router name.
+            type: str
+            sample: "router1"
+        admin_state_up:
+            description: Administrative state of the router.
+            type: bool
+            sample: true
+        status:
+            description: The router status.
+            type: str
+            sample: "ACTIVE"
+        tenant_id:
+            description: The tenant ID.
+            type: str
+            sample: "861174b82b43463c9edc5202aadc60ef"
+        external_gateway_info:
+            description: The external gateway parameters.
+            type: dict
+            sample: {
+                      "enable_snat": true,
+                      "external_fixed_ips": [
+                         {
+                           "ip_address": "10.6.6.99",
+                           "subnet_id": "4272cb52-a456-4c20-8f3c-c26024ecfa81"
+                         }
+                       ]
+                    }
+        routes:
+            description: The extra routes configuration for L3 router.
+            type: list
+

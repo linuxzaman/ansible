@@ -1,0 +1,193 @@
+> IOS_LOGGING    (/usr/lib/python2.7/dist-packages/ansible/modules/network/ios/ios_logging.py)
+
+        This module provides declarative management of logging on Cisco Ios devices.
+
+  * This module is maintained by The Ansible Network Team
+OPTIONS (= is mandatory):
+
+- aggregate
+        List of logging definitions.
+        [Default: (null)]
+
+- auth_pass
+        *Deprecated*
+        Starting with Ansible 2.5 we recommend using `connection: network_cli' and `become: yes' with `become_pass'.
+        For more information please see the L(IOS Platform Options guide, ../network/user_guide/platform_ios.html).
+        HORIZONTALLINE
+        Specifies the password to use if required to enter privileged mode on the remote device.  If `authorize' is false, then this
+        argument does nothing. If the value is not specified in the task, the value of environment variable `ANSIBLE_NET_AUTH_PASS' will
+        be used instead.
+        [Default: (null)]
+        type: str
+
+- authorize
+        *Deprecated*
+        Starting with Ansible 2.5 we recommend using `connection: network_cli' and `become: yes'.
+        For more information please see the L(IOS Platform Options guide, ../network/user_guide/platform_ios.html).
+        HORIZONTALLINE
+        Instructs the module to enter privileged mode on the remote device before sending any commands.  If not specified, the device
+        will attempt to execute all commands in non-privileged mode. If the value is not specified in the task, the value of environment
+        variable `ANSIBLE_NET_AUTHORIZE' will be used instead.
+        [Default: False]
+        type: bool
+
+- dest
+        Destination of the logs.
+        (Choices: on, host, console, monitor, buffered)[Default: (null)]
+
+- facility
+        Set logging facility.
+        [Default: (null)]
+
+- level
+        Set logging severity levels.
+        [Default: (null)]
+
+- name
+        If value of `dest' is `file' it indicates file-name, for `user' it indicates username and for `host' indicates the host name to
+        be notified.
+        [Default: (null)]
+
+- provider
+        *Deprecated*
+        Starting with Ansible 2.5 we recommend using `connection: network_cli'.
+        For more information please see the L(IOS Platform Options guide, ../network/user_guide/platform_ios.html).
+        HORIZONTALLINE
+        A dict object containing connection details.
+        [Default: (null)]
+        suboptions:
+          auth_pass:
+            description:
+            - Specifies the password to use if required to enter privileged mode on the remote
+              device.  If `authorize' is false, then this argument does nothing. If the value
+              is not specified in the task, the value of environment variable `ANSIBLE_NET_AUTH_PASS'
+              will be used instead.
+            type: str
+          authorize:
+            default: false
+            description:
+            - Instructs the module to enter privileged mode on the remote device before sending
+              any commands.  If not specified, the device will attempt to execute all commands
+              in non-privileged mode. If the value is not specified in the task, the value
+              of environment variable `ANSIBLE_NET_AUTHORIZE' will be used instead.
+            type: bool
+          host:
+            description:
+            - Specifies the DNS host name or address for connecting to the remote device over
+              the specified transport.  The value of host is used as the destination address
+              for the transport.
+            required: true
+            type: str
+          password:
+            description:
+            - Specifies the password to use to authenticate the connection to the remote device.   This
+              value is used to authenticate the SSH session. If the value is not specified
+              in the task, the value of environment variable `ANSIBLE_NET_PASSWORD' will
+              be used instead.
+            type: str
+          port:
+            default: 22
+            description:
+            - Specifies the port to use when building the connection to the remote device.
+            type: int
+          ssh_keyfile:
+            description:
+            - Specifies the SSH key to use to authenticate the connection to the remote device.   This
+              value is the path to the key used to authenticate the SSH session. If the value
+              is not specified in the task, the value of environment variable `ANSIBLE_NET_SSH_KEYFILE'
+              will be used instead.
+            type: path
+          timeout:
+            default: 10
+            description:
+            - Specifies the timeout in seconds for communicating with the network device for
+              either connecting or sending commands.  If the timeout is exceeded before the
+              operation is completed, the module will error.
+            type: int
+          username:
+            description:
+            - Configures the username to use to authenticate the connection to the remote
+              device.  This value is used to authenticate the SSH session. If the value is
+              not specified in the task, the value of environment variable `ANSIBLE_NET_USERNAME'
+              will be used instead.
+            type: str
+        
+        type: dict
+
+- size
+        Size of buffer. The acceptable value is in range from 4096 to 4294967295 bytes.
+        [Default: 4096]
+
+- state
+        State of the logging configuration.
+        (Choices: present, absent)[Default: present]
+
+
+NOTES:
+      * Tested against IOS 15.6
+      * For more information on using Ansible to manage network devices see the :ref:`Ansible Network Guide <network_guide>`
+      * For more information on using Ansible to manage Cisco devices see the `Cisco integration page
+        <https://www.ansible.com/integrations/networks/cisco>`_.
+
+
+AUTHOR: Trishna Guha (@trishnaguha)
+        METADATA:
+          status:
+          - preview
+          supported_by: network
+        
+
+EXAMPLES:
+
+- name: configure host logging
+  ios_logging:
+    dest: host
+    name: 172.16.0.1
+    state: present
+
+- name: remove host logging configuration
+  ios_logging:
+    dest: host
+    name: 172.16.0.1
+    state: absent
+
+- name: configure console logging level and facility
+  ios_logging:
+    dest: console
+    facility: local7
+    level: debugging
+    state: present
+
+- name: enable logging to all
+  ios_logging:
+    dest : on
+
+- name: configure buffer size
+  ios_logging:
+    dest: buffered
+    size: 5000
+
+- name: Configure logging using aggregate
+  ios_logging:
+    aggregate:
+      - { dest: console, level: notifications }
+      - { dest: buffered, size: 9000 }
+
+- name: remove logging using aggregate
+  ios_logging:
+    aggregate:
+      - { dest: console, level: notifications }
+      - { dest: buffered, size: 9000 }
+    state: absent
+
+
+RETURN VALUES:
+
+commands:
+  description: The list of configuration mode commands to send to the device
+  returned: always
+  type: list
+  sample:
+    - logging facility local7
+    - logging host 172.16.0.1
+

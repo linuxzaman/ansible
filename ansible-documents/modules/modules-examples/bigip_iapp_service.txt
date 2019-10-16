@@ -1,0 +1,144 @@
+EXAMPLES:
+
+- name: Create HTTP iApp service from iApp template
+  bigip_iapp_service:
+    name: foo-service
+    template: f5.http
+    parameters: "{{ lookup('file', 'f5.http.parameters.json') }}"
+    state: present
+    provider:
+      user: admin
+      password: secret
+      server: lb.mydomain.com
+  delegate_to: localhost
+
+- name: Upgrade foo-service to v1.2.0rc4 of the f5.http template
+  bigip_iapp_service:
+    name: foo-service
+    template: f5.http.v1.2.0rc4
+    state: present
+    provider:
+      user: admin
+      password: secret
+      server: lb.mydomain.com
+  delegate_to: localhost
+
+- name: Configure a service using parameters in YAML
+  bigip_iapp_service:
+    name: tests
+    template: web_frontends
+    state: present
+    parameters:
+      variables:
+        - name: var__vs_address
+          value: 1.1.1.1
+        - name: pm__apache_servers_for_http
+          value: 2.2.2.1:80
+        - name: pm__apache_servers_for_https
+          value: 2.2.2.2:80
+    provider:
+      user: admin
+      password: secret
+      server: lb.mydomain.com
+  delegate_to: localhost
+
+- name: Re-configure a service whose underlying iApp was updated in place
+  bigip_iapp_service:
+    name: tests
+    template: web_frontends
+    force: yes
+    state: present
+    parameters:
+      variables:
+        - name: var__vs_address
+          value: 1.1.1.1
+        - name: pm__apache_servers_for_http
+          value: 2.2.2.1:80
+        - name: pm__apache_servers_for_https
+          value: 2.2.2.2:80
+    provider:
+      user: admin
+      password: secret
+      server: lb.mydomain.com
+  delegate_to: localhost
+
+- name: Try to remove the iApp template before the associated Service is removed
+  bigip_iapp_template:
+    name: web_frontends
+    state: absent
+    provider:
+      user: admin
+      password: secret
+      server: lb.mydomain.com
+  register: result
+  failed_when:
+    - result is not success
+    - "'referenced by one or more applications' not in result.msg"
+
+- name: Configure a service using more complicated parameters
+  bigip_iapp_service:
+    name: tests
+    template: web_frontends
+    state: present
+    provider:
+      user: admin
+      password: secret
+      server: lb.mydomain.com
+    parameters:
+      variables:
+        - name: var__vs_address
+          value: 1.1.1.1
+        - name: pm__apache_servers_for_http
+          value: 2.2.2.1:80
+        - name: pm__apache_servers_for_https
+          value: 2.2.2.2:80
+      lists:
+        - name: irules__irules
+          value:
+            - foo
+            - bar
+      tables:
+        - name: basic__snatpool_members
+        - name: net__snatpool_members
+        - name: optimizations__hosts
+        - name: pool__hosts
+          columnNames:
+            - name
+          rows:
+            - row:
+                - internal.company.bar
+        - name: pool__members
+          columnNames:
+            - addr
+            - port
+            - connection_limit
+          rows:
+            - row:
+                - "none"
+                - 80
+                - 0
+        - name: server_pools__servers
+  delegate_to: localhost
+
+- name: Override metadata that may or may not exist in parameters
+  bigip_iapp_service:
+    name: foo-service
+    template: f5.http
+    parameters: "{{ lookup('file', 'f5.http.parameters.json') }}"
+    metadata:
+      - persist: yes
+        name: data 1
+      - persist: yes
+        name: data 2
+    state: present
+    provider:
+      user: admin
+      password: secret
+      server: lb.mydomain.com
+  delegate_to: localhost
+
+
+RETURN VALUES:
+
+# only common fields returned
+

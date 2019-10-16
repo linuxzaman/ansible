@@ -1,0 +1,73 @@
+EXAMPLES:
+
+- name: Create a volume
+  hcloud_volume:
+    name: my-volume
+    location: fsn1
+    size: 100
+    state: present
+- name: Create a volume and format it with ext4
+  hcloud_volume:
+    name: my-volume
+    location: fsn
+    format: ext4
+    size: 100
+    state: present
+- name: Mount a existing volume and automount
+  hcloud_volume:
+    name: my-volume
+    server: my-server
+    automount: yes
+    state: present
+- name: Mount a existing volume and automount
+  hcloud_volume:
+    name: my-volume
+    server: my-server
+    automount: yes
+    state: present
+- name: Ensure the volume is absent (remove if needed)
+  hcloud_volume:
+    name: my-volume
+    state: absent
+
+
+RETURN VALUES:
+
+hcloud_volume:
+    description: The block volume
+    returned: Always
+    type: complex
+    contains:
+        id:
+            description: ID of the volume
+            type: int
+            returned: Always
+            sample: 12345
+        name:
+            description: Name of the volume
+            type: string
+            returned: Always
+            sample: my-volume
+        size:
+            description: Size in MB of the volume
+            type: int
+            returned: Always
+            sample: 1337
+        location:
+            description: Location name where the volume is located at
+            type: string
+            returned: Always
+            sample: "fsn1"
+        labels:
+            description: User-defined labels (key-value pairs)
+            type: dict
+            returned: Always
+            sample:
+                key: value
+                mylabel: 123
+        server:
+            description: Server name where the volume is attached to
+            type: string
+            returned: Always
+            sample: "my-server"
+

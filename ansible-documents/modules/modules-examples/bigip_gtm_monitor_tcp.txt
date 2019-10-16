@@ -1,0 +1,95 @@
+EXAMPLES:
+
+- name: Create a GTM TCP monitor
+  bigip_gtm_monitor_tcp:
+    name: my_monitor
+    ip: 1.1.1.1
+    port: 80
+    send: my send string
+    receive: my receive string
+    state: present
+    provider:
+      user: admin
+      password: secret
+      server: lb.mydomain.com
+  delegate_to: localhost
+
+- name: Remove TCP Monitor
+  bigip_gtm_monitor_tcp:
+    name: my_monitor
+    state: absent
+    provider:
+      user: admin
+      password: secret
+      server: lb.mydomain.com
+  delegate_to: localhost
+
+- name: Add TCP monitor for all addresses, port 514
+  bigip_gtm_monitor_tcp:
+    name: my_monitor
+    port: 514
+    provider:
+      user: admin
+      password: secret
+      server: lb.mydomain.com
+  delegate_to: localhost
+
+
+RETURN VALUES:
+
+parent:
+  description: New parent template of the monitor.
+  returned: changed
+  type: str
+  sample: tcp
+ip:
+  description: The new IP of IP/port definition.
+  returned: changed
+  type: str
+  sample: 10.12.13.14
+port:
+  description: The new port the monitor checks the resource on.
+  returned: changed
+  type: str
+  sample: 8080
+interval:
+  description: The new interval in which to run the monitor check.
+  returned: changed
+  type: int
+  sample: 2
+timeout:
+  description: The new timeout in which the remote system must respond to the monitor.
+  returned: changed
+  type: int
+  sample: 10
+ignore_down_response:
+  description: Whether to ignore the down response or not.
+  returned: changed
+  type: bool
+  sample: True
+send:
+  description: The new send string for this monitor.
+  returned: changed
+  type: str
+  sample: tcp string to send
+receive:
+  description: The new receive string for this monitor.
+  returned: changed
+  type: str
+  sample: tcp string to receive
+probe_timeout:
+  description: The new timeout in which the system will timeout the monitor probe.
+  returned: changed
+  type: int
+  sample: 10
+reverse:
+  description: The new value for whether the monitor operates in reverse mode.
+  returned: changed
+  type: bool
+  sample: False
+transparent:
+  description: The new value for whether the monitor operates in transparent mode.
+  returned: changed
+  type: bool
+  sample: False
+

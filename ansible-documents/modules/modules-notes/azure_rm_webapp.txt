@@ -1,0 +1,388 @@
+> AZURE_RM_WEBAPP    (/usr/lib/python2.7/dist-packages/ansible/modules/cloud/azure/azure_rm_webapp.py)
+
+        Create, update and delete instance of Web App.
+
+  * This module is maintained by The Ansible Community
+OPTIONS (= is mandatory):
+
+- ad_user
+        Active Directory username. Use when authenticating with an Active Directory user rather than service principal.
+        [Default: (null)]
+        type: str
+
+- adfs_authority_url
+        Azure AD authority url. Use when authenticating with Username/password, and has your own ADFS authority.
+        [Default: (null)]
+        type: str
+        version_added: 2.6
+
+- api_profile
+        Selects an API profile to use when communicating with Azure services. Default value of `latest' is appropriate for public clouds;
+        future values will allow use with Azure Stack.
+        [Default: latest]
+        type: str
+        version_added: 2.5
+
+- app_settings
+        Configure web app application settings. Suboptions are in key value pair format.
+        [Default: (null)]
+
+- app_state
+        Start/Stop/Restart the web app.
+        (Choices: started, stopped, restarted)[Default: started]
+        type: str
+
+- append_tags
+        Use to control if tags field is canonical or just appends to existing tags.
+        When canonical, any tags not found in the tags parameter will be removed from the object's metadata.
+        [Default: True]
+        type: bool
+
+- auth_source
+        Controls the source of the credentials to use for authentication.
+        If not specified, ANSIBLE_AZURE_AUTH_SOURCE environment variable will be used and default to `auto' if variable is not defined.
+        `auto' will follow the default precedence of module parameters -> environment variables -> default profile in credential file
+        `~/.azure/credentials'.
+        When set to `cli', the credentials will be sources from the default Azure CLI profile.
+        Can also be set via the `ANSIBLE_AZURE_AUTH_SOURCE' environment variable.
+        When set to `msi', the host machine must be an azure resource with an enabled MSI extension. `subscription_id' or the environment
+        variable `AZURE_SUBSCRIPTION_ID' can be used to identify the subscription ID if the resource is granted access to more than one
+        subscription, otherwise the first subscription is chosen.
+        The `msi' was added in Ansible 2.6.
+        (Choices: auto, cli, credential_file, env, msi)[Default: (null)]
+        type: str
+        version_added: 2.5
+
+- cert_validation_mode
+        Controls the certificate validation behavior for Azure endpoints. By default, all modules will validate the server certificate,
+        but when an HTTPS proxy is in use, or against Azure Stack, it may be necessary to disable this behavior by passing `ignore'. Can
+        also be set via credential file profile or the `AZURE_CERT_VALIDATION' environment variable.
+        (Choices: ignore, validate)[Default: (null)]
+        type: str
+        version_added: 2.5
+
+- client_affinity_enabled
+        True to enable client affinity; False to stop sending session affinity cookies, which route client requests in the same session
+        to the same instance.
+        [Default: True]
+        type: bool
+
+- client_id
+        Azure client ID. Use when authenticating with a Service Principal.
+        [Default: (null)]
+        type: str
+
+- cloud_environment
+        For cloud environments other than the US public cloud, the environment name (as defined by Azure Python SDK, eg,
+        `AzureChinaCloud', `AzureUSGovernment'), or a metadata discovery endpoint URL (required for Azure Stack). Can also be set via
+        credential file profile or the `AZURE_CLOUD_ENVIRONMENT' environment variable.
+        [Default: AzureCloud]
+        type: str
+        version_added: 2.4
+
+- container_settings
+        Web app container settings.
+        [Default: (null)]
+        suboptions:
+          name:
+            description: Name of container. eg. "imagename:tag"
+          registry_server_password:
+            description:
+            - The container registry server password.
+          registry_server_url:
+            description: Container registry server url. eg. mydockerregistry.io
+          registry_server_user:
+            description: The container registry server user name.
+        
+
+- deployment_source
+        Deployment source for git
+        [Default: (null)]
+        suboptions:
+          branch:
+            description:
+            - The branch name of the repository.
+          url:
+            description:
+            - Repository url of deployment source.
+        
+
+- dns_registration
+        If true web app hostname is not registered with DNS on creation.
+        [Default: (null)]
+        type: bool
+
+- frameworks
+        Set of run time framework settings. Each setting is a dictionary.
+        See https://docs.microsoft.com/en-us/azure/app-service/app-service-web-overview for more info.
+        [Default: (null)]
+        suboptions:
+          name:
+            choices:
+            - java
+            - net_framework
+            - php
+            - python
+            - ruby
+            - dotnetcore
+            - node
+            description:
+            - Name of the framework.
+            - Supported framework list for Windows web app and Linux web app is different.
+            - For Windows web app, supported names(June 2018) java, net_framework, php, python,
+              node. Multiple framework can be set at same time.
+            - For Linux web app, supported names(June 2018) java, ruby, php, dotnetcore, node.
+              Only one framework can be set.
+            - Java framework is mutually exclusive with others.
+          settings:
+            description:
+            - List of settings of the framework.
+            suboptions:
+              java_container:
+                description: Name of Java container. This is supported by specific framework
+                  `java' only. e.g. Tomcat, Jetty.
+              java_container_version:
+                description:
+                - Version of Java container. This is supported by specific framework `java'
+                  only.
+                - For Tomcat, e.g. 8.0, 8.5, 9.0. For Jetty, e.g. 9.1, 9.3.
+          version:
+            description:
+            - Version of the framework. For Linux web app supported value, see https://aka.ms/linux-stacks
+              for more info.
+            - net_framework supported value sample, 'v4.0' for .NET 4.6 and 'v3.0' for .NET
+              3.5.
+            - php supported value sample, 5.5, 5.6, 7.0.
+            - python supported value sample, e.g., 5.5, 5.6, 7.0.
+            - node supported value sample, 6.6, 6.9.
+            - dotnetcore supported value sample, 1.0, 1,1, 1.2.
+            - ruby supported value sample, 2.3.
+            - java supported value sample, 1.8, 1.9 for windows web app. 8 for linux web app.
+        
+
+- https_only
+        Configures web site to accept only https requests.
+        [Default: (null)]
+        type: bool
+
+- location
+        Resource location. If not set, location from the resource group will be used as default.
+        [Default: (null)]
+
+= name
+        Unique name of the app to create or update. To create or update a deployment slot, use the {slot} parameter.
+
+
+- password
+        Active Directory user password. Use when authenticating with an Active Directory user rather than service principal.
+        [Default: (null)]
+
+- plan
+        App service plan. Required for creation.
+        It can be name of existing app service plan in same resource group as web app.
+        It can be resource id of existing app service plan. eg.,
+        /subscriptions/<subs_id>/resourceGroups/<resource_group>/providers/Microsoft.Web/serverFarms/<plan_name>
+        It can be a dict which contains `name', `resource_group', `sku', `is_linux' and `number_of_workers'.
+        `name'. Name of app service plan.
+        `resource_group'. Resource group name of app service plan.
+        `sku'. SKU of app service plan. For allowed sku, please refer to https://azure.microsoft.com/en-us/pricing/details/app-
+        service/linux/.
+        `is_linux'. Indicates Linux app service plan. type bool. default False.
+        `number_of_workers'. Number of workers.
+        [Default: (null)]
+
+- profile
+        Security profile found in ~/.azure/credentials file.
+        [Default: (null)]
+        type: str
+
+- purge_app_settings
+        Purge any existing application settings. Replace web app application settings with app_settings.
+        [Default: (null)]
+        type: bool
+
+= resource_group
+        Name of the resource group to which the resource belongs.
+
+
+- scm_type
+        Repository type of deployment source. Eg. LocalGit, GitHub.
+        Please see https://docs.microsoft.com/en-us/rest/api/appservice/webapps/createorupdate#scmtype for more info.
+        [Default: (null)]
+
+- secret
+        Azure client secret. Use when authenticating with a Service Principal.
+        [Default: (null)]
+        type: str
+
+- skip_custom_domain_verification
+        If true, custom (non *.azurewebsites.net) domains associated with web app are not verified.
+        [Default: (null)]
+        type: bool
+
+- startup_file
+        The web's startup file.
+        This only applies for linux web app.
+        [Default: (null)]
+
+- state
+        Assert the state of the Web App.
+        Use `present' to create or update a Web App and `absent' to delete it.
+        (Choices: absent, present)[Default: present]
+
+- subscription_id
+        Your Azure subscription Id.
+        [Default: (null)]
+        type: str
+
+- tags
+        Dictionary of string:string pairs to assign as metadata to the object.
+        Metadata tags on the object will be updated with any provided values.
+        To remove tags set append_tags option to false.
+        [Default: (null)]
+        type: dict
+
+- tenant
+        Azure tenant ID. Use when authenticating with a Service Principal.
+        [Default: (null)]
+        type: str
+
+- ttl_in_seconds
+        Time to live in seconds for web app default domain name.
+        [Default: (null)]
+
+
+NOTES:
+      * For authentication with Azure you can pass parameters, set environment variables, use a profile stored in
+        ~/.azure/credentials, or log in before you run your tasks or playbook with `az login'.
+      * Authentication is also possible using a service principal or Active Directory user.
+      * To authenticate via service principal, pass subscription_id, client_id, secret and tenant or set environment variables
+        AZURE_SUBSCRIPTION_ID, AZURE_CLIENT_ID, AZURE_SECRET and AZURE_TENANT.
+      * To authenticate via Active Directory user, pass ad_user and password, or set AZURE_AD_USER and AZURE_PASSWORD in the
+        environment.
+      * Alternatively, credentials can be stored in ~/.azure/credentials. This is an ini file containing a [default] section and
+        the following keys: subscription_id, client_id, secret and tenant or subscription_id, ad_user and password. It is also
+        possible to add additional profiles. Specify the profile by passing profile or setting AZURE_PROFILE in the environment.
+
+
+SEE ALSO:
+      * Sign in with Azure CLI
+           How to authenticate using the `az login' command.
+           https://docs.microsoft.com/en-us/cli/azure/authenticate-azure-cli?view=azure-cli-latest
+
+
+REQUIREMENTS:  python >= 2.7, azure >= 2.0.0
+
+AUTHOR: Yunge Zhu (@yungezz)
+        METADATA:
+          status:
+          - preview
+          supported_by: community
+        
+
+EXAMPLES:
+
+- name: Create a windows web app with non-exist app service plan
+      azure_rm_webapp:
+        resource_group: myresourcegroup
+        name: mywinwebapp
+        plan:
+          resource_group: myappserviceplan_rg
+          name: myappserviceplan
+          is_linux: false
+          sku: S1
+
+    - name: Create a docker web app with some app settings, with docker image
+      azure_rm_webapp:
+        resource_group: myresourcegroup
+        name: mydockerwebapp
+        plan:
+          resource_group: appserviceplan_test
+          name: myappplan
+          is_linux: true
+          sku: S1
+          number_of_workers: 2
+        app_settings:
+          testkey: testvalue
+          testkey2: testvalue2
+        container_settings:
+          name: ansible/ansible:ubuntu1404
+
+    - name: Create a docker web app with private acr registry
+      azure_rm_webapp:
+        resource_group: myresourcegroup
+        name: mydockerwebapp
+        plan: myappplan
+        app_settings:
+          testkey: testvalue
+        container_settings:
+          name: ansible/ubuntu1404
+          registry_server_url: myregistry.io
+          registry_server_user: user
+          registry_server_password: pass
+
+    - name: Create a linux web app with Node 6.6 framework
+      azure_rm_webapp:
+        resource_group: myresourcegroup
+        name: mylinuxwebapp
+        plan:
+          resource_group: appserviceplan_test
+          name: myappplan
+        app_settings:
+          testkey: testvalue
+        frameworks:
+          - name: "node"
+            version: "6.6"
+
+    - name: Create a windows web app with node, php
+      azure_rm_webapp:
+        resource_group: myresourcegroup
+        name: mywinwebapp
+        plan:
+          resource_group: appserviceplan_test
+          name: myappplan
+        app_settings:
+          testkey: testvalue
+        frameworks:
+          - name: "node"
+            version: 6.6
+          - name: "php"
+            version: "7.0"
+
+    - name: Create a stage deployment slot for an existing web app
+      azure_rm_webapp:
+        resource_group: myresourcegroup
+        name: mywebapp/slots/stage
+        plan:
+          resource_group: myresourcegroup
+          name: myappplan
+        app_settings:
+          testkey:testvalue
+
+    - name: Create a linux web app with java framework
+      azure_rm_webapp:
+        resource_group: myresourcegroup
+        name: mylinuxwebapp
+        plan:
+          resource_group: appserviceplan_test
+          name: myappplan
+        app_settings:
+          testkey: testvalue
+        frameworks:
+          - name: "java"
+            version: "8"
+            settings:
+              java_container: "Tomcat"
+              java_container_version: "8.5"
+
+
+RETURN VALUES:
+
+azure_webapp:
+    description: Id of current web app.
+    returned: always
+    type: dict
+    sample: {
+        "id": "/subscriptions/xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx/resourceGroups/myResourceGroup/providers/Microsoft.Web/sites/ansiblewindowsaaa"
+    }
+

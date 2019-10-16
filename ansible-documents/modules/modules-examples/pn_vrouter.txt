@@ -1,0 +1,34 @@
+EXAMPLES:
+
+- name: create vrouter
+  pn_vrouter:
+    state: 'present'
+    pn_name: 'ansible-vrouter'
+    pn_vnet: 'ansible-fab-global'
+    pn_router_id: 208.74.182.1
+
+- name: delete vrouter
+  pn_vrouter:
+    state: 'absent'
+    pn_name: 'ansible-vrouter'
+
+
+RETURN VALUES:
+
+command:
+  description: The CLI command run on the target node(s).
+  returned: always
+  type: str
+stdout:
+  description: The set of responses from the vrouter command.
+  returned: always
+  type: list
+stderr:
+  description: The set of error responses from the vrouter command.
+  returned: on error
+  type: list
+changed:
+  description: Indicates whether the CLI caused changes on the target.
+  returned: always
+  type: bool
+

@@ -1,0 +1,305 @@
+> AWS_APPLICATION_SCALING_POLICY    (/usr/lib/python2.7/dist-packages/ansible/modules/cloud/amazon/aws_application_scaling_policy.py)
+
+        Creates, updates or removes a Scaling Policy
+
+  * This module is maintained by The Ansible Community
+OPTIONS (= is mandatory):
+
+- aws_access_key
+        AWS access key. If not set then the value of the AWS_ACCESS_KEY_ID, AWS_ACCESS_KEY or EC2_ACCESS_KEY environment variable is
+        used.
+        (Aliases: ec2_access_key, access_key)[Default: (null)]
+        type: str
+
+- aws_secret_key
+        AWS secret key. If not set then the value of the AWS_SECRET_ACCESS_KEY, AWS_SECRET_KEY, or EC2_SECRET_KEY environment variable is
+        used.
+        (Aliases: ec2_secret_key, secret_key)[Default: (null)]
+        type: str
+
+- debug_botocore_endpoint_logs
+        Use a botocore.endpoint logger to parse the unique (rather than total) "resource:action" API calls made during a task, outputing
+        the set to the resource_actions key in the task results. Use the aws_resource_action callback to output to total list made during
+        a playbook. The ANSIBLE_DEBUG_BOTOCORE_LOGS environment variable may also be used.
+        [Default: no]
+        type: bool
+        version_added: 2.8
+
+- ec2_url
+        Url to use to connect to EC2 or your Eucalyptus cloud (by default the module will use EC2 endpoints). Ignored for modules where
+        region is required. Must be specified for all other modules if region is not used. If not set then the value of the EC2_URL
+        environment variable, if any, is used.
+        [Default: (null)]
+        type: str
+
+- maximum_tasks
+        The maximum value to scale to in response to a scale out event. This parameter is required if you are creating a first new policy
+        for the specified service.
+        [Default: (null)]
+        version_added: 2.6
+
+- minimum_tasks
+        The minimum value to scale to in response to a scale in event. This parameter is required if you are creating a first new policy
+        for the specified service.
+        [Default: (null)]
+        version_added: 2.6
+
+- override_task_capacity
+        Whether or not to override values of minimum and/or maximum tasks if it's already set.
+        [Default: False]
+        type: bool
+        version_added: 2.6
+
+= policy_name
+        The name of the scaling policy.
+
+
+= policy_type
+        The policy type.
+        (Choices: StepScaling, TargetTrackingScaling)
+
+- profile
+        Uses a boto profile. Only works with boto >= 2.24.0.
+        [Default: (null)]
+        type: str
+        version_added: 1.6
+
+- region
+        The AWS region to use. If not specified then the value of the AWS_REGION or EC2_REGION environment variable, if any, is used. See
+        http://docs.aws.amazon.com/general/latest/gr/rande.html#ec2_region
+        (Aliases: aws_region, ec2_region)[Default: (null)]
+        type: str
+
+= resource_id
+        The identifier of the resource associated with the scalable target.
+
+
+= scalable_dimension
+        The scalable dimension associated with the scalable target.
+        (Choices: ecs:service:DesiredCount, ec2:spot-fleet-request:TargetCapacity, elasticmapreduce:instancegroup:InstanceCount,
+        appstream:fleet:DesiredCapacity, dynamodb:table:ReadCapacityUnits, dynamodb:table:WriteCapacityUnits,
+        dynamodb:index:ReadCapacityUnits, dynamodb:index:WriteCapacityUnits)
+
+- security_token
+        AWS STS security token. If not set then the value of the AWS_SECURITY_TOKEN or EC2_SECURITY_TOKEN environment variable is used.
+        (Aliases: access_token)[Default: (null)]
+        type: str
+        version_added: 1.6
+
+= service_namespace
+        The namespace of the AWS service.
+        (Choices: ecs, elasticmapreduce, ec2, appstream, dynamodb)
+
+- step_scaling_policy_configuration
+        A step scaling policy. This parameter is required if you are creating a policy and the policy type is StepScaling.
+        [Default: (null)]
+
+- target_tracking_scaling_policy_configuration
+        A target tracking policy. This parameter is required if you are creating a new policy and the policy type is
+        TargetTrackingScaling.
+        [Default: (null)]
+
+- validate_certs
+        When set to "no", SSL certificates will not be validated for boto versions >= 2.6.0.
+        [Default: True]
+        type: bool
+        version_added: 1.5
+
+
+NOTES:
+      * for details of the parameters and returns see http://boto3.readthedocs.io/en/latest/reference/services/application-
+        autoscaling.html#ApplicationAutoScaling.Client.put_scaling_policy
+      * If parameters are not set within the module, the following environment variables can be used in decreasing order of
+        precedence `AWS_URL' or `EC2_URL', `AWS_ACCESS_KEY_ID' or `AWS_ACCESS_KEY' or `EC2_ACCESS_KEY', `AWS_SECRET_ACCESS_KEY' or
+        `AWS_SECRET_KEY' or `EC2_SECRET_KEY', `AWS_SECURITY_TOKEN' or `EC2_SECURITY_TOKEN', `AWS_REGION' or `EC2_REGION'
+      * Ansible uses the boto configuration file (typically ~/.boto) if no credentials are provided. See
+        https://boto.readthedocs.io/en/latest/boto_config_tut.html
+      * `AWS_REGION' or `EC2_REGION' can be typically be used to specify the AWS region, when required, but this can also be
+        configured in the boto config file
+
+
+REQUIREMENTS:  boto, boto3, botocore, json, python >= 2.6
+
+AUTHOR: Gustavo Maia (@gurumaia), Chen Leibovich (@chenl87)
+        METADATA:
+          status:
+          - preview
+          supported_by: community
+        
+
+EXAMPLES:
+
+# Note: These examples do not set authentication details, see the AWS Guide for details.
+
+# Create step scaling policy for ECS Service
+- name: scaling_policy
+  aws_application_scaling_policy:
+    state: present
+    policy_name: test_policy
+    service_namespace: ecs
+    resource_id: service/poc-pricing/test-as
+    scalable_dimension: ecs:service:DesiredCount
+    policy_type: StepScaling
+    minimum_tasks: 1
+    maximum_tasks: 6
+    step_scaling_policy_configuration:
+      AdjustmentType: ChangeInCapacity
+      StepAdjustments:
+        - MetricIntervalUpperBound: 123
+          ScalingAdjustment: 2
+        - MetricIntervalLowerBound: 123
+          ScalingAdjustment: -2
+      Cooldown: 123
+      MetricAggregationType: Average
+
+# Create target tracking scaling policy for ECS Service
+- name: scaling_policy
+  aws_application_scaling_policy:
+    state: present
+    policy_name: test_policy
+    service_namespace: ecs
+    resource_id: service/poc-pricing/test-as
+    scalable_dimension: ecs:service:DesiredCount
+    policy_type: TargetTrackingScaling
+    minimum_tasks: 1
+    maximum_tasks: 6
+    target_tracking_scaling_policy_configuration:
+      TargetValue: 60
+      PredefinedMetricSpecification:
+        PredefinedMetricType: ECSServiceAverageCPUUtilization
+      ScaleOutCooldown: 60
+      ScaleInCooldown: 60
+
+# Remove scalable target for ECS Service
+- name: scaling_policy
+  aws_application_scaling_policy:
+    state: absent
+    policy_name: test_policy
+    policy_type: StepScaling
+    service_namespace: ecs
+    resource_id: service/cluster-name/service-name
+    scalable_dimension: ecs:service:DesiredCount
+
+
+RETURN VALUES:
+
+alarms:
+    description: List of the CloudWatch alarms associated with the scaling policy
+    returned: when state present
+    type: complex
+    contains:
+        alarm_arn:
+            description: The Amazon Resource Name (ARN) of the alarm
+            returned: when state present
+            type: str
+        alarm_name:
+            description: The name of the alarm
+            returned: when state present
+            type: str
+service_namespace:
+    description: The namespace of the AWS service.
+    returned: when state present
+    type: str
+    sample: ecs
+resource_id:
+    description: The identifier of the resource associated with the scalable target.
+    returned: when state present
+    type: str
+    sample: service/cluster-name/service-name
+scalable_dimension:
+    description: The scalable dimension associated with the scalable target.
+    returned: when state present
+    type: str
+    sample: ecs:service:DesiredCount
+policy_arn:
+    description: The Amazon Resource Name (ARN) of the scaling policy..
+    returned: when state present
+    type: str
+policy_name:
+    description: The name of the scaling policy.
+    returned: when state present
+    type: str
+policy_type:
+    description: The policy type.
+    returned: when state present
+    type: str
+min_capacity:
+    description: The minimum value to scale to in response to a scale in event. Required if I(state) is C(present).
+    returned: when state present
+    type: int
+    sample: 1
+max_capacity:
+    description: The maximum value to scale to in response to a scale out event. Required if I(state) is C(present).
+    returned: when state present
+    type: int
+    sample: 2
+role_arn:
+    description: The ARN of an IAM role that allows Application Auto Scaling to modify the scalable target on your behalf. Required if I(state) is C(present).
+    returned: when state present
+    type: str
+    sample: arn:aws:iam::123456789123:role/roleName
+step_scaling_policy_configuration:
+    description: The step scaling policy.
+    returned: when state present and the policy type is StepScaling
+    type: complex
+    contains:
+        adjustment_type:
+            description: The adjustment type
+            returned: when state present and the policy type is StepScaling
+            type: str
+            sample: "ChangeInCapacity, PercentChangeInCapacity, ExactCapacity"
+        cooldown:
+            description: The amount of time, in seconds, after a scaling activity completes
+                where previous trigger-related scaling activities can influence future scaling events
+            returned: when state present and the policy type is StepScaling
+            type: int
+            sample: 60
+        metric_aggregation_type:
+            description: The aggregation type for the CloudWatch metrics
+            returned: when state present and the policy type is StepScaling
+            type: str
+            sample: "Average, Minimum, Maximum"
+        step_adjustments:
+            description: A set of adjustments that enable you to scale based on the size of the alarm breach
+            returned: when state present and the policy type is StepScaling
+            type: list of complex
+target_tracking_scaling_policy_configuration:
+    description: The target tracking policy.
+    returned: when state present and the policy type is TargetTrackingScaling
+    type: complex
+    contains:
+        predefined_metric_specification:
+            description: A predefined metric
+            returned: when state present and the policy type is TargetTrackingScaling
+            type: complex
+            contains:
+                predefined_metric_type:
+                    description: The metric type
+                    returned: when state present and the policy type is TargetTrackingScaling
+                    type: str
+                    sample: "ECSServiceAverageCPUUtilization, ECSServiceAverageMemoryUtilization"
+                resource_label:
+                    description: Identifies the resource associated with the metric type
+                    returned: when metric type is ALBRequestCountPerTarget
+                    type: str
+        scale_in_cooldown:
+            description: The amount of time, in seconds, after a scale in activity completes before another scale in activity can start
+            returned: when state present and the policy type is TargetTrackingScaling
+            type: int
+            sample: 60
+        scale_out_cooldown:
+            description: The amount of time, in seconds, after a scale out activity completes before another scale out activity can start
+            returned: when state present and the policy type is TargetTrackingScaling
+            type: int
+            sample: 60
+        target_value:
+            description: The target value for the metric
+            returned: when state present and the policy type is TargetTrackingScaling
+            type: int
+            sample: 70
+creation_time:
+    description: The Unix timestamp for when the scalable target was created.
+    returned: when state present
+    type: str
+    sample: '2017-09-28T08:22:51.881000-03:00'
+

@@ -1,0 +1,490 @@
+> FORTIOS_SYSTEM_ACCPROFILE    (/usr/lib/python2.7/dist-packages/ansible/modules/network/fortios/fortios_system_accprofile.py)
+
+        This module is able to configure a FortiGate or FortiOS by allowing the user to set and modify system feature and accprofile
+        category. Examples include all parameters and values need to be adjusted to datasources before usage. Tested with FOS v6.0.2
+
+  * This module is maintained by The Ansible Community
+OPTIONS (= is mandatory):
+
+= host
+        FortiOS or FortiGate ip address.
+
+
+- https
+        Indicates if the requests towards FortiGate must use HTTPS protocol
+        [Default: True]
+        type: bool
+
+- password
+        FortiOS or FortiGate password.
+        [Default: ]
+
+- system_accprofile
+        Configure access profiles for system administrators.
+        [Default: None]
+        suboptions:
+          admintimeout:
+            description:
+            - Administrator timeout for this access profile (0 - 480 min, default = 10, 0
+              means never timeout).
+          admintimeout-override:
+            choices:
+            - enable
+            - disable
+            description:
+            - Enable/disable overriding the global administrator idle timeout.
+          authgrp:
+            choices:
+            - none
+            - read
+            - read-write
+            description:
+            - Administrator access to Users and Devices.
+          comments:
+            description:
+            - Comment.
+          ftviewgrp:
+            choices:
+            - none
+            - read
+            - read-write
+            description:
+            - FortiView.
+          fwgrp:
+            choices:
+            - none
+            - read
+            - read-write
+            - custom
+            description:
+            - Administrator access to the Firewall configuration.
+          fwgrp-permission:
+            description:
+            - Custom firewall permission.
+            suboptions:
+              address:
+                choices:
+                - none
+                - read
+                - read-write
+                description:
+                - Address Configuration.
+              policy:
+                choices:
+                - none
+                - read
+                - read-write
+                description:
+                - Policy Configuration.
+              schedule:
+                choices:
+                - none
+                - read
+                - read-write
+                description:
+                - Schedule Configuration.
+              service:
+                choices:
+                - none
+                - read
+                - read-write
+                description:
+                - Service Configuration.
+          loggrp:
+            choices:
+            - none
+            - read
+            - read-write
+            - custom
+            description:
+            - Administrator access to Logging and Reporting including viewing log messages.
+          loggrp-permission:
+            description:
+            - Custom Log & Report permission.
+            suboptions:
+              config:
+                choices:
+                - none
+                - read
+                - read-write
+                description:
+                - Log & Report configuration.
+              data-access:
+                choices:
+                - none
+                - read
+                - read-write
+                description:
+                - Log & Report Data Access.
+              report-access:
+                choices:
+                - none
+                - read
+                - read-write
+                description:
+                - Log & Report Report Access.
+              threat-weight:
+                choices:
+                - none
+                - read
+                - read-write
+                description:
+                - Log & Report Threat Weight.
+          name:
+            description:
+            - Profile name.
+            required: true
+          netgrp:
+            choices:
+            - none
+            - read
+            - read-write
+            - custom
+            description:
+            - Network Configuration.
+          netgrp-permission:
+            description:
+            - Custom network permission.
+            suboptions:
+              cfg:
+                choices:
+                - none
+                - read
+                - read-write
+                description:
+                - Network Configuration.
+              packet-capture:
+                choices:
+                - none
+                - read
+                - read-write
+                description:
+                - Packet Capture Configuration.
+              route-cfg:
+                choices:
+                - none
+                - read
+                - read-write
+                description:
+                - Router Configuration.
+          scope:
+            choices:
+            - vdom
+            - global
+            description:
+            - 'Scope of admin access: global or specific VDO[s].'
+          secfabgrp:
+            choices:
+            - none
+            - read
+            - read-write
+            description:
+            - Security Fabric.
+          state:
+            choices:
+            - present
+            - absent
+            description:
+            - Indicates whether to create or remove the object
+          sysgrp:
+            choices:
+            - none
+            - read
+            - read-write
+            - custom
+            description:
+            - System Configuration.
+          sysgrp-permission:
+            description:
+            - Custom system permission.
+            suboptions:
+              admin:
+                choices:
+                - none
+                - read
+                - read-write
+                description:
+                - Administrator Users.
+              cfg:
+                choices:
+                - none
+                - read
+                - read-write
+                description:
+                - System Configuration.
+              mnt:
+                choices:
+                - none
+                - read
+                - read-write
+                description:
+                - Maintenance.
+              upd:
+                choices:
+                - none
+                - read
+                - read-write
+                description:
+                - FortiGuard Updates.
+          utmgrp:
+            choices:
+            - none
+            - read
+            - read-write
+            - custom
+            description:
+            - Administrator access to Security Profiles.
+          utmgrp-permission:
+            description:
+            - Custom Security Profile permissions.
+            suboptions:
+              antivirus:
+                choices:
+                - none
+                - read
+                - read-write
+                description:
+                - Antivirus profiles and settings.
+              application-control:
+                choices:
+                - none
+                - read
+                - read-write
+                description:
+                - Application Control profiles and settings.
+              data-loss-prevention:
+                choices:
+                - none
+                - read
+                - read-write
+                description:
+                - DLP profiles and settings.
+              dnsfilter:
+                choices:
+                - none
+                - read
+                - read-write
+                description:
+                - DNS Filter profiles and settings.
+              endpoint-control:
+                choices:
+                - none
+                - read
+                - read-write
+                description:
+                - FortiClient Profiles.
+              icap:
+                choices:
+                - none
+                - read
+                - read-write
+                description:
+                - ICAP profiles and settings.
+              ips:
+                choices:
+                - none
+                - read
+                - read-write
+                description:
+                - IPS profiles and settings.
+              spamfilter:
+                choices:
+                - none
+                - read
+                - read-write
+                description:
+                - AntiSpam filter and settings.
+              voip:
+                choices:
+                - none
+                - read
+                - read-write
+                description:
+                - VoIP profiles and settings.
+              waf:
+                choices:
+                - none
+                - read
+                - read-write
+                description:
+                - Web Application Firewall profiles and settings.
+              webfilter:
+                choices:
+                - none
+                - read
+                - read-write
+                description:
+                - Web Filter profiles and settings.
+          vpngrp:
+            choices:
+            - none
+            - read
+            - read-write
+            description:
+            - Administrator access to IPsec, SSL, PPTP, and L2TP VPN.
+          wanoptgrp:
+            choices:
+            - none
+            - read
+            - read-write
+            description:
+            - Administrator access to WAN Opt & Cache.
+          wifi:
+            choices:
+            - none
+            - read
+            - read-write
+            description:
+            - Administrator access to the WiFi controller and Switch controller.
+        
+
+= username
+        FortiOS or FortiGate username.
+
+
+- vdom
+        Virtual domain, among those defined previously. A vdom is a virtual instance of the FortiGate that can be configured and used as
+        a different unit.
+        [Default: root]
+
+
+NOTES:
+      * Requires fortiosapi library developed by Fortinet
+      * Run as a local_action in your playbook
+
+
+REQUIREMENTS:  fortiosapi>=0.9.8
+
+AUTHOR: Miguel Angel Munoz (@mamunozgonzalez), Nicolas Thomas (@thomnico)
+        METADATA:
+          status:
+          - preview
+          supported_by: community
+        
+
+EXAMPLES:
+
+- hosts: localhost
+  vars:
+   host: "192.168.122.40"
+   username: "admin"
+   password: ""
+   vdom: "root"
+  tasks:
+  - name: Configure access profiles for system administrators.
+    fortios_system_accprofile:
+      host:  "{{ host }}"
+      username: "{{ username }}"
+      password: "{{ password }}"
+      vdom:  "{{ vdom }}"
+      https: "False"
+      system_accprofile:
+        state: "present"
+        admintimeout: "3"
+        admintimeout-override: "enable"
+        authgrp: "none"
+        comments: "<your_own_value>"
+        ftviewgrp: "none"
+        fwgrp: "none"
+        fwgrp-permission:
+            address: "none"
+            policy: "none"
+            schedule: "none"
+            service: "none"
+        loggrp: "none"
+        loggrp-permission:
+            config: "none"
+            data-access: "none"
+            report-access: "none"
+            threat-weight: "none"
+        name: "default_name_20"
+        netgrp: "none"
+        netgrp-permission:
+            cfg: "none"
+            packet-capture: "none"
+            route-cfg: "none"
+        scope: "vdom"
+        secfabgrp: "none"
+        sysgrp: "none"
+        sysgrp-permission:
+            admin: "none"
+            cfg: "none"
+            mnt: "none"
+            upd: "none"
+        utmgrp: "none"
+        utmgrp-permission:
+            antivirus: "none"
+            application-control: "none"
+            data-loss-prevention: "none"
+            dnsfilter: "none"
+            endpoint-control: "none"
+            icap: "none"
+            ips: "none"
+            spamfilter: "none"
+            voip: "none"
+            waf: "none"
+            webfilter: "none"
+        vpngrp: "none"
+        wanoptgrp: "none"
+        wifi: "none"
+
+
+RETURN VALUES:
+
+build:
+  description: Build number of the fortigate image
+  returned: always
+  type: str
+  sample: '1547'
+http_method:
+  description: Last method used to provision the content into FortiGate
+  returned: always
+  type: str
+  sample: 'PUT'
+http_status:
+  description: Last result given by FortiGate on last operation applied
+  returned: always
+  type: str
+  sample: "200"
+mkey:
+  description: Master key (id) used in the last call to FortiGate
+  returned: success
+  type: str
+  sample: "id"
+name:
+  description: Name of the table used to fulfill the request
+  returned: always
+  type: str
+  sample: "urlfilter"
+path:
+  description: Path of the table used to fulfill the request
+  returned: always
+  type: str
+  sample: "webfilter"
+revision:
+  description: Internal revision number
+  returned: always
+  type: str
+  sample: "17.0.2.10658"
+serial:
+  description: Serial number of the unit
+  returned: always
+  type: str
+  sample: "FGVMEVYYQT3AB5352"
+status:
+  description: Indication of the operation's result
+  returned: always
+  type: str
+  sample: "success"
+vdom:
+  description: Virtual domain used
+  returned: always
+  type: str
+  sample: "root"
+version:
+  description: Version of the FortiGate
+  returned: always
+  type: str
+  sample: "v5.6.3"
+
+

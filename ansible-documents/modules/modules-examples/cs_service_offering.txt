@@ -1,0 +1,216 @@
+EXAMPLES:
+
+- name: Create a non-volatile compute service offering with local storage
+  cs_service_offering:
+    name: Micro
+    display_text: Micro 512mb 1cpu
+    cpu_number: 1
+    cpu_speed: 2198
+    memory: 512
+    host_tags: eco
+    storage_type: local
+  delegate_to: localhost
+
+- name: Create a volatile compute service offering with shared storage
+  cs_service_offering:
+    name: Tiny
+    display_text: Tiny 1gb 1cpu
+    cpu_number: 1
+    cpu_speed: 2198
+    memory: 1024
+    storage_type: shared
+    is_volatile: yes
+    host_tags: eco
+    storage_tags: eco
+  delegate_to: localhost
+
+- name: Create or update a volatile compute service offering with shared storage
+  cs_service_offering:
+    name: Tiny
+    display_text: Tiny 1gb 1cpu
+    cpu_number: 1
+    cpu_speed: 2198
+    memory: 1024
+    storage_type: shared
+    is_volatile: yes
+    host_tags: eco
+    storage_tags: eco
+  delegate_to: localhost
+
+- name: Create or update a custom compute service offering
+  cs_service_offering:
+    name: custom
+    display_text: custom compute offer
+    is_customized: yes
+    storage_type: shared
+    host_tags: eco
+    storage_tags: eco
+  delegate_to: localhost
+
+- name: Remove a compute service offering
+  cs_service_offering:
+    name: Tiny
+    state: absent
+  delegate_to: localhost
+
+- name: Create or update a system offering for the console proxy
+  cs_service_offering:
+    name: System Offering for Console Proxy 2GB
+    display_text: System Offering for Console Proxy 2GB RAM
+    is_system: yes
+    system_vm_type: consoleproxy
+    cpu_number: 1
+    cpu_speed: 2198
+    memory: 2048
+    storage_type: shared
+    storage_tags: perf
+  delegate_to: localhost
+
+- name: Remove a system offering
+  cs_service_offering:
+    name: System Offering for Console Proxy 2GB
+    is_system: yes
+    state: absent
+  delegate_to: localhost
+
+
+RETURN VALUES:
+
+---
+id:
+  description: UUID of the service offering
+  returned: success
+  type: str
+  sample: a6f7a5fc-43f8-11e5-a151-feff819cdc9f
+cpu_number:
+  description: Number of CPUs in the service offering
+  returned: success
+  type: int
+  sample: 4
+cpu_speed:
+  description: Speed of CPUs in MHz in the service offering
+  returned: success
+  type: int
+  sample: 2198
+disk_iops_max:
+  description: Max iops of the disk offering
+  returned: success
+  type: int
+  sample: 1000
+disk_iops_min:
+  description: Min iops of the disk offering
+  returned: success
+  type: int
+  sample: 500
+disk_bytes_read_rate:
+  description: Bytes read rate of the service offering
+  returned: success
+  type: int
+  sample: 1000
+disk_bytes_write_rate:
+  description: Bytes write rate of the service offering
+  returned: success
+  type: int
+  sample: 1000
+disk_iops_read_rate:
+  description: IO requests per second read rate of the service offering
+  returned: success
+  type: int
+  sample: 1000
+disk_iops_write_rate:
+  description: IO requests per second write rate of the service offering
+  returned: success
+  type: int
+  sample: 1000
+created:
+  description: Date the offering was created
+  returned: success
+  type: str
+  sample: 2017-11-19T10:48:59+0000
+display_text:
+  description: Display text of the offering
+  returned: success
+  type: str
+  sample: Micro 512mb 1cpu
+domain:
+  description: Domain the offering is into
+  returned: success
+  type: str
+  sample: ROOT
+host_tags:
+  description: List of host tags
+  returned: success
+  type: list
+  sample: [ 'eco' ]
+storage_tags:
+  description: List of storage tags
+  returned: success
+  type: list
+  sample: [ 'eco' ]
+is_system:
+  description: Whether the offering is for system VMs or not
+  returned: success
+  type: bool
+  sample: false
+is_iops_customized:
+  description: Whether the offering uses custom IOPS or not
+  returned: success
+  type: bool
+  sample: false
+is_volatile:
+  description: Whether the offering is volatile or not
+  returned: success
+  type: bool
+  sample: false
+limit_cpu_usage:
+  description: Whether the CPU usage is restricted to committed service offering
+  returned: success
+  type: bool
+  sample: false
+memory:
+  description: Memory of the system offering
+  returned: success
+  type: int
+  sample: 512
+name:
+  description: Name of the system offering
+  returned: success
+  type: str
+  sample: Micro
+offer_ha:
+  description: Whether HA support is enabled in the offering or not
+  returned: success
+  type: bool
+  sample: false
+provisioning_type:
+  description: Provisioning type used to create volumes
+  returned: success
+  type: str
+  sample: thin
+storage_type:
+  description: Storage type used to create volumes
+  returned: success
+  type: str
+  sample: shared
+system_vm_type:
+  description: System VM type of this offering
+  returned: success
+  type: str
+  sample: consoleproxy
+service_offering_details:
+  description: Additioanl service offering details
+  returned: success
+  type: dict
+  sample: "{'vgpuType': 'GRID K180Q','pciDevice':'Group of NVIDIA Corporation GK107GL [GRID K1] GPUs'}"
+network_rate:
+  description: Data transfer rate in megabits per second allowed
+  returned: success
+  type: int
+  sample: 1000
+is_customized:
+  description: Whether the offering is customizable or not
+  returned: success
+  type: bool
+  sample: false
+  version_added: '2.8'
+

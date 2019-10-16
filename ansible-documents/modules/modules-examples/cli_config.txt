@@ -1,0 +1,53 @@
+EXAMPLES:
+
+- name: configure device with config
+  cli_config:
+    config: "{{ lookup('template', 'basic/config.j2') }}"
+
+- name: multiline config
+  cli_config:
+    config: |
+      hostname foo
+      feature nxapi
+
+- name: configure device with config with defaults enabled
+  cli_config:
+    config: "{{ lookup('template', 'basic/config.j2') }}"
+    defaults: yes
+
+- name: Use diff_match
+  cli_config:
+    config: "{{ lookup('file', 'interface_config') }}"
+    diff_match: none
+
+- name: nxos replace config
+  cli_config:
+    replace: 'bootflash:nxoscfg'
+
+- name: commit with comment
+  cli_config:
+    config: set system host-name foo
+    commit_comment: this is a test
+
+- name: configurable backup path
+  cli_config:
+    config: "{{ lookup('template', 'basic/config.j2') }}"
+    backup: yes
+    backup_options:
+      filename: backup.cfg
+      dir_path: /home/user
+
+
+RETURN VALUES:
+
+commands:
+  description: The set of commands that will be pushed to the remote device
+  returned: always
+  type: list
+  sample: ['interface Loopback999', 'no shutdown']
+backup_path:
+  description: The full path to the backup file
+  returned: when backup is yes
+  type: str
+  sample: /playbooks/ansible/backup/hostname_config.2016-07-16@22:28:34
+

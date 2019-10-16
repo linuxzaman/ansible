@@ -1,0 +1,95 @@
+> ZABBIX_HOSTMACRO    (/usr/lib/python2.7/dist-packages/ansible/modules/monitoring/zabbix/zabbix_hostmacro.py)
+
+        manages Zabbix host macros, it can create, update or delete them.
+
+  * This module is maintained by The Ansible Community
+OPTIONS (= is mandatory):
+
+- force
+        Only updates an existing macro if set to `yes'.
+        [Default: yes]
+        type: bool
+        version_added: 2.5
+        
+
+= host_name
+        Name of the host.
+
+
+- http_login_password
+        Basic Auth password
+        [Default: (null)]
+        type: str
+        version_added: 2.1
+
+= http_login_user
+        Basic Auth login
+
+        type: str
+        version_added: 2.1
+
+= login_password
+        Zabbix user password.
+
+        type: str
+
+= login_user
+        Zabbix user name.
+
+        type: str
+
+= macro_name
+        Name of the host macro without the enclosing curly braces and the leading dollar sign.
+
+
+= macro_value
+        Value of the host macro.
+
+
+= server_url
+        URL of Zabbix server, with protocol (http or https). `url' is an alias for `server_url'.
+        (Aliases: url)
+        type: str
+
+- state
+        State of the macro.
+        On `present', it will create if macro does not exist or update the macro if the associated data is different.
+        On `absent' will remove a macro if it exists.
+        (Choices: present, absent)[Default: present]
+
+- timeout
+        The timeout of API request (seconds).
+        [Default: 10]
+        type: int
+
+- validate_certs
+        If set to False, SSL certificates will not be validated. This should only be used on personally controlled sites using self-
+        signed certificates.
+        [Default: True]
+        type: bool
+        version_added: 2.5
+
+
+REQUIREMENTS:  python >= 2.6, zabbix-api
+
+AUTHOR: Cove (@cove), Dean Hailin Song (!UNKNOWN)
+        METADATA:
+          status:
+          - preview
+          supported_by: community
+        
+
+EXAMPLES:
+
+- name: Create a new host macro or update an existing macro's value
+  local_action:
+    module: zabbix_hostmacro
+    server_url: http://monitor.example.com
+    login_user: username
+    login_password: password
+    host_name: ExampleHost
+    macro_name: EXAMPLE.MACRO
+    macro_value: Example value
+    state: present
+
+

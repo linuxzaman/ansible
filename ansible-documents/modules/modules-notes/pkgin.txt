@@ -1,0 +1,103 @@
+> PKGIN    (/usr/lib/python2.7/dist-packages/ansible/modules/packaging/os/pkgin.py)
+
+        The standard package manager for SmartOS, but also usable on NetBSD or any OS that uses `pkgsrc'.  (Home: http://pkgin.net/)
+
+  * This module is maintained by The Ansible Community
+OPTIONS (= is mandatory):
+
+- clean
+        Clean packages cache
+        [Default: no]
+        type: bool
+        version_added: 2.1
+
+- force
+        Force package reinstall
+        [Default: no]
+        type: bool
+        version_added: 2.1
+
+- full_upgrade
+        Upgrade all packages to their newer versions
+        [Default: no]
+        type: bool
+        version_added: 2.1
+
+- name
+        Name of package to install/remove;
+        multiple names may be given, separated by commas
+        [Default: (null)]
+
+- state
+        Intended state of the package
+        (Choices: present, absent)[Default: present]
+
+- update_cache
+        Update repository database. Can be run with other steps or on it's own.
+        [Default: no]
+        type: bool
+        version_added: 2.1
+
+- upgrade
+        Upgrade main packages to their newer versions
+        [Default: no]
+        type: bool
+        version_added: 2.1
+
+
+NOTES:
+      * Known bug with pkgin < 0.8.0: if a package is removed and another package depends on it, the other package will be silently
+        removed as well.  New to Ansible 1.9: check-mode support.
+
+
+AUTHOR: Larry Gilbert (@L2G), Shaun Zinck (@szinck), Jasper Lievisse Adriaanse (@jasperla)
+        METADATA:
+          status:
+          - preview
+          supported_by: community
+        
+
+EXAMPLES:
+
+# install package foo
+- pkgin:
+    name: foo
+    state: present
+
+# Update database and install "foo" package
+- pkgin:
+    name: foo
+    update_cache: yes
+
+# remove package foo
+- pkgin:
+    name: foo
+    state: absent
+
+# remove packages foo and bar
+- pkgin:
+    name: foo,bar
+    state: absent
+
+# Update repositories as a separate step
+- pkgin:
+    update_cache: yes
+
+# Upgrade main packages (equivalent to C(pkgin upgrade))
+- pkgin:
+    upgrade: yes
+
+# Upgrade all packages (equivalent to C(pkgin full-upgrade))
+- pkgin:
+    full_upgrade: yes
+
+# Force-upgrade all packages (equivalent to C(pkgin -F full-upgrade))
+- pkgin:
+    full_upgrade: yes
+    force: yes
+
+# clean packages cache (equivalent to C(pkgin clean))
+- pkgin:
+    clean: yes
+
+

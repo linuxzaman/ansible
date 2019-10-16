@@ -1,0 +1,99 @@
+> NA_ELEMENTSW_VOLUME_CLONE    (/usr/lib/python2.7/dist-packages/ansible/modules/storage/netapp/na_elementsw_volume_clone.py)
+
+        Create volume clones on Element OS
+
+  * This module is maintained by an Ansible Partner
+OPTIONS (= is mandatory):
+
+- access
+        Access allowed for the volume.
+        If unspecified, the access settings of the clone will be the same as the source.
+        readOnly - Only read operations are allowed.
+        readWrite - Reads and writes are allowed.
+        locked - No reads or writes are allowed.
+        replicationTarget - Identify a volume as the target volume for a paired set of volumes. If the volume is not paired, the access
+        status is locked.
+        (Choices: readOnly, readWrite, locked, replicationTarget)[Default: (null)]
+
+= account_id
+        Account ID for the owner of this cloned volume. id may be a numeric identifier or an account name.
+
+
+- attributes
+        A YAML dictionary of attributes that you would like to apply on this cloned volume.
+        [Default: (null)]
+
+= hostname
+        The hostname or IP address of the SolidFire cluster.
+
+
+= name
+        The name of the clone.
+
+
+= password
+        Password for the specified user.
+        (Aliases: pass)
+
+- size
+        The size of the cloned volume in (size_unit).
+        [Default: (null)]
+
+- size_unit
+        The unit used to interpret the size parameter.
+        (Choices: bytes, b, kb, mb, gb, tb, pb, eb, zb, yb)[Default: gb]
+
+- src_snapshot_id
+        The id of the snapshot to clone. id may be a numeric identifier or a snapshot name.
+        [Default: (null)]
+
+= src_volume_id
+        The id of the src volume to clone. id may be a numeric identifier or a volume name.
+
+
+= username
+        Please ensure that the user has the adequate permissions. For more information, please read the official documentation
+        https://mysupport.netapp.com/documentation/docweb/index.html?productID=62636&language=en-US.
+        (Aliases: user)
+
+
+NOTES:
+      * The modules prefixed with na\\_elementsw are built to support the SolidFire storage platform.
+
+
+REQUIREMENTS:  The modules were developed with SolidFire 10.1, solidfire-sdk-python (1.1.0.92) or greater. Install using 'pip install
+        solidfire-sdk-python'
+
+AUTHOR: NetApp Ansible Team (@carchi8py) <ng-ansibleteam@netapp.com>
+        METADATA:
+          status:
+          - preview
+          supported_by: certified
+        
+
+EXAMPLES:
+
+- name: Clone Volume
+      na_elementsw_volume_clone:
+        hostname: "{{ elementsw_hostname }}"
+        username: "{{ elementsw_username }}"
+        password: "{{ elementsw_password }}"
+        name: CloneAnsibleVol
+        src_volume_id: 123
+        src_snapshot_id: 41
+        account_id: 3
+        size: 1
+        size_unit: gb
+        access: readWrite
+        attributes: {"virtual_network_id": 12345}
+
+
+RETURN VALUES:
+
+
+msg:
+    description: Success message
+    returned: success
+    type: str
+
+

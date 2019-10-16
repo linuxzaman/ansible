@@ -1,0 +1,54 @@
+EXAMPLES:
+
+- name: configure top level configuration
+  aruba_config:
+    lines: hostname {{ inventory_hostname }}
+
+- name: diff the running-config against a provided config
+  aruba_config:
+    diff_against: intended
+    intended: "{{ lookup('file', 'master.cfg') }}"
+
+- name: configure interface settings
+  aruba_config:
+    lines:
+      - description test interface
+      - ip access-group 1 in
+    parents: interface gigabitethernet 0/0/0
+
+- name: load new acl into device
+  aruba_config:
+    lines:
+      - permit host 10.10.10.10
+      - ipv6 permit host fda9:97d6:32a3:3e59::3333
+    parents: ip access-list standard 1
+    before: no ip access-list standard 1
+    match: exact
+
+- name: configurable backup path
+  aruba_config:
+    backup: yes
+    lines: hostname {{ inventory_hostname }}
+    backup_options:
+      filename: backup.cfg
+      dir_path: /home/user
+
+
+RETURN VALUES:
+
+commands:
+  description: The set of commands that will be pushed to the remote device
+  returned: always
+  type: list
+  sample: ['hostname foo', 'vlan 1', 'name default']
+updates:
+  description: The set of commands that will be pushed to the remote device
+  returned: always
+  type: list
+  sample: ['hostname foo', 'vlan 1', 'name default']
+backup_path:
+  description: The full path to the backup file
+  returned: when backup is yes
+  type: str
+  sample: /playbooks/ansible/backup/aruba_config.2016-07-16@22:28:34
+

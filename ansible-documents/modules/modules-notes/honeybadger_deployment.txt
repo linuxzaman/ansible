@@ -1,0 +1,57 @@
+> HONEYBADGER_DEPLOYMENT    (/usr/lib/python2.7/dist-packages/ansible/modules/monitoring/honeybadger_deployment.py)
+
+        Notify Honeybadger.io about app deployments (see http://docs.honeybadger.io/article/188-deployment-tracking)
+
+  * This module is maintained by The Ansible Community
+OPTIONS (= is mandatory):
+
+= environment
+        The environment name, typically 'production', 'staging', etc.
+
+
+- repo
+        URL of the project repository
+        [Default: (null)]
+
+- revision
+        A hash, number, tag, or other identifier showing what revision was deployed
+        [Default: (null)]
+
+= token
+        API token.
+
+
+- url
+        Optional URL to submit the notification to.
+        [Default: https://api.honeybadger.io/v1/deploys]
+
+- user
+        The username of the person doing the deployment
+        [Default: (null)]
+
+- validate_certs
+        If `no', SSL certificates for the target url will not be validated. This should only be used on personally controlled sites using
+        self-signed certificates.
+        [Default: yes]
+        type: bool
+
+
+AUTHOR: Benjamin Curtis (@stympy)
+        METADATA:
+          status:
+          - preview
+          supported_by: community
+        
+
+EXAMPLES:
+
+- honeybadger_deployment:
+    token: AAAAAA
+    environment: staging
+    user: ansible
+    revision: b6826b8
+    repo: 'git@github.com:user/repo.git'
+
+
+RETURN VALUES:
+# 

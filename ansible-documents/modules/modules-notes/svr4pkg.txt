@@ -1,0 +1,87 @@
+> SVR4PKG    (/usr/lib/python2.7/dist-packages/ansible/modules/packaging/os/svr4pkg.py)
+
+        Manages SVR4 packages on Solaris 10 and 11. These were the native packages on Solaris <= 10 and are available as a legacy feature
+        in Solaris 11. Note that this is a very basic packaging system. It will not enforce dependencies on install or remove.
+
+  * This module is maintained by The Ansible Community
+OPTIONS (= is mandatory):
+
+- category
+        Install/Remove category instead of a single package.
+        [Default: (null)]
+        type: bool
+        version_added: 1.6
+
+= name
+        Package name, e.g. `SUNWcsr'
+
+
+- proxy
+        HTTP[s] proxy to be used if `src' is a URL.
+        [Default: (null)]
+
+- response_file
+        Specifies the location of a response file to be used if package expects input on install. (added in Ansible 1.4)
+        [Default: (null)]
+
+- src
+        Specifies the location to install the package from. Required when `state=present'.
+        Can be any path acceptable to the `pkgadd' command's `-d' option. e.g.: `somefile.pkg', `/dir/with/pkgs',
+        `http:/server/mypkgs.pkg'.
+        If using a file or directory, they must already be accessible by the host. See the [copy] module for a way to get them there.
+        [Default: (null)]
+
+= state
+        Whether to install (`present'), or remove (`absent') a package.
+        If the package is to be installed, then `src' is required.
+        The SVR4 package system doesn't provide an upgrade operation. You need to uninstall the old, then install the new package.
+        (Choices: present, absent)
+
+- zone
+        Whether to install the package only in the current zone, or install it into all zones.
+        The installation into all zones works only if you are working with the global zone.
+        (Choices: current, all)[Default: all]
+        version_added: 1.6
+
+
+AUTHOR: Boyd Adamson (@brontitall)
+        METADATA:
+          status:
+          - preview
+          supported_by: community
+        
+
+EXAMPLES:
+
+# Install a package from an already copied file
+- svr4pkg:
+    name: CSWcommon
+    src: /tmp/cswpkgs.pkg
+    state: present
+
+# Install a package directly from an http site
+- svr4pkg:
+    name: CSWpkgutil
+    src: 'http://get.opencsw.org/now'
+    state: present
+    zone: current
+
+# Install a package with a response file
+- svr4pkg:
+    name: CSWggrep
+    src: /tmp/third-party.pkg
+    response_file: /tmp/ggrep.response
+    state: present
+
+# Ensure that a package is not installed.
+- svr4pkg:
+    name: SUNWgnome-sound-recorder
+    state: absent
+
+# Ensure that a category is not installed.
+- svr4pkg:
+    name: FIREFOX
+    state: absent
+    category: true
+
+

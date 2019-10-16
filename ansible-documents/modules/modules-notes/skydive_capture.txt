@@ -1,0 +1,153 @@
+> SKYDIVE_CAPTURE    (/usr/lib/python2.7/dist-packages/ansible/modules/network/skydive/skydive_capture.py)
+
+        This module manages flow capture on interfaces. The Gremlin expression is continuously evaluated which means that it is possible
+        to define a capture on nodes that do not exist yet. It is useful when you want to start a capture on all OpenvSwitch whatever the
+        number of Skydive agents you will start. While starting the capture, user can specify the capture name, capture description and
+        capture type optionally.
+
+  * This module is maintained by The Ansible Network Team
+OPTIONS (= is mandatory):
+
+- capture_name
+        To define flow capture name.
+        [Default: ]
+
+- description
+        Configures a text string to be associated with the instance of this object.
+        [Default: ]
+
+- extra_tcp_metric
+        To define flow capture ExtraTCPMetric.
+        [Default: False]
+        type: bool
+
+- interface_name
+        To define flow capture interface name.
+        [Default: (null)]
+
+- ip_defrag
+        To define flow capture IPDefrag.
+        [Default: False]
+        type: bool
+
+- layer_key_mode
+        To define flow capture Layer KeyMode.
+        [Default: L2]
+        type: str
+
+- provider
+        A dict object containing connection details.
+        [Default: (null)]
+        suboptions:
+          endpoint:
+            description:
+            - Specifies the hostname/address along with the port as `localhost:8082'for connecting
+              to the remote instance of SKYDIVE client over the REST API.
+            required: true
+          insecure:
+            default: false
+            description:
+            - Ignore SSL certification verification.
+            type: bool
+          password:
+            description:
+            - Specifies the password to use to authenticate the connection to the remote instance
+              of SKYDIVE client.
+          ssl:
+            default: false
+            description:
+            - Specifies the ssl parameter that decides if the connection type shall be http
+              or https.
+            type: bool
+          user:
+            description:
+            - Configures the username to use to authenticate the connection to the remote
+              instance of SKYDIVE client.
+        
+
+- query
+        It's the complete gremlin query which the users can input, `G.V('.Has('Name', 'eth0', 'Type', 'device')), to create the capture.
+        And, if the user directly inputs the gremlin query then user is not required to input any other module parameter as gremlin query
+        takes care of creating the flow capture.
+        [Default: (null)]
+
+- reassemble_tcp
+        To define flow capture ReassembleTCP.
+        [Default: False]
+        type: bool
+
+- state
+        State of the flow capture. If value is `present' flow capture will be created else if it is `absent' it will be deleted.
+        (Choices: present, absent)[Default: present]
+
+- type
+        To define flow capture interface type.
+        [Default: (null)]
+
+
+NOTES:
+      * This module must be run locally, which can be achieved by specifying `connection: local'.
+
+
+REQUIREMENTS:  skydive-client
+
+AUTHOR: Sumit Jaiswal (@sjaiswal)
+        METADATA:
+          status:
+          - preview
+          supported_by: network
+        
+
+EXAMPLES:
+
+- name: start a new flow capture directly from gremlin query
+  skydive_capture:
+    query: G.V().Has('Name', 'eth0', 'Type', 'device')
+    state: present
+    provider:
+      endpoint: localhost:8082
+      username: admin
+      password: admin
+
+- name: stop the flow capture directly from gremlin query
+  skydive_capture:
+    query: G.V().Has('Name', 'eth0', 'Type', 'device')
+    state: absent
+    provider:
+      endpoint: localhost:8082
+      username: admin
+      password: admin
+
+- name: start a new flow capture from user's input
+  skydive_capture:
+    interface_name: Node1
+    type: myhost
+    capture_name: test_capture
+    description: test description
+    extra_tcp_metric: true
+    ip_defrag: true
+    reassemble_tcp: true
+    state: present
+    provider:
+      endpoint: localhost:8082
+      username: admin
+      password: admin
+
+- name: stop the flow capture
+  skydive_capture:
+    interface_name: Node1
+    type: myhost
+    capture_name: test_capture
+    description: test description
+    extra_tcp_metric: true
+    ip_defrag: true
+    reassemble_tcp: true
+    state: absent
+    provider:
+      endpoint: localhost:8082
+      username: admin
+      password: admin
+
+
+RETURN VALUES:
+ # 

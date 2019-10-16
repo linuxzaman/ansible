@@ -1,0 +1,55 @@
+EXAMPLES:
+
+- name: Add a new subnet to a BD
+  mso_schema_template_bd_subnet:
+    host: mso_host
+    username: admin
+    password: SomeSecretPassword
+    schema: Schema 1
+    template: Template 1
+    bd: BD 1
+    subnet: 10.0.0.0/24
+    state: present
+  delegate_to: localhost
+
+- name: Remove a subset from a BD
+  mso_schema_template_bd_subnet:
+    host: mso_host
+    username: admin
+    password: SomeSecretPassword
+    schema: Schema 1
+    template: Template 1
+    bd: BD 1
+    subnet: 10.0.0.0/24
+    state: absent
+  delegate_to: localhost
+
+- name: Query a specific BD subnet
+  mso_schema_template_bd_subnet:
+    host: mso_host
+    username: admin
+    password: SomeSecretPassword
+    schema: Schema 1
+    template: Template 1
+    bd: BD 1
+    subnet: 10.0.0.0/24
+    state: query
+  delegate_to: localhost
+  register: query_result
+
+- name: Query all BD subnets
+  mso_schema_template_bd_subnet:
+    host: mso_host
+    username: admin
+    password: SomeSecretPassword
+    schema: Schema 1
+    template: Template 1
+    bd: BD 1
+    state: query
+  delegate_to: localhost
+  register: query_result
+
+
+RETURN VALUES:
+
+

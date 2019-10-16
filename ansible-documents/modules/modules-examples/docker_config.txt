@@ -1,0 +1,73 @@
+EXAMPLES:
+
+- name: Create config foo (from a file on the control machine)
+  docker_config:
+    name: foo
+    # If the file is JSON or binary, Ansible might modify it (because
+    # it is first decoded and later re-encoded). Base64-encoding the
+    # file directly after reading it prevents this to happen.
+    data: "{{ lookup('file', '/path/to/config/file') | b64encode }}"
+    data_is_b64: true
+    state: present
+
+- name: Change the config data
+  docker_config:
+    name: foo
+    data: Goodnight everyone!
+    labels:
+      bar: baz
+      one: '1'
+    state: present
+
+- name: Add a new label
+  docker_config:
+    name: foo
+    data: Goodnight everyone!
+    labels:
+      bar: baz
+      one: '1'
+      # Adding a new label will cause a remove/create of the config
+      two: '2'
+    state: present
+
+- name: No change
+  docker_config:
+    name: foo
+    data: Goodnight everyone!
+    labels:
+      bar: baz
+      one: '1'
+      # Even though 'two' is missing, there is no change to the existing config
+    state: present
+
+- name: Update an existing label
+  docker_config:
+    name: foo
+    data: Goodnight everyone!
+    labels:
+      bar: monkey   # Changing a label will cause a remove/create of the config
+      one: '1'
+    state: present
+
+- name: Force the (re-)creation of the config
+  docker_config:
+    name: foo
+    data: Goodnight everyone!
+    force: yes
+    state: present
+
+- name: Remove config foo
+  docker_config:
+    name: foo
+    state: absent
+
+
+RETURN VALUES:
+
+config_id:
+  description:
+    - The ID assigned by Docker to the config object.
+  returned: success and C(state == "present")
+  type: str
+  sample: 'hzehrmyjigmcp2gb6nlhmjqcv'
+

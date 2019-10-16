@@ -1,0 +1,178 @@
+> AVI_SYSTEMCONFIGURATION    (/usr/lib/python2.7/dist-packages/ansible/modules/network/avi/avi_systemconfiguration.py)
+
+        This module is used to configure SystemConfiguration object more examples at https://github.com/avinetworks/devops
+
+  * This module is maintained by The Ansible Community
+OPTIONS (= is mandatory):
+
+- admin_auth_configuration
+        Adminauthconfiguration settings for systemconfiguration.
+        [Default: (null)]
+
+- api_context
+        Avi API context that includes current session ID and CSRF Token.
+        This allows user to perform single login and re-use the session.
+        [Default: (null)]
+        type: dict
+        version_added: 2.5
+
+- api_version
+        Avi API version of to use for Avi API and objects.
+        [Default: 16.4.4]
+        type: str
+
+- avi_api_patch_op
+        Patch operation to use when using avi_api_update_method as patch.
+        (Choices: add, replace, delete)[Default: (null)]
+        version_added: 2.5
+
+- avi_api_update_method
+        Default method for object update is HTTP PUT.
+        Setting to patch will override that behavior to use HTTP PATCH.
+        (Choices: put, patch)[Default: put]
+        version_added: 2.5
+
+- avi_credentials
+        Avi Credentials dictionary which can be used in lieu of enumerating Avi Controller login details.
+        [Default: (null)]
+        type: dict
+        version_added: 2.5
+
+- controller
+        IP address or hostname of the controller. The default value is the environment variable `AVI_CONTROLLER'.
+        [Default: ]
+        type: str
+
+- default_license_tier
+        Specifies the default license tier which would be used by new clouds.
+        Enum options - ENTERPRISE_16, ENTERPRISE_18.
+        Field introduced in 17.2.5.
+        Default value when not specified in API or module is interpreted by Avi Controller as ENTERPRISE_18.
+        [Default: (null)]
+        version_added: 2.5
+
+- dns_configuration
+        Dnsconfiguration settings for systemconfiguration.
+        [Default: (null)]
+
+- dns_virtualservice_refs
+        Dns virtualservices hosting fqdn records for applications across avi vantage.
+        If no virtualservices are provided, avi vantage will provide dns services for configured applications.
+        Switching back to avi vantage from dns virtualservices is not allowed.
+        It is a reference to an object of type virtualservice.
+        [Default: (null)]
+
+- docker_mode
+        Boolean flag to set docker_mode.
+        Default value when not specified in API or module is interpreted by Avi Controller as False.
+        [Default: (null)]
+        type: bool
+
+- email_configuration
+        Emailconfiguration settings for systemconfiguration.
+        [Default: (null)]
+
+- global_tenant_config
+        Tenantconfiguration settings for systemconfiguration.
+        [Default: (null)]
+
+- linux_configuration
+        Linuxconfiguration settings for systemconfiguration.
+        [Default: (null)]
+
+- mgmt_ip_access_control
+        Configure ip access control for controller to restrict open access.
+        [Default: (null)]
+
+- ntp_configuration
+        Ntpconfiguration settings for systemconfiguration.
+        [Default: (null)]
+
+- password
+        Password of Avi user in Avi controller. The default value is the environment variable `AVI_PASSWORD'.
+        [Default: ]
+        type: str
+
+- portal_configuration
+        Portalconfiguration settings for systemconfiguration.
+        [Default: (null)]
+
+- proxy_configuration
+        Proxyconfiguration settings for systemconfiguration.
+        [Default: (null)]
+
+- snmp_configuration
+        Snmpconfiguration settings for systemconfiguration.
+        [Default: (null)]
+
+- ssh_ciphers
+        Allowed ciphers list for ssh to the management interface on the controller and service engines.
+        If this is not specified, all the default ciphers are allowed.
+        Ssh -q cipher provides the list of default ciphers supported.
+        [Default: (null)]
+
+- ssh_hmacs
+        Allowed hmac list for ssh to the management interface on the controller and service engines.
+        If this is not specified, all the default hmacs are allowed.
+        Ssh -q mac provides the list of default hmacs supported.
+        [Default: (null)]
+
+- state
+        The state that should be applied on the entity.
+        (Choices: absent, present)[Default: present]
+
+- tenant
+        Name of tenant used for all Avi API calls and context of object.
+        [Default: admin]
+        type: str
+
+- tenant_uuid
+        UUID of tenant used for all Avi API calls and context of object.
+        [Default: ]
+        type: str
+
+- url
+        Avi controller URL of the object.
+        [Default: (null)]
+
+- username
+        Username used for accessing Avi controller. The default value is the environment variable `AVI_USERNAME'.
+        [Default: ]
+        type: str
+
+- uuid
+        Unique object identifier of the object.
+        [Default: (null)]
+
+
+NOTES:
+      * For more information on using Ansible to manage Avi Network devices see https://www.ansible.com/ansible-avi-networks.
+
+
+REQUIREMENTS:  avisdk
+
+AUTHOR: Gaurav Rastogi (@grastogi23) <grastogi@avinetworks.com>
+        METADATA:
+          status:
+          - preview
+          supported_by: community
+        
+
+EXAMPLES:
+
+- name: Example to create SystemConfiguration object
+  avi_systemconfiguration:
+    controller: 10.10.25.42
+    username: admin
+    password: something
+    state: present
+    name: sample_systemconfiguration
+
+
+RETURN VALUES:
+
+obj:
+    description: SystemConfiguration (api/systemconfiguration) object
+    returned: success, changed
+    type: dict
+

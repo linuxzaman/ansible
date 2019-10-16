@@ -1,0 +1,205 @@
+> FORTIOS_ENDPOINT_CONTROL_SETTINGS    (/usr/lib/python2.7/dist-packages/ansible/modules/network/fortios/fortios_endpoint_control_settings.py)
+
+        This module is able to configure a FortiGate or FortiOS by allowing the user to configure endpoint_control feature and settings
+        category. Examples includes all options and need to be adjusted to datasources before usage. Tested with FOS v6.0.2
+
+  * This module is maintained by The Ansible Community
+OPTIONS (= is mandatory):
+
+- endpoint_control_settings
+        Configure endpoint control settings.
+        [Default: None]
+        suboptions:
+          download-custom-link:
+            description:
+            - Customized URL for downloading FortiClient.
+          download-location:
+            choices:
+            - fortiguard
+            - custom
+            description:
+            - FortiClient download location (FortiGuard or custom).
+          forticlient-avdb-update-interval:
+            description:
+            - Period of time between FortiClient AntiVirus database updates (0 - 24 hours,
+              default = 8).
+          forticlient-dereg-unsupported-client:
+            choices:
+            - enable
+            - disable
+            description:
+            - Enable/disable deregistering unsupported FortiClient endpoints.
+          forticlient-ems-rest-api-call-timeout:
+            description:
+            - FortiClient EMS call timeout in milliseconds (500 - 30000 milliseconds, default
+              = 5000).
+          forticlient-keepalive-interval:
+            description:
+            - Interval between two KeepAlive messages from FortiClient (20 - 300 sec, default
+              = 60).
+          forticlient-offline-grace:
+            choices:
+            - enable
+            - disable
+            description:
+            - Enable/disable grace period for offline registered clients.
+          forticlient-offline-grace-interval:
+            description:
+            - Grace period for offline registered FortiClient (60 - 600 sec, default = 120).
+          forticlient-reg-key:
+            description:
+            - FortiClient registration key.
+          forticlient-reg-key-enforce:
+            choices:
+            - enable
+            - disable
+            description:
+            - Enable/disable requiring or enforcing FortiClient registration keys.
+          forticlient-reg-timeout:
+            description:
+            - FortiClient registration license timeout (days, min = 1, max = 180, 0 means
+              unlimited).
+          forticlient-sys-update-interval:
+            description:
+            - Interval between two system update messages from FortiClient (30 - 1440 min,
+              default = 720).
+          forticlient-user-avatar:
+            choices:
+            - enable
+            - disable
+            description:
+            - Enable/disable uploading FortiClient user avatars.
+          forticlient-warning-interval:
+            description:
+            - Period of time between FortiClient portal warnings (0 - 24 hours, default =
+              1).
+        
+
+= host
+        FortiOS or FortiGate ip address.
+
+
+- https
+        Indicates if the requests towards FortiGate must use HTTPS protocol
+        [Default: False]
+        type: bool
+
+- password
+        FortiOS or FortiGate password.
+        [Default: ]
+
+= username
+        FortiOS or FortiGate username.
+
+
+- vdom
+        Virtual domain, among those defined previously. A vdom is a virtual instance of the FortiGate that can be configured and used as
+        a different unit.
+        [Default: root]
+
+
+NOTES:
+      * Requires fortiosapi library developed by Fortinet
+      * Run as a local_action in your playbook
+
+
+REQUIREMENTS:  fortiosapi>=0.9.8
+
+AUTHOR: Miguel Angel Munoz (@mamunozgonzalez), Nicolas Thomas (@thomnico)
+        METADATA:
+          status:
+          - preview
+          supported_by: community
+        
+
+EXAMPLES:
+
+- hosts: localhost
+  vars:
+   host: "192.168.122.40"
+   username: "admin"
+   password: ""
+   vdom: "root"
+  tasks:
+  - name: Configure endpoint control settings.
+    fortios_endpoint_control_settings:
+      host:  "{{ host }}"
+      username: "{{ username }}"
+      password: "{{ password }}"
+      vdom:  "{{ vdom }}"
+      endpoint_control_settings:
+        download-custom-link: "<your_own_value>"
+        download-location: "fortiguard"
+        forticlient-avdb-update-interval: "5"
+        forticlient-dereg-unsupported-client: "enable"
+        forticlient-ems-rest-api-call-timeout: "7"
+        forticlient-keepalive-interval: "8"
+        forticlient-offline-grace: "enable"
+        forticlient-offline-grace-interval: "10"
+        forticlient-reg-key: "<your_own_value>"
+        forticlient-reg-key-enforce: "enable"
+        forticlient-reg-timeout: "13"
+        forticlient-sys-update-interval: "14"
+        forticlient-user-avatar: "enable"
+        forticlient-warning-interval: "16"
+
+
+RETURN VALUES:
+
+build:
+  description: Build number of the fortigate image
+  returned: always
+  type: str
+  sample: '1547'
+http_method:
+  description: Last method used to provision the content into FortiGate
+  returned: always
+  type: str
+  sample: 'PUT'
+http_status:
+  description: Last result given by FortiGate on last operation applied
+  returned: always
+  type: str
+  sample: "200"
+mkey:
+  description: Master key (id) used in the last call to FortiGate
+  returned: success
+  type: str
+  sample: "id"
+name:
+  description: Name of the table used to fulfill the request
+  returned: always
+  type: str
+  sample: "urlfilter"
+path:
+  description: Path of the table used to fulfill the request
+  returned: always
+  type: str
+  sample: "webfilter"
+revision:
+  description: Internal revision number
+  returned: always
+  type: str
+  sample: "17.0.2.10658"
+serial:
+  description: Serial number of the unit
+  returned: always
+  type: str
+  sample: "FGVMEVYYQT3AB5352"
+status:
+  description: Indication of the operation's result
+  returned: always
+  type: str
+  sample: "success"
+vdom:
+  description: Virtual domain used
+  returned: always
+  type: str
+  sample: "root"
+version:
+  description: Version of the FortiGate
+  returned: always
+  type: str
+  sample: "v5.6.3"
+
+

@@ -1,0 +1,455 @@
+> AZURE_RM_VIRTUALMACHINESCALESET    (/usr/lib/python2.7/dist-packages/ansible/modules/cloud/azure/azure_rm_virtualmachinescaleset.py)
+
+        Create and update a virtual machine scale set.
+
+  * This module is maintained by The Ansible Community
+OPTIONS (= is mandatory):
+
+- ad_user
+        Active Directory username. Use when authenticating with an Active Directory user rather than service principal.
+        [Default: (null)]
+        type: str
+
+- adfs_authority_url
+        Azure AD authority url. Use when authenticating with Username/password, and has your own ADFS authority.
+        [Default: (null)]
+        type: str
+        version_added: 2.6
+
+- admin_password
+        Password for the admin username. Not required if the os_type is Linux and SSH password authentication is disabled by setting
+        ssh_password_enabled to false.
+        [Default: (null)]
+
+- admin_username
+        Admin username used to access the host after it is created. Required when creating a VM.
+        [Default: (null)]
+
+- api_profile
+        Selects an API profile to use when communicating with Azure services. Default value of `latest' is appropriate for public clouds;
+        future values will allow use with Azure Stack.
+        [Default: latest]
+        type: str
+        version_added: 2.5
+
+- append_tags
+        Use to control if tags field is canonical or just appends to existing tags.
+        When canonical, any tags not found in the tags parameter will be removed from the object's metadata.
+        [Default: True]
+        type: bool
+
+- application_gateway
+        Application gateway name.
+        [Default: (null)]
+        version_added: 2.8
+
+- auth_source
+        Controls the source of the credentials to use for authentication.
+        If not specified, ANSIBLE_AZURE_AUTH_SOURCE environment variable will be used and default to `auto' if variable is not defined.
+        `auto' will follow the default precedence of module parameters -> environment variables -> default profile in credential file
+        `~/.azure/credentials'.
+        When set to `cli', the credentials will be sources from the default Azure CLI profile.
+        Can also be set via the `ANSIBLE_AZURE_AUTH_SOURCE' environment variable.
+        When set to `msi', the host machine must be an azure resource with an enabled MSI extension. `subscription_id' or the environment
+        variable `AZURE_SUBSCRIPTION_ID' can be used to identify the subscription ID if the resource is granted access to more than one
+        subscription, otherwise the first subscription is chosen.
+        The `msi' was added in Ansible 2.6.
+        (Choices: auto, cli, credential_file, env, msi)[Default: (null)]
+        type: str
+        version_added: 2.5
+
+- capacity
+        Capacity of VMSS.
+        [Default: 1]
+
+- cert_validation_mode
+        Controls the certificate validation behavior for Azure endpoints. By default, all modules will validate the server certificate,
+        but when an HTTPS proxy is in use, or against Azure Stack, it may be necessary to disable this behavior by passing `ignore'. Can
+        also be set via credential file profile or the `AZURE_CERT_VALIDATION' environment variable.
+        (Choices: ignore, validate)[Default: (null)]
+        type: str
+        version_added: 2.5
+
+- client_id
+        Azure client ID. Use when authenticating with a Service Principal.
+        [Default: (null)]
+        type: str
+
+- cloud_environment
+        For cloud environments other than the US public cloud, the environment name (as defined by Azure Python SDK, eg,
+        `AzureChinaCloud', `AzureUSGovernment'), or a metadata discovery endpoint URL (required for Azure Stack). Can also be set via
+        credential file profile or the `AZURE_CLOUD_ENVIRONMENT' environment variable.
+        [Default: AzureCloud]
+        type: str
+        version_added: 2.4
+
+- custom_data
+        Data which is made available to the virtual machine and used by e.g., cloud-init.
+        Many images in the marketplace are not cloud-init ready. Thus, data sent to `custom_data' would be ignored. If the image you are
+        attempting to use is not listed in https://docs.microsoft.com/en-us/azure/virtual-machines/linux/using-cloud-init#cloud-init-
+        overview, follow these steps https://docs.microsoft.com/en-us/azure/virtual-machines/linux/cloudinit-prepare-custom-image.
+        [Default: (null)]
+        version_added: 2.8
+
+- data_disks
+        Describes list of data disks.
+        [Default: (null)]
+        suboptions:
+          caching:
+            choices:
+            - ReadOnly
+            - ReadWrite
+            default: ReadOnly
+            description:
+            - Type of data disk caching.
+            version_added: '2.4'
+          disk_size_gb:
+            description:
+            - The initial disk size in GB for blank data disks.
+            version_added: '2.4'
+          lun:
+            default: 0
+            description:
+            - The logical unit number for data disk.
+            version_added: '2.4'
+          managed_disk_type:
+            choices:
+            - Standard_LRS
+            - Premium_LRS
+            description:
+            - Managed data disk type.
+            version_added: '2.4'
+        
+        version_added: 2.4
+
+- enable_accelerated_networking
+        Indicates whether user wants to allow accelerated networking for virtual machines in scaleset being created.
+        [Default: (null)]
+        type: bool
+        version_added: 2.7
+
+= image
+        Specifies the image used to build the VM.
+        If a string, the image is sourced from a custom image based on the name.
+        If a dict with the keys `publisher', `offer', `sku', and `version', the image is sourced from a Marketplace image. NOTE: set
+        image.version to `latest' to get the most recent version of a given image.
+        If a dict with the keys `name' and `resource_group', the image is sourced from a custom image based on the `name' and
+        `resource_group' set. NOTE: the key `resource_group' is optional and if omitted, all images in the subscription will be searched
+        for by `name'.
+        Custom image support was added in Ansible 2.5
+
+
+- load_balancer
+        Load balancer name.
+        [Default: (null)]
+        version_added: 2.5
+
+- location
+        Valid Azure location. Defaults to location of the resource group.
+        [Default: (null)]
+
+- managed_disk_type
+        Managed disk type.
+        (Choices: Standard_LRS, Premium_LRS)[Default: (null)]
+
+= name
+        Name of the virtual machine.
+
+
+- os_disk_caching
+        Type of OS disk caching.
+        (Aliases: disk_caching)(Choices: ReadOnly, ReadWrite)[Default: ReadOnly]
+
+- os_type
+        Base type of operating system.
+        (Choices: Windows, Linux)[Default: Linux]
+
+- overprovision
+        Specifies whether the Virtual Machine Scale Set should be overprovisioned.
+        [Default: True]
+        type: bool
+        version_added: 2.8
+
+- password
+        Active Directory user password. Use when authenticating with an Active Directory user rather than service principal.
+        [Default: (null)]
+
+- profile
+        Security profile found in ~/.azure/credentials file.
+        [Default: (null)]
+        type: str
+
+- remove_on_absent
+        When removing a VM using state 'absent', also remove associated resources.
+        It can be 'all' or a list with any of the following: ['network_interfaces', 'virtual_storage', 'public_ips'].
+        Any other input will be ignored.
+        [Default: [u'all']]
+
+= resource_group
+        Name of the resource group containing the virtual machine scale set.
+
+
+- secret
+        Azure client secret. Use when authenticating with a Service Principal.
+        [Default: (null)]
+        type: str
+
+- security_group
+        Existing security group with which to associate the subnet.
+        It can be the security group name which is in the same resource group.
+        It can be the resource Id.
+        It can be a dict which contains `name' and `resource_group' of the security group.
+        (Aliases: security_group_name)[Default: (null)]
+        version_added: 2.7
+
+- short_hostname
+        Short host name
+        [Default: (null)]
+
+- ssh_password_enabled
+        When the os_type is Linux, setting ssh_password_enabled to false will disable SSH password authentication and require use of SSH
+        keys.
+        [Default: True]
+        type: bool
+
+- ssh_public_keys
+        For os_type Linux provide a list of SSH keys. Each item in the list should be a dictionary where the dictionary contains two
+        keys: path and key_data. Set the path to the default location of the authorized_keys files. On an Enterprise Linux host, for
+        example, the path will be /home/<admin username>/.ssh/authorized_keys. Set key_data to the actual value of the public key.
+        [Default: (null)]
+
+- state
+        Assert the state of the virtual machine scale set.
+        State `present' will check that the machine exists with the requested configuration. If the configuration of the existing machine
+        does not match, the machine will be updated. state.
+        State `absent' will remove the virtual machine scale set.
+        (Choices: absent, present)[Default: present]
+
+- subnet_name
+        Subnet name.
+        (Aliases: subnet)[Default: (null)]
+
+- subscription_id
+        Your Azure subscription Id.
+        [Default: (null)]
+        type: str
+
+- tags
+        Dictionary of string:string pairs to assign as metadata to the object.
+        Metadata tags on the object will be updated with any provided values.
+        To remove tags set append_tags option to false.
+        [Default: (null)]
+        type: dict
+
+- tenant
+        Azure tenant ID. Use when authenticating with a Service Principal.
+        [Default: (null)]
+        type: str
+
+- tier
+        SKU Tier.
+        (Choices: Basic, Standard)[Default: (null)]
+
+- upgrade_policy
+        Upgrade policy.
+        (Choices: Manual, Automatic)[Default: (null)]
+
+- virtual_network_name
+        Virtual Network name.
+        (Aliases: virtual_network)[Default: (null)]
+
+- virtual_network_resource_group
+        When creating a virtual machine, if a specific virtual network from another resource group should be used, use this parameter to
+        specify the resource group to use.
+        [Default: (null)]
+        version_added: 2.5
+
+- vm_size
+        A valid Azure VM size value. For example, 'Standard_D4'. The list of choices varies depending on the subscription and location.
+        Check your subscription for available choices.
+        [Default: (null)]
+
+- zones
+        A list of Availability Zones for your virtual machine scale set
+        [Default: (null)]
+        type: list
+        version_added: 2.8
+
+
+NOTES:
+      * This module was called `azure_rm_virtualmachine_scaleset' before Ansible 2.8. The usage did not change.
+      * For authentication with Azure you can pass parameters, set environment variables, use a profile stored in
+        ~/.azure/credentials, or log in before you run your tasks or playbook with `az login'.
+      * Authentication is also possible using a service principal or Active Directory user.
+      * To authenticate via service principal, pass subscription_id, client_id, secret and tenant or set environment variables
+        AZURE_SUBSCRIPTION_ID, AZURE_CLIENT_ID, AZURE_SECRET and AZURE_TENANT.
+      * To authenticate via Active Directory user, pass ad_user and password, or set AZURE_AD_USER and AZURE_PASSWORD in the
+        environment.
+      * Alternatively, credentials can be stored in ~/.azure/credentials. This is an ini file containing a [default] section and
+        the following keys: subscription_id, client_id, secret and tenant or subscription_id, ad_user and password. It is also
+        possible to add additional profiles. Specify the profile by passing profile or setting AZURE_PROFILE in the environment.
+
+
+SEE ALSO:
+      * Sign in with Azure CLI
+           How to authenticate using the `az login' command.
+           https://docs.microsoft.com/en-us/cli/azure/authenticate-azure-cli?view=azure-cli-latest
+
+
+REQUIREMENTS:  python >= 2.7, azure >= 2.0.0
+
+AUTHOR: Sertac Ozercan (@sozercan)
+        METADATA:
+          status:
+          - preview
+          supported_by: community
+        
+
+EXAMPLES:
+
+- name: Create VMSS
+  azure_rm_virtualmachinescaleset:
+    resource_group: myResourceGroup
+    name: testvmss
+    vm_size: Standard_DS1_v2
+    capacity: 2
+    virtual_network_name: testvnet
+    subnet_name: testsubnet
+    admin_username: adminUser
+    ssh_password_enabled: false
+    ssh_public_keys:
+      - path: /home/adminUser/.ssh/authorized_keys
+        key_data: < insert yor ssh public key here... >
+    managed_disk_type: Standard_LRS
+    image:
+      offer: CoreOS
+      publisher: CoreOS
+      sku: Stable
+      version: latest
+    data_disks:
+      - lun: 0
+        disk_size_gb: 64
+        caching: ReadWrite
+        managed_disk_type: Standard_LRS
+
+- name: Create a VMSS with a custom image
+  azure_rm_virtualmachinescaleset:
+    resource_group: myResourceGroup
+    name: testvmss
+    vm_size: Standard_DS1_v2
+    capacity: 2
+    virtual_network_name: testvnet
+    subnet_name: testsubnet
+    admin_username: adminUser
+    admin_password: password01
+    managed_disk_type: Standard_LRS
+    image: customimage001
+
+- name: Create a VMSS with a custom image from a particular resource group
+  azure_rm_virtualmachinescaleset:
+    resource_group: myResourceGroup
+    name: testvmss
+    vm_size: Standard_DS1_v2
+    capacity: 2
+    virtual_network_name: testvnet
+    subnet_name: testsubnet
+    admin_username: adminUser
+    admin_password: password01
+    managed_disk_type: Standard_LRS
+    image:
+      name: customimage001
+      resource_group: myResourceGroup
+
+
+RETURN VALUES:
+
+azure_vmss:
+    description: Facts about the current state of the object. Note that facts are not part of the registered output but available directly.
+    returned: always
+    type: complex
+    contains: {
+        "properties": {
+            "overprovision": true,
+            "singlePlacementGroup": true,
+            "upgradePolicy": {
+                "mode": "Manual"
+            },
+            "virtualMachineProfile": {
+                "networkProfile": {
+                    "networkInterfaceConfigurations": [
+                        {
+                            "name": "testvmss",
+                            "properties": {
+                                "dnsSettings": {
+                                    "dnsServers": []
+                                },
+                                "enableAcceleratedNetworking": false,
+                                "ipConfigurations": [
+                                    {
+                                        "name": "default",
+                                        "properties": {
+                                            "privateIPAddressVersion": "IPv4",
+                                            "subnet": {
+                                                "id": "/subscriptions/xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx/resourceGroup/myResourceGroup/providers/Microsoft.Network/virtualNetworks/testvnet/subnets/testsubnet"
+                                            }
+                                        }
+                                    }
+                                ],
+                                "primary": true
+                            }
+                        }
+                    ]
+                },
+                "osProfile": {
+                    "adminUsername": "testuser",
+                    "computerNamePrefix": "testvmss",
+                    "linuxConfiguration": {
+                        "disablePasswordAuthentication": true,
+                        "ssh": {
+                            "publicKeys": [
+                                {
+                                    "keyData": "",
+                                    "path": "/home/testuser/.ssh/authorized_keys"
+                                }
+                            ]
+                        }
+                    },
+                    "secrets": []
+                },
+                "storageProfile": {
+                    "dataDisks": [
+                        {
+                            "caching": "ReadWrite",
+                            "createOption": "empty",
+                            "diskSizeGB": 64,
+                            "lun": 0,
+                            "managedDisk": {
+                                "storageAccountType": "Standard_LRS"
+                            }
+                        }
+                    ],
+                    "imageReference": {
+                        "offer": "CoreOS",
+                        "publisher": "CoreOS",
+                        "sku": "Stable",
+                        "version": "899.17.0"
+                    },
+                    "osDisk": {
+                        "caching": "ReadWrite",
+                        "createOption": "fromImage",
+                        "managedDisk": {
+                            "storageAccountType": "Standard_LRS"
+                        }
+                    }
+                }
+            }
+        },
+        "sku": {
+            "capacity": 2,
+            "name": "Standard_DS1_v2",
+            "tier": "Standard"
+        },
+        "tags": null,
+        "type": "Microsoft.Compute/virtualMachineScaleSets"
+    }
+

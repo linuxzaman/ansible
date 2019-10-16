@@ -1,0 +1,87 @@
+EXAMPLES:
+
+- name: Create a record of type A
+  netcup_dns:
+    api_key: "..."
+    api_password: "..."
+    customer_id: "..."
+    domain: "example.com"
+    name: "mail"
+    type: "A"
+    value: "127.0.0.1"
+
+- name: Delete that record
+  netcup_dns:
+    api_key: "..."
+    api_password: "..."
+    customer_id: "..."
+    domain: "example.com"
+    name: "mail"
+    type: "A"
+    value: "127.0.0.1"
+    state: absent
+
+- name: Create a wildcard record
+  netcup_dns:
+    api_key: "..."
+    api_password: "..."
+    customer_id: "..."
+    domain: "example.com"
+    name: "*"
+    type: "A"
+    value: "127.0.1.1"
+
+- name: Set the MX record for example.com
+  netcup_dns:
+    api_key: "..."
+    api_password: "..."
+    customer_id: "..."
+    domain: "example.com"
+    type: "MX"
+    value: "mail.example.com"
+
+- name: Set a record and ensure that this is the only one
+  netcup_dns:
+    api_key: "..."
+    api_password: "..."
+    customer_id: "..."
+    name: "demo"
+    domain: "example.com"
+    type: "AAAA"
+    value: "::1"
+    solo: true
+
+
+RETURN VALUES:
+
+records:
+    description: list containing all records
+    returned: success
+    type: complex
+    contains:
+        name:
+            description: the record name
+            returned: success
+            type: str
+            sample: fancy-hostname
+        type:
+            description: the record type
+            returned: succcess
+            type: str
+            sample: A
+        value:
+            description: the record destination
+            returned: success
+            type: str
+            sample: 127.0.0.1
+        priority:
+            description: the record priority (only relevant if type=MX)
+            returned: success
+            type: int
+            sample: 0
+        id:
+            description: internal id of the record
+            returned: success
+            type: int
+            sample: 12345
+

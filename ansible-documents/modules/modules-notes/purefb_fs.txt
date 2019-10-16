@@ -1,0 +1,142 @@
+> PUREFB_FS    (/usr/lib/python2.7/dist-packages/ansible/modules/storage/purestorage/purefb_fs.py)
+
+        This module manages filesystems on Pure Storage FlashBlade.
+
+  * This module is maintained by The Ansible Community
+OPTIONS (= is mandatory):
+
+- api_token
+        FlashBlade API token for admin privileged user.
+        [Default: (null)]
+        type: str
+
+- eradicate
+        Define whether to eradicate the filesystem on delete or leave in trash.
+        [Default: False]
+        type: bool
+
+- fastremove
+        Define whether the fast remove directory is enabled for the filesystem.
+        [Default: False]
+        type: bool
+
+- fb_url
+        FlashBlade management IP address or Hostname.
+        [Default: (null)]
+        type: str
+
+- hard_limit
+        Define whether the capacity for a filesystem is a hard limit.
+        CAUTION This will cause the filesystem to go Read-Only if the capacity has already exceeded the logical size of the filesystem.
+        [Default: False]
+        type: bool
+        version_added: 2.8
+        
+
+- http
+        Define whether to HTTP/HTTPS protocol is enabled for the filesystem.
+        [Default: False]
+        type: bool
+
+= name
+        Filesystem Name.
+
+        type: str
+
+- nfs
+        Define whether to NFS protocol is enabled for the filesystem.
+        [Default: True]
+        type: bool
+
+- nfs_rules
+        Define the NFS rules in operation.
+        [Default: *(rw,no_root_squash)]
+        type: str
+
+- size
+        Volume size in M, G, T or P units. See examples.
+        [Default: 32G]
+        type: str
+
+- smb
+        Define whether to SMB protocol is enabled for the filesystem.
+        [Default: False]
+        type: bool
+
+- snapshot
+        Define whether a snapshot directory is enabled for the filesystem.
+        [Default: False]
+        type: bool
+
+- state
+        Create, delete or modifies a filesystem.
+        (Choices: present, absent)[Default: present]
+        type: str
+
+
+NOTES:
+      * This module requires the `purity_fb' Python library
+      * You must set `PUREFB_URL' and `PUREFB_API' environment variables if `fb_url' and `api_token' arguments are not passed to
+        the module directly
+
+
+REQUIREMENTS:  python >= 2.7, purity_fb >= 1.1
+
+AUTHOR: Pure Storage Ansible Team (@sdodsley) <pure-ansible-team@purestorage.com>
+        METADATA:
+          status:
+          - preview
+          supported_by: community
+        
+
+EXAMPLES:
+
+- name: Create new filesystem named foo
+  purefb_fs:
+    name: foo
+    size: 1T
+    state: present
+    fb_url: 10.10.10.2
+    api_token: T-55a68eb5-c785-4720-a2ca-8b03903bf641
+
+- name: Delete filesystem named foo
+  purefb_fs:
+    name: foo
+    state: absent
+    fb_url: 10.10.10.2
+    api_token: T-55a68eb5-c785-4720-a2ca-8b03903bf641
+
+- name: Recover filesystem named foo
+  purefb_fs:
+    name: foo
+    state: present
+    fb_url: 10.10.10.2
+    api_token: T-55a68eb5-c785-4720-a2ca-8b03903bf641
+
+- name: Eradicate filesystem named foo
+  purefb_fs:
+    name: foo
+    state: absent
+    eradicate: true
+    fb_url: 10.10.10.2
+    api_token: T-55a68eb5-c785-4720-a2ca-8b03903bf641
+
+- name: Modify attributes of an existing filesystem named foo
+  purefb_fs:
+    name: foo
+
+    size: 2T
+    nfs : true
+    nfs_rules: '*(ro)'
+    snapshot: true
+    fastremove: true
+    hard_limit: true
+    smb: true
+    state: present
+    fb_url: 10.10.10.2
+    api_token: T-55a68eb5-c785-4720-a2ca-8b03903bf641
+
+
+RETURN VALUES:
+
+

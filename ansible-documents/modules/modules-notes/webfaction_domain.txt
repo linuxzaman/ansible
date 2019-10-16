@@ -1,0 +1,65 @@
+> WEBFACTION_DOMAIN    (/usr/lib/python2.7/dist-packages/ansible/modules/cloud/webfaction/webfaction_domain.py)
+
+        Add or remove domains or subdomains on a Webfaction host. Further documentation at https://github.com/quentinsf/ansible-
+        webfaction.
+
+  * This module is maintained by The Ansible Community
+OPTIONS (= is mandatory):
+
+= login_name
+        The webfaction account to use
+
+
+= login_password
+        The webfaction password to use
+
+
+= name
+        The name of the domain
+
+
+- state
+        Whether the domain should exist
+        (Choices: present, absent)[Default: present]
+
+- subdomains
+        Any subdomains to create.
+        [Default: []]
+
+
+NOTES:
+      * If you are `deleting' domains by using `state=absent', then note that if you specify subdomains, just those particular
+        subdomains will be deleted. If you don't specify subdomains, the domain will be deleted.
+      * You can run playbooks that use this on a local machine, or on a Webfaction host, or elsewhere, since the scripts use the
+        remote webfaction API. The location is not important. However, running them on multiple hosts `simultaneously' is best
+        avoided. If you don't specify `localhost' as your host, you may want to add `serial: 1' to the plays.
+      * See `the webfaction API <https://docs.webfaction.com/xmlrpc-api/>`_ for more info.
+
+
+AUTHOR: Quentin Stafford-Fraser (@quentinsf)
+        METADATA:
+          status:
+          - preview
+          supported_by: community
+        
+
+EXAMPLES:
+
+- name: Create a test domain
+    webfaction_domain:
+      name: mydomain.com
+      state: present
+      subdomains:
+       - www
+       - blog
+      login_name: "{{webfaction_user}}"
+      login_password: "{{webfaction_passwd}}"
+
+  - name: Delete test domain and any subdomains
+    webfaction_domain:
+      name: mydomain.com
+      state: absent
+      login_name: "{{webfaction_user}}"
+      login_password: "{{webfaction_passwd}}"
+
+

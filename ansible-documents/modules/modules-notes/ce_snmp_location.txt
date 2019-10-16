@@ -1,0 +1,81 @@
+> CE_SNMP_LOCATION    (/usr/lib/python2.7/dist-packages/ansible/modules/network/cloudengine/ce_snmp_location.py)
+
+        Manages SNMP location configurations on HUAWEI CloudEngine switches.
+
+  * This module is maintained by The Ansible Community
+OPTIONS (= is mandatory):
+
+= location
+        Location information.
+
+
+- state
+        Manage the state of the resource.
+        (Choices: present, absent)[Default: present]
+
+
+AUTHOR: wangdezhuang (@QijunPan)
+        METADATA:
+          status:
+          - preview
+          supported_by: community
+        
+
+EXAMPLES:
+
+- name: CloudEngine snmp location test
+  hosts: cloudengine
+  connection: local
+  gather_facts: no
+  vars:
+    cli:
+      host: "{{ inventory_hostname }}"
+      port: "{{ ansible_ssh_port }}"
+      username: "{{ username }}"
+      password: "{{ password }}"
+      transport: cli
+
+  tasks:
+
+  - name: "Config SNMP location"
+    ce_snmp_location:
+      state: present
+      location: nanjing China
+      provider: "{{ cli }}"
+
+  - name: "Remove SNMP location"
+    ce_snmp_location:
+      state: absent
+      location: nanjing China
+      provider: "{{ cli }}"
+
+
+RETURN VALUES:
+
+changed:
+    description: check to see if a change was made on the device
+    returned: always
+    type: bool
+    sample: true
+proposed:
+    description: k/v pairs of parameters passed into module
+    returned: always
+    type: dict
+    sample: {"location": "nanjing China",
+             "state": "present"}
+existing:
+    description: k/v pairs of existing aaa server
+    returned: always
+    type: dict
+    sample: {}
+end_state:
+    description: k/v pairs of aaa params after module execution
+    returned: always
+    type: dict
+    sample: {"location": "nanjing China"}
+updates:
+    description: command sent to the device
+    returned: always
+    type: list
+    sample: ["snmp-agent sys-info location nanjing China"]
+

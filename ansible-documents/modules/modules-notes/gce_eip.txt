@@ -1,0 +1,73 @@
+> GCE_EIP    (/usr/lib/python2.7/dist-packages/ansible/modules/cloud/google/gce_eip.py)
+
+        Create (reserve) or Destroy (release) Regional or Global IP Addresses. See https://cloud.google.com/compute/docs/configure-
+        instance-ip-addresses#reserve_new_static for more on reserving static addresses.
+
+  * This module is maintained by The Ansible Community
+OPTIONS (= is mandatory):
+
+= name
+        Name of Address.
+
+
+= region
+        Region to create the address in. Set to 'global' to create a global address.
+
+
+- state
+        The state the address should be in. `present' or `absent' are the only valid options.
+        (Choices: present, absent)[Default: present]
+
+
+NOTES:
+      * Global addresses can only be used with Global Forwarding Rules.
+
+
+REQUIREMENTS:  python >= 2.6, apache-libcloud >= 0.19.0
+
+AUTHOR: Tom Melendez (@supertom) <tom@supertom.com>
+        METADATA:
+          status:
+          - preview
+          supported_by: community
+        
+
+EXAMPLES:
+
+# Create a Global external IP address
+- gce_eip:
+    service_account_email: "{{ service_account_email }}"
+    credentials_file: "{{ credentials_file }}"
+    project_id: "{{ project_id }}"
+    name: my-global-ip
+    region: global
+    state: present
+
+# Create a Regional external IP address
+- gce_eip:
+    service_account_email: "{{ service_account_email }}"
+    credentials_file: "{{ credentials_file }}"
+    project_id: "{{ project_id }}"
+    name: my-global-ip
+    region: us-east1
+    state: present
+
+
+RETURN VALUES:
+
+address:
+    description: IP address being operated on
+    returned: always
+    type: str
+    sample: "35.186.222.233"
+name:
+    description: name of the address being operated on
+    returned: always
+    type: str
+    sample: "my-address"
+region:
+    description: Which region an address belongs.
+    returned: always
+    type: str
+    sample: "global"
+

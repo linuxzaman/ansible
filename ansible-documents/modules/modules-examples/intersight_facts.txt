@@ -1,0 +1,41 @@
+EXAMPLES:
+
+- name: Get facts for all servers
+  intersight_facts:
+    api_private_key: ~/Downloads/SecretKey.txt
+    api_key_id: 64612d300d0982/64612d300d0b00/64612d300d3650
+    server_names:
+- debug:
+    msg: "server name {{ item.Name }}, moid {{ item.Moid }}"
+  loop: "{{ intersight_servers }}"
+  when: intersight_servers is defined
+
+- name: Get facts for servers by name
+  intersight_facts:
+    api_private_key: ~/Downloads/SecretKey.txt
+    api_key_id: 64612d300d0982/64612d300d0b00/64612d300d3650
+    server_names:
+      - SJC18-L14-UCS1-1
+- debug:
+    msg: "server moid {{ intersight_servers[0].Moid }}"
+  when: intersight_servers[0] is defined
+
+
+RETURN VALUES:
+
+intersight_servers:
+  description: A list of Intersight Servers.  See L(Cisco Intersight,https://intersight.com/apidocs) for details.
+  returned: always
+  type: complex
+  contains:
+    Name:
+      description: The name of the server.
+      returned: always
+      type: str
+      sample: SJC18-L14-UCS1-1
+    Moid:
+      description: The unique identifier of this Managed Object instance.
+      returned: always
+      type: str
+      sample: 5978bea36ad4b000018d63dc
+

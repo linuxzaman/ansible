@@ -1,0 +1,81 @@
+EXAMPLES:
+
+# Create a new SSD volume
+- name: Create an SSD volume
+  cloudscale_volume:
+    name: my_ssd_volume
+    size_gb: 50
+    api_token: xxxxxx
+  register: my_ssd_volume
+
+# Attach an existing volume to a server
+- name: Attach volume to server
+  cloudscale_volume:
+    uuid: my_ssd_volume.uuid
+    server_uuids:
+      - ea3b39a3-77a8-4d0b-881d-0bb00a1e7f48
+    api_token: xxxxxx
+
+# Create and attach a volume to a server
+- name: Create and attach volume to server
+  cloudscale_volume:
+    name: my_ssd_volume
+    size_gb: 50
+    server_uuids:
+      - ea3b39a3-77a8-4d0b-881d-0bb00a1e7f48
+    api_token: xxxxxx
+
+# Detach volume from server
+- name: Detach volume from server
+  cloudscale_volume:
+    uuid: my_ssd_volume.uuid
+    server_uuids: []
+    api_token: xxxxxx
+
+# Delete a volume
+- name: Delete volume
+  cloudscale_volume:
+    name: my_ssd_volume
+    state: absent
+    api_token: xxxxxx
+
+
+RETURN VALUES:
+
+href:
+  description: The API URL to get details about this volume.
+  returned: success when state == present
+  type: str
+  sample: https://api.cloudscale.ch/v1/volumes/2db69ba3-1864-4608-853a-0771b6885a3a
+uuid:
+  description: The unique identifier for this volume.
+  returned: success when state == present
+  type: str
+  sample: 2db69ba3-1864-4608-853a-0771b6885a3a
+name:
+  description: The display name of the volume.
+  returned: success when state == present
+  type: str
+  sample: my_ssd_volume
+size_gb:
+  description: The size of the volume in GB.
+  returned: success when state == present
+  type: str
+  sample: 50
+type:
+  description: "The type of the volume. There are currently two options:
+                ssd (default) or bulk."
+  returned: success when state == present
+  type: str
+  sample: bulk
+server_uuids:
+  description: The UUIDs of the servers this volume is attached to.
+  returned: success when state == present
+  type: list
+  sample: ['47cec963-fcd2-482f-bdb6-24461b2d47b1']
+state:
+  description: The current status of the volume.
+  returned: success
+  type: str
+  sample: present
+

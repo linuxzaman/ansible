@@ -1,0 +1,59 @@
+> IPADM_IF    (/usr/lib/python2.7/dist-packages/ansible/modules/network/illumos/ipadm_if.py)
+
+        Create, delete, enable or disable IP interfaces on Solaris/illumos systems.
+
+  * This module is maintained by The Ansible Community
+OPTIONS (= is mandatory):
+
+= name
+        IP interface name.
+
+
+- state
+        Create or delete Solaris/illumos IP interfaces.
+        (Choices: present, absent, enabled, disabled)[Default: present]
+
+- temporary
+        Specifies that the IP interface is temporary. Temporary IP interfaces do not persist across reboots.
+        [Default: False]
+        type: bool
+
+
+AUTHOR: Adam Števko (@xen0l)
+        METADATA:
+          status:
+          - preview
+          supported_by: community
+        
+
+EXAMPLES:
+
+# Create vnic0 interface
+- ipadm_if:
+    name: vnic0
+    state: enabled
+
+# Disable vnic0 interface
+- ipadm_if:
+    name: vnic0
+    state: disabled
+
+
+RETURN VALUES:
+
+name:
+    description: IP interface name
+    returned: always
+    type: str
+    sample: "vnic0"
+state:
+    description: state of the target
+    returned: always
+    type: str
+    sample: "present"
+temporary:
+    description: persistence of a IP interface
+    returned: always
+    type: bool
+    sample: "True"
+

@@ -1,0 +1,48 @@
+EXAMPLES:
+
+- name: configure the login banner
+  iosxr_banner:
+    banner: login
+    text: |
+      this is my login banner
+      that contains a multiline
+      string
+    state: present
+- name: remove the motd banner
+  iosxr_banner:
+    banner: motd
+    state: absent
+- name: Configure banner from file
+  iosxr_banner:
+    banner:  motd
+    text: "{{ lookup('file', './config_partial/raw_banner.cfg') }}"
+    state: present
+
+
+RETURN VALUES:
+
+commands:
+  description: The list of configuration mode commands sent to device with transport C(cli)
+  returned: always (empty list when no commands to send)
+  type: list
+  sample:
+    - banner login
+    - this is my login banner
+    - that contains a multiline
+    - string
+
+xml:
+  description: NetConf rpc xml sent to device with transport C(netconf)
+  returned: always (empty list when no xml rpc to send)
+  type: list
+  version_added: 2.5
+  sample:
+    - '<config xmlns:xc="urn:ietf:params:xml:ns:netconf:base:1.0">
+            <banners xmlns="http://cisco.com/ns/yang/Cisco-IOS-XR-infra-infra-cfg">
+                <banner xc:operation="merge">
+                  <banner-name>motd</banner-name>
+                  <banner-text>Ansible banner example</banner-text>
+                </banner>
+            </banners>
+        </config>'
+

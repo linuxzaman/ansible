@@ -1,0 +1,36 @@
+EXAMPLES:
+
+- name: Add Server Technology to ASM Policy
+  bigip_asm_policy_server_technology:
+    name: Joomla
+    policy_name: FooPolicy
+    provider:
+      password: secret
+      server: lb.mydomain.com
+      user: admin
+  delegate_to: localhost
+- name: Remove Server Technology from ASM Policy
+  bigip_asm_policy_server_technology:
+    name: Joomla
+    policy_name: FooPolicy
+    state: absent
+    provider:
+      password: secret
+      server: lb.mydomain.com
+      user: admin
+  delegate_to: localhost
+
+
+RETURN VALUES:
+
+policy_name:
+  description: The name of the ASM policy
+  returned: changed
+  type: str
+  sample: FooPolicy
+name:
+  description: The name of Server Technology added/removed on ASM policy
+  returned: changed
+  type: str
+  sample: Joomla
+

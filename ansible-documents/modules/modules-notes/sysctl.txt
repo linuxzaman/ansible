@@ -1,0 +1,85 @@
+> SYSCTL    (/usr/lib/python2.7/dist-packages/ansible/modules/system/sysctl.py)
+
+        This module manipulates sysctl entries and optionally performs a `/sbin/sysctl -p' after changing them.
+
+  * This module is maintained by The Ansible Core Team
+OPTIONS (= is mandatory):
+
+- ignoreerrors
+        Use this option to ignore errors about unknown keys.
+        [Default: no]
+        type: bool
+
+= name
+        The dot-separated path (aka `key') specifying the sysctl variable.
+        (Aliases: key)
+
+- reload
+        If `yes', performs a `/sbin/sysctl -p' if the `sysctl_file' is updated. If `no', does not reload `sysctl' even if the
+        `sysctl_file' is updated.
+        [Default: yes]
+        type: bool
+
+- state
+        Whether the entry should be present or absent in the sysctl file.
+        (Choices: present, absent)[Default: present]
+
+- sysctl_file
+        Specifies the absolute path to `sysctl.conf', if not `/etc/sysctl.conf'.
+        [Default: /etc/sysctl.conf]
+
+- sysctl_set
+        Verify token value with the sysctl command and set with -w if necessary
+        [Default: no]
+        type: bool
+        version_added: 1.5
+        
+
+- value
+        Desired value of the sysctl key.
+        (Aliases: val)[Default: (null)]
+
+
+AUTHOR: David CHANIAL (@davixx) <david.chanial@gmail.com>
+        METADATA:
+          status:
+          - stableinterface
+          supported_by: core
+        
+
+EXAMPLES:
+
+# Set vm.swappiness to 5 in /etc/sysctl.conf
+- sysctl:
+    name: vm.swappiness
+    value: 5
+    state: present
+
+# Remove kernel.panic entry from /etc/sysctl.conf
+- sysctl:
+    name: kernel.panic
+    state: absent
+    sysctl_file: /etc/sysctl.conf
+
+# Set kernel.panic to 3 in /tmp/test_sysctl.conf
+- sysctl:
+    name: kernel.panic
+    value: 3
+    sysctl_file: /tmp/test_sysctl.conf
+    reload: no
+
+# Set ip forwarding on in /proc and verify token value with the sysctl command
+- sysctl:
+    name: net.ipv4.ip_forward
+    value: 1
+    sysctl_set: yes
+
+# Set ip forwarding on in /proc and in the sysctl file and reload if necessary
+- sysctl:
+    name: net.ipv4.ip_forward
+    value: 1
+    sysctl_set: yes
+    state: present
+    reload: yes
+
+

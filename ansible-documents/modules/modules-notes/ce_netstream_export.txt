@@ -1,0 +1,172 @@
+> CE_NETSTREAM_EXPORT    (/usr/lib/python2.7/dist-packages/ansible/modules/network/cloudengine/ce_netstream_export.py)
+
+        Configure NetStream flow statistics exporting and versions for exported packets on HUAWEI CloudEngine switches.
+
+  * This module is maintained by The Ansible Community
+OPTIONS (= is mandatory):
+
+- as_option
+        Specifies the AS number recorded in the statistics as the original or the peer AS number.
+        (Choices: origin, peer)[Default: (null)]
+
+- bgp_nexthop
+        Configures the statistics to carry BGP next hop information. Currently, only V9 supports the exported packets carrying BGP next
+        hop information.
+        (Choices: enable, disable)[Default: disable]
+
+- host_ip
+        Specifies destination address which can be IPv6 or IPv4 of the exported NetStream packet.
+        [Default: (null)]
+
+- host_port
+        Specifies the destination UDP port number of the exported packets. The value is an integer that ranges from 1 to 65535.
+        [Default: (null)]
+
+- host_vpn
+        Specifies the VPN instance of the exported packets carrying flow statistics. Ensure the VPN instance has been created on the
+        device.
+        [Default: (null)]
+
+- source_ip
+        Specifies source address which can be IPv6 or IPv4 of the exported NetStream packet.
+        [Default: (null)]
+
+- state
+        Manage the state of the resource.
+        (Choices: present, absent)[Default: present]
+
+= type
+        Specifies NetStream feature.
+        (Choices: ip, vxlan)
+
+- version
+        Sets the version of exported packets.
+        (Choices: 5, 9)[Default: (null)]
+
+
+AUTHOR: Zhijin Zhou (@QijunPan)
+        METADATA:
+          status:
+          - preview
+          supported_by: community
+        
+
+EXAMPLES:
+
+- name: netstream export module test
+  hosts: cloudengine
+  connection: local
+  gather_facts: no
+  vars:
+    cli:
+      host: "{{ inventory_hostname }}"
+      port: "{{ ansible_ssh_port }}"
+      username: "{{ username }}"
+      password: "{{ password }}"
+      transport: cli
+
+  tasks:
+
+  - name: Configures the source address for the exported packets carrying IPv4 flow statistics.
+    ce_netstream_export:
+      type: ip
+      source_ip: 192.8.2.2
+      provider: "{{ cli }}"
+
+  - name: Configures the source IP address for the exported packets carrying VXLAN flexible flow statistics.
+    ce_netstream_export:
+      type: vxlan
+      source_ip: 192.8.2.3
+      provider: "{{ cli }}"
+
+  - name: Configures the destination IP address and destination UDP port number for the exported packets carrying IPv4 flow statistics.
+    ce_netstream_export:
+      type: ip
+      host_ip: 192.8.2.4
+      host_port: 25
+      host_vpn: test
+      provider: "{{ cli }}"
+
+  - name: Configures the destination IP address and destination UDP port number for the exported packets carrying VXLAN flexible flow statistics.
+    ce_netstream_export:
+      type: vxlan
+      host_ip: 192.8.2.5
+      host_port: 26
+      host_vpn: test
+      provider: "{{ cli }}"
+
+  - name: Configures the version number of the exported packets carrying IPv4 flow statistics.
+    ce_netstream_export:
+      type: ip
+      version: 9
+      as_option: origin
+      bgp_nexthop: enable
+      provider: "{{ cli }}"
+
+  - name: Configures the version for the exported packets carrying VXLAN flexible flow statistics.
+    ce_netstream_export:
+      type: vxlan
+      version: 9
+      provider: "{{ cli }}"
+
+
+RETURN VALUES:
+
+proposed:
+    description: k/v pairs of parameters passed into module
+    returned: always
+    type: dict
+    sample: {
+                "as_option": "origin",
+                "bgp_nexthop": "enable",
+                "host_ip": "192.8.5.6",
+                "host_port": "26",
+                "host_vpn": "test",
+                "source_ip": "192.8.2.5",
+                "state": "present",
+                "type": "ip",
+                "version": "9"
+            }
+existing:
+    description: k/v pairs of existing attributes on the device
+    returned: always
+    type: dict
+    sample: {
+                "as_option": null,
+                "bgp_nexthop": "disable",
+                "host_ip": null,
+                "host_port": null,
+                "host_vpn": null,
+                "source_ip": null,
+                "type": "ip",
+                "version": null
+            }
+end_state:
+    description: k/v pairs of end attributes on the device
+    returned: always
+    type: dict
+    sample: {
+                "as_option": "origin",
+                "bgp_nexthop": "enable",
+                "host_ip": "192.8.5.6",
+                "host_port": "26",
+                "host_vpn": "test",
+                "source_ip": "192.8.2.5",
+                "type": "ip",
+                "version": "9"
+            }
+updates:
+    description: command list sent to the device
+    returned: always
+    type: list
+    sample: [
+                "netstream export ip source 192.8.2.5",
+                "netstream export ip host 192.8.5.6 26 vpn-instance test",
+                "netstream export ip version 9 origin-as bgp-nexthop"
+            ]
+changed:
+    description: check to see if a change was made on the device
+    returned: always
+    type: bool
+    sample: true
+

@@ -1,0 +1,108 @@
+EXAMPLES:
+
+- name: Get instance of MariaDB Server
+    azure_rm_mariadbserver_facts:
+      resource_group: myResourceGroup
+      name: server_name
+
+  - name: List instances of MariaDB Server
+    azure_rm_mariadbserver_facts:
+      resource_group: myResourceGroup
+
+
+RETURN VALUES:
+
+servers:
+    description: A list of dictionaries containing facts for MariaDB servers.
+    returned: always
+    type: complex
+    contains:
+        id:
+            description:
+                - Resource ID
+            returned: always
+            type: str
+            sample: /subscriptions/xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx/resourceGroups/myResourceGroup/providers/Microsoft.DBforMariaDB/servers/myabdud1223
+        resource_group:
+            description:
+                - Resource group name.
+            returned: always
+            type: str
+            sample: myResourceGroup
+        name:
+            description:
+                - Resource name.
+            returned: always
+            type: str
+            sample: myabdud1223
+        location:
+            description:
+                - The location the resource resides in.
+            returned: always
+            type: str
+            sample: eastus
+        sku:
+            description:
+                - The SKU of the server.
+            returned: always
+            type: complex
+            contains:
+                name:
+                    description:
+                        - The name of the SKU
+                    returned: always
+                    type: str
+                    sample: GP_Gen4_2
+                tier:
+                    description:
+                        - The tier of the particular SKU
+                    returned: always
+                    type: str
+                    sample: GeneralPurpose
+                capacity:
+                    description:
+                        - The scale capacity.
+                    returned: always
+                    type: int
+                    sample: 2
+        storage_mb:
+            description:
+                - The maximum storage allowed for a server.
+            returned: always
+            type: int
+            sample: 128000
+        enforce_ssl:
+            description:
+                - Enable SSL enforcement.
+            returned: always
+            type: bool
+            sample: False
+        admin_username:
+            description:
+                - "The administrator's login name of a server."
+            returned: always
+            type: str
+            sample: serveradmin
+        version:
+            description:
+                - Server version.
+            returned: always
+            type: str
+            sample: "9.6"
+        user_visible_state:
+            description:
+                - A state of a server that is visible to user.
+            returned: always
+            type: str
+            sample: Ready
+        fully_qualified_domain_name:
+            description:
+                - The fully qualified domain name of a server.
+            returned: always
+            type: str
+            sample: myabdud1223.mys.database.azure.com
+        tags:
+            description: Tags assigned to the resource. Dictionary of string:string pairs.
+            type: dict
+            sample: { tag1: abc }
+

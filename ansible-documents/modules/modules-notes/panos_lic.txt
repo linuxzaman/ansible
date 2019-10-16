@@ -1,0 +1,73 @@
+> PANOS_LIC    (/usr/lib/python2.7/dist-packages/ansible/modules/network/panos/_panos_lic.py)
+
+        Apply an authcode to a device. The authcode should have been previously registered on the Palo Alto Networks support portal. The
+        device should have Internet access.
+
+DEPRECATED: 
+
+	Reason: Consolidating code base.
+	Will be removed in: Ansible 2.12
+	Alternatives: Use U(https://galaxy.ansible.com/PaloAltoNetworks/paloaltonetworks) instead.
+
+
+  * This module is maintained by The Ansible Community
+OPTIONS (= is mandatory):
+
+= auth_code
+        authcode to be applied
+
+
+- force
+        whether to apply authcode even if device is already licensed
+        [Default: false]
+        type: bool
+
+= ip_address
+        IP address (or hostname) of PAN-OS device.
+
+        type: str
+
+= password
+        Password for authentication.
+
+        type: str
+
+- username
+        Username for authentication.
+        [Default: admin]
+        type: str
+
+
+REQUIREMENTS:  pan-python
+
+AUTHOR: Luigi Mori (@jtschichold), Ivan Bojer (@ivanbojer)
+        METADATA:
+          status:
+          - deprecated
+          supported_by: community
+        
+
+EXAMPLES:
+
+- hosts: localhost
+      connection: local
+      tasks:
+        - name: fetch license
+          panos_lic:
+            ip_address: "192.168.1.1"
+            password: "paloalto"
+            auth_code: "IBADCODE"
+          register: result
+    - name: Display serialnumber (if already registered)
+      debug:
+        var: "{{result.serialnumber}}"
+
+
+RETURN VALUES:
+
+serialnumber:
+    description: serialnumber of the device in case that it has been already registered
+    returned: success
+    type: str
+    sample: 007200004214
+

@@ -1,0 +1,48 @@
+EXAMPLES:
+
+- name: create a instance
+  gcp_spanner_instance:
+    name: instance-database
+    display_name: My Spanner Instance
+    node_count: 2
+    labels:
+      cost_center: ti-1700004
+    config: regional-us-central1
+    project: "{{ gcp_project }}"
+    auth_kind: "{{ gcp_cred_kind }}"
+    service_account_file: "{{ gcp_cred_file }}"
+    state: present
+  register: instance
+
+- name: create a database
+  gcp_spanner_database:
+    name: webstore
+    instance: "{{ instance }}"
+    project: test_project
+    auth_kind: serviceaccount
+    service_account_file: "/tmp/auth.pem"
+    state: present
+
+
+RETURN VALUES:
+
+name:
+  description:
+  - A unique identifier for the database, which cannot be changed after the instance
+    is created. Values are of the form [a-z][-a-z0-9]*[a-z0-9].
+  returned: success
+  type: str
+extraStatements:
+  description:
+  - 'An optional list of DDL statements to run inside the newly created database.
+    Statements can create tables, indexes, etc. These statements execute atomically
+    with the creation of the database: if there is an error in any statement, the
+    database is not created.'
+  returned: success
+  type: list
+instance:
+  description:
+  - The instance to create the database on.
+  returned: success
+  type: dict
+

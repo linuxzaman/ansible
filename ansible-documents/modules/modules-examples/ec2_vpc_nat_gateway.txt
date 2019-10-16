@@ -1,0 +1,115 @@
+EXAMPLES:
+
+# Note: These examples do not set authentication details, see the AWS Guide for details.
+
+- name: Create new nat gateway with client token.
+  ec2_vpc_nat_gateway:
+    state: present
+    subnet_id: subnet-12345678
+    eip_address: 52.1.1.1
+    region: ap-southeast-2
+    client_token: abcd-12345678
+  register: new_nat_gateway
+
+- name: Create new nat gateway using an allocation-id.
+  ec2_vpc_nat_gateway:
+    state: present
+    subnet_id: subnet-12345678
+    allocation_id: eipalloc-12345678
+    region: ap-southeast-2
+  register: new_nat_gateway
+
+- name: Create new nat gateway, using an EIP address  and wait for available status.
+  ec2_vpc_nat_gateway:
+    state: present
+    subnet_id: subnet-12345678
+    eip_address: 52.1.1.1
+    wait: yes
+    region: ap-southeast-2
+  register: new_nat_gateway
+
+- name: Create new nat gateway and allocate new EIP.
+  ec2_vpc_nat_gateway:
+    state: present
+    subnet_id: subnet-12345678
+    wait: yes
+    region: ap-southeast-2
+  register: new_nat_gateway
+
+- name: Create new nat gateway and allocate new EIP if a nat gateway does not yet exist in the subnet.
+  ec2_vpc_nat_gateway:
+    state: present
+    subnet_id: subnet-12345678
+    wait: yes
+    region: ap-southeast-2
+    if_exist_do_not_create: true
+  register: new_nat_gateway
+
+- name: Delete nat gateway using discovered nat gateways from facts module.
+  ec2_vpc_nat_gateway:
+    state: absent
+    region: ap-southeast-2
+    wait: yes
+    nat_gateway_id: "{{ item.NatGatewayId }}"
+    release_eip: yes
+  register: delete_nat_gateway_result
+  loop: "{{ gateways_to_remove.result }}"
+
+- name: Delete nat gateway and wait for deleted status.
+  ec2_vpc_nat_gateway:
+    state: absent
+    nat_gateway_id: nat-12345678
+    wait: yes
+    wait_timeout: 500
+    region: ap-southeast-2
+
+- name: Delete nat gateway and release EIP.
+  ec2_vpc_nat_gateway:
+    state: absent
+    nat_gateway_id: nat-12345678
+    release_eip: yes
+    wait: yes
+    wait_timeout: 300
+    region: ap-southeast-2
+
+
+RETURN VALUES:
+
+create_time:
+  description: The ISO 8601 date time format in UTC.
+  returned: In all cases.
+  type: str
+  sample: "2016-03-05T05:19:20.282000+00:00'"
+nat_gateway_id:
+  description: id of the VPC NAT Gateway
+  returned: In all cases.
+  type: str
+  sample: "nat-0d1e3a878585988f8"
+subnet_id:
+  description: id of the Subnet
+  returned: In all cases.
+  type: str
+  sample: "subnet-12345"
+state:
+  description: The current state of the NAT Gateway.
+  returned: In all cases.
+  type: str
+  sample: "available"
+vpc_id:
+  description: id of the VPC.
+  returned: In all cases.
+  type: str
+  sample: "vpc-12345"
+nat_gateway_addresses:
+  description: List of dictionairies containing the public_ip, network_interface_id, private_ip, and allocation_id.
+  returned: In all cases.
+  type: str
+  sample: [
+      {
+          'public_ip': '52.52.52.52',
+          'network_interface_id': 'eni-12345',
+          'private_ip': '10.0.0.100',
+          'allocation_id': 'eipalloc-12345'
+      }
+  ]
+

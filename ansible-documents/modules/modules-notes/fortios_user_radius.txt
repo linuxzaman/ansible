@@ -1,0 +1,462 @@
+> FORTIOS_USER_RADIUS    (/usr/lib/python2.7/dist-packages/ansible/modules/network/fortios/fortios_user_radius.py)
+
+        This module is able to configure a FortiGate or FortiOS by allowing the user to set and modify user feature and radius category.
+        Examples include all parameters and values need to be adjusted to datasources before usage. Tested with FOS v6.0.2
+
+  * This module is maintained by The Ansible Community
+OPTIONS (= is mandatory):
+
+= host
+        FortiOS or FortiGate ip address.
+
+
+- https
+        Indicates if the requests towards FortiGate must use HTTPS protocol
+        [Default: True]
+        type: bool
+
+- password
+        FortiOS or FortiGate password.
+        [Default: ]
+
+- user_radius
+        Configure RADIUS server entries.
+        [Default: None]
+        suboptions:
+          accounting-server:
+            description:
+            - Additional accounting servers.
+            suboptions:
+              id:
+                description:
+                - ID (0 - 4294967295).
+                required: true
+              port:
+                description:
+                - RADIUS accounting port number.
+              secret:
+                description:
+                - Secret key.
+              server:
+                description:
+                - Server CN domain name or IP.
+              source-ip:
+                description:
+                - Source IP address for communications to the RADIUS server.
+              status:
+                choices:
+                - enable
+                - disable
+                description:
+                - Status.
+          acct-all-servers:
+            choices:
+            - enable
+            - disable
+            description:
+            - Enable/disable sending of accounting messages to all configured servers (default
+              = disable).
+          acct-interim-interval:
+            description:
+            - Time in seconds between each accounting interim update message.
+          all-usergroup:
+            choices:
+            - disable
+            - enable
+            description:
+            - Enable/disable automatically including this RADIUS server in all user groups.
+          auth-type:
+            choices:
+            - auto
+            - ms_chap_v2
+            - ms_chap
+            - chap
+            - pap
+            description:
+            - Authentication methods/protocols permitted for this RADIUS server.
+          class:
+            description:
+            - Class attribute name(s).
+            suboptions:
+              name:
+                description:
+                - Class name.
+                required: true
+          h3c-compatibility:
+            choices:
+            - enable
+            - disable
+            description:
+            - Enable/disable compatibility with the H3C, a mechanism that performs security
+              checking for authentication.
+          name:
+            description:
+            - RADIUS server entry name.
+            required: true
+          nas-ip:
+            description:
+            - IP address used to communicate with the RADIUS server and used as NAS-IP-Address
+              and Called-Station-ID attributes.
+          password-encoding:
+            choices:
+            - auto
+            - ISO-8859-1
+            description:
+            - Password encoding.
+          password-renewal:
+            choices:
+            - enable
+            - disable
+            description:
+            - Enable/disable password renewal.
+          radius-coa:
+            choices:
+            - enable
+            - disable
+            description:
+            - Enable to allow a mechanism to change the attributes of an authentication, authorization,
+              and accounting session after it is authenticated.
+          radius-port:
+            description:
+            - RADIUS service port number.
+          rsso:
+            choices:
+            - enable
+            - disable
+            description:
+            - Enable/disable RADIUS based single sign on feature.
+          rsso-context-timeout:
+            description:
+            - Time in seconds before the logged out user is removed from the "user context
+              list" of logged on users.
+          rsso-endpoint-attribute:
+            choices:
+            - User-Name
+            - NAS-IP-Address
+            - Framed-IP-Address
+            - Framed-IP-Netmask
+            - Filter-Id
+            - Login-IP-Host
+            - Reply-Message
+            - Callback-Number
+            - Callback-Id
+            - Framed-Route
+            - Framed-IPX-Network
+            - Class
+            - Called-Station-Id
+            - Calling-Station-Id
+            - NAS-Identifier
+            - Proxy-State
+            - Login-LAT-Service
+            - Login-LAT-Node
+            - Login-LAT-Group
+            - Framed-AppleTalk-Zone
+            - Acct-Session-Id
+            - Acct-Multi-Session-Id
+            description:
+            - RADIUS attributes used to extract the user end point identifer from the RADIUS
+              Start record.
+          rsso-endpoint-block-attribute:
+            choices:
+            - User-Name
+            - NAS-IP-Address
+            - Framed-IP-Address
+            - Framed-IP-Netmask
+            - Filter-Id
+            - Login-IP-Host
+            - Reply-Message
+            - Callback-Number
+            - Callback-Id
+            - Framed-Route
+            - Framed-IPX-Network
+            - Class
+            - Called-Station-Id
+            - Calling-Station-Id
+            - NAS-Identifier
+            - Proxy-State
+            - Login-LAT-Service
+            - Login-LAT-Node
+            - Login-LAT-Group
+            - Framed-AppleTalk-Zone
+            - Acct-Session-Id
+            - Acct-Multi-Session-Id
+            description:
+            - RADIUS attributes used to block a user.
+          rsso-ep-one-ip-only:
+            choices:
+            - enable
+            - disable
+            description:
+            - Enable/disable the replacement of old IP addresses with new ones for the same
+              endpoint on RADIUS accounting Start messages.
+          rsso-flush-ip-session:
+            choices:
+            - enable
+            - disable
+            description:
+            - Enable/disable flushing user IP sessions on RADIUS accounting Stop messages.
+          rsso-log-flags:
+            choices:
+            - protocol-error
+            - profile-missing
+            - accounting-stop-missed
+            - accounting-event
+            - endpoint-block
+            - radiusd-other
+            - none
+            description:
+            - Events to log.
+          rsso-log-period:
+            description:
+            - Time interval in seconds that group event log messages will be generated for
+              dynamic profile events.
+          rsso-radius-response:
+            choices:
+            - enable
+            - disable
+            description:
+            - Enable/disable sending RADIUS response packets after receiving Start and Stop
+              records.
+          rsso-radius-server-port:
+            description:
+            - UDP port to listen on for RADIUS Start and Stop records.
+          rsso-secret:
+            description:
+            - RADIUS secret used by the RADIUS accounting server.
+          rsso-validate-request-secret:
+            choices:
+            - enable
+            - disable
+            description:
+            - Enable/disable validating the RADIUS request shared secret in the Start or End
+              record.
+          secondary-secret:
+            description:
+            - Secret key to access the secondary server.
+          secondary-server:
+            description:
+            - Secondary RADIUS CN domain name or IP.
+          secret:
+            description:
+            - Pre-shared secret key used to access the primary RADIUS server.
+          server:
+            description:
+            - Primary RADIUS server CN domain name or IP address.
+          source-ip:
+            description:
+            - Source IP address for communications to the RADIUS server.
+          sso-attribute:
+            choices:
+            - User-Name
+            - NAS-IP-Address
+            - Framed-IP-Address
+            - Framed-IP-Netmask
+            - Filter-Id
+            - Login-IP-Host
+            - Reply-Message
+            - Callback-Number
+            - Callback-Id
+            - Framed-Route
+            - Framed-IPX-Network
+            - Class
+            - Called-Station-Id
+            - Calling-Station-Id
+            - NAS-Identifier
+            - Proxy-State
+            - Login-LAT-Service
+            - Login-LAT-Node
+            - Login-LAT-Group
+            - Framed-AppleTalk-Zone
+            - Acct-Session-Id
+            - Acct-Multi-Session-Id
+            description:
+            - RADIUS attribute that contains the profile group name to be extracted from the
+              RADIUS Start record.
+          sso-attribute-key:
+            description:
+            - Key prefix for SSO group value in the SSO attribute.
+          sso-attribute-value-override:
+            choices:
+            - enable
+            - disable
+            description:
+            - Enable/disable override old attribute value with new value for the same endpoint.
+          state:
+            choices:
+            - present
+            - absent
+            description:
+            - Indicates whether to create or remove the object
+          tertiary-secret:
+            description:
+            - Secret key to access the tertiary server.
+          tertiary-server:
+            description:
+            - Tertiary RADIUS CN domain name or IP.
+          timeout:
+            description:
+            - Time in seconds between re-sending authentication requests.
+          use-management-vdom:
+            choices:
+            - enable
+            - disable
+            description:
+            - Enable/disable using management VDOM to send requests.
+          username-case-sensitive:
+            choices:
+            - enable
+            - disable
+            description:
+            - Enable/disable case sensitive user names.
+        
+
+= username
+        FortiOS or FortiGate username.
+
+
+- vdom
+        Virtual domain, among those defined previously. A vdom is a virtual instance of the FortiGate that can be configured and used as
+        a different unit.
+        [Default: root]
+
+
+NOTES:
+      * Requires fortiosapi library developed by Fortinet
+      * Run as a local_action in your playbook
+
+
+REQUIREMENTS:  fortiosapi>=0.9.8
+
+AUTHOR: Miguel Angel Munoz (@mamunozgonzalez), Nicolas Thomas (@thomnico)
+        METADATA:
+          status:
+          - preview
+          supported_by: community
+        
+
+EXAMPLES:
+
+- hosts: localhost
+  vars:
+   host: "192.168.122.40"
+   username: "admin"
+   password: ""
+   vdom: "root"
+  tasks:
+  - name: Configure RADIUS server entries.
+    fortios_user_radius:
+      host:  "{{ host }}"
+      username: "{{ username }}"
+      password: "{{ password }}"
+      vdom:  "{{ vdom }}"
+      https: "False"
+      user_radius:
+        state: "present"
+        accounting-server:
+         -
+            id:  "4"
+            port: "5"
+            secret: "<your_own_value>"
+            server: "192.168.100.40"
+            source-ip: "84.230.14.43"
+            status: "enable"
+        acct-all-servers: "enable"
+        acct-interim-interval: "11"
+        all-usergroup: "disable"
+        auth-type: "auto"
+        class:
+         -
+            name: "default_name_15"
+        h3c-compatibility: "enable"
+        name: "default_name_17"
+        nas-ip: "<your_own_value>"
+        password-encoding: "auto"
+        password-renewal: "enable"
+        radius-coa: "enable"
+        radius-port: "22"
+        rsso: "enable"
+        rsso-context-timeout: "24"
+        rsso-endpoint-attribute: "User-Name"
+        rsso-endpoint-block-attribute: "User-Name"
+        rsso-ep-one-ip-only: "enable"
+        rsso-flush-ip-session: "enable"
+        rsso-log-flags: "protocol-error"
+        rsso-log-period: "30"
+        rsso-radius-response: "enable"
+        rsso-radius-server-port: "32"
+        rsso-secret: "<your_own_value>"
+        rsso-validate-request-secret: "enable"
+        secondary-secret: "<your_own_value>"
+        secondary-server: "<your_own_value>"
+        secret: "<your_own_value>"
+        server: "192.168.100.40"
+        source-ip: "84.230.14.43"
+        sso-attribute: "User-Name"
+        sso-attribute-key: "<your_own_value>"
+        sso-attribute-value-override: "enable"
+        tertiary-secret: "<your_own_value>"
+        tertiary-server: "<your_own_value>"
+        timeout: "45"
+        use-management-vdom: "enable"
+        username-case-sensitive: "enable"
+
+
+RETURN VALUES:
+
+build:
+  description: Build number of the fortigate image
+  returned: always
+  type: str
+  sample: '1547'
+http_method:
+  description: Last method used to provision the content into FortiGate
+  returned: always
+  type: str
+  sample: 'PUT'
+http_status:
+  description: Last result given by FortiGate on last operation applied
+  returned: always
+  type: str
+  sample: "200"
+mkey:
+  description: Master key (id) used in the last call to FortiGate
+  returned: success
+  type: str
+  sample: "id"
+name:
+  description: Name of the table used to fulfill the request
+  returned: always
+  type: str
+  sample: "urlfilter"
+path:
+  description: Path of the table used to fulfill the request
+  returned: always
+  type: str
+  sample: "webfilter"
+revision:
+  description: Internal revision number
+  returned: always
+  type: str
+  sample: "17.0.2.10658"
+serial:
+  description: Serial number of the unit
+  returned: always
+  type: str
+  sample: "FGVMEVYYQT3AB5352"
+status:
+  description: Indication of the operation's result
+  returned: always
+  type: str
+  sample: "success"
+vdom:
+  description: Virtual domain used
+  returned: always
+  type: str
+  sample: "root"
+version:
+  description: Version of the FortiGate
+  returned: always
+  type: str
+  sample: "v5.6.3"
+
+

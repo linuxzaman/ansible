@@ -1,0 +1,45 @@
+EXAMPLES:
+
+- name: Create a tag
+  vmware_tag:
+    hostname: '{{ vcenter_hostname }}'
+    username: '{{ vcenter_username }}'
+    password: '{{ vcenter_password }}'
+    validate_certs: no
+    category_id: 'urn:vmomi:InventoryServiceCategory:e785088d-6981-4b1c-9fb8-1100c3e1f742:GLOBAL'
+    tag_name: Sample_Tag_0002
+    tag_description: Sample Description
+    state: present
+  delegate_to: localhost
+
+- name: Update tag description
+  vmware_tag:
+    hostname: '{{ vcenter_hostname }}'
+    username: '{{ vcenter_username }}'
+    password: '{{ vcenter_password }}'
+    tag_name: Sample_Tag_0002
+    tag_description: Some fancy description
+    state: present
+  delegate_to: localhost
+
+- name: Delete tag
+  vmware_tag:
+    hostname: '{{ vcenter_hostname }}'
+    username: '{{ vcenter_username }}'
+    password: '{{ vcenter_password }}'
+    tag_name: Sample_Tag_0002
+    state: absent
+  delegate_to: localhost
+
+
+RETURN VALUES:
+
+results:
+  description: dictionary of tag metadata
+  returned: on success
+  type: dict
+  sample: {
+        "msg": "Tag 'Sample_Tag_0002' created.",
+        "tag_id": "urn:vmomi:InventoryServiceTag:bff91819-f529-43c9-80ca-1c9dfda09441:GLOBAL"
+    }
+

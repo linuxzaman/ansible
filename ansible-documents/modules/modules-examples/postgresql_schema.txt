@@ -1,0 +1,32 @@
+EXAMPLES:
+
+- name: Create a new schema with name acme in test database
+  postgresql_schema:
+    db: test
+    name: acme
+
+- name: Create a new schema acme with a user bob who will own it
+  postgresql_schema:
+    name: acme
+    owner: bob
+
+- name: Drop schema "acme" with cascade
+  postgresql_schema:
+    name: acme
+    state: absent
+    cascade_drop: yes
+
+
+RETURN VALUES:
+
+schema:
+  description: Name of the schema.
+  returned: success, changed
+  type: str
+  sample: "acme"
+queries:
+  description: List of executed queries.
+  returned: always
+  type: list
+  sample: ["CREATE SCHEMA \"acme\""]
+

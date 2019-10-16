@@ -1,0 +1,109 @@
+> VDIRECT_COMMIT    (/usr/lib/python2.7/dist-packages/ansible/modules/network/radware/vdirect_commit.py)
+
+        Commits pending configuration changes on one or more Radware devices via vDirect server. For Alteon ADC device, apply, sync and
+        save actions will be performed by default. Skipping of an action is possible by explicit parameter specifying. For Alteon VX
+        Container device, no sync operation will be performed since sync action is only relevant for Alteon ADC devices. For DefensePro
+        and AppWall devices, a bulk commit action will be performed. Explicit apply, sync and save actions specifying is not relevant.
+
+  * This module is maintained by The Ansible Community
+OPTIONS (= is mandatory):
+
+- apply
+        If `no', apply action will not be performed. Relevant for ADC devices only.
+        [Default: yes]
+        type: bool
+
+= devices
+        List of Radware Alteon device names for commit operations.
+
+
+- save
+        If `no', save action will not be performed. Relevant for ADC devices only.
+        [Default: yes]
+        type: bool
+
+- sync
+        If `no', sync action will not be performed. Relevant for ADC devices only.
+        [Default: yes]
+        type: bool
+
+- validate_certs
+        If `no', SSL certificates will not be validated,
+        may be set as `VDIRECT_VALIDATE_CERTS' or `VDIRECT_VERIFY' environment variable.
+        This should only set to `no' used on personally controlled sites using self-signed certificates.
+        (Aliases: vdirect_validate_certs)[Default: yes]
+        type: bool
+
+- vdirect_http_port
+        vDirect server HTTP port number, may be set as `VDIRECT_HTTP_PORT' environment variable.
+        [Default: 2188]
+
+- vdirect_https_port
+        vDirect server HTTPS port number, may be set as `VDIRECT_HTTPS_PORT' environment variable.
+        [Default: 2189]
+
+= vdirect_ip
+        Primary vDirect server IP address, may be set as `VDIRECT_IP' environment variable.
+
+
+= vdirect_password
+        vDirect server password, may be set as `VDIRECT_PASSWORD' environment variable.
+
+
+- vdirect_secondary_ip
+        Secondary vDirect server IP address, may be set as `VDIRECT_SECONDARY_IP' environment variable.
+        [Default: (null)]
+
+- vdirect_timeout
+        Amount of time to wait for async operation completion [seconds],
+        may be set as `VDIRECT_TIMEOUT' environment variable.
+        [Default: 60]
+
+- vdirect_use_ssl
+        If `no', an HTTP connection will be used instead of the default HTTPS connection,
+        may be set as `VDIRECT_HTTPS' or `VDIRECT_USE_SSL' environment variable.
+        [Default: yes]
+        type: bool
+
+= vdirect_user
+        vDirect server username, may be set as `VDIRECT_USER' environment variable.
+
+
+- vdirect_wait
+        Wait for async operation to complete, may be set as `VDIRECT_WAIT' environment variable.
+        [Default: yes]
+        type: bool
+
+
+NOTES:
+      * Requires the Radware vdirect-client Python package on the host. This is as easy as `pip install vdirect-client'
+
+
+REQUIREMENTS:  vdirect-client >= 4.1.1
+
+AUTHOR: Evgeny Fedoruk @ Radware LTD (@evgenyfedoruk)
+        METADATA:
+          status:
+          - preview
+          supported_by: community
+        
+
+EXAMPLES:
+
+- name: vdirect_commit
+  vdirect_commit:
+      vdirect_ip: 10.10.10.10
+      vdirect_user: vDirect
+      vdirect_password: radware
+      devices: ['dev1', 'dev2']
+      sync: no
+
+
+RETURN VALUES:
+
+result:
+    description: Message detailing actions result
+    returned: success
+    type: str
+    sample: "Requested actions were successfully performed on all devices."
+

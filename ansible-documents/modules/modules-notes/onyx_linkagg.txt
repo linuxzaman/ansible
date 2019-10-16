@@ -1,0 +1,82 @@
+> ONYX_LINKAGG    (/usr/lib/python2.7/dist-packages/ansible/modules/network/onyx/onyx_linkagg.py)
+
+        This module provides declarative management of link aggregation groups on Mellanox ONYX network devices.
+
+  * This module is maintained by The Ansible Community
+OPTIONS (= is mandatory):
+
+- aggregate
+        List of link aggregation definitions.
+        [Default: (null)]
+
+= members
+        List of members interfaces of the link aggregation group. The value can be single interface or list of interfaces.
+
+
+- mode
+        Mode of the link aggregation group. A value of `on' will enable LACP. `active' configures the link to actively information about
+        the state of the link, or it can be configured in `passive' mode ie. send link state information only when received them from
+        another link.
+        (Choices: on, active, passive)[Default: True]
+
+= name
+        Name of the link aggregation group.
+
+
+- purge
+        Purge link aggregation groups not defined in the `aggregate' parameter.
+        [Default: False]
+        type: bool
+
+- state
+        State of the link aggregation group.
+        (Choices: present, absent, up, down)[Default: present]
+
+
+AUTHOR: Samer Deeb (@samerd)
+        METADATA:
+          status:
+          - preview
+          supported_by: community
+        
+
+EXAMPLES:
+
+- name: configure link aggregation group
+  onyx_linkagg:
+    name: Po1
+    members:
+      - Eth1/1
+      - Eth1/2
+
+- name: remove configuration
+  onyx_linkagg:
+    name: Po1
+    state: absent
+
+- name: Create aggregate of linkagg definitions
+  onyx_linkagg:
+    aggregate:
+        - { name: Po1, members: [Eth1/1] }
+        - { name: Po2, members: [Eth1/2] }
+
+- name: Remove aggregate of linkagg definitions
+  onyx_linkagg:
+    aggregate:
+      - name: Po1
+      - name: Po2
+    state: absent
+
+
+RETURN VALUES:
+
+commands:
+  description: The list of configuration mode commands to send to the device
+  returned: always.
+  type: list
+  sample:
+    - interface port-channel 1
+    - exit
+    - interface ethernet 1/1 channel-group 1 mode on
+    - interface ethernet 1/2 channel-group 1 mode on
+

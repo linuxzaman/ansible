@@ -1,0 +1,82 @@
+EXAMPLES:
+
+- name: List all networks associated to the YourOrg organization
+  meraki_network:
+    auth_key: abc12345
+    state: query
+    org_name: YourOrg
+  delegate_to: localhost
+- name: Query network named MyNet in the YourOrg organization
+  meraki_network:
+    auth_key: abc12345
+    state: query
+    org_name: YourOrg
+    net_name: MyNet
+  delegate_to: localhost
+- name: Create network named MyNet in the YourOrg organization
+  meraki_network:
+    auth_key: abc12345
+    state: present
+    org_name: YourOrg
+    net_name: MyNet
+    type: switch
+    timezone: America/Chicago
+    tags: production, chicago
+  delegate_to: localhost
+- name: Create combined network named MyNet in the YourOrg organization
+  meraki_network:
+    auth_key: abc12345
+    state: present
+    org_name: YourOrg
+    net_name: MyNet
+    type:
+      - switch
+      - appliance
+    timezone: America/Chicago
+    tags: production, chicago
+  delegate_to: localhost
+
+
+RETURN VALUES:
+
+data:
+    description: Information about the created or manipulated object.
+    returned: info
+    type: complex
+    contains:
+      id:
+        description: Identification string of network.
+        returned: success
+        type: str
+        sample: N_12345
+      name:
+        description: Written name of network.
+        returned: success
+        type: str
+        sample: YourNet
+      organizationId:
+        description: Organization ID which owns the network.
+        returned: success
+        type: str
+        sample: 0987654321
+      tags:
+        description: Space delimited tags assigned to network.
+        returned: success
+        type: str
+        sample: " production wireless "
+      timeZone:
+        description: Timezone where network resides.
+        returned: success
+        type: str
+        sample: America/Chicago
+      type:
+        description: Functional type of network.
+        returned: success
+        type: str
+        sample: switch
+      disableMyMerakiCom:
+        description: States whether U(my.meraki.com) and other device portals should be disabled.
+        returned: success
+        type: bool
+        sample: true
+

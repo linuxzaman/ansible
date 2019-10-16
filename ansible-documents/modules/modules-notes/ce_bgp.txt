@@ -1,0 +1,190 @@
+> CE_BGP    (/usr/lib/python2.7/dist-packages/ansible/modules/network/cloudengine/ce_bgp.py)
+
+        Manages BGP configurations on HUAWEI CloudEngine switches.
+
+  * This module is maintained by The Ansible Community
+OPTIONS (= is mandatory):
+
+- as_number
+        Local AS number. The value is a string of 1 to 11 characters.
+        [Default: (null)]
+
+- as_path_limit
+        Maximum number of AS numbers in the AS_Path attribute. The default value is 255.
+        [Default: (null)]
+
+- bgp_rid_auto_sel
+        The function to automatically select router IDs for all VPN BGP instances is enabled.
+        (Choices: no_use, true, false)[Default: no_use]
+
+- check_first_as
+        Check the first AS in the AS_Path of the update messages from EBGP peers.
+        (Choices: no_use, true, false)[Default: no_use]
+
+- clear_interval
+        Clear interval.
+        [Default: (null)]
+
+- confed_id_number
+        Confederation ID. The value is a string of 1 to 11 characters.
+        [Default: (null)]
+
+- confed_nonstanded
+        Configure the device to be compatible with devices in a nonstandard confederation.
+        (Choices: no_use, true, false)[Default: no_use]
+
+- confed_peer_as_num
+        Confederation AS number, in two-byte or four-byte format. The value is a string of 1 to 11 characters.
+        [Default: (null)]
+
+- conn_retry_time
+        ConnectRetry interval. The value is an integer, in seconds. The default value is 32s.
+        [Default: (null)]
+
+- default_af_type
+        Type of a created address family, which can be IPv4 unicast or IPv6 unicast. The default type is IPv4 unicast.
+        (Choices: ipv4uni, ipv6uni)[Default: (null)]
+
+- ebgp_if_sensitive
+        If the value is true, After the fast EBGP interface awareness function is enabled, EBGP sessions on an interface are deleted
+        immediately when the interface goes Down. If the value is  false, After the fast EBGP interface awareness function is enabled,
+        EBGP sessions on an interface are not deleted immediately when the interface goes Down.
+        (Choices: no_use, true, false)[Default: no_use]
+
+- gr_peer_reset
+        Peer disconnection through GR.
+        (Choices: no_use, true, false)[Default: no_use]
+
+- graceful_restart
+        Enable GR of the BGP speaker in the specified address family, peer address, or peer group.
+        (Choices: no_use, true, false)[Default: no_use]
+
+- hold_interval
+        Hold interval.
+        [Default: (null)]
+
+- hold_time
+        Hold time, in seconds. The value of the hold time can be 0 or range from 3 to 65535.
+        [Default: (null)]
+
+- is_shutdown
+        Interrupt BGP all neighbor.
+        (Choices: no_use, true, false)[Default: no_use]
+
+- keep_all_routes
+        If the value is true, the system stores all route update messages received from all peers (groups) after BGP connection setup. If
+        the value is false, the system stores only BGP update messages that are received from peers and pass the configured import
+        policy.
+        (Choices: no_use, true, false)[Default: no_use]
+
+- keepalive_time
+        If the value of a timer changes, the BGP peer relationship between the routers is disconnected. The value is an integer ranging
+        from 0 to 21845. The default value is 60.
+        [Default: (null)]
+
+- memory_limit
+        Support BGP RIB memory protection.
+        (Choices: no_use, true, false)[Default: no_use]
+
+- min_hold_time
+        Min hold time, in seconds. The value of the hold time can be 0 or range from 20 to 65535.
+        [Default: (null)]
+
+- router_id
+        ID of a router that is in IPv4 address format.
+        [Default: (null)]
+
+- state
+        Specify desired state of the resource.
+        (Choices: present, absent)[Default: present]
+
+- suppress_interval
+        Suppress interval.
+        [Default: (null)]
+
+- time_wait_for_rib
+        Period of waiting for the End-Of-RIB flag. The value is an integer ranging from 3 to 3000. The default value is 600.
+        [Default: (null)]
+
+- vrf_name
+        Name of a BGP instance. The name is a case-sensitive string of characters.
+        [Default: (null)]
+
+- vrf_rid_auto_sel
+        If the value is true, VPN BGP instances are enabled to automatically select router IDs. If the value is false, VPN BGP instances
+        are disabled from automatically selecting router IDs.
+        (Choices: no_use, true, false)[Default: no_use]
+
+
+AUTHOR: wangdezhuang (@QijunPan)
+        METADATA:
+          status:
+          - preview
+          supported_by: community
+        
+
+EXAMPLES:
+
+- name: CloudEngine BGP test
+  hosts: cloudengine
+  connection: local
+  gather_facts: no
+  vars:
+    cli:
+      host: "{{ inventory_hostname }}"
+      port: "{{ ansible_ssh_port }}"
+      username: "{{ username }}"
+      password: "{{ password }}"
+      transport: cli
+
+  tasks:
+
+  - name: "Enable BGP"
+    ce_bgp:
+      state: present
+      as_number: 100
+      confed_id_number: 250
+      provider: "{{ cli }}"
+
+  - name: "Disable BGP"
+    ce_bgp:
+      state: absent
+      as_number: 100
+      confed_id_number: 250
+      provider: "{{ cli }}"
+
+  - name: "Create confederation peer AS num"
+    ce_bgp:
+      state: present
+      confed_peer_as_num: 260
+      provider: "{{ cli }}"
+
+
+RETURN VALUES:
+
+changed:
+    description: check to see if a change was made on the device
+    returned: always
+    type: bool
+    sample: true
+proposed:
+    description: k/v pairs of parameters passed into module
+    returned: always
+    type: dict
+    sample: {"as_number": "100", state": "present"}
+existing:
+    description: k/v pairs of existing aaa server
+    returned: always
+    type: dict
+    sample: {"bgp_enable": [["100"], ["true"]]}
+end_state:
+    description: k/v pairs of aaa params after module execution
+    returned: always
+    type: dict
+    sample: {"bgp_enable": [["100"], ["true"]]}
+updates:
+    description: command sent to the device
+    returned: always
+    type: list
+    sample: ["bgp 100"]
+

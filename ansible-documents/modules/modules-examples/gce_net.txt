@@ -1,0 +1,117 @@
+EXAMPLES:
+
+# Create a 'legacy' Network
+- name: Create Legacy Network
+  gce_net:
+    name: legacynet
+    ipv4_range: '10.24.17.0/24'
+    mode: legacy
+    state: present
+
+# Create an 'auto' Network
+- name: Create Auto Network
+  gce_net:
+    name: autonet
+    mode: auto
+    state: present
+
+# Create a 'custom' Network
+- name: Create Custom Network
+  gce_net:
+    name: customnet
+    mode: custom
+    subnet_name: "customsubnet"
+    subnet_region: us-east1
+    ipv4_range: '10.240.16.0/24'
+    state: "present"
+
+# Create Firewall Rule with Source Tags
+- name: Create Firewall Rule w/Source Tags
+  gce_net:
+    name: default
+    fwname: "my-firewall-rule"
+    allowed: tcp:80
+    state: "present"
+    src_tags: "foo,bar"
+
+# Create Firewall Rule with Source Range
+- name: Create Firewall Rule w/Source Range
+  gce_net:
+    name: default
+    fwname: "my-firewall-rule"
+    allowed: tcp:80
+    state: "present"
+    src_range: ['10.1.1.1/32']
+
+# Create Custom Subnetwork
+- name: Create Custom Subnetwork
+  gce_net:
+    name: privatenet
+    mode: custom
+    subnet_name: subnet_example
+    subnet_region: us-central1
+    ipv4_range: '10.0.0.0/16'
+
+
+RETURN VALUES:
+
+allowed:
+    description: Rules (ports and protocols) specified by this firewall rule.
+    returned: When specified
+    type: str
+    sample: "tcp:80;icmp"
+
+fwname:
+    description: Name of the firewall rule.
+    returned: When specified
+    type: str
+    sample: "my-fwname"
+
+ipv4_range:
+    description: IPv4 range of the specified network or subnetwork.
+    returned: when specified or when a subnetwork is created
+    type: str
+    sample: "10.0.0.0/16"
+
+name:
+    description: Name of the network.
+    returned: always
+    type: str
+    sample: "my-network"
+
+src_range:
+    description: IP address blocks a firewall rule applies to.
+    returned: when specified
+    type: list
+    sample: [ '10.1.1.12/8' ]
+
+src_tags:
+    description: Instance Tags firewall rule applies to.
+    returned: when specified while creating a firewall rule
+    type: list
+    sample: [ 'foo', 'bar' ]
+
+state:
+    description: State of the item operated on.
+    returned: always
+    type: str
+    sample: "present"
+
+subnet_name:
+    description: Name of the subnetwork.
+    returned: when specified or when a subnetwork is created
+    type: str
+    sample: "my-subnetwork"
+
+subnet_region:
+    description: Region of the specified subnet.
+    returned: when specified or when a subnetwork is created
+    type: str
+    sample: "us-east1"
+
+target_tags:
+    description: Instance Tags with these tags receive traffic allowed by firewall rule.
+    returned: when specified while creating a firewall rule
+    type: list
+    sample: [ 'foo', 'bar' ]
+

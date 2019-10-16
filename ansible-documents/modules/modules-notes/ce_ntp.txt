@@ -1,0 +1,113 @@
+> CE_NTP    (/usr/lib/python2.7/dist-packages/ansible/modules/network/cloudengine/ce_ntp.py)
+
+        Manages core NTP configuration on HUAWEI CloudEngine switches.
+
+  * This module is maintained by The Ansible Community
+OPTIONS (= is mandatory):
+
+- is_preferred
+        Makes given NTP server or peer the preferred NTP server or peer for the device.
+        (Choices: enable, disable)[Default: (null)]
+
+- key_id
+        Authentication key identifier to use with given NTP server or peer.
+        [Default: (null)]
+
+- peer
+        Network address of NTP peer.
+        [Default: (null)]
+
+- server
+        Network address of NTP server.
+        [Default: (null)]
+
+- source_int
+        Local source interface from which NTP messages are sent. Must be fully qualified interface name, i.e. `40GE1/0/22', `vlanif10'.
+        Interface types, such as `10GE', `40GE', `100GE', `Eth-Trunk', `LoopBack', `MEth', `NULL', `Tunnel', `Vlanif'.
+        [Default: (null)]
+
+- state
+        Manage the state of the resource.
+        (Choices: present, absent)[Default: present]
+
+- vpn_name
+        Makes the device communicate with the given NTP server or peer over a specific vpn.
+        [Default: _public_]
+
+
+AUTHOR: Zhijin Zhou (@QijunPan)
+        METADATA:
+          status:
+          - preview
+          supported_by: community
+        
+
+EXAMPLES:
+
+- name: NTP test
+  hosts: cloudengine
+  connection: local
+  gather_facts: no
+  vars:
+    cli:
+      host: "{{ inventory_hostname }}"
+      port: "{{ ansible_ssh_port }}"
+      username: "{{ username }}"
+      password: "{{ password }}"
+      transport: cli
+
+  tasks:
+
+  - name: "Set NTP Server with parameters"
+    ce_ntp:
+      server: 192.8.2.6
+      vpn_name: js
+      source_int: vlanif4001
+      is_preferred: enable
+      key_id: 32
+      provider: "{{ cli }}"
+
+  - name: "Set NTP Peer with parameters"
+    ce_ntp:
+      peer: 192.8.2.6
+      vpn_name: js
+      source_int: vlanif4001
+      is_preferred: enable
+      key_id: 32
+      provider: "{{ cli }}"
+
+
+RETURN VALUES:
+
+proposed:
+    description: k/v pairs of parameters passed into module
+    returned: always
+    type: dict
+    sample: {"server": "2.2.2.2",        "key_id": "48",
+             "is_preferred": "enable",     "vpn_name":"js",
+             "source_int": "vlanif4002", "state":"present"}
+existing:
+    description: k/v pairs of existing ntp server/peer
+    returned: always
+    type: dict
+    sample: {"server": "2.2.2.2",        "key_id": "32",
+            "is_preferred": "disable",     "vpn_name":"js",
+            "source_int": "vlanif4002"}
+end_state:
+    description: k/v pairs of ntp info after module execution
+    returned: always
+    type: dict
+    sample: {"server": "2.2.2.2",        "key_id": "48",
+             "is_preferred": "enable",     "vpn_name":"js",
+             "source_int": "vlanif4002"}
+updates:
+    description: command sent to the device
+    returned: always
+    type: list
+    sample: ["ntp server 2.2.2.2 authentication-keyid 48 source-interface vlanif4002 vpn-instance js preferred"]
+changed:
+    description: check to see if a change was made on the device
+    returned: always
+    type: bool
+    sample: true
+

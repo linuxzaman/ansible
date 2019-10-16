@@ -1,0 +1,276 @@
+> EFS    (/usr/lib/python2.7/dist-packages/ansible/modules/cloud/amazon/efs.py)
+
+        Module allows create, search and destroy Amazon EFS file systems
+
+  * This module is maintained by The Ansible Community
+OPTIONS (= is mandatory):
+
+- aws_access_key
+        AWS access key. If not set then the value of the AWS_ACCESS_KEY_ID, AWS_ACCESS_KEY or EC2_ACCESS_KEY environment variable is
+        used.
+        (Aliases: ec2_access_key, access_key)[Default: (null)]
+        type: str
+
+- aws_secret_key
+        AWS secret key. If not set then the value of the AWS_SECRET_ACCESS_KEY, AWS_SECRET_KEY, or EC2_SECRET_KEY environment variable is
+        used.
+        (Aliases: ec2_secret_key, secret_key)[Default: (null)]
+        type: str
+
+- debug_botocore_endpoint_logs
+        Use a botocore.endpoint logger to parse the unique (rather than total) "resource:action" API calls made during a task, outputing
+        the set to the resource_actions key in the task results. Use the aws_resource_action callback to output to total list made during
+        a playbook. The ANSIBLE_DEBUG_BOTOCORE_LOGS environment variable may also be used.
+        [Default: no]
+        type: bool
+        version_added: 2.8
+
+- ec2_url
+        Url to use to connect to EC2 or your Eucalyptus cloud (by default the module will use EC2 endpoints). Ignored for modules where
+        region is required. Must be specified for all other modules if region is not used. If not set then the value of the EC2_URL
+        environment variable, if any, is used.
+        [Default: (null)]
+        type: str
+
+- encrypt
+        A boolean value that, if true, creates an encrypted file system. This can not be modfied after the file system is created.
+        [Default: no]
+        type: bool
+        version_added: 2.5
+        
+
+- id
+        ID of Amazon EFS. Either name or ID required for delete.
+        [Default: (null)]
+
+- kms_key_id
+        The id of the AWS KMS CMK that will be used to protect the encrypted file system. This parameter is only required if you want to
+        use a non-default CMK. If this parameter is not specified, the default CMK for Amazon EFS is used. The key id can be Key ID, Key
+        ID ARN, Key Alias or Key Alias ARN.
+        [Default: (null)]
+        version_added: 2.5
+        
+
+- name
+        Creation Token of Amazon EFS file system. Required for create and update. Either name or ID required for delete.
+        [Default: (null)]
+
+- performance_mode
+        File system's performance mode to use. Only takes effect during creation.
+        (Choices: general_purpose, max_io)[Default: general_purpose]
+
+- profile
+        Uses a boto profile. Only works with boto >= 2.24.0.
+        [Default: (null)]
+        type: str
+        version_added: 1.6
+
+- provisioned_throughput_in_mibps
+        If the throughput_mode is provisioned, select the amount of throughput to provisioned in Mibps.
+        Requires botocore >= 1.10.57
+        [Default: (null)]
+        type: float
+        version_added: 2.8
+        
+
+- purge_tags
+        If yes, existing tags will be purged from the resource to match exactly what is defined by `tags' parameter. If the `tags'
+        parameter is not set then tags will not be modified.
+        [Default: yes]
+        type: bool
+        version_added: 2.5
+        
+
+- region
+        The AWS region to use. If not specified then the value of the AWS_REGION or EC2_REGION environment variable, if any, is used. See
+        http://docs.aws.amazon.com/general/latest/gr/rande.html#ec2_region
+        (Aliases: aws_region, ec2_region)[Default: (null)]
+        type: str
+
+- security_token
+        AWS STS security token. If not set then the value of the AWS_SECURITY_TOKEN or EC2_SECURITY_TOKEN environment variable is used.
+        (Aliases: access_token)[Default: (null)]
+        type: str
+        version_added: 1.6
+
+- state
+        Allows to create, search and destroy Amazon EFS file system
+        (Choices: present, absent)[Default: present]
+
+- tags
+        List of tags of Amazon EFS. Should be defined as dictionary In case of 'present' state with list of tags and existing EFS
+        (matched by 'name'), tags of EFS will be replaced with provided data.
+        [Default: (null)]
+
+- targets
+        List of mounted targets. It should be a list of dictionaries, every dictionary should include next attributes: - subnet_id -
+        Mandatory. The ID of the subnet to add the mount target in. - ip_address - Optional. A valid IPv4 address within the address
+        range of the specified subnet. - security_groups - Optional. List of security group IDs, of the form 'sg-xxxxxxxx'. These must be
+        for the same VPC as subnet specified This data may be modified for existing EFS using state 'present' and new list of mount
+        targets.
+        [Default: (null)]
+
+- throughput_mode
+        The throughput_mode for the file system to be created.
+        Requires botocore >= 1.10.57
+        (Choices: bursting, provisioned)[Default: (null)]
+        version_added: 2.8
+        
+
+- validate_certs
+        When set to "no", SSL certificates will not be validated for boto versions >= 2.6.0.
+        [Default: True]
+        type: bool
+        version_added: 1.5
+
+- wait
+        In case of 'present' state should wait for EFS 'available' life cycle state (of course, if current state not 'deleting' or
+        'deleted') In case of 'absent' state should wait for EFS 'deleted' life cycle state
+        [Default: no]
+        type: bool
+
+- wait_timeout
+        How long the module should wait (in seconds) for desired state before returning. Zero means wait as long as necessary.
+        [Default: 0]
+
+
+NOTES:
+      * If parameters are not set within the module, the following environment variables can be used in decreasing order of
+        precedence `AWS_URL' or `EC2_URL', `AWS_ACCESS_KEY_ID' or `AWS_ACCESS_KEY' or `EC2_ACCESS_KEY', `AWS_SECRET_ACCESS_KEY' or
+        `AWS_SECRET_KEY' or `EC2_SECRET_KEY', `AWS_SECURITY_TOKEN' or `EC2_SECURITY_TOKEN', `AWS_REGION' or `EC2_REGION'
+      * Ansible uses the boto configuration file (typically ~/.boto) if no credentials are provided. See
+        https://boto.readthedocs.io/en/latest/boto_config_tut.html
+      * `AWS_REGION' or `EC2_REGION' can be typically be used to specify the AWS region, when required, but this can also be
+        configured in the boto config file
+
+
+REQUIREMENTS:  boto, boto3, python >= 2.6
+
+AUTHOR: Ryan Sydnor (@ryansydnor), Artem Kazakov (@akazakov)
+        METADATA:
+          status:
+          - preview
+          supported_by: community
+        
+
+EXAMPLES:
+
+# EFS provisioning
+- efs:
+    state: present
+    name: myTestEFS
+    tags:
+        name: myTestNameTag
+        purpose: file-storage
+    targets:
+        - subnet_id: subnet-748c5d03
+          security_groups: [ "sg-1a2b3c4d" ]
+
+# Modifying EFS data
+- efs:
+    state: present
+    name: myTestEFS
+    tags:
+        name: myAnotherTestTag
+    targets:
+        - subnet_id: subnet-7654fdca
+          security_groups: [ "sg-4c5d6f7a" ]
+
+# Deleting EFS
+- efs:
+    state: absent
+    name: myTestEFS
+
+
+RETURN VALUES:
+
+creation_time:
+    description: timestamp of creation date
+    returned: always
+    type: str
+    sample: "2015-11-16 07:30:57-05:00"
+creation_token:
+    description: EFS creation token
+    returned: always
+    type: str
+    sample: "console-88609e04-9a0e-4a2e-912c-feaa99509961"
+file_system_id:
+    description: ID of the file system
+    returned: always
+    type: str
+    sample: "fs-xxxxxxxx"
+life_cycle_state:
+    description: state of the EFS file system
+    returned: always
+    type: str
+    sample: "creating, available, deleting, deleted"
+mount_point:
+    description: url of file system with leading dot from the time when AWS EFS required to add a region suffix to the address
+    returned: always
+    type: str
+    sample: ".fs-xxxxxxxx.efs.us-west-2.amazonaws.com:/"
+filesystem_address:
+    description: url of file system valid for use with mount
+    returned: always
+    type: str
+    sample: "fs-xxxxxxxx.efs.us-west-2.amazonaws.com:/"
+mount_targets:
+    description: list of mount targets
+    returned: always
+    type: list
+    sample:
+        [
+            {
+                "file_system_id": "fs-a7ad440e",
+                "ip_address": "172.31.17.173",
+                "life_cycle_state": "available",
+                "mount_target_id": "fsmt-d8907871",
+                "network_interface_id": "eni-6e387e26",
+                "owner_id": "740748460359",
+                "security_groups": [
+                    "sg-a30b22c6"
+                ],
+                "subnet_id": "subnet-e265c895"
+            },
+            ...
+        ]
+name:
+    description: name of the file system
+    returned: always
+    type: str
+    sample: "my-efs"
+number_of_mount_targets:
+    description: the number of targets mounted
+    returned: always
+    type: int
+    sample: 3
+owner_id:
+    description: AWS account ID of EFS owner
+    returned: always
+    type: str
+    sample: "XXXXXXXXXXXX"
+size_in_bytes:
+    description: size of the file system in bytes as of a timestamp
+    returned: always
+    type: dict
+    sample:
+        {
+            "timestamp": "2015-12-21 13:59:59-05:00",
+            "value": 12288
+        }
+performance_mode:
+    description: performance mode of the file system
+    returned: always
+    type: str
+    sample: "generalPurpose"
+tags:
+    description: tags on the efs instance
+    returned: always
+    type: dict
+    sample:
+        {
+            "name": "my-efs",
+            "key": "Value"
+        }
+
+

@@ -1,0 +1,258 @@
+> PROXYSQL_QUERY_RULES    (/usr/lib/python2.7/dist-packages/ansible/modules/database/proxysql/proxysql_query_rules.py)
+
+        The [proxysql_query_rules] module modifies query rules using the proxysql admin interface.
+
+  * This module is maintained by The Ansible Community
+OPTIONS (= is mandatory):
+
+- active
+        A rule with `active' set to `False' will be tracked in the database, but will be never loaded in the in-memory data structures.
+        [Default: (null)]
+        type: bool
+
+- apply
+        Used in combination with `flagIN' and `flagOUT' to create chains of rules. Setting apply to True signifies the last rule to be
+        applied.
+        [Default: (null)]
+        type: bool
+
+- cache_ttl
+        The number of milliseconds for which to cache the result of the query. Note in ProxySQL 1.1 `cache_ttl' was in seconds.
+        [Default: (null)]
+
+- client_addr
+        Match traffic from a specific source.
+        [Default: (null)]
+
+- comment
+        Free form text field, usable for a descriptive comment of the query rule.
+        [Default: (null)]
+
+- config_file
+        Specify a config file from which `login_user' and `login_password' are to be read.
+        [Default: ]
+        type: path
+
+- delay
+        Number of milliseconds to delay the execution of the query. This is essentially a throttling mechanism and QoS, and allows a way
+        to give priority to queries over others. This value is added to the mysql-default_query_delay global variable that applies to all
+        queries.
+        [Default: (null)]
+
+- destination_hostgroup
+        Route matched queries to this hostgroup. This happens unless there is a started transaction and the logged in user has
+        `transaction_persistent' set to `True' (see [proxysql_mysql_users]).
+        [Default: (null)]
+
+- digest
+        Match queries with a specific digest, as returned by stats_mysql_query_digest.digest.
+        [Default: (null)]
+
+- error_msg
+        Query will be blocked, and the specified error_msg will be returned to the client.
+        [Default: (null)]
+
+- flagIN
+        Used in combination with `flagOUT' and `apply' to create chains of rules.
+        [Default: (null)]
+
+- flagOUT
+        Used in combination with `flagIN' and apply to create chains of rules. When set, `flagOUT' signifies the `flagIN' to be used in
+        the next chain of rules.
+        [Default: (null)]
+
+- force_delete
+        By default we avoid deleting more than one schedule in a single batch, however if you need this behaviour and you're not
+        concerned about the schedules deleted, you can set `force_delete' to `True'.
+        [Default: False]
+        type: bool
+
+- load_to_runtime
+        Dynamically load config to runtime memory.
+        [Default: yes]
+        type: bool
+
+- log
+        Query will be logged.
+        [Default: (null)]
+        type: bool
+
+- login_host
+        The host used to connect to ProxySQL admin interface.
+        [Default: 127.0.0.1]
+        type: str
+
+- login_password
+        The password used to authenticate to ProxySQL admin interface.
+        [Default: (null)]
+        type: str
+
+- login_port
+        The port used to connect to ProxySQL admin interface.
+        [Default: 6032]
+        type: int
+
+- login_user
+        The username used to authenticate to ProxySQL admin interface.
+        [Default: (null)]
+        type: str
+
+- match_digest
+        Regular expression that matches the query digest. The dialect of regular expressions used is that of re2 -
+        https://github.com/google/re2
+        [Default: (null)]
+
+- match_pattern
+        Regular expression that matches the query text. The dialect of regular expressions used is that of re2 -
+        https://github.com/google/re2
+        [Default: (null)]
+
+- mirror_flagOUT
+        Enables query mirroring. If set `mirror_flagOUT' can be used to evaluates the mirrored query against the specified chain of
+        rules.
+        [Default: (null)]
+
+- mirror_hostgroup
+        Enables query mirroring. If set `mirror_hostgroup' can be used to mirror queries to the same or different hostgroup.
+        [Default: (null)]
+
+- negate_match_pattern
+        If `negate_match_pattern' is set to `True', only queries not matching the query text will be considered as a match. This acts as
+        a NOT operator in front of the regular expression matching against match_pattern.
+        [Default: (null)]
+        type: bool
+
+- proxy_addr
+        Match incoming traffic on a specific local IP.
+        [Default: (null)]
+
+- proxy_port
+        Match incoming traffic on a specific local port.
+        [Default: (null)]
+
+- replace_pattern
+        This is the pattern with which to replace the matched pattern. Note that this is optional, and when omitted, the query processor
+        will only cache, route, or set other parameters without rewriting.
+        [Default: (null)]
+
+- retries
+        The maximum number of times a query needs to be re-executed in case of detected failure during the execution of the query. If
+        retries is not specified, the global variable mysql-query_retries_on_failure applies.
+        [Default: (null)]
+
+- rule_id
+        The unique id of the rule. Rules are processed in rule_id order.
+        [Default: (null)]
+
+- save_to_disk
+        Save config to sqlite db on disk to persist the configuration.
+        [Default: yes]
+        type: bool
+
+- schemaname
+        Filtering criteria matching schemaname. If `schemaname' is non-NULL, a query will match only if the connection uses schemaname as
+        its default schema.
+        [Default: (null)]
+
+- state
+        When `present' - adds the rule, when `absent' - removes the rule.
+        (Choices: present, absent)[Default: present]
+
+- timeout
+        The maximum timeout in milliseconds with which the matched or rewritten query should be executed. If a query run for longer than
+        the specific threshold, the query is automatically killed. If timeout is not specified, the global variable mysql-
+        default_query_timeout applies.
+        [Default: (null)]
+
+- username
+        Filtering criteria matching username.  If `username' is non-NULL, a query will match only if the connection is made with the
+        correct username.
+        [Default: (null)]
+
+
+REQUIREMENTS:  PyMySQL (Python 2.7 and Python 3.X), or, MySQLdb (Python 2.x)
+
+AUTHOR: Ben Mildren (@bmildren)
+        METADATA:
+          status:
+          - stableinterface
+          supported_by: community
+        
+
+EXAMPLES:
+
+---
+# This example adds a rule to redirect queries from a specific user to another
+# hostgroup, it saves the mysql query rule config to disk, but avoids loading
+# the mysql query config config to runtime (this might be because several
+# rules are being added and the user wants to push the config to runtime in a
+# single batch using the M(proxysql_manage_config) module). It uses supplied
+# credentials to connect to the proxysql admin interface.
+
+- proxysql_query_rules:
+    login_user: admin
+    login_password: admin
+    username: 'guest_ro'
+    match_pattern: "^SELECT.*"
+    destination_hostgroup: 1
+    active: 1
+    retries: 3
+    state: present
+    load_to_runtime: False
+
+# This example removes all rules that use the username 'guest_ro', saves the
+# mysql query rule config to disk, and dynamically loads the mysql query rule
+# config to runtime.  It uses credentials in a supplied config file to connect
+# to the proxysql admin interface.
+
+- proxysql_query_rules:
+    config_file: '~/proxysql.cnf'
+    username: 'guest_ro'
+    state: absent
+    force_delete: true
+
+
+RETURN VALUES:
+
+stdout:
+    description: The mysql user modified or removed from proxysql
+    returned: On create/update will return the newly modified rule, in all
+              other cases will return a list of rules that match the supplied
+              criteria.
+    type: dict
+    "sample": {
+        "changed": true,
+        "msg": "Added rule to mysql_query_rules",
+        "rules": [
+            {
+                "active": "0",
+                "apply": "0",
+                "cache_ttl": null,
+                "client_addr": null,
+                "comment": null,
+                "delay": null,
+                "destination_hostgroup": 1,
+                "digest": null,
+                "error_msg": null,
+                "flagIN": "0",
+                "flagOUT": null,
+                "log": null,
+                "match_digest": null,
+                "match_pattern": null,
+                "mirror_flagOUT": null,
+                "mirror_hostgroup": null,
+                "negate_match_pattern": "0",
+                "proxy_addr": null,
+                "proxy_port": null,
+                "reconnect": null,
+                "replace_pattern": null,
+                "retries": null,
+                "rule_id": "1",
+                "schemaname": null,
+                "timeout": null,
+                "username": "guest_ro"
+            }
+        ],
+        "state": "present"
+    }
+

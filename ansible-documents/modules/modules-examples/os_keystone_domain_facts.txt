@@ -1,0 +1,49 @@
+EXAMPLES:
+
+# Gather facts about previously created domain
+- os_keystone_domain_facts:
+    cloud: awesomecloud
+- debug:
+    var: openstack_domains
+
+# Gather facts about a previously created domain by name
+- os_keystone_domain_facts:
+    cloud: awesomecloud
+    name: demodomain
+- debug:
+    var: openstack_domains
+
+# Gather facts about a previously created domain with filter
+- os_keystone_domain_facts:
+    cloud: awesomecloud
+    name: demodomain
+    filters:
+      enabled: False
+- debug:
+    var: openstack_domains
+
+
+RETURN VALUES:
+
+openstack_domains:
+    description: has all the OpenStack facts about domains
+    returned: always, but can be null
+    type: complex
+    contains:
+        id:
+            description: Unique UUID.
+            returned: success
+            type: str
+        name:
+            description: Name given to the domain.
+            returned: success
+            type: str
+        description:
+            description: Description of the domain.
+            returned: success
+            type: str
+        enabled:
+            description: Flag to indicate if the domain is enabled.
+            returned: success
+            type: bool
+

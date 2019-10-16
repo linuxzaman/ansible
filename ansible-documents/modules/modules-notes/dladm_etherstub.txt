@@ -1,0 +1,59 @@
+> DLADM_ETHERSTUB    (/usr/lib/python2.7/dist-packages/ansible/modules/network/illumos/dladm_etherstub.py)
+
+        Create or delete etherstubs on Solaris/illumos systems.
+
+  * This module is maintained by The Ansible Community
+OPTIONS (= is mandatory):
+
+= name
+        Etherstub name.
+
+
+- state
+        Create or delete Solaris/illumos etherstub.
+        (Choices: present, absent)[Default: present]
+
+- temporary
+        Specifies that the etherstub is temporary. Temporary etherstubs do not persist across reboots.
+        [Default: False]
+        type: bool
+
+
+AUTHOR: Adam Števko (@xen0l)
+        METADATA:
+          status:
+          - preview
+          supported_by: community
+        
+
+EXAMPLES:
+
+# Create 'stub0' etherstub
+- dladm_etherstub:
+    name: stub0
+    state: present
+
+# Remove 'stub0 etherstub
+- dladm_etherstub:
+    name: stub0
+    state: absent
+
+
+RETURN VALUES:
+
+name:
+    description: etherstub name
+    returned: always
+    type: str
+    sample: "switch0"
+state:
+    description: state of the target
+    returned: always
+    type: str
+    sample: "present"
+temporary:
+    description: etherstub's persistence
+    returned: always
+    type: bool
+    sample: "True"
+

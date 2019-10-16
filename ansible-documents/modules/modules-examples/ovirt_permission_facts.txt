@@ -1,0 +1,21 @@
+EXAMPLES:
+
+# Examples don't contain auth parameter for simplicity,
+# look at ovirt_auth module to see how to reuse authentication:
+
+# Gather facts about all permissions of user with username C(john):
+- ovirt_permission_facts:
+    user_name: john
+    authz_name: example.com-authz
+- debug:
+    var: ovirt_permissions
+
+
+RETURN VALUES:
+
+ovirt_permissions:
+    description: "List of dictionaries describing the permissions. Permission attributes are mapped to dictionary keys,
+                  all permissions attributes can be found at following url: http://ovirt.github.io/ovirt-engine-api-model/master/#types/permission."
+    returned: On success.
+    type: list
+

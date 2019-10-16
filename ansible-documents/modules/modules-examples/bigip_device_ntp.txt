@@ -1,0 +1,35 @@
+EXAMPLES:
+
+- name: Set NTP server
+  bigip_device_ntp:
+    ntp_servers:
+      - 192.0.2.23
+    provider:
+      password: secret
+      server: lb.mydomain.com
+      user: admin
+  delegate_to: localhost
+
+- name: Set timezone
+  bigip_device_ntp:
+    timezone: America/Los_Angeles
+    provider:
+      password: secret
+      server: lb.mydomain.com
+      user: admin
+  delegate_to: localhost
+
+
+RETURN VALUES:
+
+ntp_servers:
+  description: The NTP servers that were set on the device
+  returned: changed
+  type: list
+  sample: ["192.0.2.23", "192.0.2.42"]
+timezone:
+  description: The timezone that was set on the device
+  returned: changed
+  type: str
+  sample: true
+

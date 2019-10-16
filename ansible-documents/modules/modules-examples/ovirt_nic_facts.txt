@@ -1,0 +1,21 @@
+EXAMPLES:
+
+# Examples don't contain auth parameter for simplicity,
+# look at ovirt_auth module to see how to reuse authentication:
+
+# Gather facts about all NICs which names start with C(eth) for VM named C(centos7):
+- ovirt_nic_facts:
+    vm: centos7
+    name: eth*
+- debug:
+    var: ovirt_nics
+
+
+RETURN VALUES:
+
+ovirt_nics:
+    description: "List of dictionaries describing the network interfaces. NIC attributes are mapped to dictionary keys,
+                  all NICs attributes can be found at following url: http://ovirt.github.io/ovirt-engine-api-model/master/#types/nic."
+    returned: On success.
+    type: list
+

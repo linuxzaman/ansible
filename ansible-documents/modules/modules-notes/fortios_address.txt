@@ -1,0 +1,155 @@
+> FORTIOS_ADDRESS    (/usr/lib/python2.7/dist-packages/ansible/modules/network/fortios/fortios_address.py)
+
+        This module provide management of firewall addresses on FortiOS devices.
+
+  * This module is maintained by The Ansible Community
+OPTIONS (= is mandatory):
+
+- backup
+        This argument will cause the module to create a backup of the current `running-config' from the remote device before any changes
+        are made.  The backup file is written to the i(backup) folder.
+        [Default: False]
+        type: bool
+
+- backup_filename
+        Specifies the backup filename. If omitted filename will be formatted like HOST_config.YYYY-MM-DD@HH:MM:SS
+        [Default: (null)]
+        type: str
+
+- backup_path
+        Specifies where to store backup files. Required if `backup=yes'.
+        [Default: (null)]
+        type: path
+
+- comment
+        free text to describe address.
+        [Default: (null)]
+
+- config_file
+        Path to configuration file. Required when `file_mode' is True.
+        [Default: (null)]
+        type: path
+        version_added: 2.4
+
+- country
+        2 letter country code (like FR).
+        [Default: (null)]
+
+- end_ip
+        Last ip in range (used only with type=iprange).
+        [Default: (null)]
+
+- file_mode
+        Don't connect to any device, only use `config_file' as input and Output.
+        [Default: False]
+        type: bool
+        version_added: 2.4
+
+- host
+        Specifies the DNS hostname or IP address for connecting to the remote fortios device. Required when `file_mode' is False.
+        [Default: (null)]
+        type: str
+
+- interface
+        interface name the address apply to.
+        [Default: any]
+
+= name
+        Name of the address to add or delete.
+
+
+- password
+        Specifies the password used to authenticate to the remote device. Required when `file_mode' is True.
+        [Default: (null)]
+        type: str
+
+- start_ip
+        First ip in range (used only with type=iprange).
+        [Default: (null)]
+
+= state
+        Specifies if address need to be added or deleted.
+        (Choices: present, absent)
+
+- timeout
+        Timeout in seconds for connecting to the remote device.
+        [Default: 60]
+        type: int
+
+- type
+        Type of the address.
+        (Choices: iprange, fqdn, ipmask, geography)[Default: (null)]
+
+- username
+        Configures the username used to authenticate to the remote device. Required when `file_mode' is True.
+        [Default: (null)]
+        type: str
+
+- value
+        Address value, based on type. If type=fqdn, somthing like www.google.com. If type=ipmask, you can use simple ip (192.168.0.1),
+        ip+mask (192.168.0.1 255.255.255.0) or CIDR (192.168.0.1/32).
+        [Default: (null)]
+
+- vdom
+        Specifies on which vdom to apply configuration
+        [Default: (null)]
+        type: str
+
+
+NOTES:
+      * This module requires netaddr python library.
+
+
+AUTHOR: Benjamin Jolivot (@bjolivot)
+        METADATA:
+          status:
+          - preview
+          supported_by: community
+        
+
+EXAMPLES:
+
+- name: Register french addresses
+  fortios_address:
+    host: 192.168.0.254
+    username: admin
+    password: p4ssw0rd
+    state: present
+    name: "fromfrance"
+    type: geography
+    country: FR
+    comment: "French geoip address"
+
+- name: Register some fqdn
+  fortios_address:
+    host: 192.168.0.254
+    username: admin
+    password: p4ssw0rd
+    state: present
+    name: "Ansible"
+    type: fqdn
+    value: www.ansible.com
+    comment: "Ansible website"
+
+- name: Register google DNS
+  fortios_address:
+    host: 192.168.0.254
+    username: admin
+    password: p4ssw0rd
+    state: present
+    name: "google_dns"
+    type: ipmask
+    value: 8.8.8.8
+
+
+RETURN VALUES:
+
+firewall_address_config:
+  description: full firewall addresses config string.
+  returned: always
+  type: str
+change_string:
+  description: The commands executed by the module.
+  returned: only if config changed
+  type: str
+

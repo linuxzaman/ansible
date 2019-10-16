@@ -1,0 +1,51 @@
+EXAMPLES:
+
+- name: Add a new BD
+  mso_schema_template_bd:
+    host: mso_host
+    username: admin
+    password: SomeSecretPassword
+    schema: Schema 1
+    template: Template 1
+    bd: BD 1
+    state: present
+  delegate_to: localhost
+
+- name: Remove an BD
+  mso_schema_template_bd:
+    host: mso_host
+    username: admin
+    password: SomeSecretPassword
+    schema: Schema 1
+    template: Template 1
+    bd: BD1
+    state: absent
+  delegate_to: localhost
+
+- name: Query a specific BDs
+  mso_schema_template_bd:
+    host: mso_host
+    username: admin
+    password: SomeSecretPassword
+    schema: Schema 1
+    template: Template 1
+    bd: BD1
+    state: query
+  delegate_to: localhost
+  register: query_result
+
+- name: Query all BDs
+  mso_schema_template_bd:
+    host: mso_host
+    username: admin
+    password: SomeSecretPassword
+    schema: Schema 1
+    template: Template 1
+    state: query
+  delegate_to: localhost
+  register: query_result
+
+
+RETURN VALUES:
+
+

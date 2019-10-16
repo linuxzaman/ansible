@@ -1,0 +1,88 @@
+> LDAP_PASSWD    (/usr/lib/python2.7/dist-packages/ansible/modules/net_tools/ldap/ldap_passwd.py)
+
+        Set a password for an LDAP entry.  This module only asserts that a given password is valid for a given entry.  To assert the
+        existence of an entry, see [ldap_entry].
+
+  * This module is maintained by The Ansible Community
+OPTIONS (= is mandatory):
+
+- bind_dn
+        A DN to bind with. If this is omitted, we'll try a SASL bind with the EXTERNAL mechanism.
+        If this is blank, we'll use an anonymous bind.
+        [Default: (null)]
+        type: str
+
+- bind_pw
+        The password to use with `bind_dn'.
+        [Default: (null)]
+        type: str
+
+= dn
+        The DN of the entry to add or remove.
+
+        type: str
+
+= passwd
+        The (plaintext) password to be set for `dn'.
+
+
+- server_uri
+        A URI to the LDAP server.
+        The default value lets the underlying LDAP client library look for a UNIX domain socket in its default location.
+        [Default: ldapi:///]
+        type: str
+
+- start_tls
+        If true, we'll use the START_TLS LDAP extension.
+        [Default: False]
+        type: bool
+
+- validate_certs
+        If set to `no', SSL certificates will not be validated.
+        This should only be used on sites using self-signed certificates.
+        [Default: True]
+        type: bool
+        version_added: 2.4
+
+
+NOTES:
+      * The default authentication settings will attempt to use a SASL EXTERNAL bind over a UNIX domain socket. This works well
+        with the default Ubuntu install for example, which includes a cn=peercred,cn=external,cn=auth ACL rule allowing root to
+        modify the server configuration. If you need to use a simple bind to access your server, pass the credentials in `bind_dn'
+        and `bind_pw'.
+
+
+REQUIREMENTS:  python-ldap
+
+AUTHOR: Keller Fuchs (@KellerFuchs)
+        METADATA:
+          status:
+          - preview
+          supported_by: community
+        
+
+EXAMPLES:
+
+- name: Set a password for the admin user
+  ldap_passwd:
+    dn: cn=admin,dc=example,dc=com
+    passwd: "{{ vault_secret }}"
+
+- name: Setting passwords in bulk
+  ldap_passwd:
+    dn: "{{ item.key }}"
+    passwd: "{{ item.value }}"
+  with_dict:
+    alice: alice123123
+    bob:   "|30b!"
+    admin: "{{ vault_secret }}"
+
+
+RETURN VALUES:
+
+modlist:
+  description: list of modified parameters
+  returned: success
+  type: list
+  sample: '[[2, "olcRootDN", ["cn=root,dc=example,dc=com"]]]'
+

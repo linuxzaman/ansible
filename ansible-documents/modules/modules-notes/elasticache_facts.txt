@@ -1,0 +1,278 @@
+> ELASTICACHE_FACTS    (/usr/lib/python2.7/dist-packages/ansible/modules/cloud/amazon/elasticache_facts.py)
+
+        Retrieve facts from AWS Elasticache clusters
+
+  * This module is maintained by The Ansible Community
+OPTIONS (= is mandatory):
+
+- aws_access_key
+        AWS access key. If not set then the value of the AWS_ACCESS_KEY_ID, AWS_ACCESS_KEY or EC2_ACCESS_KEY environment variable is
+        used.
+        (Aliases: ec2_access_key, access_key)[Default: (null)]
+        type: str
+
+- aws_secret_key
+        AWS secret key. If not set then the value of the AWS_SECRET_ACCESS_KEY, AWS_SECRET_KEY, or EC2_SECRET_KEY environment variable is
+        used.
+        (Aliases: ec2_secret_key, secret_key)[Default: (null)]
+        type: str
+
+- debug_botocore_endpoint_logs
+        Use a botocore.endpoint logger to parse the unique (rather than total) "resource:action" API calls made during a task, outputing
+        the set to the resource_actions key in the task results. Use the aws_resource_action callback to output to total list made during
+        a playbook. The ANSIBLE_DEBUG_BOTOCORE_LOGS environment variable may also be used.
+        [Default: no]
+        type: bool
+        version_added: 2.8
+
+- ec2_url
+        Url to use to connect to EC2 or your Eucalyptus cloud (by default the module will use EC2 endpoints). Ignored for modules where
+        region is required. Must be specified for all other modules if region is not used. If not set then the value of the EC2_URL
+        environment variable, if any, is used.
+        [Default: (null)]
+        type: str
+
+- name
+        The name of an Elasticache cluster
+        [Default: (null)]
+
+- profile
+        Uses a boto profile. Only works with boto >= 2.24.0.
+        [Default: (null)]
+        type: str
+        version_added: 1.6
+
+- region
+        The AWS region to use. If not specified then the value of the AWS_REGION or EC2_REGION environment variable, if any, is used. See
+        http://docs.aws.amazon.com/general/latest/gr/rande.html#ec2_region
+        (Aliases: aws_region, ec2_region)[Default: (null)]
+        type: str
+
+- security_token
+        AWS STS security token. If not set then the value of the AWS_SECURITY_TOKEN or EC2_SECURITY_TOKEN environment variable is used.
+        (Aliases: access_token)[Default: (null)]
+        type: str
+        version_added: 1.6
+
+- validate_certs
+        When set to "no", SSL certificates will not be validated for boto versions >= 2.6.0.
+        [Default: True]
+        type: bool
+        version_added: 1.5
+
+
+NOTES:
+      * If parameters are not set within the module, the following environment variables can be used in decreasing order of
+        precedence `AWS_URL' or `EC2_URL', `AWS_ACCESS_KEY_ID' or `AWS_ACCESS_KEY' or `EC2_ACCESS_KEY', `AWS_SECRET_ACCESS_KEY' or
+        `AWS_SECRET_KEY' or `EC2_SECRET_KEY', `AWS_SECURITY_TOKEN' or `EC2_SECURITY_TOKEN', `AWS_REGION' or `EC2_REGION'
+      * Ansible uses the boto configuration file (typically ~/.boto) if no credentials are provided. See
+        https://boto.readthedocs.io/en/latest/boto_config_tut.html
+      * `AWS_REGION' or `EC2_REGION' can be typically be used to specify the AWS region, when required, but this can also be
+        configured in the boto config file
+
+
+REQUIREMENTS:  python >= 2.6, boto
+
+AUTHOR: Will Thames (@willthames)
+        METADATA:
+          status:
+          - preview
+          supported_by: community
+        
+
+EXAMPLES:
+
+- name: obtain all Elasticache facts
+  elasticache_facts:
+
+- name: obtain all facts for a single Elasticache cluster
+  elasticache_facts:
+    name: test_elasticache
+
+
+RETURN VALUES:
+
+elasticache_clusters:
+  description: List of elasticache clusters
+  returned: always
+  type: complex
+  contains:
+    auto_minor_version_upgrade:
+      description: Whether to automatically upgrade to minor versions
+      returned: always
+      type: bool
+      sample: true
+    cache_cluster_create_time:
+      description: Date and time cluster was created
+      returned: always
+      type: str
+      sample: '2017-09-15T05:43:46.038000+00:00'
+    cache_cluster_id:
+      description: ID of the cache cluster
+      returned: always
+      type: str
+      sample: abcd-1234-001
+    cache_cluster_status:
+      description: Status of Elasticache cluster
+      returned: always
+      type: str
+      sample: available
+    cache_node_type:
+      description: Instance type of Elasticache nodes
+      returned: always
+      type: str
+      sample: cache.t2.micro
+    cache_nodes:
+      description: List of Elasticache nodes in the cluster
+      returned: always
+      type: complex
+      contains:
+        cache_node_create_time:
+          description: Date and time node was created
+          returned: always
+          type: str
+          sample: '2017-09-15T05:43:46.038000+00:00'
+        cache_node_id:
+          description: ID of the cache node
+          returned: always
+          type: str
+          sample: '0001'
+        cache_node_status:
+          description: Status of the cache node
+          returned: always
+          type: str
+          sample: available
+        customer_availability_zone:
+          description: Availability Zone in which the cache node was created
+          returned: always
+          type: str
+          sample: ap-southeast-2b
+        endpoint:
+          description: Connection details for the cache node
+          returned: always
+          type: complex
+          contains:
+            address:
+              description: URL of the cache node endpoint
+              returned: always
+              type: str
+              sample: abcd-1234-001.bgiz2p.0001.apse2.cache.amazonaws.com
+            port:
+              description: Port of the cache node endpoint
+              returned: always
+              type: int
+              sample: 6379
+        parameter_grou_status:
+          description: Status of the Cache Parameter Group
+          returned: always
+          type: str
+          sample: in-sync
+    cache_parameter_group:
+      description: Contents of the Cache Parameter GGroup
+      returned: always
+      type: complex
+      contains:
+        cache_node_ids_to_reboot:
+          description: Cache nodes which need to be rebooted for parameter changes to be applied
+          returned: always
+          type: list
+          sample: []
+        cache_parameter_group_name:
+          description: Name of the cache parameter group
+          returned: always
+          type: str
+          sample: default.redis3.2
+        parameter_apply_status:
+          description: Status of parameter updates
+          returned: always
+          type: str
+          sample: in-sync
+    cache_security_groups:
+      description: Security Groups used by the cache
+      returned: always
+      type: list
+      sample:
+        - 'sg-abcd1234'
+    cache_subnet_group_name:
+      description: Elasticache Subnet Group used by the cache
+      returned: always
+      type: str
+      sample: abcd-subnet-group
+    client_download_landing_page:
+      description: URL of client download web page
+      returned: always
+      type: str
+      sample: 'https://console.aws.amazon.com/elasticache/home#client-download:'
+    engine:
+      description: Engine used by elasticache
+      returned: always
+      type: str
+      sample: redis
+    engine_version:
+      description: Version of elasticache engine
+      returned: always
+      type: str
+      sample: 3.2.4
+    notification_configuration:
+      description: Configuration of notifications
+      returned: if notifications are enabled
+      type: complex
+      contains:
+        topic_arn:
+          description: ARN of notification destination topic
+          returned: if notifications are enabled
+          type: str
+          sample: arn:aws:sns:*:123456789012:my_topic
+        topic_name:
+          description: Name of notification destination topic
+          returned: if notifications are enabled
+          type: str
+          sample: MyTopic
+    num_cache_nodes:
+      description: Number of Cache Nodes
+      returned: always
+      type: int
+      sample: 1
+    pending_modified_values:
+      description: Values that are pending modification
+      returned: always
+      type: complex
+      contains: {}
+    preferred_availability_zone:
+      description: Preferred Availability Zone
+      returned: always
+      type: str
+      sample: ap-southeast-2b
+    preferred_maintenance_window:
+      description: Time slot for preferred maintenance window
+      returned: always
+      type: str
+      sample: sat:12:00-sat:13:00
+    replication_group_id:
+      description: Replication Group Id
+      returned: always
+      type: str
+      sample: replication-001
+    security_groups:
+      description: List of Security Groups associated with Elasticache
+      returned: always
+      type: complex
+      contains:
+        security_group_id:
+          description: Security Group ID
+          returned: always
+          type: str
+          sample: sg-abcd1234
+        status:
+          description: Status of Security Group
+          returned: always
+          type: str
+          sample: active
+    tags:
+      description: Tags applied to the elasticache cluster
+      returned: always
+      type: complex
+      sample:
+        Application: web
+        Environment: test
+

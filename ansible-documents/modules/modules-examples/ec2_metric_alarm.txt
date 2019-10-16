@@ -1,0 +1,37 @@
+EXAMPLES:
+
+- name: create alarm
+    ec2_metric_alarm:
+      state: present
+      region: ap-southeast-2
+      name: "cpu-low"
+      metric: "CPUUtilization"
+      namespace: "AWS/EC2"
+      statistic: Average
+      comparison: "<="
+      threshold: 5.0
+      period: 300
+      evaluation_periods: 3
+      unit: "Percent"
+      description: "This will alarm when a bamboo slave's cpu usage average is lower than 5% for 15 minutes "
+      dimensions: {'InstanceId':'i-XXX'}
+      alarm_actions: ["action1","action2"]
+
+  - name: Create an alarm to recover a failed instance
+    ec2_metric_alarm:
+      state: present
+      region: us-west-1
+      name: "recover-instance"
+      metric: "StatusCheckFailed_System"
+      namespace: "AWS/EC2"
+      statistic: "Minimum"
+      comparison: ">="
+      threshold: 1.0
+      period: 60
+      evaluation_periods: 2
+      unit: "Seconds"
+      description: "This will recover an instance when it fails"
+      dimensions: {"InstanceId":'i-XXX'}
+      alarm_actions: ["arn:aws:automate:us-west-1:ec2:recover"]
+
+

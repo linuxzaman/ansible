@@ -1,0 +1,56 @@
+EXAMPLES:
+
+- name: Enable enhanced mode on a Distributed Switch
+  vmware_dvswitch_lacp:
+    hostname: '{{ inventory_hostname }}'
+    username: '{{ vcenter_username }}'
+    password: '{{ vcenter_password }}'
+    switch: dvSwitch
+    support_mode: enhanced
+    validate_certs: "{{ validate_vcenter_certs }}"
+  delegate_to: localhost
+  loop_control:
+    label: "{{ item.name }}"
+  with_items: "{{ vcenter_distributed_switches }}"
+
+- name: Enable enhanced mode and create two LAGs on a Distributed Switch
+  vmware_dvswitch_lacp:
+    hostname: '{{ inventory_hostname }}'
+    username: '{{ vcenter_username }}'
+    password: '{{ vcenter_password }}'
+    switch: dvSwitch
+    support_mode: enhanced
+    link_aggregation_groups:
+        - name: lag1
+          uplink_number: 2
+          mode: active
+          load_balancing_mode: srcDestIpTcpUdpPortVlan
+        - name: lag2
+          uplink_number: 2
+          mode: passive
+          load_balancing_mode: srcDestIp
+    validate_certs: "{{ validate_vcenter_certs }}"
+  delegate_to: localhost
+  loop_control:
+    label: "{{ item.name }}"
+  with_items: "{{ vcenter_distributed_switches }}"
+
+
+RETURN VALUES:
+
+result:
+    description: information about performed operation
+    returned: always
+    type: str
+    sample: {
+        "changed": true,
+        "dvswitch": "dvSwitch",
+        "link_aggregation_groups": [
+            {"load_balancing_mode": "srcDestIpTcpUdpPortVlan", "mode": "active", "name": "lag1", "uplink_number": 2},
+            {"load_balancing_mode": "srcDestIp", "mode": "active", "name": "lag2", "uplink_number": 2}
+        ],
+        "link_aggregation_groups_previous": [],
+        "support_mode": "enhanced",
+        "result": "lacp lags changed"
+    }
+

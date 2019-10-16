@@ -1,0 +1,233 @@
+> OS_NOVA_FLAVOR    (/usr/lib/python2.7/dist-packages/ansible/modules/cloud/openstack/os_nova_flavor.py)
+
+        Add or remove flavors from OpenStack.
+
+  * This module is maintained by The Ansible Community
+OPTIONS (= is mandatory):
+
+- api_timeout
+        How long should the socket layer wait before timing out for API calls. If this is omitted, nothing will be passed to the requests
+        library.
+        [Default: (null)]
+        type: int
+
+- auth
+        Dictionary containing auth information as needed by the cloud's auth plugin strategy. For the default `password' plugin, this
+        would contain `auth_url', `username', `password', `project_name' and any information about domains (for example,
+        `os_user_domain_name' or `os_project_domain_name') if the cloud supports them. For other plugins, this param will need to contain
+        whatever parameters that auth plugin requires. This parameter is not needed if a named cloud is provided or OpenStack OS_*
+        environment variables are present.
+        [Default: (null)]
+        type: dict
+
+- auth_type
+        Name of the auth plugin to use. If the cloud uses something other than password authentication, the name of the plugin should be
+        indicated here and the contents of the `auth' parameter should be updated accordingly.
+        [Default: (null)]
+        type: str
+
+- availability_zone
+        Ignored. Present for backwards compatibility
+        [Default: (null)]
+
+- ca_cert
+        A path to a CA Cert bundle that can be used as part of verifying SSL API requests.
+        (Aliases: cacert)[Default: (null)]
+        type: str
+
+- client_cert
+        A path to a client certificate to use as part of the SSL transaction.
+        (Aliases: cert)[Default: (null)]
+        type: str
+
+- client_key
+        A path to a client key to use as part of the SSL transaction.
+        (Aliases: key)[Default: (null)]
+        type: str
+
+- cloud
+        Named cloud or cloud config to operate against. If `cloud' is a string, it references a named cloud config as defined in an
+        OpenStack clouds.yaml file. Provides default values for `auth' and `auth_type'. This parameter is not needed if `auth' is
+        provided or if OpenStack OS_* environment variables are present. If `cloud' is a dict, it contains a complete cloud configuration
+        like would be in a section of clouds.yaml.
+        [Default: (null)]
+        type: raw
+
+- disk
+        Size of local disk, in GB.
+        [Default: (null)]
+
+- ephemeral
+        Ephemeral space size, in GB.
+        [Default: 0]
+
+- extra_specs
+        Metadata dictionary
+        [Default: (null)]
+        version_added: 2.3
+
+- flavorid
+        ID for the flavor. This is optional as a unique UUID will be assigned if a value is not specified.
+        [Default: auto]
+
+- interface
+        Endpoint URL type to fetch from the service catalog.
+        (Aliases: endpoint_type)(Choices: admin, internal, public)[Default: public]
+        type: str
+        version_added: 2.3
+
+- is_public
+        Make flavor accessible to the public.
+        [Default: yes]
+        type: bool
+
+= name
+        Flavor name.
+
+
+- ram
+        Amount of memory, in MB.
+        [Default: (null)]
+
+- region_name
+        Name of the region.
+        [Default: (null)]
+        type: str
+
+- rxtx_factor
+        RX/TX factor.
+        [Default: 1.0]
+
+- state
+        Indicate desired state of the resource. When `state' is 'present', then `ram', `vcpus', and `disk' are all required. There are no
+        default values for those parameters.
+        (Choices: present, absent)[Default: present]
+
+- swap
+        Swap space size, in MB.
+        [Default: 0]
+
+- timeout
+        How long should ansible wait for the requested resource.
+        [Default: 180]
+        type: int
+
+- validate_certs
+        Whether or not SSL API requests should be verified.
+        Before Ansible 2.3 this defaulted to `yes'.
+        (Aliases: verify)[Default: False]
+        type: bool
+
+- vcpus
+        Number of virtual CPUs.
+        [Default: (null)]
+
+- wait
+        Should ansible wait until the requested resource is complete.
+        [Default: True]
+        type: bool
+
+
+NOTES:
+      * The standard OpenStack environment variables, such as `OS_USERNAME' may be used instead of providing explicit values.
+      * Auth information is driven by openstacksdk, which means that values can come from a yaml config file in
+        /etc/ansible/openstack.yaml, /etc/openstack/clouds.yaml or ~/.config/openstack/clouds.yaml, then from standard environment
+        variables, then finally by explicit parameters in plays. More information can be found at
+        https://docs.openstack.org/openstacksdk/
+
+
+REQUIREMENTS:  openstacksdk, python >= 2.7
+
+AUTHOR: David Shrewsbury (@Shrews)
+        METADATA:
+          status:
+          - preview
+          supported_by: community
+        
+
+EXAMPLES:
+
+- name: "Create 'tiny' flavor with 1024MB of RAM, 1 virtual CPU, and 10GB of local disk, and 10GB of ephemeral."
+  os_nova_flavor:
+    cloud: mycloud
+    state: present
+    name: tiny
+    ram: 1024
+    vcpus: 1
+    disk: 10
+    ephemeral: 10
+
+- name: "Delete 'tiny' flavor"
+  os_nova_flavor:
+    cloud: mycloud
+    state: absent
+    name: tiny
+
+- name: Create flavor with metadata
+  os_nova_flavor:
+    cloud: mycloud
+    state: present
+    name: tiny
+    ram: 1024
+    vcpus: 1
+    disk: 10
+    extra_specs:
+      "quota:disk_read_iops_sec": 5000
+      "aggregate_instance_extra_specs:pinned": false
+
+
+RETURN VALUES:
+
+flavor:
+    description: Dictionary describing the flavor.
+    returned: On success when I(state) is 'present'
+    type: complex
+    contains:
+        id:
+            description: Flavor ID.
+            returned: success
+            type: str
+            sample: "515256b8-7027-4d73-aa54-4e30a4a4a339"
+        name:
+            description: Flavor name.
+            returned: success
+            type: str
+            sample: "tiny"
+        disk:
+            description: Size of local disk, in GB.
+            returned: success
+            type: int
+            sample: 10
+        ephemeral:
+            description: Ephemeral space size, in GB.
+            returned: success
+            type: int
+            sample: 10
+        ram:
+            description: Amount of memory, in MB.
+            returned: success
+            type: int
+            sample: 1024
+        swap:
+            description: Swap space size, in MB.
+            returned: success
+            type: int
+            sample: 100
+        vcpus:
+            description: Number of virtual CPUs.
+            returned: success
+            type: int
+            sample: 2
+        is_public:
+            description: Make flavor accessible to the public.
+            returned: success
+            type: bool
+            sample: true
+        extra_specs:
+            description: Flavor metadata
+            returned: success
+            type: dict
+            sample:
+                "quota:disk_read_iops_sec": 5000
+                "aggregate_instance_extra_specs:pinned": false
+

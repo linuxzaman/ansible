@@ -1,0 +1,179 @@
+> NETSCALER_GSLB_SITE    (/usr/lib/python2.7/dist-packages/ansible/modules/network/netscaler/netscaler_gslb_site.py)
+
+        Manage gslb site entities in Netscaler.
+
+  * This module is maintained by The Ansible Community
+OPTIONS (= is mandatory):
+
+- clip
+        Cluster IP address. Specify this parameter to connect to the remote cluster site for GSLB auto-sync. Note: The cluster IP address
+        is defined when creating the cluster.
+        [Default: (null)]
+
+- metricexchange
+        Exchange metrics with other sites. Metrics are exchanged by using Metric Exchange Protocol (MEP). The appliances in the GSLB
+        setup exchange health information once every second.
+        If you disable metrics exchange, you can use only static load balancing methods (such as round robin, static proximity, or the
+        hash-based methods), and if you disable metrics exchange when a dynamic load balancing method (such as least connection) is in
+        operation, the appliance falls back to round robin. Also, if you disable metrics exchange, you must use a monitor to determine
+        the state of GSLB services. Otherwise, the service is marked as DOWN.
+        (Choices: enabled, disabled)[Default: (null)]
+
+- naptrreplacementsuffix
+        The naptr replacement suffix configured here will be used to construct the naptr replacement field in NAPTR record.
+        Minimum length = 1
+        [Default: (null)]
+
+= nitro_pass
+        The password with which to authenticate to the netscaler node.
+
+        type: str
+
+- nitro_protocol
+        Which protocol to use when accessing the nitro API objects.
+        (Choices: http, https)[Default: http]
+        type: str
+
+- nitro_timeout
+        Time in seconds until a timeout error is thrown when establishing a new session with Netscaler
+        [Default: 310]
+        type: float
+
+= nitro_user
+        The username with which to authenticate to the netscaler node.
+
+        type: str
+
+= nsip
+        The ip address of the netscaler appliance where the nitro API calls will be made.
+        The port can be specified with the colon (:). E.g. 192.168.1.1:555.
+
+        type: str
+
+- nwmetricexchange
+        Exchange, with other GSLB sites, network metrics such as round-trip time (RTT), learned from communications with various local
+        DNS (LDNS) servers used by clients. RTT information is used in the dynamic RTT load balancing method, and is exchanged every 5
+        seconds.
+        (Choices: enabled, disabled)[Default: (null)]
+
+- parentsite
+        Parent site of the GSLB site, in a parent-child topology.
+        [Default: (null)]
+
+- publicclip
+        IP address to be used to globally access the remote cluster when it is deployed behind a NAT. It can be same as the normal
+        cluster IP address.
+        [Default: (null)]
+
+- publicip
+        Public IP address for the local site. Required only if the appliance is deployed in a private address space and the site has a
+        public IP address hosted on an external firewall or a NAT device.
+        Minimum length = 1
+        [Default: (null)]
+
+- save_config
+        If `yes' the module will save the configuration on the netscaler node if it makes any changes.
+        The module will not save the configuration on the netscaler node if it made no changes.
+        [Default: True]
+        type: bool
+
+- sessionexchange
+        Exchange persistent session entries with other GSLB sites every five seconds.
+        (Choices: enabled, disabled)[Default: (null)]
+
+- siteipaddress
+        IP address for the GSLB site. The GSLB site uses this IP address to communicate with other GSLB sites. For a local site, use any
+        IP address that is owned by the appliance (for example, a SNIP or MIP address, or the IP address of the ADNS service).
+        Minimum length = 1
+        [Default: (null)]
+
+- sitename
+        Name for the GSLB site. Must begin with an ASCII alphanumeric or underscore `_' character, and must contain only ASCII
+        alphanumeric, underscore `_', hash `#', period `.', space ` ', colon `:', at `@', equals `=', and hyphen `-' characters. Cannot
+        be changed after the virtual server is created.
+        Minimum length = 1
+        [Default: (null)]
+
+- sitetype
+        Type of site to create. If the type is not specified, the appliance automatically detects and sets the type on the basis of the
+        IP address being assigned to the site. If the specified site IP address is owned by the appliance (for example, a MIP address or
+        SNIP address), the site is a local site. Otherwise, it is a remote site.
+        (Choices: REMOTE, LOCAL)[Default: (null)]
+
+- state
+        The state of the resource being configured by the module on the netscaler node.
+        When present the resource will be created if needed and configured according to the module's parameters.
+        When absent the resource will be deleted from the netscaler node.
+        (Choices: absent, present)[Default: present]
+        type: str
+
+- triggermonitor
+        Specify the conditions under which the GSLB service must be monitored by a monitor, if one is bound. Available settings function
+        as follows:
+        * `ALWAYS' - Monitor the GSLB service at all times.
+        * `MEPDOWN' - Monitor the GSLB service only when the exchange of metrics through the Metrics Exchange Protocol (MEP) is disabled.
+        `MEPDOWN_SVCDOWN' - Monitor the service in either of the following situations:
+        * The exchange of metrics through MEP is disabled.
+        * The exchange of metrics through MEP is enabled but the status of the service, learned through metrics exchange, is DOWN.
+        (Choices: ALWAYS, MEPDOWN, MEPDOWN_SVCDOWN)[Default: (null)]
+
+- validate_certs
+        If `no', SSL certificates will not be validated. This should only be used on personally controlled sites using self-signed
+        certificates.
+        [Default: True]
+        type: bool
+
+
+NOTES:
+      * For more information on using Ansible to manage Citrix NetScaler Network devices see https://www.ansible.com/ansible-
+        netscaler.
+
+
+REQUIREMENTS:  nitro python sdk
+
+AUTHOR: George Nikolopoulos (@giorgos-nikolopoulos)
+        METADATA:
+          status:
+          - preview
+          supported_by: community
+        
+
+EXAMPLES:
+
+- name: Setup gslb site
+  delegate_to: localhost
+  netscaler_gslb_site:
+    nsip: 172.18.0.2
+    nitro_user: nsroot
+    nitro_pass: nsroot
+
+    sitename: gslb-site-1
+    siteipaddress: 192.168.1.1
+    sitetype: LOCAL
+    publicip: 192.168.1.1
+    metricexchange: enabled
+    nwmetricexchange: enabled
+    sessionexchange: enabled
+    triggermonitor: ALWAYS
+
+
+RETURN VALUES:
+
+loglines:
+    description: list of logged messages by the module
+    returned: always
+    type: list
+    sample: "['message 1', 'message 2']"
+
+msg:
+    description: Message detailing the failure reason
+    returned: failure
+    type: str
+    sample: "Action does not exist"
+
+diff:
+    description: List of differences between the actual configured object and the configuration specified in the module
+    returned: failure
+    type: dict
+    sample: "{ 'targetlbvserver': 'difference. ours: (str) server1 other: (str) server2' }"
+

@@ -1,0 +1,171 @@
+> RAX_SCALING_POLICY    (/usr/lib/python2.7/dist-packages/ansible/modules/cloud/rackspace/rax_scaling_policy.py)
+
+        Manipulate Rackspace Cloud Autoscale Scaling Policy
+
+  * This module is maintained by The Ansible Community
+OPTIONS (= is mandatory):
+
+- api_key
+        Rackspace API key, overrides `credentials'.
+        (Aliases: password)[Default: (null)]
+        type: str
+
+- at
+        The UTC time when this policy will be executed. The time must be formatted according to `yyyy-MM-dd'T'HH:mm:ss.SSS' such as
+        `2013-05-19T08:07:08Z'
+        [Default: (null)]
+
+- auth_endpoint
+        The URI of the authentication service.
+        [Default: https://identity.api.rackspacecloud.com/v2.0/]
+        version_added: 1.5
+
+- change
+        The change, either as a number of servers or as a percentage, to make in the scaling group. If this is a percentage, you must set
+        `is_percent' to `true' also.
+        [Default: (null)]
+
+- cooldown
+        The period of time, in seconds, that must pass before any scaling can occur after the previous scaling. Must be an integer
+        between 0 and 86400 (24 hrs).
+        [Default: (null)]
+
+- credentials
+        File to find the Rackspace credentials in. Ignored if `api_key' and `username' are provided.
+        (Aliases: creds_file)[Default: (null)]
+        type: path
+
+- cron
+        The time when the policy will be executed, as a cron entry. For example, if this is parameter is set to `1 0 * * *'
+        [Default: (null)]
+
+- desired_capacity
+        The desired server capacity of the scaling the group; that is, how many servers should be in the scaling group.
+        [Default: (null)]
+
+- env
+        Environment as configured in `~/.pyrax.cfg', see https://github.com/rackspace/pyrax/blob/master/docs/getting_started.md#pyrax-
+        configuration.
+        [Default: (null)]
+        type: str
+        version_added: 1.5
+
+- identity_type
+        Authentication mechanism to use, such as rackspace or keystone.
+        [Default: rackspace]
+        version_added: 1.5
+
+- is_percent
+        Whether the value in `change' is a percent value
+        [Default: False]
+        type: bool
+
+= name
+        Name to give the policy
+
+
+= policy_type
+        The type of policy that will be executed for the current release.
+        (Choices: webhook, schedule)
+
+- region
+        Region to create an instance in.
+        [Default: DFW]
+        type: str
+
+= scaling_group
+        Name of the scaling group that this policy will be added to
+
+
+- state
+        Indicate desired state of the resource
+        (Choices: present, absent)[Default: present]
+
+- tenant_id
+        The tenant ID used for authentication.
+        [Default: (null)]
+        version_added: 1.5
+
+- tenant_name
+        The tenant name used for authentication.
+        [Default: (null)]
+        version_added: 1.5
+
+- username
+        Rackspace username, overrides `credentials'.
+        [Default: (null)]
+        type: str
+
+- validate_certs
+        Whether or not to require SSL validation of API endpoints.
+        (Aliases: verify_ssl)[Default: (null)]
+        type: bool
+        version_added: 1.5
+
+
+NOTES:
+      * The following environment variables can be used, `RAX_USERNAME', `RAX_API_KEY', `RAX_CREDS_FILE', `RAX_CREDENTIALS',
+        `RAX_REGION'.
+      * `RAX_CREDENTIALS' and `RAX_CREDS_FILE' points to a credentials file appropriate for pyrax. See
+        https://github.com/rackspace/pyrax/blob/master/docs/getting_started.md#authenticating
+      * `RAX_USERNAME' and `RAX_API_KEY' obviate the use of a credentials file
+      * `RAX_REGION' defines a Rackspace Public Cloud region (DFW, ORD, LON, ...)
+      * The following environment variables can be used, `RAX_USERNAME', `RAX_API_KEY', `RAX_CREDS_FILE', `RAX_CREDENTIALS',
+        `RAX_REGION'.
+      * `RAX_CREDENTIALS' and `RAX_CREDS_FILE' points to a credentials file appropriate for pyrax. See
+        https://github.com/rackspace/pyrax/blob/master/docs/getting_started.md#authenticating
+      * `RAX_USERNAME' and `RAX_API_KEY' obviate the use of a credentials file
+      * `RAX_REGION' defines a Rackspace Public Cloud region (DFW, ORD, LON, ...)
+
+
+REQUIREMENTS:  pyrax, python >= 2.6
+
+AUTHOR: Matt Martz (@sivel)
+        METADATA:
+          status:
+          - preview
+          supported_by: community
+        
+
+EXAMPLES:
+
+---
+- hosts: localhost
+  gather_facts: false
+  connection: local
+  tasks:
+    - rax_scaling_policy:
+        credentials: ~/.raxpub
+        region: ORD
+        at: '2013-05-19T08:07:08Z'
+        change: 25
+        cooldown: 300
+        is_percent: true
+        name: ASG Test Policy - at
+        policy_type: schedule
+        scaling_group: ASG Test
+      register: asps_at
+
+    - rax_scaling_policy:
+        credentials: ~/.raxpub
+        region: ORD
+        cron: '1 0 * * *'
+        change: 25
+        cooldown: 300
+        is_percent: true
+        name: ASG Test Policy - cron
+        policy_type: schedule
+        scaling_group: ASG Test
+      register: asp_cron
+
+    - rax_scaling_policy:
+        credentials: ~/.raxpub
+        region: ORD
+        cooldown: 300
+        desired_capacity: 5
+        name: ASG Test Policy - webhook
+        policy_type: webhook
+        scaling_group: ASG Test
+      register: asp_webhook
+
+

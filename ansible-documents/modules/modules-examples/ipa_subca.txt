@@ -1,0 +1,33 @@
+EXAMPLES:
+
+# Ensure IPA Sub CA is present
+- ipa_subca:
+    ipa_host: spider.example.com
+    ipa_pass: Passw0rd!
+    state: present
+    subca_name: AnsibleSubCA1
+    subca_subject: 'CN=AnsibleSubCA1,O=example.com'
+    subca_desc: Ansible Sub CA
+
+# Ensure that IPA Sub CA is removed
+- ipa_subca:
+    ipa_host: spider.example.com
+    ipa_pass: Passw0rd!
+    state: absent
+    subca_name: AnsibleSubCA1
+
+# Ensure that IPA Sub CA is disabled
+- ipa_subca:
+    ipa_host: spider.example.com
+    ipa_pass: Passw0rd!
+    state: disable
+    subca_name: AnsibleSubCA1
+
+
+RETURN VALUES:
+
+subca:
+  description: IPA Sub CA record as returned by IPA API.
+  returned: always
+  type: dict
+

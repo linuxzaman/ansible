@@ -1,0 +1,189 @@
+> GCP_STORAGE_BUCKET_ACCESS_CONTROL    (/usr/lib/python2.7/dist-packages/ansible/modules/cloud/google/gcp_storage_bucket_access_control.py)
+
+        The BucketAccessControls resource represents the Access Control Lists (ACLs) for buckets within Google Cloud Storage. ACLs let
+        you specify who has access to your data and to what extent. There are three roles that can be assigned to an entity: READERs can
+        get the bucket, though no acl property will be returned, and list the bucket's objects. WRITERs are READERs, and they can insert
+        objects into the bucket and delete the bucket's objects. OWNERs are WRITERs, and they can get the acl property of a bucket,
+        update a bucket, and call all BucketAccessControls methods on the bucket. For more information, see Access Control, with the
+        caveat that this API uses READER, WRITER, and OWNER instead of READ, WRITE, and FULL_CONTROL.
+
+  * This module is maintained by The Ansible Community
+OPTIONS (= is mandatory):
+
+= auth_kind
+        The type of credential used.
+        (Choices: application, machineaccount, serviceaccount)
+        type: str
+
+= bucket
+        The name of the bucket.
+        This field represents a link to a Bucket resource in GCP. It can be specified in two ways. First, you can place a dictionary with
+        key 'name' and value of your resource's name Alternatively, you can add `register: name-of-resource` to a gcp_storage_bucket task
+        and then set this bucket field to "{{ name-of-resource }}"
+
+
+= entity
+        The entity holding the permission, in one of the following forms: user-userId user-email group-groupId group-email domain-domain
+        project-team-projectId allUsers allAuthenticatedUsers Examples: The user liz@example.com would be user-liz@example.com.
+        The group example@googlegroups.com would be group-example@googlegroups.com.
+        To refer to all members of the Google Apps for Business domain example.com, the entity would be domain-example.com.
+
+
+- entity_id
+        The ID for the entity.
+        [Default: (null)]
+
+- project
+        The Google Cloud Platform project to use.
+        [Default: (null)]
+        type: str
+
+- project_team
+        The project team associated with the entity.
+        [Default: (null)]
+        suboptions:
+          project_number:
+            description:
+            - The project team associated with the entity.
+            required: false
+          team:
+            choices:
+            - editors
+            - owners
+            - viewers
+            description:
+            - The team.
+            required: false
+        
+
+- role
+        The access permission for the entity.
+        (Choices: OWNER, READER, WRITER)[Default: (null)]
+
+- scopes
+        Array of scopes to be used.
+        [Default: (null)]
+        type: list
+
+- service_account_contents
+        A string representing the contents of a Service Account JSON file.
+        This should not be passed in as a dictionary, but a string that has the exact contents of a service account json file (valid
+        JSON)
+        [Default: (null)]
+        type: str
+
+- service_account_email
+        An optional service account email address if machineaccount is selected and the user does not wish to use the default email.
+        [Default: (null)]
+        type: str
+
+- service_account_file
+        The path of a Service Account JSON file if serviceaccount is selected as type.
+        [Default: (null)]
+        type: path
+
+- state
+        Whether the given object should exist in GCP
+        (Choices: present, absent)[Default: present]
+
+
+NOTES:
+      * For authentication, you can set service_account_file using the `GCP_SERVICE_ACCOUNT_FILE' env variable.
+      * For authentication, you can set service_account_email using the `GCP_SERVICE_ACCOUNT_EMAIL' env variable.
+      * For authentication, you can set service_account_contents using the `GCP_SERVICE_ACCOUNT_CONTENTS' env variable.
+      * For authentication, you can set auth_kind using the `GCP_AUTH_KIND' env variable.
+      * For authentication, you can set scopes using the `GCP_SCOPES' env variable.
+      * Environment variables values will only be used if the playbook values are not set.
+      * The `service_account_email' and `service_account_file' options are mutually exclusive.
+
+
+REQUIREMENTS:  python >= 2.6, requests >= 2.18.4, google-auth >= 1.3.0
+
+AUTHOR: Google Inc. (@googlecloudplatform)
+        METADATA:
+          status:
+          - preview
+          supported_by: community
+        
+
+EXAMPLES:
+
+- name: create a bucket
+  gcp_storage_bucket:
+    name: "{{ resource_name }}"
+    project: "{{ gcp_project }}"
+    auth_kind: "{{ gcp_cred_kind }}"
+    service_account_file: "{{ gcp_cred_file }}"
+    state: present
+  register: bucket
+
+- name: create a bucket access control
+  gcp_storage_bucket_access_control:
+    bucket: test_object
+    entity: user-alexstephen@google.com
+    role: WRITER
+    project: test_project
+    auth_kind: serviceaccount
+    service_account_file: "/tmp/auth.pem"
+    state: present
+
+
+RETURN VALUES:
+
+bucket:
+  description:
+  - The name of the bucket.
+  returned: success
+  type: dict
+domain:
+  description:
+  - The domain associated with the entity.
+  returned: success
+  type: str
+email:
+  description:
+  - The email address associated with the entity.
+  returned: success
+  type: str
+entity:
+  description:
+  - 'The entity holding the permission, in one of the following forms: user-userId
+    user-email group-groupId group-email domain-domain project-team-projectId allUsers
+    allAuthenticatedUsers Examples: The user liz@example.com would be user-liz@example.com.'
+  - The group example@googlegroups.com would be group-example@googlegroups.com.
+  - To refer to all members of the Google Apps for Business domain example.com, the
+    entity would be domain-example.com.
+  returned: success
+  type: str
+entityId:
+  description:
+  - The ID for the entity.
+  returned: success
+  type: str
+id:
+  description:
+  - The ID of the access-control entry.
+  returned: success
+  type: str
+projectTeam:
+  description:
+  - The project team associated with the entity.
+  returned: success
+  type: complex
+  contains:
+    projectNumber:
+      description:
+      - The project team associated with the entity.
+      returned: success
+      type: str
+    team:
+      description:
+      - The team.
+      returned: success
+      type: str
+role:
+  description:
+  - The access permission for the entity.
+  returned: success
+  type: str
+

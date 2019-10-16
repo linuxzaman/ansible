@@ -1,0 +1,55 @@
+EXAMPLES:
+
+# Create 'vnic0' VNIC over 'bnx0' link
+- dladm_vnic:
+    name: vnic0
+    link: bnx0
+    state: present
+
+# Create VNIC with specified MAC and VLAN tag over 'aggr0'
+- dladm_vnic:
+    name: vnic1
+    link: aggr0
+    mac: '00:00:5E:00:53:23'
+    vlan: 4
+
+# Remove 'vnic0' VNIC
+- dladm_vnic:
+    name: vnic0
+    link: bnx0
+    state: absent
+
+
+RETURN VALUES:
+
+name:
+    description: VNIC name
+    returned: always
+    type: str
+    sample: "vnic0"
+link:
+    description: VNIC underlying link name
+    returned: always
+    type: str
+    sample: "igb0"
+state:
+    description: state of the target
+    returned: always
+    type: str
+    sample: "present"
+temporary:
+    description: VNIC's persistence
+    returned: always
+    type: bool
+    sample: "True"
+mac:
+    description: MAC address to use for VNIC
+    returned: if mac is specified
+    type: str
+    sample: "00:00:5E:00:53:42"
+vlan:
+    description: VLAN to use for VNIC
+    returned: success
+    type: int
+    sample: 42
+

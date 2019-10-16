@@ -1,0 +1,557 @@
+> FORTIOS_SYSTEM_DHCP_SERVER    (/usr/lib/python2.7/dist-packages/ansible/modules/network/fortios/fortios_system_dhcp_server.py)
+
+        This module is able to configure a FortiGate or FortiOS by allowing the user to set and modify system_dhcp feature and server
+        category. Examples include all parameters and values need to be adjusted to datasources before usage. Tested with FOS v6.0.2
+
+  * This module is maintained by The Ansible Community
+OPTIONS (= is mandatory):
+
+= host
+        FortiOS or FortiGate ip address.
+
+
+- https
+        Indicates if the requests towards FortiGate must use HTTPS protocol
+        [Default: True]
+        type: bool
+
+- password
+        FortiOS or FortiGate password.
+        [Default: ]
+
+- system_dhcp_server
+        Configure DHCP servers.
+        [Default: None]
+        suboptions:
+          auto-configuration:
+            choices:
+            - disable
+            - enable
+            description:
+            - Enable/disable auto configuration.
+          conflicted-ip-timeout:
+            description:
+            - Time in seconds to wait after a conflicted IP address is removed from the DHCP
+              range before it can be reused.
+          ddns-auth:
+            choices:
+            - disable
+            - tsig
+            description:
+            - DDNS authentication mode.
+          ddns-key:
+            description:
+            - DDNS update key (base 64 encoding).
+          ddns-keyname:
+            description:
+            - DDNS update key name.
+          ddns-server-ip:
+            description:
+            - DDNS server IP.
+          ddns-ttl:
+            description:
+            - TTL.
+          ddns-update:
+            choices:
+            - disable
+            - enable
+            description:
+            - Enable/disable DDNS update for DHCP.
+          ddns-update-override:
+            choices:
+            - disable
+            - enable
+            description:
+            - Enable/disable DDNS update override for DHCP.
+          ddns-zone:
+            description:
+            - Zone of your domain name (ex. DDNS.com).
+          default-gateway:
+            description:
+            - Default gateway IP address assigned by the DHCP server.
+          dns-server1:
+            description:
+            - DNS server 1.
+          dns-server2:
+            description:
+            - DNS server 2.
+          dns-server3:
+            description:
+            - DNS server 3.
+          dns-service:
+            choices:
+            - local
+            - default
+            - specify
+            description:
+            - Options for assigning DNS servers to DHCP clients.
+          domain:
+            description:
+            - Domain name suffix for the IP addresses that the DHCP server assigns to clients.
+          exclude-range:
+            description:
+            - Exclude one or more ranges of IP addresses from being assigned to clients.
+            suboptions:
+              end-ip:
+                description:
+                - End of IP range.
+              id:
+                description:
+                - ID.
+                required: true
+              start-ip:
+                description:
+                - Start of IP range.
+          filename:
+            description:
+            - Name of the boot file on the TFTP server.
+          forticlient-on-net-status:
+            choices:
+            - disable
+            - enable
+            description:
+            - Enable/disable FortiClient-On-Net service for this DHCP server.
+          id:
+            description:
+            - ID.
+            required: true
+          interface:
+            description:
+            - DHCP server can assign IP configurations to clients connected to this interface.
+              Source system.interface.name.
+          ip-mode:
+            choices:
+            - range
+            - usrgrp
+            description:
+            - Method used to assign client IP.
+          ip-range:
+            description:
+            - DHCP IP range configuration.
+            suboptions:
+              end-ip:
+                description:
+                - End of IP range.
+              id:
+                description:
+                - ID.
+                required: true
+              start-ip:
+                description:
+                - Start of IP range.
+          ipsec-lease-hold:
+            description:
+            - DHCP over IPsec leases expire this many seconds after tunnel down (0 to disable
+              forced-expiry).
+          lease-time:
+            description:
+            - Lease time in seconds, 0 means unlimited.
+          mac-acl-default-action:
+            choices:
+            - assign
+            - block
+            description:
+            - MAC access control default action (allow or block assigning IP settings).
+          netmask:
+            description:
+            - Netmask assigned by the DHCP server.
+          next-server:
+            description:
+            - IP address of a server (for example, a TFTP sever) that DHCP clients can download
+              a boot file from.
+          ntp-server1:
+            description:
+            - NTP server 1.
+          ntp-server2:
+            description:
+            - NTP server 2.
+          ntp-server3:
+            description:
+            - NTP server 3.
+          ntp-service:
+            choices:
+            - local
+            - default
+            - specify
+            description:
+            - Options for assigning Network Time Protocol (NTP) servers to DHCP clients.
+          options:
+            description:
+            - DHCP options.
+            suboptions:
+              code:
+                description:
+                - DHCP option code.
+              id:
+                description:
+                - ID.
+                required: true
+              ip:
+                description:
+                - DHCP option IPs.
+              type:
+                choices:
+                - hex
+                - string
+                - ip
+                description:
+                - DHCP option type.
+              value:
+                description:
+                - DHCP option value.
+          reserved-address:
+            description:
+            - Options for the DHCP server to assign IP settings to specific MAC addresses.
+            suboptions:
+              action:
+                choices:
+                - assign
+                - block
+                - reserved
+                description:
+                - Options for the DHCP server to configure the client with the reserved MAC
+                  address.
+              description:
+                description:
+                - Description.
+              id:
+                description:
+                - ID.
+                required: true
+              ip:
+                description:
+                - IP address to be reserved for the MAC address.
+              mac:
+                description:
+                - MAC address of the client that will get the reserved IP address.
+          server-type:
+            choices:
+            - regular
+            - ipsec
+            description:
+            - DHCP server can be a normal DHCP server or an IPsec DHCP server.
+          state:
+            choices:
+            - present
+            - absent
+            description:
+            - Indicates whether to create or remove the object
+          status:
+            choices:
+            - disable
+            - enable
+            description:
+            - Enable/disable this DHCP configuration.
+          tftp-server:
+            description:
+            - One or more hostnames or IP addresses of the TFTP servers in quotes separated
+              by spaces.
+            suboptions:
+              tftp-server:
+                description:
+                - TFTP server.
+                required: true
+          timezone:
+            choices:
+            - 1
+            - 2
+            - 3
+            - 4
+            - 5
+            - 81
+            - 6
+            - 7
+            - 08
+            - 09
+            - 10
+            - 11
+            - 12
+            - 13
+            - 74
+            - 14
+            - 77
+            - 15
+            - 87
+            - 16
+            - 17
+            - 18
+            - 19
+            - 20
+            - 75
+            - 21
+            - 22
+            - 23
+            - 24
+            - 80
+            - 79
+            - 25
+            - 26
+            - 27
+            - 28
+            - 78
+            - 29
+            - 30
+            - 31
+            - 32
+            - 33
+            - 34
+            - 35
+            - 36
+            - 37
+            - 38
+            - 83
+            - 84
+            - 40
+            - 85
+            - 41
+            - 42
+            - 43
+            - 39
+            - 44
+            - 46
+            - 47
+            - 51
+            - 48
+            - 45
+            - 49
+            - 50
+            - 52
+            - 53
+            - 54
+            - 55
+            - 56
+            - 57
+            - 58
+            - 59
+            - 60
+            - 62
+            - 63
+            - 61
+            - 64
+            - 65
+            - 66
+            - 67
+            - 68
+            - 69
+            - 70
+            - 71
+            - 72
+            - 0
+            - 82
+            - 73
+            - 86
+            - 76
+            description:
+            - Select the time zone to be assigned to DHCP clients.
+          timezone-option:
+            choices:
+            - disable
+            - default
+            - specify
+            description:
+            - Options for the DHCP server to set the client's time zone.
+          vci-match:
+            choices:
+            - disable
+            - enable
+            description:
+            - Enable/disable vendor class identifier (VCI) matching. When enabled only DHCP
+              requests with a matching VCI are served.
+          vci-string:
+            description:
+            - One or more VCI strings in quotes separated by spaces.
+            suboptions:
+              vci-string:
+                description:
+                - VCI strings.
+                required: true
+          wifi-ac1:
+            description:
+            - WiFi Access Controller 1 IP address (DHCP option 138, RFC 5417).
+          wifi-ac2:
+            description:
+            - WiFi Access Controller 2 IP address (DHCP option 138, RFC 5417).
+          wifi-ac3:
+            description:
+            - WiFi Access Controller 3 IP address (DHCP option 138, RFC 5417).
+          wins-server1:
+            description:
+            - WINS server 1.
+          wins-server2:
+            description:
+            - WINS server 2.
+        
+
+= username
+        FortiOS or FortiGate username.
+
+
+- vdom
+        Virtual domain, among those defined previously. A vdom is a virtual instance of the FortiGate that can be configured and used as
+        a different unit.
+        [Default: root]
+
+
+NOTES:
+      * Requires fortiosapi library developed by Fortinet
+      * Run as a local_action in your playbook
+
+
+REQUIREMENTS:  fortiosapi>=0.9.8
+
+AUTHOR: Miguel Angel Munoz (@mamunozgonzalez), Nicolas Thomas (@thomnico)
+        METADATA:
+          status:
+          - preview
+          supported_by: community
+        
+
+EXAMPLES:
+
+- hosts: localhost
+  vars:
+   host: "192.168.122.40"
+   username: "admin"
+   password: ""
+   vdom: "root"
+  tasks:
+  - name: Configure DHCP servers.
+    fortios_system_dhcp_server:
+      host:  "{{ host }}"
+      username: "{{ username }}"
+      password: "{{ password }}"
+      vdom:  "{{ vdom }}"
+      https: "False"
+      system_dhcp_server:
+        state: "present"
+        auto-configuration: "disable"
+        conflicted-ip-timeout: "4"
+        ddns-auth: "disable"
+        ddns-key: "<your_own_value>"
+        ddns-keyname: "<your_own_value>"
+        ddns-server-ip: "<your_own_value>"
+        ddns-ttl: "9"
+        ddns-update: "disable"
+        ddns-update-override: "disable"
+        ddns-zone: "<your_own_value>"
+        default-gateway: "<your_own_value>"
+        dns-server1: "<your_own_value>"
+        dns-server2: "<your_own_value>"
+        dns-server3: "<your_own_value>"
+        dns-service: "local"
+        domain: "<your_own_value>"
+        exclude-range:
+         -
+            end-ip: "<your_own_value>"
+            id:  "21"
+            start-ip: "<your_own_value>"
+        filename: "<your_own_value>"
+        forticlient-on-net-status: "disable"
+        id:  "25"
+        interface: "<your_own_value> (source system.interface.name)"
+        ip-mode: "range"
+        ip-range:
+         -
+            end-ip: "<your_own_value>"
+            id:  "30"
+            start-ip: "<your_own_value>"
+        ipsec-lease-hold: "32"
+        lease-time: "33"
+        mac-acl-default-action: "assign"
+        netmask: "<your_own_value>"
+        next-server: "<your_own_value>"
+        ntp-server1: "<your_own_value>"
+        ntp-server2: "<your_own_value>"
+        ntp-server3: "<your_own_value>"
+        ntp-service: "local"
+        options:
+         -
+            code: "42"
+            id:  "43"
+            ip: "<your_own_value>"
+            type: "hex"
+            value: "<your_own_value>"
+        reserved-address:
+         -
+            action: "assign"
+            description: "<your_own_value>"
+            id:  "50"
+            ip: "<your_own_value>"
+            mac: "<your_own_value>"
+        server-type: "regular"
+        status: "disable"
+        tftp-server:
+         -
+            tftp-server: "<your_own_value>"
+        timezone: "01"
+        timezone-option: "disable"
+        vci-match: "disable"
+        vci-string:
+         -
+            vci-string: "<your_own_value>"
+        wifi-ac1: "<your_own_value>"
+        wifi-ac2: "<your_own_value>"
+        wifi-ac3: "<your_own_value>"
+        wins-server1: "<your_own_value>"
+        wins-server2: "<your_own_value>"
+
+
+RETURN VALUES:
+
+build:
+  description: Build number of the fortigate image
+  returned: always
+  type: str
+  sample: '1547'
+http_method:
+  description: Last method used to provision the content into FortiGate
+  returned: always
+  type: str
+  sample: 'PUT'
+http_status:
+  description: Last result given by FortiGate on last operation applied
+  returned: always
+  type: str
+  sample: "200"
+mkey:
+  description: Master key (id) used in the last call to FortiGate
+  returned: success
+  type: str
+  sample: "id"
+name:
+  description: Name of the table used to fulfill the request
+  returned: always
+  type: str
+  sample: "urlfilter"
+path:
+  description: Path of the table used to fulfill the request
+  returned: always
+  type: str
+  sample: "webfilter"
+revision:
+  description: Internal revision number
+  returned: always
+  type: str
+  sample: "17.0.2.10658"
+serial:
+  description: Serial number of the unit
+  returned: always
+  type: str
+  sample: "FGVMEVYYQT3AB5352"
+status:
+  description: Indication of the operation's result
+  returned: always
+  type: str
+  sample: "success"
+vdom:
+  description: Virtual domain used
+  returned: always
+  type: str
+  sample: "root"
+version:
+  description: Version of the FortiGate
+  returned: always
+  type: str
+  sample: "v5.6.3"
+
+

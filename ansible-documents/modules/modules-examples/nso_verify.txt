@@ -1,0 +1,42 @@
+EXAMPLES:
+
+- name: Verify interface is up
+  nso_config:
+    url: http://localhost:8080/jsonrpc
+    username: username
+    password: password
+    data:
+      ncs:devices:
+        device:
+        - name: ce0
+          live-status:
+            interfaces:
+              interface:
+                - name: GigabitEthernet0/12
+                - state: Up
+
+
+RETURN VALUES:
+
+violations:
+    description: List of value violations
+    returned: failed
+    type: complex
+    sample:
+        - path: /ncs:devices/device{ce0}/description
+          expected-value: CE0 example
+          value: null
+    contains:
+        path:
+            description: Path to the value in violation
+            returned: always
+            type: str
+        expected-value:
+            description: Expected value of path
+            returned: always
+            type: str
+        value:
+            description: Current value of path
+            returned: always
+            type: str
+

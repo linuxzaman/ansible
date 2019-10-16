@@ -1,0 +1,74 @@
+EXAMPLES:
+
+- name: create web ACL
+    aws_waf_web_acl:
+      name: my_web_acl
+      rules:
+        - name: my_rule
+          priority: 1
+          action: block
+      default_action: block
+      purge_rules: yes
+      state: present
+
+  - name: delete the web acl
+    aws_waf_web_acl:
+      name: my_web_acl
+      state: absent
+
+
+RETURN VALUES:
+
+web_acl:
+  description: contents of the Web ACL
+  returned: always
+  type: complex
+  contains:
+    default_action:
+      description: Default action taken by the Web ACL if no rules match
+      returned: always
+      type: dict
+      sample:
+        type: BLOCK
+    metric_name:
+      description: Metric name used as an identifier
+      returned: always
+      type: str
+      sample: mywebacl
+    name:
+      description: Friendly name of the Web ACL
+      returned: always
+      type: str
+      sample: my web acl
+    rules:
+      description: List of rules
+      returned: always
+      type: complex
+      contains:
+        action:
+          description: Action taken by the WAF when the rule matches
+          returned: always
+          type: complex
+          sample:
+            type: ALLOW
+        priority:
+          description: priority number of the rule (lower numbers are run first)
+          returned: always
+          type: int
+          sample: 2
+        rule_id:
+          description: Rule ID
+          returned: always
+          type: str
+          sample: a6fc7ab5-287b-479f-8004-7fd0399daf75
+        type:
+          description: Type of rule (either REGULAR or RATE_BASED)
+          returned: always
+          type: str
+          sample: REGULAR
+    web_acl_id:
+      description: Unique identifier of Web ACL
+      returned: always
+      type: str
+      sample: 10fff965-4b6b-46e2-9d78-24f6d2e2d21c
+

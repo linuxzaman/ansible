@@ -1,0 +1,60 @@
+EXAMPLES:
+
+- name: create LUKS container (remains unchanged if it already exists)
+  luks_device:
+    device: "/dev/loop0"
+    state: "present"
+    keyfile: "/vault/keyfile"
+
+- name: (create and) open the LUKS container; name it "mycrypt"
+  luks_device:
+    device: "/dev/loop0"
+    state: "opened"
+    name: "mycrypt"
+    keyfile: "/vault/keyfile"
+
+- name: close the existing LUKS container "mycrypt"
+  luks_device:
+    state: "closed"
+    name: "mycrypt"
+
+- name: make sure LUKS container exists and is closed
+  luks_device:
+    device: "/dev/loop0"
+    state: "closed"
+    keyfile: "/vault/keyfile"
+
+- name: create container if it does not exist and add new key to it
+  luks_device:
+    device: "/dev/loop0"
+    state: "present"
+    keyfile: "/vault/keyfile"
+    new_keyfile: "/vault/keyfile2"
+
+- name: add new key to the LUKS container (container has to exist)
+  luks_device:
+    device: "/dev/loop0"
+    keyfile: "/vault/keyfile"
+    new_keyfile: "/vault/keyfile2"
+
+- name: remove existing key from the LUKS container
+  luks_device:
+    device: "/dev/loop0"
+    remove_keyfile: "/vault/keyfile2"
+
+- name: completely remove the LUKS container and its contents
+  luks_device:
+    device: "/dev/loop0"
+    state: "absent"
+
+
+RETURN VALUES:
+
+name:
+    description:
+        When I(state=opened) returns (generated or given) name
+        of LUKS container. Returns None if no name is supplied.
+    returned: success
+    type: str
+    sample: "luks-c1da9a58-2fde-4256-9d9f-6ab008b4dd1b"
+

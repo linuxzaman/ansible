@@ -1,0 +1,111 @@
+> PANOS_DAG_TAGS    (/usr/lib/python2.7/dist-packages/ansible/modules/network/panos/_panos_dag_tags.py)
+
+        Create the ip address to tag associations. Tags will in turn be used to create DAG's
+
+DEPRECATED: 
+
+	Reason: Consolidating code base.
+	Will be removed in: Ansible 2.12
+	Alternatives: Use U(https://galaxy.ansible.com/PaloAltoNetworks/paloaltonetworks) instead.
+
+
+  * This module is maintained by The Ansible Community
+OPTIONS (= is mandatory):
+
+- api_key
+        API key that can be used instead of `username'/`password' credentials.
+        [Default: (null)]
+
+- commit
+        commit if changed
+        [Default: True]
+        type: bool
+
+- description
+        The purpose / objective of the static Address Group
+        [Default: (null)]
+
+- devicegroup
+        - Device groups are used for the Panorama interaction with Firewall(s). The group must exists on Panorama. If device group is not
+        define we assume that we are contacting Firewall.
+        [Default: (null)]
+
+= ip_address
+        IP address (or hostname) of PAN-OS device.
+
+        type: str
+
+- ip_to_register
+        IP that will be registered with the given tag names.
+        [Default: (null)]
+
+- operation
+        The action to be taken. Supported values are `add'/`update'/`find'/`delete'.
+        [Default: (null)]
+
+= password
+        Password for authentication.
+
+        type: str
+
+- tag_names
+        The list of the tags that will be added or removed from the IP address.
+        [Default: (null)]
+
+- username
+        Username for authentication.
+        [Default: admin]
+        type: str
+
+
+NOTES:
+      * Checkmode is not supported.
+      * Panorama is not supported.
+
+
+REQUIREMENTS:  pan-python can be obtained from PyPI https://pypi.org/project/pan-python/, pandevice can be obtained from PyPI
+        https://pypi.org/project/pandevice/
+
+AUTHOR: Vinay Venkataraghavan (@vinayvenkat)
+        METADATA:
+          status:
+          - deprecated
+          supported_by: community
+        
+
+EXAMPLES:
+
+- name: Create the tags to map IP addresses
+  panos_dag_tags:
+    ip_address: "{{ ip_address }}"
+    password: "{{ password }}"
+    ip_to_register: "{{ ip_to_register }}"
+    tag_names: "{{ tag_names }}"
+    description: "Tags to allow certain IP's to access various SaaS Applications"
+    operation: 'add'
+  tags: "adddagip"
+
+- name: List the IP address to tag mapping
+  panos_dag_tags:
+    ip_address: "{{ ip_address }}"
+    password: "{{ password }}"
+    tag_names: "{{ tag_names }}"
+    description: "List the IP address to tag mapping"
+    operation: 'list'
+  tags: "listdagip"
+
+- name: Unregister an IP address from a tag mapping
+  panos_dag_tags:
+    ip_address: "{{ ip_address }}"
+    password: "{{ password }}"
+    ip_to_register: "{{ ip_to_register }}"
+    tag_names: "{{ tag_names }}"
+    description: "Unregister IP address from tag mappings"
+    operation: 'delete'
+  tags: "deletedagip"
+
+
+RETURN VALUES:
+
+# Default return values
+

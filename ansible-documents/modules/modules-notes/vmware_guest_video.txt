@@ -1,0 +1,165 @@
+> VMWARE_GUEST_VIDEO    (/usr/lib/python2.7/dist-packages/ansible/modules/cloud/vmware/vmware_guest_video.py)
+
+        This module is used to reconfigure video card settings of given virtual machine. All parameters and VMware object names are case
+        sensitive.
+
+  * This module is maintained by The Ansible Community
+OPTIONS (= is mandatory):
+
+- datacenter
+        The datacenter name to which virtual machine belongs to.
+        This parameter is case sensitive.
+        [Default: ha-datacenter]
+
+- display_number
+        The number of display. Valid value from 1 to 10. The maximum display number is 4 on vCenter 6.0, 6.5 web UI.
+        [Default: (null)]
+
+- enable_3D
+        Enable 3D for guest operating systems on which VMware supports 3D.
+        [Default: (null)]
+        type: bool
+
+- folder
+        Destination folder, absolute or relative path to find an existing guest.
+        This is a required parameter, only if multiple VMs are found with same name.
+        The folder should include the datacenter. ESXi server's datacenter is ha-datacenter.
+        Examples:
+           folder: /ha-datacenter/vm
+           folder: ha-datacenter/vm
+           folder: /datacenter1/vm
+           folder: datacenter1/vm
+           folder: /datacenter1/vm/folder1
+           folder: datacenter1/vm/folder1
+           folder: /folder1/datacenter1/vm
+           folder: folder1/datacenter1/vm
+           folder: /folder1/datacenter1/vm/folder2
+        [Default: (null)]
+
+- gather_video_facts
+        If set to True, return settings of the video card, other attributes are ignored.
+        If set to False, will do reconfiguration and return video card settings.
+        [Default: no]
+        type: bool
+
+- hostname
+        The hostname or IP address of the vSphere vCenter or ESXi server.
+        If the value is not specified in the task, the value of environment variable `VMWARE_HOST' will be used instead.
+        Environment variable support added in Ansible 2.6.
+        [Default: (null)]
+        type: str
+
+- memory_3D_mb
+        The value of 3D Memory must be power of 2 and valid value is from 32 MB to 2048 MB.
+        [Default: (null)]
+
+- name
+        Name of the virtual machine.
+        This is a required parameter, if parameter `uuid' is not supplied.
+        [Default: (null)]
+
+- password
+        The password of the vSphere vCenter or ESXi server.
+        If the value is not specified in the task, the value of environment variable `VMWARE_PASSWORD' will be used instead.
+        Environment variable support added in Ansible 2.6.
+        (Aliases: pass, pwd)[Default: (null)]
+        type: str
+
+- port
+        The port number of the vSphere vCenter or ESXi server.
+        If the value is not specified in the task, the value of environment variable `VMWARE_PORT' will be used instead.
+        Environment variable support added in Ansible 2.6.
+        [Default: 443]
+        type: int
+        version_added: 2.5
+
+- renderer_3D
+        If set to `automatic', selects the appropriate option (software or hardware) for this virtual machine automatically.
+        If set to `software', uses normal CPU processing for 3D calculations.
+        If set to `hardware', requires graphics hardware (GPU) for faster 3D calculations.
+        (Choices: automatic, software, hardware)[Default: (null)]
+
+- use_auto_detect
+        If set to True, applies common video settings to the guest operating system, attributes `display_number' and `video_memory_mb'
+        are ignored.
+        If set to False, the number of display and the total video memory will be reconfigured using `display_number' and
+        `video_memory_mb'.
+        [Default: (null)]
+        type: bool
+
+- username
+        The username of the vSphere vCenter or ESXi server.
+        If the value is not specified in the task, the value of environment variable `VMWARE_USER' will be used instead.
+        Environment variable support added in Ansible 2.6.
+        (Aliases: admin, user)[Default: (null)]
+        type: str
+
+- uuid
+        UUID of the instance to gather facts if known, this is VMware's unique identifier.
+        This is a required parameter, if parameter `name' is not supplied.
+        [Default: (null)]
+
+- validate_certs
+        Allows connection when SSL certificates are not valid. Set to `false' when certificates are not trusted.
+        If the value is not specified in the task, the value of environment variable `VMWARE_VALIDATE_CERTS' will be used instead.
+        Environment variable support added in Ansible 2.6.
+        If set to `yes', please make sure Python >= 2.7.9 is installed on the given machine.
+        [Default: True]
+        type: bool
+
+- video_memory_mb
+        Valid total MB of video memory range of virtual machine is from 1.172 MB to 256 MB on ESXi 6.7U1, from 1.172 MB to 128 MB on ESXi
+        6.7 and previous versions.
+        For specific guest OS, supported minimum and maximum video memory are different, please be careful on setting this.
+        [Default: (null)]
+
+
+NOTES:
+      * Tested on vSphere 6.0, 6.5 and 6.7
+
+
+REQUIREMENTS:  python >= 2.6, PyVmomi
+
+AUTHOR: Diane Wang (@Tomorrow9) <dianew@vmware.com>
+        METADATA:
+          status:
+          - preview
+          supported_by: community
+        
+
+EXAMPLES:
+
+- name: Change video card settings of virtual machine
+  vmware_guest_video:
+    hostname: "{{ vcenter_hostname }}"
+    username: "{{ vcenter_username }}"
+    password: "{{ vcenter_password }}"
+    datacenter: "{{ datacenter_name }}"
+    validate_certs: no
+    name: test-vm
+    gather_video_facts: false
+    use_auto_detect: false
+    display_number: 2
+    video_memory_mb: 8.0
+    enable_3D: true
+    renderer_3D: automatic
+    memory_3D_mb: 512
+  delegate_to: localhost
+  register: video_facts
+
+
+RETURN VALUES:
+
+video_status:
+    description: metadata about the virtual machine's video card after managing them
+    returned: always
+    type: dict
+    sample: {
+        "auto_detect": false,
+        "display_number": 2,
+        "enable_3D_support": true,
+        "memory_3D": 524288,
+        "renderer_3D": "automatic",
+        "video_memory": 8192
+    }
+

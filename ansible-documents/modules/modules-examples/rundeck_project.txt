@@ -1,0 +1,33 @@
+EXAMPLES:
+
+- name: Create a rundeck project
+  rundeck_project:
+    name: "Project_01"
+    api_version: 18
+    url: "https://rundeck.example.org"
+    token: "mytoken"
+    state: present
+
+- name: Remove a rundeck project
+  rundeck_project:
+    name: "Project_02"
+    url: "https://rundeck.example.org"
+    token: "mytoken"
+    state: absent
+
+
+RETURN VALUES:
+
+rundeck_response:
+    description: Rundeck response when a failure occurs
+    returned: failed
+    type: str
+before:
+    description: dictionary containing project information before modification
+    returned: success
+    type: dict
+after:
+    description: dictionary containing project information after modification
+    returned: success
+    type: dict
+

@@ -1,0 +1,96 @@
+EXAMPLES:
+
+- name: Create SNMP DCS monitor
+  bigip_monitor_snmp_dca:
+    name: my_monitor
+    state: present
+    provider:
+      server: lb.mydomain.com
+      user: admin
+      password: secret
+  delegate_to: localhost
+
+- name: Remove TCP Echo Monitor
+  bigip_monitor_snmp_dca:
+    name: my_monitor
+    state: absent
+    provider:
+      server: lb.mydomain.com
+      user: admin
+      password: secret
+  delegate_to: localhost
+
+
+RETURN VALUES:
+
+parent:
+  description: New parent template of the monitor.
+  returned: changed
+  type: str
+  sample: snmp_dca
+description:
+  description: The description of the monitor.
+  returned: changed
+  type: str
+  sample: Important Monitor
+interval:
+  description: The new interval in which to run the monitor check.
+  returned: changed
+  type: int
+  sample: 2
+timeout:
+  description: The new timeout in which the remote system must respond to the monitor.
+  returned: changed
+  type: int
+  sample: 10
+time_until_up:
+  description: The new time in which to mark a system as up after first successful response.
+  returned: changed
+  type: int
+  sample: 2
+community:
+  description: The new community for the monitor.
+  returned: changed
+  type: str
+  sample: foobar
+version:
+  description: The new new SNMP version to be used by the monitor.
+  returned: changed
+  type: str
+  sample: v2c
+agent_type:
+  description: The new agent type to be used by the monitor.
+  returned: changed
+  type: str
+  sample: UCD
+cpu_coefficient:
+  description: The new CPU coefficient.
+  returned: changed
+  type: float
+  sample: 2.4
+cpu_threshold:
+  description: The new CPU threshold.
+  returned: changed
+  type: int
+  sample: 85
+memory_coefficient:
+  description: The new memory coefficient.
+  returned: changed
+  type: float
+  sample: 6.4
+memory_threshold:
+  description: The new memory threshold.
+  returned: changed
+  type: int
+  sample: 50
+disk_coefficient:
+  description: The new disk coefficient.
+  returned: changed
+  type: float
+  sample: 10.2
+disk_threshold:
+  description: The new disk threshold.
+  returned: changed
+  type: int
+  sample: 34
+

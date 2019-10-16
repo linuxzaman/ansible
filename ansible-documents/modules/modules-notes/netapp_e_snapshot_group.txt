@@ -1,0 +1,101 @@
+> NETAPP_E_SNAPSHOT_GROUP    (/usr/lib/python2.7/dist-packages/ansible/modules/storage/netapp/netapp_e_snapshot_group.py)
+
+        Create, update, delete snapshot groups for NetApp E-series storage arrays
+
+  * This module is maintained by The Ansible Community
+OPTIONS (= is mandatory):
+
+= api_password
+        The password to authenticate with the SANtricity WebServices Proxy or embedded REST API.
+
+
+= api_url
+        The url to the SANtricity WebServices Proxy or embedded REST API.
+
+
+= api_username
+        The username to authenticate with the SANtricity WebServices Proxy or embedded REST API.
+
+
+= base_volume_name
+        The name of the base volume or thin volume to use as the base for the new snapshot group.
+        If a snapshot group with an identical `name' already exists but with a different base volume an error will be returned.
+
+
+- delete_limit
+        The automatic deletion indicator.
+        If non-zero, the oldest snapshot image will be automatically deleted when creating a new snapshot image to keep the total number
+        of snapshot images limited to the number specified.
+        This value is overridden by the consistency group setting if this snapshot group is associated with a consistency group.
+        [Default: 30]
+
+- full_policy
+        The behavior on when the data repository becomes full.
+        This value is overridden by consistency group setting if this snapshot group is associated with a consistency group
+        (Choices: purgepit, unknown, failbasewrites, __UNDEFINED)[Default: purgepit]
+
+= name
+        The name to give the snapshot group
+
+
+- repo_pct
+        The size of the repository in relation to the size of the base volume
+        [Default: 20]
+
+- rollback_priority
+        The importance of the rollback operation.
+        This value is overridden by consistency group setting if this snapshot group is associated with a consistency group
+        (Choices: highest, high, medium, low, lowest, __UNDEFINED)[Default: medium]
+
+= state
+        Whether to ensure the group is present or absent.
+        (Choices: present, absent)
+
+= storage_pool_name
+        The name of the storage pool on which to allocate the repository volume.
+
+
+- validate_certs
+        Should https certificates be validated?
+        [Default: True]
+        type: bool
+
+- warning_threshold
+        The repository utilization warning threshold, as a percentage of the repository volume capacity.
+        [Default: 80]
+
+
+AUTHOR: Kevin Hulquest (@hulquest)
+        METADATA:
+          status:
+          - preview
+          supported_by: community
+        
+
+EXAMPLES:
+
+- name: Configure Snapshot group
+      netapp_e_snapshot_group:
+        ssid: "{{ ssid }}"
+        api_url: "{{ netapp_api_url }}"
+        api_username: "{{ netapp_api_username }}"
+        api_password: "{{ netapp_api_password }}"
+        validate_certs: "{{ netapp_api_validate_certs }}"
+        base_volume_name: SSGroup_test
+        name=: OOSS_Group
+        repo_pct: 20
+        warning_threshold: 85
+        delete_limit: 30
+        full_policy: purgepit
+        storage_pool_name: Disk_Pool_1
+        rollback_priority: medium
+
+
+RETURN VALUES:
+
+msg:
+    description: Success message
+    returned: success
+    type: str
+    sample: json facts for newly created snapshot group.
+

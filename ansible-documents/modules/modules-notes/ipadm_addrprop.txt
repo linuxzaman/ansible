@@ -1,0 +1,73 @@
+> IPADM_ADDRPROP    (/usr/lib/python2.7/dist-packages/ansible/modules/network/illumos/ipadm_addrprop.py)
+
+        Modify IP address properties on Solaris/illumos systems.
+
+  * This module is maintained by The Ansible Community
+OPTIONS (= is mandatory):
+
+= addrobj
+        Specifies the address object we want to manage.
+        (Aliases: nic, interface)
+
+= property
+        Specifies the name of the address property we want to manage.
+        (Aliases: name)
+
+- state
+        Set or reset the property value.
+        (Choices: present, absent, reset)[Default: present]
+
+- temporary
+        Specifies that the address property value is temporary. Temporary values do not persist across reboots.
+        [Default: False]
+        type: bool
+
+- value
+        Specifies the value we want to set for the address property.
+        [Default: (null)]
+
+
+AUTHOR: Adam Števko (@xen0l)
+        METADATA:
+          status:
+          - preview
+          supported_by: community
+        
+
+EXAMPLES:
+
+- name: Mark address on addrobj as deprecated
+  ipadm_addrprop: property=deprecated value=on addrobj=e1000g0/v6
+
+- name: Set network prefix length for addrobj
+  ipadm_addrprop: addrobj=bge0/v4 name=prefixlen value=26
+
+
+RETURN VALUES:
+
+property:
+    description: property name
+    returned: always
+    type: str
+    sample: deprecated
+addrobj:
+    description: address object name
+    returned: always
+    type: str
+    sample: bge0/v4
+state:
+    description: state of the target
+    returned: always
+    type: str
+    sample: present
+temporary:
+    description: specifies if operation will persist across reboots
+    returned: always
+    type: bool
+    sample: True
+value:
+    description: property value
+    returned: when value is provided
+    type: str
+    sample: 26
+

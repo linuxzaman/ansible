@@ -1,0 +1,245 @@
+> OPENSSL_PKCS12    (/usr/lib/python2.7/dist-packages/ansible/modules/crypto/openssl_pkcs12.py)
+
+        This module allows one to (re-)generate PKCS#12.
+
+  * This module is maintained by The Ansible Community
+OPTIONS (= is mandatory):
+
+- action
+        `export' or `parse' a PKCS#12.
+        (Choices: export, parse)[Default: export]
+        type: str
+
+- attributes
+        The attributes the resulting file or directory should have.
+        To get supported flags look at the man page for `chattr' on the target system.
+        This string should contain the attributes in the same order as the one displayed by `lsattr'.
+        The `=' operator is assumed as default, otherwise `+' or `-' operators need to be included in the string.
+        (Aliases: attr)[Default: (null)]
+        type: str
+        version_added: 2.3
+
+- backup
+        Create a backup file including a timestamp so you can get the original output file back if you overwrote it with a new one by
+        accident.
+        [Default: False]
+        type: bool
+        version_added: 2.8
+
+- certificate_path
+        The path to read certificates and private keys from.
+        Must be in PEM format.
+        [Default: (null)]
+        type: path
+
+- force
+        Should the file be regenerated even if it already exists.
+        [Default: False]
+        type: bool
+
+- friendly_name
+        Specifies the friendly name for the certificate and private key.
+        (Aliases: name)[Default: (null)]
+        type: str
+
+- group
+        Name of the group that should own the file/directory, as would be fed to `chown'.
+        [Default: (null)]
+        type: str
+
+- iter_size
+        Number of times to repeat the encryption step.
+        [Default: 2048]
+        type: int
+
+- maciter_size
+        Number of times to repeat the MAC step.
+        [Default: 1]
+        type: int
+
+- mode
+        The permissions the resulting file or directory should have.
+        For those used to `/usr/bin/chmod' remember that modes are actually octal numbers. You must either add a leading zero so that
+        Ansible's YAML parser knows it is an octal number (like `0644' or `01777') or quote it (like `'644'' or `'1777'') so Ansible
+        receives a string and can do its own conversion from string into number.
+        Giving Ansible a number without following one of these rules will end up with a decimal number which will have unexpected
+        results.
+        As of Ansible 1.8, the mode may be specified as a symbolic mode (for example, `u+rwx' or `u=rw,g=r,o=r').
+        As of Ansible 2.6, the mode may also be the special string `preserve'.
+        When set to `preserve' the file will be given the same permissions as the source file.
+        [Default: (null)]
+        type: str
+
+- other_certificates
+        List of other certificates to include. Pre 2.8 this parameter was called `ca_certificates'
+        (Aliases: ca_certificates)[Default: (null)]
+        type: list
+
+- owner
+        Name of the user that should own the file/directory, as would be fed to `chown'.
+        [Default: (null)]
+        type: str
+
+- passphrase
+        The PKCS#12 password.
+        [Default: (null)]
+        type: str
+
+= path
+        Filename to write the PKCS#12 file to.
+
+        type: path
+
+- privatekey_passphrase
+        Passphrase source to decrypt any input private keys with.
+        [Default: (null)]
+        type: str
+
+- privatekey_path
+        File to read private key from.
+        [Default: (null)]
+        type: path
+
+- selevel
+        The level part of the SELinux file context.
+        This is the MLS/MCS attribute, sometimes known as the `range'.
+        When set to `_default', it will use the `level' portion of the policy if available.
+        [Default: s0]
+        type: str
+
+- serole
+        The role part of the SELinux file context.
+        When set to `_default', it will use the `role' portion of the policy if available.
+        [Default: (null)]
+        type: str
+
+- setype
+        The type part of the SELinux file context.
+        When set to `_default', it will use the `type' portion of the policy if available.
+        [Default: (null)]
+        type: str
+
+- seuser
+        The user part of the SELinux file context.
+        By default it uses the `system' policy, where applicable.
+        When set to `_default', it will use the `user' portion of the policy if available.
+        [Default: (null)]
+        type: str
+
+- src
+        PKCS#12 file path to parse.
+        [Default: (null)]
+        type: path
+
+- state
+        Whether the file should exist or not. All parameters except `path' are ignored when state is `absent'.
+        (Choices: absent, present)[Default: present]
+        type: str
+
+- unsafe_writes
+        Influence when to use atomic operation to prevent data corruption or inconsistent reads from the target file.
+        By default this module uses atomic operations to prevent data corruption or inconsistent reads from the target files, but
+        sometimes systems are configured or just broken in ways that prevent this. One example is docker mounted files, which cannot be
+        updated atomically from inside the container and can only be written in an unsafe manner.
+        This option allows Ansible to fall back to unsafe methods of updating files when atomic operations fail (however, it doesn't
+        force Ansible to perform unsafe writes).
+        IMPORTANT! Unsafe writes are subject to race conditions and can lead to data corruption.
+        [Default: False]
+        type: bool
+        version_added: 2.2
+
+
+SEE ALSO:
+      * Module openssl_certificate
+           The official documentation on the openssl_certificate module.
+           https://docs.ansible.com/ansible/latest/modules/openssl_certificate_module.html
+      * Module openssl_csr
+           The official documentation on the openssl_csr module.
+           https://docs.ansible.com/ansible/latest/modules/openssl_csr_module.html
+      * Module openssl_dhparam
+           The official documentation on the openssl_dhparam module.
+           https://docs.ansible.com/ansible/latest/modules/openssl_dhparam_module.html
+      * Module openssl_privatekey
+           The official documentation on the openssl_privatekey module.
+           https://docs.ansible.com/ansible/latest/modules/openssl_privatekey_module.html
+      * Module openssl_publickey
+           The official documentation on the openssl_publickey module.
+           https://docs.ansible.com/ansible/latest/modules/openssl_publickey_module.html
+
+
+REQUIREMENTS:  python-pyOpenSSL
+
+AUTHOR: Guillaume Delpierre (@gdelpierre)
+        METADATA:
+          status:
+          - preview
+          supported_by: community
+        
+
+EXAMPLES:
+
+- name: Generate PKCS#12 file
+  openssl_pkcs12:
+    action: export
+    path: /opt/certs/ansible.p12
+    friendly_name: raclette
+    privatekey_path: /opt/certs/keys/key.pem
+    certificate_path: /opt/certs/cert.pem
+    other_certificates: /opt/certs/ca.pem
+    state: present
+
+- name: Change PKCS#12 file permission
+  openssl_pkcs12:
+    action: export
+    path: /opt/certs/ansible.p12
+    friendly_name: raclette
+    privatekey_path: /opt/certs/keys/key.pem
+    certificate_path: /opt/certs/cert.pem
+    other_certificates: /opt/certs/ca.pem
+    state: present
+    mode: '0600'
+
+- name: Regen PKCS#12 file
+  openssl_pkcs12:
+    action: export
+    src: /opt/certs/ansible.p12
+    path: /opt/certs/ansible.p12
+    friendly_name: raclette
+    privatekey_path: /opt/certs/keys/key.pem
+    certificate_path: /opt/certs/cert.pem
+    other_certificates: /opt/certs/ca.pem
+    state: present
+    mode: '0600'
+    force: yes
+
+- name: Dump/Parse PKCS#12 file
+  openssl_pkcs12:
+    action: parse
+    src: /opt/certs/ansible.p12
+    path: /opt/certs/ansible.pem
+    state: present
+
+- name: Remove PKCS#12 file
+  openssl_pkcs12:
+    path: /opt/certs/ansible.p12
+    state: absent
+
+
+RETURN VALUES:
+
+filename:
+    description: Path to the generate PKCS#12 file.
+    returned: changed or success
+    type: str
+    sample: /opt/certs/ansible.p12
+privatekey:
+    description: Path to the TLS/SSL private key the public key was generated from.
+    returned: changed or success
+    type: str
+    sample: /etc/ssl/private/ansible.com.pem
+backup_file:
+    description: Name of backup file created.
+    returned: changed and if I(backup) is C(yes)
+    type: str
+    sample: /path/to/ansible.com.pem.2019-03-09@11:22~
+

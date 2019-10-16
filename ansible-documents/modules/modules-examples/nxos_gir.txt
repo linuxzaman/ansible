@@ -1,0 +1,69 @@
+EXAMPLES:
+
+# Trigger system maintenance mode
+- nxos_gir:
+    system_mode_maintenance: true
+    host: "{{ inventory_hostname }}"
+    username: "{{ un }}"
+    password: "{{ pwd }}"
+# Trigger system normal mode
+- nxos_gir:
+    system_mode_maintenance: false
+    host: "{{ inventory_hostname }}"
+    username: "{{ un }}"
+    password: "{{ pwd }}"
+# Configure on-reload reset-reason for maintenance mode
+- nxos_gir:
+    system_mode_maintenance_on_reload_reset_reason: manual_reload
+    state: present
+    host: "{{ inventory_hostname }}"
+    username: "{{ un }}"
+    password: "{{ pwd }}"
+# Add on-reload reset-reason for maintenance mode
+- nxos_gir:
+    system_mode_maintenance_on_reload_reset_reason: hw_error
+    state: present
+    host: "{{ inventory_hostname }}"
+    username: "{{ un }}"
+    password: "{{ pwd }}"
+# Remove on-reload reset-reason for maintenance mode
+- nxos_gir:
+    system_mode_maintenance_on_reload_reset_reason: manual_reload
+    state: absent
+    host: "{{ inventory_hostname }}"
+    username: "{{ un }}"
+    password: "{{ pwd }}"
+# Set timeout for maintenance mode
+- nxos_gir:
+    system_mode_maintenance_timeout: 30
+    state: present
+    host: "{{ inventory_hostname }}"
+    username: "{{ un }}"
+    password: "{{ pwd }}"
+# Remove timeout for maintenance mode
+- nxos_gir:
+    system_mode_maintenance_timeout: 30
+    state: absent
+    host: "{{ inventory_hostname }}"
+    username: "{{ un }}"
+    password: "{{ pwd }}"
+
+
+RETURN VALUES:
+
+final_system_mode:
+    description: describe the last system mode
+    returned: verbose mode
+    type: str
+    sample: normal
+updates:
+    description: commands sent to the device
+    returned: verbose mode
+    type: list
+    sample: ["terminal dont-ask", "system mode maintenance timeout 10"]
+changed:
+    description: check to see if a change was made on the device
+    returned: always
+    type: bool
+    sample: true
+

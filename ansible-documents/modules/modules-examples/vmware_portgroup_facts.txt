@@ -1,0 +1,58 @@
+EXAMPLES:
+
+- name: Gather portgroup facts about all ESXi Host in given Cluster
+  vmware_portgroup_facts:
+    hostname: '{{ vcenter_hostname }}'
+    username: '{{ vcenter_username }}'
+    password: '{{ vcenter_password }}'
+    cluster_name: '{{ cluster_name }}'
+  delegate_to: localhost
+
+- name: Gather portgroup facts about ESXi Host system
+  vmware_portgroup_facts:
+    hostname: '{{ vcenter_hostname }}'
+    username: '{{ vcenter_username }}'
+    password: '{{ vcenter_password }}'
+    esxi_hostname: '{{ esxi_hostname }}'
+  delegate_to: localhost
+
+
+RETURN VALUES:
+
+hosts_portgroup_facts:
+    description: metadata about host's portgroup configuration
+    returned: on success
+    type: dict
+    sample: {
+        "esx01": [
+            {
+                "failback": true,
+                "failover_active": ["vmnic0", "vmnic1"],
+                "failover_standby": [],
+                "failure_detection": "link_status_only",
+                "lb": "loadbalance_srcid",
+                "notify": true,
+                "portgroup": "Management Network",
+                "security": [false, false, false],
+                "ts": "No override",
+                "vlan_id": 0,
+                "vswitch": "vSwitch0",
+                "vswitch_name": "vSwitch0"
+            },
+            {
+                "failback": true,
+                "failover_active": ["vmnic2"],
+                "failover_standby": ["vmnic3"],
+                "failure_detection": "No override",
+                "lb": "No override",
+                "notify": true,
+                "portgroup": "vMotion",
+                "security": [false, false, false],
+                "ts": "No override",
+                "vlan_id": 33,
+                "vswitch": "vSwitch1",
+                "vswitch_name": "vSwitch1"
+            }
+        ]
+    }
+

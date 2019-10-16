@@ -1,0 +1,148 @@
+> GITLAB_RUNNER    (/usr/lib/python2.7/dist-packages/ansible/modules/source_control/gitlab_runner.py)
+
+        Register, update and delete runners with the GitLab API. All operations are performed using the GitLab API v4. For details,
+        consult the full API documentation at https://docs.gitlab.com/ee/api/runners.html. A valid private API token is required for all
+        operations. You can create as many tokens as you like using the GitLab web interface at
+        https://$GITLAB_URL/profile/personal_access_tokens. A valid registration token is required for registering a new runner. To
+        create shared runners, you need to ask your administrator to give you this token. It can be found at
+        https://$GITLAB_URL/admin/runners/.
+
+  * This module is maintained by The Ansible Community
+OPTIONS (= is mandatory):
+
+- access_level
+        Determines if a runner can pick up jobs from protected branches.
+        (Choices: ref_protected, not_protected)[Default: ref_protected]
+        type: str
+
+- active
+        Define if the runners is immediately active after creation.
+        [Default: True]
+        type: bool
+
+- api_password
+        The password to use for authentication against the API
+        [Default: (null)]
+        type: str
+
+= api_token
+        Your private token to interact with the GitLab API.
+        (Aliases: private_token)
+        type: str
+
+- api_url
+        The resolvable endpoint for the API
+        [Default: (null)]
+        type: str
+
+- api_username
+        The username to use for authentication against the API
+        [Default: (null)]
+        type: str
+
+= description
+        The unique name of the runner.
+        (Aliases: name)
+        type: str
+
+- locked
+        Determines if the runner is locked or not.
+        [Default: False]
+        type: bool
+
+- maximum_timeout
+        The maximum timeout that a runner has to pick up a specific job.
+        [Default: 3600]
+        type: int
+
+= registration_token
+        The registration token is used to register new runners.
+
+        type: str
+
+- run_untagged
+        Run untagged jobs or not.
+        [Default: True]
+        type: bool
+
+- state
+        Make sure that the runner with the same name exists with the same configuration or delete the runner with the same name.
+        (Choices: present, absent)[Default: present]
+        type: str
+
+- tag_list
+        The tags that apply to the runner.
+        [Default: []]
+        type: list
+
+= url
+        The URL of the Gitlab server, with protocol (i.e. http or https).
+
+        type: str
+
+- validate_certs
+        Whether or not to validate SSL certs when supplying a https endpoint.
+        [Default: True]
+        type: bool
+
+
+NOTES:
+      * To create a new runner at least the `api_token', `description' and `url' options are required.
+      * Runners need to have unique descriptions.
+
+
+REQUIREMENTS:  python >= 2.7, python-gitlab python module
+
+AUTHOR: Samy Coenen (@SamyCoenen), Guillaume Martinez (@Lunik)
+        METADATA:
+          status:
+          - preview
+          supported_by: community
+        
+
+EXAMPLES:
+
+- name: "Register runner"
+  gitlab_runner:
+    api_url: https://gitlab.example.com/
+    api_token: "{{ access_token }}"
+    registration_token: 4gfdsg345
+    description: Docker Machine t1
+    state: present
+    active: True
+    tag_list: ['docker']
+    run_untagged: False
+    locked: False
+
+- name: "Delete runner"
+  gitlab_runner:
+    api_url: https://gitlab.example.com/
+    api_token: "{{ access_token }}"
+    description: Docker Machine t1
+    state: absent
+
+
+RETURN VALUES:
+
+msg:
+  description: Success or failure message
+  returned: always
+  type: str
+  sample: "Success"
+
+result:
+  description: json parsed response from the server
+  returned: always
+  type: dict
+
+error:
+  description: the error message returned by the Gitlab API
+  returned: failed
+  type: str
+  sample: "400: path is already in use"
+
+runner:
+  description: API object
+  returned: always
+  type: dict
+

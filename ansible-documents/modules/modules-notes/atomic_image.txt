@@ -1,0 +1,63 @@
+> ATOMIC_IMAGE    (/usr/lib/python2.7/dist-packages/ansible/modules/cloud/atomic/atomic_image.py)
+
+        Manage the container images on the atomic host platform. Allows to execute the commands specified by the RUN label in the
+        container image when present.
+
+  * This module is maintained by The Ansible Community
+OPTIONS (= is mandatory):
+
+- backend
+        Define the backend where the image is pulled.
+        (Choices: docker, ostree)[Default: (null)]
+        version_added: 2.4
+
+= name
+        Name of the container image.
+
+
+- started
+        Start or Stop the container.
+        [Default: yes]
+        type: bool
+
+- state
+        The state of the container image.
+        The state `latest' will ensure container image is upgraded to the latest version and forcefully restart container, if running.
+        (Choices: absent, latest, present)[Default: latest]
+
+
+NOTES:
+      * Host should support `atomic' command.
+
+
+REQUIREMENTS:  atomic, python >= 2.6
+
+AUTHOR: Saravanan KR (@krsacme)
+        METADATA:
+          status:
+          - preview
+          supported_by: community
+        
+
+EXAMPLES:
+
+- name: Execute the run command on rsyslog container image (atomic run rhel7/rsyslog)
+  atomic_image:
+    name: rhel7/rsyslog
+    state: latest
+
+- name: Pull busybox to the OSTree backend
+  atomic_image:
+    name: busybox
+    state: latest
+    backend: ostree
+
+
+RETURN VALUES:
+
+msg:
+    description: The command standard output
+    returned: always
+    type: str
+    sample: [u'Using default tag: latest ...']
+

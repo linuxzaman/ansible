@@ -1,0 +1,149 @@
+> NIOS_NETWORK_VIEW    (/usr/lib/python2.7/dist-packages/ansible/modules/net_tools/nios/nios_network_view.py)
+
+        Adds and/or removes instances of network view objects from Infoblox NIOS servers.  This module manages NIOS `networkview' objects
+        using the Infoblox WAPI interface over REST. Updates instances of network view object from Infoblox NIOS servers.
+
+  * This module is maintained by an Ansible Partner
+OPTIONS (= is mandatory):
+
+- comment
+        Configures a text string comment to be associated with the instance of this object.  The provided text string will be configured
+        on the object instance.
+        [Default: (null)]
+
+- extattrs
+        Allows for the configuration of Extensible Attributes on the instance of the object.  This argument accepts a set of key / value
+        pairs for configuration.
+        [Default: (null)]
+
+= name
+        Specifies the fully qualified hostname to add or remove from the system. User can also update the hostname as it is possible to
+        pass a dict containing `new_name', `old_name'. See examples.
+        (Aliases: network_view)
+
+- provider
+        A dict object containing connection details.
+        [Default: (null)]
+        suboptions:
+          host:
+            description:
+            - Specifies the DNS host name or address for connecting to the remote instance
+              of NIOS WAPI over REST
+            - Value can also be specified using `INFOBLOX_HOST' environment variable.
+            required: true
+            type: str
+          http_request_timeout:
+            default: 10
+            description:
+            - The amount of time before to wait before receiving a response
+            - Value can also be specified using `INFOBLOX_HTTP_REQUEST_TIMEOUT' environment
+              variable.
+            type: int
+          max_results:
+            default: 1000
+            description:
+            - Specifies the maximum number of objects to be returned, if set to a negative
+              number the appliance will return an error when the number of returned objects
+              would exceed the setting.
+            - Value can also be specified using `INFOBLOX_MAX_RESULTS' environment variable.
+            type: int
+          max_retries:
+            default: 3
+            description:
+            - Configures the number of attempted retries before the connection is declared
+              usable
+            - Value can also be specified using `INFOBLOX_MAX_RETRIES' environment variable.
+            type: int
+          password:
+            description:
+            - Specifies the password to use to authenticate the connection to the remote instance
+              of NIOS.
+            - Value can also be specified using `INFOBLOX_PASSWORD' environment variable.
+            type: str
+          username:
+            description:
+            - Configures the username to use to authenticate the connection to the remote
+              instance of NIOS.
+            - Value can also be specified using `INFOBLOX_USERNAME' environment variable.
+            type: str
+          validate_certs:
+            aliases:
+            - ssl_verify
+            default: false
+            description:
+            - Boolean value to enable or disable verifying SSL certificates
+            - Value can also be specified using `INFOBLOX_SSL_VERIFY' environment variable.
+            type: bool
+          wapi_version:
+            default: '2.1'
+            description:
+            - Specifies the version of WAPI to use
+            - Value can also be specified using `INFOBLOX_WAP_VERSION' environment variable.
+            - Until ansible 2.8 the default WAPI was 1.4
+            type: str
+        
+        type: dict
+
+- state
+        Configures the intended state of the instance of the object on the NIOS server.  When this value is set to `present', the object
+        is configured on the device and when this value is set to `absent' the value is removed (if necessary) from the device.
+        (Choices: present, absent)[Default: present]
+
+
+NOTES:
+      * This module must be run locally, which can be achieved by specifying `connection: local'.
+      * Please read the :ref:`nios_guide` for more detailed information on how to use Infoblox with Ansible.
+
+
+REQUIREMENTS:  infoblox-client
+
+AUTHOR: Peter Sprygada (@privateip)
+        METADATA:
+          status:
+          - preview
+          supported_by: certified
+        
+
+EXAMPLES:
+
+- name: configure a new network view
+  nios_network_view:
+    name: ansible
+    state: present
+    provider:
+      host: "{{ inventory_hostname_short }}"
+      username: admin
+      password: admin
+  connection: local
+- name: update the comment for network view
+  nios_network_view:
+    name: ansible
+    comment: this is an example comment
+    state: present
+    provider:
+      host: "{{ inventory_hostname_short }}"
+      username: admin
+      password: admin
+  connection: local
+- name: remove the network view
+  nios_network_view:
+    name: ansible
+    state: absent
+    provider:
+      host: "{{ inventory_hostname_short }}"
+      username: admin
+      password: admin
+  connection: local
+- name: update a existing network view
+  nios_network_view:
+    name: {new_name: ansible-new, old_name: ansible}
+    state: present
+    provider:
+      host: "{{ inventory_hostname_short }}"
+      username: admin
+      password: admin
+  connection: local
+
+
+RETURN VALUES:
+ # 

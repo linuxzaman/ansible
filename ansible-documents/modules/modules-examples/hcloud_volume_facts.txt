@@ -1,0 +1,47 @@
+EXAMPLES:
+
+- name: Gather hcloud volume facts
+  local_action:
+    module: hcloud_volume_facts
+- name: Print the gathered facts
+  debug:
+    var: ansible_facts.hcloud_volume_facts
+
+
+RETURN VALUES:
+
+hcloud_volume_facts:
+    description: The volume facts as list
+    returned: always
+    type: complex
+    contains:
+        id:
+            description: Numeric identifier of the volume
+            returned: always
+            type: int
+            sample: 1937415
+        name:
+            description: Name of the volume
+            returned: always
+            type: str
+            sample: my-volume
+        size:
+            description: Size of the volume
+            returned: always
+            type: str
+            sample: 10
+        location:
+            description: Name of the location where the volume resides in
+            returned: always
+            type: str
+            sample: fsn1
+        server:
+            description: Name of the server where the volume is attached to
+            returned: always
+            type: str
+            sample: my-server
+        labels:
+            description: User-defined labels (key-value pairs)
+            returned: always
+            type: dict
+

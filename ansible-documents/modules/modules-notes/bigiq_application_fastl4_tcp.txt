@@ -1,0 +1,275 @@
+> BIGIQ_APPLICATION_FASTL4_TCP    (/usr/lib/python2.7/dist-packages/ansible/modules/network/f5/bigiq_application_fastl4_tcp.py)
+
+        Manages BIG-IQ applications used for load balancing a TCP-based application with a FastL4 profile.
+
+  * This module is maintained by an Ansible Partner
+OPTIONS (= is mandatory):
+
+- add_analytics
+        Collects statistics of the BIG-IP that the application is deployed to.
+        This parameter is only relevant when specifying a `service_environment' which is a BIG-IP; not an SSG.
+        [Default: False]
+        type: bool
+
+- description
+        Description of the application.
+        [Default: (null)]
+        type: str
+
+- inbound_virtual
+        Settings to configure the virtual which will receive the inbound connection.
+        [Default: (null)]
+        suboptions:
+          address:
+            description:
+            - Specifies destination IP address information to which the virtual server sends
+              traffic.
+            - This parameter is required when creating a new application.
+            required: true
+            type: str
+          netmask:
+            description:
+            - Specifies the netmask to associate with the given `destination'.
+            - This parameter is required when creating a new application.
+            required: true
+            type: str
+          port:
+            default: 8080
+            description:
+            - The port that the virtual listens for connections on.
+            - When creating a new application, if this parameter is not specified, the default
+              value of `8080' will be used.
+        
+        type: dict
+
+= name
+        Name of the new application.
+
+        type: str
+
+= password
+        The password for the user account used to connect to the BIG-IP.
+        You may omit this option by setting the environment variable `F5_PASSWORD'.
+        (Aliases: pass, pwd)
+        type: str
+
+- provider
+        A dict object containing connection details.
+        [Default: (null)]
+        suboptions:
+          password:
+            aliases:
+            - pass
+            - pwd
+            description:
+            - The password for the user account used to connect to the BIG-IP.
+            - You may omit this option by setting the environment variable `F5_PASSWORD'.
+            required: true
+            type: str
+          server:
+            description:
+            - The BIG-IP host.
+            - You may omit this option by setting the environment variable `F5_SERVER'.
+            required: true
+            type: str
+          server_port:
+            default: 443
+            description:
+            - The BIG-IP server port.
+            - You may omit this option by setting the environment variable `F5_SERVER_PORT'.
+            type: int
+          ssh_keyfile:
+            description:
+            - Specifies the SSH keyfile to use to authenticate the connection to the remote
+              device.  This argument is only used for `cli' transports.
+            - You may omit this option by setting the environment variable `ANSIBLE_NET_SSH_KEYFILE'.
+            type: path
+          timeout:
+            default: 10
+            description:
+            - Specifies the timeout in seconds for communicating with the network device for
+              either connecting or sending commands.  If the timeout is exceeded before the
+              operation is completed, the module will error.
+            type: int
+          transport:
+            choices:
+            - cli
+            - rest
+            default: rest
+            description:
+            - Configures the transport connection to use when connecting to the remote device.
+            type: str
+          user:
+            description:
+            - The username to connect to the BIG-IP with. This user must have administrative
+              privileges on the device.
+            - You may omit this option by setting the environment variable `F5_USER'.
+            required: true
+            type: str
+          validate_certs:
+            default: true
+            description:
+            - If `no', SSL certificates are not validated. Use this only on personally controlled
+              sites using self-signed certificates.
+            - You may omit this option by setting the environment variable `F5_VALIDATE_CERTS'.
+            type: bool
+        
+        type: dict
+        version_added: 2.5
+
+= server
+        The BIG-IP host.
+        You may omit this option by setting the environment variable `F5_SERVER'.
+
+        type: str
+
+- server_port
+        The BIG-IP server port.
+        You may omit this option by setting the environment variable `F5_SERVER_PORT'.
+        [Default: 443]
+        type: int
+        version_added: 2.2
+
+- servers
+        A list of servers that the application is hosted on.
+        If you are familiar with other BIG-IP setting, you might also refer to this list as the list of pool members.
+        When creating a new application, at least one server is required.
+        [Default: (null)]
+        suboptions:
+          address:
+            description:
+            - The IP address of the server.
+            required: true
+            type: str
+          port:
+            default: 8000
+            description:
+            - The port of the server.
+            - When creating a new application and specifying a server, if this parameter is
+              not provided, the default of `8000' will be used.
+            type: str
+        
+        type: list
+
+- service_environment
+        Specifies the name of service environment that the application will be deployed to.
+        When creating a new application, this parameter is required.
+        The service environment type will be discovered by this module automatically. Therefore, it is crucial that you maintain unique
+        names for items in the different service environment types.
+        SSGs are not supported for this type of application.
+        [Default: (null)]
+        type: str
+
+- state
+        The state of the resource on the system.
+        When `present', guarantees that the resource exists with the provided attributes.
+        When `absent', removes the resource from the system.
+        (Choices: absent, present)[Default: present]
+        type: str
+
+= user
+        The username to connect to the BIG-IP with. This user must have administrative privileges on the device.
+        You may omit this option by setting the environment variable `F5_USER'.
+
+        type: str
+
+- validate_certs
+        If `no', SSL certificates are not validated. Use this only on personally controlled sites using self-signed certificates.
+        You may omit this option by setting the environment variable `F5_VALIDATE_CERTS'.
+        [Default: True]
+        type: bool
+        version_added: 2.0
+
+- wait
+        If the module should wait for the application to be created, deleted or updated.
+        [Default: True]
+        type: bool
+
+
+NOTES:
+      * This module does not support updating of your application (whether deployed or not). If you need to update the application,
+        the recommended practice is to remove and re-create.
+      * This module will not work on BIGIQ version 6.1.x or greater.
+      * For more information on using Ansible to manage F5 Networks devices see https://www.ansible.com/integrations/networks/f5.
+      * Requires BIG-IP software version >= 12.
+      * The F5 modules only manipulate the running configuration of the F5 product. To ensure that BIG-IP specific configuration
+        persists to disk, be sure to include at least one task that uses the [bigip_config] module to save the running
+        configuration. Refer to the module's documentation for the correct usage of the module to save your running configuration.
+
+
+AUTHOR: Tim Rupp (@caphrim007)
+        METADATA:
+          status:
+          - preview
+          supported_by: certified
+        
+
+EXAMPLES:
+
+- name: Load balance a TCP-based application with a FastL4 profile
+  bigiq_application_fastl4_tcp:
+    name: my-app
+    description: My description
+    service_environment: my-bigip-device
+    servers:
+      - address: 1.2.3.4
+        port: 8080
+      - address: 5.6.7.8
+        port: 8080
+    inbound_virtual:
+      name: foo
+      address: 2.2.2.2
+      netmask: 255.255.255.255
+      port: 443
+    provider:
+      password: secret
+      server: lb.mydomain.com
+      user: admin
+    state: present
+  delegate_to: localhost
+
+
+RETURN VALUES:
+
+description:
+  description: The new description of the application of the resource.
+  returned: changed
+  type: str
+  sample: My application
+service_environment:
+  description: The environment which the service was deployed to.
+  returned: changed
+  type: str
+  sample: my-ssg1
+inbound_virtual_destination:
+  description: The destination of the virtual that was created.
+  returned: changed
+  type: str
+  sample: 6.7.8.9
+inbound_virtual_netmask:
+  description: The network mask of the provided inbound destination.
+  returned: changed
+  type: str
+  sample: 255.255.255.0
+inbound_virtual_port:
+  description: The port the inbound virtual address listens on.
+  returned: changed
+  type: int
+  sample: 80
+servers:
+  description: List of servers, and their ports, that make up the application.
+  type: complex
+  returned: changed
+  contains:
+    address:
+      description: The IP address of the server.
+      returned: changed
+      type: str
+      sample: 2.3.4.5
+    port:
+      description: The port that the server listens on.
+      returned: changed
+      type: int
+      sample: 8080
+  sample: hash/dictionary of values
+

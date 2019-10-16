@@ -1,0 +1,125 @@
+> PUREFB_DS    (/usr/lib/python2.7/dist-packages/ansible/modules/storage/purestorage/purefb_ds.py)
+
+        Create or erase directory services configurations. There is no facility to SSL certificates at this time. Use the FlashBlade GUI
+        for this additional configuration work. To modify an existing directory service configuration you must first delete an exisitng
+        configuration and then recreate with new settings.
+
+  * This module is maintained by The Ansible Community
+OPTIONS (= is mandatory):
+
+- api_token
+        FlashBlade API token for admin privileged user.
+        [Default: (null)]
+        type: str
+
+= base_dn
+        Sets the base of the Distinguished Name (DN) of the directory service groups. The base should consist of only Domain Components
+        (DCs). The base_dn will populate with a default value when a URI is entered by parsing domain components from the URI. The base
+        DN should specify DC= for each domain component and multiple DCs should be separated by commas.
+
+        type: str
+
+- bind_password
+        Sets the password of the bind_user user name account.
+        [Default: (null)]
+        type: str
+
+- bind_user
+        Sets the user name that can be used to bind to and query the directory.
+        For Active Directory, enter the username - often referred to as sAMAccountName or User Logon Name - of the account that is used
+        to perform directory lookups.
+        For OpenLDAP, enter the full DN of the user.
+        [Default: (null)]
+        type: str
+
+- dstype
+        The type of directory service to work on
+        (Choices: management, nfs, smb)[Default: (null)]
+        type: str
+
+- enable
+        Whether to enable or disable directory service support.
+        [Default: False]
+        type: bool
+
+- fb_url
+        FlashBlade management IP address or Hostname.
+        [Default: (null)]
+        type: str
+
+- state
+        Create or delete directory service configuration
+        (Choices: absent, present)[Default: present]
+        type: str
+
+- uri
+        A list of up to 30 URIs of the directory servers. Each URI must include the scheme ldap:// or ldaps:// (for LDAP over SSL), a
+        hostname, and a domain name or IP address. For example, ldap://ad.company.com configures the directory service with the hostname
+        "ad" in the domain "company.com" while specifying the unencrypted LDAP protocol.
+        [Default: (null)]
+        type: list
+
+
+NOTES:
+      * This module requires the `purity_fb' Python library
+      * You must set `PUREFB_URL' and `PUREFB_API' environment variables if `fb_url' and `api_token' arguments are not passed to
+        the module directly
+
+
+REQUIREMENTS:  python >= 2.7, purity_fb >= 1.1
+
+AUTHOR: Pure Storage Ansible Team (@sdodsley) <pure-ansible-team@purestorage.com>
+        METADATA:
+          status:
+          - preview
+          supported_by: community
+        
+
+EXAMPLES:
+
+- name: Delete existing management directory service
+  purefb_ds:
+    dstype: management
+    state: absent
+    fb_url: 10.10.10.2
+    api_token: e31060a7-21fc-e277-6240-25983c6c4592
+
+- name: Create NFS directory service (disabled)
+  purefb_ds:
+    dstype: nfs
+    uri: "ldap://lab.purestorage.com"
+    base_dn: "DC=lab,DC=purestorage,DC=com"
+    bind_user: Administrator
+    bind_password: password
+    fb_url: 10.10.10.2
+    api_token: e31060a7-21fc-e277-6240-25983c6c4592
+
+- name: Enable existing SMB directory service
+  purefb_ds:
+    dstypr: smb
+    enable: true
+    fb_url: 10.10.10.2
+    api_token: e31060a7-21fc-e277-6240-25983c6c4592
+
+- name: Disable existing management directory service
+  purefb_ds:
+    dstype: management
+    enable: false
+    fb_url: 10.10.10.2
+    api_token: e31060a7-21fc-e277-6240-25983c6c4592
+
+- name: Create NFS directory service (enabled)
+  purefb_ds:
+    dstype: nfs
+    enable: true
+    uri: "ldap://lab.purestorage.com"
+    base_dn: "DC=lab,DC=purestorage,DC=com"
+    bind_user: Administrator
+    bind_password: password
+    fb_url: 10.10.10.2
+    api_token: e31060a7-21fc-e277-6240-25983c6c4592
+
+
+RETURN VALUES:
+
+

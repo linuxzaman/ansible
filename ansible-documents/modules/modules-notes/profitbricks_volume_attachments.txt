@@ -1,0 +1,71 @@
+> PROFITBRICKS_VOLUME_ATTACHMENTS    (/usr/lib/python2.7/dist-packages/ansible/modules/cloud/profitbricks/profitbricks_volume_attachments.py)
+
+        Allows you to attach or detach a volume from a ProfitBricks server. This module has a dependency on profitbricks >= 1.0.0
+
+  * This module is maintained by The Ansible Community
+OPTIONS (= is mandatory):
+
+= datacenter
+        The datacenter in which to operate.
+
+
+= server
+        The name of the server you wish to detach or attach the volume.
+
+
+- state
+        Indicate desired state of the resource
+        (Choices: present, absent)[Default: present]
+
+- subscription_password
+        THe ProfitBricks password. Overrides the PB_PASSWORD environment variable.
+        [Default: (null)]
+
+- subscription_user
+        The ProfitBricks username. Overrides the PB_SUBSCRIPTION_ID environment variable.
+        [Default: (null)]
+
+= volume
+        The volume name or ID.
+
+
+- wait
+        wait for the operation to complete before returning
+        [Default: yes]
+        type: bool
+
+- wait_timeout
+        how long before wait gives up, in seconds
+        [Default: 600]
+
+
+REQUIREMENTS:  profitbricks
+
+AUTHOR: Matt Baldwin (@baldwinSPC) <baldwin@stackpointcloud.com>
+        METADATA:
+          status:
+          - preview
+          supported_by: community
+        
+
+EXAMPLES:
+
+# Attach a Volume
+
+- profitbricks_volume_attachments:
+    datacenter: Tardis One
+    server: node002
+    volume: vol01
+    wait_timeout: 500
+    state: present
+
+# Detach a Volume
+
+- profitbricks_volume_attachments:
+    datacenter: Tardis One
+    server: node002
+    volume: vol01
+    wait_timeout: 500
+    state: absent
+
+

@@ -1,0 +1,25 @@
+EXAMPLES:
+
+- name: Change the hostname to sample-hostname
+  win_hostname:
+    name: sample-hostname
+  register: res
+
+- name: Reboot
+  win_reboot:
+  when: res.reboot_required
+
+
+RETURN VALUES:
+
+old_name:
+  description: The original hostname that was set before it was changed.
+  returned: always
+  type: str
+  sample: old_hostname
+reboot_required:
+  description: Whether a reboot is required to complete the hostname change.
+  returned: always
+  type: bool
+  sample: true
+

@@ -1,0 +1,68 @@
+EXAMPLES:
+
+- name: Change the guest account name
+  win_security_policy:
+    section: System Access
+    key: NewGuestName
+    value: Guest Account
+
+- name: Set the maximum password age
+  win_security_policy:
+    section: System Access
+    key: MaximumPasswordAge
+    value: 15
+
+- name: Do not store passwords using reversible encryption
+  win_security_policy:
+    section: System Access
+    key: ClearTextPassword
+    value: 0
+
+- name: Enable system events
+  win_security_policy:
+    section: Event Audit
+    key: AuditSystemEvents
+    value: 1
+
+
+RETURN VALUES:
+
+rc:
+  description: The return code after a failure when running SecEdit.exe.
+  returned: failure with secedit calls
+  type: int
+  sample: -1
+stdout:
+  description: The output of the STDOUT buffer after a failure when running
+    SecEdit.exe.
+  returned: failure with secedit calls
+  type: str
+  sample: check log for error details
+stderr:
+  description: The output of the STDERR buffer after a failure when running
+    SecEdit.exe.
+  returned: failure with secedit calls
+  type: str
+  sample: failed to import security policy
+import_log:
+  description: The log of the SecEdit.exe /configure job that configured the
+    local policies. This is used for debugging purposes on failures.
+  returned: secedit.exe /import run and change occurred
+  type: str
+  sample: Completed 6 percent (0/15) \tProcess Privilege Rights area.
+key:
+  description: The key in the section passed to the module to modify.
+  returned: success
+  type: str
+  sample: NewGuestName
+section:
+  description: The section passed to the module to modify.
+  returned: success
+  type: str
+  sample: System Access
+value:
+  description: The value passed to the module to modify to.
+  returned: success
+  type: str
+  sample: Guest Account
+

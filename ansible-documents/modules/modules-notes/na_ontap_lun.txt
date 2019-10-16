@@ -1,0 +1,153 @@
+> NA_ONTAP_LUN    (/usr/lib/python2.7/dist-packages/ansible/modules/storage/netapp/na_ontap_lun.py)
+
+        Create, destroy, resize LUNs on NetApp ONTAP.
+
+  * This module is maintained by an Ansible Partner
+OPTIONS (= is mandatory):
+
+= flexvol_name
+        The name of the FlexVol the LUN should exist on.
+
+
+- force_remove
+        If "true", override checks that prevent a LUN from being destroyed if it is online and mapped.
+        If "false", destroying an online and mapped LUN will fail.
+        [Default: False]
+        type: bool
+
+- force_remove_fenced
+        If "true", override checks that prevent a LUN from being destroyed while it is fenced.
+        If "false", attempting to destroy a fenced LUN will fail.
+        The default if not specified is "false". This field is available in Data ONTAP 8.2 and later.
+        [Default: False]
+        type: bool
+
+- force_resize
+        Forcibly reduce the size. This is required for reducing the size of the LUN to avoid accidentally reducing the LUN size.
+        [Default: False]
+        type: bool
+
+= hostname
+        The hostname or IP address of the ONTAP instance.
+
+        type: str
+
+- http_port
+        Override the default port (80 or 443) with this port
+        [Default: (null)]
+        type: int
+
+- https
+        Enable and disable https
+        [Default: False]
+        type: bool
+
+= name
+        The name of the LUN to manage.
+
+
+- ontapi
+        The ontap api version to use
+        [Default: (null)]
+        type: int
+
+- ostype
+        The os type for the LUN.
+        [Default: image]
+
+= password
+        Password for the specified user.
+        (Aliases: pass)
+        type: str
+
+- size
+        The size of the LUN in `size_unit'.
+        Required when `state=present'.
+        [Default: (null)]
+
+- size_unit
+        The unit used to interpret the size parameter.
+        (Choices: bytes, b, kb, mb, gb, tb, pb, eb, zb, yb)[Default: gb]
+
+- space_allocation
+        This enables support for the SCSI Thin Provisioning features.  If the Host and file system do not support this do not enable it.
+        [Default: False]
+        type: bool
+        version_added: 2.7
+
+- space_reserve
+        This can be set to "false" which will create a LUN without any space being reserved.
+        [Default: True]
+        type: bool
+
+- state
+        Whether the specified LUN should exist or not.
+        (Choices: present, absent)[Default: present]
+
+= username
+        This can be a Cluster-scoped or SVM-scoped account, depending on whether a Cluster-level or SVM-level API is required. For more
+        information, please read the documentation https://mysupport.netapp.com/NOW/download/software/nmsdk/9.4/.
+        (Aliases: user)
+        type: str
+
+- validate_certs
+        If set to `no', the SSL certificates will not be validated.
+        This should only set to `False' used on personally controlled sites using self-signed certificates.
+        [Default: True]
+        type: bool
+
+= vserver
+        The name of the vserver to use.
+
+
+
+NOTES:
+      * The modules prefixed with na\\_ontap are built to support the ONTAP storage platform.
+
+
+REQUIREMENTS:  A physical or virtual clustered Data ONTAP system. The modules support Data ONTAP 9.1 and onward, Ansible 2.6, Python2
+        netapp-lib (2017.10.30) or later. Install using 'pip install netapp-lib', Python3 netapp-lib (2018.11.13) or
+        later. Install using 'pip install netapp-lib', To enable http on the cluster you must run the following commands
+        'set -privilege advanced;' 'system services web modify -http-enabled true;'
+
+AUTHOR: NetApp Ansible Team (@carchi8py) <ng-ansibleteam@netapp.com>
+        METADATA:
+          status:
+          - preview
+          supported_by: certified
+        
+
+EXAMPLES:
+
+- name: Create LUN
+  na_ontap_lun:
+    state: present
+    name: ansibleLUN
+    flexvol_name: ansibleVolume
+    vserver: ansibleVServer
+    size: 5
+    size_unit: mb
+    ostype: linux
+    space_reserve: True
+    hostname: "{{ netapp_hostname }}"
+    username: "{{ netapp_username }}"
+    password: "{{ netapp_password }}"
+
+- name: Resize LUN
+  na_ontap_lun:
+    state: present
+    name: ansibleLUN
+    force_resize: True
+    flexvol_name: ansibleVolume
+    vserver: ansibleVServer
+    size: 5
+    size_unit: gb
+    hostname: "{{ netapp_hostname }}"
+    username: "{{ netapp_username }}"
+    password: "{{ netapp_password }}"
+
+
+RETURN VALUES:
+
+
+

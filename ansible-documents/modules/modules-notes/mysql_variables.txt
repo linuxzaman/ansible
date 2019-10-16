@@ -1,0 +1,104 @@
+> MYSQL_VARIABLES    (/usr/lib/python2.7/dist-packages/ansible/modules/database/mysql/mysql_variables.py)
+
+        Query / Set MySQL variables.
+
+  * This module is maintained by The Ansible Community
+OPTIONS (= is mandatory):
+
+- ca_cert
+        The path to a Certificate Authority (CA) certificate. This option, if used, must specify the same certificate as used by the
+        server.
+        (Aliases: ssl_ca)[Default: (null)]
+        type: path
+        version_added: 2.0
+
+- client_cert
+        The path to a client public key certificate.
+        (Aliases: ssl_cert)[Default: (null)]
+        type: path
+        version_added: 2.0
+
+- client_key
+        The path to the client private key.
+        (Aliases: ssl_key)[Default: (null)]
+        type: path
+        version_added: 2.0
+
+- config_file
+        Specify a config file from which user and password are to be read.
+        [Default: ~/.my.cnf]
+        type: path
+        version_added: 2.0
+
+- connect_timeout
+        The connection timeout when connecting to the MySQL server.
+        [Default: 30]
+        type: int
+        version_added: 2.1
+
+- login_host
+        Host running the database.
+        [Default: localhost]
+        type: str
+
+- login_password
+        The password used to authenticate with.
+        [Default: (null)]
+        type: str
+
+- login_port
+        Port of the MySQL server. Requires `login_host' be defined as other than localhost if login_port is used.
+        [Default: 3306]
+        type: int
+
+- login_unix_socket
+        The path to a Unix domain socket for local connections.
+        [Default: (null)]
+        type: str
+
+- login_user
+        The username used to authenticate with.
+        [Default: (null)]
+        type: str
+
+- value
+        If set, then sets variable value to this
+        [Default: (null)]
+        type: str
+
+= variable
+        Variable name to operate
+
+        type: str
+
+
+NOTES:
+      * Requires the PyMySQL (Python 2.7 and Python 3.X) or MySQL-python (Python 2.X) package on the remote host. The Python
+        package may be installed with apt-get install python-pymysql (Ubuntu; see [apt]) or yum install python2-PyMySQL
+        (RHEL/CentOS/Fedora; see [yum]). You can also use dnf install python2-PyMySQL for newer versions of Fedora; see [dnf].
+      * Both `login_password' and `login_user' are required when you are passing credentials. If none are present, the module will
+        attempt to read the credentials from `~/.my.cnf', and finally fall back to using the MySQL default login of 'root' with no
+        password.
+
+
+REQUIREMENTS:  PyMySQL (Python 2.7 and Python 3.X), or, MySQLdb (Python 2.x)
+
+AUTHOR: Balazs Pocze (@banyek)
+        METADATA:
+          status:
+          - preview
+          supported_by: community
+        
+
+EXAMPLES:
+
+- name: Check for sync_binlog setting
+- mysql_variables:
+    variable: sync_binlog
+
+- name: Set read_only variable to 1
+- mysql_variables:
+    variable: read_only
+    value: 1
+
+

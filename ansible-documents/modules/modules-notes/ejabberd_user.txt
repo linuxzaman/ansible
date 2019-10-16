@@ -1,0 +1,61 @@
+> EJABBERD_USER    (/usr/lib/python2.7/dist-packages/ansible/modules/web_infrastructure/ejabberd_user.py)
+
+        This module provides user management for ejabberd servers
+
+  * This module is maintained by The Ansible Community
+OPTIONS (= is mandatory):
+
+= host
+        the ejabberd host associated with this username
+
+
+- logging
+        enables or disables the local syslog facility for this module
+        [Default: False]
+        type: bool
+
+- password
+        the password to assign to the username
+        [Default: (null)]
+
+- state
+        describe the desired state of the user to be managed
+        (Choices: present, absent)[Default: present]
+
+= username
+        the name of the user to manage
+
+
+
+NOTES:
+      * Password parameter is required for state == present only
+      * Passwords must be stored in clear text for this release
+      * The ejabberd configuration file must include mod_admin_extra as a module.
+
+
+REQUIREMENTS:  ejabberd with mod_admin_extra
+
+AUTHOR: Peter Sprygada (@privateip)
+        METADATA:
+          status:
+          - preview
+          supported_by: community
+        
+
+EXAMPLES:
+
+# Example playbook entries using the ejabberd_user module to manage users state.
+
+- name: create a user if it does not exist
+  ejabberd_user:
+    username: test
+    host: server
+    password: password
+
+- name: delete a user if it exists
+  ejabberd_user:
+    username: test
+    host: server
+    state: absent
+
+

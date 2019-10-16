@@ -1,0 +1,54 @@
+EXAMPLES:
+
+- name: create a security group
+  cs_securitygroup:
+    name: default
+    description: default security group
+  delegate_to: localhost
+
+- name: remove a security group
+  cs_securitygroup:
+    name: default
+    state: absent
+  delegate_to: localhost
+
+
+RETURN VALUES:
+
+---
+id:
+  description: UUID of the security group.
+  returned: success
+  type: str
+  sample: a6f7a5fc-43f8-11e5-a151-feff819cdc9f
+name:
+  description: Name of security group.
+  returned: success
+  type: str
+  sample: app
+description:
+  description: Description of security group.
+  returned: success
+  type: str
+  sample: application security group
+tags:
+  description: List of resource tags associated with the security group.
+  returned: success
+  type: list
+  sample: '[ { "key": "foo", "value": "bar" } ]'
+project:
+  description: Name of project the security group is related to.
+  returned: success
+  type: str
+  sample: Production
+domain:
+  description: Domain the security group is related to.
+  returned: success
+  type: str
+  sample: example domain
+account:
+  description: Account the security group is related to.
+  returned: success
+  type: str
+  sample: example account
+

@@ -1,0 +1,50 @@
+> RABBITMQ_PARAMETER    (/usr/lib/python2.7/dist-packages/ansible/modules/messaging/rabbitmq/rabbitmq_parameter.py)
+
+        Manage dynamic, cluster-wide parameters for RabbitMQ
+
+  * This module is maintained by The Ansible Community
+OPTIONS (= is mandatory):
+
+= component
+        Name of the component of which the parameter is being set
+
+
+= name
+        Name of the parameter being set
+
+
+- node
+        erlang node name of the rabbit we wish to configure
+        [Default: rabbit]
+        version_added: 1.2
+
+- state
+        Specify if user is to be added or removed
+        (Choices: present, absent)[Default: present]
+
+- value
+        Value of the parameter, as a JSON term
+        [Default: (null)]
+
+- vhost
+        vhost to apply access privileges.
+        [Default: /]
+
+
+AUTHOR: Chris Hoffman (@chrishoffman)
+        METADATA:
+          status:
+          - preview
+          supported_by: community
+        
+
+EXAMPLES:
+
+# Set the federation parameter 'local_username' to a value of 'guest' (in quotes)
+- rabbitmq_parameter:
+    component: federation
+    name: local-username
+    value: '"guest"'
+    state: present
+
+

@@ -1,0 +1,384 @@
+> MERAKI_SSID    (/usr/lib/python2.7/dist-packages/ansible/modules/network/meraki/meraki_ssid.py)
+
+        Allows for management of SSIDs in a Meraki wireless environment.
+
+  * This module is maintained by The Ansible Community
+OPTIONS (= is mandatory):
+
+- ap_tags_vlan_ids
+        List of VLAN tags.
+        [Default: (null)]
+        suboptions:
+          tags:
+            description:
+            - List of AP tags.
+            type: list
+          vlan_id:
+            description:
+            - Numerical identifier that is assigned to the VLAN.
+            type: int
+        
+        type: list
+
+- auth_key
+        Authentication key provided by the dashboard. Required if environmental variable `MERAKI_KEY' is not set.
+        [Default: (null)]
+        type: str
+
+- auth_mode
+        Set authentication mode of network.
+        (Choices: open, psk, open-with-radius, 8021x-meraki, 8021x-radius)[Default: (null)]
+        type: str
+
+- band_selection
+        Set band selection mode.
+        (Choices: Dual band operation, 5 GHz band only, Dual band operation with Band Steering)[Default: (null)]
+        type: str
+
+- concentrator_network_id
+        The concentrator to use for 'Layer 3 roaming with a concentrator' or 'VPN'.
+        [Default: (null)]
+        type: str
+
+- default_vlan_id
+        Default VLAN ID.
+        [Default: (null)]
+        type: str
+
+- enabled
+        Enable or disable SSID network.
+        [Default: (null)]
+        type: bool
+
+- encryption_mode
+        Set encryption mode of network.
+        (Choices: wpa, eap, wpa-eap)[Default: (null)]
+        type: str
+
+- host
+        Hostname for Meraki dashboard.
+        Only useful for internal Meraki developers.
+        [Default: api.meraki.com]
+        type: str
+
+- ip_assignment_mode
+        Method of which SSID uses to assign IP addresses.
+        (Choices: NAT mode, Bridge mode, Layer 3 roaming, Layer 3 roaming with a concentrator, VPN)[Default: (null)]
+        type: str
+
+- min_bitrate
+        Minimum bitrate (Mbps) allowed on SSID.
+        (Choices: 1, 2, 5.5, 6, 9, 11, 12, 18, 24, 36, 48, 54)[Default: (null)]
+        type: float
+
+- name
+        Name of SSID.
+        [Default: (null)]
+        type: str
+
+- net_id
+        ID of network.
+        [Default: (null)]
+        type: str
+
+- net_name
+        Name of network.
+        [Default: (null)]
+        type: str
+
+- number
+        SSID number within network.
+        (Aliases: ssid_number)[Default: (null)]
+        type: int
+
+- org_id
+        ID of organization.
+        [Default: (null)]
+        type: int
+
+- org_name
+        Name of organization.
+        (Aliases: organization)[Default: (null)]
+        type: str
+
+- output_level
+        Set amount of debug output during module execution.
+        (Choices: debug, normal)[Default: normal]
+        type: str
+
+- per_client_bandwidth_limit_down
+        Maximum bandwidth in Mbps devices on SSID can download.
+        [Default: (null)]
+        type: int
+
+- per_client_bandwidth_limit_up
+        Maximum bandwidth in Mbps devices on SSID can upload.
+        [Default: (null)]
+        type: int
+
+- psk
+        Password for wireless network.
+        Requires auth_mode to be set to psk.
+        [Default: (null)]
+        type: str
+
+- radius_accounting_enabled
+        Enable or disable RADIUS accounting.
+        [Default: (null)]
+        type: bool
+
+- radius_accounting_servers
+        List of RADIUS servers for RADIUS accounting.
+        [Default: (null)]
+        suboptions:
+          host:
+            description:
+            - IP address or hostname of RADIUS server.
+            type: str
+          port:
+            description:
+            - Port number RADIUS server is listening to.
+            type: int
+          secret:
+            description:
+            - RADIUS password.
+            type: str
+        
+        type: list
+
+- radius_coa_enabled
+        Enable or disable RADIUS CoA (Change of Authorization) on SSID.
+        [Default: (null)]
+        type: bool
+
+- radius_failover_policy
+        Set client access policy in case RADIUS servers aren't available.
+        (Choices: Deny access, Allow access)[Default: (null)]
+        type: str
+
+- radius_load_balancing_policy
+        Set load balancing policy when multiple RADIUS servers are specified.
+        (Choices: Strict priority order, Round robin)[Default: (null)]
+        type: str
+
+- radius_servers
+        List of RADIUS servers.
+        [Default: (null)]
+        suboptions:
+          host:
+            description:
+            - IP address or hostname of RADIUS server.
+            type: str
+          port:
+            description:
+            - Port number RADIUS server is listening to.
+            type: int
+          secret:
+            description:
+            - RADIUS password.
+            type: str
+        
+        type: list
+
+- splash_page
+        Set to enable splash page and specify type of splash.
+        (Choices: None, Click-through splash page, Billing, Password-protected with Meraki RADIUS, Password-protected with custom RADIUS,
+        Password-protected with Active Directory, Password-protected with LDAP, SMS authentication, Systems Manager Sentry, Facebook Wi-
+        Fi, Google OAuth, Sponsored guest)[Default: (null)]
+        type: str
+
+- state
+        Specifies whether SNMP information should be queried or modified.
+        (Choices: absent, query, present)[Default: present]
+        type: str
+
+- timeout
+        Time to timeout for HTTP requests.
+        [Default: 30]
+        type: int
+
+- use_https
+        If `no', it will use HTTP. Otherwise it will use HTTPS.
+        Only useful for internal Meraki developers.
+        [Default: True]
+        type: bool
+
+- use_proxy
+        If `no', it will not use a proxy, even if one is defined in an environment variable on the target hosts.
+        [Default: (null)]
+        type: bool
+
+- use_vlan_tagging
+        Set whether to use VLAN tagging.
+        [Default: (null)]
+        type: bool
+
+- validate_certs
+        Whether to validate HTTP certificates.
+        [Default: True]
+        type: bool
+
+- vlan_id
+        ID number of VLAN on SSID.
+        [Default: (null)]
+        type: int
+
+- walled_garden_enabled
+        Enable or disable walled garden functionality.
+        [Default: (null)]
+        type: bool
+
+- walled_garden_ranges
+        List of walled garden ranges.
+        [Default: (null)]
+        type: list
+
+- wpa_encryption_mode
+        Encryption mode within WPA2 specification.
+        (Choices: WPA1 and WPA2, WPA2 only)[Default: (null)]
+        type: str
+
+
+NOTES:
+      * Deleting an SSID does not delete RADIUS servers.
+      * More information about the Meraki API can be found at https://dashboard.meraki.com/api_docs.
+      * Some of the options are likely only used for developers within Meraki.
+
+
+AUTHOR: Kevin Breit (@kbreit)
+        METADATA:
+          status:
+          - preview
+          supported_by: community
+        
+
+EXAMPLES:
+
+- name: Enable and name SSID
+  meraki_ssid:
+    auth_key: abc123
+    state: present
+    org_name: YourOrg
+    net_name: WiFi
+    name: GuestSSID
+    enabled: true
+  delegate_to: localhost
+
+- name: Set PSK with invalid encryption mode
+  meraki_ssid:
+    auth_key: abc123
+    state: present
+    org_name: YourOrg
+    net_name: WiFi
+    name: GuestSSID
+    auth_mode: psk
+    psk: abc1234
+    encryption_mode: eap
+  ignore_errors: yes
+  delegate_to: localhost
+
+- name: Configure RADIUS servers
+  meraki_ssid:
+    auth_key: abc123
+    state: present
+    org_name: YourOrg
+    net_name: WiFi
+    name: GuestSSID
+    auth_mode: open-with-radius
+    radius_servers:
+      - host: 192.0.1.200
+        port: 1234
+        secret: abc98765
+  delegate_to: localhost
+
+- name: Enable click-through splash page
+  meraki_ssid:
+    auth_key: abc123
+    state: present
+    org_name: YourOrg
+    net_name: WiFi
+    name: GuestSSID
+    splash_page: Click-through splash page
+  delegate_to: localhost
+
+
+RETURN VALUES:
+
+data:
+    description: List of wireless SSIDs.
+    returned: success
+    type: complex
+    contains:
+        number:
+            description: Zero-based index number for SSIDs.
+            returned: success
+            type: int
+            sample: 0
+        name:
+            description:
+              - Name of wireless SSID.
+              - This value is what is broadcasted.
+            returned: success
+            type: str
+            sample: CorpWireless
+        enabled:
+            description: Enabled state of wireless network.
+            returned: success
+            type: bool
+            sample: true
+        splashPage:
+            description: Splash page to show when user authenticates.
+            returned: success
+            type: str
+            sample: Click-through splash page
+        ssidAdminAccessible:
+            description: Whether SSID is administratively accessible.
+            returned: success
+            type: bool
+            sample: true
+        authMode:
+            description: Authentication method.
+            returned: success
+            type: str
+            sample: psk
+        psk:
+            description: Secret wireless password.
+            returned: success
+            type: str
+            sample: SecretWiFiPass
+        encryptionMode:
+            description: Wireless traffic encryption method.
+            returned: success
+            type: str
+            sample: wpa
+        wpaEncryptionMode:
+            description: Enabled WPA versions.
+            returned: success
+            type: str
+            sample: WPA2 only
+        ipAssignmentMode:
+            description: Wireless client IP assignment method.
+            returned: success
+            type: str
+            sample: NAT mode
+        minBitrate:
+            description: Minimum bitrate a wireless client can connect at.
+            returned: success
+            type: int
+            sample: 11
+        bandSelection:
+            description: Wireless RF frequency wireless network will be broadcast on.
+            returned: success
+            type: str
+            sample: 5 GHz band only
+        perClientBandwidthLimitUp:
+            description: Maximum upload bandwidth a client can use.
+            returned: success
+            type: int
+            sample: 1000
+        perClientBandwidthLimitDown:
+            description: Maximum download bandwidth a client can use.
+            returned: success
+            type: int
+            sample: 0
+

@@ -1,0 +1,63 @@
+> IAP_TOKEN    (/usr/lib/python2.7/dist-packages/ansible/modules/network/itential/iap_token.py)
+
+        Checks the connection to IAP and retrieves a login token.
+
+  * This module is maintained by The Ansible Community
+OPTIONS (= is mandatory):
+
+- https
+        Use HTTPS to connect
+        By default using http
+        [Default: False]
+        type: bool
+
+= iap_fqdn
+        Provide the fqdn or ip-address for the Itential Automation Platform
+        [Default: None]
+
+= iap_port
+        Provide the port number for the Itential Automation Platform
+        [Default: None]
+
+= password
+        Provide the password for the Itential Automation Platform
+        [Default: None]
+
+= username
+        Provide the username for the Itential Automation Platform
+        [Default: None]
+
+- validate_certs
+        If `no', SSL certificates for the target url will not be validated. This should only be used on personally controlled sites using
+        self-signed certificates.
+        [Default: False]
+        type: bool
+
+
+AUTHOR: Itential (@cma0) <opensource@itential.com>
+        METADATA:
+          status:
+          - preview
+          supported_by: community
+        
+
+EXAMPLES:
+
+- name: Get token for the Itential Automation Platform
+  iap_token:
+    iap_port: 3000
+    iap_fqdn: localhost
+    username: myusername
+    password: mypass
+  register: result
+
+- debug: var=result.token
+
+
+RETURN VALUES:
+
+token:
+    description: The token acquired from the Itential Automation Platform
+    type: str
+    returned: always
+

@@ -1,0 +1,40 @@
+EXAMPLES:
+
+# File copy from ansible controller to nxos device
+  - name: "copy from server to device"
+    nxos_file_copy:
+      local_file: "./test_file.txt"
+      remote_file: "test_file.txt"
+
+# Initiate file copy from the nxos device to transfer file from an SCP server back to the nxos device
+  - name: "initiate file copy from device"
+    nxos_file_copy:
+      nxos_file_copy:
+      file_pull: True
+      local_file: "xyz"
+      local_filr_directory: "dir1/dir2/dir3"
+      remote_file: "/mydir/abc"
+      remote_scp_server: "192.168.0.1"
+      remote_scp_server_user: "myUser"
+      remote_scp_server_password: "myPassword"
+
+
+RETURN VALUES:
+
+transfer_status:
+    description: Whether a file was transferred. "No Transfer" or "Sent".
+                 If file_pull is successful, it is set to "Received".
+    returned: success
+    type: str
+    sample: 'Sent'
+local_file:
+    description: The path of the local file.
+    returned: success
+    type: str
+    sample: '/path/to/local/file'
+remote_file:
+    description: The path of the remote file.
+    returned: success
+    type: str
+    sample: '/path/to/remote/file'
+

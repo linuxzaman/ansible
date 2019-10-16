@@ -1,0 +1,870 @@
+> FORTIOS_ANTIVIRUS_PROFILE    (/usr/lib/python2.7/dist-packages/ansible/modules/network/fortios/fortios_antivirus_profile.py)
+
+        This module is able to configure a FortiGate or FortiOS by allowing the user to configure antivirus feature and profile category.
+        Examples includes all options and need to be adjusted to datasources before usage. Tested with FOS v6.0.2
+
+  * This module is maintained by The Ansible Community
+OPTIONS (= is mandatory):
+
+- antivirus_profile
+        Configure AntiVirus profiles.
+        [Default: None]
+        suboptions:
+          analytics-bl-filetype:
+            description:
+            - Only submit files matching this DLP file-pattern to FortiSandbox. Source dlp.filepattern.id.
+          analytics-db:
+            choices:
+            - disable
+            - enable
+            description:
+            - Enable/disable using the FortiSandbox signature database to supplement the AV
+              signature databases.
+          analytics-max-upload:
+            description:
+            - Maximum size of files that can be uploaded to FortiSandbox (1 - 395 MBytes,
+              default = 10).
+          analytics-wl-filetype:
+            description:
+            - Do not submit files matching this DLP file-pattern to FortiSandbox. Source dlp.filepattern.id.
+          av-block-log:
+            choices:
+            - enable
+            - disable
+            description:
+            - Enable/disable logging for AntiVirus file blocking.
+          av-virus-log:
+            choices:
+            - enable
+            - disable
+            description:
+            - Enable/disable AntiVirus logging.
+          comment:
+            description:
+            - Comment.
+          content-disarm:
+            description:
+            - AV Content Disarm and Reconstruction settings.
+            suboptions:
+              cover-page:
+                choices:
+                - disable
+                - enable
+                description:
+                - Enable/disable inserting a cover page into the disarmed document.
+              detect-only:
+                choices:
+                - disable
+                - enable
+                description:
+                - Enable/disable only detect disarmable files, do not alter content.
+              office-embed:
+                choices:
+                - disable
+                - enable
+                description:
+                - Enable/disable stripping of embedded objects in Microsoft Office documents.
+              office-hylink:
+                choices:
+                - disable
+                - enable
+                description:
+                - Enable/disable stripping of hyperlinks in Microsoft Office documents.
+              office-linked:
+                choices:
+                - disable
+                - enable
+                description:
+                - Enable/disable stripping of linked objects in Microsoft Office documents.
+              office-macro:
+                choices:
+                - disable
+                - enable
+                description:
+                - Enable/disable stripping of macros in Microsoft Office documents.
+              original-file-destination:
+                choices:
+                - fortisandbox
+                - quarantine
+                - discard
+                description:
+                - Destination to send original file if active content is removed.
+              pdf-act-form:
+                choices:
+                - disable
+                - enable
+                description:
+                - Enable/disable stripping of actions that submit data to other targets in
+                  PDF documents.
+              pdf-act-gotor:
+                choices:
+                - disable
+                - enable
+                description:
+                - Enable/disable stripping of links to other PDFs in PDF documents.
+              pdf-act-java:
+                choices:
+                - disable
+                - enable
+                description:
+                - Enable/disable stripping of actions that execute JavaScript code in PDF
+                  documents.
+              pdf-act-launch:
+                choices:
+                - disable
+                - enable
+                description:
+                - Enable/disable stripping of links to external applications in PDF documents.
+              pdf-act-movie:
+                choices:
+                - disable
+                - enable
+                description:
+                - Enable/disable stripping of embedded movies in PDF documents.
+              pdf-act-sound:
+                choices:
+                - disable
+                - enable
+                description:
+                - Enable/disable stripping of embedded sound files in PDF documents.
+              pdf-embedfile:
+                choices:
+                - disable
+                - enable
+                description:
+                - Enable/disable stripping of embedded files in PDF documents.
+              pdf-hyperlink:
+                choices:
+                - disable
+                - enable
+                description:
+                - Enable/disable stripping of hyperlinks from PDF documents.
+              pdf-javacode:
+                choices:
+                - disable
+                - enable
+                description:
+                - Enable/disable stripping of JavaScript code in PDF documents.
+          extended-log:
+            choices:
+            - enable
+            - disable
+            description:
+            - Enable/disable extended logging for antivirus.
+          ftgd-analytics:
+            choices:
+            - disable
+            - suspicious
+            - everything
+            description:
+            - Settings to control which files are uploaded to FortiSandbox.
+          ftp:
+            description:
+            - Configure FTP AntiVirus options.
+            suboptions:
+              archive-block:
+                choices:
+                - encrypted
+                - corrupted
+                - partiallycorrupted
+                - multipart
+                - nested
+                - mailbomb
+                - fileslimit
+                - timeout
+                - unhandled
+                description:
+                - Select the archive types to block.
+              archive-log:
+                choices:
+                - encrypted
+                - corrupted
+                - partiallycorrupted
+                - multipart
+                - nested
+                - mailbomb
+                - fileslimit
+                - timeout
+                - unhandled
+                description:
+                - Select the archive types to log.
+              emulator:
+                choices:
+                - enable
+                - disable
+                description:
+                - Enable/disable the virus emulator.
+              options:
+                choices:
+                - scan
+                - avmonitor
+                - quarantine
+                description:
+                - Enable/disable FTP AntiVirus scanning, monitoring, and quarantine.
+              outbreak-prevention:
+                choices:
+                - disabled
+                - files
+                - full-archive
+                description:
+                - Enable FortiGuard Virus Outbreak Prevention service.
+          http:
+            description:
+            - Configure HTTP AntiVirus options.
+            suboptions:
+              archive-block:
+                choices:
+                - encrypted
+                - corrupted
+                - partiallycorrupted
+                - multipart
+                - nested
+                - mailbomb
+                - fileslimit
+                - timeout
+                - unhandled
+                description:
+                - Select the archive types to block.
+              archive-log:
+                choices:
+                - encrypted
+                - corrupted
+                - partiallycorrupted
+                - multipart
+                - nested
+                - mailbomb
+                - fileslimit
+                - timeout
+                - unhandled
+                description:
+                - Select the archive types to log.
+              content-disarm:
+                choices:
+                - disable
+                - enable
+                description:
+                - Enable Content Disarm and Reconstruction for this protocol.
+              emulator:
+                choices:
+                - enable
+                - disable
+                description:
+                - Enable/disable the virus emulator.
+              options:
+                choices:
+                - scan
+                - avmonitor
+                - quarantine
+                description:
+                - Enable/disable HTTP AntiVirus scanning, monitoring, and quarantine.
+              outbreak-prevention:
+                choices:
+                - disabled
+                - files
+                - full-archive
+                description:
+                - Enable FortiGuard Virus Outbreak Prevention service.
+          imap:
+            description:
+            - Configure IMAP AntiVirus options.
+            suboptions:
+              archive-block:
+                choices:
+                - encrypted
+                - corrupted
+                - partiallycorrupted
+                - multipart
+                - nested
+                - mailbomb
+                - fileslimit
+                - timeout
+                - unhandled
+                description:
+                - Select the archive types to block.
+              archive-log:
+                choices:
+                - encrypted
+                - corrupted
+                - partiallycorrupted
+                - multipart
+                - nested
+                - mailbomb
+                - fileslimit
+                - timeout
+                - unhandled
+                description:
+                - Select the archive types to log.
+              content-disarm:
+                choices:
+                - disable
+                - enable
+                description:
+                - Enable Content Disarm and Reconstruction for this protocol.
+              emulator:
+                choices:
+                - enable
+                - disable
+                description:
+                - Enable/disable the virus emulator.
+              executables:
+                choices:
+                - default
+                - virus
+                description:
+                - Treat Windows executable files as viruses for the purpose of blocking or
+                  monitoring.
+              options:
+                choices:
+                - scan
+                - avmonitor
+                - quarantine
+                description:
+                - Enable/disable IMAP AntiVirus scanning, monitoring, and quarantine.
+              outbreak-prevention:
+                choices:
+                - disabled
+                - files
+                - full-archive
+                description:
+                - Enable FortiGuard Virus Outbreak Prevention service.
+          inspection-mode:
+            choices:
+            - proxy
+            - flow-based
+            description:
+            - Inspection mode.
+          mapi:
+            description:
+            - Configure MAPI AntiVirus options.
+            suboptions:
+              archive-block:
+                choices:
+                - encrypted
+                - corrupted
+                - partiallycorrupted
+                - multipart
+                - nested
+                - mailbomb
+                - fileslimit
+                - timeout
+                - unhandled
+                description:
+                - Select the archive types to block.
+              archive-log:
+                choices:
+                - encrypted
+                - corrupted
+                - partiallycorrupted
+                - multipart
+                - nested
+                - mailbomb
+                - fileslimit
+                - timeout
+                - unhandled
+                description:
+                - Select the archive types to log.
+              emulator:
+                choices:
+                - enable
+                - disable
+                description:
+                - Enable/disable the virus emulator.
+              executables:
+                choices:
+                - default
+                - virus
+                description:
+                - Treat Windows executable files as viruses for the purpose of blocking or
+                  monitoring.
+              options:
+                choices:
+                - scan
+                - avmonitor
+                - quarantine
+                description:
+                - Enable/disable MAPI AntiVirus scanning, monitoring, and quarantine.
+              outbreak-prevention:
+                choices:
+                - disabled
+                - files
+                - full-archive
+                description:
+                - Enable FortiGuard Virus Outbreak Prevention service.
+          mobile-malware-db:
+            choices:
+            - disable
+            - enable
+            description:
+            - Enable/disable using the mobile malware signature database.
+          nac-quar:
+            description:
+            - Configure AntiVirus quarantine settings.
+            suboptions:
+              expiry:
+                description:
+                - Duration of quarantine.
+              infected:
+                choices:
+                - none
+                - quar-src-ip
+                description:
+                - Enable/Disable quarantining infected hosts to the banned user list.
+              log:
+                choices:
+                - enable
+                - disable
+                description:
+                - Enable/disable AntiVirus quarantine logging.
+          name:
+            description:
+            - Profile name.
+            required: true
+          nntp:
+            description:
+            - Configure NNTP AntiVirus options.
+            suboptions:
+              archive-block:
+                choices:
+                - encrypted
+                - corrupted
+                - partiallycorrupted
+                - multipart
+                - nested
+                - mailbomb
+                - fileslimit
+                - timeout
+                - unhandled
+                description:
+                - Select the archive types to block.
+              archive-log:
+                choices:
+                - encrypted
+                - corrupted
+                - partiallycorrupted
+                - multipart
+                - nested
+                - mailbomb
+                - fileslimit
+                - timeout
+                - unhandled
+                description:
+                - Select the archive types to log.
+              emulator:
+                choices:
+                - enable
+                - disable
+                description:
+                - Enable/disable the virus emulator.
+              options:
+                choices:
+                - scan
+                - avmonitor
+                - quarantine
+                description:
+                - Enable/disable NNTP AntiVirus scanning, monitoring, and quarantine.
+              outbreak-prevention:
+                choices:
+                - disabled
+                - files
+                - full-archive
+                description:
+                - Enable FortiGuard Virus Outbreak Prevention service.
+          pop3:
+            description:
+            - Configure POP3 AntiVirus options.
+            suboptions:
+              archive-block:
+                choices:
+                - encrypted
+                - corrupted
+                - partiallycorrupted
+                - multipart
+                - nested
+                - mailbomb
+                - fileslimit
+                - timeout
+                - unhandled
+                description:
+                - Select the archive types to block.
+              archive-log:
+                choices:
+                - encrypted
+                - corrupted
+                - partiallycorrupted
+                - multipart
+                - nested
+                - mailbomb
+                - fileslimit
+                - timeout
+                - unhandled
+                description:
+                - Select the archive types to log.
+              content-disarm:
+                choices:
+                - disable
+                - enable
+                description:
+                - Enable Content Disarm and Reconstruction for this protocol.
+              emulator:
+                choices:
+                - enable
+                - disable
+                description:
+                - Enable/disable the virus emulator.
+              executables:
+                choices:
+                - default
+                - virus
+                description:
+                - Treat Windows executable files as viruses for the purpose of blocking or
+                  monitoring.
+              options:
+                choices:
+                - scan
+                - avmonitor
+                - quarantine
+                description:
+                - Enable/disable POP3 AntiVirus scanning, monitoring, and quarantine.
+              outbreak-prevention:
+                choices:
+                - disabled
+                - files
+                - full-archive
+                description:
+                - Enable FortiGuard Virus Outbreak Prevention service.
+          replacemsg-group:
+            description:
+            - Replacement message group customized for this profile. Source system.replacemsg-group.name.
+          scan-mode:
+            choices:
+            - quick
+            - full
+            description:
+            - Choose between full scan mode and quick scan mode.
+          smb:
+            description:
+            - Configure SMB AntiVirus options.
+            suboptions:
+              archive-block:
+                choices:
+                - encrypted
+                - corrupted
+                - partiallycorrupted
+                - multipart
+                - nested
+                - mailbomb
+                - fileslimit
+                - timeout
+                - unhandled
+                description:
+                - Select the archive types to block.
+              archive-log:
+                choices:
+                - encrypted
+                - corrupted
+                - partiallycorrupted
+                - multipart
+                - nested
+                - mailbomb
+                - fileslimit
+                - timeout
+                - unhandled
+                description:
+                - Select the archive types to log.
+              emulator:
+                choices:
+                - enable
+                - disable
+                description:
+                - Enable/disable the virus emulator.
+              options:
+                choices:
+                - scan
+                - avmonitor
+                - quarantine
+                description:
+                - Enable/disable SMB AntiVirus scanning, monitoring, and quarantine.
+              outbreak-prevention:
+                choices:
+                - disabled
+                - files
+                - full-archive
+                description:
+                - Enable FortiGuard Virus Outbreak Prevention service.
+          smtp:
+            description:
+            - Configure SMTP AntiVirus options.
+            suboptions:
+              archive-block:
+                choices:
+                - encrypted
+                - corrupted
+                - partiallycorrupted
+                - multipart
+                - nested
+                - mailbomb
+                - fileslimit
+                - timeout
+                - unhandled
+                description:
+                - Select the archive types to block.
+              archive-log:
+                choices:
+                - encrypted
+                - corrupted
+                - partiallycorrupted
+                - multipart
+                - nested
+                - mailbomb
+                - fileslimit
+                - timeout
+                - unhandled
+                description:
+                - Select the archive types to log.
+              content-disarm:
+                choices:
+                - disable
+                - enable
+                description:
+                - Enable Content Disarm and Reconstruction for this protocol.
+              emulator:
+                choices:
+                - enable
+                - disable
+                description:
+                - Enable/disable the virus emulator.
+              executables:
+                choices:
+                - default
+                - virus
+                description:
+                - Treat Windows executable files as viruses for the purpose of blocking or
+                  monitoring.
+              options:
+                choices:
+                - scan
+                - avmonitor
+                - quarantine
+                description:
+                - Enable/disable SMTP AntiVirus scanning, monitoring, and quarantine.
+              outbreak-prevention:
+                choices:
+                - disabled
+                - files
+                - full-archive
+                description:
+                - Enable FortiGuard Virus Outbreak Prevention service.
+          state:
+            choices:
+            - present
+            - absent
+            description:
+            - Indicates whether to create or remove the object
+        
+
+= host
+        FortiOS or FortiGate ip address.
+
+
+- https
+        Indicates if the requests towards FortiGate must use HTTPS protocol
+        [Default: False]
+        type: bool
+
+- password
+        FortiOS or FortiGate password.
+        [Default: ]
+
+= username
+        FortiOS or FortiGate username.
+
+
+- vdom
+        Virtual domain, among those defined previously. A vdom is a virtual instance of the FortiGate that can be configured and used as
+        a different unit.
+        [Default: root]
+
+
+NOTES:
+      * Requires fortiosapi library developed by Fortinet
+      * Run as a local_action in your playbook
+
+
+REQUIREMENTS:  fortiosapi>=0.9.8
+
+AUTHOR: Miguel Angel Munoz (@mamunozgonzalez), Nicolas Thomas (@thomnico)
+        METADATA:
+          status:
+          - preview
+          supported_by: community
+        
+
+EXAMPLES:
+
+- hosts: localhost
+  vars:
+   host: "192.168.122.40"
+   username: "admin"
+   password: ""
+   vdom: "root"
+  tasks:
+  - name: Configure AntiVirus profiles.
+    fortios_antivirus_profile:
+      host:  "{{ host }}"
+      username: "{{ username }}"
+      password: "{{ password }}"
+      vdom:  "{{ vdom }}"
+      antivirus_profile:
+        state: "present"
+        analytics-bl-filetype: "3 (source dlp.filepattern.id)"
+        analytics-db: "disable"
+        analytics-max-upload: "5"
+        analytics-wl-filetype: "6 (source dlp.filepattern.id)"
+        av-block-log: "enable"
+        av-virus-log: "enable"
+        comment: "Comment."
+        content-disarm:
+            cover-page: "disable"
+            detect-only: "disable"
+            office-embed: "disable"
+            office-hylink: "disable"
+            office-linked: "disable"
+            office-macro: "disable"
+            original-file-destination: "fortisandbox"
+            pdf-act-form: "disable"
+            pdf-act-gotor: "disable"
+            pdf-act-java: "disable"
+            pdf-act-launch: "disable"
+            pdf-act-movie: "disable"
+            pdf-act-sound: "disable"
+            pdf-embedfile: "disable"
+            pdf-hyperlink: "disable"
+            pdf-javacode: "disable"
+        extended-log: "enable"
+        ftgd-analytics: "disable"
+        ftp:
+            archive-block: "encrypted"
+            archive-log: "encrypted"
+            emulator: "enable"
+            options: "scan"
+            outbreak-prevention: "disabled"
+        http:
+            archive-block: "encrypted"
+            archive-log: "encrypted"
+            content-disarm: "disable"
+            emulator: "enable"
+            options: "scan"
+            outbreak-prevention: "disabled"
+        imap:
+            archive-block: "encrypted"
+            archive-log: "encrypted"
+            content-disarm: "disable"
+            emulator: "enable"
+            executables: "default"
+            options: "scan"
+            outbreak-prevention: "disabled"
+        inspection-mode: "proxy"
+        mapi:
+            archive-block: "encrypted"
+            archive-log: "encrypted"
+            emulator: "enable"
+            executables: "default"
+            options: "scan"
+            outbreak-prevention: "disabled"
+        mobile-malware-db: "disable"
+        nac-quar:
+            expiry: "<your_own_value>"
+            infected: "none"
+            log: "enable"
+        name: "default_name_63"
+        nntp:
+            archive-block: "encrypted"
+            archive-log: "encrypted"
+            emulator: "enable"
+            options: "scan"
+            outbreak-prevention: "disabled"
+        pop3:
+            archive-block: "encrypted"
+            archive-log: "encrypted"
+            content-disarm: "disable"
+            emulator: "enable"
+            executables: "default"
+            options: "scan"
+            outbreak-prevention: "disabled"
+        replacemsg-group: "<your_own_value> (source system.replacemsg-group.name)"
+        scan-mode: "quick"
+        smb:
+            archive-block: "encrypted"
+            archive-log: "encrypted"
+            emulator: "enable"
+            options: "scan"
+            outbreak-prevention: "disabled"
+        smtp:
+            archive-block: "encrypted"
+            archive-log: "encrypted"
+            content-disarm: "disable"
+            emulator: "enable"
+            executables: "default"
+            options: "scan"
+            outbreak-prevention: "disabled"
+
+
+RETURN VALUES:
+
+build:
+  description: Build number of the fortigate image
+  returned: always
+  type: str
+  sample: '1547'
+http_method:
+  description: Last method used to provision the content into FortiGate
+  returned: always
+  type: str
+  sample: 'PUT'
+http_status:
+  description: Last result given by FortiGate on last operation applied
+  returned: always
+  type: str
+  sample: "200"
+mkey:
+  description: Master key (id) used in the last call to FortiGate
+  returned: success
+  type: str
+  sample: "id"
+name:
+  description: Name of the table used to fulfill the request
+  returned: always
+  type: str
+  sample: "urlfilter"
+path:
+  description: Path of the table used to fulfill the request
+  returned: always
+  type: str
+  sample: "webfilter"
+revision:
+  description: Internal revision number
+  returned: always
+  type: str
+  sample: "17.0.2.10658"
+serial:
+  description: Serial number of the unit
+  returned: always
+  type: str
+  sample: "FGVMEVYYQT3AB5352"
+status:
+  description: Indication of the operation's result
+  returned: always
+  type: str
+  sample: "success"
+vdom:
+  description: Virtual domain used
+  returned: always
+  type: str
+  sample: "root"
+version:
+  description: Version of the FortiGate
+  returned: always
+  type: str
+  sample: "v5.6.3"
+
+

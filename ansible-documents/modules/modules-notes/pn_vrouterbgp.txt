@@ -1,0 +1,168 @@
+> PN_VROUTERBGP    (/usr/lib/python2.7/dist-packages/ansible/modules/network/netvisor/_pn_vrouterbgp.py)
+
+        Execute vrouter-bgp-add, vrouter-bgp-remove, vrouter-bgp-modify command. Each fabric, cluster, standalone switch, or virtual
+        network (VNET) can provide its tenants with a vRouter service that forwards traffic between networks and implements Layer 4
+        protocols.
+
+DEPRECATED: 
+
+	Reason: Doesn't support latest Pluribus Networks netvisor
+	Will be removed in: Ansible 2.12
+	Alternatives: Latest modules will be pushed in Ansible future versions.
+
+
+  * This module is maintained by The Ansible Community
+OPTIONS (= is mandatory):
+
+- pn_bfd
+        Specify if you want BFD protocol support for fault detection.
+        [Default: (null)]
+        type: bool
+
+- pn_clipassword
+        Provide login password if user is not root.
+        [Default: (null)]
+
+- pn_cliswitch
+        Target switch(es) to run the cli on.
+        [Default: local]
+
+- pn_cliusername
+        Provide login username if user is not root.
+        [Default: (null)]
+
+- pn_default_originate
+        Specify if you want announce default routes to the neighbor or not.
+        [Default: (null)]
+        type: bool
+
+- pn_ebgp
+        Specify a value for external BGP to accept or attempt BGP connections to external peers, not directly connected, on the network.
+        This is a value between 1 and 255.
+        [Default: (null)]
+
+- pn_holdtime
+        Specify BGP neighbor holdtime in seconds.
+        [Default: (null)]
+
+- pn_keepalive
+        Specify BGP neighbor keepalive interval in seconds.
+        [Default: (null)]
+
+- pn_max_prefix
+        Specify the maximum number of prefixes.
+        [Default: (null)]
+
+- pn_max_prefix_warn
+        Specify if you want a warning message when the maximum number of prefixes is exceeded.
+        [Default: (null)]
+        type: bool
+
+- pn_multiprotocol
+        Specify a multi-protocol for BGP.
+        (Choices: ipv4-unicast, ipv6-unicast)[Default: (null)]
+
+- pn_neighbor
+        Specify a neighbor IP address to use for BGP.
+        Required for vrouter-bgp-add.
+        [Default: (null)]
+
+- pn_next_hop_self
+        Specify if the next-hop is the same router or not.
+        [Default: (null)]
+        type: bool
+
+- pn_override_capability
+        Specify if you want to override capability.
+        [Default: (null)]
+        type: bool
+
+- pn_password
+        Specify a password, if desired.
+        [Default: (null)]
+
+- pn_prefix_listin
+        Specify the prefix list to filter traffic inbound.
+        [Default: (null)]
+
+- pn_prefix_listout
+        Specify the prefix list to filter traffic outbound.
+        [Default: (null)]
+
+- pn_remote_as
+        Specify the remote Autonomous System(AS) number. This value is between 1 and 4294967295.
+        Required for vrouter-bgp-add.
+        [Default: (null)]
+
+- pn_route_mapin
+        Specify inbound route map for neighbor.
+        [Default: (null)]
+
+- pn_route_mapout
+        Specify outbound route map for neighbor.
+        [Default: (null)]
+
+- pn_route_reflector
+        Specify if a route reflector client is used.
+        [Default: (null)]
+        type: bool
+
+- pn_soft_reconfig
+        Specify if you want a soft reconfiguration of inbound traffic.
+        [Default: (null)]
+        type: bool
+
+= pn_vrouter_name
+        Specify a name for the vRouter service.
+
+
+- pn_weight
+        Specify a default weight value between 0 and 65535 for the neighbor routes.
+        [Default: (null)]
+
+= state
+        State the action to perform. Use 'present' to add bgp, 'absent' to remove bgp and 'update' to modify bgp.
+        (Choices: present, absent, update)
+
+
+AUTHOR: Pluribus Networks (@amitsi)
+        METADATA:
+          status:
+          - deprecated
+          supported_by: community
+        
+
+EXAMPLES:
+
+- name: add vrouter-bgp
+  pn_vrouterbgp:
+    state: 'present'
+    pn_vrouter_name: 'ansible-vrouter'
+    pn_neighbor: 104.104.104.1
+    pn_remote_as: 1800
+
+- name: remove vrouter-bgp
+  pn_vrouterbgp:
+    state: 'absent'
+    pn_name: 'ansible-vrouter'
+
+
+RETURN VALUES:
+
+command:
+  description: The CLI command run on the target node(s).
+  returned: always
+  type: str
+stdout:
+  description: The set of responses from the vrouterbpg command.
+  returned: always
+  type: list
+stderr:
+  description: The set of error responses from the vrouterbgp command.
+  returned: on error
+  type: list
+changed:
+  description: Indicates whether the CLI caused changes on the target.
+  returned: always
+  type: bool
+

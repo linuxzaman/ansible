@@ -1,0 +1,212 @@
+EXAMPLES:
+
+- name: Create pool
+  bigip_pool:
+    state: present
+    name: my-pool
+    partition: Common
+    lb_method: least-connections-member
+    slow_ramp_time: 120
+    provider:
+      server: lb.mydomain.com
+      user: admin
+      password: secret
+  delegate_to: localhost
+
+- name: Modify load balancer method
+  bigip_pool:
+    state: present
+    name: my-pool
+    partition: Common
+    lb_method: round-robin
+    provider:
+      server: lb.mydomain.com
+      user: admin
+      password: secret
+  delegate_to: localhost
+
+- name: Set a single monitor (with enforcement)
+  bigip_pool:
+    state: present
+    name: my-pool
+    partition: Common
+    monitor_type: single
+    monitors:
+      - http
+    provider:
+      server: lb.mydomain.com
+      user: admin
+      password: secret
+  delegate_to: localhost
+
+- name: Set a single monitor (without enforcement)
+  bigip_pool:
+    state: present
+    name: my-pool
+    partition: Common
+    monitors:
+      - http
+    provider:
+      server: lb.mydomain.com
+      user: admin
+      password: secret
+  delegate_to: localhost
+
+- name: Set multiple monitors (all must succeed)
+  bigip_pool:
+    state: present
+    name: my-pool
+    partition: Common
+    monitor_type: and_list
+    monitors:
+      - http
+      - tcp
+    provider:
+      server: lb.mydomain.com
+      user: admin
+      password: secret
+  delegate_to: localhost
+
+- name: Set multiple monitors (at least 1 must succeed)
+  bigip_pool:
+    state: present
+    name: my-pool
+    partition: Common
+    monitor_type: m_of_n
+    quorum: 1
+    monitors:
+      - http
+      - tcp
+    provider:
+      server: lb.mydomain.com
+      user: admin
+      password: secret
+  delegate_to: localhost
+
+- name: Delete pool
+  bigip_pool:
+    state: absent
+    name: my-pool
+    partition: Common
+    provider:
+      server: lb.mydomain.com
+      user: admin
+      password: secret
+  delegate_to: localhost
+
+- name: Add metadata to pool
+  bigip_pool:
+    state: absent
+    name: my-pool
+    partition: Common
+    metadata:
+      ansible: 2.4
+      updated_at: 2017-12-20T17:50:46Z
+    provider:
+      server: lb.mydomain.com
+      user: admin
+      password: secret
+  delegate_to: localhost
+
+- name: Add pools Aggregate
+  bigip_pool:
+    aggregate:
+      - name: my-pool
+        partition: Common
+        lb_method: least-connections-member
+        slow_ramp_time: 120
+      - name: my-pool2
+        partition: Common
+        lb_method: least-sessions
+        slow_ramp_time: 120
+      - name: my-pool3
+        partition: Common
+        lb_method: round-robin
+        slow_ramp_time: 120
+    provider:
+      server: lb.mydomain.com
+      user: admin
+      password: secret
+  delegate_to: localhost
+
+- name: Add pools Aggregate, purge others
+  bigip_pool:
+    aggregate:
+      - name: my-pool
+        partition: Common
+        lb_method: least-connections-member
+        slow_ramp_time: 120
+      - name: my-pool2
+        partition: Common
+        lb_method: least-sessions
+        slow_ramp_time: 120
+      - name: my-pool3
+        partition: Common
+        lb_method: round-robin
+        slow_ramp_time: 120
+    replace_all_with: yes
+    provider:
+      server: lb.mydomain.com
+      user: admin
+      password: secret
+  delegate_to: localhost
+
+
+RETURN VALUES:
+
+monitor_type:
+  description: The contact that was set on the datacenter.
+  returned: changed
+  type: str
+  sample: admin@root.local
+quorum:
+  description: The quorum that was set on the pool.
+  returned: changed
+  type: int
+  sample: 2
+monitors:
+  description: Monitors set on the pool.
+  returned: changed
+  type: list
+  sample: ['/Common/http', '/Common/gateway_icmp']
+service_down_action:
+  description: Service down action that is set on the pool.
+  returned: changed
+  type: str
+  sample: reset
+description:
+  description: Description set on the pool.
+  returned: changed
+  type: str
+  sample: Pool of web servers
+lb_method:
+  description: The LB method set for the pool.
+  returned: changed
+  type: str
+  sample: round-robin
+slow_ramp_time:
+  description: The new value that is set for the slow ramp-up time.
+  returned: changed
+  type: int
+  sample: 500
+reselect_tries:
+  description: The new value that is set for the number of tries to contact member.
+  returned: changed
+  type: int
+  sample: 10
+metadata:
+  description: The new value of the pool.
+  returned: changed
+  type: dict
+  sample: {'key1': 'foo', 'key2': 'bar'}
+priority_group_activation:
+  description: The new minimum number of members to activate the priority group.
+  returned: changed
+  type: int
+  sample: 10
+replace_all_with:
+  description: Purges all non-aggregate pools from device
+  returned: changed
+  type: bool
+  sample: yes
+

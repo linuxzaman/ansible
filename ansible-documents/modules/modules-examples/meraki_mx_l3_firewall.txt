@@ -1,0 +1,98 @@
+EXAMPLES:
+
+- name: Query firewall rules
+  meraki_mx_l3_firewall:
+    auth_key: abc123
+    org_name: YourOrg
+    net_name: YourNet
+    state: query
+  delegate_to: localhost
+
+- name: Set two firewall rules
+  meraki_mx_l3_firewall:
+    auth_key: abc123
+    org_name: YourOrg
+    net_name: YourNet
+    state: present
+    rules:
+      - comment: Block traffic to server
+        src_cidr: 192.0.1.0/24
+        src_port: any
+        dest_cidr: 192.0.2.2/32
+        dest_port: any
+        protocol: any
+        policy: deny
+      - comment: Allow traffic to group of servers
+        src_cidr: 192.0.1.0/24
+        src_port: any
+        dest_cidr: 192.0.2.0/24
+        dest_port: any
+        protocol: any
+        policy: permit
+  delegate_to: localhost
+
+- name: Set one firewall rule and enable logging of the default rule
+  meraki_mx_l3_firewall:
+    auth_key: abc123
+    org_name: YourOrg
+    net_name: YourNet
+    state: present
+    rules:
+      - comment: Block traffic to server
+        src_cidr: 192.0.1.0/24
+        src_port: any
+        dest_cidr: 192.0.2.2/32
+        dest_port: any
+        protocol: any
+        policy: deny
+    syslog_default_rule: yes
+  delegate_to: localhost
+
+
+RETURN VALUES:
+
+data:
+    description: Firewall rules associated to network.
+    returned: success
+    type: complex
+    contains:
+        comment:
+            description: Comment to describe the firewall rule.
+            returned: always
+            type: str
+            sample: Block traffic to server
+        src_cidr:
+            description: Comma separated list of CIDR notation source networks.
+            returned: always
+            type: str
+            sample: 192.0.1.1/32,192.0.1.2/32
+        src_port:
+            description: Comma separated list of source ports.
+            returned: always
+            type: str
+            sample: 80,443
+        dest_cidr:
+            description: Comma separated list of CIDR notation destination networks.
+            returned: always
+            type: str
+            sample: 192.0.1.1/32,192.0.1.2/32
+        dest_port:
+            description: Comma separated list of destination ports.
+            returned: always
+            type: str
+            sample: 80,443
+        protocol:
+            description: Network protocol for which to match against.
+            returned: always
+            type: str
+            sample: tcp
+        policy:
+            description: Action to take when rule is matched.
+            returned: always
+            type: str
+        syslog_enabled:
+            description: Whether to log to syslog when rule is matched.
+            returned: always
+            type: bool
+            sample: true
+

@@ -1,0 +1,25 @@
+EXAMPLES:
+
+- hosts: localhost
+  tasks:
+    - debug:
+        msg: play1
+
+- name: Include a play after another play
+  import_playbook: otherplays.yaml
+
+
+- name: This DOES NOT WORK
+  hosts: all
+  tasks:
+    - debug:
+        msg: task1
+
+    - name: This fails because I'm inside a play already
+      import_playbook: stuff.yaml
+
+
+RETURN VALUES:
+
+# This module does not return anything except plays to execute.
+

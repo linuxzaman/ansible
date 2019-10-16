@@ -1,0 +1,254 @@
+> BIGIP_STATIC_ROUTE    (/usr/lib/python2.7/dist-packages/ansible/modules/network/f5/bigip_static_route.py)
+
+        Manipulate static routes on a BIG-IP.
+
+  * This module is maintained by an Ansible Partner
+OPTIONS (= is mandatory):
+
+- description
+        Descriptive text that identifies the route.
+        [Default: (null)]
+        type: str
+
+- destination
+        Specifies an IP address for the static entry in the routing table. When creating a new static route, this value is required.
+        This value cannot be changed once it is set.
+        [Default: (null)]
+        type: str
+
+- gateway_address
+        Specifies the router for the system to use when forwarding packets to the destination host or network. Also known as the next-hop
+        router address. This can be either an IPv4 or IPv6 address. When it is an IPv6 address that starts with `FE80:', the address will
+        be treated as a link-local address. This requires that the `vlan' parameter also be supplied.
+        [Default: (null)]
+        type: str
+
+- mtu
+        Specifies a specific maximum transmission unit (MTU).
+        [Default: (null)]
+        type: str
+
+= name
+        Name of the static route.
+
+        type: str
+
+- netmask
+        The netmask for the static route. When creating a new static route, this value is required.
+        This value can be in either IP or CIDR format.
+        This value cannot be changed once it is set.
+        [Default: (null)]
+        type: str
+
+- partition
+        Device partition to manage resources on.
+        [Default: Common]
+        type: str
+        version_added: 2.6
+        
+
+= password
+        The password for the user account used to connect to the BIG-IP.
+        You may omit this option by setting the environment variable `F5_PASSWORD'.
+        (Aliases: pass, pwd)
+        type: str
+
+- pool
+        Specifies the pool through which the system forwards packets to the destination.
+        [Default: (null)]
+        type: str
+
+- provider
+        A dict object containing connection details.
+        [Default: (null)]
+        suboptions:
+          password:
+            aliases:
+            - pass
+            - pwd
+            description:
+            - The password for the user account used to connect to the BIG-IP.
+            - You may omit this option by setting the environment variable `F5_PASSWORD'.
+            required: true
+            type: str
+          server:
+            description:
+            - The BIG-IP host.
+            - You may omit this option by setting the environment variable `F5_SERVER'.
+            required: true
+            type: str
+          server_port:
+            default: 443
+            description:
+            - The BIG-IP server port.
+            - You may omit this option by setting the environment variable `F5_SERVER_PORT'.
+            type: int
+          ssh_keyfile:
+            description:
+            - Specifies the SSH keyfile to use to authenticate the connection to the remote
+              device.  This argument is only used for `cli' transports.
+            - You may omit this option by setting the environment variable `ANSIBLE_NET_SSH_KEYFILE'.
+            type: path
+          timeout:
+            default: 10
+            description:
+            - Specifies the timeout in seconds for communicating with the network device for
+              either connecting or sending commands.  If the timeout is exceeded before the
+              operation is completed, the module will error.
+            type: int
+          transport:
+            choices:
+            - cli
+            - rest
+            default: rest
+            description:
+            - Configures the transport connection to use when connecting to the remote device.
+            type: str
+          user:
+            description:
+            - The username to connect to the BIG-IP with. This user must have administrative
+              privileges on the device.
+            - You may omit this option by setting the environment variable `F5_USER'.
+            required: true
+            type: str
+          validate_certs:
+            default: true
+            description:
+            - If `no', SSL certificates are not validated. Use this only on personally controlled
+              sites using self-signed certificates.
+            - You may omit this option by setting the environment variable `F5_VALIDATE_CERTS'.
+            type: bool
+        
+        type: dict
+        version_added: 2.5
+
+- reject
+        Specifies that the system drops packets sent to the destination.
+        [Default: (null)]
+        type: bool
+
+- route_domain
+        The route domain id of the system. When creating a new static route, if this value is not specified, a default value of `0' will
+        be used.
+        This value cannot be changed once it is set.
+        [Default: (null)]
+        type: int
+
+= server
+        The BIG-IP host.
+        You may omit this option by setting the environment variable `F5_SERVER'.
+
+        type: str
+
+- server_port
+        The BIG-IP server port.
+        You may omit this option by setting the environment variable `F5_SERVER_PORT'.
+        [Default: 443]
+        type: int
+        version_added: 2.2
+
+- state
+        When `present', ensures that the static route exists.
+        When `absent', ensures that the static does not exist.
+        (Choices: present, absent)[Default: present]
+        type: str
+
+= user
+        The username to connect to the BIG-IP with. This user must have administrative privileges on the device.
+        You may omit this option by setting the environment variable `F5_USER'.
+
+        type: str
+
+- validate_certs
+        If `no', SSL certificates are not validated. Use this only on personally controlled sites using self-signed certificates.
+        You may omit this option by setting the environment variable `F5_VALIDATE_CERTS'.
+        [Default: True]
+        type: bool
+        version_added: 2.0
+
+- vlan
+        Specifies the VLAN or Tunnel through which the system forwards packets to the destination. When `gateway_address' is a link-local
+        IPv6 address, this value is required.
+        [Default: (null)]
+        type: str
+
+
+NOTES:
+      * For more information on using Ansible to manage F5 Networks devices see https://www.ansible.com/integrations/networks/f5.
+      * Requires BIG-IP software version >= 12.
+      * The F5 modules only manipulate the running configuration of the F5 product. To ensure that BIG-IP specific configuration
+        persists to disk, be sure to include at least one task that uses the [bigip_config] module to save the running
+        configuration. Refer to the module's documentation for the correct usage of the module to save your running configuration.
+
+
+AUTHOR: Tim Rupp (@caphrim007)
+        METADATA:
+          status:
+          - stableinterface
+          supported_by: certified
+        
+
+EXAMPLES:
+
+- name: Create static route with gateway address
+  bigip_static_route:
+    destination: 10.10.10.10
+    netmask: 255.255.255.255
+    gateway_address: 10.2.2.3
+    name: test-route
+    provider:
+      password: secret
+      server: lb.mydomain.come
+      user: admin
+      validate_certs: no
+  delegate_to: localhost
+
+
+RETURN VALUES:
+
+vlan:
+  description: Whether the banner is enabled or not.
+  returned: changed
+  type: str
+  sample: true
+gateway_address:
+  description: Whether the banner is enabled or not.
+  returned: changed
+  type: str
+  sample: true
+destination:
+  description: Whether the banner is enabled or not.
+  returned: changed
+  type: str
+  sample: true
+route_domain:
+  description: Route domain of the static route.
+  returned: changed
+  type: int
+  sample: 1
+netmask:
+  description: Netmask of the destination.
+  returned: changed
+  type: str
+  sample: 255.255.255.255
+pool:
+  description: Whether the banner is enabled or not.
+  returned: changed
+  type: str
+  sample: true
+partition:
+  description: The partition that the static route was created on.
+  returned: changed
+  type: str
+  sample: Common
+description:
+  description: Whether the banner is enabled or not.
+  returned: changed
+  type: str
+  sample: true
+reject:
+  description: Whether the banner is enabled or not.
+  returned: changed
+  type: str
+  sample: true
+

@@ -1,0 +1,46 @@
+EXAMPLES:
+
+- name: Create Cluster
+  vmware_cluster:
+    hostname: '{{ vcenter_hostname }}'
+    username: '{{ vcenter_username }}'
+    password: '{{ vcenter_password }}'
+    datacenter_name: datacenter
+    cluster_name: cluster
+    enable_ha: yes
+    enable_drs: yes
+    enable_vsan: yes
+  delegate_to: localhost
+
+- name: Create Cluster with additional changes
+  vmware_cluster:
+    hostname: "{{ vcenter_server }}"
+    username: "{{ vcenter_user }}"
+    password: "{{ vcenter_pass }}"
+    validate_certs: no
+    datacenter_name: DC0
+    cluster_name: "{{ cluster_name }}"
+    enable_ha: True
+    ha_vm_monitoring: vmMonitoringOnly
+    enable_drs: True
+    drs_default_vm_behavior: partiallyAutomated
+    enable_vsan: True
+  register: cl_result
+  delegate_to: localhost
+
+- name: Delete Cluster
+  vmware_cluster:
+    hostname: "{{ vcenter_server }}"
+    username: "{{ vcenter_user }}"
+    password: "{{ vcenter_pass }}"
+    datacenter_name: datacenter
+    cluster_name: cluster
+    enable_ha: yes
+    enable_drs: yes
+    enable_vsan: yes
+    state: absent
+
+
+RETURN VALUES:
+#
+

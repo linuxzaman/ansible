@@ -1,0 +1,23 @@
+EXAMPLES:
+
+- name: Add linux computer to Active Directory OU using a windows machine
+    win_domain_computer:
+      name: one_linux_server.my_org.local
+      sam_account_name: linux_server
+      dns_hostname: one_linux_server.my_org.local
+      ou: "OU=servers,DC=my_org,DC=local"
+      description: Example of linux server
+      enabled: yes
+      state: present
+    delegate_to: my_windows_bridge.my_org.local
+
+  - name: Remove linux computer from Active Directory using a windows machine
+    win_domain_computer:
+      name: one_linux_server.my_org.local
+      state: absent
+    delegate_to: my_windows_bridge.my_org.local
+
+
+RETURN VALUES:
+
+

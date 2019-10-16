@@ -1,0 +1,282 @@
+> MERAKI_SWITCHPORT    (/usr/lib/python2.7/dist-packages/ansible/modules/network/meraki/meraki_switchport.py)
+
+        Allows for management of switchports settings for Meraki MS switches.
+
+  * This module is maintained by The Ansible Community
+OPTIONS (= is mandatory):
+
+- access_policy_number
+        Number of the access policy to apply.
+        Only applicable to access port types.
+        [Default: (null)]
+
+- allowed_vlans
+        List of VLAN numbers to be allowed on switchport.
+        [Default: all]
+
+- auth_key
+        Authentication key provided by the dashboard. Required if environmental variable `MERAKI_KEY' is not set.
+        [Default: (null)]
+        type: str
+
+- enabled
+        Whether a switchport should be enabled or disabled.
+        [Default: True]
+        type: bool
+
+- host
+        Hostname for Meraki dashboard.
+        Only useful for internal Meraki developers.
+        [Default: api.meraki.com]
+        type: str
+
+- isolation_enabled
+        Isolation status of switchport.
+        [Default: False]
+        type: bool
+
+- link_negotiation
+        Link speed for the switchport.
+        (Choices: Auto negotiate, 100Megabit (auto), 100 Megabit full duplex (forced))[Default: Auto negotiate]
+
+- name
+        Switchport description.
+        (Aliases: description)[Default: (null)]
+
+- number
+        Port number.
+        [Default: (null)]
+
+- org_id
+        ID of organization.
+        [Default: (null)]
+        type: int
+
+- org_name
+        Name of organization.
+        (Aliases: organization)[Default: (null)]
+        type: str
+
+- output_level
+        Set amount of debug output during module execution.
+        (Choices: debug, normal)[Default: normal]
+        type: str
+
+- poe_enabled
+        Enable or disable Power Over Ethernet on a port.
+        [Default: True]
+        type: bool
+
+- rstp_enabled
+        Enable or disable Rapid Spanning Tree Protocol on a port.
+        [Default: True]
+        type: bool
+
+- serial
+        Serial nubmer of the switch.
+        [Default: (null)]
+
+- state
+        Specifies whether a switchport should be queried or modified.
+        (Choices: query, present)[Default: query]
+
+- stp_guard
+        Set state of STP guard.
+        (Choices: disabled, root guard, bpdu guard, loop guard)[Default: disabled]
+
+- tags
+        Space delimited list of tags to assign to a port.
+        [Default: (null)]
+
+- timeout
+        Time to timeout for HTTP requests.
+        [Default: 30]
+        type: int
+
+- type
+        Set port type.
+        (Choices: access, trunk)[Default: access]
+
+- use_https
+        If `no', it will use HTTP. Otherwise it will use HTTPS.
+        Only useful for internal Meraki developers.
+        [Default: True]
+        type: bool
+
+- use_proxy
+        If `no', it will not use a proxy, even if one is defined in an environment variable on the target hosts.
+        [Default: (null)]
+        type: bool
+
+- validate_certs
+        Whether to validate HTTP certificates.
+        [Default: True]
+        type: bool
+
+- vlan
+        VLAN number assigned to port.
+        If a port is of type trunk, the specified VLAN is the native VLAN.
+        [Default: (null)]
+
+- voice_vlan
+        VLAN number assigned to a port for voice traffic.
+        Only applicable to access port type.
+        [Default: (null)]
+
+
+NOTES:
+      * More information about the Meraki API can be found at https://dashboard.meraki.com/api_docs.
+      * Some of the options are likely only used for developers within Meraki.
+
+
+AUTHOR: Kevin Breit (@kbreit)
+        METADATA:
+          status:
+          - preview
+          supported_by: community
+        
+
+EXAMPLES:
+
+- name: Query information about all switchports on a switch
+  meraki_switchport:
+    auth_key: abc12345
+    state: query
+    serial: ABC-123
+  delegate_to: localhost
+
+- name: Query information about all switchports on a switch
+  meraki_switchport:
+    auth_key: abc12345
+    state: query
+    serial: ABC-123
+    number: 2
+  delegate_to: localhost
+
+- name: Name switchport
+  meraki_switchport:
+    auth_key: abc12345
+    state: present
+    serial: ABC-123
+    number: 7
+    name: Test Port
+  delegate_to: localhost
+
+- name: Configure access port with voice VLAN
+  meraki_switchport:
+    auth_key: abc12345
+    state: present
+    serial: ABC-123
+    number: 7
+    enabled: true
+    name: Test Port
+    tags: desktop
+    type: access
+    vlan: 10
+    voice_vlan: 11
+  delegate_to: localhost
+
+- name: Check access port for idempotenty
+  meraki_switchport:
+    auth_key: abc12345
+    state: present
+    serial: ABC-123
+    number: 7
+    enabled: true
+    name: Test Port
+    tags: desktop
+    type: access
+    vlan: 10
+    voice_vlan: 11
+  delegate_to: localhost
+
+- name: Configure trunk port with specific VLANs
+  meraki_switchport:
+    auth_key: abc12345
+    state: present
+    serial: ABC-123
+    number: 7
+    enabled: true
+    name: Server port
+    tags: server
+    type: trunk
+    allowed_vlans:
+      - 10
+      - 15
+      - 20
+  delegate_to: localhost
+
+
+RETURN VALUES:
+
+data:
+    description: Information queried or updated switchports.
+    returned: success
+    type: complex
+    contains:
+        number:
+            description: Number of port.
+            returned: success
+            type: int
+            sample: 1
+        name:
+            description: Human friendly description of port.
+            returned: success
+            type: str
+            sample: "Jim Phone Port"
+        tags:
+            description: Space delimited list of tags assigned to port.
+            returned: success
+            type: str
+            sample: phone marketing
+        enabled:
+            description: Enabled state of port.
+            returned: success
+            type: bool
+            sample: true
+        poeEnabled:
+            description: Power Over Ethernet enabled state of port.
+            returned: success
+            type: bool
+            sample: true
+        type:
+            description: Type of switchport.
+            returned: success
+            type: str
+            sample: trunk
+        vlan:
+            description: VLAN assigned to port.
+            returned: success
+            type: int
+            sample: 10
+        voiceVlan:
+            description: VLAN assigned to port with voice VLAN enabled devices.
+            returned: success
+            type: int
+            sample: 20
+        isolationEnabled:
+            description: Port isolation status of port.
+            returned: success
+            type: bool
+            sample: true
+        rstpEnabled:
+            description: Enabled or disabled state of Rapid Spanning Tree Protocol (RSTP)
+            returned: success
+            type: bool
+            sample: true
+        stpGuard:
+            description: State of STP guard
+            returned: success
+            type: str
+            sample: "Root Guard"
+        accessPolicyNumber:
+            description: Number of assigned access policy. Only applicable to access ports.
+            returned: success
+            type: int
+            sample: 1234
+        linkNegotiation:
+            description: Link speed for the port.
+            returned: success
+            type: str
+            sample: "Auto negotiate"
+

@@ -1,0 +1,270 @@
+> UCS_DISK_GROUP_POLICY    (/usr/lib/python2.7/dist-packages/ansible/modules/remote_management/ucs/ucs_disk_group_policy.py)
+
+        Configures disk group policies on Cisco UCS Manager. Examples can be used with the L(UCS Platform
+        Emulator,https://communities.cisco.com/ucspe).
+
+  * This module is maintained by The Ansible Community
+OPTIONS (= is mandatory):
+
+- configuration_mode
+        Disk group configuration mode. Choose one of the following:
+        automatic - Automatically configures the disks in the disk group.
+        manual - Enables you to manually configure the disks in the disk group.
+        (Choices: automatic, manual)[Default: automatic]
+
+- description
+        The user-defined description of the storage profile. Enter up to 256 characters. "You can use any characters or spaces except the
+        following:" "` (accent mark), \ (backslash), ^ (carat), \" (double quote), = (equal sign), > (greater than), < (less than), or '
+        (single quote)."
+        (Aliases: descr)[Default: (null)]
+
+- drive_type
+        Specify the drive type to use in the drive group.
+        This can be one of the following:
+        unspecified — Selects the first available drive type, and applies that to all drives in the group.
+        HDD — Hard disk drive
+        SSD — Solid state drive
+        Option only applies when configuration mode is automatic.
+        (Choices: unspecified, HDD, SSD)[Default: unspecified]
+
+= hostname
+        IP address or hostname of Cisco UCS Manager.
+
+        type: str
+
+- manual_disks
+        List of manually configured disks.
+        Options are only used when you choose manual configuration_mode.
+        [Default: (null)]
+        suboptions:
+          name:
+            description:
+            - The name of the local LUN.
+            required: true
+          role:
+            description:
+            - 'The role of the disk. This can be one of the following:'
+            - normal - Normal
+            - ded-hot-spare - Dedicated Hot Spare
+            - glob-hot-spare - Glob Hot Spare
+          slot_num:
+            description:
+            - The slot number of the specific disk.
+          span_id:
+            default: unspecified
+            description:
+            - The Span ID of the specific disk.
+          state:
+            choices:
+            - present
+            - absent
+            default: present
+            description:
+            - If `present', will verify disk slot is configured within policy. If `absent',
+              will verify disk slot is absent from policy.
+        
+
+- min_drive_size
+        Specify the minimum drive size or unspecified to allow all drive sizes.
+        This can be from 0 to 10240 GB.
+        Option only applies when configuration mode is automatic.
+        [Default: unspecified]
+
+= name
+        The name of the disk group policy. This name can be between 1 and 16 alphanumeric characters.
+        You cannot use spaces or any special characters other than - (hyphen), "_" (underscore), : (colon), and . (period).
+        You cannot change this name after the policy is created.
+
+
+- num_ded_hot_spares
+        Specify the number of hot spares for the disk group.
+        This can be from 0 to 24.
+        Option only applies when configuration mode is automatic.
+        [Default: unspecified]
+
+- num_drives
+        Specify the number of drives for the disk group.
+        This can be from 0 to 24.
+        Option only applies when configuration mode is automatic.
+        [Default: 1]
+
+- num_glob_hot_spares
+        Specify the number of global hot spares for the disk group.
+        This can be from 0 to 24.
+        Option only applies when configuration mode is automatic.
+        [Default: unspecified]
+
+- org_dn
+        The distinguished name (dn) of the organization where the resource is assigned.
+        [Default: org-root]
+
+= password
+        Password for Cisco UCS Manager authentication.
+
+        type: str
+
+- port
+        Port number to be used during connection (by default uses 443 for https and 80 for http connection).
+        [Default: (null)]
+        type: int
+
+- proxy
+        If use_proxy is no, specfies proxy to be used for connection. e.g. 'http://proxy.xy.z:8080'
+        [Default: (null)]
+        type: str
+
+- raid_level
+        The RAID level for the disk group policy. This can be one of the following:
+        stripe - UCS Manager shows RAID 0 Striped
+        mirror - RAID 1 Mirrored
+        mirror-stripe - RAID 10 Mirrored and Striped
+        stripe-parity - RAID 5 Striped Parity
+        stripe-dual-parity - RAID 6 Striped Dual Parity
+        stripe-parity-stripe - RAID 50 Striped Parity and Striped
+        stripe-dual-parity-stripe - RAID 60 Striped Dual Parity and Striped
+        (Choices: stripe, mirror, mirror-stripe, stripe-parity, stripe-dual-parity, stripe-parity-stripe, stripe-dual-parity-
+        stripe)[Default: stripe]
+
+- state
+        Desired state of the disk group policy.
+        If `present', will verify that the disk group policy is present and will create if needed.
+        If `absent', will verify that the disk group policy is absent and will delete if needed.
+        (Choices: present, absent)[Default: present]
+
+- use_proxy
+        If `no', will not use the proxy as defined by system environment variable.
+        [Default: True]
+        type: bool
+
+- use_remaining_disks
+        Specifies whether you can use all the remaining disks in the disk group or not.
+        Option only applies when configuration mode is automatic.
+        (Choices: yes, no)[Default: no]
+
+- use_ssl
+        If `no', an HTTP connection will be used instead of the default HTTPS connection.
+        [Default: True]
+        type: bool
+
+- username
+        Username for Cisco UCS Manager authentication.
+        [Default: admin]
+        type: str
+
+- virtual_drive
+        Configuraiton of virtual drive options.
+        [Default: (null)]
+        suboptions:
+          access_policy:
+            choices:
+            - blocked
+            - hidden
+            - platform-default
+            - read-only
+            - read-write
+            - transport-ready
+            default: platform-default
+            description:
+            - Configure access policy to virtual drive.
+          drive_cache:
+            choices:
+            - disable
+            - enable
+            - no-change
+            - platform-default
+            default: platform-default
+            description:
+            - Configure drive caching.
+          io_policy:
+            choices:
+            - cached
+            - direct
+            - platform-default
+            default: platform-default
+            description:
+            - Direct or Cached IO path.
+          read_policy:
+            choices:
+            - normal
+            - platform-default
+            - read-ahead
+            default: platform-default
+            description:
+            - Read access policy to virtual drive.
+          strip_size:
+            choices:
+            - present
+            - absent
+            default: platform-default
+            description:
+            - Virtual drive strip size.
+          write_cache_policy:
+            choices:
+            - always-write-back
+            - platform-default
+            - write-back-good-bbu
+            - write-through
+            default: platform-default
+            description:
+            - Write back cache policy.
+        
+
+
+REQUIREMENTS:  ucsmsdk
+
+AUTHOR: Sindhu Sudhir (@sisudhir), David Soper (@dsoper2), CiscoUcs (@CiscoUcs), Brett Johnson (@sdbrett)
+        METADATA:
+          status:
+          - preview
+          supported_by: community
+        
+
+EXAMPLES:
+
+- name: Configure Disk Group Policy
+  ucs_disk_group_policy:
+    hostname: 172.16.143.150
+    username: admin
+    password: password
+    name: DEE-DG
+    raid_level: mirror
+    configuration_mode: manual
+    manual_disks:
+    - slot_num: '1'
+      role: normal
+    - slot_num: '2'
+      role: normal
+
+- name: Remove Disk Group Policy
+  ucs_disk_group_policy:
+    name: DEE-DG
+    hostname: 172.16.143.150
+    username: admin
+    password: password
+    state: absent
+
+- name: Remove Disk from Policy
+  ucs_disk_group_policy:
+    hostname: 172.16.143.150
+    username: admin
+    password: password
+    name: DEE-DG
+    description: Testing Ansible
+    raid_level: stripe
+    configuration_mode: manual
+    manual_disks:
+    - slot_num: '1'
+      role: normal
+    - slot_num: '2'
+      role: normal
+      state: absent
+    virtual_drive:
+      access_policy: platform-default
+      io_policy: direct
+      strip_size: 64KB
+
+
+RETURN VALUES:
+
+#
+

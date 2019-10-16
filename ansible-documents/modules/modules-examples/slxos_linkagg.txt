@@ -1,0 +1,46 @@
+EXAMPLES:
+
+- name: create link aggregation group
+  slxos_linkagg:
+    group: 10
+    state: present
+
+- name: delete link aggregation group
+  slxos_linkagg:
+    group: 10
+    state: absent
+
+- name: set link aggregation group to members
+  slxos_linkagg:
+    group: 200
+    mode: active
+    members:
+      - Ethernet 0/1
+      - Ethernet 0/2
+
+- name: remove link aggregation group from Ethernet 0/1
+  slxos_linkagg:
+    group: 200
+    mode: active
+    members:
+      - Ethernet 0/1
+
+- name: Create aggregate of linkagg definitions
+  slxos_linkagg:
+    aggregate:
+      - { group: 3, mode: on, members: [Ethernet 0/1] }
+      - { group: 100, mode: passive, members: [Ethernet 0/2] }
+
+
+RETURN VALUES:
+
+commands:
+  description: The list of configuration mode commands to send to the device
+  returned: always, except for the platforms that use Netconf transport to manage the device.
+  type: list
+  sample:
+    - interface port-channel 30
+    - interface Ethernet 0/3
+    - channel-group 30 mode on
+    - no interface port-channel 30
+

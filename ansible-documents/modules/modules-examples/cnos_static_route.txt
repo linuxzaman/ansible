@@ -1,0 +1,46 @@
+EXAMPLES:
+
+- name: configure static route
+  cnos_static_route:
+    prefix: 10.241.107.0
+    mask: 255.255.255.0
+    next_hop: 10.241.106.1
+
+- name: configure ultimate route with name and tag
+  cnos_static_route:
+    prefix: 10.241.107.0
+    mask: 255.255.255.0
+    interface: Ethernet1/13
+    description: hello world
+    tag: 100
+
+- name: remove configuration
+  cnos_static_route:
+    prefix: 10.241.107.0
+    mask: 255.255.255.0
+    next_hop: 10.241.106.0
+    state: absent
+
+- name: Add static route aggregates
+  cnos_static_route:
+    aggregate:
+      - { prefix: 10.241.107.0, mask: 255.255.255.0, next_hop: 10.241.105.0 }
+      - { prefix: 10.241.106.0, mask: 255.255.255.0, next_hop: 10.241.104.0 }
+
+- name: Remove static route aggregates
+  cnos_static_route:
+    aggregate:
+      - { prefix: 10.241.107.0, mask: 255.255.255.0, next_hop: 10.241.105.0 }
+      - { prefix: 10.241.106.0, mask: 255.255.255.0, next_hop: 10.241.104.0 }
+    state: absent
+
+
+RETURN VALUES:
+
+commands:
+  description: The list of configuration mode commands to send to the device
+  returned: always
+  type: list
+  sample:
+    - ip route 10.241.107.0 255.255.255.0 10.241.106.0
+

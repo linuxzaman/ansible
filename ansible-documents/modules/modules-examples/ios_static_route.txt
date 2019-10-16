@@ -1,0 +1,54 @@
+EXAMPLES:
+
+- name: configure static route
+  ios_static_route:
+    prefix: 192.168.2.0
+    mask: 255.255.255.0
+    next_hop: 10.0.0.1
+
+- name: configure black hole in vrf blue depending on tracked item 10
+  ios_static_route:
+    prefix: 192.168.2.0
+    mask: 255.255.255.0
+    vrf: blue
+    interface: null0
+    track: 10
+
+- name: configure ultimate route with name and tag
+  ios_static_route:
+    prefix: 192.168.2.0
+    mask: 255.255.255.0
+    interface: GigabitEthernet1
+    name: hello world
+    tag: 100
+
+- name: remove configuration
+  ios_static_route:
+    prefix: 192.168.2.0
+    mask: 255.255.255.0
+    next_hop: 10.0.0.1
+    state: absent
+
+- name: Add static route aggregates
+  ios_static_route:
+    aggregate:
+      - { prefix: 172.16.32.0, mask: 255.255.255.0, next_hop: 10.0.0.8 }
+      - { prefix: 172.16.33.0, mask: 255.255.255.0, next_hop: 10.0.0.8 }
+
+- name: Remove static route aggregates
+  ios_static_route:
+    aggregate:
+      - { prefix: 172.16.32.0, mask: 255.255.255.0, next_hop: 10.0.0.8 }
+      - { prefix: 172.16.33.0, mask: 255.255.255.0, next_hop: 10.0.0.8 }
+    state: absent
+
+
+RETURN VALUES:
+
+commands:
+  description: The list of configuration mode commands to send to the device
+  returned: always
+  type: list
+  sample:
+    - ip route 192.168.2.0 255.255.255.0 10.0.0.1
+

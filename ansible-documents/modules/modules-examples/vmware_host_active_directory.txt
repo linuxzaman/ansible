@@ -1,0 +1,44 @@
+EXAMPLES:
+
+- name: Join an AD domain
+  vmware_host_active_directory:
+    hostname: '{{ vcenter_hostname }}'
+    username: '{{ vcenter_username }}'
+    password: '{{ vcenter_password }}'
+    esxi_hostname: '{{ esxi_hostname }}'
+    ad_domain: example.local
+    ad_user: adjoin
+    ad_password: Password123$
+    ad_state: present
+    validate_certs: no
+  delegate_to: localhost
+
+- name: Leave AD domain
+  vmware_host_active_directory:
+    hostname: '{{ vcenter_hostname }}'
+    username: '{{ vcenter_username }}'
+    password: '{{ vcenter_password }}'
+    esxi_hostname: '{{ esxi_hostname }}'
+    ad_state: absent
+    validate_certs: no
+  delegate_to: localhost
+
+
+RETURN VALUES:
+
+results:
+    description: metadata about host system's AD domain join state
+    returned: always
+    type: dict
+    sample: {
+        "esxi01": {
+            "changed": true,
+            "domain": "example.local",
+            "membership_state": "ok",
+            "msg": "Host joined to AD domain",
+            "ad_state": "present",
+            "ad_state_current": "present",
+            "ad_state_previous": "absent",
+        },
+    }
+

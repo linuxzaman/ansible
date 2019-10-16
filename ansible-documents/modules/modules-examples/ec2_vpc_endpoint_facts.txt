@@ -1,0 +1,66 @@
+EXAMPLES:
+
+# Simple example of listing all support AWS services for VPC endpoints
+- name: List supported AWS endpoint services
+  ec2_vpc_endpoint_facts:
+    query: services
+    region: ap-southeast-2
+  register: supported_endpoint_services
+
+- name: Get all endpoints in ap-southeast-2 region
+  ec2_vpc_endpoint_facts:
+    query: endpoints
+    region: ap-southeast-2
+  register: existing_endpoints
+
+- name: Get all endpoints with specific filters
+  ec2_vpc_endpoint_facts:
+    query: endpoints
+    region: ap-southeast-2
+    filters:
+      vpc-id:
+        - vpc-12345678
+        - vpc-87654321
+      vpc-endpoint-state:
+        - available
+        - pending
+  register: existing_endpoints
+
+- name: Get details on specific endpoint
+  ec2_vpc_endpoint_facts:
+    query: endpoints
+    region: ap-southeast-2
+    vpc_endpoint_ids:
+      - vpce-12345678
+  register: endpoint_details
+
+
+RETURN VALUES:
+
+service_names:
+  description: AWS VPC endpoint service names
+  returned: I(query) is C(services)
+  type: list
+  sample:
+    service_names:
+    - com.amazonaws.ap-southeast-2.s3
+vpc_endpoints:
+  description:
+    - A list of endpoints that match the query. Each endpoint has the keys creation_timestamp,
+      policy_document, route_table_ids, service_name, state, vpc_endpoint_id, vpc_id.
+  returned: I(query) is C(endpoints)
+  type: list
+  sample:
+    vpc_endpoints:
+    - creation_timestamp: "2017-02-16T11:06:48+00:00"
+      policy_document: >
+        "{"Version":"2012-10-17","Id":"Policy1450910922815",
+        "Statement":[{"Sid":"Stmt1450910920641","Effect":"Allow",
+        "Principal":"*","Action":"s3:*","Resource":["arn:aws:s3:::*/*","arn:aws:s3:::*"]}]}"
+      route_table_ids:
+      - rtb-abcd1234
+      service_name: "com.amazonaws.ap-southeast-2.s3"
+      state: "available"
+      vpc_endpoint_id: "vpce-abbad0d0"
+      vpc_id: "vpc-1111ffff"
+

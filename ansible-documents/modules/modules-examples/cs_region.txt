@@ -1,0 +1,45 @@
+EXAMPLES:
+
+- name: create a region
+  cs_region:
+    id: 2
+    name: geneva
+    endpoint: https://cloud.gva.example.com
+  delegate_to: localhost
+
+- name: remove a region with ID 2
+  cs_region:
+    id: 2
+    state: absent
+  delegate_to: localhost
+
+
+RETURN VALUES:
+
+---
+id:
+  description: ID of the region.
+  returned: success
+  type: int
+  sample: 1
+name:
+  description: Name of the region.
+  returned: success
+  type: str
+  sample: local
+endpoint:
+  description: Endpoint of the region.
+  returned: success
+  type: str
+  sample: http://cloud.example.com
+gslb_service_enabled:
+  description: Whether the GSLB service is enabled or not.
+  returned: success
+  type: bool
+  sample: true
+portable_ip_service_enabled:
+  description: Whether the portable IP service is enabled or not.
+  returned: success
+  type: bool
+  sample: true
+

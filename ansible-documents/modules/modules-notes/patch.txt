@@ -1,0 +1,92 @@
+> PATCH    (/usr/lib/python2.7/dist-packages/ansible/modules/files/patch.py)
+
+        Apply patch files using the GNU patch tool.
+
+  * This module is maintained by The Ansible Community
+  * note: This module has a corresponding action plugin.
+
+OPTIONS (= is mandatory):
+
+- backup
+        Passes `--backup --version-control=numbered' to patch, producing numbered backup copies.
+        [Default: False]
+        type: bool
+        version_added: 2.0
+
+- basedir
+        Path of a base directory in which the patch file will be applied.
+        May be omitted when `dest' option is specified, otherwise required.
+        [Default: (null)]
+        type: path
+
+- binary
+        Setting to `yes' will disable patch's heuristic for transforming CRLF line endings into LF.
+        Line endings of src and dest must match.
+        If set to `no', `patch' will replace CRLF in `src' files on POSIX.
+        [Default: False]
+        type: bool
+        version_added: 2.0
+
+- dest
+        Path of the file on the remote machine to be patched.
+        The names of the files to be patched are usually taken from the patch file, but if there's just one file to be patched it can
+        specified with this option.
+        (Aliases: originalfile)[Default: (null)]
+        type: path
+
+- remote_src
+        If `no', it will search for src at originating/master machine, if `yes' it will go to the remote/target machine for the `src'.
+        [Default: False]
+        type: bool
+
+= src
+        Path of the patch file as accepted by the GNU patch tool. If `remote_src' is 'no', the patch source file is looked up from the
+        module's `files' directory.
+        (Aliases: patchfile)
+        type: path
+
+- state
+        Whether the patch should be applied or reverted.
+        (Choices: absent, present)[Default: present]
+        type: str
+        version_added: 2.6
+
+- strip
+        Number that indicates the smallest prefix containing leading slashes that will be stripped from each file name found in the patch
+        file.
+        For more information see the strip parameter of the GNU patch tool.
+        [Default: 0]
+        type: int
+
+
+NOTES:
+      * This module requires GNU `patch' utility to be installed on the remote host.
+
+
+AUTHOR: Jakub Jirutka (@jirutka), Luis Alberto Perez Lazaro (@luisperlaz)
+        METADATA:
+          status:
+          - stableinterface
+          supported_by: community
+        
+
+EXAMPLES:
+
+- name: Apply patch to one file
+  patch:
+    src: /tmp/index.html.patch
+    dest: /var/www/index.html
+
+- name: Apply patch to multiple files under basedir
+  patch:
+    src: /tmp/customize.patch
+    basedir: /var/www
+    strip: 1
+
+- name: Revert patch to one file
+  patch:
+    src: /tmp/index.html.patch
+    dest: /var/www/index.html
+    state: absent
+
+

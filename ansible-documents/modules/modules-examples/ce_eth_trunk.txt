@@ -1,0 +1,60 @@
+EXAMPLES:
+
+- name: eth_trunk module test
+  hosts: cloudengine
+  connection: local
+  gather_facts: no
+  vars:
+    cli:
+      host: "{{ inventory_hostname }}"
+      port: "{{ ansible_ssh_port }}"
+      username: "{{ username }}"
+      password: "{{ password }}"
+      transport: cli
+
+  tasks:
+  - name: Ensure Eth-Trunk100 is created, add two members, and set to mode lacp-static
+    ce_eth_trunk:
+      trunk_id: 100
+      members: ['10GE1/0/24','10GE1/0/25']
+      mode: 'lacp-static'
+      state: present
+      provider: '{{ cli }}'
+
+
+RETURN VALUES:
+
+proposed:
+    description: k/v pairs of parameters passed into module
+    returned: always
+    type: dict
+    sample: {"trunk_id": "100", "members": ['10GE1/0/24','10GE1/0/25'], "mode": "lacp-static"}
+existing:
+    description: k/v pairs of existing Eth-Trunk
+    returned: always
+    type: dict
+    sample: {"trunk_id": "100", "hash_type": "mac", "members_detail": [
+            {"memberIfName": "10GE1/0/25", "memberIfState": "Down"}],
+            "min_links": "1", "mode": "manual"}
+end_state:
+    description: k/v pairs of Eth-Trunk info after module execution
+    returned: always
+    type: dict
+    sample: {"trunk_id": "100", "hash_type": "mac", "members_detail": [
+            {"memberIfName": "10GE1/0/24", "memberIfState": "Down"},
+            {"memberIfName": "10GE1/0/25", "memberIfState": "Down"}],
+            "min_links": "1", "mode": "lacp-static"}
+updates:
+    description: command sent to the device
+    returned: always
+    type: list
+    sample: ["interface Eth-Trunk 100",
+             "mode lacp-static",
+             "interface 10GE1/0/25",
+             "eth-trunk 100"]
+changed:
+    description: check to see if a change was made on the device
+    returned: always
+    type: bool
+    sample: true
+

@@ -1,0 +1,37 @@
+EXAMPLES:
+
+- name: Mark address on addrobj as deprecated
+  ipadm_addrprop: property=deprecated value=on addrobj=e1000g0/v6
+
+- name: Set network prefix length for addrobj
+  ipadm_addrprop: addrobj=bge0/v4 name=prefixlen value=26
+
+
+RETURN VALUES:
+
+property:
+    description: property name
+    returned: always
+    type: str
+    sample: deprecated
+addrobj:
+    description: address object name
+    returned: always
+    type: str
+    sample: bge0/v4
+state:
+    description: state of the target
+    returned: always
+    type: str
+    sample: present
+temporary:
+    description: specifies if operation will persist across reboots
+    returned: always
+    type: bool
+    sample: True
+value:
+    description: property value
+    returned: when value is provided
+    type: str
+    sample: 26
+

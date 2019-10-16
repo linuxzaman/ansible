@@ -1,0 +1,98 @@
+> VMWARE_MIGRATE_VMK    (/usr/lib/python2.7/dist-packages/ansible/modules/cloud/vmware/vmware_migrate_vmk.py)
+
+        Migrate a VMK interface from VSS to VDS
+
+  * This module is maintained by The Ansible Community
+OPTIONS (= is mandatory):
+
+= current_portgroup_name
+        Portgroup name VMK interface is currently on
+
+
+= current_switch_name
+        Switch VMK interface is currently on
+
+
+= device
+        VMK interface name
+
+
+= esxi_hostname
+        ESXi hostname to be managed
+
+
+- hostname
+        The hostname or IP address of the vSphere vCenter or ESXi server.
+        If the value is not specified in the task, the value of environment variable `VMWARE_HOST' will be used instead.
+        Environment variable support added in Ansible 2.6.
+        [Default: (null)]
+        type: str
+
+= migrate_portgroup_name
+        Portgroup name to migrate VMK interface to
+
+
+= migrate_switch_name
+        Switch name to migrate VMK interface to
+
+
+- password
+        The password of the vSphere vCenter or ESXi server.
+        If the value is not specified in the task, the value of environment variable `VMWARE_PASSWORD' will be used instead.
+        Environment variable support added in Ansible 2.6.
+        (Aliases: pass, pwd)[Default: (null)]
+        type: str
+
+- port
+        The port number of the vSphere vCenter or ESXi server.
+        If the value is not specified in the task, the value of environment variable `VMWARE_PORT' will be used instead.
+        Environment variable support added in Ansible 2.6.
+        [Default: 443]
+        type: int
+        version_added: 2.5
+
+- username
+        The username of the vSphere vCenter or ESXi server.
+        If the value is not specified in the task, the value of environment variable `VMWARE_USER' will be used instead.
+        Environment variable support added in Ansible 2.6.
+        (Aliases: admin, user)[Default: (null)]
+        type: str
+
+- validate_certs
+        Allows connection when SSL certificates are not valid. Set to `false' when certificates are not trusted.
+        If the value is not specified in the task, the value of environment variable `VMWARE_VALIDATE_CERTS' will be used instead.
+        Environment variable support added in Ansible 2.6.
+        If set to `yes', please make sure Python >= 2.7.9 is installed on the given machine.
+        [Default: True]
+        type: bool
+
+
+NOTES:
+      * Tested on vSphere 5.5
+
+
+REQUIREMENTS:  python >= 2.6, PyVmomi
+
+AUTHOR: Joseph Callen (@jcpowermac), Russell Teague (@mtnbikenc)
+        METADATA:
+          status:
+          - preview
+          supported_by: community
+        
+
+EXAMPLES:
+
+- name: Migrate Management vmk
+  vmware_migrate_vmk:
+    hostname: "{{ vcenter_hostname }}"
+    username: "{{ vcenter_username }}"
+    password: "{{ vcenter_password }}"
+    esxi_hostname: "{{ esxi_hostname }}"
+    device: vmk1
+    current_switch_name: temp_vswitch
+    current_portgroup_name: esx-mgmt
+    migrate_switch_name: dvSwitch
+    migrate_portgroup_name: Management
+  delegate_to: localhost
+
+

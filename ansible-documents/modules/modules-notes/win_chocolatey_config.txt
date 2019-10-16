@@ -1,0 +1,66 @@
+> WIN_CHOCOLATEY_CONFIG    (/usr/lib/python2.7/dist-packages/ansible/modules/windows/win_chocolatey_config.py)
+
+        Used to manage Chocolatey config settings as well as unset the values.
+
+  * This module is maintained by The Ansible Community
+OPTIONS (= is mandatory):
+
+= name
+        The name of the config setting to manage.
+        See https://chocolatey.org/docs/chocolatey-configuration for a list of valid configuration settings that can be changed.
+        Any config values that contain encrypted values like a password are not idempotent as the plaintext value cannot be read.
+
+        type: str
+
+- state
+        When `absent', it will ensure the setting is unset or blank.
+        When `present', it will ensure the setting is set to the value of `value'.
+        (Choices: absent, present)[Default: present]
+        type: str
+
+- value
+        Used when `state=present' that contains the value to set for the config setting.
+        Cannot be null or an empty string, use `state=absent' to unset a config value instead.
+        [Default: (null)]
+        type: str
+
+
+SEE ALSO:
+      * Module win_chocolatey
+           The official documentation on the win_chocolatey module.
+           https://docs.ansible.com/ansible/latest/modules/win_chocolatey_module.html
+      * Module win_chocolatey_facts
+           The official documentation on the win_chocolatey_facts module.
+           https://docs.ansible.com/ansible/latest/modules/win_chocolatey_facts_module.html
+      * Module win_chocolatey_feature
+           The official documentation on the win_chocolatey_feature module.
+           https://docs.ansible.com/ansible/latest/modules/win_chocolatey_feature_module.html
+      * Module win_chocolatey_source
+           The official documentation on the win_chocolatey_source module.
+           https://docs.ansible.com/ansible/latest/modules/win_chocolatey_source_module.html
+
+
+AUTHOR: Jordan Borean (@jborean93)
+        METADATA:
+          status:
+          - preview
+          supported_by: community
+        
+
+EXAMPLES:
+
+- name: Set the cache location
+  win_chocolatey_config:
+    name: cacheLocation
+    state: present
+    value: D:\chocolatey_temp
+
+- name: Unset the cache location
+  win_chocolatey_config:
+    name: cacheLocation
+    state: absent
+
+
+RETURN VALUES:
+
+

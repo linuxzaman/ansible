@@ -1,0 +1,356 @@
+> AZURE_RM_STORAGEACCOUNT_FACTS    (/usr/lib/python2.7/dist-packages/ansible/modules/cloud/azure/azure_rm_storageaccount_facts.py)
+
+        Get facts for one storage account or all storage accounts within a resource group.
+
+  * This module is maintained by The Ansible Community
+OPTIONS (= is mandatory):
+
+- ad_user
+        Active Directory username. Use when authenticating with an Active Directory user rather than service principal.
+        [Default: (null)]
+        type: str
+
+- adfs_authority_url
+        Azure AD authority url. Use when authenticating with Username/password, and has your own ADFS authority.
+        [Default: (null)]
+        type: str
+        version_added: 2.6
+
+- api_profile
+        Selects an API profile to use when communicating with Azure services. Default value of `latest' is appropriate for public clouds;
+        future values will allow use with Azure Stack.
+        [Default: latest]
+        type: str
+        version_added: 2.5
+
+- auth_source
+        Controls the source of the credentials to use for authentication.
+        If not specified, ANSIBLE_AZURE_AUTH_SOURCE environment variable will be used and default to `auto' if variable is not defined.
+        `auto' will follow the default precedence of module parameters -> environment variables -> default profile in credential file
+        `~/.azure/credentials'.
+        When set to `cli', the credentials will be sources from the default Azure CLI profile.
+        Can also be set via the `ANSIBLE_AZURE_AUTH_SOURCE' environment variable.
+        When set to `msi', the host machine must be an azure resource with an enabled MSI extension. `subscription_id' or the environment
+        variable `AZURE_SUBSCRIPTION_ID' can be used to identify the subscription ID if the resource is granted access to more than one
+        subscription, otherwise the first subscription is chosen.
+        The `msi' was added in Ansible 2.6.
+        (Choices: auto, cli, credential_file, env, msi)[Default: (null)]
+        type: str
+        version_added: 2.5
+
+- cert_validation_mode
+        Controls the certificate validation behavior for Azure endpoints. By default, all modules will validate the server certificate,
+        but when an HTTPS proxy is in use, or against Azure Stack, it may be necessary to disable this behavior by passing `ignore'. Can
+        also be set via credential file profile or the `AZURE_CERT_VALIDATION' environment variable.
+        (Choices: ignore, validate)[Default: (null)]
+        type: str
+        version_added: 2.5
+
+- client_id
+        Azure client ID. Use when authenticating with a Service Principal.
+        [Default: (null)]
+        type: str
+
+- cloud_environment
+        For cloud environments other than the US public cloud, the environment name (as defined by Azure Python SDK, eg,
+        `AzureChinaCloud', `AzureUSGovernment'), or a metadata discovery endpoint URL (required for Azure Stack). Can also be set via
+        credential file profile or the `AZURE_CLOUD_ENVIRONMENT' environment variable.
+        [Default: AzureCloud]
+        type: str
+        version_added: 2.4
+
+- name
+        Only show results for a specific account.
+        [Default: (null)]
+
+- password
+        Active Directory user password. Use when authenticating with an Active Directory user rather than service principal.
+        [Default: (null)]
+
+- profile
+        Security profile found in ~/.azure/credentials file.
+        [Default: (null)]
+        type: str
+
+- resource_group
+        Limit results to a resource group. Required when filtering by name.
+        (Aliases: resource_group_name)[Default: (null)]
+
+- secret
+        Azure client secret. Use when authenticating with a Service Principal.
+        [Default: (null)]
+        type: str
+
+- show_blob_cors
+        Show the blob CORS settings for each of the storageaccount's blob.
+        Note that it will cost a lot time when list all storageaccount rather than querry a single one.
+        [Default: (null)]
+        type: bool
+        version_added: 2.8
+
+- show_connection_string
+        Show the connection string for each of the storageaccount's endpoints.
+        Note that it will cost a lot of time when list all storageaccount rather than query a single one.
+        [Default: (null)]
+        type: bool
+        version_added: 2.8
+
+- subscription_id
+        Your Azure subscription Id.
+        [Default: (null)]
+        type: str
+
+- tags
+        Limit results by providing a list of tags. Format tags as 'key' or 'key:value'.
+        [Default: (null)]
+
+- tenant
+        Azure tenant ID. Use when authenticating with a Service Principal.
+        [Default: (null)]
+        type: str
+
+
+NOTES:
+      * For authentication with Azure you can pass parameters, set environment variables, use a profile stored in
+        ~/.azure/credentials, or log in before you run your tasks or playbook with `az login'.
+      * Authentication is also possible using a service principal or Active Directory user.
+      * To authenticate via service principal, pass subscription_id, client_id, secret and tenant or set environment variables
+        AZURE_SUBSCRIPTION_ID, AZURE_CLIENT_ID, AZURE_SECRET and AZURE_TENANT.
+      * To authenticate via Active Directory user, pass ad_user and password, or set AZURE_AD_USER and AZURE_PASSWORD in the
+        environment.
+      * Alternatively, credentials can be stored in ~/.azure/credentials. This is an ini file containing a [default] section and
+        the following keys: subscription_id, client_id, secret and tenant or subscription_id, ad_user and password. It is also
+        possible to add additional profiles. Specify the profile by passing profile or setting AZURE_PROFILE in the environment.
+
+
+SEE ALSO:
+      * Sign in with Azure CLI
+           How to authenticate using the `az login' command.
+           https://docs.microsoft.com/en-us/cli/azure/authenticate-azure-cli?view=azure-cli-latest
+
+
+REQUIREMENTS:  python >= 2.7, azure >= 2.0.0
+
+AUTHOR: Chris Houseknecht (@chouseknecht), Matt Davis (@nitzmahone)
+        METADATA:
+          status:
+          - preview
+          supported_by: community
+        
+
+EXAMPLES:
+
+- name: Get facts for one account
+      azure_rm_storageaccount_facts:
+        resource_group: myResourceGroup
+        name: clh0002
+
+    - name: Get facts for all accounts in a resource group
+      azure_rm_storageaccount_facts:
+        resource_group: myResourceGroup
+
+    - name: Get facts for all accounts by tags
+      azure_rm_storageaccount_facts:
+        tags:
+          - testing
+          - foo:bar
+
+
+RETURN VALUES:
+
+azure_storageaccounts:
+    description: List of storage account dicts.
+    returned: always
+    type: list
+    example: [{
+        "id": "/subscriptions/xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx/myResourceGroups/testing/providers/Microsoft.Storage/storageAccounts/testaccount001",
+        "location": "eastus2",
+        "name": "testaccount001",
+        "properties": {
+            "accountType": "Standard_LRS",
+            "creationTime": "2016-03-28T02:46:58.290113Z",
+            "primaryEndpoints": {
+                "blob": "https://testaccount001.blob.core.windows.net/",
+                "file": "https://testaccount001.file.core.windows.net/",
+                "queue": "https://testaccount001.queue.core.windows.net/",
+                "table": "https://testaccount001.table.core.windows.net/"
+            },
+            "primaryLocation": "eastus2",
+            "provisioningState": "Succeeded",
+            "statusOfPrimary": "Available"
+        },
+        "tags": {},
+        "type": "Microsoft.Storage/storageAccounts"
+    }]
+storageaccounts:
+    description: List of storage account dicts in resource module's parameter format.
+    returned: always
+    type: complex
+    contains:
+        id:
+            description:
+                - Resource ID.
+            sample: "/subscriptions/xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx/resourceGroups/myResourceGroup/providers/Microsoft.Storage/storageAccounts/t
+                     estaccount001"
+        name:
+            description:
+                - Name of the storage account to update or create.
+            sample: "testaccount001"
+        location:
+            description:
+                - Valid azure location. Defaults to location of the resource group.
+            sample: eastus
+        account_type:
+            description:
+                - Type of storage account.
+                - "NOTE: Standard_ZRS and Premium_LRS accounts cannot be changed to other account types."
+                - Other account types cannot be changed to Standard_ZRS or Premium_LRS.
+            sample: Standard_ZRS
+        custom_domain:
+            description:
+                - User domain assigned to the storage account.
+                - Must be a dictionary with 'name' and 'use_sub_domain' keys where 'name' is the CNAME source.
+            type: complex
+            contains:
+                name:
+                    description:
+                        - CNAME source.
+                    sample: testaccount
+                use_sub_domain:
+                    description:
+                        - whether to use sub domain.
+                    sample: true
+        kind:
+            description:
+                - The 'kind' of storage.
+            sample: Storage
+        access_tier:
+            description:
+                - The access tier for this storage account.
+            sample: Hot
+        https_only:
+            description:
+                -  Allows https traffic only to storage service if sets to true.
+            sample: false
+        provisioning_state:
+            description:
+                - Gets the status of the storage account at the time the operation was called.
+                - Possible values include 'Creating', 'ResolvingDNS', 'Succeeded'.
+            sample: Succeeded
+        secondary_location:
+            description:
+                - Gets the location of the geo-replicated secondary for the storage account.
+                - Only available if the accountType is Standard_GRS or Standard_RAGRS.
+            sample: westus
+        status_of_primary:
+            description:
+                - Gets the status indicating whether the primary location of the storage account is available or unavailable.
+            sample: available
+        status_of_secondary:
+            description:
+                - Gets the status indicating whether the secondary location of the storage account is available or unavailable.
+            sample: available
+        primary_location:
+            description:
+                - Gets the location of the primary data center for the storage account.
+            sample: eastus
+        primary_endpoints:
+            description:
+                - Gets the URLs that are used to perform a retrieval of a public blob, queue, or table object.
+                - Note that Standard_ZRS and Premium_LRS accounts only return the blob endpoint.
+            type: complex
+            contains:
+                blob:
+                    description:
+                        - Gets the primary blob endpoint and connection string.
+                    type: complex
+                    contains:
+                        endpoint:
+                            description:
+                                - Gets the primary blob endpoint.
+                            sample: "https://testaccount001.blob.core.windows.net/"
+                        connectionstring:
+                            description:
+                                - Connectionstring of the blob endpoint
+                            sample: "DefaultEndpointsProtocol=https;EndpointSuffix=core.windows.net;AccountName=X;AccountKey=X;BlobEndpoint=X"
+                queue:
+                    description:
+                        - Gets the primary queue endpoint and connection string.
+                    type: complex
+                    contains:
+                        endpoint:
+                            description:
+                                - Gets the primary queue endpoint.
+                            sample: "https://testaccount001.queue.core.windows.net/"
+                        connectionstring:
+                            description:
+                                - Connectionstring of the queue endpoint
+                            sample: "DefaultEndpointsProtocol=https;EndpointSuffix=core.windows.net;AccountName=X;AccountKey=X;QueueEndpoint=X"
+                table:
+                    description:
+                        - Gets the primary table endpoint and connection string.
+                    type: complex
+                    contains:
+                        endpoint:
+                            description:
+                                - Gets the primary table endpoint.
+                            sample: "https://testaccount001.table.core.windows.net/"
+                        connectionstring:
+                            description:
+                                - Connectionstring of the table endpoint
+                            sample: "DefaultEndpointsProtocol=https;EndpointSuffix=core.windows.net;AccountName=X;AccountKey=X;TableEndpoint=X"
+        secondary_endpoints:
+            description:
+                - Gets the URLs that are used to perform a retrieval of a public blob, queue, or table object from the secondary location.
+                - Only available if the SKU name is Standard_RAGRS.
+            type: complex
+            contains:
+                blob:
+                    description:
+                        - Gets the secondary blob endpoint and connection string.
+                    type: complex
+                    contains:
+                        endpoint:
+                            description:
+                                - Gets the secondary blob endpoint.
+                            sample: "https://testaccount001.blob.core.windows.net/"
+                        connectionstring:
+                            description:
+                                - Connectionstring of the blob endpoint
+                            sample: "DefaultEndpointsProtocol=https;EndpointSuffix=core.windows.net;AccountName=X;AccountKey=X;BlobEndpoint=X"
+                queue:
+                    description:
+                        - Gets the secondary queue endpoint and connection string.
+                    type: complex
+                    contains:
+                        endpoint:
+                            description:
+                                - Gets the secondary queue endpoint.
+                            sample: "https://testaccount001.queue.core.windows.net/"
+                        connectionstring:
+                            description:
+                                - Connectionstring of the queue endpoint
+                            sample: "DefaultEndpointsProtocol=https;EndpointSuffix=core.windows.net;AccountName=X;AccountKey=X;QueueEndpoint=X"
+                table:
+                    description:
+                        - Gets the secondary table endpoint and connection string.
+                    type: complex
+                    contains:
+                        endpoint:
+                            description:
+                                - Gets the secondary table endpoint.
+                            sample: "https://testaccount001.table.core.windows.net/"
+                        connectionstring:
+                            description:
+                                - Connectionstring of the table endpoint
+                            sample: "DefaultEndpointsProtocol=https;EndpointSuffix=core.windows.net;AccountName=X;AccountKey=X;TableEndpoint=X"
+        tags:
+            description:
+                - Resource tags.
+            type: dict
+            sample: { "tag1": "abc" }
+        blob_cors:
+            description:
+                - Blob CORS of blob.
+            type: list
+

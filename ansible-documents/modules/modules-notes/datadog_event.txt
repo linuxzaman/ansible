@@ -1,0 +1,83 @@
+> DATADOG_EVENT    (/usr/lib/python2.7/dist-packages/ansible/modules/monitoring/datadog_event.py)
+
+        Allows to post events to Datadog (www.datadoghq.com) service. Uses http://docs.datadoghq.com/api/#events API.
+
+  * This module is maintained by The Ansible Community
+OPTIONS (= is mandatory):
+
+- aggregation_key
+        An arbitrary string to use for aggregation.
+        [Default: (null)]
+
+- alert_type
+        Type of alert.
+        (Choices: error, warning, info, success)[Default: info]
+
+= api_key
+        Your DataDog API key.
+
+
+= app_key
+        Your DataDog app key.
+
+        version_added: 2.2
+
+- date_happened
+        POSIX timestamp of the event.
+        Default value is now.
+        [Default: now]
+
+- host
+        Host name to associate with the event.
+        [Default: {{ ansible_hostname }}]
+        version_added: 2.4
+
+- priority
+        The priority of the event.
+        (Choices: normal, low)[Default: normal]
+
+- tags
+        Comma separated list of tags to apply to the event.
+        [Default: (null)]
+
+= text
+        The body of the event.
+
+
+= title
+        The event title.
+
+
+- validate_certs
+        If `no', SSL certificates will not be validated. This should only be used on personally controlled sites using self-signed
+        certificates.
+        [Default: yes]
+        type: bool
+        version_added: 1.5.1
+
+
+AUTHOR: Artūras `arturaz` Šlajus (@arturaz), Naoya Nakazawa (@n0ts)
+        METADATA:
+          status:
+          - preview
+          supported_by: community
+        
+
+EXAMPLES:
+
+# Post an event with low priority
+- datadog_event:
+    title: Testing from ansible
+    text: Test
+    priority: low
+    api_key: 9775a026f1ca7d1c6c5af9d94d9595a4
+    app_key: j4JyCYfefWHhgFgiZUqRm63AXHNZQyPGBfJtAzmN
+# Post an event with several tags
+- datadog_event:
+    title: Testing from ansible
+    text: Test
+    api_key: 9775a026f1ca7d1c6c5af9d94d9595a4
+    app_key: j4JyCYfefWHhgFgiZUqRm63AXHNZQyPGBfJtAzmN
+    tags: 'aa,bb,#host:{{ inventory_hostname }}'
+
+

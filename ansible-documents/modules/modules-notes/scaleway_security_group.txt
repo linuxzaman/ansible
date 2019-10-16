@@ -1,0 +1,129 @@
+> SCALEWAY_SECURITY_GROUP    (/usr/lib/python2.7/dist-packages/ansible/modules/cloud/scaleway/scaleway_security_group.py)
+
+        This module manages Security Group on Scaleway account https://developer.scaleway.com.
+
+  * This module is maintained by The Ansible Community
+OPTIONS (= is mandatory):
+
+- api_timeout
+        HTTP timeout to Scaleway API in seconds.
+        (Aliases: timeout)[Default: 30]
+        type: int
+
+- api_token
+        Scaleway OAuth token.
+        (Aliases: oauth_token)[Default: (null)]
+        type: str
+
+- api_url
+        Scaleway API URL.
+        (Aliases: base_url)[Default: https://api.scaleway.com]
+        type: str
+
+- description
+        Description of the Security Group.
+        [Default: (null)]
+        type: str
+
+- inbound_default_policy
+        Default policy for incoming trafic.
+        (Choices: accept, drop)[Default: (null)]
+        type: str
+
+= name
+        Name of the Security Group.
+
+        type: str
+
+= organization
+        Organization identifier.
+
+        type: str
+
+- organization_default
+        Create security group to be the default one.
+        [Default: (null)]
+        type: bool
+
+- outbound_default_policy
+        Default policy for outcoming trafic.
+        (Choices: accept, drop)[Default: (null)]
+        type: str
+
+- query_parameters
+        List of parameters passed to the query string.
+        [Default: {}]
+        type: dict
+
+= region
+        Scaleway region to use (for example `par1').
+        (Choices: ams1, EMEA-NL-EVS, par1, EMEA-FR-PAR1)
+        type: str
+
+- state
+        Indicate desired state of the Security Group.
+        (Choices: absent, present)[Default: present]
+        type: str
+
+= stateful
+        Create a stateful security group which allows established connections in and out.
+
+        type: bool
+
+- validate_certs
+        Validate SSL certs of the Scaleway API.
+        [Default: True]
+        type: bool
+
+
+NOTES:
+      * Also see the API documentation on https://developer.scaleway.com/
+      * If `api_token' is not set within the module, the following environment variables can be used in decreasing order of
+        precedence `SCW_TOKEN', `SCW_API_KEY', `SCW_OAUTH_TOKEN' or `SCW_API_TOKEN'.
+      * If one wants to use a different `api_url' one can also set the `SCW_API_URL' environment variable.
+
+
+AUTHOR: Antoine Barbare (@abarbare)
+        METADATA:
+          status:
+          - preview
+          supported_by: community
+        
+
+EXAMPLES:
+
+- name: Create a Security Group
+    scaleway_security_group:
+      state: present
+      region: par1
+      name: security_group
+      description: "my security group description"
+      organization: "43a3b6c8-916f-477b-b7ec-ff1898f5fdd9"
+      stateful: false
+      inbound_default_policy: accept
+      outbound_default_policy: accept
+      organization_default: false
+    register: security_group_creation_task
+
+
+RETURN VALUES:
+
+data:
+    description: This is only present when C(state=present)
+    returned: when C(state=present)
+    type: dict
+    sample: {
+        "scaleway_security_group": {
+            "description": "my security group description",
+            "enable_default_security": true,
+            "id": "0168fb1f-cc46-4f69-b4be-c95d2a19bcae",
+            "inbound_default_policy": "accept",
+            "name": "security_group",
+            "organization": "43a3b6c8-916f-477b-b7ec-ff1898f5fdd9",
+            "organization_default": false,
+            "outbound_default_policy": "accept",
+            "servers": [],
+            "stateful": false
+        }
+    }
+

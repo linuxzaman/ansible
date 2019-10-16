@@ -1,0 +1,486 @@
+> FORTIOS_REPORT_CHART    (/usr/lib/python2.7/dist-packages/ansible/modules/network/fortios/fortios_report_chart.py)
+
+        This module is able to configure a FortiGate or FortiOS by allowing the user to set and modify report feature and chart category.
+        Examples include all parameters and values need to be adjusted to datasources before usage. Tested with FOS v6.0.2
+
+  * This module is maintained by The Ansible Community
+OPTIONS (= is mandatory):
+
+= host
+        FortiOS or FortiGate ip address.
+
+
+- https
+        Indicates if the requests towards FortiGate must use HTTPS protocol
+        [Default: True]
+        type: bool
+
+- password
+        FortiOS or FortiGate password.
+        [Default: ]
+
+- report_chart
+        Report chart widget configuration.
+        [Default: None]
+        suboptions:
+          background:
+            description:
+            - Chart background.
+          category:
+            choices:
+            - misc
+            - traffic
+            - event
+            - virus
+            - webfilter
+            - attack
+            - spam
+            - dlp
+            - app-ctrl
+            - vulnerability
+            description:
+            - Category.
+          category-series:
+            description:
+            - Category series of pie chart.
+            suboptions:
+              databind:
+                description:
+                - Category series value expression.
+              font-size:
+                description:
+                - Font size of category-series title.
+          color-palette:
+            description:
+            - Color palette (system will pick color automatically by default).
+          column:
+            description:
+            - Table column definition.
+            suboptions:
+              detail-unit:
+                description:
+                - Detail unit of column.
+              detail-value:
+                description:
+                - Detail value of column.
+              footer-unit:
+                description:
+                - Footer unit of column.
+              footer-value:
+                description:
+                - Footer value of column.
+              header-value:
+                description:
+                - Display name of table header.
+              id:
+                description:
+                - ID.
+                required: true
+              mapping:
+                description:
+                - Show detail in certain display value for certain condition.
+                suboptions:
+                  displayname:
+                    description:
+                    - Display name.
+                  id:
+                    description:
+                    - id
+                    required: true
+                  op:
+                    choices:
+                    - none
+                    - greater
+                    - greater-equal
+                    - less
+                    - less-equal
+                    - equal
+                    - between
+                    description:
+                    - Comparision operater.
+                  value-type:
+                    choices:
+                    - integer
+                    - string
+                    description:
+                    - Value type.
+                  value1:
+                    description:
+                    - Value 1.
+                  value2:
+                    description:
+                    - Value 2.
+          comments:
+            description:
+            - Comment.
+          dataset:
+            description:
+            - Bind dataset to chart.
+          dimension:
+            choices:
+            - 2D
+            - 3D
+            description:
+            - Dimension.
+          drill-down-charts:
+            description:
+            - Drill down charts.
+            suboptions:
+              chart-name:
+                description:
+                - Drill down chart name.
+              id:
+                description:
+                - Drill down chart ID.
+                required: true
+              status:
+                choices:
+                - enable
+                - disable
+                description:
+                - Enable/disable this drill down chart.
+          favorite:
+            choices:
+            - false
+            - true
+            description:
+            - Favorite.
+          graph-type:
+            choices:
+            - none
+            - bar
+            - pie
+            - line
+            - flow
+            description:
+            - Graph type.
+          legend:
+            choices:
+            - enable
+            - disable
+            description:
+            - Enable/Disable Legend area.
+          legend-font-size:
+            description:
+            - Font size of legend area.
+          name:
+            description:
+            - Chart Widget Name
+            required: true
+          period:
+            choices:
+            - last24h
+            - last7d
+            description:
+            - Time period.
+          policy:
+            description:
+            - Used by monitor policy.
+          state:
+            choices:
+            - present
+            - absent
+            description:
+            - Indicates whether to create or remove the object
+          style:
+            choices:
+            - auto
+            - manual
+            description:
+            - Style.
+          title:
+            description:
+            - Chart title.
+          title-font-size:
+            description:
+            - Font size of chart title.
+          type:
+            choices:
+            - graph
+            - table
+            description:
+            - Chart type.
+          value-series:
+            description:
+            - Value series of pie chart.
+            suboptions:
+              databind:
+                description:
+                - Value series value expression.
+          x-series:
+            description:
+            - X-series of chart.
+            suboptions:
+              caption:
+                description:
+                - X-series caption.
+              caption-font-size:
+                description:
+                - X-series caption font size.
+              databind:
+                description:
+                - X-series value expression.
+              font-size:
+                description:
+                - X-series label font size.
+              is-category:
+                choices:
+                - true
+                - false
+                description:
+                - X-series represent category or not.
+              label-angle:
+                choices:
+                - 45-degree
+                - vertical
+                - horizontal
+                description:
+                - X-series label angle.
+              scale-direction:
+                choices:
+                - decrease
+                - increase
+                description:
+                - Scale increase or decrease.
+              scale-format:
+                choices:
+                - YYYY-MM-DD-HH-MM
+                - YYYY-MM-DD HH
+                - YYYY-MM-DD
+                - YYYY-MM
+                - YYYY
+                - HH-MM
+                - MM-DD
+                description:
+                - Date/time format.
+              scale-step:
+                description:
+                - Scale step.
+              scale-unit:
+                choices:
+                - minute
+                - hour
+                - day
+                - month
+                - year
+                description:
+                - Scale unit.
+              unit:
+                description:
+                - X-series unit.
+          y-series:
+            description:
+            - Y-series of chart.
+            suboptions:
+              caption:
+                description:
+                - Y-series caption.
+              caption-font-size:
+                description:
+                - Y-series caption font size.
+              databind:
+                description:
+                - Y-series value expression.
+              extra-databind:
+                description:
+                - Extra Y-series value.
+              extra-y:
+                choices:
+                - enable
+                - disable
+                description:
+                - Allow another Y-series value
+              extra-y-legend:
+                description:
+                - Extra Y-series legend type/name.
+              font-size:
+                description:
+                - Y-series label font size.
+              group:
+                description:
+                - Y-series group option.
+              label-angle:
+                choices:
+                - 45-degree
+                - vertical
+                - horizontal
+                description:
+                - Y-series label angle.
+              unit:
+                description:
+                - Y-series unit.
+              y-legend:
+                description:
+                - First Y-series legend type/name.
+        
+
+= username
+        FortiOS or FortiGate username.
+
+
+- vdom
+        Virtual domain, among those defined previously. A vdom is a virtual instance of the FortiGate that can be configured and used as
+        a different unit.
+        [Default: root]
+
+
+NOTES:
+      * Requires fortiosapi library developed by Fortinet
+      * Run as a local_action in your playbook
+
+
+REQUIREMENTS:  fortiosapi>=0.9.8
+
+AUTHOR: Miguel Angel Munoz (@mamunozgonzalez), Nicolas Thomas (@thomnico)
+        METADATA:
+          status:
+          - preview
+          supported_by: community
+        
+
+EXAMPLES:
+
+- hosts: localhost
+  vars:
+   host: "192.168.122.40"
+   username: "admin"
+   password: ""
+   vdom: "root"
+  tasks:
+  - name: Report chart widget configuration.
+    fortios_report_chart:
+      host:  "{{ host }}"
+      username: "{{ username }}"
+      password: "{{ password }}"
+      vdom:  "{{ vdom }}"
+      https: "False"
+      report_chart:
+        state: "present"
+        background: "<your_own_value>"
+        category: "misc"
+        category-series:
+            databind: "<your_own_value>"
+            font-size: "7"
+        color-palette: "<your_own_value>"
+        column:
+         -
+            detail-unit: "<your_own_value>"
+            detail-value: "<your_own_value>"
+            footer-unit: "<your_own_value>"
+            footer-value: "<your_own_value>"
+            header-value: "<your_own_value>"
+            id:  "15"
+            mapping:
+             -
+                displayname: "<your_own_value>"
+                id:  "18"
+                op: "none"
+                value-type: "integer"
+                value1: "<your_own_value>"
+                value2: "<your_own_value>"
+        comments: "<your_own_value>"
+        dataset: "<your_own_value>"
+        dimension: "2D"
+        drill-down-charts:
+         -
+            chart-name: "<your_own_value>"
+            id:  "28"
+            status: "enable"
+        favorite: "no"
+        graph-type: "none"
+        legend: "enable"
+        legend-font-size: "33"
+        name: "default_name_34"
+        period: "last24h"
+        policy: "36"
+        style: "auto"
+        title: "<your_own_value>"
+        title-font-size: "39"
+        type: "graph"
+        value-series:
+            databind: "<your_own_value>"
+        x-series:
+            caption: "<your_own_value>"
+            caption-font-size: "45"
+            databind: "<your_own_value>"
+            font-size: "47"
+            is-category: "yes"
+            label-angle: "45-degree"
+            scale-direction: "decrease"
+            scale-format: "YYYY-MM-DD-HH-MM"
+            scale-step: "52"
+            scale-unit: "minute"
+            unit: "<your_own_value>"
+        y-series:
+            caption: "<your_own_value>"
+            caption-font-size: "57"
+            databind: "<your_own_value>"
+            extra-databind: "<your_own_value>"
+            extra-y: "enable"
+            extra-y-legend: "<your_own_value>"
+            font-size: "62"
+            group: "<your_own_value>"
+            label-angle: "45-degree"
+            unit: "<your_own_value>"
+            y-legend: "<your_own_value>"
+
+
+RETURN VALUES:
+
+build:
+  description: Build number of the fortigate image
+  returned: always
+  type: str
+  sample: '1547'
+http_method:
+  description: Last method used to provision the content into FortiGate
+  returned: always
+  type: str
+  sample: 'PUT'
+http_status:
+  description: Last result given by FortiGate on last operation applied
+  returned: always
+  type: str
+  sample: "200"
+mkey:
+  description: Master key (id) used in the last call to FortiGate
+  returned: success
+  type: str
+  sample: "id"
+name:
+  description: Name of the table used to fulfill the request
+  returned: always
+  type: str
+  sample: "urlfilter"
+path:
+  description: Path of the table used to fulfill the request
+  returned: always
+  type: str
+  sample: "webfilter"
+revision:
+  description: Internal revision number
+  returned: always
+  type: str
+  sample: "17.0.2.10658"
+serial:
+  description: Serial number of the unit
+  returned: always
+  type: str
+  sample: "FGVMEVYYQT3AB5352"
+status:
+  description: Indication of the operation's result
+  returned: always
+  type: str
+  sample: "success"
+vdom:
+  description: Virtual domain used
+  returned: always
+  type: str
+  sample: "root"
+version:
+  description: Version of the FortiGate
+  returned: always
+  type: str
+  sample: "v5.6.3"
+
+

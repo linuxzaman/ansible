@@ -1,0 +1,100 @@
+EXAMPLES:
+
+- hosts: localhost
+  vars:
+   host: "192.168.122.40"
+   username: "admin"
+   password: ""
+   vdom: "root"
+  tasks:
+  - name: Configure central management.
+    fortios_system_central_management:
+      host:  "{{  host }}"
+      username: "{{ username }}"
+      password: "{{ password }}"
+      vdom:  "{{  vdom }}"
+      system_central_management:
+        allow-monitor: "enable"
+        allow-push-configuration: "enable"
+        allow-push-firmware: "enable"
+        allow-remote-firmware-upgrade: "enable"
+        enc-algorithm: "default"
+        fmg: "<your_own_value>"
+        fmg-source-ip: "<your_own_value>"
+        fmg-source-ip6: "<your_own_value>"
+        include-default-servers: "enable"
+        mode: "normal"
+        schedule-config-restore: "enable"
+        schedule-script-restore: "enable"
+        serial-number: "<your_own_value>"
+        server-list:
+         -
+            addr-type: "ipv4"
+            fqdn: "<your_own_value>"
+            id:  "19"
+            server-address: "<your_own_value>"
+            server-address6: "<your_own_value>"
+            server-type: "update"
+        type: "fortimanager"
+        vdom: "<your_own_value> (source system.vdom.name)"
+
+
+RETURN VALUES:
+
+build:
+  description: Build number of the fortigate image
+  returned: always
+  type: str
+  sample: '1547'
+http_method:
+  description: Last method used to provision the content into FortiGate
+  returned: always
+  type: str
+  sample: 'PUT'
+http_status:
+  description: Last result given by FortiGate on last operation applied
+  returned: always
+  type: str
+  sample: "200"
+mkey:
+  description: Master key (id) used in the last call to FortiGate
+  returned: success
+  type: str
+  sample: "key1"
+name:
+  description: Name of the table used to fulfill the request
+  returned: always
+  type: str
+  sample: "urlfilter"
+path:
+  description: Path of the table used to fulfill the request
+  returned: always
+  type: str
+  sample: "webfilter"
+revision:
+  description: Internal revision number
+  returned: always
+  type: str
+  sample: "17.0.2.10658"
+serial:
+  description: Serial number of the unit
+  returned: always
+  type: str
+  sample: "FGVMEVYYQT3AB5352"
+status:
+  description: Indication of the operation's result
+  returned: always
+  type: str
+  sample: "success"
+vdom:
+  description: Virtual domain used
+  returned: always
+  type: str
+  sample: "root"
+version:
+  description: Version of the FortiGate
+  returned: always
+  type: str
+  sample: "v5.6.3"
+
+

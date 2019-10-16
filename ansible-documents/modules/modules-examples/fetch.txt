@@ -1,0 +1,26 @@
+EXAMPLES:
+
+- name: Store file into /tmp/fetched/host.example.com/tmp/somefile
+  fetch:
+    src: /tmp/somefile
+    dest: /tmp/fetched
+
+- name: Specifying a path directly
+  fetch:
+    src: /tmp/somefile
+    dest: /tmp/prefix-{{ inventory_hostname }}
+    flat: yes
+
+- name: Specifying a destination path
+  fetch:
+    src: /tmp/uniquefile
+    dest: /tmp/special/
+    flat: yes
+
+- name: Storing in a path relative to the playbook
+  fetch:
+    src: /tmp/uniquefile
+    dest: special/prefix-{{ inventory_hostname }}
+    flat: yes
+
+

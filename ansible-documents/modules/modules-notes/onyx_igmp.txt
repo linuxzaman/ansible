@@ -1,0 +1,71 @@
+> ONYX_IGMP    (/usr/lib/python2.7/dist-packages/ansible/modules/network/onyx/onyx_igmp.py)
+
+        This module provides declarative management of IGMP protocol params on Mellanox ONYX network devices.
+
+  * This module is maintained by The Ansible Community
+OPTIONS (= is mandatory):
+
+- default_version
+        Configure the default operating version of the IGMP snooping
+        (Choices: V2, V3)[Default: (null)]
+
+- last_member_query_interval
+        Configure the last member query interval, range 1-25
+        [Default: (null)]
+
+- mrouter_timeout
+        Configure the mrouter timeout, range 60-600
+        [Default: (null)]
+
+- port_purge_timeout
+        Configure the host port purge timeout, range 130-1225
+        [Default: (null)]
+
+- proxy_reporting
+        Configure ip igmp snooping proxy and enable reporting mode
+        (Choices: enabled, disabled)[Default: (null)]
+
+- report_suppression_interval
+        Configure the report suppression interval, range 1-25
+        [Default: (null)]
+
+= state
+        IGMP state.
+        (Choices: enabled, disabled)
+
+- unregistered_multicast
+        Configure the unregistered multicast mode Flood unregistered multicast Forward unregistered multicast to mrouter ports
+        (Choices: flood, forward-to-mrouter-ports)[Default: (null)]
+
+
+NOTES:
+      * Tested on ONYX 3.6.6107
+
+
+AUTHOR: Samer Deeb (@samerd)
+        METADATA:
+          status:
+          - preview
+          supported_by: community
+        
+
+EXAMPLES:
+
+- name: configure igmp
+  onyx_igmp:
+    state: enabled
+    unregistered_multicast: flood
+
+
+RETURN VALUES:
+
+commands:
+  description: The list of configuration mode commands to send to the device.
+  returned: always
+  type: list
+  sample:
+    - ip igmp snooping
+    - ip igmp snooping last-member-query-interval 10
+    - ip igmp snooping mrouter-timeout 150
+    - ip igmp snooping port-purge-timeout 150
+

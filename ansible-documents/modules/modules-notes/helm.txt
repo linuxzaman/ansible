@@ -1,0 +1,97 @@
+> HELM    (/usr/lib/python2.7/dist-packages/ansible/modules/cloud/misc/helm.py)
+
+        Install, upgrade, delete and list packages with the Helm package manager.
+
+  * This module is maintained by The Ansible Community
+OPTIONS (= is mandatory):
+
+- chart
+        A map describing the chart to install. See examples for available options.
+        [Default: {}]
+
+- disable_hooks
+        Whether to disable hooks during the uninstall process.
+        [Default: no]
+        type: bool
+
+- host
+        Tiller's server host.
+        [Default: localhost]
+
+- name
+        Release name to manage.
+        [Default: (null)]
+
+- namespace
+        Kubernetes namespace where the chart should be installed.
+        [Default: default]
+
+- port
+        Tiller's server port.
+        [Default: 44134]
+
+- state
+        Whether to install `present', remove `absent', or purge `purged' a package.
+        (Choices: absent, purged, present)[Default: present]
+
+- values
+        A map of value options for the chart.
+        [Default: {}]
+
+
+REQUIREMENTS:  pyhelm, grpcio
+
+AUTHOR: Flavio Percoco (@flaper87)
+        METADATA:
+          status:
+          - preview
+          supported_by: community
+        
+
+EXAMPLES:
+
+- name: Install helm chart
+  helm:
+    host: localhost
+    chart:
+      name: memcached
+      version: 0.4.0
+      source:
+        type: repo
+        location: https://kubernetes-charts.storage.googleapis.com
+    state: present
+    name: my-memcached
+    namespace: default
+
+- name: Uninstall helm chart
+  helm:
+    host: localhost
+    state: absent
+    name: my-memcached
+
+- name: Install helm chart from a git repo
+  helm:
+    host: localhost
+    chart:
+      source:
+        type: git
+        location: https://github.com/user/helm-chart.git
+    state: present
+    name: my-example
+    namespace: default
+
+- name: Install helm chart from a git repo specifying path
+  helm:
+    host: localhost
+    chart:
+      source:
+        type: git
+        location: https://github.com/helm/charts.git
+        path: stable/memcached
+    state: present
+    name: my-memcached
+    namespace: default
+
+
+RETURN VALUES:
+ # 

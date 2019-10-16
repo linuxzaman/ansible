@@ -1,0 +1,32 @@
+EXAMPLES:
+
+- name: Launch a workflow
+  tower_workflow_launch:
+    name: "Test Workflow"
+  delegate_to: localhost
+  run_once: true
+  register: workflow_results
+
+- name: Launch a Workflow with parameters without waiting
+  tower_workflow_launch:
+    workflow_template: "Test workflow"
+    extra_vars: "---
+my: var"
+    wait: False
+  delegate_to: localhost
+  run_once: true
+  register: workflow_task_info
+
+
+RETURN VALUES:
+
+tower_version:
+    description: The version of Tower we connected to
+    returned: If connection to Tower works
+    type: str
+    sample: '3.4.0'
+job_info:
+    description: dictionary containing information about the workflow executed
+    returned: If workflow launched
+    type: dict
+

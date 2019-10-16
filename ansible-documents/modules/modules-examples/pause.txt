@@ -1,0 +1,52 @@
+EXAMPLES:
+
+# Pause for 5 minutes to build app cache.
+- pause:
+    minutes: 5
+
+# Pause until you can verify updates to an application were successful.
+- pause:
+
+# A helpful reminder of what to look out for post-update.
+- pause:
+    prompt: "Make sure org.foo.FooOverload exception is not present"
+
+# Pause to get some sensitive input.
+- pause:
+    prompt: "Enter a secret"
+    echo: no
+
+
+RETURN VALUES:
+
+user_input:
+  description: User input from interactive console
+  returned: if no waiting time set
+  type: str
+  sample: Example user input
+start:
+  description: Time when started pausing
+  returned: always
+  type: str
+  sample: "2017-02-23 14:35:07.298862"
+stop:
+  description: Time when ended pausing
+  returned: always
+  type: str
+  sample: "2017-02-23 14:35:09.552594"
+delta:
+  description: Time paused in seconds
+  returned: always
+  type: str
+  sample: 2
+stdout:
+  description: Output of pause module
+  returned: always
+  type: str
+  sample: Paused for 0.04 minutes
+echo:
+  description: Value of echo setting
+  returned: always
+  type: bool
+  sample: true
+

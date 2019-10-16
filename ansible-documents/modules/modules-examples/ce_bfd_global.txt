@@ -1,0 +1,101 @@
+EXAMPLES:
+
+- name: bfd global module test
+  hosts: cloudengine
+  connection: local
+  gather_facts: no
+  vars:
+    cli:
+      host: "{{ inventory_hostname }}"
+      port: "{{ ansible_ssh_port }}"
+      username: "{{ username }}"
+      password: "{{ password }}"
+      transport: cli
+
+  tasks:
+  - name: Enable the global BFD function
+    ce_bfd_global:
+      bfd_enable: enable
+      provider: '{{ cli }}'
+
+  - name: Set the default multicast IP address to 224.0.0.150
+    ce_bfd_global:
+      bfd_enable: enable
+      default_ip: 224.0.0.150
+      state: present
+      provider: '{{ cli }}'
+
+  - name: Set the priority of BFD control packets for dynamic and static BFD sessions
+    ce_bfd_global:
+      bfd_enable: enable
+      tos_exp_dynamic: 5
+      tos_exp_static: 6
+      state: present
+      provider: '{{ cli }}'
+
+  - name: Disable the global BFD function
+    ce_bfd_global:
+      bfd_enable: disable
+      provider: '{{ cli }}'
+
+
+RETURN VALUES:
+
+proposed:
+    description: k/v pairs of parameters passed into module
+    returned: verbose mode
+    type: dict
+    sample: {
+        "bfd_enalbe": "enable",
+        "damp_init_wait_time": null,
+        "damp_max_wait_time": null,
+        "damp_second_wait_time": null,
+        "default_ip": null,
+        "delayUpTimer": null,
+        "state": "present",
+        "tos_exp_dynamic": null,
+        "tos_exp_static": null
+    }
+existing:
+    description: k/v pairs of existing configuration
+    returned: verbose mode
+    type: dict
+    sample: {
+        "global": {
+            "bfdEnable": "false",
+            "dampInitWaitTime": "2000",
+            "dampMaxWaitTime": "12000",
+            "dampSecondWaitTime": "5000",
+            "defaultIp": "224.0.0.184",
+            "delayUpTimer": null,
+            "tosExp": "7",
+            "tosExpStatic": "7"
+        }
+    }
+end_state:
+    description: k/v pairs of configuration after module execution
+    returned: verbose mode
+    type: dict
+    sample: {
+        "global": {
+            "bfdEnable": "true",
+            "dampInitWaitTime": "2000",
+            "dampMaxWaitTime": "12000",
+            "dampSecondWaitTime": "5000",
+            "defaultIp": "224.0.0.184",
+            "delayUpTimer": null,
+            "tosExp": "7",
+            "tosExpStatic": "7"
+        }
+    }
+updates:
+    description: commands sent to the device
+    returned: always
+    type: list
+    sample: [ "bfd" ]
+changed:
+    description: check to see if a change was made on the device
+    returned: always
+    type: bool
+    sample: true
+

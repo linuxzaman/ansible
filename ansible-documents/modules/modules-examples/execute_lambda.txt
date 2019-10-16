@@ -1,0 +1,48 @@
+EXAMPLES:
+
+- execute_lambda:
+    name: test-function
+    # the payload is automatically serialized and sent to the function
+    payload:
+      foo: bar
+      value: 8
+  register: response
+
+# Test that you have sufficient permissions to execute a Lambda function in
+# another account
+- execute_lambda:
+    function_arn: arn:aws:lambda:us-east-1:123456789012:function/some-function
+    dry_run: true
+
+- execute_lambda:
+    name: test-function
+    payload:
+      foo: bar
+      value: 8
+    wait: true
+    tail_log: true
+  register: response
+  # the response will have a `logs` key that will contain a log (up to 4KB) of the function execution in Lambda.
+
+- execute_lambda:
+    name: test-function
+    version_qualifier: PRODUCTION
+
+
+RETURN VALUES:
+
+output:
+    description: Function output if wait=true and the function returns a value
+    returned: success
+    type: dict
+    sample: "{ 'output': 'something' }"
+logs:
+    description: The last 4KB of the function logs. Only provided if I(tail_log) is true
+    type: str
+    returned: if I(tail_log) == true
+status:
+    description: C(StatusCode) of API call exit (200 for synchronous invokes, 202 for async)
+    type: int
+    sample: 200
+    returned: always
+

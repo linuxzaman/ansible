@@ -1,0 +1,70 @@
+EXAMPLES:
+
+- name: List Role Definitions in scope
+      azure_rm_roledefinition_facts:
+        scope: /subscriptions/xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx/resourceGroups/myResourceGroup
+
+    - name: Get Role Definition by name
+      azure_rm_roledefinition_facts:
+        scope: /subscriptions/xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx/resourceGroups/myResourceGroup
+        name: myRoleDefinition
+
+
+RETURN VALUES:
+
+roledefinitions:
+    description: A list of Role Definition facts.
+    returned: always
+    type: complex
+    contains:
+      id:
+        description: Role Definition id.
+        returned: always
+        type: str
+        sample: "/subscriptions/xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx/providers/Microsoft.Authorization/roleDefinitions/xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx"
+      role_name:
+        description: Role name.
+        returned: always
+        type: str
+        sample: myCustomRoleDefinition
+      name:
+        description: System assigned role name.
+        returned: always
+        type: str
+        sample: xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx
+      assignable_scopes:
+        description:
+            - List of assignable scope of this definition.
+        returned: always
+        type: list
+        sample: "/subscriptions/xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx/resourceGroups/myResourceGroup"
+      permissions:
+        description:
+            - List of Role Definition peremissions.
+        returned: always
+        contains:
+            actions:
+                description:
+                    - List of allowed actions.
+                returned: always
+                type: list
+                sample: Microsoft.Compute/virtualMachines/read
+            not_actions:
+                description:
+                    - List of denied actions.
+                returned: always
+                type: list
+                sample: Microsoft.Compute/virtualMachines/write
+            data_actions:
+                description:
+                    - List of allowed data actions.
+                returned: always
+                type: list
+                sample: Microsoft.Storage/storageAccounts/blobServices/containers/blobs/read
+            not_data_actions:
+                description:
+                    - List of denied actions.
+                returned: always
+                type: list
+                sample: Microsoft.Storage/storageAccounts/blobServices/containers/blobs/write
+

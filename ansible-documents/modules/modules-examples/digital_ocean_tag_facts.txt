@@ -1,0 +1,40 @@
+EXAMPLES:
+
+- name: Gather facts about all tags
+  digital_ocean_tag_facts:
+    oauth_token: "{{ oauth_token }}"
+
+- name: Gather facts about tag with given name
+  digital_ocean_tag_facts:
+    oauth_token: "{{ oauth_token }}"
+    tag_name: "extra_awesome_tag"
+
+- name: Get resources from tag name
+  digital_ocean_tag_facts:
+  register: resp_out
+- set_fact:
+    resources: "{{ item.resources }}"
+  loop: "{{ resp_out.data|json_query(name) }}"
+  vars:
+    name: "[?name=='extra_awesome_tag']"
+- debug: var=resources
+
+
+RETURN VALUES:
+
+data:
+    description: DigitalOcean tag facts
+    returned: success
+    type: list
+    sample: [
+        {
+            "name": "extra-awesome",
+            "resources": {
+            "droplets": {
+                "count": 1,
+                ...
+                }
+            }
+        },
+    ]
+

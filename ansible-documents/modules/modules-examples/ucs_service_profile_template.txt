@@ -1,0 +1,33 @@
+EXAMPLES:
+
+- name: Configure Service Profile Template with LAN/SAN Connectivity and all other options defaulted
+  ucs_service_profile_template:
+    hostname: 172.16.143.150
+    username: admin
+    password: password
+    name: DEE-Ctrl
+    template_type: updating-template
+    uuid_pool: UUID-Pool
+    storage_profile: DEE-StgProf
+    lan_connectivity_policy: Cntr-FC-Boot
+    iqn_pool: iSCSI-Boot-A
+    san_connectivity_policy: Cntr-FC-Boot
+    boot_policy: DEE-vMedia
+    maintenance_policy: default
+    server_pool: Container-Pool
+    host_firmware_package: 3.1.2b
+    bios_policy: Docker
+
+- name: Remove Service Profile Template
+  ucs_service_profile_template:
+    hostname: 172.16.143.150
+    username: admin
+    password: password
+    name: DEE-Ctrl
+    state: absent
+
+
+RETURN VALUES:
+
+#
+

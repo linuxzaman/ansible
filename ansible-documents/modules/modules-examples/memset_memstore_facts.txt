@@ -1,0 +1,73 @@
+EXAMPLES:
+
+- name: get usage for mstestyaa1
+  memset_memstore_facts:
+    name: mstestyaa1
+    api_key: 5eb86c9896ab03919abcf03857163741
+  delegate_to: localhost
+
+
+RETURN VALUES:
+
+---
+memset_api:
+  description: Info from the Memset API
+  returned: always
+  type: complex
+  contains:
+    cdn_bandwidth:
+      description: Dictionary of CDN bandwidth facts
+      returned: always
+      type: complex
+      contains:
+        bytes_out:
+          description: Outbound CDN bandwidth for the last 24 hours in bytes
+          returned: always
+          type: int
+          sample: 1000
+        requests:
+          description: Number of requests in the last 24 hours
+          returned: always
+          type: int
+          sample: 10
+        bytes_in:
+          description: Inbound CDN bandwidth for the last 24 hours in bytes
+          returned: always
+          type: int
+          sample: 1000
+    containers:
+      description: Number of containers
+      returned: always
+      type: int
+      sample: 10
+    bytes:
+      description: Space used in bytes
+      returned: always
+      type: int
+      sample: 3860997965
+    objs:
+      description: Number of objects
+      returned: always
+      type: int
+      sample: 1000
+    bandwidth:
+      description: Dictionary of CDN bandwidth facts
+      returned: always
+      type: complex
+      contains:
+        bytes_out:
+          description: Outbound bandwidth for the last 24 hours in bytes
+          returned: always
+          type: int
+          sample: 1000
+        requests:
+          description: Number of requests in the last 24 hours
+          returned: always
+          type: int
+          sample: 10
+        bytes_in:
+          description: Inbound bandwidth for the last 24 hours in bytes
+          returned: always
+          type: int
+          sample: 1000
+

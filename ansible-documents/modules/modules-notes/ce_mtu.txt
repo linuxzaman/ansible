@@ -1,0 +1,119 @@
+> CE_MTU    (/usr/lib/python2.7/dist-packages/ansible/modules/network/cloudengine/ce_mtu.py)
+
+        Manages MTU settings on HUAWEI CloudEngine switches.
+
+  * This module is maintained by The Ansible Community
+OPTIONS (= is mandatory):
+
+- interface
+        Full name of interface, i.e. 40GE1/0/22.
+        [Default: (null)]
+
+- jumbo_max
+        Maximum frame size. The default value is 9216. The value is an integer and expressed in bytes. The value range is 1536 to 12224
+        for the CE12800 and 1536 to 12288 for ToR switches.
+        [Default: (null)]
+
+- jumbo_min
+        Non-jumbo frame size threshod. The default value is 1518. The value is an integer that ranges from 1518 to jumbo_max, in bytes.
+        [Default: (null)]
+
+- mtu
+        MTU for a specific interface. The value is an integer ranging from 46 to 9600, in bytes.
+        [Default: (null)]
+
+- state
+        Specify desired state of the resource.
+        (Choices: present, absent)[Default: present]
+
+
+NOTES:
+      * Either `sysmtu' param is required or `interface' AND `mtu' params are req'd.
+      * `state=absent' unconfigures a given MTU if that value is currently present.
+
+
+AUTHOR: QijunPan (@QijunPan)
+        METADATA:
+          status:
+          - preview
+          supported_by: community
+        
+
+EXAMPLES:
+
+- name: Mtu test
+  hosts: cloudengine
+  connection: local
+  gather_facts: no
+  vars:
+    cli:
+      host: "{{ inventory_hostname }}"
+      port: "{{ ansible_ssh_port }}"
+      username: "{{ username }}"
+      password: "{{ password }}"
+      transport: cli
+
+  tasks:
+
+  - name: "Config jumboframe on 40GE1/0/22"
+    ce_mtu:
+      interface: 40GE1/0/22
+      jumbo_max: 9000
+      jumbo_min: 8000
+      provider: "{{ cli }}"
+
+  - name: "Config mtu on 40GE1/0/22 (routed interface)"
+    ce_mtu:
+      interface: 40GE1/0/22
+      mtu: 1600
+      provider: "{{ cli }}"
+
+  - name: "Config mtu on 40GE1/0/23 (switched interface)"
+    ce_mtu:
+      interface: 40GE1/0/22
+      mtu: 9216
+      provider: "{{ cli }}"
+
+  - name: "Config mtu and jumboframe on 40GE1/0/22 (routed interface)"
+    ce_mtu:
+      interface: 40GE1/0/22
+      mtu: 1601
+      jumbo_max: 9001
+      jumbo_min: 8001
+      provider: "{{ cli }}"
+
+  - name: "Unconfigure mtu and jumboframe on a given interface"
+    ce_mtu:
+      state: absent
+      interface: 40GE1/0/22
+      provider: "{{ cli }}"
+
+
+RETURN VALUES:
+
+proposed:
+    description: k/v pairs of parameters passed into module
+    returned: always
+    type: dict
+    sample: {"mtu": "1700", "jumbo_max": "9000", jumbo_min: "8000"}
+existing:
+    description: k/v pairs of existing mtu/sysmtu on the interface/system
+    returned: always
+    type: dict
+    sample: {"mtu": "1600", "jumbo_max": "9216", "jumbo_min": "1518"}
+end_state:
+    description: k/v pairs of mtu/sysmtu values after module execution
+    returned: always
+    type: dict
+    sample: {"mtu": "1700", "jumbo_max": "9000", jumbo_min: "8000"}
+updates:
+    description: command sent to the device
+    returned: always
+    type: list
+    sample: ["interface 40GE1/0/23", "mtu 1700", "jumboframe enable 9000 8000"]
+changed:
+    description: check to see if a change was made on the device
+    returned: always
+    type: bool
+    sample: true
+

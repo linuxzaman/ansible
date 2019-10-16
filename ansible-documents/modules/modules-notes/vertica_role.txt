@@ -1,0 +1,67 @@
+> VERTICA_ROLE    (/usr/lib/python2.7/dist-packages/ansible/modules/database/vertica/vertica_role.py)
+
+        Adds or removes Vertica database role and, optionally, assign other roles.
+
+  * This module is maintained by The Ansible Community
+OPTIONS (= is mandatory):
+
+- assigned_roles
+        Comma separated list of roles to assign to the role.
+        (Aliases: assigned_role)[Default: (null)]
+
+- cluster
+        Name of the Vertica cluster.
+        [Default: localhost]
+
+- db
+        Name of the Vertica database.
+        [Default: (null)]
+
+- login_password
+        The password used to authenticate with.
+        [Default: (null)]
+
+- login_user
+        The username used to authenticate with.
+        [Default: dbadmin]
+
+= name
+        Name of the role to add or remove.
+
+
+- port
+        Vertica cluster port to connect to.
+        [Default: 5433]
+
+- state
+        Whether to create `present', drop `absent' or lock `locked' a role.
+        (Choices: present, absent)[Default: present]
+
+
+NOTES:
+      * The default authentication assumes that you are either logging in as or sudo'ing to the `dbadmin' account on the host.
+      * This module uses `pyodbc', a Python ODBC database adapter. You must ensure that `unixODBC' and `pyodbc' is installed on the
+        host and properly configured.
+      * Configuring `unixODBC' for Vertica requires `Driver = /opt/vertica/lib64/libverticaodbc.so' to be added to the `Vertica'
+        section of either `/etc/odbcinst.ini' or `$HOME/.odbcinst.ini' and both `ErrorMessagesPath = /opt/vertica/lib64' and
+        `DriverManagerEncoding = UTF-16' to be added to the `Driver' section of either `/etc/vertica.ini' or `$HOME/.vertica.ini'.
+
+
+REQUIREMENTS:  unixODBC, pyodbc
+
+AUTHOR: Dariusz Owczarek (@dareko)
+        METADATA:
+          status:
+          - preview
+          supported_by: community
+        
+
+EXAMPLES:
+
+- name: creating a new vertica role
+  vertica_role: name=role_name db=db_name state=present
+
+- name: creating a new vertica role with other role assigned
+  vertica_role: name=role_name assigned_role=other_role_name state=present
+
+

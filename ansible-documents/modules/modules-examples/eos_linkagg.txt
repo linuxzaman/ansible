@@ -1,0 +1,56 @@
+EXAMPLES:
+
+- name: create link aggregation group
+  eos_linkagg:
+    group: 10
+    state: present
+
+- name: delete link aggregation group
+  eos_linkagg:
+    group: 10
+    state: absent
+
+- name: set link aggregation group to members
+  eos_linkagg:
+    group: 200
+    min_links: 3
+    mode: active
+    members:
+      - Ethernet0
+      - Ethernet1
+
+- name: remove link aggregation group from Ethernet0
+  eos_linkagg:
+    group: 200
+    min_links: 3
+    mode: active
+    members:
+      - Ethernet1
+
+- name: Create aggregate of linkagg definitions
+  eos_linkagg:
+    aggregate:
+      - { group: 3, mode: on, members: [Ethernet1] }
+      - { group: 100, mode: passive, min_links: 3, members: [Ethernet2] }
+
+- name: Remove aggregate of linkagg definitions
+  eos_linkagg:
+    aggregate:
+      - { group: 3, mode: on, members: [Ethernet1] }
+      - { group: 100, mode: passive, min_links: 3, members: [Ethernet2] }
+    state: absent
+
+
+RETURN VALUES:
+
+commands:
+  description: The list of configuration mode commands to send to the device
+  returned: always, except for the platforms that use Netconf transport to manage the device.
+  type: list
+  sample:
+    - interface port-channel 30
+    - port-channel min-links 5
+    - interface Ethernet3
+    - channel-group 30 mode on
+    - no interface port-channel 30
+

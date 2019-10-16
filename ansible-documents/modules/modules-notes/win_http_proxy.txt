@@ -1,0 +1,96 @@
+> WIN_HTTP_PROXY    (/usr/lib/python2.7/dist-packages/ansible/modules/windows/win_http_proxy.py)
+
+        Used to set, remove, or import proxy settings for Windows HTTP Services `WinHTTP'. WinHTTP is a framework used by applications or
+        services, typically .NET applications or non-interactive services, to make web requests.
+
+  * This module is maintained by The Ansible Community
+OPTIONS (= is mandatory):
+
+- bypass
+        A list of hosts that will bypass the set proxy when being accessed.
+        Use `<local>' to match hostnames that are not fully qualified domain names. This is useful when needing to connect to intranet
+        sites using just the hostname.
+        Omit, set to null or an empty string/list to remove the bypass list.
+        If this is set then `proxy' must also be set.
+        [Default: (null)]
+        type: list
+
+- proxy
+        A string or dict that specifies the proxy to be set.
+        If setting a string, should be in the form `hostname', `hostname:port', or `protocol=hostname:port'.
+        If the port is undefined, the default port for the protocol in use is used.
+        If setting a dict, the keys should be the protocol and the values should be the hostname and/or port for that protocol.
+        Valid protocols are `http', `https', `ftp', and `socks'.
+        Omit, set to null or an empty string to remove the proxy settings.
+        [Default: (null)]
+
+- source
+        Instead of manually specifying the `proxy' and/or `bypass', set this to import the proxy from a set source like Internet
+        Explorer.
+        Using `ie' will import the Internet Explorer proxy settings for the current active network connection of the current user.
+        Only IE's proxy URL and bypass list will be imported into WinHTTP.
+        This is like running `netsh winhttp import proxy source=ie'.
+        The value is imported when the module runs and will not automatically be updated if the IE configuration changes in the future.
+        The module will have to be run again to sync the latest changes.
+        (Choices: ie)[Default: (null)]
+        type: str
+
+
+NOTES:
+      * This is not the same as the proxy settings set in Internet Explorer, also known as `WinINet'; use the [win_inet_proxy]
+        module to manage that instead.
+      * These settings are set system wide and not per user, it will require Administrative privileges to run.
+
+
+SEE ALSO:
+      * Module win_inet_proxy
+           The official documentation on the win_inet_proxy module.
+           https://docs.ansible.com/ansible/latest/modules/win_inet_proxy_module.html
+
+
+AUTHOR: Jordan Borean (@jborean93)
+        METADATA:
+          status:
+          - preview
+          supported_by: community
+        
+
+EXAMPLES:
+
+- name: Set a proxy to use for all protocols
+  win_http_proxy:
+    proxy: hostname
+
+- name: Set a proxy with a specific port with a bypass list
+  win_http_proxy:
+    proxy: hostname:8080
+    bypass:
+    - server1
+    - server2
+    - <local>
+
+- name: Set the proxy based on the IE proxy settings
+  win_http_proxy:
+    source: ie
+
+- name: Set a proxy for specific protocols
+  win_http_proxy:
+    proxy:
+      http: hostname:8080
+      https: hostname:8443
+
+- name: Set a proxy for specific protocols using a string
+  win_http_proxy:
+    proxy: http=hostname:8080;https=hostname:8443
+    bypass: server1,server2,<local>
+
+- name: Remove any proxy settings
+  win_http_proxy:
+    proxy: ''
+    bypass: ''
+
+
+RETURN VALUES:
+
+#
+

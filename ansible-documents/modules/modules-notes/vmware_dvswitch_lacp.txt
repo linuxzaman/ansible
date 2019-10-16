@@ -1,0 +1,160 @@
+> VMWARE_DVSWITCH_LACP    (/usr/lib/python2.7/dist-packages/ansible/modules/cloud/vmware/vmware_dvswitch_lacp.py)
+
+        This module can be used to configure Link Aggregation Control Protocol (LACP) support mode and Link Aggregation Groups (LAGs).
+
+  * This module is maintained by The Ansible Community
+OPTIONS (= is mandatory):
+
+- hostname
+        The hostname or IP address of the vSphere vCenter or ESXi server.
+        If the value is not specified in the task, the value of environment variable `VMWARE_HOST' will be used instead.
+        Environment variable support added in Ansible 2.6.
+        [Default: (null)]
+        type: str
+
+- link_aggregation_groups
+        Can only be used if `lacp_support' is set to `enhanced'.
+        The following parameters are required:
+        - `name' (string): Name of the LAG.
+        - `uplink_number' (int): Number of uplinks. Can 1 to 30.
+        - `mode' (string): The negotiating state of the uplinks/ports.
+           - choices: [ active, passive ]
+        - `load_balancing_mode' (string): Load balancing algorithm.
+           - Valid attributes are:
+           - srcTcpUdpPort: Source TCP/UDP port number.
+           - srcDestIpTcpUdpPortVlan: Source and destination IP, source and destination TCP/UDP port number and VLAN.
+           - srcIpVlan: Source IP and VLAN.
+           - srcDestTcpUdpPort: Source and destination TCP/UDP port number.
+           - srcMac: Source MAC address.
+           - destIp: Destination IP.
+           - destMac: Destination MAC address.
+           - vlan: VLAN only.
+           - srcDestIp: Source and Destination IP.
+           - srcIpTcpUdpPortVlan: Source IP, TCP/UDP port number and VLAN.
+           - srcDestIpTcpUdpPort: Source and destination IP and TCP/UDP port number.
+           - srcDestMac: Source and destination MAC address.
+           - destIpTcpUdpPort: Destination IP and TCP/UDP port number.
+           - srcPortId: Source Virtual Port Id.
+           - srcIp: Source IP.
+           - srcIpTcpUdpPort: Source IP and TCP/UDP port number.
+           - destIpTcpUdpPortVlan: Destination IP, TCP/UDP port number and VLAN.
+           - destTcpUdpPort: Destination TCP/UDP port number.
+           - destIpVlan: Destination IP and VLAN.
+           - srcDestIpVlan: Source and destination IP and VLAN.
+           - The default load balancing mode in the vSphere Client is srcDestIpTcpUdpPortVlan.
+        Please see examples for more information.
+        [Default: (null)]
+        type: list
+
+- password
+        The password of the vSphere vCenter or ESXi server.
+        If the value is not specified in the task, the value of environment variable `VMWARE_PASSWORD' will be used instead.
+        Environment variable support added in Ansible 2.6.
+        (Aliases: pass, pwd)[Default: (null)]
+        type: str
+
+- port
+        The port number of the vSphere vCenter or ESXi server.
+        If the value is not specified in the task, the value of environment variable `VMWARE_PORT' will be used instead.
+        Environment variable support added in Ansible 2.6.
+        [Default: 443]
+        type: int
+        version_added: 2.5
+
+- support_mode
+        The LACP support mode.
+        `basic': One Link Aggregation Control Protocol group in the switch (singleLag).
+        `enhanced': Multiple Link Aggregation Control Protocol groups in the switch (multipleLag).
+        (Choices: basic, enhanced)[Default: basic]
+        type: str
+
+= switch
+        The name of the Distributed Switch to manage.
+        (Aliases: dvswitch)
+
+- username
+        The username of the vSphere vCenter or ESXi server.
+        If the value is not specified in the task, the value of environment variable `VMWARE_USER' will be used instead.
+        Environment variable support added in Ansible 2.6.
+        (Aliases: admin, user)[Default: (null)]
+        type: str
+
+- validate_certs
+        Allows connection when SSL certificates are not valid. Set to `false' when certificates are not trusted.
+        If the value is not specified in the task, the value of environment variable `VMWARE_VALIDATE_CERTS' will be used instead.
+        Environment variable support added in Ansible 2.6.
+        If set to `yes', please make sure Python >= 2.7.9 is installed on the given machine.
+        [Default: True]
+        type: bool
+
+
+NOTES:
+      * Tested on vSphere 6.7
+      * You need to run the task two times if you want to remove all LAGs and change the support mode to 'basic'
+
+
+REQUIREMENTS:  python >= 2.6, PyVmomi
+
+AUTHOR: Christian Kotte (@ckotte)
+        METADATA:
+          status:
+          - preview
+          supported_by: community
+        
+
+EXAMPLES:
+
+- name: Enable enhanced mode on a Distributed Switch
+  vmware_dvswitch_lacp:
+    hostname: '{{ inventory_hostname }}'
+    username: '{{ vcenter_username }}'
+    password: '{{ vcenter_password }}'
+    switch: dvSwitch
+    support_mode: enhanced
+    validate_certs: "{{ validate_vcenter_certs }}"
+  delegate_to: localhost
+  loop_control:
+    label: "{{ item.name }}"
+  with_items: "{{ vcenter_distributed_switches }}"
+
+- name: Enable enhanced mode and create two LAGs on a Distributed Switch
+  vmware_dvswitch_lacp:
+    hostname: '{{ inventory_hostname }}'
+    username: '{{ vcenter_username }}'
+    password: '{{ vcenter_password }}'
+    switch: dvSwitch
+    support_mode: enhanced
+    link_aggregation_groups:
+        - name: lag1
+          uplink_number: 2
+          mode: active
+          load_balancing_mode: srcDestIpTcpUdpPortVlan
+        - name: lag2
+          uplink_number: 2
+          mode: passive
+          load_balancing_mode: srcDestIp
+    validate_certs: "{{ validate_vcenter_certs }}"
+  delegate_to: localhost
+  loop_control:
+    label: "{{ item.name }}"
+  with_items: "{{ vcenter_distributed_switches }}"
+
+
+RETURN VALUES:
+
+result:
+    description: information about performed operation
+    returned: always
+    type: str
+    sample: {
+        "changed": true,
+        "dvswitch": "dvSwitch",
+        "link_aggregation_groups": [
+            {"load_balancing_mode": "srcDestIpTcpUdpPortVlan", "mode": "active", "name": "lag1", "uplink_number": 2},
+            {"load_balancing_mode": "srcDestIp", "mode": "active", "name": "lag2", "uplink_number": 2}
+        ],
+        "link_aggregation_groups_previous": [],
+        "support_mode": "enhanced",
+        "result": "lacp lags changed"
+    }
+

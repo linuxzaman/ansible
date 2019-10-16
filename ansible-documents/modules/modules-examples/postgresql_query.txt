@@ -1,0 +1,62 @@
+EXAMPLES:
+
+- name: Simple select query to acme db
+  postgresql_query:
+    db: acme
+    query: SELECT version()
+
+- name: Select query to db acme with positional arguments and non-default credentials
+  postgresql_query:
+    db: acme
+    login_user: django
+    login_password: mysecretpass
+    query: SELECT * FROM acme WHERE id = %s AND story = %s
+    positional_args:
+    - 1
+    - test
+
+- name: Select query to test_db with named_args
+  postgresql_query:
+    db: test_db
+    query: SELECT * FROM test WHERE id = %(id_val)s AND story = %(story_val)s
+    named_args:
+      id_val: 1
+      story_val: test
+
+- name: Insert query to db test_db
+  postgresql_query:
+    db: test_db
+    query: INSERT INTO test_db (id, story) VALUES (2, 'my_long_story')
+
+- name: Run queries from SQL script
+  postgresql_query:
+    db: test_db
+    path_to_script: /var/lib/pgsql/test.sql
+    positional_args:
+    - 1
+
+
+RETURN VALUES:
+
+query:
+    description: Query that was tried to be executed.
+    returned: always
+    type: str
+    sample: 'SELECT * FROM bar'
+statusmessage:
+    description: Attribute containing the message returned by the command.
+    returned: always
+    type: str
+    sample: 'INSERT 0 1'
+query_result:
+    description:
+    - List of dictionaries in column:value form representing returned rows.
+    returned: changed
+    type: list
+    sample: [{"Column": "Value1"},{"Column": "Value2"}]
+rowcount:
+    description: Number of affected rows.
+    returned: changed
+    type: int
+    sample: 5
+

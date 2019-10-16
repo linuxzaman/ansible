@@ -1,0 +1,175 @@
+> NETSCALER_SERVER    (/usr/lib/python2.7/dist-packages/ansible/modules/network/netscaler/netscaler_server.py)
+
+        Manage server entities configuration. This module is intended to run either on the ansible  control node or a bastion
+        (jumpserver) with access to the actual netscaler instance.
+
+  * This module is maintained by The Ansible Community
+OPTIONS (= is mandatory):
+
+- comment
+        Any information about the server.
+        [Default: (null)]
+
+- delay
+        Time, in seconds, after which all the services configured on the server are disabled.
+        This option is meaningful only when setting the `disabled' option to `true'
+        [Default: (null)]
+        version_added: 2.5
+
+- disabled
+        When set to `true' the server state will be set to `disabled'.
+        When set to `false' the server state will be set to `enabled'.
+        Note that due to limitations of the underlying NITRO API a `disabled' state change alone does not cause the module result to
+        report a changed status.
+        [Default: False]
+        type: bool
+
+- domain
+        Domain name of the server. For a domain based configuration, you must create the server first.
+        Minimum length = 1
+        [Default: (null)]
+
+- domainresolveretry
+        Time, in seconds, for which the NetScaler appliance must wait, after DNS resolution fails, before sending the next DNS query to
+        resolve the domain name.
+        Minimum value = `5'
+        Maximum value = `20939'
+        [Default: 5]
+
+- graceful
+        Shut down gracefully, without accepting any new connections, and disabling each service when all of its connections are closed.
+        This option is meaningful only when setting the `disabled' option to `true'
+        [Default: (null)]
+        type: bool
+        version_added: 2.5
+
+- ipaddress
+        IPv4 or IPv6 address of the server. If you create an IP address based server, you can specify the name of the server, instead of
+        its IP address, when creating a service. Note: If you do not create a server entry, the server IP address that you enter when you
+        create a service becomes the name of the server.
+        [Default: (null)]
+
+- ipv6address
+        Support IPv6 addressing mode. If you configure a server with the IPv6 addressing mode, you cannot use the server in the IPv4
+        addressing mode.
+        [Default: False]
+        type: bool
+
+- name
+        Name for the server.
+        Must begin with an ASCII alphabetic or underscore `_' character, and must contain only ASCII alphanumeric, underscore `_', hash
+        `#', period `.', space ` ', colon `:', at `@', equals `=', and hyphen `-' characters.
+        Can be changed after the name is created.
+        Minimum length = 1
+        [Default: (null)]
+
+= nitro_pass
+        The password with which to authenticate to the netscaler node.
+
+        type: str
+
+- nitro_protocol
+        Which protocol to use when accessing the nitro API objects.
+        (Choices: http, https)[Default: http]
+        type: str
+
+- nitro_timeout
+        Time in seconds until a timeout error is thrown when establishing a new session with Netscaler
+        [Default: 310]
+        type: float
+
+= nitro_user
+        The username with which to authenticate to the netscaler node.
+
+        type: str
+
+= nsip
+        The ip address of the netscaler appliance where the nitro API calls will be made.
+        The port can be specified with the colon (:). E.g. 192.168.1.1:555.
+
+        type: str
+
+- save_config
+        If `yes' the module will save the configuration on the netscaler node if it makes any changes.
+        The module will not save the configuration on the netscaler node if it made no changes.
+        [Default: True]
+        type: bool
+
+- state
+        The state of the resource being configured by the module on the netscaler node.
+        When present the resource will be created if needed and configured according to the module's parameters.
+        When absent the resource will be deleted from the netscaler node.
+        (Choices: absent, present)[Default: present]
+        type: str
+
+- td
+        Integer value that uniquely identifies the traffic domain in which you want to configure the entity. If you do not specify an ID,
+        the entity becomes part of the default traffic domain, which has an ID of 0.
+        Minimum value = `0'
+        Maximum value = `4094'
+        [Default: (null)]
+
+- translationip
+        IP address used to transform the server's DNS-resolved IP address.
+        [Default: (null)]
+
+- translationmask
+        The netmask of the translation ip.
+        [Default: (null)]
+
+- validate_certs
+        If `no', SSL certificates will not be validated. This should only be used on personally controlled sites using self-signed
+        certificates.
+        [Default: True]
+        type: bool
+
+
+NOTES:
+      * For more information on using Ansible to manage Citrix NetScaler Network devices see https://www.ansible.com/ansible-
+        netscaler.
+
+
+REQUIREMENTS:  nitro python sdk
+
+AUTHOR: George Nikolopoulos (@giorgos-nikolopoulos)
+        METADATA:
+          status:
+          - preview
+          supported_by: community
+        
+
+EXAMPLES:
+
+- name: Setup server
+  delegate_to: localhost
+  netscaler_server:
+      nsip: 172.18.0.2
+      nitro_user: nsroot
+      nitro_pass: nsroot
+
+      state: present
+
+      name: server-1
+      ipaddress: 192.168.1.1
+
+
+RETURN VALUES:
+
+loglines:
+    description: list of logged messages by the module
+    returned: always
+    type: list
+    sample: ['message 1', 'message 2']
+
+msg:
+    description: Message detailing the failure reason
+    returned: failure
+    type: str
+    sample: "Action does not exist"
+
+diff:
+    description: List of differences between the actual configured object and the configuration specified in the module
+    returned: failure
+    type: dict
+    sample: { 'targetlbvserver': 'difference. ours: (str) server1 other: (str) server2' }
+

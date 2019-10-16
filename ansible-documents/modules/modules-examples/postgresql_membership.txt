@@ -1,0 +1,45 @@
+EXAMPLES:
+
+- name: Grant role read_only to alice and bob
+  postgresql_membership:
+    group: read_only
+    target_roles:
+    - alice
+    - bob
+    state: present
+
+# you can also use target_roles: alice,bob,etc to pass the role list
+
+- name: Revoke role read_only and exec_func from bob. Ignore if roles don't exist
+  postgresql_membership:
+    groups:
+    - read_only
+    - exec_func
+    target_role: bob
+    fail_on_role: no
+    state: absent
+
+
+RETURN VALUES:
+
+queries:
+    description: List of executed queries.
+    returned: always
+    type: str
+    sample: [ "GRANT \"user_ro\" TO \"alice\"" ]
+granted:
+    description: Dict of granted groups and roles.
+    returned: if I(state=present)
+    type: dict
+    sample: { "ro_group": [ "alice", "bob" ] }
+revoked:
+    description: Dict of revoked groups and roles.
+    returned: if I(state=absent)
+    type: dict
+    sample: { "ro_group": [ "alice", "bob" ] }
+state:
+    description: Membership state that tried to be set.
+    returned: always
+    type: str
+    sample: "present"
+

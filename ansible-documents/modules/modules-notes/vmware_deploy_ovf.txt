@@ -1,0 +1,177 @@
+> VMWARE_DEPLOY_OVF    (/usr/lib/python2.7/dist-packages/ansible/modules/cloud/vmware/vmware_deploy_ovf.py)
+
+        This module can be used to deploy a VMware VM from an OVF or OVA file
+
+  * This module is maintained by The Ansible Community
+OPTIONS (= is mandatory):
+
+- allow_duplicates
+        Whether or not to allow duplicate VM names. ESXi allows duplicates, vCenter may not.
+        [Default: yes]
+        type: bool
+
+- cluster
+        Cluster to deploy to.
+        [Default: (null)]
+
+- datacenter
+        Datacenter to deploy to.
+        [Default: ha-datacenter]
+
+- datastore
+        Datastore to deploy to.
+        [Default: datastore1]
+
+- deployment_option
+        The key of the chosen deployment option.
+        [Default: (null)]
+
+- disk_provisioning
+        Disk provisioning type.
+        (Choices: flat, eagerZeroedThick, monolithicSparse, twoGbMaxExtentSparse, twoGbMaxExtentFlat, thin, sparse, thick, seSparse,
+        monolithicFlat)[Default: thin]
+
+- fail_on_spec_warnings
+        Cause the module to treat OVF Import Spec warnings as errors.
+        [Default: no]
+        type: bool
+
+- folder
+        Absolute path of folder to place the virtual machine.
+        If not specified, defaults to the value of `datacenter.vmFolder'.
+        Examples:
+           folder: /ha-datacenter/vm
+           folder: ha-datacenter/vm
+           folder: /datacenter1/vm
+           folder: datacenter1/vm
+           folder: /datacenter1/vm/folder1
+           folder: datacenter1/vm/folder1
+           folder: /folder1/datacenter1/vm
+           folder: folder1/datacenter1/vm
+           folder: /folder1/datacenter1/vm/folder2
+        [Default: (null)]
+
+- hostname
+        The hostname or IP address of the vSphere vCenter or ESXi server.
+        If the value is not specified in the task, the value of environment variable `VMWARE_HOST' will be used instead.
+        Environment variable support added in Ansible 2.6.
+        [Default: (null)]
+        type: str
+
+- inject_ovf_env
+        Force the given properties to be inserted into an OVF Environment and injected through VMware Tools.
+        [Default: (null)]
+        type: bool
+        version_added: 2.8
+
+- name
+        Name of the VM to work with.
+        Virtual machine names in vCenter are not necessarily unique, which may be problematic.
+        [Default: (null)]
+
+- networks
+        `key: value' mapping of OVF network name, to the vCenter network name.
+        [Default: {u'VM Network': u'VM Network'}]
+
+- ovf
+        Path to OVF or OVA file to deploy.
+        (Aliases: ova)[Default: (null)]
+
+- password
+        The password of the vSphere vCenter or ESXi server.
+        If the value is not specified in the task, the value of environment variable `VMWARE_PASSWORD' will be used instead.
+        Environment variable support added in Ansible 2.6.
+        (Aliases: pass, pwd)[Default: (null)]
+        type: str
+
+- port
+        The port number of the vSphere vCenter or ESXi server.
+        If the value is not specified in the task, the value of environment variable `VMWARE_PORT' will be used instead.
+        Environment variable support added in Ansible 2.6.
+        [Default: 443]
+        type: int
+        version_added: 2.5
+
+- power_on
+        Whether or not to power on the virtual machine after creation.
+        [Default: True]
+        type: bool
+
+- properties
+        The assignment of values to the properties found in the OVF as key value pairs.
+        [Default: (null)]
+
+- resource_pool
+        Resource Pool to deploy to.
+        [Default: Resources]
+
+- username
+        The username of the vSphere vCenter or ESXi server.
+        If the value is not specified in the task, the value of environment variable `VMWARE_USER' will be used instead.
+        Environment variable support added in Ansible 2.6.
+        (Aliases: admin, user)[Default: (null)]
+        type: str
+
+- validate_certs
+        Allows connection when SSL certificates are not valid. Set to `false' when certificates are not trusted.
+        If the value is not specified in the task, the value of environment variable `VMWARE_VALIDATE_CERTS' will be used instead.
+        Environment variable support added in Ansible 2.6.
+        If set to `yes', please make sure Python >= 2.7.9 is installed on the given machine.
+        [Default: True]
+        type: bool
+
+- wait
+        Wait for the host to power on.
+        [Default: True]
+        type: bool
+
+- wait_for_ip_address
+        Wait until vCenter detects an IP address for the VM.
+        This requires vmware-tools (vmtoolsd) to properly work after creation.
+        [Default: False]
+        type: bool
+
+
+REQUIREMENTS:  pyvmomi
+
+AUTHOR: Matt Martz (@sivel)
+        METADATA:
+          status:
+          - preview
+          supported_by: community
+        
+
+EXAMPLES:
+
+- vmware_deploy_ovf:
+    hostname: '{{ vcenter_hostname }}'
+    username: '{{ vcenter_username }}'
+    password: '{{ vcenter_password }}'
+    ovf: /path/to/ubuntu-16.04-amd64.ovf
+    wait_for_ip_address: true
+  delegate_to: localhost
+
+# Deploys a new VM named 'NewVM' in specific datacenter/cluster, with network mapping taken from variable and using ova template from an absolute path
+- vmware_deploy_ovf:
+    hostname: '{{ vcenter_hostname }}'
+    username: '{{ vcenter_username }}'
+    password: '{{ vcenter_password }}'
+    datacenter: Datacenter1
+    cluster: Cluster1
+    datastore: vsandatastore
+    name: NewVM
+    networks: "{u'VM Network':u'{{ ProvisioningNetworkLabel }}'}"
+    validate_certs: no
+    power_on: no
+    ovf: /absolute/path/to/template/mytemplate.ova
+  delegate_to: localhost
+
+
+RETURN VALUES:
+
+instance:
+    description: metadata about the new virtual machine
+    returned: always
+    type: dict
+    sample: None
+

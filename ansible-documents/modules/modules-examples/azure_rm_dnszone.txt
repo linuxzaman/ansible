@@ -1,0 +1,36 @@
+EXAMPLES:
+
+- name: Create a DNS zone
+  azure_rm_dnszone:
+    resource_group: myResourceGroup
+    name: example.com
+
+- name: Delete a DNS zone
+  azure_rm_dnszone:
+    resource_group: myResourceGroup
+    name: example.com
+    state: absent
+
+
+RETURN VALUES:
+
+state:
+    description: Current state of the zone.
+    returned: always
+    type: dict
+    sample: {
+        "id": "/subscriptions/xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx/resourceGroup/myResourceGroup",
+        "location": "global",
+        "name": "Testing",
+        "name_servers": [
+            "ns1-07.azure-dns.com.",
+            "ns2-07.azure-dns.net.",
+            "ns3-07.azure-dns.org.",
+            "ns4-07.azure-dns.info."
+        ],
+        "number_of_record_sets": 2,
+        "type": "private",
+        "resolution_virtual_networks": ["/subscriptions/XXXX/resourceGroup/myResourceGroup/providers/Microsoft.Network/virtualNetworks/foo"]
+    }
+
+

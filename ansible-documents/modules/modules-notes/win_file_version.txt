@@ -1,0 +1,79 @@
+> WIN_FILE_VERSION    (/usr/lib/python2.7/dist-packages/ansible/modules/windows/win_file_version.py)
+
+        Get DLL or EXE file build version.
+
+  * This module is maintained by The Ansible Community
+OPTIONS (= is mandatory):
+
+= path
+        File to get version.
+        Always provide absolute path.
+
+        type: path
+
+
+NOTES:
+      * This module will always return no change.
+
+
+SEE ALSO:
+      * Module win_file
+           The official documentation on the win_file module.
+           https://docs.ansible.com/ansible/latest/modules/win_file_module.html
+
+
+AUTHOR: Sam Liu (@SamLiu79)
+        METADATA:
+          status:
+          - preview
+          supported_by: community
+        
+
+EXAMPLES:
+
+- name: Get acm instance version
+  win_file_version:
+    path: C:\Windows\System32\cmd.exe
+  register: exe_file_version
+
+- debug:
+    msg: '{{ exe_file_version }}'
+
+
+RETURN VALUES:
+
+path:
+  description: file path
+  returned: always
+  type: str
+
+file_version:
+  description: File version number..
+  returned: no error
+  type: str
+
+product_version:
+  description: The version of the product this file is distributed with.
+  returned: no error
+  type: str
+
+file_major_part:
+  description: the major part of the version number.
+  returned: no error
+  type: str
+
+file_minor_part:
+  description: the minor part of the version number of the file.
+  returned: no error
+  type: str
+
+file_build_part:
+  description: build number of the file.
+  returned: no error
+  type: str
+
+file_private_part:
+  description: file private part number.
+  returned: no error
+  type: str
+

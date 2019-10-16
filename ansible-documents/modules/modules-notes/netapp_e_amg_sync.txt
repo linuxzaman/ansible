@@ -1,0 +1,113 @@
+> NETAPP_E_AMG_SYNC    (/usr/lib/python2.7/dist-packages/ansible/modules/storage/netapp/netapp_e_amg_sync.py)
+
+        Allows for the initialization, suspension and resumption of an asynchronous mirror group's synchronization for NetApp E-series
+        storage arrays.
+
+  * This module is maintained by The Ansible Community
+OPTIONS (= is mandatory):
+
+= api_password
+        The password to authenticate with the SANtricity WebServices Proxy or embedded REST API.
+
+
+= api_url
+        The url to the SANtricity WebServices Proxy or embedded REST API.
+
+
+= api_username
+        The username to authenticate with the SANtricity WebServices Proxy or embedded REST API.
+
+
+- delete_recovery_point
+        Indicates whether the failures point can be deleted on the secondary if necessary to achieve the synchronization.
+        If true, and if the amount of unsynchronized data exceeds the CoW repository capacity on the secondary for any member volume, the
+        last failures point will be deleted and synchronization will continue.
+        If false, the synchronization will be suspended if the amount of unsynchronized data exceeds the CoW Repository capacity on the
+        secondary and the failures point will be preserved.
+        NOTE: This only has impact for newly launched syncs.
+        [Default: False]
+        type: bool
+
+= name
+        The name of the async mirror group you wish to target
+
+
+- ssid
+        The ID of the storage array containing the AMG you wish to target
+        [Default: (null)]
+
+= state
+        The synchronization action you'd like to take.
+        If `running' then it will begin syncing if there is no active sync or will resume a suspended sync. If there is already a sync in
+        progress, it will return with an OK status.
+        If `suspended' it will suspend any ongoing sync action, but return OK if there is no active sync or if the sync is already
+        suspended
+        (Choices: running, suspended)
+
+- validate_certs
+        Should https certificates be validated?
+        [Default: True]
+        type: bool
+
+
+AUTHOR: Kevin Hulquest (@hulquest)
+        METADATA:
+          status:
+          - preview
+          supported_by: community
+        
+
+EXAMPLES:
+
+- name: start AMG async
+      netapp_e_amg_sync:
+        name: "{{ amg_sync_name }}"
+        state: running
+        ssid: "{{ ssid }}"
+        api_url: "{{ netapp_api_url }}"
+        api_username: "{{ netapp_api_username }}"
+        api_password: "{{ netapp_api_password }}"
+
+
+RETURN VALUES:
+
+json:
+    description: The object attributes of the AMG.
+    returned: success
+    type: str
+    example:
+        {
+            "changed": false,
+            "connectionType": "fc",
+            "groupRef": "3700000060080E5000299C24000006EF57ACAC70",
+            "groupState": "optimal",
+            "id": "3700000060080E5000299C24000006EF57ACAC70",
+            "label": "made_with_ansible",
+            "localRole": "primary",
+            "mirrorChannelRemoteTarget": "9000000060080E5000299C24005B06E557AC7EEC",
+            "orphanGroup": false,
+            "recoveryPointAgeAlertThresholdMinutes": 20,
+            "remoteRole": "secondary",
+            "remoteTarget": {
+                "nodeName": {
+                    "ioInterfaceType": "fc",
+                    "iscsiNodeName": null,
+                    "remoteNodeWWN": "20040080E5299F1C"
+                },
+                "remoteRef": "9000000060080E5000299C24005B06E557AC7EEC",
+                "scsiinitiatorTargetBaseProperties": {
+                    "ioInterfaceType": "fc",
+                    "iscsiinitiatorTargetBaseParameters": null
+                }
+            },
+            "remoteTargetId": "ansible2",
+            "remoteTargetName": "Ansible2",
+            "remoteTargetWwn": "60080E5000299F880000000056A25D56",
+            "repositoryUtilizationWarnThreshold": 80,
+            "roleChangeProgress": "none",
+            "syncActivity": "idle",
+            "syncCompletionTimeAlertThresholdMinutes": 10,
+            "syncIntervalMinutes": 10,
+            "worldWideName": "60080E5000299C24000006EF57ACAC70"
+    }
+

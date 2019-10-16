@@ -1,0 +1,41 @@
+EXAMPLES:
+
+- name: Enable eAPI access with default configuration
+  eos_eapi:
+    state: started
+
+- name: Enable eAPI with no HTTP, HTTPS at port 9443, local HTTP at port 80, and socket enabled
+  eos_eapi:
+    state: started
+    http: false
+    https_port: 9443
+    local_http: yes
+    local_http_port: 80
+    socket: yes
+
+- name: Shutdown eAPI access
+  eos_eapi:
+    state: stopped
+
+
+RETURN VALUES:
+
+commands:
+  description: The list of configuration mode commands to send to the device
+  returned: always
+  type: list
+  sample:
+    - management api http-commands
+    - protocol http port 81
+    - no protocol https
+urls:
+  description: Hash of URL endpoints eAPI is listening on per interface
+  returned: when eAPI is started
+  type: dict
+  sample: {'Management1': ['http://172.26.10.1:80']}
+session_name:
+  description: The EOS config session name used to load the configuration
+  returned: when changed is True
+  type: str
+  sample: ansible_1479315771
+

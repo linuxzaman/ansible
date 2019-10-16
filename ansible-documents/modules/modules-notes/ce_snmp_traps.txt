@@ -1,0 +1,105 @@
+> CE_SNMP_TRAPS    (/usr/lib/python2.7/dist-packages/ansible/modules/network/cloudengine/ce_snmp_traps.py)
+
+        Manages SNMP traps configurations on HUAWEI CloudEngine switches.
+
+  * This module is maintained by The Ansible Community
+OPTIONS (= is mandatory):
+
+- feature_name
+        Alarm feature name.
+        (Choices: aaa, arp, bfd, bgp, cfg, configuration, dad, devm, dhcpsnp, dldp, driver, efm, erps, error-down, fcoe, fei, fei_comm,
+        fm, ifnet, info, ipsg, ipv6, isis, l3vpn, lacp, lcs, ldm, ldp, ldt, lldp, mpls_lspm, msdp, mstp, nd, netconf, nqa, nvo3,
+        openflow, ospf, ospfv3, pim, pim-std, qos, radius, rm, rmon, securitytrap, smlktrap, snmp, ssh, stackmng, sysclock, sysom,
+        system, tcp, telnet, trill, trunk, tty, vbst, vfs, virtual-perception, vrrp, vstm, all)[Default: (null)]
+
+- interface_number
+        Interface number.
+        [Default: (null)]
+
+- interface_type
+        Interface type.
+        (Choices: Ethernet, Eth-Trunk, Tunnel, NULL, LoopBack, Vlanif, 100GE, 40GE, MTunnel, 10GE, GE, MEth, Vbdif, Nve)[Default: (null)]
+
+- port_number
+        Source port number.
+        [Default: (null)]
+
+- trap_name
+        Alarm trap name.
+        [Default: (null)]
+
+
+AUTHOR: wangdezhuang (@QijunPan)
+        METADATA:
+          status:
+          - preview
+          supported_by: community
+        
+
+EXAMPLES:
+
+- name: CloudEngine snmp traps test
+  hosts: cloudengine
+  connection: local
+  gather_facts: no
+  vars:
+    cli:
+      host: "{{ inventory_hostname }}"
+      port: "{{ ansible_ssh_port }}"
+      username: "{{ username }}"
+      password: "{{ password }}"
+      transport: cli
+
+  tasks:
+
+  - name: "Config SNMP trap all enable"
+    ce_snmp_traps:
+      state: present
+      feature_name: all
+      provider: "{{ cli }}"
+
+  - name: "Config SNMP trap interface"
+    ce_snmp_traps:
+      state: present
+      interface_type: 40GE
+      interface_number: 2/0/1
+      provider: "{{ cli }}"
+
+  - name: "Config SNMP trap port"
+    ce_snmp_traps:
+      state: present
+      port_number: 2222
+      provider: "{{ cli }}"
+
+
+RETURN VALUES:
+
+changed:
+    description: check to see if a change was made on the device
+    returned: always
+    type: bool
+    sample: true
+proposed:
+    description: k/v pairs of parameters passed into module
+    returned: always
+    type: dict
+    sample: {"feature_name": "all",
+             "state": "present"}
+existing:
+    description: k/v pairs of existing aaa server
+    returned: always
+    type: dict
+    sample: {"snmp-agent trap": [],
+             "undo snmp-agent trap": []}
+end_state:
+    description: k/v pairs of aaa params after module execution
+    returned: always
+    type: dict
+    sample: {"snmp-agent trap": ["enable"],
+             "undo snmp-agent trap": []}
+updates:
+    description: command sent to the device
+    returned: always
+    type: list
+    sample: ["snmp-agent trap enable"]
+

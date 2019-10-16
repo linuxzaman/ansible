@@ -1,0 +1,263 @@
+> CLOUDFRONT_FACTS    (/usr/lib/python2.7/dist-packages/ansible/modules/cloud/amazon/cloudfront_facts.py)
+
+        Gets information about an AWS CloudFront distribution
+
+  * This module is maintained by The Ansible Community
+OPTIONS (= is mandatory):
+
+- all_lists
+        Get all cloudfront lists that do not require parameters.
+        [Default: False]
+        type: bool
+
+- aws_access_key
+        AWS access key. If not set then the value of the AWS_ACCESS_KEY_ID, AWS_ACCESS_KEY or EC2_ACCESS_KEY environment variable is
+        used.
+        (Aliases: ec2_access_key, access_key)[Default: (null)]
+        type: str
+
+- aws_secret_key
+        AWS secret key. If not set then the value of the AWS_SECRET_ACCESS_KEY, AWS_SECRET_KEY, or EC2_SECRET_KEY environment variable is
+        used.
+        (Aliases: ec2_secret_key, secret_key)[Default: (null)]
+        type: str
+
+- debug_botocore_endpoint_logs
+        Use a botocore.endpoint logger to parse the unique (rather than total) "resource:action" API calls made during a task, outputing
+        the set to the resource_actions key in the task results. Use the aws_resource_action callback to output to total list made during
+        a playbook. The ANSIBLE_DEBUG_BOTOCORE_LOGS environment variable may also be used.
+        [Default: no]
+        type: bool
+        version_added: 2.8
+
+- distribution
+        Get information about a distribution. Requires `distribution_id' or `domain_name_alias' to be specified.
+        [Default: False]
+        type: bool
+
+- distribution_config
+        Get the configuration information about a distribution. Requires `distribution_id' or `domain_name_alias' to be specified.
+        [Default: False]
+        type: bool
+
+- distribution_id
+        The id of the CloudFront distribution. Used with `distribution', `distribution_config', `invalidation', `streaming_distribution',
+        `streaming_distribution_config', `list_invalidations'.
+        [Default: (null)]
+
+- domain_name_alias
+        Can be used instead of `distribution_id' - uses the aliased CNAME for the cloudfront distribution to get the distribution id
+        where required.
+        [Default: (null)]
+
+- ec2_url
+        Url to use to connect to EC2 or your Eucalyptus cloud (by default the module will use EC2 endpoints). Ignored for modules where
+        region is required. Must be specified for all other modules if region is not used. If not set then the value of the EC2_URL
+        environment variable, if any, is used.
+        [Default: (null)]
+        type: str
+
+- invalidation
+        Get information about an invalidation. Requires `invalidation_id' to be specified.
+        [Default: False]
+        type: bool
+
+- invalidation_id
+        The id of the invalidation to get information about. Used with `invalidation'.
+        [Default: (null)]
+
+- list_distributions
+        Get a list of cloudfront distributions.
+        [Default: False]
+        type: bool
+
+- list_distributions_by_web_acl_id
+        Get a list of distributions using web acl id as a filter. Requires `web_acl_id' to be set.
+        [Default: False]
+        type: bool
+
+- list_invalidations
+        Get a list of invalidations. Requires `distribution_id' or `domain_name_alias' to be specified.
+        [Default: False]
+        type: bool
+
+- list_origin_access_identities
+        Get a list of cloudfront origin access identities. Requires `origin_access_identity_id' to be set.
+        [Default: False]
+        type: bool
+
+- list_streaming_distributions
+        Get a list of streaming distributions.
+        [Default: False]
+        type: bool
+
+- origin_access_identity
+        Get information about an origin access identity. Requires `origin_access_identity_id' to be specified.
+        [Default: False]
+        type: bool
+
+- origin_access_identity_config
+        Get the configuration information about an origin access identity. Requires `origin_access_identity_id' to be specified.
+        [Default: False]
+        type: bool
+
+- origin_access_identity_id
+        The id of the cloudfront origin access identity to get information about.
+        [Default: (null)]
+
+- profile
+        Uses a boto profile. Only works with boto >= 2.24.0.
+        [Default: (null)]
+        type: str
+        version_added: 1.6
+
+- region
+        The AWS region to use. If not specified then the value of the AWS_REGION or EC2_REGION environment variable, if any, is used. See
+        http://docs.aws.amazon.com/general/latest/gr/rande.html#ec2_region
+        (Aliases: aws_region, ec2_region)[Default: (null)]
+        type: str
+
+- security_token
+        AWS STS security token. If not set then the value of the AWS_SECURITY_TOKEN or EC2_SECURITY_TOKEN environment variable is used.
+        (Aliases: access_token)[Default: (null)]
+        type: str
+        version_added: 1.6
+
+- streaming_distribution
+        Get information about a specified RTMP distribution. Requires `distribution_id' or `domain_name_alias' to be specified.
+        [Default: False]
+        type: bool
+
+- streaming_distribution_config
+        Get the configuration information about a specified RTMP distribution. Requires `distribution_id' or `domain_name_alias' to be
+        specified.
+        [Default: False]
+        type: bool
+
+- summary
+        Returns a summary of all distributions, streaming distributions and origin_access_identities. This is the default behaviour if no
+        option is selected.
+        [Default: False]
+        type: bool
+
+- validate_certs
+        When set to "no", SSL certificates will not be validated for boto versions >= 2.6.0.
+        [Default: True]
+        type: bool
+        version_added: 1.5
+
+- web_acl_id
+        Used with `list_distributions_by_web_acl_id'.
+        [Default: (null)]
+
+
+NOTES:
+      * If parameters are not set within the module, the following environment variables can be used in decreasing order of
+        precedence `AWS_URL' or `EC2_URL', `AWS_ACCESS_KEY_ID' or `AWS_ACCESS_KEY' or `EC2_ACCESS_KEY', `AWS_SECRET_ACCESS_KEY' or
+        `AWS_SECRET_KEY' or `EC2_SECRET_KEY', `AWS_SECURITY_TOKEN' or `EC2_SECURITY_TOKEN', `AWS_REGION' or `EC2_REGION'
+      * Ansible uses the boto configuration file (typically ~/.boto) if no credentials are provided. See
+        https://boto.readthedocs.io/en/latest/boto_config_tut.html
+      * `AWS_REGION' or `EC2_REGION' can be typically be used to specify the AWS region, when required, but this can also be
+        configured in the boto config file
+
+
+REQUIREMENTS:  boto, boto3 >= 1.0.0, python >= 2.6
+
+AUTHOR: Willem van Ketwich (@wilvk)
+        METADATA:
+          status:
+          - preview
+          supported_by: community
+        
+
+EXAMPLES:
+
+# Note: These examples do not set authentication details, see the AWS Guide for details.
+
+# Get a summary of distributions
+- cloudfront_facts:
+    summary: true
+
+# Get information about a distribution
+- cloudfront_facts:
+    distribution: true
+    distribution_id: my-cloudfront-distribution-id
+
+# Get information about a distribution using the CNAME of the cloudfront distribution.
+- cloudfront_facts:
+    distribution: true
+    domain_name_alias: www.my-website.com
+
+# Facts are published in ansible_facts['cloudfront'][<distribution_name>]
+- debug:
+    msg: "{{ ansible_facts['cloudfront']['my-cloudfront-distribution-id'] }}"
+
+- debug:
+    msg: "{{ ansible_facts['cloudfront']['www.my-website.com'] }}"
+
+# Get all information about an invalidation for a distribution.
+- cloudfront_facts:
+    invalidation: true
+    distribution_id: my-cloudfront-distribution-id
+    invalidation_id: my-cloudfront-invalidation-id
+
+# Get all information about a cloudfront origin access identity.
+- cloudfront_facts:
+    origin_access_identity: true
+    origin_access_identity_id: my-cloudfront-origin-access-identity-id
+
+# Get all information about lists not requiring parameters (ie. list_origin_access_identities, list_distributions, list_streaming_distributions)
+- cloudfront_facts:
+    origin_access_identity: true
+    origin_access_identity_id: my-cloudfront-origin-access-identity-id
+
+# Get all information about lists not requiring parameters (ie. list_origin_access_identities, list_distributions, list_streaming_distributions)
+- cloudfront_facts:
+    all_lists: true
+
+
+RETURN VALUES:
+
+origin_access_identity:
+    description: Describes the origin access identity information. Requires I(origin_access_identity_id) to be set.
+    returned: only if I(origin_access_identity) is true
+    type: dict
+origin_access_identity_configuration:
+    description: Describes the origin access identity information configuration information. Requires I(origin_access_identity_id) to be set.
+    returned: only if I(origin_access_identity_configuration) is true
+    type: dict
+distribution:
+    description: >
+      Facts about a cloudfront distribution. Requires I(distribution_id) or I(domain_name_alias)
+      to be specified. Requires I(origin_access_identity_id) to be set.
+    returned: only if distribution is true
+    type: dict
+distribution_config:
+    description: >
+      Facts about a cloudfront distribution's config. Requires I(distribution_id) or I(domain_name_alias)
+      to be specified.
+    returned: only if I(distribution_config) is true
+    type: dict
+invalidation:
+    description: >
+      Describes the invalidation information for the distribution. Requires
+      I(invalidation_id) to be specified and either I(distribution_id) or I(domain_name_alias.)
+    returned: only if invalidation is true
+    type: dict
+streaming_distribution:
+    description: >
+      Describes the streaming information for the distribution. Requires
+      I(distribution_id) or I(domain_name_alias) to be specified.
+    returned: only if I(streaming_distribution) is true
+    type: dict
+streaming_distribution_config:
+    description: >
+      Describes the streaming configuration information for the distribution.
+      Requires I(distribution_id) or I(domain_name_alias) to be specified.
+    returned: only if I(streaming_distribution_config) is true
+    type: dict
+summary:
+    description: Gives a summary of distributions, streaming distributions and origin access identities.
+    returned: as default or if summary is true
+    type: dict
+

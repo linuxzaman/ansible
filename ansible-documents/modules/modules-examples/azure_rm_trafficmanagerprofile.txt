@@ -1,0 +1,44 @@
+EXAMPLES:
+
+- name: Create a Traffic Manager Profile
+      azure_rm_trafficmanagerprofile:
+        name: tmtest
+        resource_group: myResourceGroup
+        location: global
+        profile_status: enabled
+        routing_method: priority
+        dns_config:
+          relative_name: tmtest
+          ttl: 60
+        monitor_config:
+          protocol: HTTPS
+          port: 80
+          path: '/'
+        tags:
+          Environment: Test
+
+    - name: Delete a Traffic Manager Profile
+      azure_rm_trafficmanagerprofile:
+        state: absent
+        name: tmtest
+        resource_group: myResourceGroup
+
+
+RETURN VALUES:
+
+id:
+    description: The ID of the traffic manager profile
+    returned: when traffic manager profile exists
+    type: str
+    example: "/subscriptions/xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx/resourceGroups/tmt/providers/Microsoft.Network/trafficManagerProfiles/tmtest"
+endpoints:
+  description: List of endpoint IDs attached to the profile
+  returned: when traffic manager endpoints exists
+  type: list
+  sample: [
+        "/subscriptions/xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx/resourceGroups/tmt/providers/Microsoft.Network/trafficManagerProfiles/tm049b1ae293/exter
+         nalEndpoints/e2",
+        "/subscriptions/xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx/resourceGroups/tmt/providers/Microsoft.Network/trafficManagerProfiles/tm049b1ae293/exter
+         nalEndpoints/e1"
+    ]
+

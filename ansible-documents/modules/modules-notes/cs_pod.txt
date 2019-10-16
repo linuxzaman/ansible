@@ -1,0 +1,194 @@
+> CS_POD    (/usr/lib/python2.7/dist-packages/ansible/modules/cloud/cloudstack/cs_pod.py)
+
+        Create, update, delete pods.
+
+  * This module is maintained by The Ansible Community
+OPTIONS (= is mandatory):
+
+- api_http_method
+        HTTP method used to query the API endpoint.
+        If not given, the `CLOUDSTACK_METHOD' env variable is considered.
+        As the last option, the value is taken from the ini config file, also see the notes.
+        Fallback value is `get' if not specified.
+        (Choices: get, post)[Default: (null)]
+        type: str
+
+- api_key
+        API key of the CloudStack API.
+        If not given, the `CLOUDSTACK_KEY' env variable is considered.
+        As the last option, the value is taken from the ini config file, also see the notes.
+        [Default: (null)]
+        type: str
+
+- api_region
+        Name of the ini section in the `cloustack.ini' file.
+        If not given, the `CLOUDSTACK_REGION' env variable is considered.
+        [Default: cloudstack]
+        type: str
+
+- api_secret
+        Secret key of the CloudStack API.
+        If not set, the `CLOUDSTACK_SECRET' env variable is considered.
+        As the last option, the value is taken from the ini config file, also see the notes.
+        [Default: (null)]
+        type: str
+
+- api_timeout
+        HTTP timeout in seconds.
+        If not given, the `CLOUDSTACK_TIMEOUT' env variable is considered.
+        As the last option, the value is taken from the ini config file, also see the notes.
+        Fallback value is 10 seconds if not specified.
+        [Default: (null)]
+        type: int
+
+- api_url
+        URL of the CloudStack API e.g. https://cloud.example.com/client/api.
+        If not given, the `CLOUDSTACK_ENDPOINT' env variable is considered.
+        As the last option, the value is taken from the ini config file, also see the notes.
+        [Default: (null)]
+        type: str
+
+- end_ip
+        Ending IP address for the Pod.
+        [Default: (null)]
+        type: str
+
+- gateway
+        Gateway for the Pod.
+        Required on `state=present'
+        [Default: (null)]
+        type: str
+
+- id
+        uuid of the existing pod.
+        [Default: (null)]
+        type: str
+
+= name
+        Name of the pod.
+
+        type: str
+
+- netmask
+        Netmask for the Pod.
+        Required on `state=present'
+        [Default: (null)]
+        type: str
+
+- start_ip
+        Starting IP address for the Pod.
+        Required on `state=present'
+        [Default: (null)]
+        type: str
+
+- state
+        State of the pod.
+        (Choices: present, enabled, disabled, absent)[Default: present]
+        type: str
+
+- zone
+        Name of the zone in which the pod belongs to.
+        If not set, default zone is used.
+        [Default: (null)]
+        type: str
+
+
+NOTES:
+      * Ansible uses the `cs' library's configuration method if credentials are not provided by the arguments `api_url', `api_key',
+        `api_secret'. Configuration is read from several locations, in the following order. The `CLOUDSTACK_ENDPOINT',
+        `CLOUDSTACK_KEY', `CLOUDSTACK_SECRET' and `CLOUDSTACK_METHOD'. `CLOUDSTACK_TIMEOUT' environment variables. A
+        `CLOUDSTACK_CONFIG' environment variable pointing to an `.ini' file. A `cloudstack.ini' file in the current working
+        directory. A `.cloudstack.ini' file in the users home directory. Optionally multiple credentials and endpoints can be
+        specified using ini sections in `cloudstack.ini'. Use the argument `api_region' to select the section name, default section
+        is `cloudstack'. See https://github.com/exoscale/cs for more information.
+      * A detailed guide about cloudstack modules can be found in the L(CloudStack Cloud
+        Guide,../scenario_guides/guide_cloudstack.html).
+      * This module supports check mode.
+
+
+REQUIREMENTS:  python >= 2.6, cs >= 0.6.10
+
+AUTHOR: René Moser (@resmo)
+        METADATA:
+          status:
+          - stableinterface
+          supported_by: community
+        
+
+EXAMPLES:
+
+- name: Ensure a pod is present
+  cs_pod:
+    name: pod1
+    zone: ch-zrh-ix-01
+    start_ip: 10.100.10.101
+    gateway: 10.100.10.1
+    netmask: 255.255.255.0
+  delegate_to: localhost
+
+- name: Ensure a pod is disabled
+  cs_pod:
+    name: pod1
+    zone: ch-zrh-ix-01
+    state: disabled
+  delegate_to: localhost
+
+- name: Ensure a pod is enabled
+  cs_pod:
+    name: pod1
+    zone: ch-zrh-ix-01
+    state: enabled
+  delegate_to: localhost
+
+- name: Ensure a pod is absent
+  cs_pod:
+    name: pod1
+    zone: ch-zrh-ix-01
+    state: absent
+  delegate_to: localhost
+
+
+RETURN VALUES:
+
+---
+id:
+  description: UUID of the pod.
+  returned: success
+  type: str
+  sample: 04589590-ac63-4ffc-93f5-b698b8ac38b6
+name:
+  description: Name of the pod.
+  returned: success
+  type: str
+  sample: pod01
+start_ip:
+  description: Starting IP of the pod.
+  returned: success
+  type: str
+  sample: 10.100.1.101
+end_ip:
+  description: Ending IP of the pod.
+  returned: success
+  type: str
+  sample: 10.100.1.254
+netmask:
+  description: Netmask of the pod.
+  returned: success
+  type: str
+  sample: 255.255.255.0
+gateway:
+  description: Gateway of the pod.
+  returned: success
+  type: str
+  sample: 10.100.1.1
+allocation_state:
+  description: State of the pod.
+  returned: success
+  type: str
+  sample: Enabled
+zone:
+  description: Name of zone the pod is in.
+  returned: success
+  type: str
+  sample: ch-gva-2
+

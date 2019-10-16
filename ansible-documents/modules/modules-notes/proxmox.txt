@@ -1,0 +1,300 @@
+> PROXMOX    (/usr/lib/python2.7/dist-packages/ansible/modules/cloud/misc/proxmox.py)
+
+        allows you to create/delete/stop instances in Proxmox VE cluster Starting in Ansible 2.1, it automatically detects
+        containerization type (lxc for PVE 4, openvz for older)
+
+  * This module is maintained by The Ansible Community
+OPTIONS (= is mandatory):
+
+= api_host
+        the host of the Proxmox VE cluster
+
+
+- api_password
+        the password to authenticate with
+        you can use PROXMOX_PASSWORD environment variable
+        [Default: (null)]
+
+= api_user
+        the user to authenticate with
+
+
+- cores
+        Specify number of cores per socket.
+        [Default: 1]
+        version_added: 2.4
+        
+
+- cpus
+        numbers of allocated cpus for instance
+        [Default: 1]
+
+- cpuunits
+        CPU weight for a VM
+        [Default: 1000]
+
+- disk
+        hard disk size in GB for instance
+        [Default: 3]
+
+- force
+        forcing operations
+        can be used only with states `present', `stopped', `restarted'
+        with `state=present' force option allow to overwrite existing container
+        with states `stopped' , `restarted' allow to force stop instance
+        [Default: no]
+        type: bool
+
+- hostname
+        the instance hostname
+        required only for `state=present'
+        must be unique if vmid is not passed
+        [Default: (null)]
+
+- ip_address
+        specifies the address the container will be assigned
+        [Default: (null)]
+
+- memory
+        memory size in MB for instance
+        [Default: 512]
+
+- mounts
+        specifies additional mounts (separate disks) for the container. As a hash/dictionary defining mount points
+        [Default: (null)]
+        version_added: 2.2
+
+- nameserver
+        sets DNS server IP address for a container
+        [Default: (null)]
+
+- netif
+        specifies network interfaces for the container. As a hash/dictionary defining interfaces.
+        [Default: (null)]
+
+- node
+        Proxmox VE node, when new VM will be created
+        required only for `state=present'
+        for another states will be autodiscovered
+        [Default: (null)]
+
+- onboot
+        specifies whether a VM will be started during system bootup
+        [Default: no]
+        type: bool
+
+- ostemplate
+        the template for VM creating
+        required only for `state=present'
+        [Default: (null)]
+
+- password
+        the instance root password
+        required only for `state=present'
+        [Default: (null)]
+
+- pool
+        Proxmox VE resource pool
+        [Default: (null)]
+        version_added: 2.3
+
+- pubkey
+        Public key to add to /root/.ssh/authorized_keys. This was added on Proxmox 4.2, it is ignored for earlier versions
+        [Default: (null)]
+        version_added: 2.3
+
+- searchdomain
+        sets DNS search domain for a container
+        [Default: (null)]
+
+- state
+        Indicate desired state of the instance
+        (Choices: present, started, absent, stopped, restarted)[Default: present]
+
+- storage
+        target storage
+        [Default: local]
+
+- swap
+        swap memory size in MB for instance
+        [Default: 0]
+
+- timeout
+        timeout for operations
+        [Default: 30]
+
+- unprivileged
+        Indicate if the container should be unprivileged
+        [Default: no]
+        type: bool
+        version_added: 2.3
+
+- validate_certs
+        enable / disable https certificate verification
+        [Default: no]
+        type: bool
+
+- vmid
+        the instance id
+        if not set, the next available VM ID will be fetched from ProxmoxAPI.
+        if not set, will be fetched from PromoxAPI based on the hostname
+        [Default: (null)]
+
+
+NOTES:
+      * Requires proxmoxer and requests modules on host. This modules can be installed with pip.
+
+
+REQUIREMENTS:  proxmoxer, python >= 2.7, requests
+
+AUTHOR: Sergei Antipov (@UnderGreen)
+        METADATA:
+          status:
+          - preview
+          supported_by: community
+        
+
+EXAMPLES:
+
+# Create new container with minimal options
+- proxmox:
+    vmid: 100
+    node: uk-mc02
+    api_user: root@pam
+    api_password: 1q2w3e
+    api_host: node1
+    password: 123456
+    hostname: example.org
+    ostemplate: 'local:vztmpl/ubuntu-14.04-x86_64.tar.gz'
+
+# Create new container automatically selecting the next available vmid.
+- proxmox:
+    node: 'uk-mc02'
+    api_user: 'root@pam'
+    api_password: '1q2w3e'
+    api_host: 'node1'
+    password: '123456'
+    hostname: 'example.org'
+    ostemplate: 'local:vztmpl/ubuntu-14.04-x86_64.tar.gz'
+
+# Create new container with minimal options with force(it will rewrite existing container)
+- proxmox:
+    vmid: 100
+    node: uk-mc02
+    api_user: root@pam
+    api_password: 1q2w3e
+    api_host: node1
+    password: 123456
+    hostname: example.org
+    ostemplate: 'local:vztmpl/ubuntu-14.04-x86_64.tar.gz'
+    force: yes
+
+# Create new container with minimal options use environment PROXMOX_PASSWORD variable(you should export it before)
+- proxmox:
+    vmid: 100
+    node: uk-mc02
+    api_user: root@pam
+    api_host: node1
+    password: 123456
+    hostname: example.org
+    ostemplate: 'local:vztmpl/ubuntu-14.04-x86_64.tar.gz'
+
+# Create new container with minimal options defining network interface with dhcp
+- proxmox:
+    vmid: 100
+    node: uk-mc02
+    api_user: root@pam
+    api_password: 1q2w3e
+    api_host: node1
+    password: 123456
+    hostname: example.org
+    ostemplate: 'local:vztmpl/ubuntu-14.04-x86_64.tar.gz'
+    netif: '{"net0":"name=eth0,ip=dhcp,ip6=dhcp,bridge=vmbr0"}'
+
+# Create new container with minimal options defining network interface with static ip
+- proxmox:
+    vmid: 100
+    node: uk-mc02
+    api_user: root@pam
+    api_password: 1q2w3e
+    api_host: node1
+    password: 123456
+    hostname: example.org
+    ostemplate: 'local:vztmpl/ubuntu-14.04-x86_64.tar.gz'
+    netif: '{"net0":"name=eth0,gw=192.168.0.1,ip=192.168.0.2/24,bridge=vmbr0"}'
+
+# Create new container with minimal options defining a mount with 8GB
+- proxmox:
+    vmid: 100
+    node: uk-mc02
+    api_user: root@pam
+    api_password: 1q2w3e
+    api_host: node1
+    password: 123456
+    hostname: example.org
+    ostemplate: local:vztmpl/ubuntu-14.04-x86_64.tar.gz'
+    mounts: '{"mp0":"local:8,mp=/mnt/test/"}'
+
+# Create new container with minimal options defining a cpu core limit
+- proxmox:
+    vmid: 100
+    node: uk-mc02
+    api_user: root@pam
+    api_password: 1q2w3e
+    api_host: node1
+    password: 123456
+    hostname: example.org
+    ostemplate: local:vztmpl/ubuntu-14.04-x86_64.tar.gz'
+    cores: 2
+
+# Start container
+- proxmox:
+    vmid: 100
+    api_user: root@pam
+    api_password: 1q2w3e
+    api_host: node1
+    state: started
+
+# Start container with mount. You should enter a 90-second timeout because servers with additional disks take longer to boot.
+- proxmox:
+    vmid: 100
+    api_user: root@pam
+    api_password: 1q2w3e
+    api_host: node1
+    state: started
+    timeout: 90
+
+# Stop container
+- proxmox:
+    vmid: 100
+    api_user: root@pam
+    api_password: 1q2w3e
+    api_host: node1
+    state: stopped
+
+# Stop container with force
+- proxmox:
+    vmid: 100
+    api_user: root@pam
+    api_password: 1q2w3e
+    api_host: node1
+    force: yes
+    state: stopped
+
+# Restart container(stopped or mounted container you can't restart)
+- proxmox:
+    vmid: 100
+    api_user: root@pam
+    api_password: 1q2w3e
+    api_host: node1
+    state: restarted
+
+# Remove container
+- proxmox:
+    vmid: 100
+    api_user: root@pam
+    api_password: 1q2w3e
+    api_host: node1
+    state: absent
+
+

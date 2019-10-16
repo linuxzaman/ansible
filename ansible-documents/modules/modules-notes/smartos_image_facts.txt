@@ -1,0 +1,40 @@
+> SMARTOS_IMAGE_FACTS    (/usr/lib/python2.7/dist-packages/ansible/modules/cloud/smartos/smartos_image_facts.py)
+
+        Retrieve facts about all installed images on SmartOS. Facts will be inserted to the ansible_facts key.
+
+  * This module is maintained by The Ansible Community
+OPTIONS (= is mandatory):
+
+- filters
+        Criteria for selecting image. Can be any value from image manifest and 'published_date', 'published', 'source', 'clones', and
+        'size'. More informaton can be found at https://smartos.org/man/1m/imgadm under 'imgadm list'.
+        [Default: (null)]
+
+
+AUTHOR: Adam Števko (@xen0l)
+        METADATA:
+          status:
+          - preview
+          supported_by: community
+        
+
+EXAMPLES:
+
+# Return facts about all installed images.
+- smartos_image_facts:
+
+# Return all private active Linux images.
+- smartos_image_facts: filters="os=linux state=active public=false"
+
+# Show, how many clones does every image have.
+- smartos_image_facts:
+
+- debug: msg="{{ smartos_images[item]['name'] }}-{{smartos_images[item]['version'] }}
+            has {{ smartos_images[item]['clones'] }} VM(s)"
+  with_items: "{{ smartos_images.keys() }}"
+
+
+RETURN VALUES:
+
+# this module returns ansible_facts
+

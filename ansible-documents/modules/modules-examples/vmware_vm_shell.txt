@@ -1,0 +1,85 @@
+EXAMPLES:
+
+- name: Run command inside a virtual machine
+  vmware_vm_shell:
+    hostname: "{{ vcenter_hostname }}"
+    username: "{{ vcenter_username }}"
+    password: "{{ vcenter_password }}"
+    datacenter: "{{ datacenter }}"
+    folder: "/{{datacenter}}/vm"
+    vm_id: "{{ vm_name }}"
+    vm_username: root
+    vm_password: superSecret
+    vm_shell: /bin/echo
+    vm_shell_args: " $var >> myFile "
+    vm_shell_env:
+      - "PATH=/bin"
+      - "VAR=test"
+    vm_shell_cwd: "/tmp"
+  delegate_to: localhost
+  register: shell_command_output
+
+- name: Run command inside a virtual machine with wait and timeout
+  vmware_vm_shell:
+    hostname: "{{ vcenter_hostname }}"
+    username: "{{ vcenter_username }}"
+    password: "{{ vcenter_password }}"
+    datacenter: "{{ datacenter }}"
+    folder: "/{{datacenter}}/vm"
+    vm_id: NameOfVM
+    vm_username: root
+    vm_password: superSecret
+    vm_shell: /bin/sleep
+    vm_shell_args: 100
+    wait_for_process: True
+    timeout: 2000
+  delegate_to: localhost
+  register: shell_command_with_wait_timeout
+
+- name: Change user password in the guest machine
+  vmware_vm_shell:
+    hostname: "{{ vcenter_hostname }}"
+    username: "{{ vcenter_username }}"
+    password: "{{ vcenter_password }}"
+    datacenter: "{{ datacenter }}"
+    folder: "/{{datacenter}}/vm"
+    vm_id: "{{ vm_name }}"
+    vm_username: sample
+    vm_password: old_password
+    vm_shell: "/bin/echo"
+    vm_shell_args: "-e 'old_password\nnew_password\nnew_password' | passwd sample > /tmp/$$.txt 2>&1"
+  delegate_to: localhost
+
+- name: Change hostname of guest machine
+  vmware_vm_shell:
+    hostname: "{{ vcenter_hostname }}"
+    username: "{{ vcenter_username }}"
+    password: "{{ vcenter_password }}"
+    validate_certs: no
+    datacenter: "{{ datacenter }}"
+    folder: "/{{datacenter}}/vm"
+    vm_id: "{{ vm_name }}"
+    vm_username: testUser
+    vm_password: SuperSecretPassword
+    vm_shell: "/usr/bin/hostnamectl"
+    vm_shell_args: "set-hostname new_hostname > /tmp/$$.txt 2>&1"
+  delegate_to: localhost
+
+
+RETURN VALUES:
+
+results:
+    description: metadata about the new process after completion with wait_for_process
+    returned: on success
+    type: dict
+    sample:
+      {
+        "cmd_line": "\"/bin/sleep\" 1",
+        "end_time": "2018-04-26T05:03:21+00:00",
+        "exit_code": 0,
+        "name": "sleep",
+        "owner": "dev1",
+        "start_time": "2018-04-26T05:03:19+00:00",
+        "uuid": "564db1e2-a3ff-3b0e-8b77-49c25570bb66",
+      }
+

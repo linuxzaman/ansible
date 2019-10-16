@@ -1,0 +1,95 @@
+> HCLOUD_SSH_KEY_FACTS    (/usr/lib/python2.7/dist-packages/ansible/modules/cloud/hcloud/hcloud_ssh_key_facts.py)
+
+        Gather facts about your Hetzner Cloud ssh_keys.
+
+  * This module is maintained by The Ansible Community
+OPTIONS (= is mandatory):
+
+= api_token
+        This is the API Token for the Hetzner Cloud.
+
+        type: str
+
+- endpoint
+        This is the API Endpoint for the Hetzner Cloud.
+        [Default: https://api.hetzner.cloud/v1]
+        type: str
+
+- fingerprint
+        The fingerprint of the ssh key you want to get.
+        [Default: (null)]
+        type: str
+
+- id
+        The ID of the ssh key you want to get.
+        [Default: (null)]
+        type: int
+
+- label_selector
+        The label selector for the ssh key you want to get.
+        [Default: (null)]
+        type: str
+
+- name
+        The name of the ssh key you want to get.
+        [Default: (null)]
+        type: str
+
+
+SEE ALSO:
+      * Documentation for Hetzner Cloud API
+           Complete reference for the Hetzner Cloud API.
+           https://docs.hetzner.cloud/
+
+
+REQUIREMENTS:  hcloud-python >= 1.0.0
+
+AUTHOR: Christopher Schmitt (@cschmitt-hcloud)
+        METADATA:
+          status:
+          - preview
+          supported_by: community
+        
+
+EXAMPLES:
+
+- name: Gather hcloud sshkey facts
+  local_action:
+    module: hcloud_ssh_key_facts
+- name: Print the gathered facts
+  debug:
+    var: ansible_facts.hcloud_ssh_key_facts
+
+
+RETURN VALUES:
+
+hcloud_ssh_key_facts:
+    description: The ssh key instances
+    returned: Always
+    type: complex
+    contains:
+        id:
+            description: Numeric identifier of the ssh_key
+            returned: always
+            type: int
+            sample: 1937415
+        name:
+            description: Name of the ssh_key
+            returned: always
+            type: str
+            sample: my-ssh-key
+        fingerprint:
+            description: Fingerprint of the ssh key
+            returned: always
+            type: str
+            sample: 0e:e0:bd:c7:2d:1f:69:49:94:44:91:f1:19:fd:35:f3
+        public_key:
+            description: The acctual public key
+            returned: always
+            type: str
+            sample: "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIGpl/tnk74nnQJxxLAtutUApUZMRJxryKh7VXkNbd4g9 john@example.com"
+        labels:
+            description: User-defined labels (key-value pairs)
+            returned: always
+            type: dict
+

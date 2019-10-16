@@ -1,0 +1,34 @@
+EXAMPLES:
+
+- name: send configuration commands to IOS
+  telnet:
+    user: cisco
+    password: cisco
+    login_prompt: "Username: "
+    prompts:
+      - "[>#]"
+    command:
+      - terminal length 0
+      - configure terminal
+      - hostname ios01
+
+- name: run show commands
+  telnet:
+    user: cisco
+    password: cisco
+    login_prompt: "Username: "
+    prompts:
+      - "[>#]"
+    command:
+      - terminal length 0
+      - show version
+
+
+RETURN VALUES:
+
+output:
+    description: output of each command is an element in this list
+    type: list
+    returned: always
+    sample: [ 'success', 'success', '', 'warning .. something' ]
+

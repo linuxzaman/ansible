@@ -1,0 +1,59 @@
+EXAMPLES:
+
+- name: create a vpc
+  hwc_network_vpc:
+      identity_endpoint: "{{ identity_endpoint }}"
+      user: "{{ user }}"
+      password: "{{ password }}"
+      domain: "{{ domain }}"
+      project: "{{ project }}"
+      region: "{{ region }}"
+      name: "vpc_1"
+      cidr: "192.168.100.0/24"
+      state: present
+
+
+RETURN VALUES:
+
+    id:
+        description:
+            - the id of vpc.
+        type: str
+        returned: success
+    name:
+        description:
+            - the name of vpc.
+        type: str
+        returned: success
+    cidr:
+        description:
+            - the range of available subnets in the vpc.
+        type: str
+        returned: success
+    status:
+        description:
+            - the status of vpc.
+        type: str
+        returned: success
+    routes:
+        description:
+            - the route information.
+        type: complex
+        returned: success
+        contains:
+            destination:
+                description:
+                    - the destination network segment of a route.
+                type: str
+                returned: success
+            next_hop:
+                description:
+                    - the next hop of a route.
+                type: str
+                returned: success
+    enable_shared_snat:
+        description:
+            - show whether the shared snat is enabled.
+        type: bool
+        returned: success
+

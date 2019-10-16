@@ -1,0 +1,147 @@
+> CS_RESOURCELIMIT    (/usr/lib/python2.7/dist-packages/ansible/modules/cloud/cloudstack/cs_resourcelimit.py)
+
+        Manage limits of resources for domains, accounts and projects.
+
+  * This module is maintained by The Ansible Community
+OPTIONS (= is mandatory):
+
+- account
+        Account the resource is related to.
+        [Default: (null)]
+        type: str
+
+- api_http_method
+        HTTP method used to query the API endpoint.
+        If not given, the `CLOUDSTACK_METHOD' env variable is considered.
+        As the last option, the value is taken from the ini config file, also see the notes.
+        Fallback value is `get' if not specified.
+        (Choices: get, post)[Default: (null)]
+        type: str
+
+- api_key
+        API key of the CloudStack API.
+        If not given, the `CLOUDSTACK_KEY' env variable is considered.
+        As the last option, the value is taken from the ini config file, also see the notes.
+        [Default: (null)]
+        type: str
+
+- api_region
+        Name of the ini section in the `cloustack.ini' file.
+        If not given, the `CLOUDSTACK_REGION' env variable is considered.
+        [Default: cloudstack]
+        type: str
+
+- api_secret
+        Secret key of the CloudStack API.
+        If not set, the `CLOUDSTACK_SECRET' env variable is considered.
+        As the last option, the value is taken from the ini config file, also see the notes.
+        [Default: (null)]
+        type: str
+
+- api_timeout
+        HTTP timeout in seconds.
+        If not given, the `CLOUDSTACK_TIMEOUT' env variable is considered.
+        As the last option, the value is taken from the ini config file, also see the notes.
+        Fallback value is 10 seconds if not specified.
+        [Default: (null)]
+        type: int
+
+- api_url
+        URL of the CloudStack API e.g. https://cloud.example.com/client/api.
+        If not given, the `CLOUDSTACK_ENDPOINT' env variable is considered.
+        As the last option, the value is taken from the ini config file, also see the notes.
+        [Default: (null)]
+        type: str
+
+- domain
+        Domain the resource is related to.
+        [Default: (null)]
+        type: str
+
+- limit
+        Maximum number of the resource.
+        Default is unlimited `-1'.
+        (Aliases: max)[Default: -1]
+        type: int
+
+- project
+        Name of the project the resource is related to.
+        [Default: (null)]
+        type: str
+
+= resource_type
+        Type of the resource.
+        (Aliases: type)(Choices: instance, ip_address, volume, snapshot, template, network, vpc, cpu, memory, primary_storage,
+        secondary_storage)
+        type: str
+
+
+NOTES:
+      * Ansible uses the `cs' library's configuration method if credentials are not provided by the arguments `api_url', `api_key',
+        `api_secret'. Configuration is read from several locations, in the following order. The `CLOUDSTACK_ENDPOINT',
+        `CLOUDSTACK_KEY', `CLOUDSTACK_SECRET' and `CLOUDSTACK_METHOD'. `CLOUDSTACK_TIMEOUT' environment variables. A
+        `CLOUDSTACK_CONFIG' environment variable pointing to an `.ini' file. A `cloudstack.ini' file in the current working
+        directory. A `.cloudstack.ini' file in the users home directory. Optionally multiple credentials and endpoints can be
+        specified using ini sections in `cloudstack.ini'. Use the argument `api_region' to select the section name, default section
+        is `cloudstack'. See https://github.com/exoscale/cs for more information.
+      * A detailed guide about cloudstack modules can be found in the L(CloudStack Cloud
+        Guide,../scenario_guides/guide_cloudstack.html).
+      * This module supports check mode.
+
+
+REQUIREMENTS:  python >= 2.6, cs >= 0.6.10
+
+AUTHOR: René Moser (@resmo)
+        METADATA:
+          status:
+          - stableinterface
+          supported_by: community
+        
+
+EXAMPLES:
+
+- name: Update a resource limit for instances of a domain
+  cs_resourcelimit:
+    type: instance
+    limit: 10
+    domain: customers
+  delegate_to: localhost
+
+- name: Update a resource limit for instances of an account
+  cs_resourcelimit:
+    type: instance
+    limit: 12
+    account: moserre
+    domain: customers
+  delegate_to: localhost
+
+
+RETURN VALUES:
+
+---
+recource_type:
+  description: Type of the resource
+  returned: success
+  type: str
+  sample: instance
+limit:
+  description: Maximum number of the resource.
+  returned: success
+  type: int
+  sample: -1
+domain:
+  description: Domain the resource is related to.
+  returned: success
+  type: str
+  sample: example domain
+account:
+  description: Account the resource is related to.
+  returned: success
+  type: str
+  sample: example account
+project:
+  description: Project the resource is related to.
+  returned: success
+  type: str
+  sample: example project
+

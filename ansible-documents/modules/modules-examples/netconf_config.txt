@@ -1,0 +1,77 @@
+EXAMPLES:
+
+- name: use lookup filter to provide xml configuration
+  netconf_config:
+    content: "{{ lookup('file', './config.xml') }}"
+
+- name: set ntp server in the device
+  netconf_config:
+    content: |
+        <config xmlns:xc="urn:ietf:params:xml:ns:netconf:base:1.0">
+            <system xmlns="urn:ietf:params:xml:ns:yang:ietf-system">
+                <ntp>
+                    <enabled>true</enabled>
+                    <server>
+                        <name>ntp1</name>
+                        <udp><address>127.0.0.1</address></udp>
+                    </server>
+                </ntp>
+            </system>
+        </config>
+
+- name: wipe ntp configuration
+  netconf_config:
+    content: |
+        <config xmlns:xc="urn:ietf:params:xml:ns:netconf:base:1.0">
+            <system xmlns="urn:ietf:params:xml:ns:yang:ietf-system">
+                <ntp>
+                    <enabled>false</enabled>
+                    <server operation="remove">
+                        <name>ntp1</name>
+                    </server>
+                </ntp>
+            </system>
+        </config>
+
+- name: configure interface while providing different private key file path (for connection=netconf)
+  netconf_config:
+    backup: yes
+  register: backup_junos_location
+  vars:
+    ansible_private_key_file: /home/admin/.ssh/newprivatekeyfile
+
+- name: configurable backup path
+  netconf_config:
+    backup: yes
+    backup_options:
+      filename: backup.cfg
+      dir_path: /home/user
+
+
+RETURN VALUES:
+
+server_capabilities:
+    description: list of capabilities of the server
+    returned: success
+    type: list
+    sample: ['urn:ietf:params:netconf:base:1.1','urn:ietf:params:netconf:capability:confirmed-commit:1.0','urn:ietf:params:netconf:capability:candidate:1.0']
+backup_path:
+  description: The full path to the backup file
+  returned: when backup is yes
+  type: str
+  sample: /playbooks/ansible/backup/config.2016-07-16@22:28:34
+diff:
+  description: If --diff option in enabled while running, the before and after configuration change are
+               returned as part of before and after key.
+  returned: when diff is enabled
+  type: dict
+  sample:
+    "after": "<rpc-reply>
+<data>
+<configuration>
+<version>17.3R1.10</version>...<--snip-->"
+    "before": "<rpc-reply>
+<data>
+<configuration>
+ <version>17.3R1.10</version>...<--snip-->"
+

@@ -1,0 +1,240 @@
+> MERAKI_DEVICE    (/usr/lib/python2.7/dist-packages/ansible/modules/network/meraki/meraki_device.py)
+
+        Visibility into devices associated to a Meraki environment.
+
+  * This module is maintained by The Ansible Community
+OPTIONS (= is mandatory):
+
+- address
+        Postal address of device's location.
+        [Default: (null)]
+
+- auth_key
+        Authentication key provided by the dashboard. Required if environmental variable `MERAKI_KEY' is not set.
+        [Default: (null)]
+        type: str
+
+- host
+        Hostname for Meraki dashboard.
+        Only useful for internal Meraki developers.
+        [Default: api.meraki.com]
+        type: str
+
+- hostname
+        Hostname of network device to search for.
+        (Aliases: name)[Default: (null)]
+
+- lat
+        Latitude of device's geographic location.
+        Use negative number for southern hemisphere.
+        (Aliases: latitude)[Default: (null)]
+
+- lldp_cdp_timespan
+        Timespan, in seconds, used to query LLDP and CDP information.
+        Must be less than 1 month.
+        [Default: (null)]
+
+- lng
+        Longitude of device's geographic location.
+        Use negative number for western hemisphere.
+        (Aliases: longitude)[Default: (null)]
+
+- model
+        Model of network device to search for.
+        [Default: (null)]
+
+- move_map_marker
+        Whether or not to set the latitude and longitude of a device based on the new address.
+        Only applies when `lat' and `lng' are not specified.
+        [Default: (null)]
+        type: bool
+
+- net_id
+        ID of a network.
+        [Default: (null)]
+
+- net_name
+        Name of a network.
+        (Aliases: network)[Default: (null)]
+
+- note
+        Informational notes about a device.
+        Limited to 255 characters.
+        [Default: (null)]
+        version_added: 2.8
+
+- org_id
+        ID of organization.
+        [Default: (null)]
+        type: int
+
+- org_name
+        Name of organization.
+        If `clone' is specified, `org_name' is the name of the new organization.
+        (Aliases: organization)[Default: (null)]
+        type: str
+
+- output_level
+        Set amount of debug output during module execution.
+        (Choices: debug, normal)[Default: normal]
+        type: str
+
+- serial
+        Serial number of a device to query.
+        [Default: (null)]
+
+- serial_lldp_cdp
+        Serial number of device to query LLDP/CDP information from.
+        [Default: (null)]
+
+- serial_uplink
+        Serial number of device to query uplink information from.
+        [Default: (null)]
+
+- state
+        Query an organization.
+        (Choices: absent, present, query)[Default: query]
+
+- tags
+        Space delimited list of tags to assign to device.
+        [Default: (null)]
+
+- timeout
+        Time to timeout for HTTP requests.
+        [Default: 30]
+        type: int
+
+- use_https
+        If `no', it will use HTTP. Otherwise it will use HTTPS.
+        Only useful for internal Meraki developers.
+        [Default: True]
+        type: bool
+
+- use_proxy
+        If `no', it will not use a proxy, even if one is defined in an environment variable on the target hosts.
+        [Default: (null)]
+        type: bool
+
+- validate_certs
+        Whether to validate HTTP certificates.
+        [Default: True]
+        type: bool
+
+
+NOTES:
+      * This module does not support claiming of devices or licenses into a Meraki organization.
+      * More information about the Meraki API can be found at https://dashboard.meraki.com/api_docs.
+      * Some of the options are likely only used for developers within Meraki.
+      * More information about the Meraki API can be found at https://dashboard.meraki.com/api_docs.
+      * Some of the options are likely only used for developers within Meraki.
+
+
+AUTHOR: Kevin Breit (@kbreit)
+        METADATA:
+          status:
+          - preview
+          supported_by: community
+        
+
+EXAMPLES:
+
+- name: Query all devices in an organization.
+  meraki_device:
+    auth_key: abc12345
+    org_name: YourOrg
+    state: query
+  delegate_to: localhost
+
+- name: Query all devices in a network.
+  meraki_device:
+    auth_key: abc12345
+    org_name: YourOrg
+    net_name: YourNet
+    state: query
+  delegate_to: localhost
+
+- name: Query a device by serial number.
+  meraki_device:
+    auth_key: abc12345
+    org_name: YourOrg
+    net_name: YourNet
+    serial: ABC-123
+    state: query
+  delegate_to: localhost
+
+- name: Lookup uplink information about a device.
+  meraki_device:
+    auth_key: abc12345
+    org_name: YourOrg
+    net_name: YourNet
+    serial_uplink: ABC-123
+    state: query
+  delegate_to: localhost
+
+- name: Lookup LLDP and CDP information about devices connected to specified device.
+  meraki_device:
+    auth_key: abc12345
+    org_name: YourOrg
+    net_name: YourNet
+    serial_lldp_cdp: ABC-123
+    state: query
+  delegate_to: localhost
+
+- name: Lookup a device by hostname.
+  meraki_device:
+    auth_key: abc12345
+    org_name: YourOrg
+    net_name: YourNet
+    hostname: main-switch
+    state: query
+  delegate_to: localhost
+
+- name: Query all devices of a specific model.
+  meraki_device:
+    auth_key: abc123
+    org_name: YourOrg
+    net_name: YourNet
+    model: MR26
+    state: query
+  delegate_to: localhost
+
+- name: Update information about a device.
+  meraki_device:
+    auth_key: abc123
+    org_name: YourOrg
+    net_name: YourNet
+    state: present
+    serial: '{{serial}}'
+    name: mr26
+    address: 1060 W. Addison St., Chicago, IL
+    lat: 41.948038
+    lng: -87.65568
+    tags: recently-added
+  delegate_to: localhost
+
+- name: Claim a deivce into a network.
+  meraki_device:
+    auth_key: abc123
+    org_name: YourOrg
+    net_name: YourNet
+    serial: ABC-123
+    state: present
+  delegate_to: localhost
+
+- name: Remove a device from a network.
+  meraki_device:
+    auth_key: abc123
+    org_name: YourOrg
+    net_name: YourNet
+    serial: ABC-123
+    state: absent
+  delegate_to: localhost
+
+
+RETURN VALUES:
+
+response:
+    description: Data returned from Meraki dashboard.
+    type: dict
+    returned: info
+

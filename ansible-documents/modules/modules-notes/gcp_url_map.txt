@@ -1,0 +1,124 @@
+> GCP_URL_MAP    (/usr/lib/python2.7/dist-packages/ansible/modules/cloud/google/_gcp_url_map.py)
+
+        Create, Update or Destory a Url_Map. See https://cloud.google.com/compute/docs/load-balancing/http/url-map for an overview. More
+        details on the Url_Map API can be found at https://cloud.google.com/compute/docs/reference/latest/urlMaps#resource.
+
+DEPRECATED: 
+
+	Reason: Updated modules released with increased functionality
+	Will be removed in: Ansible 2.12
+	Alternatives: Use M(gcp_compute_url_map) instead.
+
+
+  * This module is maintained by The Ansible Community
+OPTIONS (= is mandatory):
+
+= default_service
+        Default Backend Service if no host rules match.
+
+
+- host_rules
+        The list of HostRules to use against the URL. Contains a list of hosts and an associated path_matcher.
+        The 'hosts' parameter is a list of host patterns to match. They must be valid hostnames, except * will match any string of
+        ([a-z0-9-.]*). In that case, * must be the first character and must be followed in the pattern by either - or ..
+        The 'path_matcher' parameter is name of the PathMatcher to use to match the path portion of the URL if the hostRule matches the
+        URL's host portion.
+        [Default: (null)]
+
+- path_matchers
+        The list of named PathMatchers to use against the URL. Contains path_rules, which is a list of paths and an associated service. A
+        default_service can also be specified for each path_matcher.
+        The 'name' parameter to which this path_matcher is referred by the host_rule.
+        The 'default_service' parameter is the name of the BackendService resource. This will be used if none of the path_rules defined
+        by this path_matcher is matched by the URL's path portion.
+        The 'path_rules' parameter is a list of dictionaries containing a list of paths and a service to direct traffic to. Each path
+        item must start with / and the only place a * is allowed is at the end following a /. The string fed to the path matcher does not
+        include any text after the first ? or
+        [Default: (null)]
+
+= url_map_name
+        Name of the Url_Map.
+
+
+
+NOTES:
+      * Only supports global Backend Services.
+      * Url_Map tests are not currently supported.
+
+
+REQUIREMENTS:  python >= 2.6, google-api-python-client >= 1.6.2, google-auth >= 0.9.0, google-auth-httplib2 >= 0.0.2
+
+AUTHOR: Tom Melendez (@supertom) <tom@supertom.com>
+        METADATA:
+          status:
+          - deprecated
+          supported_by: community
+        
+
+EXAMPLES:
+
+- name: Create Minimal Url_Map
+  gcp_url_map:
+    service_account_email: "{{ service_account_email }}"
+    credentials_file: "{{ credentials_file }}"
+    project_id: "{{ project_id }}"
+    url_map_name: my-url_map
+    default_service: my-backend-service
+    state: present
+- name: Create UrlMap with pathmatcher
+  gcp_url_map:
+    service_account_email: "{{ service_account_email }}"
+    credentials_file: "{{ credentials_file }}"
+    project_id: "{{ project_id }}"
+    url_map_name: my-url-map-pm
+    default_service: default-backend-service
+    path_matchers:
+    - name: 'path-matcher-one'
+      description: 'path matcher one'
+      default_service: 'bes-pathmatcher-one-default'
+      path_rules:
+      - service: 'my-one-bes'
+        paths:
+        - '/data'
+        - '/aboutus'
+    host_rules:
+      - hosts:
+        - '*.'
+        path_matcher: 'path-matcher-one'
+    state: "present"
+
+
+RETURN VALUES:
+
+host_rules:
+    description: List of HostRules.
+    returned: If specified.
+    type: dict
+    sample: [ { hosts: ["*."], "path_matcher": "my-pm" } ]
+path_matchers:
+    description: The list of named PathMatchers to use against the URL.
+    returned: If specified.
+    type: dict
+    sample: [ { "name": "my-pm", "path_rules": [ { "paths": [ "/data" ] } ], "service": "my-service" } ]
+state:
+    description: state of the Url_Map
+    returned: Always.
+    type: str
+    sample: present
+updated_url_map:
+    description: True if the url_map has been updated. Will not appear on
+                 initial url_map creation.
+    returned: if the url_map has been updated.
+    type: bool
+    sample: true
+url_map_name:
+    description: Name of the Url_Map
+    returned: Always
+    type: str
+    sample: my-url-map
+url_map:
+    description: GCP Url_Map dictionary
+    returned: Always. Refer to GCP documentation for detailed field descriptions.
+    type: dict
+    sample: { "name": "my-url-map", "hostRules": [...], "pathMatchers": [...] }
+

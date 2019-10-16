@@ -1,0 +1,74 @@
+EXAMPLES:
+
+- name: Create PVLANs on a Distributed Switch
+  vmware_dvswitch_pvlans:
+    hostname: '{{ inventory_hostname }}'
+    username: '{{ vcenter_username }}'
+    password: '{{ vcenter_password }}'
+    switch: dvSwitch
+    primary_pvlans:
+      - primary_pvlan_id: 1
+      - primary_pvlan_id: 4
+    secondary_pvlans:
+      - primary_pvlan_id: 1
+        secondary_pvlan_id: 2
+        pvlan_type: isolated
+      - primary_pvlan_id: 1
+        secondary_pvlan_id: 3
+        pvlan_type: community
+      - primary_pvlan_id: 4
+        secondary_pvlan_id: 5
+        pvlan_type: community
+  delegate_to: localhost
+
+- name: Create primary PVLAN and secondary promiscuous PVLAN on a Distributed Switch
+  vmware_dvswitch_pvlans:
+    hostname: '{{ inventory_hostname }}'
+    username: '{{ vcenter_username }}'
+    password: '{{ vcenter_password }}'
+    switch: dvSwitch
+    primary_pvlans:
+      - primary_pvlan_id: 1
+  delegate_to: localhost
+
+- name: Remove all PVLANs from a Distributed Switch
+  vmware_dvswitch_pvlans:
+    hostname: '{{ inventory_hostname }}'
+    username: '{{ vcenter_username }}'
+    password: '{{ vcenter_password }}'
+    switch: dvSwitch
+    primary_pvlans: []
+    secondary_pvlans: []
+  delegate_to: localhost
+
+
+RETURN VALUES:
+
+result:
+    description: information about performed operation
+    returned: always
+    type: str
+    sample: {
+        "changed": true,
+        "dvswitch": "dvSwitch",
+        "private_vlans": [
+            {
+                "primary_pvlan_id": 1,
+                "pvlan_type": "promiscuous",
+                "secondary_pvlan_id": 1
+            },
+            {
+                "primary_pvlan_id": 1,
+                "pvlan_type": "isolated",
+                "secondary_pvlan_id": 2
+            },
+            {
+                "primary_pvlan_id": 1,
+                "pvlan_type": "community",
+                "secondary_pvlan_id": 3
+            }
+        ],
+        "private_vlans_previous": [],
+        "result": "All private VLANs added"
+    }
+

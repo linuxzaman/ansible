@@ -1,0 +1,36 @@
+EXAMPLES:
+
+# Ensure service is present
+- ipa_service:
+    name: http/host01.example.com
+    state: present
+    ipa_host: ipa.example.com
+    ipa_user: admin
+    ipa_pass: topsecret
+
+# Ensure service is absent
+- ipa_service:
+    name: http/host01.example.com
+    state: absent
+    ipa_host: ipa.example.com
+    ipa_user: admin
+    ipa_pass: topsecret
+
+# Changing Managing hosts list
+- ipa_service:
+    name: http/host01.example.com
+    host:
+       - host01.example.com
+       - host02.example.com
+    ipa_host: ipa.example.com
+    ipa_user: admin
+    ipa_pass: topsecret
+
+
+RETURN VALUES:
+
+service:
+  description: Service as returned by IPA API.
+  returned: always
+  type: dict
+

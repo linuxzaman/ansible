@@ -1,0 +1,41 @@
+EXAMPLES:
+
+- name: Deploy stack from a compose file
+    docker_stack:
+      state: present
+      name: mystack
+      compose:
+        - /opt/docker-compose.yml
+
+  - name: Deploy stack from base compose file and override the web service
+    docker_stack:
+      state: present
+      name: mystack
+      compose:
+        - /opt/docker-compose.yml
+        - version: '3'
+          services:
+            web:
+              image: nginx:latest
+              environment:
+                ENVVAR: envvar
+
+  - name: Remove stack
+    docker_stack:
+      name: mystack
+      state: absent
+
+
+RETURN VALUES:
+
+stack_spec_diff:
+    description: |
+        dictionary containing the differences between the 'Spec' field
+        of the stack services before and after applying the new stack
+        definition.
+    sample: >
+        "stack_spec_diff":
+        {'test_stack_test_service': {u'TaskTemplate': {u'ContainerSpec': {delete: [u'Env']}}}}
+    returned: on change
+    type: dict
+

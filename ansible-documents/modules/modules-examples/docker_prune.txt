@@ -1,0 +1,88 @@
+EXAMPLES:
+
+- name: Prune containers older than 24h
+  docker_prune:
+    containers: yes
+    containers_filters:
+      # only consider containers created more than 24 hours ago
+      until: 24h
+
+- name: Prune everything
+  docker_prune:
+    containers: yes
+    images: yes
+    networks: yes
+    volumes: yes
+    builder_cache: yes
+
+- name: Prune everything (including non-dangling images)
+  docker_prune:
+    containers: yes
+    images: yes
+    images_filters:
+      dangling: false
+    networks: yes
+    volumes: yes
+    builder_cache: yes
+
+
+RETURN VALUES:
+
+# containers
+containers:
+    description:
+      - List of IDs of deleted containers.
+    returned: C(containers) is C(true)
+    type: list
+    sample: '[]'
+containers_space_reclaimed:
+    description:
+      - Amount of reclaimed disk space from container pruning in bytes.
+    returned: C(containers) is C(true)
+    type: int
+    sample: '0'
+
+# images
+images:
+    description:
+      - List of IDs of deleted images.
+    returned: C(images) is C(true)
+    type: list
+    sample: '[]'
+images_space_reclaimed:
+    description:
+      - Amount of reclaimed disk space from image pruning in bytes.
+    returned: C(images) is C(true)
+    type: int
+    sample: '0'
+
+# networks
+networks:
+    description:
+      - List of IDs of deleted networks.
+    returned: C(networks) is C(true)
+    type: list
+    sample: '[]'
+
+# volumes
+volumes:
+    description:
+      - List of IDs of deleted volumes.
+    returned: C(volumes) is C(true)
+    type: list
+    sample: '[]'
+volumes_space_reclaimed:
+    description:
+      - Amount of reclaimed disk space from volumes pruning in bytes.
+    returned: C(volumes) is C(true)
+    type: int
+    sample: '0'
+
+# builder_cache
+builder_cache_space_reclaimed:
+    description:
+      - Amount of reclaimed disk space from builder cache pruning in bytes.
+    returned: C(builder_cache) is C(true)
+    type: int
+    sample: '0'
+

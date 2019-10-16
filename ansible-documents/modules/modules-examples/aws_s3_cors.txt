@@ -1,0 +1,58 @@
+EXAMPLES:
+
+# Note: These examples do not set authentication details, see the AWS Guide for details.
+
+# Create a simple cors for s3 bucket
+- aws_s3_cors:
+    name: mys3bucket
+    state: present
+    rules:
+      - allowed_origins:
+          - http://www.example.com/
+        allowed_methods:
+          - GET
+          - POST
+        allowed_headers:
+          - Authorization
+        expose_headers:
+          - x-amz-server-side-encryption
+          - x-amz-request-id
+        max_age_seconds: 30000
+
+# Remove cors for s3 bucket
+- aws_s3_cors:
+    name: mys3bucket
+    state: absent
+
+
+RETURN VALUES:
+
+changed:
+  description: check to see if a change was made to the rules
+  returned: always
+  type: bool
+  sample: true
+name:
+  description: name of bucket
+  returned: always
+  type: str
+  sample: 'bucket-name'
+rules:
+  description: list of current rules
+  returned: always
+  type: list
+  sample: [
+     {
+        "allowed_headers": [
+          "Authorization"
+        ],
+        "allowed_methods": [
+          "GET"
+        ],
+        "allowed_origins": [
+          "*"
+        ],
+        "max_age_seconds": 30000
+      }
+    ]
+

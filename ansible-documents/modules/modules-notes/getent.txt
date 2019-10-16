@@ -1,0 +1,77 @@
+> GETENT    (/usr/lib/python2.7/dist-packages/ansible/modules/system/getent.py)
+
+        Runs getent against one of it's various databases and returns information into the host's facts, in a getent_<database> prefixed
+        variable.
+
+  * This module is maintained by The Ansible Core Team
+OPTIONS (= is mandatory):
+
+= database
+        The name of a getent database supported by the target system (passwd, group, hosts, etc).
+
+
+- fail_key
+        If a supplied key is missing this will make the task fail if `yes'.
+        [Default: yes]
+        type: bool
+
+- key
+        Key from which to return values from the specified database, otherwise the full contents are returned.
+        [Default: ]
+
+- split
+        Character used to split the database values into lists/arrays such as ':' or '  ', otherwise  it will try to pick one depending
+        on the database.
+        [Default: (null)]
+
+
+NOTES:
+      * Not all databases support enumeration, check system documentation for details.
+
+
+AUTHOR: Brian Coca (@bcoca)
+        METADATA:
+          status:
+          - stableinterface
+          supported_by: core
+        
+
+EXAMPLES:
+
+# get root user info
+- getent:
+    database: passwd
+    key: root
+- debug:
+    var: getent_passwd
+
+# get all groups
+- getent:
+    database: group
+    split: ':'
+- debug:
+    var: getent_group
+
+# get all hosts, split by tab
+- getent:
+    database: hosts
+- debug:
+    var: getent_hosts
+
+# get http service info, no error if missing
+- getent:
+    database: services
+    key: http
+    fail_key: False
+- debug:
+    var: getent_services
+
+# get user password hash (requires sudo/root)
+- getent:
+    database: shadow
+    key: www-data
+    split: ':'
+- debug:
+    var: getent_shadow
+
+

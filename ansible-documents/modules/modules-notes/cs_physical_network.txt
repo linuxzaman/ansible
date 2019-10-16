@@ -1,0 +1,257 @@
+> CS_PHYSICAL_NETWORK    (/usr/lib/python2.7/dist-packages/ansible/modules/cloud/cloudstack/cs_physical_network.py)
+
+        Create, update and remove networks. Enabled and disabled Network Service Providers Enables Internal LoadBalancer and
+        VPC/VirtualRouter elements as required
+
+  * This module is maintained by The Ansible Community
+OPTIONS (= is mandatory):
+
+- api_http_method
+        HTTP method used to query the API endpoint.
+        If not given, the `CLOUDSTACK_METHOD' env variable is considered.
+        As the last option, the value is taken from the ini config file, also see the notes.
+        Fallback value is `get' if not specified.
+        (Choices: get, post)[Default: (null)]
+        type: str
+
+- api_key
+        API key of the CloudStack API.
+        If not given, the `CLOUDSTACK_KEY' env variable is considered.
+        As the last option, the value is taken from the ini config file, also see the notes.
+        [Default: (null)]
+        type: str
+
+- api_region
+        Name of the ini section in the `cloustack.ini' file.
+        If not given, the `CLOUDSTACK_REGION' env variable is considered.
+        [Default: cloudstack]
+        type: str
+
+- api_secret
+        Secret key of the CloudStack API.
+        If not set, the `CLOUDSTACK_SECRET' env variable is considered.
+        As the last option, the value is taken from the ini config file, also see the notes.
+        [Default: (null)]
+        type: str
+
+- api_timeout
+        HTTP timeout in seconds.
+        If not given, the `CLOUDSTACK_TIMEOUT' env variable is considered.
+        As the last option, the value is taken from the ini config file, also see the notes.
+        Fallback value is 10 seconds if not specified.
+        [Default: (null)]
+        type: int
+
+- api_url
+        URL of the CloudStack API e.g. https://cloud.example.com/client/api.
+        If not given, the `CLOUDSTACK_ENDPOINT' env variable is considered.
+        As the last option, the value is taken from the ini config file, also see the notes.
+        [Default: (null)]
+        type: str
+
+- broadcast_domain_range
+        broadcast domain range for the physical network[Pod or Zone].
+        (Choices: POD, ZONE)[Default: (null)]
+        type: str
+
+- domain
+        Domain the network is owned by.
+        [Default: (null)]
+        type: str
+
+- isolation_method
+        Isolation method for the physical network.
+        (Choices: VLAN, GRE, L3)[Default: (null)]
+        type: str
+
+= name
+        Name of the physical network.
+        (Aliases: physical_network)
+        type: str
+
+- network_speed
+        The speed for the physical network.
+        (Choices: 1G, 10G)[Default: (null)]
+        type: str
+
+- nsps_disabled
+        List of Network Service Providers to disable.
+        [Default: (null)]
+        type: list
+
+- nsps_enabled
+        List of Network Service Providers to enable.
+        [Default: (null)]
+        type: list
+
+- poll_async
+        Poll async jobs until job has finished.
+        [Default: True]
+        type: bool
+
+- state
+        State of the physical network.
+        (Choices: present, absent, disabled, enabled)[Default: present]
+        type: str
+
+- tags
+        A tag to identify this network.
+        Physical networks support only one tag.
+        To remove an existing tag pass an empty string.
+        (Aliases: tag)[Default: (null)]
+        type: str
+
+- vlan
+        The VLAN/VNI Ranges of the physical network.
+        [Default: (null)]
+        type: str
+
+- zone
+        Name of the zone in which the network belongs.
+        If not set, default zone is used.
+        [Default: (null)]
+        type: str
+
+
+NOTES:
+      * Ansible uses the `cs' library's configuration method if credentials are not provided by the arguments `api_url', `api_key',
+        `api_secret'. Configuration is read from several locations, in the following order. The `CLOUDSTACK_ENDPOINT',
+        `CLOUDSTACK_KEY', `CLOUDSTACK_SECRET' and `CLOUDSTACK_METHOD'. `CLOUDSTACK_TIMEOUT' environment variables. A
+        `CLOUDSTACK_CONFIG' environment variable pointing to an `.ini' file. A `cloudstack.ini' file in the current working
+        directory. A `.cloudstack.ini' file in the users home directory. Optionally multiple credentials and endpoints can be
+        specified using ini sections in `cloudstack.ini'. Use the argument `api_region' to select the section name, default section
+        is `cloudstack'. See https://github.com/exoscale/cs for more information.
+      * A detailed guide about cloudstack modules can be found in the L(CloudStack Cloud
+        Guide,../scenario_guides/guide_cloudstack.html).
+      * This module supports check mode.
+
+
+REQUIREMENTS:  python >= 2.6, cs >= 0.6.10
+
+AUTHOR: Netservers Ltd. (@netservers), Patryk Cichy (@PatTheSilent)
+        METADATA:
+          status:
+          - preview
+          supported_by: community
+        
+
+EXAMPLES:
+
+- name: Ensure a network is present
+  cs_physical_network:
+    name: net01
+    zone: zone01
+    isolation_method: VLAN
+    broadcast_domain_range: ZONE
+  delegate_to: localhost
+
+- name: Set a tag on a network
+  cs_physical_network:
+    name: net01
+    tag: overlay
+  delegate_to: localhost
+
+- name: Remove tag on a network
+  cs_physical_network:
+    name: net01
+    tag: ""
+  delegate_to: localhost
+
+- name: Ensure a network is enabled with specific nsps enabled
+  cs_physical_network:
+    name: net01
+    zone: zone01
+    isolation_method: VLAN
+    vlan: 100-200,300-400
+    broadcast_domain_range: ZONE
+    state: enabled
+    nsps_enabled:
+      - virtualrouter
+      - internallbvm
+      - vpcvirtualrouter
+  delegate_to: localhost
+
+- name: Ensure a network is disabled
+  cs_physical_network:
+    name: net01
+    zone: zone01
+    state: disabled
+  delegate_to: localhost
+
+- name: Ensure a network is enabled
+  cs_physical_network:
+    name: net01
+    zone: zone01
+    state: enabled
+  delegate_to: localhost
+
+- name: Ensure a network is absent
+  cs_physical_network:
+    name: net01
+    zone: zone01
+    state: absent
+  delegate_to: localhost
+
+
+RETURN VALUES:
+
+---
+id:
+  description: UUID of the network.
+  returned: success
+  type: str
+  sample: 3f8f25cd-c498-443f-9058-438cfbcbff50
+name:
+  description: Name of the network.
+  returned: success
+  type: str
+  sample: net01
+state:
+  description: State of the network [Enabled/Disabled].
+  returned: success
+  type: str
+  sample: Enabled
+broadcast_domain_range:
+  description: broadcastdomainrange of the network [POD / ZONE].
+  returned: success
+  type: str
+  sample: ZONE
+isolation_method:
+  description: isolationmethod of the network [VLAN/GRE/L3].
+  returned: success
+  type: str
+  sample: VLAN
+network_speed:
+  description: networkspeed of the network [1G/10G].
+  returned: success
+  type: str
+  sample: 1G
+zone:
+  description: Name of zone the physical network is in.
+  returned: success
+  type: str
+  sample: ch-gva-2
+domain:
+  description: Name of domain the network is in.
+  returned: success
+  type: str
+  sample: domain1
+nsps:
+  description: list of enabled or disabled Network Service Providers
+  type: complex
+  returned: on enabling/disabling of Network Service Providers
+  contains:
+    enabled:
+      description: list of Network Service Providers that were enabled
+      returned: on Network Service Provider enabling
+      type: list
+      sample:
+       - virtualrouter
+    disabled:
+      description: list of Network Service Providers that were disabled
+      returned: on Network Service Provider disabling
+      type: list
+      sample:
+       - internallbvm
+
+

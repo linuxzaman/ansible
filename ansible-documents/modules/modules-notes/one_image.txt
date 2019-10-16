@@ -1,0 +1,147 @@
+> ONE_IMAGE    (/usr/lib/python2.7/dist-packages/ansible/modules/cloud/opennebula/one_image.py)
+
+        Manages OpenNebula images
+
+  * This module is maintained by The Ansible Community
+OPTIONS (= is mandatory):
+
+- api_password
+        Password of the user to login into OpenNebula RPC server. If not set
+        then the value of the `ONE_PASSWORD' environment variable is used.
+        [Default: (null)]
+
+- api_url
+        URL of the OpenNebula RPC server.
+        It is recommended to use HTTPS so that the username/password are not
+        transferred over the network unencrypted.
+        If not set then the value of the `ONE_URL' environment variable is used.
+        [Default: (null)]
+
+- api_username
+        Name of the user to login into the OpenNebula RPC server. If not set
+        then the value of the `ONE_USERNAME' environment variable is used.
+        [Default: (null)]
+
+- enabled
+        Whether the image should be enabled or disabled.
+        [Default: (null)]
+        type: bool
+
+- id
+        A `id' of the image you would like to manage.
+        [Default: (null)]
+
+- name
+        A `name' of the image you would like to manage.
+        [Default: (null)]
+
+- new_name
+        A name that will be assigned to the existing or new image.
+        In the case of cloning, by default `new_name' will take the name of the origin image with the prefix 'Copy of'.
+        [Default: (null)]
+
+- state
+        `present' - state that is used to manage the image
+        `absent' - delete the image
+        `cloned' - clone the image
+        `renamed' - rename the image to the `new_name'
+        (Choices: present, absent, cloned, renamed)[Default: present]
+
+
+REQUIREMENTS:  python-oca
+
+AUTHOR: Milan Ilic (@ilicmilan)
+        METADATA:
+          status:
+          - preview
+          supported_by: community
+        
+
+EXAMPLES:
+
+# Fetch the IMAGE by id
+- one_image:
+    id: 45
+  register: result
+
+# Print the IMAGE properties
+- debug:
+    msg: result
+
+# Rename existing IMAGE
+- one_image:
+    id: 34
+    state: renamed
+    new_name: bar-image
+
+# Disable the IMAGE by id
+- one_image:
+    id: 37
+    enabled: no
+
+# Enable the IMAGE by name
+- one_image:
+    name: bar-image
+    enabled: yes
+
+# Clone the IMAGE by name
+- one_image:
+    name: bar-image
+    state: cloned
+    new_name: bar-image-clone
+  register: result
+
+# Delete the IMAGE by id
+- one_image:
+    id: '{{ result.id }}'
+    state: absent
+
+
+RETURN VALUES:
+
+id:
+    description: image id
+    type: int
+    returned: success
+    sample: 153
+name:
+    description: image name
+    type: str
+    returned: success
+    sample: app1
+group_id:
+    description: image's group id
+    type: int
+    returned: success
+    sample: 1
+group_name:
+    description: image's group name
+    type: str
+    returned: success
+    sample: one-users
+owner_id:
+    description: image's owner id
+    type: int
+    returned: success
+    sample: 143
+owner_name:
+    description: image's owner name
+    type: str
+    returned: success
+    sample: ansible-test
+state:
+    description: state of image instance
+    type: str
+    returned: success
+    sample: READY
+used:
+    description: is image in use
+    type: bool
+    returned: success
+    sample: true
+running_vms:
+    description: count of running vms that use this image
+    type: int
+    returned: success
+    sample: 7
+

@@ -1,0 +1,75 @@
+EXAMPLES:
+
+- name: configure interface
+  cnos_interface:
+      name: Ethernet1/33
+      description: test-interface
+      speed: 100
+      duplex: half
+      mtu: 999
+
+- name: remove interface
+  cnos_interface:
+    name: loopback3
+    state: absent
+
+- name: make interface up
+  cnos_interface:
+    name: Ethernet1/33
+    enabled: True
+
+- name: make interface down
+  cnos_interface:
+    name: Ethernet1/33
+    enabled: False
+
+- name: Check intent arguments
+  cnos_interface:
+    name: Ethernet1/33
+    state: up
+    tx_rate: ge(0)
+    rx_rate: le(0)
+
+- name: Check neighbors intent arguments
+  cnos_interface:
+    name: Ethernet1/33
+    neighbors:
+    - port: eth0
+      host: netdev
+
+- name: Config + intent
+  cnos_interface:
+    name: Ethernet1/33
+    enabled: False
+    state: down
+
+- name: Add interface using aggregate
+  cnos_interface:
+    aggregate:
+    - { name: Ethernet1/33, mtu: 256, description: test-interface-1 }
+    - { name: Ethernet1/44, mtu: 516, description: test-interface-2 }
+    duplex: full
+    speed: 100
+    state: present
+
+- name: Delete interface using aggregate
+  cnos_interface:
+    aggregate:
+    - name: loopback3
+    - name: loopback6
+    state: absent
+
+
+RETURN VALUES:
+
+commands:
+  description: The list of configuration mode commands to send to the device.
+  returned: always, except for the platforms that use Netconf transport to
+            manage the device.
+  type: list
+  sample:
+  - interface Ethernet1/33
+  - description test-interface
+  - duplex half
+  - mtu 512
+

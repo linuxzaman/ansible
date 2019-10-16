@@ -1,0 +1,119 @@
+> SKYDIVE_NODE    (/usr/lib/python2.7/dist-packages/ansible/modules/network/skydive/skydive_node.py)
+
+        This module handles adding node to the Skydive topology.
+
+  * This module is maintained by The Ansible Network Team
+OPTIONS (= is mandatory):
+
+- host
+        To define host for the node.
+        [Default: (null)]
+
+- metadata
+        To define metadata for the node.
+        [Default: (null)]
+
+= name
+        To define name for the node.
+
+
+= node_type
+        To define type for the node.
+
+
+- provider
+        A dict object containing connection details.
+        [Default: (null)]
+        suboptions:
+          endpoint:
+            description:
+            - Specifies the hostname/address along with the port as `localhost:8082'for connecting
+              to the remote instance of SKYDIVE client over the REST API.
+            required: true
+          insecure:
+            default: false
+            description:
+            - Ignore SSL certification verification.
+            type: bool
+          password:
+            description:
+            - Specifies the password to use to authenticate the connection to the remote instance
+              of SKYDIVE client.
+          ssl:
+            default: false
+            description:
+            - Specifies the ssl parameter that decides if the connection type shall be http
+              or https.
+            type: bool
+          user:
+            description:
+            - Configures the username to use to authenticate the connection to the remote
+              instance of SKYDIVE client.
+        
+
+- seed
+        used to generate the UUID of the node
+        [Default: ]
+
+- state
+        State of the Skydive Node. If value is `present' new node will be created else if it is `absent' it will be deleted.
+        (Choices: present, update, absent)[Default: present]
+
+
+NOTES:
+      * This module must be run locally, which can be achieved by specifying `connection: local'.
+
+
+REQUIREMENTS:  skydive-client
+
+AUTHOR: Sumit Jaiswal (@sjaiswal)
+        METADATA:
+          status:
+          - preview
+          supported_by: network
+        
+
+EXAMPLES:
+
+- name: create tor node
+  skydive_node:
+    name: TOR
+    node_type: fabric
+    seed: TOR1
+    metadata:
+      Model: Cisco 5300
+    state: present
+    provider:
+      endpoint: localhost:8082
+      username: admin
+      password: admin
+
+- name: update tor node
+  skydive_node:
+    name: TOR
+    node_type: host
+    seed: TOR1
+    metadata:
+      Model: Cisco 3400
+    state: update
+    provider:
+      endpoint: localhost:8082
+      username: admin
+      password: admin
+
+- name: Delete the tor node
+  skydive_node:
+    name: TOR
+    node_type: host
+    seed: TOR1
+    metadata:
+      Model: Cisco 3400
+    state: absent
+    provider:
+      endpoint: localhost:8082
+      username: admin
+      password: admin
+
+
+RETURN VALUES:
+ # 

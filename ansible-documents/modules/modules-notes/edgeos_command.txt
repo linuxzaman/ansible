@@ -1,0 +1,79 @@
+> EDGEOS_COMMAND    (/usr/lib/python2.7/dist-packages/ansible/modules/network/edgeos/edgeos_command.py)
+
+        This command module allows running one or more commands on a remote device running EdgeOS, such as the Ubiquiti EdgeRouter. This
+        module does not support running commands in configuration mode. Certain `show' commands in EdgeOS produce many lines of output
+        and use a custom pager that can cause this module to hang.  If the value of the environment variable
+        `ANSIBLE_EDGEOS_TERMINAL_LENGTH' is not set, the default number of 10000 is used. This is a network module and requires
+        `connection: network_cli' in order to work properly. For more information please see the L(Network
+        Guide,../network/getting_started/index.html).
+
+  * This module is maintained by The Ansible Community
+OPTIONS (= is mandatory):
+
+= commands
+        The commands or ordered set of commands that should be run against the remote device. The output of the command is returned to
+        the playbook. If the `wait_for' argument is provided, the module is not returned until the condition is met or the number of
+        retries is exceeded.
+
+
+- interval
+        The number of seconds to wait between `retries' of the command.
+        [Default: 1]
+
+- match
+        Used in conjunction with `wait_for' to create match policy. If set to `all', then all conditions in `wait_for' must be met. If
+        set to `any', then only one condition must match.
+        (Choices: any, all)[Default: all]
+
+- retries
+        Number of times a command should be tried before it is considered failed. The command is run on the target device and evaluated
+        against the `wait_for' conditionals.
+        [Default: 10]
+
+- wait_for
+        Causes the task to wait for a specific condition to be met before moving forward. If the condition is not met before the
+        specified number of retries is exceeded, the task will fail.
+        [Default: (null)]
+
+
+NOTES:
+      * Tested against EdgeOS 1.9.7
+      * Running `show system boot-messages all' will cause the module to hang since EdgeOS is using a custom pager setting to
+        display the output of that command.
+
+
+AUTHOR: Chad Norgan (@beardymcbeards), Sam Doran (@samdoran)
+        METADATA:
+          status:
+          - preview
+          supported_by: community
+        
+
+EXAMPLES:
+
+tasks:
+  - name: Reboot the device
+    edgeos_command:
+      commands: reboot now
+
+  - name: Show the configuration for eth0 and eth1
+    edgeos_command:
+      commands: show interfaces ethernet {{ item }}
+    loop:
+      - eth0
+      - eth1
+
+
+RETURN VALUES:
+
+stdout:
+  description: The set of responses from the commands
+  returned: always apart from low level errors (such as action plugin)
+  type: list
+  sample: ['...', '...']
+stdout_lines:
+  description: The value of stdout split into a list
+  returned: always
+  type: list
+  sample: [['...', '...'], ['...'], ['...']]
+

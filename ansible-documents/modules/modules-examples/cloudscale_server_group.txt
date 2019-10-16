@@ -1,0 +1,50 @@
+EXAMPLES:
+
+---
+- name: Ensure server group exists
+  cloudscale_server_group:
+    name: my-name
+    type: anti-affinity
+    api_token: xxxxxx
+
+- name: Ensure a server group is absent
+  cloudscale_server_group:
+    name: my-name
+    state: absent
+    api_token: xxxxxx
+
+
+RETURN VALUES:
+
+---
+href:
+  description: API URL to get details about this server group
+  returned: if available
+  type: str
+  sample: https://api.cloudscale.ch/v1/server-group/cfde831a-4e87-4a75-960f-89b0148aa2cc
+uuid:
+  description: The unique identifier for this server
+  returned: always
+  type: str
+  sample: cfde831a-4e87-4a75-960f-89b0148aa2cc
+name:
+  description: The display name of the server group
+  returned: always
+  type: str
+  sample: load balancers
+type:
+  description: The type the server group
+  returned: if available
+  type: str
+  sample: anti-affinity
+servers:
+  description: A list of servers that are part of the server group.
+  returned: if available
+  type: list
+  sample: []
+state:
+  description: State of the server group.
+  returned: always
+  type: str
+  sample: present
+

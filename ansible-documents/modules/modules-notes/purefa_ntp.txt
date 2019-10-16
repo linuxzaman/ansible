@@ -1,0 +1,69 @@
+> PUREFA_NTP    (/usr/lib/python2.7/dist-packages/ansible/modules/storage/purestorage/purefa_ntp.py)
+
+        Set or erase NTP configuration for Pure Storage FlashArrays.
+
+  * This module is maintained by The Ansible Community
+OPTIONS (= is mandatory):
+
+= api_token
+        FlashArray API token for admin privileged user.
+
+        type: str
+
+= fa_url
+        FlashArray management IPv4 address or Hostname.
+
+        type: str
+
+- ntp_servers
+        A list of up to 4 alternate NTP servers. These may include IPv4, IPv6 or FQDNs. Invalid IP addresses will cause the module to
+        fail. No validation is performed for FQDNs.
+        If more than 4 servers are provided, only the first 4 unique nameservers will be used.
+        if no servers are given a default of `0.pool.ntp.org' will be used.
+        [Default: (null)]
+        type: list
+
+- state
+        Create or delete NTP servers configuration
+        (Choices: absent, present)[Default: present]
+        type: str
+
+
+NOTES:
+      * This module requires the `purestorage' Python library
+      * You must set `PUREFA_URL' and `PUREFA_API' environment variables if `fa_url' and `api_token' arguments are not passed to
+        the module directly
+
+
+REQUIREMENTS:  python >= 2.7, purestorage
+
+AUTHOR: Pure Storage Ansible Team (@sdodsley) <pure-ansible-team@purestorage.com>
+        METADATA:
+          status:
+          - preview
+          supported_by: community
+        
+
+EXAMPLES:
+
+- name: Delete exisitng NTP server entries
+  purefa_ntp:
+    state: absent
+    fa_url: 10.10.10.2
+    api_token: e31060a7-21fc-e277-6240-25983c6c4592
+
+- name: Set array NTP servers
+  purefa_ntp:
+    state: present
+    ntp_servers:
+      - "0.pool.ntp.org"
+      - "1.pool.ntp.org"
+      - "2.pool.ntp.org"
+      - "3.pool.ntp.org"
+    fa_url: 10.10.10.2
+    api_token: e31060a7-21fc-e277-6240-25983c6c4592
+
+
+RETURN VALUES:
+
+

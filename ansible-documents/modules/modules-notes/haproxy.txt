@@ -1,0 +1,186 @@
+> HAPROXY    (/usr/lib/python2.7/dist-packages/ansible/modules/net_tools/haproxy.py)
+
+        Enable, disable, drain and set weights for HAProxy backend servers using socket commands.
+
+  * This module is maintained by The Ansible Community
+OPTIONS (= is mandatory):
+
+- backend
+        Name of the HAProxy backend pool.
+        If this parameter is unset, it will be auto-detected.
+        [Default: (null)]
+        type: str
+
+- drain
+        Wait until the server has no active connections or until the timeout determined by wait_interval and wait_retries is reached.
+        Continue only after the status changes to 'MAINT'.
+        This overrides the shutdown_sessions option.
+        [Default: (null)]
+        type: bool
+        version_added: 2.4
+
+- fail_on_not_found
+        Fail whenever trying to enable/disable a backend host that does not exist
+        [Default: False]
+        type: bool
+        version_added: 2.2
+
+= host
+        Name of the backend host to change.
+
+        type: str
+
+- shutdown_sessions
+        When disabling a server, immediately terminate all the sessions attached to the specified server.
+        This can be used to terminate long-running sessions after a server is put into maintenance mode. Overridden by the drain option.
+        [Default: False]
+        type: bool
+
+- socket
+        Path to the HAProxy socket file.
+        [Default: /var/run/haproxy.sock]
+        type: path
+
+= state
+        Desired state of the provided backend host.
+        Note that `drain' state was added in version 2.4.
+        It is supported only by HAProxy version 1.5 or later,
+        When used on versions < 1.5, it will be ignored.
+        (Choices: disabled, drain, enabled)
+        type: str
+
+- wait
+        Wait until the server reports a status of 'UP' when `state=enabled', status of 'MAINT' when `state=disabled' or status of 'DRAIN'
+        when `state=drain'
+        [Default: False]
+        type: bool
+        version_added: 2.0
+
+- wait_interval
+        Number of seconds to wait between retries.
+        [Default: 5]
+        type: int
+        version_added: 2.0
+
+- wait_retries
+        Number of times to check for status after changing the state.
+        [Default: 25]
+        type: int
+        version_added: 2.0
+
+- weight
+        The value passed in argument.
+        If the value ends with the `%` sign, then the new weight will be relative to the initially configured weight.
+        Relative weights are only permitted between 0 and 100% and absolute weights are permitted between 0 and 256.
+        [Default: (null)]
+        type: str
+
+
+NOTES:
+      * Enable, disable and drain commands are restricted and can only be issued on sockets configured for level 'admin'. For
+        example, you can add the line 'stats socket /var/run/haproxy.sock level admin' to the general section of haproxy.cfg. See
+        http://haproxy.1wt.eu/download/1.5/doc/configuration.txt.
+      * Depends on netcat (nc) being available; you need to install the appropriate package for your operating system before this
+        module can be used.
+
+
+AUTHOR: Ravi Bhure (@ravibhure)
+        METADATA:
+          status:
+          - preview
+          supported_by: community
+        
+
+EXAMPLES:
+
+- name: Disable server in 'www' backend pool
+  haproxy:
+    state: disabled
+    host: '{{ inventory_hostname }}'
+    backend: www
+
+- name: Disable server without backend pool name (apply to all available backend pool)
+  haproxy:
+    state: disabled
+    host: '{{ inventory_hostname }}'
+
+- name: Disable server, provide socket file
+  haproxy:
+    state: disabled
+    host: '{{ inventory_hostname }}'
+    socket: /var/run/haproxy.sock
+    backend: www
+
+- name: Disable server, provide socket file, wait until status reports in maintenance
+  haproxy:
+    state: disabled
+    host: '{{ inventory_hostname }}'
+    socket: /var/run/haproxy.sock
+    backend: www
+    wait: yes
+
+# Place server in drain mode, providing a socket file.  Then check the server's
+# status every minute to see if it changes to maintenance mode, continuing if it
+# does in an hour and failing otherwise.
+- haproxy:
+    state: disabled
+    host: '{{ inventory_hostname }}'
+    socket: /var/run/haproxy.sock
+    backend: www
+    wait: yes
+    drain: yes
+    wait_interval: 1
+    wait_retries: 60
+
+- name: Disable backend server in 'www' backend pool and drop open sessions to it
+  haproxy:
+    state: disabled
+    host: '{{ inventory_hostname }}'
+    backend: www
+    socket: /var/run/haproxy.sock
+    shutdown_sessions: yes
+
+- name: Disable server without backend pool name (apply to all available backend pool) but fail when the backend host is not found
+  haproxy:
+    state: disabled
+    host: '{{ inventory_hostname }}'
+    fail_on_not_found: yes
+
+- name: Enable server in 'www' backend pool
+  haproxy:
+    state: enabled
+    host: '{{ inventory_hostname }}'
+    backend: www
+
+- name: Enable server in 'www' backend pool wait until healthy
+  haproxy:
+    state: enabled
+    host: '{{ inventory_hostname }}'
+    backend: www
+    wait: yes
+
+- name: Enable server in 'www' backend pool wait until healthy. Retry 10 times with intervals of 5 seconds to retrieve the health
+  haproxy:
+    state: enabled
+    host: '{{ inventory_hostname }}'
+    backend: www
+    wait: yes
+    wait_retries: 10
+    wait_interval: 5
+
+- name: Enable server in 'www' backend pool with change server(s) weight
+  haproxy:
+    state: enabled
+    host: '{{ inventory_hostname }}'
+    socket: /var/run/haproxy.sock
+    weight: 10
+    backend: www
+
+- name: Set the server in 'www' backend pool to drain mode
+  haproxy:
+    state: drain
+    host: '{{ inventory_hostname }}'
+    socket: /var/run/haproxy.sock
+    backend: www
+
+

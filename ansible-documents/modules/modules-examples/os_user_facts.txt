@@ -1,0 +1,70 @@
+EXAMPLES:
+
+# Gather facts about previously created users
+- os_user_facts:
+    cloud: awesomecloud
+- debug:
+    var: openstack_users
+
+# Gather facts about a previously created user by name
+- os_user_facts:
+    cloud: awesomecloud
+    name: demouser
+- debug:
+    var: openstack_users
+
+# Gather facts about a previously created user in a specific domain
+- os_user_facts:
+    cloud: awesomecloud
+    name: demouser
+    domain: admindomain
+- debug:
+    var: openstack_users
+
+# Gather facts about a previously created user in a specific domain with filter
+- os_user_facts:
+    cloud: awesomecloud
+    name: demouser
+    domain: admindomain
+    filters:
+      enabled: False
+- debug:
+    var: openstack_users
+
+
+RETURN VALUES:
+
+openstack_users:
+    description: has all the OpenStack facts about users
+    returned: always, but can be null
+    type: complex
+    contains:
+        id:
+            description: Unique UUID.
+            returned: success
+            type: str
+        name:
+            description: Name given to the user.
+            returned: success
+            type: str
+        enabled:
+            description: Flag to indicate if the user is enabled
+            returned: success
+            type: bool
+        domain_id:
+            description: Domain ID containing the user
+            returned: success
+            type: str
+        default_project_id:
+            description: Default project ID of the user
+            returned: success
+            type: str
+        email:
+            description: Email of the user
+            returned: success
+            type: str
+        username:
+            description: Username of the user
+            returned: success
+            type: str
+

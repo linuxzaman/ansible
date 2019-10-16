@@ -1,0 +1,75 @@
+EXAMPLES:
+
+# Gather facts about all images
+- one_image_facts:
+  register: result
+
+# Print all images facts
+- debug:
+    msg: result
+
+# Gather facts about an image using ID
+- one_image_facts:
+    ids:
+      - 123
+
+# Gather facts about an image using the name
+- one_image_facts:
+    name: 'foo-image'
+  register: foo_image
+
+# Gather facts about all IMAGEs whose name matches regex 'app-image-.*'
+- one_image_facts:
+    name: '~app-image-.*'
+  register: app_images
+
+# Gather facts about all IMAGEs whose name matches regex 'foo-image-.*' ignoring cases
+- one_image_facts:
+    name: '~*foo-image-.*'
+  register: foo_images
+
+
+RETURN VALUES:
+
+images:
+    description: A list of images info
+    type: complex
+    returned: success
+    contains:
+        id:
+            description: image id
+            type: int
+            sample: 153
+        name:
+            description: image name
+            type: str
+            sample: app1
+        group_id:
+            description: image's group id
+            type: int
+            sample: 1
+        group_name:
+            description: image's group name
+            type: str
+            sample: one-users
+        owner_id:
+            description: image's owner id
+            type: int
+            sample: 143
+        owner_name:
+            description: image's owner name
+            type: str
+            sample: ansible-test
+        state:
+            description: state of image instance
+            type: str
+            sample: READY
+        used:
+            description: is image in use
+            type: bool
+            sample: true
+        running_vms:
+            description: count of running vms that use this image
+            type: int
+            sample: 7
+

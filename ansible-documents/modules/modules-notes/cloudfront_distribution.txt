@@ -1,0 +1,1038 @@
+> CLOUDFRONT_DISTRIBUTION    (/usr/lib/python2.7/dist-packages/ansible/modules/cloud/amazon/cloudfront_distribution.py)
+
+        Allows for easy creation, updating and deletion of CloudFront distributions.
+
+  * This module is maintained by The Ansible Community
+OPTIONS (= is mandatory):
+
+- alias
+        The name of an alias (CNAME) that is used in a distribution. This is used to effectively reference a distribution by its alias as
+        an alias can only be used by one distribution per AWS account. This variable avoids having to provide the `distribution_id' as
+        well as the `e_tag', or `caller_reference' of an existing distribution.
+        [Default: (null)]
+
+- aliases
+        A `list[]' of domain name aliases (CNAMEs) as strings to be used for the distribution. Each alias must be unique across all
+        distribution for the AWS account.
+        [Default: (null)]
+
+- aws_access_key
+        AWS access key. If not set then the value of the AWS_ACCESS_KEY_ID, AWS_ACCESS_KEY or EC2_ACCESS_KEY environment variable is
+        used.
+        (Aliases: ec2_access_key, access_key)[Default: (null)]
+        type: str
+
+- aws_secret_key
+        AWS secret key. If not set then the value of the AWS_SECRET_ACCESS_KEY, AWS_SECRET_KEY, or EC2_SECRET_KEY environment variable is
+        used.
+        (Aliases: ec2_secret_key, secret_key)[Default: (null)]
+        type: str
+
+- cache_behaviors
+        A config element that is a `list[]' of complex cache behavior objects to be specified for the distribution. The order of the list
+        is preserved across runs unless `purge_cache_behavior' is enabled. Each cache behavior comprises the attributes `path_pattern'
+        `target_origin_id' `forwarded_values' `query_string' `cookies' `forward' `whitelisted_names' `headers[]'
+        `query_string_cache_keys[]' `trusted_signers' `enabled' `items[]' `viewer_protocol_policy' `min_ttl' `allowed_methods' `items[]'
+        `cached_methods[]' `smooth_streaming' `default_ttl' `max_ttl' `compress' `lambda_function_associations[]'
+        `field_level_encryption_id'
+        [Default: (null)]
+
+- caller_reference
+        A unique identifier for creating and updating cloudfront distributions. Each caller reference must be unique across all
+        distributions. e.g. a caller reference used in a web distribution cannot be reused in a streaming distribution. This parameter
+        can be used instead of `distribution_id' to reference an existing distribution. If not specified, this defaults to a datetime
+        stamp of the format 'YYYY-MM-DDTHH:MM:SS.ffffff'.
+        [Default: (null)]
+
+- comment
+        A comment that describes the cloudfront distribution. If not specified, it defaults to a generic message that it has been created
+        with Ansible, and a datetime stamp.
+        [Default: (null)]
+
+- custom_error_responses
+        A config element that is a `list[]' of complex custom error responses to be specified for the distribution. This attribute
+        configures custom http error messages returned to the user. Each custom error response object comprises the attributes
+        `error_code' `response_page_path' `response_code' `error_caching_min_ttl'
+        [Default: (null)]
+
+- debug_botocore_endpoint_logs
+        Use a botocore.endpoint logger to parse the unique (rather than total) "resource:action" API calls made during a task, outputing
+        the set to the resource_actions key in the task results. Use the aws_resource_action callback to output to total list made during
+        a playbook. The ANSIBLE_DEBUG_BOTOCORE_LOGS environment variable may also be used.
+        [Default: no]
+        type: bool
+        version_added: 2.8
+
+- default_cache_behavior
+        A config element that is a complex object specifying the default cache behavior of the distribution. If not specified, the
+        `target_origin_id' is defined as the `target_origin_id' of the first valid `cache_behavior' in `cache_behaviors' with defaults.
+        The default cache behavior comprises the attributes `target_origin_id' `forwarded_values' `query_string' `cookies' `forward'
+        `whitelisted_names' `headers[]' `query_string_cache_keys[]' `trusted_signers' `enabled' `items[]' `viewer_protocol_policy'
+        `min_ttl' `allowed_methods' `items[]' `cached_methods[]' `smooth_streaming' `default_ttl' `max_ttl' `compress'
+        `lambda_function_associations[]' `lambda_function_arn' `event_type' `field_level_encryption_id'
+        [Default: (null)]
+
+- default_origin_domain_name
+        The domain name to use for an origin if no `origins' have been specified. Should only be used on a first run of generating a
+        distribution and not on subsequent runs. Should not be used in conjunction with `distribution_id', `caller_reference' or `alias'.
+        [Default: (null)]
+
+- default_origin_path
+        The default origin path to specify for an origin if no `origins' have been specified. Defaults to empty if not specified.
+        [Default: (null)]
+
+- default_root_object
+        A config element that specifies the path to request when the user requests the origin. e.g. if specified as 'index.html', this
+        maps to www.example.com/index.html when www.example.com is called by the user. This prevents the entire distribution origin from
+        being exposed at the root.
+        [Default: (null)]
+
+- distribution_id
+        The id of the cloudfront distribution. This parameter can be exchanged with `alias' or `caller_reference' and is used in
+        conjunction with `e_tag'.
+        [Default: (null)]
+
+- e_tag
+        A unique identifier of a modified or existing distribution. Used in conjunction with `distribution_id'. Is determined
+        automatically if not specified.
+        [Default: (null)]
+
+- ec2_url
+        Url to use to connect to EC2 or your Eucalyptus cloud (by default the module will use EC2 endpoints). Ignored for modules where
+        region is required. Must be specified for all other modules if region is not used. If not set then the value of the EC2_URL
+        environment variable, if any, is used.
+        [Default: (null)]
+        type: str
+
+- enabled
+        A boolean value that specifies whether the distribution is enabled or disabled.
+        [Default: yes]
+        type: bool
+
+- http_version
+        The version of the http protocol to use for the distribution.
+        (Choices: http1.1, http2)[Default: aws defaults this to 'http2']
+
+- ipv6_enabled
+        Determines whether IPv6 support is enabled or not.
+        [Default: no]
+        type: bool
+
+- logging
+        A config element that is a complex object that defines logging for the distribution. The logging object comprises the attributes
+        `enabled' `include_cookies' `bucket' `prefix'
+        [Default: (null)]
+
+- origins
+        A config element that is a `list[]' of complex origin objects to be specified for the distribution. Used for creating and
+        updating distributions. Each origin item comprises the attributes `id' `domain_name' (defaults to default_origin_domain_name if
+        not specified) `origin_path' (defaults to default_origin_path if not specified) `custom_headers[]' `header_name' `header_value'
+        `s3_origin_access_identity_enabled' `custom_origin_config' `http_port' `https_port' `origin_protocol_policy'
+        `origin_ssl_protocols[]' `origin_read_timeout' `origin_keepalive_timeout'
+        [Default: (null)]
+
+- price_class
+        A string that specifies the pricing class of the distribution. As per https://aws.amazon.com/cloudfront/pricing/
+        `price_class=PriceClass_100' consists of the areas United States Canada Europe `price_class=PriceClass_200' consists of the areas
+        United States Canada Europe Hong Kong, Philippines, S. Korea, Singapore & Taiwan Japan India `price_class=PriceClass_All'
+        consists of the areas United States Canada Europe Hong Kong, Philippines, S. Korea, Singapore & Taiwan Japan India South America
+        Australia
+        (Choices: PriceClass_100, PriceClass_200, PriceClass_All)[Default: aws defaults this to 'PriceClass_All']
+
+- profile
+        Uses a boto profile. Only works with boto >= 2.24.0.
+        [Default: (null)]
+        type: str
+        version_added: 1.6
+
+- purge_aliases
+        Specifies whether existing aliases will be removed before adding new aliases. When `purge_aliases=yes', existing aliases are
+        removed and `aliases' are added.
+        [Default: no]
+        type: bool
+
+- purge_cache_behaviors
+        Whether to remove any cache behaviors that aren't listed in `cache_behaviors'. This switch also allows the reordering of
+        cache_behaviors.
+        [Default: False]
+        type: bool
+
+- purge_custom_error_responses
+        Whether to remove any custom error responses that aren't listed in `custom_error_responses'
+        [Default: False]
+        type: bool
+
+- purge_origins
+        Whether to remove any origins that aren't listed in `origins'
+        [Default: False]
+        type: bool
+
+- purge_tags
+        Specifies whether existing tags will be removed before adding new tags. When `purge_tags=yes', existing tags are removed and
+        `tags' are added, if specified. If no tags are specified, it removes all existing tags for the distribution. When
+        `purge_tags=no', existing tags are kept and `tags' are added, if specified.
+        [Default: no]
+        type: bool
+
+- region
+        The AWS region to use. If not specified then the value of the AWS_REGION or EC2_REGION environment variable, if any, is used. See
+        http://docs.aws.amazon.com/general/latest/gr/rande.html#ec2_region
+        (Aliases: aws_region, ec2_region)[Default: (null)]
+        type: str
+
+- restrictions
+        A config element that is a complex object that describes how a distribution should restrict it's content. The restriction object
+        comprises the following attributes `geo_restriction' `restriction_type' `items[]'
+        [Default: (null)]
+
+- security_token
+        AWS STS security token. If not set then the value of the AWS_SECURITY_TOKEN or EC2_SECURITY_TOKEN environment variable is used.
+        (Aliases: access_token)[Default: (null)]
+        type: str
+        version_added: 1.6
+
+- state
+        The desired state of the distribution present - creates a new distribution or updates an existing distribution. absent - deletes
+        an existing distribution.
+        (Choices: present, absent)[Default: present]
+
+- tags
+        Should be input as a dict() of key-value pairs. Note that numeric keys or values must be wrapped in quotes. e.g. "Priority:" '1'
+        [Default: (null)]
+
+- validate_certs
+        When set to "no", SSL certificates will not be validated for boto versions >= 2.6.0.
+        [Default: True]
+        type: bool
+        version_added: 1.5
+
+- viewer_certificate
+        A config element that is a complex object that specifies the encryption details of the distribution. Comprises the following
+        attributes `cloudfront_default_certificate' `iam_certificate_id' `acm_certificate_arn' `ssl_support_method'
+        `minimum_protocol_version' `certificate' `certificate_source'
+        [Default: (null)]
+
+- wait
+        Specifies whether the module waits until the distribution has completed processing the creation or update.
+        [Default: no]
+        type: bool
+
+- wait_timeout
+        Specifies the duration in seconds to wait for a timeout of a cloudfront create or update. Defaults to 1800 seconds (30 minutes).
+        [Default: 1800]
+
+- web_acl_id
+        The id of a Web Application Firewall (WAF) Access Control List (ACL).
+        [Default: (null)]
+
+
+NOTES:
+      * If parameters are not set within the module, the following environment variables can be used in decreasing order of
+        precedence `AWS_URL' or `EC2_URL', `AWS_ACCESS_KEY_ID' or `AWS_ACCESS_KEY' or `EC2_ACCESS_KEY', `AWS_SECRET_ACCESS_KEY' or
+        `AWS_SECRET_KEY' or `EC2_SECRET_KEY', `AWS_SECURITY_TOKEN' or `EC2_SECURITY_TOKEN', `AWS_REGION' or `EC2_REGION'
+      * Ansible uses the boto configuration file (typically ~/.boto) if no credentials are provided. See
+        https://boto.readthedocs.io/en/latest/boto_config_tut.html
+      * `AWS_REGION' or `EC2_REGION' can be typically be used to specify the AWS region, when required, but this can also be
+        configured in the boto config file
+
+
+REQUIREMENTS:  boto, boto3 >= 1.0.0, python >= 2.6
+
+AUTHOR: Willem van Ketwich (@wilvk), Will Thames (@willthames)
+        METADATA:
+          status:
+          - preview
+          supported_by: community
+        
+
+EXAMPLES:
+
+# create a basic distribution with defaults and tags
+
+- cloudfront_distribution:
+    state: present
+    default_origin_domain_name: www.my-cloudfront-origin.com
+    tags:
+      Name: example distribution
+      Project: example project
+      Priority: '1'
+
+# update a distribution comment by distribution_id
+
+- cloudfront_distribution:
+    state: present
+    distribution_id: E1RP5A2MJ8073O
+    comment: modified by ansible cloudfront.py
+
+# update a distribution comment by caller_reference
+
+- cloudfront_distribution:
+    state: present
+    caller_reference: my cloudfront distribution 001
+    comment: modified by ansible cloudfront.py
+
+# update a distribution's aliases and comment using the distribution_id as a reference
+
+- cloudfront_distribution:
+    state: present
+    distribution_id: E1RP5A2MJ8073O
+    comment: modified by cloudfront.py again
+    aliases: [ 'www.my-distribution-source.com', 'zzz.aaa.io' ]
+
+# update a distribution's aliases and comment using an alias as a reference
+
+- cloudfront_distribution:
+    state: present
+    caller_reference: my test distribution
+    comment: modified by cloudfront.py again
+    aliases:
+      - www.my-distribution-source.com
+      - zzz.aaa.io
+
+# update a distribution's comment and aliases and tags and remove existing tags
+
+- cloudfront_distribution:
+    state: present
+    distribution_id: E15BU8SDCGSG57
+    comment: modified by cloudfront.py again
+    aliases:
+      - tested.com
+    tags:
+      Project: distribution 1.2
+    purge_tags: yes
+
+# create a distribution with an origin, logging and default cache behavior
+
+- cloudfront_distribution:
+    state: present
+    caller_reference: unique test distribution id
+    origins:
+        - id: 'my test origin-000111'
+          domain_name: www.example.com
+          origin_path: /production
+          custom_headers:
+            - header_name: MyCustomHeaderName
+              header_value: MyCustomHeaderValue
+    default_cache_behavior:
+      target_origin_id: 'my test origin-000111'
+      forwarded_values:
+        query_string: true
+        cookies:
+          forward: all
+        headers:
+         - '*'
+      viewer_protocol_policy: allow-all
+      smooth_streaming: true
+      compress: true
+      allowed_methods:
+        items:
+          - GET
+          - HEAD
+        cached_methods:
+          - GET
+          - HEAD
+    logging:
+      enabled: true
+      include_cookies: false
+      bucket: mylogbucket.s3.amazonaws.com
+      prefix: myprefix/
+    enabled: false
+    comment: this is a cloudfront distribution with logging
+
+# delete a distribution
+
+- cloudfront_distribution:
+    state: absent
+    caller_reference: replaceable distribution
+
+
+RETURN VALUES:
+
+active_trusted_signers:
+  description: Key pair IDs that CloudFront is aware of for each trusted signer
+  returned: always
+  type: complex
+  contains:
+    enabled:
+      description: Whether trusted signers are in use
+      returned: always
+      type: bool
+      sample: false
+    quantity:
+      description: Number of trusted signers
+      returned: always
+      type: int
+      sample: 1
+    items:
+      description: Number of trusted signers
+      returned: when there are trusted signers
+      type: list
+      sample:
+      - key_pair_id
+aliases:
+  description: Aliases that refer to the distribution
+  returned: always
+  type: complex
+  contains:
+    items:
+      description: List of aliases
+      returned: always
+      type: list
+      sample:
+      - test.example.com
+    quantity:
+      description: Number of aliases
+      returned: always
+      type: int
+      sample: 1
+arn:
+  description: Amazon Resource Name of the distribution
+  returned: always
+  type: str
+  sample: arn:aws:cloudfront::123456789012:distribution/E1234ABCDEFGHI
+cache_behaviors:
+  description: Cloudfront cache behaviors
+  returned: always
+  type: complex
+  contains:
+    items:
+      description: List of cache behaviors
+      returned: always
+      type: complex
+      contains:
+        allowed_methods:
+          description: Methods allowed by the cache behavior
+          returned: always
+          type: complex
+          contains:
+            cached_methods:
+              description: Methods cached by the cache behavior
+              returned: always
+              type: complex
+              contains:
+                items:
+                  description: List of cached methods
+                  returned: always
+                  type: list
+                  sample:
+                  - HEAD
+                  - GET
+                quantity:
+                  description: Count of cached methods
+                  returned: always
+                  type: int
+                  sample: 2
+            items:
+              description: List of methods allowed by the cache behavior
+              returned: always
+              type: list
+              sample:
+              - HEAD
+              - GET
+            quantity:
+              description: Count of methods allowed by the cache behavior
+              returned: always
+              type: int
+              sample: 2
+        compress:
+          description: Whether compression is turned on for the cache behavior
+          returned: always
+          type: bool
+          sample: false
+        default_ttl:
+          description: Default Time to Live of the cache behavior
+          returned: always
+          type: int
+          sample: 86400
+        forwarded_values:
+          description: Values forwarded to the origin for this cache behavior
+          returned: always
+          type: complex
+          contains:
+            cookies:
+              description: Cookies to forward to the origin
+              returned: always
+              type: complex
+              contains:
+                forward:
+                  description: Which cookies to forward to the origin for this cache behavior
+                  returned: always
+                  type: str
+                  sample: none
+                whitelisted_names:
+                  description: The names of the cookies to forward to the origin for this cache behavior
+                  returned: when I(forward) is C(whitelist)
+                  type: complex
+                  contains:
+                    quantity:
+                      description: Count of cookies to forward
+                      returned: always
+                      type: int
+                      sample: 1
+                    items:
+                      description: List of cookies to forward
+                      returned: when list is not empty
+                      type: list
+                      sample: my_cookie
+            headers:
+              description: Which headers are used to vary on cache retrievals
+              returned: always
+              type: complex
+              contains:
+                quantity:
+                  description: Count of headers to vary on
+                  returned: always
+                  type: int
+                  sample: 1
+                items:
+                  description: List of headers to vary on
+                  returned: when list is not empty
+                  type: list
+                  sample:
+                  - Host
+            query_string:
+              description: Whether the query string is used in cache lookups
+              returned: always
+              type: bool
+              sample: false
+            query_string_cache_keys:
+              description: Which query string keys to use in cache lookups
+              returned: always
+              type: complex
+              contains:
+                quantity:
+                  description: Count of query string cache keys to use in cache lookups
+                  returned: always
+                  type: int
+                  sample: 1
+                items:
+                  description: List of query string cache keys to use in cache lookups
+                  returned: when list is not empty
+                  type: list
+                  sample:
+        lambda_function_associations:
+          description: Lambda function associations for a cache behavior
+          returned: always
+          type: complex
+          contains:
+            quantity:
+              description: Count of lambda function associations
+              returned: always
+              type: int
+              sample: 1
+            items:
+              description: List of lambda function associations
+              returned: when list is not empty
+              type: list
+              sample:
+              - lambda_function_arn: arn:aws:lambda:123456789012:us-east-1/lambda/lambda-function
+                event_type: viewer-response
+        max_ttl:
+          description: Maximum Time to Live
+          returned: always
+          type: int
+          sample: 31536000
+        min_ttl:
+          description: Minimum Time to Live
+          returned: always
+          type: int
+          sample: 0
+        path_pattern:
+          description: Path pattern that determines this cache behavior
+          returned: always
+          type: str
+          sample: /path/to/files/*
+        smooth_streaming:
+          description: Whether smooth streaming is enabled
+          returned: always
+          type: bool
+          sample: false
+        target_origin_id:
+          description: Id of origin reference by this cache behavior
+          returned: always
+          type: str
+          sample: origin_abcd
+        trusted_signers:
+          description: Trusted signers
+          returned: always
+          type: complex
+          contains:
+            enabled:
+              description: Whether trusted signers are enabled for this cache behavior
+              returned: always
+              type: bool
+              sample: false
+            quantity:
+              description: Count of trusted signers
+              returned: always
+              type: int
+              sample: 1
+        viewer_protocol_policy:
+          description: Policy of how to handle http/https
+          returned: always
+          type: str
+          sample: redirect-to-https
+    quantity:
+      description: Count of cache behaviors
+      returned: always
+      type: int
+      sample: 1
+
+caller_reference:
+  description: Idempotency reference given when creating cloudfront distribution
+  returned: always
+  type: str
+  sample: '1484796016700'
+comment:
+  description: Any comments you want to include about the distribution
+  returned: always
+  type: str
+  sample: 'my first cloudfront distribution'
+custom_error_responses:
+  description: Custom error responses to use for error handling
+  returned: always
+  type: complex
+  contains:
+    items:
+      description: List of custom error responses
+      returned: always
+      type: complex
+      contains:
+        error_caching_min_ttl:
+          description: Minimum time to cache this error response
+          returned: always
+          type: int
+          sample: 300
+        error_code:
+          description: Origin response code that triggers this error response
+          returned: always
+          type: int
+          sample: 500
+        response_code:
+          description: Response code to return to the requester
+          returned: always
+          type: str
+          sample: '500'
+        response_page_path:
+          description: Path that contains the error page to display
+          returned: always
+          type: str
+          sample: /errors/5xx.html
+    quantity:
+      description: Count of custom error response items
+      returned: always
+      type: int
+      sample: 1
+default_cache_behavior:
+  description: Default cache behavior
+  returned: always
+  type: complex
+  contains:
+    allowed_methods:
+      description: Methods allowed by the cache behavior
+      returned: always
+      type: complex
+      contains:
+        cached_methods:
+          description: Methods cached by the cache behavior
+          returned: always
+          type: complex
+          contains:
+            items:
+              description: List of cached methods
+              returned: always
+              type: list
+              sample:
+              - HEAD
+              - GET
+            quantity:
+              description: Count of cached methods
+              returned: always
+              type: int
+              sample: 2
+        items:
+          description: List of methods allowed by the cache behavior
+          returned: always
+          type: list
+          sample:
+          - HEAD
+          - GET
+        quantity:
+          description: Count of methods allowed by the cache behavior
+          returned: always
+          type: int
+          sample: 2
+    compress:
+      description: Whether compression is turned on for the cache behavior
+      returned: always
+      type: bool
+      sample: false
+    default_ttl:
+      description: Default Time to Live of the cache behavior
+      returned: always
+      type: int
+      sample: 86400
+    forwarded_values:
+      description: Values forwarded to the origin for this cache behavior
+      returned: always
+      type: complex
+      contains:
+        cookies:
+          description: Cookies to forward to the origin
+          returned: always
+          type: complex
+          contains:
+            forward:
+              description: Which cookies to forward to the origin for this cache behavior
+              returned: always
+              type: str
+              sample: none
+            whitelisted_names:
+              description: The names of the cookies to forward to the origin for this cache behavior
+              returned: when I(forward) is C(whitelist)
+              type: complex
+              contains:
+                quantity:
+                  description: Count of cookies to forward
+                  returned: always
+                  type: int
+                  sample: 1
+                items:
+                  description: List of cookies to forward
+                  returned: when list is not empty
+                  type: list
+                  sample: my_cookie
+        headers:
+          description: Which headers are used to vary on cache retrievals
+          returned: always
+          type: complex
+          contains:
+            quantity:
+              description: Count of headers to vary on
+              returned: always
+              type: int
+              sample: 1
+            items:
+              description: List of headers to vary on
+              returned: when list is not empty
+              type: list
+              sample:
+              - Host
+        query_string:
+          description: Whether the query string is used in cache lookups
+          returned: always
+          type: bool
+          sample: false
+        query_string_cache_keys:
+          description: Which query string keys to use in cache lookups
+          returned: always
+          type: complex
+          contains:
+            quantity:
+              description: Count of query string cache keys to use in cache lookups
+              returned: always
+              type: int
+              sample: 1
+            items:
+              description: List of query string cache keys to use in cache lookups
+              returned: when list is not empty
+              type: list
+              sample:
+    lambda_function_associations:
+      description: Lambda function associations for a cache behavior
+      returned: always
+      type: complex
+      contains:
+        quantity:
+          description: Count of lambda function associations
+          returned: always
+          type: int
+          sample: 1
+        items:
+          description: List of lambda function associations
+          returned: when list is not empty
+          type: list
+          sample:
+          - lambda_function_arn: arn:aws:lambda:123456789012:us-east-1/lambda/lambda-function
+            event_type: viewer-response
+    max_ttl:
+      description: Maximum Time to Live
+      returned: always
+      type: int
+      sample: 31536000
+    min_ttl:
+      description: Minimum Time to Live
+      returned: always
+      type: int
+      sample: 0
+    path_pattern:
+      description: Path pattern that determines this cache behavior
+      returned: always
+      type: str
+      sample: /path/to/files/*
+    smooth_streaming:
+      description: Whether smooth streaming is enabled
+      returned: always
+      type: bool
+      sample: false
+    target_origin_id:
+      description: Id of origin reference by this cache behavior
+      returned: always
+      type: str
+      sample: origin_abcd
+    trusted_signers:
+      description: Trusted signers
+      returned: always
+      type: complex
+      contains:
+        enabled:
+          description: Whether trusted signers are enabled for this cache behavior
+          returned: always
+          type: bool
+          sample: false
+        quantity:
+          description: Count of trusted signers
+          returned: always
+          type: int
+          sample: 1
+    viewer_protocol_policy:
+      description: Policy of how to handle http/https
+      returned: always
+      type: str
+      sample: redirect-to-https
+default_root_object:
+  description: The object that you want CloudFront to request from your origin (for example, index.html)
+    when a viewer requests the root URL for your distribution
+  returned: always
+  type: str
+  sample: ''
+diff:
+  description: Difference between previous configuration and new configuration
+  returned: always
+  type: dict
+  sample: {}
+domain_name:
+  description: Domain name of cloudfront distribution
+  returned: always
+  type: str
+  sample: d1vz8pzgurxosf.cloudfront.net
+enabled:
+  description: Whether the cloudfront distribution is enabled or not
+  returned: always
+  type: bool
+  sample: true
+http_version:
+  description: Version of HTTP supported by the distribution
+  returned: always
+  type: str
+  sample: http2
+id:
+  description: Cloudfront distribution ID
+  returned: always
+  type: str
+  sample: E123456ABCDEFG
+in_progress_invalidation_batches:
+  description: The number of invalidation batches currently in progress
+  returned: always
+  type: int
+  sample: 0
+is_ipv6_enabled:
+  description: Whether IPv6 is enabled
+  returned: always
+  type: bool
+  sample: true
+last_modified_time:
+  description: Date and time distribution was last modified
+  returned: always
+  type: str
+  sample: '2017-10-13T01:51:12.656000+00:00'
+logging:
+  description: Logging information
+  returned: always
+  type: complex
+  contains:
+    bucket:
+      description: S3 bucket logging destination
+      returned: always
+      type: str
+      sample: logs-example-com.s3.amazonaws.com
+    enabled:
+      description: Whether logging is enabled
+      returned: always
+      type: bool
+      sample: true
+    include_cookies:
+      description: Whether to log cookies
+      returned: always
+      type: bool
+      sample: false
+    prefix:
+      description: Prefix added to logging object names
+      returned: always
+      type: str
+      sample: cloudfront/test
+origins:
+  description: Origins in the cloudfront distribution
+  returned: always
+  type: complex
+  contains:
+    items:
+      description: List of origins
+      returned: always
+      type: complex
+      contains:
+        custom_headers:
+          description: Custom headers passed to the origin
+          returned: always
+          type: complex
+          contains:
+            quantity:
+              description: Count of headers
+              returned: always
+              type: int
+              sample: 1
+        custom_origin_config:
+          description: Configuration of the origin
+          returned: always
+          type: complex
+          contains:
+            http_port:
+              description: Port on which HTTP is listening
+              returned: always
+              type: int
+              sample: 80
+            https_port:
+              description: Port on which HTTPS is listening
+              returned: always
+              type: int
+              sample: 443
+            origin_keepalive_timeout:
+              description: Keep-alive timeout
+              returned: always
+              type: int
+              sample: 5
+            origin_protocol_policy:
+              description: Policy of which protocols are supported
+              returned: always
+              type: str
+              sample: https-only
+            origin_read_timeout:
+              description: Timeout for reads to the origin
+              returned: always
+              type: int
+              sample: 30
+            origin_ssl_protocols:
+              description: SSL protocols allowed by the origin
+              returned: always
+              type: complex
+              contains:
+                items:
+                  description: List of SSL protocols
+                  returned: always
+                  type: list
+                  sample:
+                  - TLSv1
+                  - TLSv1.1
+                  - TLSv1.2
+                quantity:
+                  description: Count of SSL protocols
+                  returned: always
+                  type: int
+                  sample: 3
+        domain_name:
+          description: Domain name of the origin
+          returned: always
+          type: str
+          sample: test-origin.example.com
+        id:
+          description: ID of the origin
+          returned: always
+          type: str
+          sample: test-origin.example.com
+        origin_path:
+          description: Subdirectory to prefix the request from the S3 or HTTP origin
+          returned: always
+          type: str
+          sample: ''
+    quantity:
+      description: Count of origins
+      returned: always
+      type: int
+      sample: 1
+price_class:
+  description: Price class of cloudfront distribution
+  returned: always
+  type: str
+  sample: PriceClass_All
+restrictions:
+  description: Restrictions in use by Cloudfront
+  returned: always
+  type: complex
+  contains:
+    geo_restriction:
+      description: Controls the countries in which your content is distributed.
+      returned: always
+      type: complex
+      contains:
+        quantity:
+          description: Count of restrictions
+          returned: always
+          type: int
+          sample: 1
+        items:
+          description: List of country codes allowed or disallowed
+          returned: always
+          type: list
+          sample: xy
+        restriction_type:
+          description: Type of restriction
+          returned: always
+          type: str
+          sample: blacklist
+status:
+  description: Status of the cloudfront distribution
+  returned: always
+  type: str
+  sample: InProgress
+tags:
+  description: Distribution tags
+  returned: always
+  type: dict
+  sample:
+    Hello: World
+viewer_certificate:
+  description: Certificate used by cloudfront distribution
+  returned: always
+  type: complex
+  contains:
+    acm_certificate_arn:
+      description: ARN of ACM certificate
+      returned: when certificate comes from ACM
+      type: str
+      sample: arn:aws:acm:us-east-1:123456789012:certificate/abcd1234-1234-1234-abcd-123456abcdef
+    certificate:
+      description: Reference to certificate
+      returned: always
+      type: str
+      sample: arn:aws:acm:us-east-1:123456789012:certificate/abcd1234-1234-1234-abcd-123456abcdef
+    certificate_source:
+      description: Where certificate comes from
+      returned: always
+      type: str
+      sample: acm
+    minimum_protocol_version:
+      description: Minimum SSL/TLS protocol supported by this distribution
+      returned: always
+      type: str
+      sample: TLSv1
+    ssl_support_method:
+      description: Support for pre-SNI browsers or not
+      returned: always
+      type: str
+      sample: sni-only
+web_acl_id:
+  description: ID of Web Access Control List (from WAF service)
+  returned: always
+  type: str
+  sample: abcd1234-1234-abcd-abcd-abcd12345678
+

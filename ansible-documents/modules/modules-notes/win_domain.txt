@@ -1,0 +1,119 @@
+> WIN_DOMAIN    (/usr/lib/python2.7/dist-packages/ansible/modules/windows/win_domain.py)
+
+        Ensure that the domain named by `dns_domain_name' exists and is reachable. If the domain is not reachable, the domain is created
+        in a new forest on the target Windows Server 2012R2+ host. This module may require subsequent use of the [win_reboot] action if
+        changes are made.
+
+  * This module is maintained by The Ansible Core Team
+OPTIONS (= is mandatory):
+
+- create_dns_delegation
+        Whether to create a DNS delegation that references the new DNS server that you install along with the domain controller.
+        Valid for Active Directory-integrated DNS only.
+        The default is computed automatically based on the environment.
+        [Default: (null)]
+        type: bool
+        version_added: 2.8
+
+- database_path
+        The path to a directory on a fixed disk of the Windows host where the domain database will be created.
+        If not set then the default path is `%SYSTEMROOT%\NTDS'.
+        [Default: (null)]
+        type: path
+        version_added: 2.5
+
+= dns_domain_name
+        The DNS name of the domain which should exist and be reachable or reside on the target Windows host.
+
+        type: str
+
+- domain_mode
+        Specifies the domain functional level of the first domain in the creation of a new forest.
+        The domain functional level cannot be lower than the forest functional level, but it can be higher.
+        The default is automatically computed and set.
+        (Choices: Win2003, Win2008, Win2008R2, Win2012, Win2012R2, WinThreshold)[Default: (null)]
+        type: str
+        version_added: 2.8
+
+- domain_netbios_name
+        The NetBIOS name for the root domain in the new forest.
+        For NetBIOS names to be valid for use with this parameter they must be single label names of 15 characters or less, if not it
+        will fail.
+        If this parameter is not set, then the default is automatically computed from the value of the `domain_name' parameter.
+        [Default: (null)]
+        type: str
+        version_added: 2.6
+
+- forest_mode
+        Specifies the forest functional level for the new forest.
+        The default forest functional level in Windows Server is typically the same as the version you are running.
+        (Choices: Win2003, Win2008, Win2008R2, Win2012, Win2012R2, WinThreshold)[Default: (null)]
+        type: str
+        version_added: 2.8
+
+= safe_mode_password
+        Safe mode password for the domain controller.
+
+        type: str
+
+- sysvol_path
+        The path to a directory on a fixed disk of the Windows host where the Sysvol file will be created.
+        If not set then the default path is `%SYSTEMROOT%\SYSVOL'.
+        [Default: (null)]
+        type: path
+        version_added: 2.5
+
+
+SEE ALSO:
+      * Module win_domain_controller
+           The official documentation on the win_domain_controller module.
+           https://docs.ansible.com/ansible/latest/modules/win_domain_controller_module.html
+      * Module win_domain_computer
+           The official documentation on the win_domain_computer module.
+           https://docs.ansible.com/ansible/latest/modules/win_domain_computer_module.html
+      * Module win_domain_group
+           The official documentation on the win_domain_group module.
+           https://docs.ansible.com/ansible/latest/modules/win_domain_group_module.html
+      * Module win_domain_membership
+           The official documentation on the win_domain_membership module.
+           https://docs.ansible.com/ansible/latest/modules/win_domain_membership_module.html
+      * Module win_domain_user
+           The official documentation on the win_domain_user module.
+           https://docs.ansible.com/ansible/latest/modules/win_domain_user_module.html
+
+
+AUTHOR: Matt Davis (@nitzmahone)
+        METADATA:
+          status:
+          - preview
+          supported_by: core
+        
+
+EXAMPLES:
+
+- name: Create new domain in a new forest on the target host
+  win_domain:
+    dns_domain_name: ansible.vagrant
+    safe_mode_password: password123!
+
+- name: Create new Windows domain in a new forest with specific parameters
+  win_domain:
+    create_dns_delegation: no
+    database_path: C:\Windows\NTDS
+    dns_domain_name: ansible.vagrant
+    domain_mode: Win2012R2
+    domain_netbios_name: ANSIBLE
+    forest_mode: Win2012R2
+    safe_mode_password: password123!
+    sysvol_path: C:\Windows\SYSVOL
+  register: domain_install
+
+
+RETURN VALUES:
+
+reboot_required:
+    description: True if changes were made that require a reboot.
+    returned: always
+    type: bool
+    sample: true
+

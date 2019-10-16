@@ -1,0 +1,206 @@
+> FORTIOS_IPS_CUSTOM    (/usr/lib/python2.7/dist-packages/ansible/modules/network/fortios/fortios_ips_custom.py)
+
+        This module is able to configure a FortiGate or FortiOS by allowing the user to configure ips feature and custom category.
+        Examples includes all options and need to be adjusted to datasources before usage. Tested with FOS v6.0.2
+
+  * This module is maintained by The Ansible Community
+OPTIONS (= is mandatory):
+
+= host
+        FortiOS or FortiGate ip adress.
+
+
+- https
+        Indicates if the requests towards FortiGate must use HTTPS protocol
+        [Default: True]
+        type: bool
+
+- ips_custom
+        Configure IPS custom signature.
+        [Default: None]
+        suboptions:
+          action:
+            choices:
+            - pass
+            - block
+            description:
+            - Default action (pass or block) for this signature.
+          application:
+            description:
+            - Applications to be protected. Blank for all applications.
+          comment:
+            description:
+            - Comment.
+          location:
+            description:
+            - Protect client or server traffic.
+          log:
+            choices:
+            - disable
+            - enable
+            description:
+            - Enable/disable logging.
+          log-packet:
+            choices:
+            - disable
+            - enable
+            description:
+            - Enable/disable packet logging.
+          os:
+            description:
+            - Operating system(s) that the signature protects. Blank for all operating systems.
+          protocol:
+            description:
+            - Protocol(s) that the signature scans. Blank for all protocols.
+          rule-id:
+            description:
+            - Signature ID.
+          severity:
+            description:
+            - Relative severity of the signature, from info to critical. Log messages generated
+              by the signature include the severity.
+          sig-name:
+            description:
+            - Signature name.
+          signature:
+            description:
+            - Custom signature enclosed in single quotes.
+          state:
+            choices:
+            - present
+            - absent
+            description:
+            - Indicates whether to create or remove the object
+          status:
+            choices:
+            - disable
+            - enable
+            description:
+            - Enable/disable this signature.
+          tag:
+            description:
+            - Signature tag.
+            required: true
+        
+
+- password
+        FortiOS or FortiGate password.
+        [Default: ]
+
+= username
+        FortiOS or FortiGate username.
+
+
+- vdom
+        Virtual domain, among those defined previously. A vdom is a virtual instance of the FortiGate that can be configured and used as
+        a different unit.
+        [Default: root]
+
+
+NOTES:
+      * Requires fortiosapi library developed by Fortinet
+      * Run as a local_action in your playbook
+
+
+REQUIREMENTS:  fortiosapi>=0.9.8
+
+AUTHOR: Miguel Angel Munoz (@mamunozgonzalez), Nicolas Thomas (@thomnico)
+        METADATA:
+          status:
+          - preview
+          supported_by: community
+        
+
+EXAMPLES:
+
+- hosts: localhost
+  vars:
+   host: "192.168.122.40"
+   username: "admin"
+   password: ""
+   vdom: "root"
+  tasks:
+  - name: Configure IPS custom signature.
+    fortios_ips_custom:
+      host:  "{{ host }}"
+      username: "{{ username }}"
+      password: "{{ password }}"
+      vdom:  "{{ vdom }}"
+      https: "False"
+      ips_custom:
+        state: "present"
+        action: "pass"
+        application: "<your_own_value>"
+        comment: "Comment."
+        location: "<your_own_value>"
+        log: "disable"
+        log-packet: "disable"
+        os: "<your_own_value>"
+        protocol: "<your_own_value>"
+        rule-id: "11"
+        severity: "<your_own_value>"
+        sig-name: "<your_own_value>"
+        signature: "<your_own_value>"
+        status: "disable"
+        tag: "<your_own_value>"
+
+
+RETURN VALUES:
+
+build:
+  description: Build number of the fortigate image
+  returned: always
+  type: str
+  sample: '1547'
+http_method:
+  description: Last method used to provision the content into FortiGate
+  returned: always
+  type: str
+  sample: 'PUT'
+http_status:
+  description: Last result given by FortiGate on last operation applied
+  returned: always
+  type: str
+  sample: "200"
+mkey:
+  description: Master key (id) used in the last call to FortiGate
+  returned: success
+  type: str
+  sample: "id"
+name:
+  description: Name of the table used to fulfill the request
+  returned: always
+  type: str
+  sample: "urlfilter"
+path:
+  description: Path of the table used to fulfill the request
+  returned: always
+  type: str
+  sample: "webfilter"
+revision:
+  description: Internal revision number
+  returned: always
+  type: str
+  sample: "17.0.2.10658"
+serial:
+  description: Serial number of the unit
+  returned: always
+  type: str
+  sample: "FGVMEVYYQT3AB5352"
+status:
+  description: Indication of the operation's result
+  returned: always
+  type: str
+  sample: "success"
+vdom:
+  description: Virtual domain used
+  returned: always
+  type: str
+  sample: "root"
+version:
+  description: Version of the FortiGate
+  returned: always
+  type: str
+  sample: "v5.6.3"
+
+

@@ -1,0 +1,37 @@
+EXAMPLES:
+
+- name:  Add network to bgp
+  pn_vrouter_bgp_network:
+    pn_cliswitch: "sw01"
+    state: "present"
+    pn_vrouter_name: "foo-vrouter"
+    pn_network: '10.10.10.10'
+    pn_netmask: '31'
+
+- name:  Remove network from bgp
+  pn_vrouter_bgp_network:
+    pn_cliswitch: "sw01"
+    state: "absent"
+    pn_vrouter_name: "foo-vrouter"
+    pn_network: '10.10.10.10'
+
+
+RETURN VALUES:
+
+command:
+  description: the CLI command run on the target node.
+  returned: always
+  type: str
+stdout:
+  description: set of responses from the vrouter-bgp-network command.
+  returned: always
+  type: list
+stderr:
+  description: set of error responses from the vrouter-bgp-network command.
+  returned: on error
+  type: list
+changed:
+  description: indicates whether the CLI caused changes on the target.
+  returned: always
+  type: bool
+

@@ -1,0 +1,40 @@
+EXAMPLES:
+
+- name: admin service functionality
+  pn_admin_service:
+    pn_cliswitch: "sw01"
+    state: "update"
+    pn__if: "mgmt"
+    pn_web: False
+    pn_icmp: True
+
+- name: admin service functionality
+  pn_admin_service:
+    pn_cliswitch: "sw01"
+    state: "update"
+    pn_web: False
+    pn__if: "mgmt"
+    pn_snmp: True
+    pn_net_api: True
+    pn_ssh: True
+
+
+RETURN VALUES:
+
+command:
+  description: the CLI command run on the target node.
+  returned: always
+  type: str
+stdout:
+  description: set of responses from the admin-service command.
+  returned: always
+  type: list
+stderr:
+  description: set of error responses from the admin-service command.
+  returned: on error
+  type: list
+changed:
+  description: indicates whether the CLI caused changes on the target.
+  returned: always
+  type: bool
+

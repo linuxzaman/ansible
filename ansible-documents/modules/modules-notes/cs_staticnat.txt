@@ -1,0 +1,196 @@
+> CS_STATICNAT    (/usr/lib/python2.7/dist-packages/ansible/modules/cloud/cloudstack/cs_staticnat.py)
+
+        Create, update and remove static NATs.
+
+  * This module is maintained by The Ansible Community
+OPTIONS (= is mandatory):
+
+- account
+        Account the static NAT is related to.
+        [Default: (null)]
+        type: str
+
+- api_http_method
+        HTTP method used to query the API endpoint.
+        If not given, the `CLOUDSTACK_METHOD' env variable is considered.
+        As the last option, the value is taken from the ini config file, also see the notes.
+        Fallback value is `get' if not specified.
+        (Choices: get, post)[Default: (null)]
+        type: str
+
+- api_key
+        API key of the CloudStack API.
+        If not given, the `CLOUDSTACK_KEY' env variable is considered.
+        As the last option, the value is taken from the ini config file, also see the notes.
+        [Default: (null)]
+        type: str
+
+- api_region
+        Name of the ini section in the `cloustack.ini' file.
+        If not given, the `CLOUDSTACK_REGION' env variable is considered.
+        [Default: cloudstack]
+        type: str
+
+- api_secret
+        Secret key of the CloudStack API.
+        If not set, the `CLOUDSTACK_SECRET' env variable is considered.
+        As the last option, the value is taken from the ini config file, also see the notes.
+        [Default: (null)]
+        type: str
+
+- api_timeout
+        HTTP timeout in seconds.
+        If not given, the `CLOUDSTACK_TIMEOUT' env variable is considered.
+        As the last option, the value is taken from the ini config file, also see the notes.
+        Fallback value is 10 seconds if not specified.
+        [Default: (null)]
+        type: int
+
+- api_url
+        URL of the CloudStack API e.g. https://cloud.example.com/client/api.
+        If not given, the `CLOUDSTACK_ENDPOINT' env variable is considered.
+        As the last option, the value is taken from the ini config file, also see the notes.
+        [Default: (null)]
+        type: str
+
+- domain
+        Domain the static NAT is related to.
+        [Default: (null)]
+        type: str
+
+= ip_address
+        Public IP address the static NAT is assigned to.
+
+        type: str
+
+- network
+        Network the IP address is related to.
+        [Default: (null)]
+        type: str
+        version_added: 2.2
+
+- poll_async
+        Poll async jobs until job has finished.
+        [Default: True]
+        type: bool
+
+- project
+        Name of the project the static NAT is related to.
+        [Default: (null)]
+        type: str
+
+- state
+        State of the static NAT.
+        (Choices: present, absent)[Default: present]
+        type: str
+
+- vm
+        Name of virtual machine which we make the static NAT for.
+        Required if `state=present'.
+        [Default: (null)]
+        type: str
+
+- vm_guest_ip
+        VM guest NIC secondary IP address for the static NAT.
+        [Default: (null)]
+        type: str
+
+- vpc
+        VPC the network related to.
+        [Default: (null)]
+        type: str
+        version_added: 2.3
+
+- zone
+        Name of the zone in which the virtual machine is in.
+        If not set, default zone is used.
+        [Default: (null)]
+        type: str
+
+
+NOTES:
+      * Ansible uses the `cs' library's configuration method if credentials are not provided by the arguments `api_url', `api_key',
+        `api_secret'. Configuration is read from several locations, in the following order. The `CLOUDSTACK_ENDPOINT',
+        `CLOUDSTACK_KEY', `CLOUDSTACK_SECRET' and `CLOUDSTACK_METHOD'. `CLOUDSTACK_TIMEOUT' environment variables. A
+        `CLOUDSTACK_CONFIG' environment variable pointing to an `.ini' file. A `cloudstack.ini' file in the current working
+        directory. A `.cloudstack.ini' file in the users home directory. Optionally multiple credentials and endpoints can be
+        specified using ini sections in `cloudstack.ini'. Use the argument `api_region' to select the section name, default section
+        is `cloudstack'. See https://github.com/exoscale/cs for more information.
+      * A detailed guide about cloudstack modules can be found in the L(CloudStack Cloud
+        Guide,../scenario_guides/guide_cloudstack.html).
+      * This module supports check mode.
+
+
+REQUIREMENTS:  python >= 2.6, cs >= 0.6.10
+
+AUTHOR: René Moser (@resmo)
+        METADATA:
+          status:
+          - stableinterface
+          supported_by: community
+        
+
+EXAMPLES:
+
+- name: Create a static NAT for IP 1.2.3.4 to web01
+  cs_staticnat:
+    ip_address: 1.2.3.4
+    vm: web01
+  delegate_to: localhost
+
+- name: Remove a static NAT
+  cs_staticnat:
+    ip_address: 1.2.3.4
+    state: absent
+  delegate_to: localhost
+
+
+RETURN VALUES:
+
+---
+id:
+  description: UUID of the ip_address.
+  returned: success
+  type: str
+  sample: a6f7a5fc-43f8-11e5-a151-feff819cdc9f
+ip_address:
+  description: Public IP address.
+  returned: success
+  type: str
+  sample: 1.2.3.4
+vm_name:
+  description: Name of the virtual machine.
+  returned: success
+  type: str
+  sample: web-01
+vm_display_name:
+  description: Display name of the virtual machine.
+  returned: success
+  type: str
+  sample: web-01
+vm_guest_ip:
+  description: IP of the virtual machine.
+  returned: success
+  type: str
+  sample: 10.101.65.152
+zone:
+  description: Name of zone the static NAT is related to.
+  returned: success
+  type: str
+  sample: ch-gva-2
+project:
+  description: Name of project the static NAT is related to.
+  returned: success
+  type: str
+  sample: Production
+account:
+  description: Account the static NAT is related to.
+  returned: success
+  type: str
+  sample: example account
+domain:
+  description: Domain the static NAT is related to.
+  returned: success
+  type: str
+  sample: example domain
+

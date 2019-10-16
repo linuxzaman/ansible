@@ -1,0 +1,36 @@
+EXAMPLES:
+
+- name: configure hostname and domain name
+  net_system:
+    hostname: ios01
+    domain_name: test.example.com
+    domain-search:
+      - ansible.com
+      - redhat.com
+      - cisco.com
+
+- name: remove configuration
+  net_system:
+    state: absent
+
+- name: configure DNS lookup sources
+  net_system:
+    lookup_source: MgmtEth0/0/CPU0/0
+
+- name: configure name servers
+  net_system:
+    name_servers:
+      - 8.8.8.8
+      - 8.8.4.4
+
+
+RETURN VALUES:
+
+commands:
+  description: The list of configuration mode commands to send to the device
+  returned: always, except for the platforms that use Netconf transport to manage the device.
+  type: list
+  sample:
+    - hostname ios01
+    - ip domain name test.example.com
+

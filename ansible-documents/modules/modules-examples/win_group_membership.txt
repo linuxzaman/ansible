@@ -1,0 +1,52 @@
+EXAMPLES:
+
+- name: Add a local and domain user to a local group
+  win_group_membership:
+    name: Remote Desktop Users
+    members:
+      - NewLocalAdmin
+      - DOMAIN\TestUser
+    state: present
+
+- name: Remove a domain group and service user from a local group
+  win_group_membership:
+    name: Backup Operators
+    members:
+      - DOMAIN\TestGroup
+      - NT AUTHORITY\SYSTEM
+    state: absent
+
+- name: Ensure only a domain user exists in a local group
+  win_group_membership:
+    name: Remote Desktop Users
+    members:
+      - DOMAIN\TestUser
+    state: pure
+
+
+RETURN VALUES:
+
+name:
+    description: The name of the target local group.
+    returned: always
+    type: str
+    sample: Administrators
+added:
+    description: A list of members added when C(state) is C(present) or
+      C(pure); this is empty if no members are added.
+    returned: success and C(state) is C(present)
+    type: list
+    sample: ["SERVERNAME\\NewLocalAdmin", "DOMAIN\\TestUser"]
+removed:
+    description: A list of members removed when C(state) is C(absent) or
+      C(pure); this is empty if no members are removed.
+    returned: success and C(state) is C(absent)
+    type: list
+    sample: ["DOMAIN\\TestGroup", "NT AUTHORITY\\SYSTEM"]
+members:
+    description: A list of all local group members at completion; this is empty
+      if the group contains no members.
+    returned: success
+    type: list
+    sample: ["DOMAIN\\TestUser", "SERVERNAME\\NewLocalAdmin"]
+

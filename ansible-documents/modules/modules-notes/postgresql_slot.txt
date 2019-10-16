@@ -1,0 +1,164 @@
+> POSTGRESQL_SLOT    (/usr/lib/python2.7/dist-packages/ansible/modules/database/postgresql/postgresql_slot.py)
+
+        Add or remove physical or logical slots from a PostgreSQL database.
+
+  * This module is maintained by The Ansible Community
+OPTIONS (= is mandatory):
+
+- ca_cert
+        Specifies the name of a file containing SSL certificate authority (CA) certificate(s).
+        If the file exists, the server's certificate will be verified to be signed by one of these authorities.
+        (Aliases: ssl_rootcert)[Default: (null)]
+        type: str
+
+- db
+        Name of database to connect to.
+        (Aliases: login_db)[Default: (null)]
+        type: str
+
+- immediately_reserve
+        Optional parameter the when `yes' specifies that the LSN for this replication slot be reserved immediately, otherwise the
+        default, `no', specifies that the LSN is reserved on the first connection from a streaming replication client.
+        Is available from PostgreSQL version 9.6.
+        Uses only with `slot_type=physical'.
+        Mutually exclusive with `slot_type=logical'.
+        [Default: False]
+        type: bool
+
+- login_host
+        Host running the database.
+        [Default: (null)]
+        type: str
+
+- login_password
+        The password used to authenticate with.
+        [Default: (null)]
+        type: str
+
+- login_unix_socket
+        Path to a Unix domain socket for local connections.
+        [Default: (null)]
+        type: str
+
+- login_user
+        The username used to authenticate with.
+        [Default: postgres]
+        type: str
+
+= name
+        Name of the slot to add or remove.
+        (Aliases: slot_name)
+        type: str
+
+- output_plugin
+        All logical slots must indicate which output plugin decoder they're using.
+        This parameter does not apply to physical slots.
+        It will be ignored with `slot_type=physical'.
+        [Default: test_decoding]
+        type: str
+
+- port
+        Database port to connect to.
+        (Aliases: login_port)[Default: 5432]
+        type: int
+
+- session_role
+        Switch to session_role after connecting. The specified session_role must be a role that the current login_user is a member of.
+        Permissions checking for SQL commands is carried out as though the session_role were the one that had logged in originally.
+        [Default: (null)]
+        type: str
+
+- slot_type
+        Slot type.
+        For more information see https://www.postgresql.org/docs/current/protocol-replication.html and
+        https://www.postgresql.org/docs/current/logicaldecoding-explanation.html.
+        (Choices: logical, physical)[Default: physical]
+        type: str
+
+- ssl_mode
+        Determines whether or with what priority a secure SSL TCP/IP connection will be negotiated with the server.
+        See https://www.postgresql.org/docs/current/static/libpq-ssl.html for more information on the modes.
+        Default of `prefer' matches libpq default.
+        (Choices: allow, disable, prefer, require, verify-ca, verify-full)[Default: prefer]
+        type: str
+
+- state
+        The slot state.
+        `state=present' implies the slot must be present in the system.
+        `state=absent' implies the `groups' must be revoked from `target_roles'.
+        (Choices: absent, present)[Default: present]
+        type: str
+
+
+NOTES:
+      * Physical replication slots were introduced to PostgreSQL with version 9.4, while logical replication slots were added
+        beginning with version 10.0.
+      * The default authentication assumes that you are either logging in as or sudo'ing to the postgres account on the host.
+      * To avoid "Peer authentication failed for user postgres" error, use postgres user as a `become_user'.
+      * This module uses psycopg2, a Python PostgreSQL database adapter. You must ensure that psycopg2 is installed on the host
+        before using this module.
+      * If the remote host is the PostgreSQL server (which is the default case), then PostgreSQL must also be installed on the
+        remote host.
+      * For Ubuntu-based systems, install the postgresql, libpq-dev, and python-psycopg2 packages
+      * The default authentication assumes that you are either logging in as or sudo'ing to the `postgres' account on the host.
+      * This module uses `psycopg2', a Python PostgreSQL database adapter. You must ensure that psycopg2 is installed on the host
+        before using this module. If the remote host is the PostgreSQL server (which is the default case), then PostgreSQL must
+        also be installed on the remote host. For Ubuntu-based systems, install the `postgresql', `libpq-dev', and `python-
+        psycopg2' packages on the remote host before using this module.
+      * The ca_cert parameter requires at least Postgres version 8.4 and `psycopg2' version 2.4.3.
+
+
+REQUIREMENTS:  psycopg2
+
+AUTHOR: John Scalia (@jscalia), Andew Klychkov (@Andersson007)
+        METADATA:
+          status:
+          - preview
+          supported_by: community
+        
+
+EXAMPLES:
+
+- name: Create physical_one physical slot if doesn't exist
+  become_user: postgres
+  postgresql_slot:
+    slot_name: physical_one
+    db: ansible
+
+- name: Remove physical_one slot if exists
+  become_user: postgres
+  postgresql_slot:
+    slot_name: physical_one
+    db: ansible
+    state: absent
+
+- name: Create logical_one logical slot to the database acme if doen't exist
+  postgresql_slot:
+    name: logical_slot_one
+    slot_type: logical
+    state: present
+    output_plugin: custom_decoder_one
+
+- name: Remove logical_one slot if exists from the cluster running on another host and non-standard port
+  postgresql_slot:
+    name: logical_one
+    login_host: mydatabase.example.org
+    port: 5433
+    login_user: ourSuperuser
+    login_password: thePassword
+    state: absent
+
+
+RETURN VALUES:
+
+name:
+  description: Name of the slot
+  returned: always
+  type: str
+  sample: "physical_one"
+queries:
+  description: List of executed queries.
+  returned: always
+  type: str
+  sample: [ "SELECT pg_create_physical_replication_slot('physical_one', False, False)" ]
+

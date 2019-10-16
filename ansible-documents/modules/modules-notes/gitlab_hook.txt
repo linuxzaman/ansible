@@ -1,0 +1,166 @@
+> GITLAB_HOOK    (/usr/lib/python2.7/dist-packages/ansible/modules/source_control/gitlab_hook.py)
+
+        Adds, updates and removes project hook
+
+  * This module is maintained by The Ansible Community
+OPTIONS (= is mandatory):
+
+- api_password
+        The password to use for authentication against the API
+        [Default: (null)]
+        type: str
+
+- api_token
+        Gitlab token for logging in.
+        (Aliases: private_token, access_token)[Default: (null)]
+        type: str
+        version_added: 2.8
+
+- api_url
+        The resolvable endpoint for the API
+        [Default: (null)]
+        type: str
+
+- api_username
+        The username to use for authentication against the API
+        [Default: (null)]
+        type: str
+
+= hook_url
+        The url that you want GitLab to post to, this is used as the primary key for updates and deletion.
+
+        type: str
+
+- hook_validate_certs
+        Whether GitLab will do SSL verification when triggering the hook
+        (Aliases: enable_ssl_verification)[Default: False]
+        type: bool
+
+- issues_events
+        Trigger hook on issues events
+        [Default: False]
+        type: bool
+
+- job_events
+        Trigger hook on job events
+        [Default: False]
+        type: bool
+
+- merge_requests_events
+        Trigger hook on merge requests events
+        [Default: False]
+        type: bool
+
+- note_events
+        Trigger hook on note events
+        [Default: False]
+        type: bool
+
+- pipeline_events
+        Trigger hook on pipeline events
+        [Default: False]
+        type: bool
+
+= project
+        Id or Full path of the project in the form of group/name
+
+        type: str
+
+- push_events
+        Trigger hook on push events
+        [Default: True]
+        type: bool
+
+= state
+        When `present' the hook will be updated to match the input or created if it doesn't exist. When `absent' it will be deleted if it
+        exists.
+        (Choices: present, absent)[Default: present]
+        type: str
+
+- tag_push_events
+        Trigger hook on tag push events
+        [Default: False]
+        type: bool
+
+- token
+        Secret token to validate hook messages at the receiver.
+        If this is present it will always result in a change as it cannot be retrieved from GitLab.
+        Will show up in the X-Gitlab-Token HTTP request header
+        [Default: (null)]
+        type: str
+
+- validate_certs
+        Whether or not to validate SSL certs when supplying a https endpoint.
+        [Default: True]
+        type: bool
+
+- wiki_page_events
+        Trigger hook on wiki events
+        [Default: False]
+        type: bool
+
+
+REQUIREMENTS:  python >= 2.7, python-gitlab python module
+
+AUTHOR: Marcus Watkins (@marwatk), Guillaume Martinez (@Lunik)
+        METADATA:
+          status:
+          - preview
+          supported_by: community
+        
+
+EXAMPLES:
+
+- name: "Adding a project hook"
+  gitlab_hook:
+    api_url: https://gitlab.example.com/
+    api_token: "{{ access_token }}"
+    project: "my_group/my_project"
+    hook_url: "https://my-ci-server.example.com/gitlab-hook"
+    state: present
+    push_events: yes
+    tag_push_events: yes
+    hook_validate_certs: no
+    token: "my-super-secret-token-that-my-ci-server-will-check"
+
+- name: "Delete the previous hook"
+  gitlab_hook:
+    api_url: https://gitlab.example.com/
+    api_token: "{{ access_token }}"
+    project: "my_group/my_project"
+    hook_url: "https://my-ci-server.example.com/gitlab-hook"
+    state: absent
+
+- name: "Delete a hook by numeric project id"
+  gitlab_hook:
+    api_url: https://gitlab.example.com/
+    api_token: "{{ access_token }}"
+    project: 10
+    hook_url: "https://my-ci-server.example.com/gitlab-hook"
+    state: absent
+
+
+RETURN VALUES:
+
+msg:
+  description: Success or failure message
+  returned: always
+  type: str
+  sample: "Success"
+
+result:
+  description: json parsed response from the server
+  returned: always
+  type: dict
+
+error:
+  description: the error message returned by the Gitlab API
+  returned: failed
+  type: str
+  sample: "400: path is already in use"
+
+hook:
+  description: API object
+  returned: always
+  type: dict
+

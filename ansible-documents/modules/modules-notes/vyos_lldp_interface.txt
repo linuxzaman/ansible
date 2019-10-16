@@ -1,0 +1,126 @@
+> VYOS_LLDP_INTERFACE    (/usr/lib/python2.7/dist-packages/ansible/modules/network/vyos/vyos_lldp_interface.py)
+
+        This module provides declarative management of LLDP interfaces configuration on VyOS network devices.
+
+  * This module is maintained by The Ansible Network Team
+OPTIONS (= is mandatory):
+
+- aggregate
+        List of interfaces LLDP should be configured on.
+        [Default: (null)]
+
+- name
+        Name of the interface LLDP should be configured on.
+        [Default: (null)]
+
+- provider
+        *Deprecated*
+        Starting with Ansible 2.5 we recommend using `connection: network_cli'.
+        For more information please see the L(Network Guide, ../network/getting_started/network_differences.html#multiple-communication-
+        protocols).
+        HORIZONTALLINE
+        A dict object containing connection details.
+        [Default: (null)]
+        suboptions:
+          host:
+            description:
+            - Specifies the DNS host name or address for connecting to the remote device over
+              the specified transport.  The value of host is used as the destination address
+              for the transport.
+            required: true
+            type: str
+          password:
+            description:
+            - Specifies the password to use to authenticate the connection to the remote device.   This
+              value is used to authenticate the SSH session. If the value is not specified
+              in the task, the value of environment variable `ANSIBLE_NET_PASSWORD' will
+              be used instead.
+            type: str
+          port:
+            default: 22
+            description:
+            - Specifies the port to use when building the connection to the remote device.
+            type: int
+          ssh_keyfile:
+            description:
+            - Specifies the SSH key to use to authenticate the connection to the remote device.   This
+              value is the path to the key used to authenticate the SSH session. If the value
+              is not specified in the task, the value of environment variable `ANSIBLE_NET_SSH_KEYFILE'
+              will be used instead.
+            type: path
+          timeout:
+            default: 10
+            description:
+            - Specifies the timeout in seconds for communicating with the network device for
+              either connecting or sending commands.  If the timeout is exceeded before the
+              operation is completed, the module will error.
+            type: int
+          username:
+            description:
+            - Configures the username to use to authenticate the connection to the remote
+              device.  This value is used to authenticate the SSH session. If the value is
+              not specified in the task, the value of environment variable `ANSIBLE_NET_USERNAME'
+              will be used instead.
+            type: str
+        
+        type: dict
+
+- state
+        State of the LLDP configuration.
+        (Choices: present, absent, enabled, disabled)[Default: present]
+
+
+NOTES:
+      * Tested against VYOS 1.1.7
+      * For more information on using Ansible to manage network devices see the :ref:`Ansible Network Guide <network_guide>`
+
+
+AUTHOR: Ricardo Carrillo Cruz (@rcarrillocruz)
+        METADATA:
+          status:
+          - preview
+          supported_by: network
+        
+
+EXAMPLES:
+
+- name: Enable LLDP on eth1
+  net_lldp_interface:
+    state: present
+
+- name: Enable LLDP on specific interfaces
+  net_lldp_interface:
+    interfaces:
+      - eth1
+      - eth2
+    state: present
+
+- name: Disable LLDP globally
+  net_lldp_interface:
+    state: disabled
+
+- name: Create aggregate of LLDP interface configurations
+  vyos_lldp_interface:
+    aggregate:
+    - name: eth1
+    - name: eth2
+    state: present
+
+- name: Delete aggregate of LLDP interface configurations
+  vyos_lldp_interface:
+    aggregate:
+    - name: eth1
+    - name: eth2
+    state: absent
+
+
+RETURN VALUES:
+
+commands:
+  description: The list of configuration mode commands to send to the device
+  returned: always, except for the platforms that use Netconf transport to manage the device.
+  type: list
+  sample:
+    - set service lldp eth1
+    - set service lldp eth2 disable
+

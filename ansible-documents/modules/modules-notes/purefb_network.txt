@@ -1,0 +1,88 @@
+> PUREFB_NETWORK    (/usr/lib/python2.7/dist-packages/ansible/modules/storage/purestorage/purefb_network.py)
+
+        This module manages network interfaces on Pure Storage FlashBlade. When creating a network interface a subnet must already exist
+        with a network prefix that covers the IP address of the interface being created.
+
+  * This module is maintained by The Ansible Community
+OPTIONS (= is mandatory):
+
+- address
+        IP address of interface.
+        [Default: (null)]
+        type: str
+
+- api_token
+        FlashBlade API token for admin privileged user.
+        [Default: (null)]
+        type: str
+
+- fb_url
+        FlashBlade management IP address or Hostname.
+        [Default: (null)]
+        type: str
+
+- itype
+        Type of interface.
+        (Choices: vip)[Default: vip]
+        type: str
+
+= name
+        Interface Name.
+
+        type: str
+
+- services
+        Define which services are configured for the interfaces.
+        (Choices: data)[Default: data]
+        type: str
+
+- state
+        Create, delete or modifies a network interface.
+        (Choices: present, absent)[Default: present]
+        type: str
+
+
+NOTES:
+      * This module requires the `purity_fb' Python library
+      * You must set `PUREFB_URL' and `PUREFB_API' environment variables if `fb_url' and `api_token' arguments are not passed to
+        the module directly
+
+
+REQUIREMENTS:  python >= 2.7, purity_fb >= 1.1
+
+AUTHOR: Pure Storage Ansible Team (@sdodsley) <pure-ansible-team@purestorage.com>
+        METADATA:
+          status:
+          - preview
+          supported_by: community
+        
+
+EXAMPLES:
+
+- name: Create new network interface named foo
+  purefb_network:
+    name: foo
+    address: 10.21.200.23
+    state: present
+    fb_url: 10.10.10.2
+    api_token: T-55a68eb5-c785-4720-a2ca-8b03903bf641
+
+- name: Change IP address of network interface named foo
+  purefb_network:
+    name: foo
+    state: present
+    address: 10.21.200.123
+    fb_url: 10.10.10.2
+    api_token: T-55a68eb5-c785-4720-a2ca-8b03903bf641
+
+- name: Delete network interface named foo
+  purefb_network:
+    name: foo
+    state: absent
+    fb_url: 10.10.10.2
+    api_token: T-55a68eb5-c785-4720-a2ca-8b03903bf641
+
+
+RETURN VALUES:
+
+

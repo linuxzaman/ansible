@@ -1,0 +1,160 @@
+EXAMPLES:
+
+# Note: These examples do not set authentication details, see the AWS Guide for details.
+
+# Gather facts about all target groups
+- elb_target_group_facts:
+
+# Gather facts about the target group attached to a particular ELB
+- elb_target_group_facts:
+    load_balancer_arn: "arn:aws:elasticloadbalancing:ap-southeast-2:001122334455:loadbalancer/app/my-elb/aabbccddeeff"
+
+# Gather facts about a target groups named 'tg1' and 'tg2'
+- elb_target_group_facts:
+    names:
+      - tg1
+      - tg2
+
+
+RETURN VALUES:
+
+target_groups:
+    description: a list of target groups
+    returned: always
+    type: complex
+    contains:
+        deregistration_delay_timeout_seconds:
+            description: The amount time for Elastic Load Balancing to wait before changing the state of a deregistering target from draining to unused.
+            returned: always
+            type: int
+            sample: 300
+        health_check_interval_seconds:
+            description: The approximate amount of time, in seconds, between health checks of an individual target.
+            returned: always
+            type: int
+            sample: 30
+        health_check_path:
+            description: The destination for the health check request.
+            returned: always
+            type: str
+            sample: /index.html
+        health_check_port:
+            description: The port to use to connect with the target.
+            returned: always
+            type: str
+            sample: traffic-port
+        health_check_protocol:
+            description: The protocol to use to connect with the target.
+            returned: always
+            type: str
+            sample: HTTP
+        health_check_timeout_seconds:
+            description: The amount of time, in seconds, during which no response means a failed health check.
+            returned: always
+            type: int
+            sample: 5
+        healthy_threshold_count:
+            description: The number of consecutive health checks successes required before considering an unhealthy target healthy.
+            returned: always
+            type: int
+            sample: 5
+        load_balancer_arns:
+            description: The Amazon Resource Names (ARN) of the load balancers that route traffic to this target group.
+            returned: always
+            type: list
+            sample: []
+        matcher:
+            description: The HTTP codes to use when checking for a successful response from a target.
+            returned: always
+            type: dict
+            sample: {
+                "http_code": "200"
+            }
+        port:
+            description: The port on which the targets are listening.
+            returned: always
+            type: int
+            sample: 80
+        protocol:
+            description: The protocol to use for routing traffic to the targets.
+            returned: always
+            type: str
+            sample: HTTP
+        stickiness_enabled:
+            description: Indicates whether sticky sessions are enabled.
+            returned: always
+            type: bool
+            sample: true
+        stickiness_lb_cookie_duration_seconds:
+            description: Indicates whether sticky sessions are enabled.
+            returned: always
+            type: int
+            sample: 86400
+        stickiness_type:
+            description: The type of sticky sessions.
+            returned: always
+            type: str
+            sample: lb_cookie
+        tags:
+            description: The tags attached to the target group.
+            returned: always
+            type: dict
+            sample: "{
+                'Tag': 'Example'
+            }"
+        target_group_arn:
+            description: The Amazon Resource Name (ARN) of the target group.
+            returned: always
+            type: str
+            sample: "arn:aws:elasticloadbalancing:ap-southeast-2:01234567890:targetgroup/mytargetgroup/aabbccddee0044332211"
+        targets_health_description:
+            description: Targets health description.
+            returned: when collect_targets_health is enabled
+            type: complex
+            contains:
+                health_check_port:
+                    description: The port to check target health.
+                    returned: always
+                    type: string
+                    sample: '80'
+                target:
+                    description: The target metadata.
+                    returned: always
+                    type: complex
+                    contains:
+                        id:
+                            description: The ID of the target.
+                            returned: always
+                            type: string
+                            sample: i-0123456789
+                        port:
+                            description: The port to use to connect with the target.
+                            returned: always
+                            type: int
+                            sample: 80
+                target_health:
+                    description: The target health status.
+                    returned: always
+                    type: complex
+                    contains:
+                        state:
+                            description: The state of the target health.
+                            returned: always
+                            type: string
+                            sample: healthy
+        target_group_name:
+            description: The name of the target group.
+            returned: always
+            type: str
+            sample: mytargetgroup
+        unhealthy_threshold_count:
+            description: The number of consecutive health check failures required before considering the target unhealthy.
+            returned: always
+            type: int
+            sample: 2
+        vpc_id:
+            description: The ID of the VPC for the targets.
+            returned: always
+            type: str
+            sample: vpc-0123456
+

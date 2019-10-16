@@ -1,0 +1,87 @@
+EXAMPLES:
+
+# Create DNS record for www.domain.com
+- name: create DNS record
+  memset_zone_record:
+    api_key: dcf089a2896940da9ffefb307ef49ccd
+    state: present
+    zone: domain.com
+    type: A
+    record: www
+    address: 1.2.3.4
+    ttl: 300
+    relative: false
+  delegate_to: localhost
+
+# create an SPF record for domain.com
+- name: create SPF record for domain.com
+  memset_zone_record:
+    api_key: dcf089a2896940da9ffefb307ef49ccd
+    state: present
+    zone: domain.com
+    type: TXT
+    address: "v=spf1 +a +mx +ip4:a1.2.3.4 ?all"
+  delegate_to: localhost
+
+# create multiple DNS records
+- name: create multiple DNS records
+  memset_zone_record:
+    api_key: dcf089a2896940da9ffefb307ef49ccd
+    zone: "{{ item.zone }}"
+    type: "{{ item.type }}"
+    record: "{{ item.record }}"
+    address: "{{ item.address }}"
+  delegate_to: localhost
+  with_items:
+    - { 'zone': 'domain1.com', 'type': 'A', 'record': 'www', 'address': '1.2.3.4' }
+    - { 'zone': 'domain2.com', 'type': 'A', 'record': 'mail', 'address': '4.3.2.1' }
+
+
+RETURN VALUES:
+
+memset_api:
+  description: Record info from the Memset API.
+  returned: when state == present
+  type: complex
+  contains:
+    address:
+      description: Record content (may be an IP, string or blank depending on record type).
+      returned: always
+      type: str
+      sample: 1.1.1.1
+    id:
+      description: Record ID.
+      returned: always
+      type: str
+      sample: "b0bb1ce851aeea6feeb2dc32fe83bf9c"
+    priority:
+      description: Priority for C(MX) and C(SRV) records.
+      returned: always
+      type: int
+      sample: 10
+    record:
+      description: Name of record.
+      returned: always
+      type: str
+      sample: "www"
+    relative:
+      description: Adds the current domain onto the address field for C(CNAME), C(MX), C(NS) and C(SRV) types.
+      returned: always
+      type: bool
+      sample: False
+    ttl:
+      description: Record TTL.
+      returned: always
+      type: int
+      sample: 10
+    type:
+      description: Record type.
+      returned: always
+      type: str
+      sample: AAAA
+    zone_id:
+      description: Zone ID.
+      returned: always
+      type: str
+      sample: "b0bb1ce851aeea6feeb2dc32fe83bf9c"
+

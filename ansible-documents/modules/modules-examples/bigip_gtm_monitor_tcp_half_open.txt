@@ -1,0 +1,72 @@
+EXAMPLES:
+
+- name: Create TCP half-open Monitor
+  bigip_gtm_monitor_tcp_half_open:
+    state: present
+    ip: 10.10.10.10
+    name: my_monitor
+    provider:
+      user: admin
+      password: secret
+      server: lb.mydomain.com
+  delegate_to: localhost
+
+- name: Remove TCP half-open Monitor
+  bigip_gtm_monitor_tcp_half_open:
+    state: absent
+    name: my_monitor
+    provider:
+      user: admin
+      password: secret
+      server: lb.mydomain.com
+  delegate_to: localhost
+
+- name: Add half-open monitor for all addresses, port 514
+  bigip_gtm_monitor_tcp_half_open:
+    port: 514
+    name: my_monitor
+    provider:
+      user: admin
+      password: secret
+      server: lb.mydomain.com
+  delegate_to: localhost
+
+
+RETURN VALUES:
+
+parent:
+  description: New parent template of the monitor.
+  returned: changed
+  type: str
+  sample: tcp_half_open
+ip:
+  description: The new IP of IP/port definition.
+  returned: changed
+  type: str
+  sample: 10.12.13.14
+interval:
+  description: The new interval in which to run the monitor check.
+  returned: changed
+  type: int
+  sample: 2
+timeout:
+  description: The new timeout in which the remote system must respond to the monitor.
+  returned: changed
+  type: int
+  sample: 10
+probe_timeout:
+  description: The new timeout in which the system will timeout the monitor probe.
+  returned: changed
+  type: int
+  sample: 10
+probe_interval:
+  description: The new interval in which the system will check the monitor probe.
+  returned: changed
+  type: int
+  sample: 10
+probe_attempts:
+  description: The new number of attempts the system will make in checking the monitor probe.
+  returned: changed
+  type: int
+  sample: 10
+

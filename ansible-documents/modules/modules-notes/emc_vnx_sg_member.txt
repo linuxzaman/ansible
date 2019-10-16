@@ -1,0 +1,78 @@
+> EMC_VNX_SG_MEMBER    (/usr/lib/python2.7/dist-packages/ansible/modules/storage/emc/emc_vnx_sg_member.py)
+
+        This module manages the members of an existing storage group.
+
+  * This module is maintained by The Ansible Community
+OPTIONS (= is mandatory):
+
+= lunid
+        Lun id to be added.
+
+
+= name
+        Name of the Storage group to manage.
+
+
+= sp_address
+        Address of the SP of target/secondary storage.
+
+        type: str
+
+- sp_password
+        password for accessing SP.
+        [Default: sysadmin]
+        type: str
+
+- sp_user
+        Username for accessing SP.
+        [Default: sysadmin]
+        type: str
+
+- state
+        Indicates the desired lunid state.
+        `present' ensures specified lunid is present in the Storage Group.
+        `absent' ensures specified lunid is absent from Storage Group.
+        (Choices: present, absent)[Default: present]
+
+
+NOTES:
+      * The modules prefixed with emc_vnx are built to support the EMC VNX storage platform.
+
+
+REQUIREMENTS:  An EMC VNX Storage device., Ansible 2.7., storops (0.5.10 or greater). Install using 'pip install storops'.
+
+AUTHOR: Luca 'remix_tj' Lorenzetto (@remixtj)
+        METADATA:
+          status:
+          - preview
+          supported_by: community
+        
+
+EXAMPLES:
+
+- name: Add lun to storage group
+  emc_vnx_sg_member:
+    name: sg01
+    sp_address: sp1a.fqdn
+    sp_user: sysadmin
+    sp_password: sysadmin
+    lunid: 100
+    state: present
+
+- name: Remove lun from storage group
+  emc_vnx_sg_member:
+    name: sg01
+    sp_address: sp1a.fqdn
+    sp_user: sysadmin
+    sp_password: sysadmin
+    lunid: 100
+    state: absent
+
+
+RETURN VALUES:
+
+hluid:
+    description: LUNID that hosts attached to the storage group will see.
+    type: int
+    returned: success
+

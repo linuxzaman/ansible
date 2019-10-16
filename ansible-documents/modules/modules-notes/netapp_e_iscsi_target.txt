@@ -1,0 +1,120 @@
+> NETAPP_E_ISCSI_TARGET    (/usr/lib/python2.7/dist-packages/ansible/modules/storage/netapp/netapp_e_iscsi_target.py)
+
+        Configure the settings of an E-Series iSCSI target
+
+  * This module is maintained by The Ansible Community
+OPTIONS (= is mandatory):
+
+= api_password
+        The password to authenticate with the SANtricity Web Services Proxy or Embedded Web Services API.
+
+
+= api_url
+        The url to the SANtricity Web Services Proxy or Embedded Web Services API. Example https://prod-1.wahoo.acme.com/devmgr/v2
+
+
+= api_username
+        The username to authenticate with the SANtricity Web Services Proxy or Embedded Web Services API.
+
+
+- chap_secret
+        Enable Challenge-Handshake Authentication Protocol (CHAP), utilizing this value as the password.
+        When this value is specified, we will always trigger an update (changed=True). We have no way of verifying whether or not the
+        password has changed.
+        The chap secret may only use ascii characters with values between 32 and 126 decimal.
+        The chap secret must be no less than 12 characters, but no greater than 57 characters in length.
+        The chap secret is cleared when not specified or an empty string.
+        (Aliases: chap, password)[Default: (null)]
+
+- log_path
+        A local path (on the Ansible controller), to a file to be used for debug logging.
+        [Default: (null)]
+
+- name
+        The name/alias to assign to the iSCSI target.
+        This alias is often used by the initiator software in order to make an iSCSI target easier to identify.
+        (Aliases: alias)[Default: (null)]
+
+- ping
+        Enable ICMP ping responses from the configured iSCSI ports.
+        [Default: True]
+        type: bool
+
+- ssid
+        The ID of the array to manage. This value must be unique for each array.
+        [Default: 1]
+
+- unnamed_discovery
+        When an initiator initiates a discovery session to an initiator port, it is considered an unnamed discovery session if the iSCSI
+        target iqn is not specified in the request.
+        This option may be disabled to increase security if desired.
+        [Default: True]
+        type: bool
+
+- validate_certs
+        Should https certificates be validated?
+        [Default: True]
+        type: bool
+
+
+NOTES:
+      * Check mode is supported.
+      * Some of the settings are dependent on the settings applied to the iSCSI interfaces. These can be configured using
+        [netapp_e_iscsi_interface].
+      * This module requires a Web Services API version of >= 1.3.
+      * The E-Series Ansible modules require either an instance of the Web Services Proxy (WSP), to be available to manage the
+        storage-system, or an E-Series storage-system that supports the Embedded Web Services API.
+      * Embedded Web Services is currently available on the E2800, E5700, EF570, and newer hardware models.
+      * [netapp_e_storage_system] may be utilized for configuring the systems managed by a WSP instance.
+
+
+AUTHOR: Michael Price (@lmprice)
+        METADATA:
+          status:
+          - preview
+          supported_by: community
+        
+
+EXAMPLES:
+
+- name: Enable ping responses and unnamed discovery sessions for all iSCSI ports
+      netapp_e_iscsi_target:
+        api_url: "https://localhost:8443/devmgr/v2"
+        api_username: admin
+        api_password: myPassword
+        ssid: "1"
+        validate_certs: no
+        name: myTarget
+        ping: yes
+        unnamed_discovery: yes
+
+    - name: Set the target alias and the CHAP secret
+      netapp_e_iscsi_target:
+        ssid: "{{ ssid }}"
+        api_url: "{{ netapp_api_url }}"
+        api_username: "{{ netapp_api_username }}"
+        api_password: "{{ netapp_api_password }}"
+        name: myTarget
+        chap: password1234
+
+
+RETURN VALUES:
+
+msg:
+    description: Success message
+    returned: on success
+    type: str
+    sample: The iSCSI target settings have been updated.
+alias:
+    description:
+        - The alias assigned to the iSCSI target.
+    returned: on success
+    sample: myArray
+    type: str
+iqn:
+    description:
+        - The iqn (iSCSI Qualified Name), assigned to the iSCSI target.
+    returned: on success
+    sample: iqn.1992-08.com.netapp:2800.000a132000b006d2000000005a0e8f45
+    type: str
+

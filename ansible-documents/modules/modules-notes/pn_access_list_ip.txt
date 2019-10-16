@@ -1,0 +1,70 @@
+> PN_ACCESS_LIST_IP    (/usr/lib/python2.7/dist-packages/ansible/modules/network/netvisor/pn_access_list_ip.py)
+
+        This modules can be used to add and remove IPs associated with access list.
+
+  * This module is maintained by The Ansible Community
+OPTIONS (= is mandatory):
+
+- pn_cliswitch
+        Target switch to run the CLI on.
+        [Default: (null)]
+        type: str
+
+- pn_ip
+        IP associated with the access list.
+        [Default: ::]
+        type: str
+
+- pn_name
+        Access List Name.
+        [Default: (null)]
+        type: str
+
+= state
+        State the action to perform. Use 'present' to add access-list-ip and 'absent' to remove access-list-ip.
+        (Choices: present, absent)
+
+
+AUTHOR: Pluribus Networks (@rajaspachipulusu17)
+        METADATA:
+          status:
+          - preview
+          supported_by: community
+        
+
+EXAMPLES:
+
+- name: access list ip functionality
+  pn_access_list_ip:
+    pn_cliswitch: "sw01"
+    pn_name: "foo"
+    pn_ip: "172.16.3.1"
+    state: "present"
+
+- name: access list ip functionality
+  pn_access_list_ip:
+    pn_cliswitch: "sw01"
+    pn_name: "foo"
+    pn_ip: "172.16.3.1"
+    state: "absent"
+
+
+RETURN VALUES:
+
+command:
+  description: the CLI command run on the target node.
+  returned: always
+  type: str
+stdout:
+  description: set of responses from the access-list-ip command.
+  returned: always
+  type: list
+stderr:
+  description: set of error responses from the access-list-ip command.
+  returned: on error
+  type: list
+changed:
+  description: indicates whether the CLI caused changes on the target.
+  returned: always
+  type: bool
+

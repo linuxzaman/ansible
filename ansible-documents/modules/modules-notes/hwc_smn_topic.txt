@@ -1,0 +1,154 @@
+> HWC_SMN_TOPIC    (/usr/lib/python2.7/dist-packages/ansible/modules/cloud/huawei/hwc_smn_topic.py)
+
+        Represents a SMN notification topic resource.
+
+  * This module is maintained by The Ansible Community
+OPTIONS (= is mandatory):
+
+- display_name
+        Topic display name, which is presented as the name of the email sender in an email message. The topic display name contains a
+        maximum of 192 bytes.
+        [Default: (null)]
+        type: str
+
+= domain
+        The name of the Domain to scope to (Identity v3, currently only domain names are supported, and not domain IDs).
+
+        type: str
+
+- id
+        The id of resource to be managed.
+        [Default: (null)]
+        type: str
+
+= identity_endpoint
+        The Identity authentication URL.
+
+        type: str
+
+= name
+        Name of the topic to be created. The topic name is a string of 1 to 256 characters. It must contain upper- or lower-case letters,
+        digits, hyphens (-), and underscores `_', and must start with a letter or digit.
+
+        type: str
+
+= password
+        The password to login with.
+
+        type: str
+
+= project
+        The name of the Tenant (Identity v2) or Project (Identity v3). (currently only project names are supported, and not project IDs).
+
+        type: str
+
+= region
+        The region to which the project belongs.
+
+        type: str
+
+- state
+        Whether the given object should exist in Huaweicloud Cloud.
+        (Choices: present, absent)[Default: present]
+        type: str
+
+- timeouts
+        The timeouts for create/update/delete operation.
+        [Default: (null)]
+        suboptions:
+          create:
+            default: 10m
+            description:
+            - The timeouts for create operation.
+            type: str
+          delete:
+            description:
+            - The timeouts for delete operation.
+            type: str
+          update:
+            default: 10m
+            description:
+            - The timeouts for update operation.
+            type: str
+        
+        type: dict
+
+= user
+        The user name to login with (currently only user names are supported, and not user IDs).
+
+        type: str
+
+
+NOTES:
+      * For authentication, you can set identity_endpoint using the `ANSIBLE_HWC_IDENTITY_ENDPOINT' env variable.
+      * For authentication, you can set user using the `ANSIBLE_HWC_USER' env variable.
+      * For authentication, you can set password using the `ANSIBLE_HWC_PASSWORD' env variable.
+      * For authentication, you can set domain using the `ANSIBLE_HWC_DOMAIN' env variable.
+      * For authentication, you can set project using the `ANSIBLE_HWC_PROJECT' env variable.
+      * For authentication, you can set region using the `ANSIBLE_HWC_REGION' env variable.
+      * Environment variables values will only be used if the playbook values are not set.
+
+
+REQUIREMENTS:  requests >= 2.18.4, keystoneauth1 >= 3.6.0
+
+AUTHOR: Huawei Inc. (@huaweicloud)
+        METADATA:
+          status:
+          - preview
+          supported_by: community
+        
+
+EXAMPLES:
+
+- name: create a smn topic
+  hwc_smn_topic:
+      identity_endpoint: "{{ identity_endpoint }}"
+      user_name: "{{ user_name }}"
+      password: "{{ password }}"
+      domain_name: "{{ domain_name }}"
+      project_name: "{{ project_name }}"
+      region: "{{ region }}"
+      name: "ansible_smn_topic_test"
+      state: present
+
+
+RETURN VALUES:
+
+create_time:
+    description:
+        - Time when the topic was created.
+    returned: success
+    type: str
+display_name:
+    description:
+        - Topic display name, which is presented as the name of the email
+          sender in an email message. The topic display name contains a
+          maximum of 192 bytes.
+    returned: success
+    type: str
+name:
+    description:
+        - Name of the topic to be created. The topic name is a string of 1
+          to 256 characters. It must contain upper- or lower-case letters,
+          digits, hyphens (-), and underscores C(_), and must start with a
+          letter or digit.
+    returned: success
+    type: str
+push_policy:
+    description:
+        - Message pushing policy. 0 indicates that the message sending
+          fails and the message is cached in the queue. 1 indicates that
+          the failed message is discarded.
+    returned: success
+    type: int
+topic_urn:
+    description:
+        - Resource identifier of a topic, which is unique.
+    returned: success
+    type: str
+update_time:
+    description:
+        - Time when the topic was updated.
+    returned: success
+    type: str
+

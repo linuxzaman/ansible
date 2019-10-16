@@ -1,0 +1,114 @@
+> IDRAC_FIRMWARE    (/usr/lib/python2.7/dist-packages/ansible/modules/remote_management/dellemc/idrac/idrac_firmware.py)
+
+        Update the Firmware by connecting to a network share (either CIFS or NFS) that contains a catalog of available updates. Network
+        share should contain a valid repository of Update Packages (DUPs) and a catalog file describing the DUPs. All applicable updates
+        contained in the repository are applied to the system. This feature is available only with iDRAC Enterprise License.
+
+  * This module is maintained by The Ansible Community
+OPTIONS (= is mandatory):
+
+- catalog_file_name
+        Catalog file name relative to the `share_name'.
+        [Default: Catalog.xml]
+        type: str
+
+= idrac_ip
+        iDRAC IP Address.
+
+        type: str
+
+= idrac_password
+        iDRAC user password.
+
+        type: str
+
+- idrac_port
+        iDRAC port.
+        [Default: 443]
+        type: int
+
+= idrac_user
+        iDRAC username.
+
+        type: str
+
+- job_wait
+        Whether to wait for job completion or not.
+        [Default: True]
+        type: bool
+
+- reboot
+        Whether to reboots after applying the updates or not.
+        [Default: False]
+        type: bool
+
+= share_mnt
+        Local mount path of the network share with read-write permission for ansible user. This option is mandatory for Network Share.
+
+        type: str
+
+= share_name
+        CIFS or NFS Network share.
+
+        type: str
+
+- share_password
+        Network share user password. This option is mandatory for CIFS Network Share.
+        [Default: (null)]
+        type: str
+
+- share_user
+        Network share user in the format 'user@domain' or 'domain\\user' if user is part of a domain else 'user'. This option is
+        mandatory for CIFS Network Share.
+        [Default: (null)]
+        type: str
+
+
+REQUIREMENTS:  omsdk, python >= 2.7.5
+
+AUTHOR: Rajeev Arakkal (@rajeevarakkal)
+        METADATA:
+          status:
+          - preview
+          supported_by: community
+        
+
+EXAMPLES:
+
+---
+- name: Update firmware from repository on a Network Share
+  idrac_firmware:
+       idrac_ip: "192.168.0.1"
+       idrac_user: "user_name"
+       idrac_password: "user_password"
+       share_name: "192.168.0.0:/share"
+       share_user: "share_user_name"
+       share_password: "share_user_pwd"
+       share_mnt: "/mnt/share"
+       reboot: True
+       job_wait: True
+       catalog_file_name: "Catalog.xml"
+
+
+RETURN VALUES:
+
+---
+msg:
+  type: str
+  description: Over all firmware update status.
+  returned: always
+  sample: "Successfully updated the firmware."
+update_status:
+  type: dict
+  description: Firmware Update job and progress details from the iDRAC.
+  returned: success
+  sample: {
+        'InstanceID': 'JID_XXXXXXXXXXXX',
+        'JobState': 'Completed',
+        'Message': 'Job completed successfully.',
+        'MessageId': 'REDXXX',
+        'Name': 'Repository Update',
+        'JobStartTime': 'NA',
+        'Status': 'Success',
+    }
+

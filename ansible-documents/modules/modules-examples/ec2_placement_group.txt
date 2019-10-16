@@ -1,0 +1,43 @@
+EXAMPLES:
+
+# Note: These examples do not set authentication details, see the AWS Guide
+# for details.
+
+# Create a placement group.
+- ec2_placement_group:
+    name: my-cluster
+    state: present
+
+# Create a Spread placement group.
+- ec2_placement_group:
+    name: my-cluster
+    state: present
+    strategy: spread
+
+# Delete a placement group.
+- ec2_placement_group:
+    name: my-cluster
+    state: absent
+
+
+RETURN VALUES:
+
+placement_group:
+  description: Placement group attributes
+  returned: when state != absent
+  type: complex
+  contains:
+    name:
+      description: PG name
+      type: str
+      sample: my-cluster
+    state:
+      description: PG state
+      type: str
+      sample: "available"
+    strategy:
+      description: PG strategy
+      type: str
+      sample: "cluster"
+
+

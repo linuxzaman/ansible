@@ -1,0 +1,83 @@
+EXAMPLES:
+
+- name: Configure vrf configuration
+  junos_vrf:
+    name: test-1
+    description: test-vrf-1
+    interfaces:
+      - ge-0/0/3
+      - ge-0/0/2
+    rd: 192.0.2.1:10
+    target: target:65514:113
+    state: present
+
+- name: Remove vrf configuration
+  junos_vrf:
+    name: test-1
+    description: test-vrf-1
+    interfaces:
+      - ge-0/0/3
+      - ge-0/0/2
+    rd: 192.0.2.1:10
+    target: target:65514:113
+    state: absent
+
+- name: Deactivate vrf configuration
+  junos_vrf:
+    name: test-1
+    description: test-vrf-1
+    interfaces:
+      - ge-0/0/3
+      - ge-0/0/2
+    rd: 192.0.2.1:10
+    target: target:65514:113
+    active: False
+
+- name: Activate vrf configuration
+  junos_vrf:
+    name: test-1
+    description: test-vrf-1
+    interfaces:
+      - ge-0/0/3
+      - ge-0/0/2
+    rd: 192.0.2.1:10
+    target: target:65514:113
+    active: True
+
+- name: Create vrf using aggregate
+  junos_vrf:
+    aggregate:
+    - name: test-1
+      description: test-vrf-1
+      interfaces:
+        - ge-0/0/3
+         - ge-0/0/2
+      rd: 192.0.2.1:10
+      target: target:65514:113
+    - name: test-2
+      description: test-vrf-2
+      interfaces:
+        - ge-0/0/4
+        - ge-0/0/5
+      rd: 192.0.2.2:10
+      target: target:65515:114
+  state: present
+
+
+RETURN VALUES:
+
+diff.prepared:
+  description: Configuration difference before and after applying change.
+  returned: when configuration is changed and diff option is enabled.
+  type: str
+  sample: >
+        [edit routing-instances]
+        +   test-1 {
+        +       description test-vrf-1;
+        +       instance-type vrf;
+        +       interface ge-0/0/2.0;
+        +       interface ge-0/0/3.0;
+        +       route-distinguisher 192.0.2.1:10;
+        +       vrf-target target:65514:113;
+        +   }
+

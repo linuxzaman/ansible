@@ -1,0 +1,86 @@
+> PN_CPU_MGMT_CLASS    (/usr/lib/python2.7/dist-packages/ansible/modules/network/netvisor/pn_cpu_mgmt_class.py)
+
+        This module can we used to update mgmt port ingress policers.
+
+  * This module is maintained by The Ansible Community
+OPTIONS (= is mandatory):
+
+- pn_burst_size
+        ingress traffic burst size (bytes) or default.
+        [Default: (null)]
+        type: str
+
+- pn_cliswitch
+        Target switch to run the CLI on.
+        [Default: (null)]
+        type: str
+
+- pn_name
+        mgmt port ingress traffic class.
+        (Choices: arp, icmp, ssh, snmp, fabric, bcast, nfs, web, web-ssl, net-api)[Default: (null)]
+        type: str
+
+- pn_rate_limit
+        ingress rate limit on mgmt port(bps) or unlimited.
+        [Default: (null)]
+        type: str
+
+= state
+        State the action to perform. Use `update' to modify cpu-mgmt-class.
+        (Choices: update)
+        type: str
+
+
+AUTHOR: Pluribus Networks (@rajaspachipulusu17)
+        METADATA:
+          status:
+          - preview
+          supported_by: community
+        
+
+EXAMPLES:
+
+- name: cpu mgmt class modify ingress policers
+  pn_cpu_mgmt_class:
+    pn_cliswitch: "sw01"
+    state: "update"
+    pn_name: "icmp"
+    pn_rate_limit: "10000"
+    pn_burst_size: "14000"
+
+- name: cpu mgmt class modify ingress policers
+  pn_cpu_mgmt_class:
+    pn_cliswitch: "sw01"
+    state: "update"
+    pn_name: "snmp"
+    pn_burst_size: "8000"
+    pn_rate_limit: "100000"
+
+- name: cpu mgmt class modify ingress policers
+  pn_cpu_mgmt_class:
+    pn_cliswitch: "sw01"
+    state: "update"
+    pn_name: "web"
+    pn_rate_limit: "10000"
+    pn_burst_size: "1000"
+
+
+RETURN VALUES:
+
+command:
+  description: the CLI command run on the target node.
+  returned: always
+  type: str
+stdout:
+  description: set of responses from the cpu-mgmt-class command.
+  returned: always
+  type: list
+stderr:
+  description: set of error responses from the cpu-mgmt-class command.
+  returned: on error
+  type: list
+changed:
+  description: indicates whether the CLI caused changes on the target.
+  returned: always
+  type: bool
+

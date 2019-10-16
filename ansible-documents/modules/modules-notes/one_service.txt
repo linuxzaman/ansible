@@ -1,0 +1,218 @@
+> ONE_SERVICE    (/usr/lib/python2.7/dist-packages/ansible/modules/cloud/opennebula/one_service.py)
+
+        Manage OpenNebula services
+
+  * This module is maintained by The Ansible Community
+OPTIONS (= is mandatory):
+
+- api_password
+        Password of the user to login into OpenNebula OneFlow API server. If not set then the value of the `ONEFLOW_PASSWORD' environment
+        variable is used.
+        [Default: (null)]
+
+- api_url
+        URL of the OpenNebula OneFlow API server.
+        It is recommended to use HTTPS so that the username/password are not transferred over the network unencrypted.
+        If not set then the value of the ONEFLOW_URL environment variable is used.
+        [Default: (null)]
+
+- api_username
+        Name of the user to login into the OpenNebula OneFlow API server. If not set then the value of the `ONEFLOW_USERNAME' environment
+        variable is used.
+        [Default: (null)]
+
+- cardinality
+        Number of VMs for the specified role
+        [Default: (null)]
+
+- custom_attrs
+        Dictionary of key/value custom attributes which will be used when instantiating a new service.
+        [Default: {}]
+
+- force
+        Force the new cardinality even if it is outside the limits
+        [Default: False]
+        type: bool
+
+- group_id
+        ID of the group which will be set as the group of the service
+        [Default: (null)]
+
+- mode
+        Set permission mode of a service instance in octet format, e.g. `600' to give owner `use' and `manage' and nothing to group and
+        others.
+        [Default: (null)]
+
+- owner_id
+        ID of the user which will be set as the owner of the service
+        [Default: (null)]
+
+- role
+        Name of the role whose cardinality should be changed
+        [Default: (null)]
+
+- service_id
+        ID of a service instance that you would like to manage
+        [Default: (null)]
+
+- service_name
+        Name of a service instance that you would like to manage
+        [Default: (null)]
+
+- state
+        `present' - instantiate a service from a template specified with `template_id'/`template_name'.
+        `absent' - terminate an instance of a service specified with `service_id'/`service_name'.
+        (Choices: present, absent)[Default: present]
+
+- template_id
+        ID of a service template to use to create a new instance of a service
+        [Default: (null)]
+
+- template_name
+        Name of service template to use to create a new instace of a service
+        [Default: (null)]
+
+- unique
+        Setting `unique=yes' will make sure that there is only one service instance running with a name set with `service_name' when
+        instantiating a service from a template specified with `template_id'/`template_name'. Check examples below.
+        [Default: False]
+        type: bool
+
+- wait
+        Wait for the instance to reach RUNNING state after DEPLOYING or COOLDOWN state after SCALING
+        [Default: False]
+        type: bool
+
+- wait_timeout
+        How long before wait gives up, in seconds
+        [Default: 300]
+
+
+AUTHOR: Milan Ilic (@ilicmilan)
+        METADATA:
+          status:
+          - preview
+          supported_by: community
+        
+
+EXAMPLES:
+
+# Instantiate a new service
+- one_service:
+    template_id: 90
+  register: result
+
+# Print service properties
+- debug:
+    msg: result
+
+# Instantiate a new service with specified service_name, service group and mode
+- one_service:
+    template_name: 'app1_template'
+    service_name: 'app1'
+    group_id: 1
+    mode: '660'
+
+# Instantiate a new service with template_id and pass custom_attrs dict
+- one_service:
+    template_id: 90
+    custom_attrs:
+      public_network_id: 21
+      private_network_id: 26
+
+# Instiate a new service 'foo' if the service doesn't already exist, otherwise do nothing
+- one_service:
+    template_id: 53
+    service_name: 'foo'
+    unique: yes
+
+# Delete a service by ID
+- one_service:
+    service_id: 153
+    state: absent
+
+# Get service info
+- one_service:
+    service_id: 153
+  register: service_info
+
+# Change service owner, group and mode
+- one_service:
+    service_name: 'app2'
+    owner_id: 34
+    group_id: 113
+    mode: '600'
+
+# Instantiate service and wait for it to become RUNNING
+-  one_service:
+    template_id: 43
+    service_name: 'foo1'
+
+# Wait service to become RUNNING
+- one_service:
+    service_id: 112
+    wait: yes
+
+# Change role cardinality
+- one_service:
+    service_id: 153
+    role: bar
+    cardinality: 5
+
+# Change role cardinality and wait for it to be applied
+- one_service:
+    service_id: 112
+    role: foo
+    cardinality: 7
+    wait: yes
+
+
+RETURN VALUES:
+
+service_id:
+    description: service id
+    type: int
+    returned: success
+    sample: 153
+service_name:
+    description: service name
+    type: str
+    returned: success
+    sample: app1
+group_id:
+    description: service's group id
+    type: int
+    returned: success
+    sample: 1
+group_name:
+    description: service's group name
+    type: str
+    returned: success
+    sample: one-users
+owner_id:
+    description: service's owner id
+    type: int
+    returned: success
+    sample: 143
+owner_name:
+    description: service's owner name
+    type: str
+    returned: success
+    sample: ansible-test
+state:
+    description: state of service instance
+    type: str
+    returned: success
+    sample: RUNNING
+mode:
+    description: service's mode
+    type: int
+    returned: success
+    sample: 660
+roles:
+    description: list of dictionaries of roles, each role is described by name, cardinality, state and nodes ids
+    type: list
+    returned: success
+    sample: '[{"cardinality": 1,"name": "foo","state": "RUNNING","ids": [ 123, 456 ]},
+              {"cardinality": 2,"name": "bar","state": "RUNNING", "ids": [ 452, 567, 746 ]}]'
+

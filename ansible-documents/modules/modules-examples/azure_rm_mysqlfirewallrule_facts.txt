@@ -1,0 +1,53 @@
+EXAMPLES:
+
+- name: Get instance of MySQL Firewall Rule
+    azure_rm_mysqlfirewallrule_facts:
+      resource_group: myResourceGroup
+      server_name: server_name
+      name: firewall_rule_name
+
+  - name: List instances of MySQL Firewall Rule
+    azure_rm_mysqlfirewallrule_facts:
+      resource_group: myResourceGroup
+      server_name: server_name
+
+
+RETURN VALUES:
+
+rules:
+    description: A list of dictionaries containing facts for MySQL Firewall Rule.
+    returned: always
+    type: complex
+    contains:
+        id:
+            description:
+                - Resource ID
+            returned: always
+            type: str
+            sample: "/subscriptions/xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx/resourceGroups/TestGroup/providers/Microsoft.DBforMySQL/servers/testserver/fire
+                    wallRules/rule1"
+        server_name:
+            description:
+                - The name of the server.
+            returned: always
+            type: str
+            sample: testserver
+        name:
+            description:
+                - Resource name.
+            returned: always
+            type: str
+            sample: rule1
+        start_ip_address:
+            description:
+                - The start IP address of the MySQL firewall rule.
+            returned: always
+            type: str
+            sample: 10.0.0.16
+        end_ip_address:
+            description:
+                - The end IP address of the MySQL firewall rule.
+            returned: always
+            type: str
+            sample: 10.0.0.18
+

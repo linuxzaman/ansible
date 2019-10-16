@@ -1,0 +1,237 @@
+> IOSXR_INTERFACE    (/usr/lib/python2.7/dist-packages/ansible/modules/network/iosxr/iosxr_interface.py)
+
+        This module provides declarative management of Interfaces on Cisco IOS XR network devices.
+
+  * This module is maintained by The Ansible Network Team
+OPTIONS (= is mandatory):
+
+- active
+        Whether the interface is `active' or `preconfigured'. Preconfiguration allows you to configure modular services cards before they
+        are inserted into the router. When the cards are inserted, they are instantly configured. Active cards are the ones already
+        inserted.
+        (Choices: active, preconfigure)[Default: active]
+        version_added: 2.5
+        
+
+- aggregate
+        List of Interface definitions. Include multiple interface configurations together, one each on a separate line
+        [Default: (null)]
+
+- delay
+        Time in seconds to wait before checking for the operational state on remote device. This wait is applicable for operational state
+        argument which are `state' with values `up'/`down', `tx_rate' and `rx_rate'.
+        [Default: 10]
+
+- description
+        Description of Interface being configured.
+        [Default: (null)]
+
+- duplex
+        Configures the interface duplex mode. Default is auto-negotiation when not configured.
+        (Choices: full, half)[Default: (null)]
+
+- enabled
+        Removes the shutdown configuration, which removes the forced administrative down on the interface, enabling it to move to an up
+        or down state.
+        [Default: True]
+        type: bool
+
+- mtu
+        Sets the MTU value for the interface. Range is between 64 and 65535'
+        [Default: (null)]
+
+= name
+        Name of the interface to configure in `type + path' format. e.g. `GigabitEthernet0/0/0/0'
+
+
+- provider
+        *Deprecated*
+        Starting with Ansible 2.5 we recommend using `connection: network_cli'.
+        For more information please see the L(Network Guide, ../network/getting_started/network_differences.html#multiple-communication-
+        protocols).
+        HORIZONTALLINE
+        A dict object containing connection details.
+        [Default: (null)]
+        suboptions:
+          host:
+            description:
+            - Specifies the DNS host name or address for connecting to the remote device over
+              the specified transport.  The value of host is used as the destination address
+              for the transport.
+            required: true
+            type: str
+          password:
+            description:
+            - Specifies the password to use to authenticate the connection to the remote device.   This
+              value is used to authenticate the SSH session. If the value is not specified
+              in the task, the value of environment variable `ANSIBLE_NET_PASSWORD' will
+              be used instead.
+            type: str
+          port:
+            default: 22
+            description:
+            - Specifies the port to use when building the connection to the remote device.
+            type: int
+          ssh_keyfile:
+            description:
+            - Specifies the SSH key to use to authenticate the connection to the remote device.   This
+              value is the path to the key used to authenticate the SSH session. If the value
+              is not specified in the task, the value of environment variable `ANSIBLE_NET_SSH_KEYFILE'
+              will be used instead.
+            type: path
+          timeout:
+            default: 10
+            description:
+            - Specifies the timeout in seconds for communicating with the network device for
+              either connecting or sending commands.  If the timeout is exceeded before the
+              operation is completed, the module will error.
+            type: int
+          username:
+            description:
+            - Configures the username to use to authenticate the connection to the remote
+              device.  This value is used to authenticate the SSH session. If the value is
+              not specified in the task, the value of environment variable `ANSIBLE_NET_USERNAME'
+              will be used instead.
+            type: str
+        
+        type: dict
+
+- rx_rate
+        Receiver rate in bits per second (bps).
+        This is state check parameter only.
+        Supports conditionals, see L(Conditionals in Networking Modules,../network/user_guide/network_working_with_command_output.html)
+        [Default: (null)]
+
+- speed
+        Configure the speed for an interface. Default is auto-negotiation when not configured.
+        (Choices: 10, 100, 1000)[Default: (null)]
+
+- state
+        State of the Interface configuration, `up' means present and operationally up and `down' means present and operationally `down'
+        (Choices: present, absent, up, down)[Default: present]
+
+- tx_rate
+        Transmit rate in bits per second (bps).
+        This is state check parameter only.
+        Supports conditionals, see L(Conditionals in Networking Modules,../network/user_guide/network_working_with_command_output.html)
+        [Default: (null)]
+
+
+NOTES:
+      * Tested against IOS XRv 6.1.2
+      * Preconfiguration of physical interfaces is not supported with `netconf' transport.
+      * For more information on using Ansible to manage network devices see the :ref:`Ansible Network Guide <network_guide>`
+      * For more information on using Ansible to manage Cisco devices see the `Cisco integration page
+        <https://www.ansible.com/integrations/networks/cisco>`_.
+
+
+REQUIREMENTS:  ncclient >= 0.5.3 when using netconf, lxml >= 4.1.1 when using netconf
+
+AUTHOR: Ganesh Nalawade (@ganeshrn), Kedar Kekan (@kedarX)
+        METADATA:
+          status:
+          - preview
+          supported_by: network
+        
+
+EXAMPLES:
+
+- name: configure interface
+  iosxr_interface:
+      name: GigabitEthernet0/0/0/2
+      description: test-interface
+      speed: 100
+      duplex: half
+      mtu: 512
+
+- name: remove interface
+  iosxr_interface:
+    name: GigabitEthernet0/0/0/2
+    state: absent
+
+- name: make interface up
+  iosxr_interface:
+    name: GigabitEthernet0/0/0/2
+    enabled: True
+
+- name: make interface down
+  iosxr_interface:
+    name: GigabitEthernet0/0/0/2
+    enabled: False
+
+- name: Create interface using aggregate
+  iosxr_interface:
+    aggregate:
+    - name: GigabitEthernet0/0/0/3
+    - name: GigabitEthernet0/0/0/2
+    speed: 100
+    duplex: full
+    mtu: 512
+    state: present
+
+- name: Create interface using aggregate along with additional params in aggregate
+  iosxr_interface:
+    aggregate:
+    - { name: GigabitEthernet0/0/0/3, description: test-interface 3 }
+    - { name: GigabitEthernet0/0/0/2, description: test-interface 2 }
+    speed: 100
+    duplex: full
+    mtu: 512
+    state: present
+
+- name: Delete interface using aggregate
+  iosxr_interface:
+    aggregate:
+    - name: GigabitEthernet0/0/0/3
+    - name: GigabitEthernet0/0/0/2
+    state: absent
+
+- name: Check intent arguments
+  iosxr_interface:
+    name: GigabitEthernet0/0/0/5
+    state: up
+    delay: 20
+
+- name: Config + intent
+  iosxr_interface:
+    name: GigabitEthernet0/0/0/5
+    enabled: False
+    state: down
+    delay: 20
+
+
+RETURN VALUES:
+
+commands:
+  description: The list of configuration mode commands sent to device with transport C(cli)
+  returned: always (empty list when no commands to send)
+  type: list
+  sample:
+  - interface GigabitEthernet0/0/0/2
+  - description test-interface
+  - duplex half
+  - mtu 512
+
+xml:
+  description: NetConf rpc xml sent to device with transport C(netconf)
+  returned: always (empty list when no xml rpc to send)
+  type: list
+  version_added: 2.5
+  sample:
+  - '<config xmlns:xc="urn:ietf:params:xml:ns:netconf:base:1.0">
+    <interface-configurations xmlns="http://cisco.com/ns/yang/Cisco-IOS-XR-ifmgr-cfg">
+    <interface-configuration xc:operation="merge">
+    <active>act</active>
+    <interface-name>GigabitEthernet0/0/0/0</interface-name>
+    <description>test-interface-0</description>
+    <mtus><mtu>
+    <owner>GigabitEthernet</owner>
+    <mtu>512</mtu>
+    </mtu></mtus>
+    <ethernet xmlns="http://cisco.com/ns/yang/Cisco-IOS-XR-drivers-media-eth-cfg">
+    <speed>100</speed>
+    <duplex>half</duplex>
+    </ethernet>
+    </interface-configuration>
+    </interface-configurations></config>'
+

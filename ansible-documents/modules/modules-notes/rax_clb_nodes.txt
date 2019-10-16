@@ -1,0 +1,158 @@
+> RAX_CLB_NODES    (/usr/lib/python2.7/dist-packages/ansible/modules/cloud/rackspace/rax_clb_nodes.py)
+
+        Adds, modifies and removes nodes from a Rackspace Cloud Load Balancer
+
+  * This module is maintained by The Ansible Community
+OPTIONS (= is mandatory):
+
+- address
+        IP address or domain name of the node
+        [Default: (null)]
+
+- api_key
+        Rackspace API key, overrides `credentials'.
+        (Aliases: password)[Default: (null)]
+        type: str
+
+- auth_endpoint
+        The URI of the authentication service.
+        [Default: https://identity.api.rackspacecloud.com/v2.0/]
+        version_added: 1.5
+
+- condition
+        Condition for the node, which determines its role within the load balancer
+        (Choices: enabled, disabled, draining)[Default: (null)]
+
+- credentials
+        File to find the Rackspace credentials in. Ignored if `api_key' and `username' are provided.
+        (Aliases: creds_file)[Default: (null)]
+        type: path
+
+- env
+        Environment as configured in `~/.pyrax.cfg', see https://github.com/rackspace/pyrax/blob/master/docs/getting_started.md#pyrax-
+        configuration.
+        [Default: (null)]
+        type: str
+        version_added: 1.5
+
+- identity_type
+        Authentication mechanism to use, such as rackspace or keystone.
+        [Default: rackspace]
+        version_added: 1.5
+
+= load_balancer_id
+        Load balancer id
+
+
+- node_id
+        Node id
+        [Default: (null)]
+
+- port
+        Port number of the load balanced service on the node
+        [Default: (null)]
+
+- region
+        Region to create an instance in.
+        [Default: DFW]
+        type: str
+
+- state
+        Indicate desired state of the node
+        (Choices: present, absent)[Default: present]
+
+- tenant_id
+        The tenant ID used for authentication.
+        [Default: (null)]
+        version_added: 1.5
+
+- tenant_name
+        The tenant name used for authentication.
+        [Default: (null)]
+        version_added: 1.5
+
+- type
+        Type of node
+        (Choices: primary, secondary)[Default: (null)]
+
+- username
+        Rackspace username, overrides `credentials'.
+        [Default: (null)]
+        type: str
+
+- validate_certs
+        Whether or not to require SSL validation of API endpoints.
+        (Aliases: verify_ssl)[Default: (null)]
+        type: bool
+        version_added: 1.5
+
+- wait
+        Wait for the load balancer to become active before returning
+        [Default: no]
+        type: bool
+
+- wait_timeout
+        How long to wait before giving up and returning an error
+        [Default: 30]
+
+- weight
+        Weight of node
+        [Default: (null)]
+
+
+NOTES:
+      * The following environment variables can be used, `RAX_USERNAME', `RAX_API_KEY', `RAX_CREDS_FILE', `RAX_CREDENTIALS',
+        `RAX_REGION'.
+      * `RAX_CREDENTIALS' and `RAX_CREDS_FILE' points to a credentials file appropriate for pyrax. See
+        https://github.com/rackspace/pyrax/blob/master/docs/getting_started.md#authenticating
+      * `RAX_USERNAME' and `RAX_API_KEY' obviate the use of a credentials file
+      * `RAX_REGION' defines a Rackspace Public Cloud region (DFW, ORD, LON, ...)
+      * The following environment variables can be used, `RAX_USERNAME', `RAX_API_KEY', `RAX_CREDS_FILE', `RAX_CREDENTIALS',
+        `RAX_REGION'.
+      * `RAX_CREDENTIALS' and `RAX_CREDS_FILE' points to a credentials file appropriate for pyrax. See
+        https://github.com/rackspace/pyrax/blob/master/docs/getting_started.md#authenticating
+      * `RAX_USERNAME' and `RAX_API_KEY' obviate the use of a credentials file
+      * `RAX_REGION' defines a Rackspace Public Cloud region (DFW, ORD, LON, ...)
+
+
+REQUIREMENTS:  pyrax, python >= 2.6
+
+AUTHOR: Lukasz Kawczynski (@neuroid)
+        METADATA:
+          status:
+          - preview
+          supported_by: community
+        
+
+EXAMPLES:
+
+# Add a new node to the load balancer
+- local_action:
+    module: rax_clb_nodes
+    load_balancer_id: 71
+    address: 10.2.2.3
+    port: 80
+    condition: enabled
+    type: primary
+    wait: yes
+    credentials: /path/to/credentials
+
+# Drain connections from a node
+- local_action:
+    module: rax_clb_nodes
+    load_balancer_id: 71
+    node_id: 410
+    condition: draining
+    wait: yes
+    credentials: /path/to/credentials
+
+# Remove a node from the load balancer
+- local_action:
+    module: rax_clb_nodes
+    load_balancer_id: 71
+    node_id: 410
+    state: absent
+    wait: yes
+    credentials: /path/to/credentials
+
+

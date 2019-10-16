@@ -1,0 +1,39 @@
+EXAMPLES:
+
+- name: Add vrouter interface to nic
+  pn_vrouter_interface_ip:
+    state: "present"
+    pn_cliswitch: "sw01"
+    pn_vrouter_name: "foo-vrouter"
+    pn_ip: "2620:0:1651:1::30"
+    pn_netmask: "127"
+    pn_nic: "eth0.4092"
+
+- name: Remove vrouter interface to nic
+  pn_vrouter_interface_ip:
+    state: "absent"
+    pn_cliswitch: "sw01"
+    pn_vrouter_name: "foo-vrouter"
+    pn_ip: "2620:0:1651:1::30"
+    pn_nic: "eth0.4092"
+
+
+RETURN VALUES:
+
+command:
+  description: the CLI command run on the target node.
+  returned: always
+  type: str
+stdout:
+  description: set of responses from the vrouter-interface-ip command.
+  returned: always
+  type: list
+stderr:
+  description: set of error responses from the vrouter-interface-ip command.
+  returned: on error
+  type: list
+changed:
+  description: indicates whether the CLI caused changes on the target.
+  returned: always
+  type: bool
+

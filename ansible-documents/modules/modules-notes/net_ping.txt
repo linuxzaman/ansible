@@ -1,0 +1,97 @@
+> NET_PING    (/usr/lib/python2.7/dist-packages/ansible/modules/network/system/net_ping.py)
+
+        Tests reachability using ping from network device to a remote destination. For Windows targets, use the [win_ping] module
+        instead. For targets running Python, use the [ping] module instead.
+
+  * This module is maintained by The Ansible Community
+  * note: This module has a corresponding action plugin.
+
+OPTIONS (= is mandatory):
+
+- count
+        Number of packets to send.
+        [Default: 5]
+
+= dest
+        The IP Address or hostname (resolvable by switch) of the remote node.
+
+
+- source
+        The source IP Address.
+        [Default: (null)]
+
+- state
+        Determines if the expected result is success or fail.
+        (Choices: absent, present)[Default: present]
+
+- vrf
+        The VRF to use for forwarding.
+        [Default: default]
+
+
+NOTES:
+      * For Windows targets, use the [win_ping] module instead.
+      * For targets running Python, use the [ping] module instead.
+      * This module is supported on `ansible_network_os' network platforms. See the :ref:`Network Platform Options
+        <platform_options>` for details.
+
+
+AUTHOR: Jacob McGill (@jmcgill298)
+        METADATA:
+          status:
+          - preview
+          supported_by: community
+        
+
+EXAMPLES:
+
+- name: Test reachability to 10.10.10.10 using default vrf
+  net_ping:
+    dest: 10.10.10.10
+
+- name: Test reachability to 10.20.20.20 using prod vrf
+  net_ping:
+    dest: 10.20.20.20
+    vrf: prod
+
+- name: Test unreachability to 10.30.30.30 using default vrf
+  net_ping:
+    dest: 10.30.30.30
+    state: absent
+
+- name: Test reachability to 10.40.40.40 using prod vrf and setting count and source
+  net_ping:
+    dest: 10.40.40.40
+    source: loopback0
+    vrf: prod
+    count: 20
+
+
+RETURN VALUES:
+
+commands:
+  description: Show the command sent.
+  returned: always
+  type: list
+  sample: ["ping vrf prod 10.40.40.40 count 20 source loopback0"]
+packet_loss:
+  description: Percentage of packets lost.
+  returned: always
+  type: str
+  sample: "0%"
+packets_rx:
+  description: Packets successfully received.
+  returned: always
+  type: int
+  sample: 20
+packets_tx:
+  description: Packets successfully transmitted.
+  returned: always
+  type: int
+  sample: 20
+rtt:
+  description: Show RTT stats.
+  returned: always
+  type: dict
+  sample: {"avg": 2, "max": 8, "min": 1}
+

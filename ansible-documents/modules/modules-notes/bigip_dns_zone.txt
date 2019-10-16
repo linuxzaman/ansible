@@ -1,0 +1,258 @@
+> BIGIP_DNS_ZONE    (/usr/lib/python2.7/dist-packages/ansible/modules/network/f5/bigip_dns_zone.py)
+
+        Manage DNS zones on BIG-IP. The zones managed here are primarily used for configuring DNS Express on BIG-IP. This module does not
+        configure zones that are found in BIG-IP ZoneRunner.
+
+  * This module is maintained by an Ansible Partner
+OPTIONS (= is mandatory):
+
+- dns_express
+        DNS express related settings.
+        [Default: (null)]
+        suboptions:
+          allow_notify_from:
+            description:
+            - Specifies the IP addresses from which the system accepts NOTIFY messages for
+              this DNS Express zone.
+            type: list
+          enabled:
+            description:
+            - Specifies the current status of the DNS Express zone.
+            type: bool
+          notify_action:
+            choices:
+            - consume
+            - bypass
+            - repeat
+            description:
+            - Specifies the action the system takes when a NOTIFY message is received for
+              this DNS Express zone.
+            - If a TSIG key is configured for the zone, the signature is only validated for
+              `consume' and `repeat' actions.
+            - When `consume', the NOTIFY message is seen only by DNS Express.
+            - When `bypass', the NOTIFY message does not go to DNS Express, but instead goes
+              to a back-end DNS server (subject to the value of the Unhandled Query Action
+              configured in the DNS profile applied to the listener that handles the DNS request).
+            - When `repeat', the NOTIFY message goes to both DNS Express and any back-end
+              DNS server.
+            type: str
+          response_policy:
+            description:
+            - Specifies whether this DNS Express zone is a DNS response policy zone (RPZ).
+            type: bool
+          server:
+            description:
+            - Specifies the back-end authoritative DNS server from which the BIG-IP system
+              receives AXFR zone transfers for the DNS Express zone.
+            type: str
+          verify_tsig:
+            description:
+            - Specifies whether the system verifies the identity of the authoritative nameserver
+              that sends updated information for this DNS Express zone.
+            type: bool
+        
+        type: dict
+
+= name
+        Specifies the name of the DNS zone.
+        The name must begin with a letter and contain only letters, numbers, and the underscore character.
+
+        type: str
+
+- nameservers
+        Specifies the DNS nameservers to which the system sends NOTIFY messages.
+        [Default: (null)]
+        type: list
+
+- partition
+        Device partition to manage resources on.
+        [Default: Common]
+        type: str
+
+= password
+        The password for the user account used to connect to the BIG-IP.
+        You may omit this option by setting the environment variable `F5_PASSWORD'.
+        (Aliases: pass, pwd)
+        type: str
+
+- provider
+        A dict object containing connection details.
+        [Default: (null)]
+        suboptions:
+          password:
+            aliases:
+            - pass
+            - pwd
+            description:
+            - The password for the user account used to connect to the BIG-IP.
+            - You may omit this option by setting the environment variable `F5_PASSWORD'.
+            required: true
+            type: str
+          server:
+            description:
+            - The BIG-IP host.
+            - You may omit this option by setting the environment variable `F5_SERVER'.
+            required: true
+            type: str
+          server_port:
+            default: 443
+            description:
+            - The BIG-IP server port.
+            - You may omit this option by setting the environment variable `F5_SERVER_PORT'.
+            type: int
+          ssh_keyfile:
+            description:
+            - Specifies the SSH keyfile to use to authenticate the connection to the remote
+              device.  This argument is only used for `cli' transports.
+            - You may omit this option by setting the environment variable `ANSIBLE_NET_SSH_KEYFILE'.
+            type: path
+          timeout:
+            default: 10
+            description:
+            - Specifies the timeout in seconds for communicating with the network device for
+              either connecting or sending commands.  If the timeout is exceeded before the
+              operation is completed, the module will error.
+            type: int
+          transport:
+            choices:
+            - cli
+            - rest
+            default: rest
+            description:
+            - Configures the transport connection to use when connecting to the remote device.
+            type: str
+          user:
+            description:
+            - The username to connect to the BIG-IP with. This user must have administrative
+              privileges on the device.
+            - You may omit this option by setting the environment variable `F5_USER'.
+            required: true
+            type: str
+          validate_certs:
+            default: true
+            description:
+            - If `no', SSL certificates are not validated. Use this only on personally controlled
+              sites using self-signed certificates.
+            - You may omit this option by setting the environment variable `F5_VALIDATE_CERTS'.
+            type: bool
+        
+        type: dict
+        version_added: 2.5
+
+= server
+        The BIG-IP host.
+        You may omit this option by setting the environment variable `F5_SERVER'.
+
+        type: str
+
+- server_port
+        The BIG-IP server port.
+        You may omit this option by setting the environment variable `F5_SERVER_PORT'.
+        [Default: 443]
+        type: int
+        version_added: 2.2
+
+- state
+        When `present', ensures that the resource exists.
+        When `absent', ensures the resource is removed.
+        (Choices: present, absent)[Default: present]
+        type: str
+
+- tsig_server_key
+        Specifies the TSIG key the system uses to authenticate the back-end DNS authoritative server that sends AXFR zone transfers to
+        the BIG-IP system.
+        [Default: (null)]
+        type: str
+
+= user
+        The username to connect to the BIG-IP with. This user must have administrative privileges on the device.
+        You may omit this option by setting the environment variable `F5_USER'.
+
+        type: str
+
+- validate_certs
+        If `no', SSL certificates are not validated. Use this only on personally controlled sites using self-signed certificates.
+        You may omit this option by setting the environment variable `F5_VALIDATE_CERTS'.
+        [Default: True]
+        type: bool
+        version_added: 2.0
+
+
+NOTES:
+      * For more information on using Ansible to manage F5 Networks devices see https://www.ansible.com/integrations/networks/f5.
+      * Requires BIG-IP software version >= 12.
+      * The F5 modules only manipulate the running configuration of the F5 product. To ensure that BIG-IP specific configuration
+        persists to disk, be sure to include at least one task that uses the [bigip_config] module to save the running
+        configuration. Refer to the module's documentation for the correct usage of the module to save your running configuration.
+
+
+AUTHOR: Tim Rupp (@caphrim007)
+        METADATA:
+          status:
+          - preview
+          supported_by: certified
+        
+
+EXAMPLES:
+
+- name: Create a DNS zone for DNS express
+  bigip_dns_zone:
+    name: foo.bar.com
+    dns_express:
+      enabled: yes
+      server: dns-lab
+      allow_notify_from:
+        - 192.168.39.10
+      notify_action: consume
+      verify_tsig: no
+      response_policy: no
+    provider:
+      password: secret
+      server: lb.mydomain.com
+      user: admin
+  delegate_to: localhost
+
+
+RETURN VALUES:
+
+enabled:
+  description: Whether the zone is enabled or not.
+  returned: changed
+  type: bool
+  sample: yes
+allow_notify_from:
+  description: The new DNS Express Allow NOTIFY From value.
+  returned: changed
+  type: list
+  sample: ['1.1.1.1', '2.2.2.2']
+notify_action:
+  description: The new DNS Express Notify Action value.
+  returned: changed
+  type: str
+  sample: consume
+verify_tsig:
+  description: The new DNS Express Verify Notify TSIG value.
+  returned: changed
+  type: bool
+  sample: yes
+express_server:
+  description: The new DNS Express Server value.
+  returned: changed
+  type: str
+  sample: server1
+response_policy:
+  description: The new DNS Express Response Policy value.
+  returned: changed
+  type: bool
+  sample: no
+nameservers:
+  description: The new Zone Transfer Clients Nameservers value.
+  returned: changed
+  type: list
+  sample: ['/Common/server1', '/Common/server2']
+tsig_server_key:
+  description: The new TSIG Server Key value.
+  returned: changed
+  type: str
+  sample: /Common/key1
+

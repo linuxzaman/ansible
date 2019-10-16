@@ -1,0 +1,142 @@
+> CYBERARK_USER    (/usr/lib/python2.7/dist-packages/ansible/modules/identity/cyberark/cyberark_user.py)
+
+        CyberArk User Management using PAS Web Services SDK. It currently supports the following actions Get User Details, Add User,
+        Update User, Delete User.
+
+  * This module is maintained by an Ansible Partner
+OPTIONS (= is mandatory):
+
+- change_password_on_the_next_logon
+        Whether or not the user must change their password in their next logon.
+        [Default: False]
+        type: bool
+
+= cyberark_session
+        Dictionary set by a CyberArk authentication containing the different values to perform actions on a logged-on CyberArk session,
+        please see [cyberark_authentication] module for an example of cyberark_session.
+
+        type: dict
+
+- disabled
+        Whether or not the user will be disabled.
+        [Default: False]
+        type: bool
+
+- email
+        The user email address.
+        [Default: (null)]
+        type: str
+
+- expiry_date
+        The date and time when the user account will expire and become disabled.
+        [Default: (null)]
+        type: str
+
+- first_name
+        The user first name.
+        [Default: (null)]
+        type: str
+
+- group_name
+        The name of the group the user will be added to.
+        [Default: (null)]
+        type: str
+
+- initial_password
+        The password that the new user will use to log on the first time.
+        This password must meet the password policy requirements.
+        This parameter is required when state is present -- Add User.
+        [Default: (null)]
+        type: str
+
+- last_name
+        The user last name.
+        [Default: (null)]
+        type: str
+
+- location
+        The Vault Location for the user.
+        [Default: (null)]
+        type: str
+
+- new_password
+        The user updated password. Make sure that this password meets the password policy requirements.
+        [Default: (null)]
+        type: str
+
+- state
+        Specifies the state needed for the user present for create user, absent for delete user.
+        (Choices: absent, present)[Default: present]
+        type: str
+
+- user_type_name
+        The type of user.
+        The parameter defaults to `EPVUser'.
+        [Default: (null)]
+        type: str
+
+= username
+        The name of the user who will be queried (for details), added, updated or deleted.
+
+        type: str
+
+
+AUTHOR: Edward Nunez (@enunez-cyberark) CyberArk BizDev, Cyberark Bizdev (@cyberark-bizdev), erasmix (@erasmix)
+        METADATA:
+          status:
+          - preview
+          supported_by: certified
+        
+
+EXAMPLES:
+
+- name: Logon to CyberArk Vault using PAS Web Services SDK
+  cyberark_authentication:
+    api_base_url: https://components.cyberark.local
+    use_shared_logon_authentication: yes
+
+- name: Create user & immediately add it to a group
+  cyberark_user:
+    username: username
+    initial_password: password
+    user_type_name: EPVUser
+    change_password_on_the_next_logon: no
+    group_name: GroupOfUser
+    state: present
+    cyberark_session: '{{ cyberark_session }}'
+
+- name: Make sure user is present and reset user credential if present
+  cyberark_user:
+    username: Username
+    new_password: password
+    disabled: no
+    state: present
+    cyberark_session: '{{ cyberark_session }}'
+
+- name: Logoff from CyberArk Vault
+  cyberark_authentication:
+    state: absent
+    cyberark_session: '{{ cyberark_session }}'
+
+
+RETURN VALUES:
+
+changed:
+    description: Whether there was a change done.
+    type: bool
+    returned: always
+cyberark_user:
+    description: Dictionary containing result properties.
+    returned: always
+    type: dict
+    sample:
+        result:
+            description: user properties when state is present
+            type: dict
+            returned: success
+status_code:
+    description: Result HTTP Status code
+    returned: success
+    type: int
+    sample: 200
+

@@ -1,0 +1,113 @@
+> IOSXR_NETCONF    (/usr/lib/python2.7/dist-packages/ansible/modules/network/iosxr/iosxr_netconf.py)
+
+        This module provides an abstraction that enables and configures the netconf system service running on Cisco IOS-XR Software. This
+        module can be used to easily enable the Netconf API. Netconf provides a programmatic interface for working with configuration and
+        state resources as defined in RFC 6242.
+
+  * This module is maintained by The Ansible Network Team
+OPTIONS (= is mandatory):
+
+- netconf_port
+        This argument specifies the port the netconf service should listen on for SSH connections.  The default port as defined in RFC
+        6242 is 830.
+        (Aliases: listens_on)[Default: 830]
+
+- netconf_vrf
+        netconf vrf name
+        (Aliases: vrf)[Default: default]
+
+- provider
+        *Deprecated*
+        Starting with Ansible 2.5 we recommend using `connection: network_cli'.
+        For more information please see the L(Network Guide, ../network/getting_started/network_differences.html#multiple-communication-
+        protocols).
+        HORIZONTALLINE
+        A dict object containing connection details.
+        [Default: (null)]
+        suboptions:
+          host:
+            description:
+            - Specifies the DNS host name or address for connecting to the remote device over
+              the specified transport.  The value of host is used as the destination address
+              for the transport.
+            required: true
+            type: str
+          password:
+            description:
+            - Specifies the password to use to authenticate the connection to the remote device.   This
+              value is used to authenticate the SSH session. If the value is not specified
+              in the task, the value of environment variable `ANSIBLE_NET_PASSWORD' will
+              be used instead.
+            type: str
+          port:
+            default: 22
+            description:
+            - Specifies the port to use when building the connection to the remote device.
+            type: int
+          ssh_keyfile:
+            description:
+            - Specifies the SSH key to use to authenticate the connection to the remote device.   This
+              value is the path to the key used to authenticate the SSH session. If the value
+              is not specified in the task, the value of environment variable `ANSIBLE_NET_SSH_KEYFILE'
+              will be used instead.
+            type: path
+          timeout:
+            default: 10
+            description:
+            - Specifies the timeout in seconds for communicating with the network device for
+              either connecting or sending commands.  If the timeout is exceeded before the
+              operation is completed, the module will error.
+            type: int
+          username:
+            description:
+            - Configures the username to use to authenticate the connection to the remote
+              device.  This value is used to authenticate the SSH session. If the value is
+              not specified in the task, the value of environment variable `ANSIBLE_NET_USERNAME'
+              will be used instead.
+            type: str
+        
+        type: dict
+
+- state
+        Specifies the state of the `iosxr_netconf' resource on the remote device.  If the `state' argument is set to `present' the
+        netconf service will be configured.  If the `state' argument is set to `absent' the netconf service will be removed from the
+        configuration.
+        (Choices: present, absent)[Default: present]
+
+
+NOTES:
+      * Tested against Cisco IOS XR Software, Version 6.1.2
+      * For more information on using Ansible to manage network devices see the :ref:`Ansible Network Guide <network_guide>`
+      * For more information on using Ansible to manage Cisco devices see the `Cisco integration page
+        <https://www.ansible.com/integrations/networks/cisco>`_.
+
+
+REQUIREMENTS:  ncclient >= 0.5.3 when using netconf, lxml >= 4.1.1 when using netconf
+
+AUTHOR: Kedar Kekan (@kedarX)
+        METADATA:
+          status:
+          - preview
+          supported_by: network
+        
+
+EXAMPLES:
+
+- name: enable netconf service on port 830
+  iosxr_netconf:
+    listens_on: 830
+    state: present
+
+- name: disable netconf service
+  iosxr_netconf:
+    state: absent
+
+
+RETURN VALUES:
+
+commands:
+  description: Returns the command sent to the remote device
+  returned: when changed is True
+  type: str
+  sample: 'ssh server netconf port 830'
+

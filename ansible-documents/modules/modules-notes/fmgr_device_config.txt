@@ -1,0 +1,76 @@
+> FMGR_DEVICE_CONFIG    (/usr/lib/python2.7/dist-packages/ansible/modules/network/fortimanager/fmgr_device_config.py)
+
+        Edit device configurations from FortiManager Device Manager using JSON RPC API.
+
+  * This module is maintained by The Ansible Community
+OPTIONS (= is mandatory):
+
+- adom
+        The ADOM the configuration should belong to.
+        [Default: root]
+
+- device_hostname
+        The device's new hostname.
+        [Default: (null)]
+
+= device_unique_name
+        The unique device's name that you are editing. A.K.A. Friendly name of the device in FortiManager.
+
+
+- install_config
+        Tells FMGR to attempt to install the config after making it.
+        [Default: disable]
+
+- interface
+        The interface/port number you are editing.
+        [Default: (null)]
+
+- interface_allow_access
+        Specify what protocols are allowed on the interface, comma-separated list (see examples).
+        [Default: (null)]
+
+- interface_ip
+        The IP and subnet of the interface/port you are editing.
+        [Default: (null)]
+
+
+NOTES:
+      * Full Documentation at https://ftnt-ansible-docs.readthedocs.io/en/latest/.
+
+
+AUTHOR: Luke Weighall (@lweighall), Andrew Welsh (@Ghilli3), Jim Huber (@p4r4n0y1ng)
+        METADATA:
+          status:
+          - preview
+          supported_by: community
+        
+
+EXAMPLES:
+
+- name: CHANGE HOSTNAME
+  fmgr_device_config:
+    device_hostname: "ChangedbyAnsible"
+    device_unique_name: "FGT1"
+
+- name: EDIT INTERFACE INFORMATION
+  fmgr_device_config:
+    adom: "root"
+    device_unique_name: "FGT2"
+    interface: "port3"
+    interface_ip: "10.1.1.1/24"
+    interface_allow_access: "ping, telnet, https"
+
+- name: INSTALL CONFIG
+  fmgr_device_config:
+    adom: "root"
+    device_unique_name: "FGT1"
+    install_config: "enable"
+
+
+RETURN VALUES:
+
+api_result:
+  description: full API response, includes status code and message
+  returned: always
+  type: str
+

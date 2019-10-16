@@ -1,0 +1,254 @@
+> AZURE_RM_MANAGEDDISK    (/usr/lib/python2.7/dist-packages/ansible/modules/cloud/azure/azure_rm_manageddisk.py)
+
+        Create, update and delete an Azure Managed Disk
+
+  * This module is maintained by The Ansible Community
+OPTIONS (= is mandatory):
+
+- ad_user
+        Active Directory username. Use when authenticating with an Active Directory user rather than service principal.
+        [Default: (null)]
+        type: str
+
+- adfs_authority_url
+        Azure AD authority url. Use when authenticating with Username/password, and has your own ADFS authority.
+        [Default: (null)]
+        type: str
+        version_added: 2.6
+
+- api_profile
+        Selects an API profile to use when communicating with Azure services. Default value of `latest' is appropriate for public clouds;
+        future values will allow use with Azure Stack.
+        [Default: latest]
+        type: str
+        version_added: 2.5
+
+- append_tags
+        Use to control if tags field is canonical or just appends to existing tags.
+        When canonical, any tags not found in the tags parameter will be removed from the object's metadata.
+        [Default: True]
+        type: bool
+
+- attach_caching
+        Disk caching policy controlled by VM. Will be used when attached to the VM defined by `managed_by'.
+        If this option is different from the current caching policy, the managed disk will be deattached from the VM and attached with
+        current caching option again.
+        Allowed values: '', read_only, read_write.
+        (Choices: , read_only, read_write)[Default: (null)]
+        version_added: 2.8
+        
+
+- auth_source
+        Controls the source of the credentials to use for authentication.
+        If not specified, ANSIBLE_AZURE_AUTH_SOURCE environment variable will be used and default to `auto' if variable is not defined.
+        `auto' will follow the default precedence of module parameters -> environment variables -> default profile in credential file
+        `~/.azure/credentials'.
+        When set to `cli', the credentials will be sources from the default Azure CLI profile.
+        Can also be set via the `ANSIBLE_AZURE_AUTH_SOURCE' environment variable.
+        When set to `msi', the host machine must be an azure resource with an enabled MSI extension. `subscription_id' or the environment
+        variable `AZURE_SUBSCRIPTION_ID' can be used to identify the subscription ID if the resource is granted access to more than one
+        subscription, otherwise the first subscription is chosen.
+        The `msi' was added in Ansible 2.6.
+        (Choices: auto, cli, credential_file, env, msi)[Default: (null)]
+        type: str
+        version_added: 2.5
+
+- cert_validation_mode
+        Controls the certificate validation behavior for Azure endpoints. By default, all modules will validate the server certificate,
+        but when an HTTPS proxy is in use, or against Azure Stack, it may be necessary to disable this behavior by passing `ignore'. Can
+        also be set via credential file profile or the `AZURE_CERT_VALIDATION' environment variable.
+        (Choices: ignore, validate)[Default: (null)]
+        type: str
+        version_added: 2.5
+
+- client_id
+        Azure client ID. Use when authenticating with a Service Principal.
+        [Default: (null)]
+        type: str
+
+- cloud_environment
+        For cloud environments other than the US public cloud, the environment name (as defined by Azure Python SDK, eg,
+        `AzureChinaCloud', `AzureUSGovernment'), or a metadata discovery endpoint URL (required for Azure Stack). Can also be set via
+        credential file profile or the `AZURE_CLOUD_ENVIRONMENT' environment variable.
+        [Default: AzureCloud]
+        type: str
+        version_added: 2.4
+
+- create_option
+        Allowed values: empty, import, copy. - `import' from a VHD file in `source_uri' and `copy' from previous managed disk
+        `source_uri'.
+        (Choices: empty, import, copy)[Default: (null)]
+
+- disk_size_gb
+        Size in GB of the managed disk to be created.
+        If `create_option' is `copy' then the value must be greater than or equal to the source's size.
+        [Default: (null)]
+
+- location
+        Valid Azure location. Defaults to location of the resource group.
+        [Default: (null)]
+
+- managed_by
+        Name of an existing virtual machine with which the disk is or will be associated, this VM should be in the same resource group.
+        To detach a disk from a vm, explicitly set to ''.
+        If this option is unset, the value will not be changed.
+        [Default: (null)]
+        version_added: 2.5
+        
+
+= name
+        Name of the managed disk.
+
+
+- os_type
+        Type of Operating System: `linux' or `windows'.
+        Used when `create_option' is either `copy' or `import' and the source is an OS disk.
+        If omitted during creation, no value is set.
+        If omitted during an update, no change is made.
+        Once set, this value cannot be cleared.
+        (Choices: linux, windows)[Default: (null)]
+
+- password
+        Active Directory user password. Use when authenticating with an Active Directory user rather than service principal.
+        [Default: (null)]
+
+- profile
+        Security profile found in ~/.azure/credentials file.
+        [Default: (null)]
+        type: str
+
+= resource_group
+        Name of a resource group where the managed disk exists or will be created.
+
+
+- secret
+        Azure client secret. Use when authenticating with a Service Principal.
+        [Default: (null)]
+        type: str
+
+- source_uri
+        URI to a valid VHD file to be used or the resource ID of the managed disk to copy.
+        (Aliases: source_resource_uri)[Default: (null)]
+
+- state
+        Assert the state of the managed disk. Use `present' to create or update a managed disk and `absent' to delete a managed disk.
+        (Choices: absent, present)[Default: present]
+
+- storage_account_type
+        Type of storage for the managed disk.
+        If not specified, the disk is created as `Standard_LRS'.
+        `Standard_LRS' is for Standard HDD.
+        `StandardSSD_LRS' (added in 2.8) is for Standard SSD.
+        `Premium_LRS' is for Premium SSD.
+        `UltraSSD_LRS' (added in 2.8) is for Ultra SSD, which is in preview mode, and only available on select instance types.
+        See https://docs.microsoft.com/en-us/azure/virtual-machines/windows/disks-types for more information about disk types.
+        (Choices: Standard_LRS, StandardSSD_LRS, Premium_LRS, UltraSSD_LRS)[Default: (null)]
+
+- subscription_id
+        Your Azure subscription Id.
+        [Default: (null)]
+        type: str
+
+- tags
+        Tags to assign to the managed disk.
+        [Default: (null)]
+        type: dict
+
+- tenant
+        Azure tenant ID. Use when authenticating with a Service Principal.
+        [Default: (null)]
+        type: str
+
+- zone
+        Allowed values: 1, 2, 3, ''.
+        (Choices: 1, 2, 3, )[Default: (null)]
+        version_added: 2.8
+
+
+NOTES:
+      * This module was called `azure_rm_managed_disk' before Ansible 2.8. The usage did not change.
+      * For authentication with Azure you can pass parameters, set environment variables, use a profile stored in
+        ~/.azure/credentials, or log in before you run your tasks or playbook with `az login'.
+      * Authentication is also possible using a service principal or Active Directory user.
+      * To authenticate via service principal, pass subscription_id, client_id, secret and tenant or set environment variables
+        AZURE_SUBSCRIPTION_ID, AZURE_CLIENT_ID, AZURE_SECRET and AZURE_TENANT.
+      * To authenticate via Active Directory user, pass ad_user and password, or set AZURE_AD_USER and AZURE_PASSWORD in the
+        environment.
+      * Alternatively, credentials can be stored in ~/.azure/credentials. This is an ini file containing a [default] section and
+        the following keys: subscription_id, client_id, secret and tenant or subscription_id, ad_user and password. It is also
+        possible to add additional profiles. Specify the profile by passing profile or setting AZURE_PROFILE in the environment.
+
+
+SEE ALSO:
+      * Sign in with Azure CLI
+           How to authenticate using the `az login' command.
+           https://docs.microsoft.com/en-us/cli/azure/authenticate-azure-cli?view=azure-cli-latest
+
+
+REQUIREMENTS:  python >= 2.7, azure >= 2.0.0
+
+AUTHOR: Bruno Medina (@brusMX)
+        METADATA:
+          status:
+          - preview
+          supported_by: community
+        
+
+EXAMPLES:
+
+- name: Create managed disk
+      azure_rm_manageddisk:
+        name: mymanageddisk
+        location: eastus
+        resource_group: myResourceGroup
+        disk_size_gb: 4
+
+    - name: Create managed operating system disk from page blob
+      azure_rm_manageddisk:
+        name: mymanageddisk
+        location: eastus2
+        resource_group: myResourceGroup
+        create_option: import
+        source_uri: https://storageaccountname.blob.core.windows.net/containername/blob-name.vhd
+        os_type: windows
+        storage_account_type: Premium_LRS
+
+    - name: Mount the managed disk to VM
+      azure_rm_manageddisk:
+        name: mymanageddisk
+        location: eastus
+        resource_group: myResourceGroup
+        disk_size_gb: 4
+        managed_by: testvm001
+        attach_caching: read_only
+
+    - name: Unmount the managed disk to VM
+      azure_rm_manageddisk:
+        name: mymanageddisk
+        location: eastus
+        resource_group: myResourceGroup
+        disk_size_gb: 4
+
+    - name: Delete managed disk
+      azure_rm_manage_disk:
+        name: mymanageddisk
+        location: eastus
+        resource_group: myResourceGroup
+        state: absent
+
+
+RETURN VALUES:
+
+id:
+    description: The managed disk resource ID.
+    returned: always
+    type: dict
+state:
+    description: Current state of the managed disk
+    returned: always
+    type: dict
+changed:
+    description: Whether or not the resource has changed
+    returned: always
+    type: bool
+

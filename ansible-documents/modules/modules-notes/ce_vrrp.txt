@@ -1,0 +1,237 @@
+> CE_VRRP    (/usr/lib/python2.7/dist-packages/ansible/modules/network/cloudengine/ce_vrrp.py)
+
+        Manages VRRP interface attributes on HUAWEI CloudEngine devices.
+
+  * This module is maintained by The Ansible Community
+OPTIONS (= is mandatory):
+
+- admin_flowdown
+        Disable the flowdown function for service VRRP.
+        [Default: no]
+        type: bool
+
+- admin_ignore_if_down
+        mVRRP ignores an interface Down event.
+        [Default: no]
+        type: bool
+
+- admin_interface
+        Tracked mVRRP interface name. The value is a string of 1 to 63 characters.
+        [Default: (null)]
+
+- admin_vrid
+        Tracked mVRRP ID. The value is an integer ranging from 1 to 255.
+        [Default: (null)]
+
+- advertise_interval
+        Configured interval between sending advertisements, in milliseconds. Only the master router sends VRRP advertisements. The
+        default value is 1000 milliseconds.
+        [Default: (null)]
+
+- auth_key
+        This object is set based on the authentication type. When noAuthentication is specified, the value is empty. When
+        simpleTextPassword or md5Authentication is specified, the value is a string of 1 to 8 characters in plaintext and displayed as a
+        blank text for security.
+        [Default: (null)]
+
+- auth_mode
+        Authentication type used for VRRP packet exchanges between virtual routers. The values are noAuthentication, simpleTextPassword,
+        md5Authentication. The default value is noAuthentication.
+        (Choices: simple, md5, none)[Default: (null)]
+
+- fast_resume
+        mVRRP's fast resume mode.
+        (Choices: enable, disable)[Default: (null)]
+
+- gratuitous_arp_interval
+        Interval at which gratuitous ARP packets are sent, in seconds. The value ranges from 30 to 1200.The default value is 300.
+        [Default: (null)]
+
+- holding_multiplier
+        The configured holdMultiplier.The value is an integer ranging from 3 to 10. The default value is 3.
+        [Default: (null)]
+
+- interface
+        Name of an interface. The value is a string of 1 to 63 characters.
+        [Default: (null)]
+
+- is_plain
+        Select the display mode of an authentication key. By default, an authentication key is displayed in ciphertext.
+        [Default: no]
+        type: bool
+
+- preempt_timer_delay
+        Preemption delay. The value is an integer ranging from 0 to 3600. The default value is 0.
+        [Default: (null)]
+
+- priority
+        Configured VRRP priority. The value ranges from 1 to 254. The default value is 100. A larger value indicates a higher priority.
+        [Default: (null)]
+
+- recover_delay
+        Delay in recovering after an interface goes Up. The delay is used for interface flapping suppression. The value is an integer
+        ranging from 0 to 3600. The default value is 0 seconds.
+        [Default: (null)]
+
+- state
+        Specify desired state of the resource.
+        (Choices: present, absent)[Default: present]
+
+- version
+        VRRP version. The default version is v2.
+        (Choices: v2, v3)[Default: (null)]
+
+- virtual_ip
+        Virtual IP address. The value is a string of 0 to 255 characters.
+        [Default: (null)]
+
+- vrid
+        VRRP backup group ID. The value is an integer ranging from 1 to 255.
+        [Default: present]
+
+- vrrp_type
+        Type of a VRRP backup group.
+        (Choices: normal, member, admin)[Default: (null)]
+
+
+AUTHOR: Li Yanfeng (@numone213)
+        METADATA:
+          status:
+          - preview
+          supported_by: community
+        
+
+EXAMPLES:
+
+- name: vrrp module test
+  hosts: cloudengine
+  connection: local
+  gather_facts: no
+  vars:
+    cli:
+      host: "{{ inventory_hostname }}"
+      port: "{{ ansible_ssh_port }}"
+      username: "{{ username }}"
+      password: "{{ password }}"
+      transport: cli
+
+  tasks:
+
+  - name: Set vrrp version
+    ce_vrrp:
+      version: v3
+      provider: "{{ cli }}"
+
+  - name: Set vrrp gratuitous-arp interval
+    ce_vrrp:
+      gratuitous_arp_interval: 40
+      mlag_id: 4
+      provider: "{{ cli }}"
+
+  - name: Set vrrp recover-delay
+    ce_vrrp:
+      recover_delay: 10
+      provider: "{{ cli }}"
+
+  - name: Set vrrp vrid virtual-ip
+    ce_vrrp:
+      interface: 40GE2/0/8
+      vrid: 1
+      virtual_ip: 10.14.2.7
+      provider: "{{ cli }}"
+
+  - name: Set vrrp vrid admin
+    ce_vrrp:
+      interface: 40GE2/0/8
+      vrid: 1
+      vrrp_type: admin
+      provider: "{{ cli }}"
+
+  - name: Set vrrp vrid fast_resume
+    ce_vrrp:
+      interface: 40GE2/0/8
+      vrid: 1
+      fast_resume: enable
+      provider: "{{ cli }}"
+
+  - name: Set vrrp vrid holding-multiplier
+    ce_vrrp:
+      interface: 40GE2/0/8
+      vrid: 1
+      holding_multiplier: 4
+      provider: "{{ cli }}"
+
+  - name: Set vrrp vrid preempt timer delay
+    ce_vrrp:
+      interface: 40GE2/0/8
+      vrid: 1
+      preempt_timer_delay: 10
+      provider: "{{ cli }}"
+
+  - name: Set vrrp vrid admin-vrrp
+    ce_vrrp:
+      interface: 40GE2/0/8
+      vrid: 1
+      admin_interface: 40GE2/0/9
+      admin_vrid: 2
+      vrrp_type: member
+      provider: "{{ cli }}"
+
+  - name: Set vrrp vrid authentication-mode
+    ce_vrrp:
+      interface: 40GE2/0/8
+      vrid: 1
+      is_plain: true
+      auth_mode: simple
+      auth_key: aaa
+      provider: "{{ cli }}"
+
+
+RETURN VALUES:
+
+changed:
+    description: check to see if a change was made on the device
+    returned: always
+    type: bool
+    sample: true
+proposed:
+    description: k/v pairs of parameters passed into module
+    returned: always
+    type: dict
+    sample: {
+                "auth_key": "aaa",
+                "auth_mode": "simple",
+                "interface": "40GE2/0/8",
+                "is_plain": true,
+                "state": "present",
+                "vrid": "1"
+            }
+existing:
+    description: k/v pairs of existing aaa server
+    returned: always
+    type: dict
+    sample: {
+                "auth_mode": "none",
+                "interface": "40GE2/0/8",
+                "is_plain": "false",
+                "vrid": "1",
+                "vrrp_type": "normal"
+            }
+end_state:
+    description: k/v pairs of aaa params after module execution
+    returned: always
+    type: dict
+    sample: {
+                "auth_mode": "simple",
+                "interface": "40GE2/0/8",
+                "is_plain": "true",
+                "vrid": "1",
+                "vrrp_type": "normal"
+    }
+updates:
+    description: command sent to the device
+    returned: always
+    type: list
+    sample: { "interface 40GE2/0/8",
+              "vrrp vrid 1 authentication-mode simple plain aaa"}
+

@@ -1,0 +1,86 @@
+> INFINI_HOST    (/usr/lib/python2.7/dist-packages/ansible/modules/storage/infinidat/infini_host.py)
+
+        This module creates, deletes or modifies hosts on Infinibox.
+
+  * This module is maintained by The Ansible Community
+OPTIONS (= is mandatory):
+
+= name
+        Host Name
+
+
+- password
+        Infinibox User password.
+        [Default: (null)]
+        type: str
+
+- state
+        Creates/Modifies Host when present or removes when absent
+        (Choices: present, absent)[Default: present]
+
+= system
+        Infinibox Hostname or IPv4 Address.
+
+        type: str
+
+- user
+        Infinibox User username with sufficient priveledges ( see notes ).
+        [Default: (null)]
+
+- volume
+        Volume name to map to the host
+        [Default: (null)]
+
+- wwns
+        List of wwns of the host
+        [Default: (null)]
+
+
+NOTES:
+      * This module requires infinisdk python library
+      * You must set INFINIBOX_USER and INFINIBOX_PASSWORD environment variables if user and password arguments are not passed to
+        the module directly
+      * Ansible uses the infinisdk configuration file `~/.infinidat/infinisdk.ini' if no credentials are provided. See
+        http://infinisdk.readthedocs.io/en/latest/getting_started.html
+
+
+REQUIREMENTS:  python >= 2.7, infinisdk
+
+AUTHOR: Gregory Shulov (@GR360RY)
+        METADATA:
+          status:
+          - preview
+          supported_by: community
+        
+
+EXAMPLES:
+
+- name: Create new new host
+  infini_host:
+    name: foo.example.com
+    user: admin
+    password: secret
+    system: ibox001
+
+- name: Make sure host bar is available with wwn ports
+  infini_host:
+    name: bar.example.com
+    wwns:
+      - "00:00:00:00:00:00:00"
+      - "11:11:11:11:11:11:11"
+    system: ibox01
+    user: admin
+    password: secret
+
+- name: Map host foo.example.com to volume bar
+  infini_host:
+    name: foo.example.com
+    volume: bar
+    system: ibox01
+    user: admin
+    password: secret
+
+
+RETURN VALUES:
+
+

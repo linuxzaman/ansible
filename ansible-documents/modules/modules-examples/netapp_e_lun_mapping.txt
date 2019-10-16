@@ -1,0 +1,33 @@
+EXAMPLES:
+
+---
+    - name: Map volume1 to the host target host1
+      netapp_e_lun_mapping:
+        ssid: 1
+        api_url: "{{ netapp_api_url }}"
+        api_username: "{{ netapp_api_username }}"
+        api_password: "{{ netapp_api_password }}"
+        validate_certs: no
+        state: present
+        target: host1
+        volume: volume1
+    - name: Delete the lun mapping between volume1 and host1
+      netapp_e_lun_mapping:
+        ssid: 1
+        api_url: "{{ netapp_api_url }}"
+        api_username: "{{ netapp_api_username }}"
+        api_password: "{{ netapp_api_password }}"
+        validate_certs: yes
+        state: absent
+        target: host1
+        volume: volume1
+
+
+RETURN VALUES:
+
+msg:
+    description: success of the module
+    returned: always
+    type: str
+    sample: Lun mapping is complete
+

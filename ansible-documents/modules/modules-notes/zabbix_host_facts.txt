@@ -1,0 +1,122 @@
+> ZABBIX_HOST_FACTS    (/usr/lib/python2.7/dist-packages/ansible/modules/monitoring/zabbix/zabbix_host_facts.py)
+
+        This module allows you to search for Zabbix host entries.
+
+  * This module is maintained by The Ansible Community
+OPTIONS (= is mandatory):
+
+- exact_match
+        Find the exact match
+        [Default: False]
+        type: bool
+
+- host_inventory
+        List of host inventory keys to display in result.
+        Whole host inventory is retrieved if keys are not specified.
+        [Default: (null)]
+        type: list
+        version_added: 2.8
+        
+
+- host_ip
+        Host interface IP of the host in Zabbix.
+        [Default: (null)]
+
+= host_name
+        Name of the host in Zabbix.
+        host_name is the unique identifier used and cannot be updated using this module.
+
+
+- http_login_password
+        Basic Auth password
+        [Default: (null)]
+        type: str
+        version_added: 2.1
+
+= http_login_user
+        Basic Auth login
+
+        type: str
+        version_added: 2.1
+
+= login_password
+        Zabbix user password.
+
+        type: str
+
+= login_user
+        Zabbix user name.
+
+        type: str
+
+- remove_duplicate
+        Remove duplicate host from host result
+        [Default: True]
+        type: bool
+
+= server_url
+        URL of Zabbix server, with protocol (http or https). `url' is an alias for `server_url'.
+        (Aliases: url)
+        type: str
+
+- timeout
+        The timeout of API request (seconds).
+        [Default: 10]
+        type: int
+
+- validate_certs
+        If set to False, SSL certificates will not be validated. This should only be used on personally controlled sites using self-
+        signed certificates.
+        [Default: True]
+        type: bool
+        version_added: 2.5
+
+
+REQUIREMENTS:  python >= 2.6, zabbix-api
+
+AUTHOR: Michael Miko (@RedWhiteMiko)
+        METADATA:
+          status:
+          - preview
+          supported_by: community
+        
+
+EXAMPLES:
+
+- name: Get host info
+  local_action:
+    module: zabbix_host_facts
+    server_url: http://monitor.example.com
+    login_user: username
+    login_password: password
+    host_name: ExampleHost
+    host_ip: 127.0.0.1
+    timeout: 10
+    exact_match: no
+    remove_duplicate: yes
+
+- name: Reduce host inventory information to provided keys
+  local_action:
+    module: zabbix_host_facts
+    server_url: http://monitor.example.com
+    login_user: username
+    login_password: password
+    host_name: ExampleHost
+    host_inventory:
+      - os
+      - tag
+    host_ip: 127.0.0.1
+    timeout: 10
+    exact_match: no
+    remove_duplicate: yes
+
+
+RETURN VALUES:
+
+---
+hosts:
+  description: List of Zabbix hosts. See https://www.zabbix.com/documentation/3.4/manual/api/reference/host/get for list of host values.
+  returned: success
+  type: dict
+  sample: [ { "available": "1", "description": "", "disable_until": "0", "error": "", "flags": "0", "groups": ["1"], "host": "Host A", ... } ]
+

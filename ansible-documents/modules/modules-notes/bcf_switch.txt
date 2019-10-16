@@ -1,0 +1,64 @@
+> BCF_SWITCH    (/usr/lib/python2.7/dist-packages/ansible/modules/network/bigswitch/bcf_switch.py)
+
+        Create and remove a Big Cloud Fabric switch.
+
+  * This module is maintained by The Ansible Community
+OPTIONS (= is mandatory):
+
+- access_token
+        Big Cloud Fabric access token. If this isn't set then the environment variable `BIGSWITCH_ACCESS_TOKEN' is used.
+        [Default: (null)]
+
+= controller
+        The controller IP address.
+
+
+= fabric_role
+        Fabric role of the switch.
+        (Choices: spine, leaf)
+
+- leaf_group
+        The leaf group of the switch if the switch is a leaf.
+        [Default: (null)]
+
+= mac
+        The MAC address of the switch.
+
+
+= name
+        The name of the switch.
+
+
+- state
+        Whether the switch should be present or absent.
+        (Choices: present, absent)[Default: present]
+
+- validate_certs
+        If `false', SSL certificates will not be validated. This should only be used on personally controlled devices using self-signed
+        certificates.
+        [Default: True]
+        type: bool
+
+
+AUTHOR: Ted (@tedelhourani)
+        METADATA:
+          status:
+          - preview
+          supported_by: community
+        
+
+EXAMPLES:
+
+- name: bcf leaf switch
+  bcf_switch:
+    name: Rack1Leaf1
+    fabric_role: leaf
+    leaf_group: R1
+    mac: 00:00:00:02:00:02
+    controller: '{{ inventory_hostname }}'
+    state: present
+    validate_certs: false
+
+
+RETURN VALUES:
+ # 

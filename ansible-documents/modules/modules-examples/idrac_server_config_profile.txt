@@ -1,0 +1,78 @@
+EXAMPLES:
+
+---
+- name: Import Server Configuration Profile from a network share
+  idrac_server_config_profile:
+    idrac_ip: "192.168.0.1"
+    idrac_user: "user_name"
+    idrac_password: "user_password"
+    command: "import"
+    share_name: "192.168.0.2:/share"
+    share_user: "share_user_name"
+    share_password: "share_user_password"
+    scp_file: "scp_filename.xml"
+    scp_components: "ALL"
+    job_wait: True
+
+- name: Import Server Configuration Profile from a local path
+  idrac_server_config_profile:
+    idrac_ip: "192.168.0.1"
+    idrac_user: "user_name"
+    idrac_password: "user_password"
+    command: "import"
+    share_name: "/scp_folder"
+    share_user: "share_user_name"
+    share_password: "share_user_password"
+    scp_file: "scp_filename.xml"
+    scp_components: "ALL"
+    job_wait: True
+
+- name: Export Server Configuration Profile to a network share
+  idrac_server_config_profile:
+    idrac_ip: "192.168.0.1"
+    idrac_user: "user_name"
+    idrac_password: "user_password"
+    share_name: "192.168.0.2:/share"
+    share_user: "share_user_name"
+    share_password: "share_user_password"
+    job_wait: False
+
+- name: Export Server Configuration Profile to a local path
+  idrac_server_config_profile:
+    idrac_ip: "192.168.0.1"
+    idrac_user: "user_name"
+    idrac_password: "user_password"
+    share_name: "/scp_folder"
+    share_user: "share_user_name"
+    share_password: "share_user_password"
+    job_wait: False
+
+
+RETURN VALUES:
+
+---
+msg:
+  type: str
+  description: Status of the import or export SCP job.
+  returned: always
+  sample: "Successfully imported the Server Configuration Profile"
+scp_status:
+  type: dict
+  description: SCP operation job and progress details from the iDRAC.
+  returned: success
+  sample:
+    {
+      "Id": "JID_XXXXXXXXX",
+      "JobState": "Completed",
+      "JobType": "ImportConfiguration",
+      "Message": "Successfully imported and applied Server Configuration Profile.",
+      "MessageArgs": [],
+      "MessageId": "XXX123",
+      "Name": "Import Configuration",
+      "PercentComplete": 100,
+      "StartTime": "TIME_NOW",
+      "Status": "Success",
+      "TargetSettingsURI": null,
+      "retval": true
+    }
+

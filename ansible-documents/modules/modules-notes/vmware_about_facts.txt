@@ -1,0 +1,102 @@
+> VMWARE_ABOUT_FACTS    (/usr/lib/python2.7/dist-packages/ansible/modules/cloud/vmware/vmware_about_facts.py)
+
+        This module can be used to gather information about VMware server to which user is trying to connect.
+
+  * This module is maintained by The Ansible Community
+OPTIONS (= is mandatory):
+
+- hostname
+        The hostname or IP address of the vSphere vCenter or ESXi server.
+        If the value is not specified in the task, the value of environment variable `VMWARE_HOST' will be used instead.
+        Environment variable support added in Ansible 2.6.
+        [Default: (null)]
+        type: str
+
+- password
+        The password of the vSphere vCenter or ESXi server.
+        If the value is not specified in the task, the value of environment variable `VMWARE_PASSWORD' will be used instead.
+        Environment variable support added in Ansible 2.6.
+        (Aliases: pass, pwd)[Default: (null)]
+        type: str
+
+- port
+        The port number of the vSphere vCenter or ESXi server.
+        If the value is not specified in the task, the value of environment variable `VMWARE_PORT' will be used instead.
+        Environment variable support added in Ansible 2.6.
+        [Default: 443]
+        type: int
+        version_added: 2.5
+
+- username
+        The username of the vSphere vCenter or ESXi server.
+        If the value is not specified in the task, the value of environment variable `VMWARE_USER' will be used instead.
+        Environment variable support added in Ansible 2.6.
+        (Aliases: admin, user)[Default: (null)]
+        type: str
+
+- validate_certs
+        Allows connection when SSL certificates are not valid. Set to `false' when certificates are not trusted.
+        If the value is not specified in the task, the value of environment variable `VMWARE_VALIDATE_CERTS' will be used instead.
+        Environment variable support added in Ansible 2.6.
+        If set to `yes', please make sure Python >= 2.7.9 is installed on the given machine.
+        [Default: True]
+        type: bool
+
+
+NOTES:
+      * Tested on vSphere 6.5
+
+
+REQUIREMENTS:  python >= 2.6, PyVmomi
+
+AUTHOR: Abhijeet Kasurde (@Akasurde)
+        METADATA:
+          status:
+          - preview
+          supported_by: community
+        
+
+EXAMPLES:
+
+- name: Provide information about vCenter
+  vmware_about_facts:
+    hostname: '{{ vcenter_hostname }}'
+    username: '{{ vcenter_username }}'
+    password: '{{ vcenter_password }}'
+  delegate_to: localhost
+  register: vcenter_about_info
+
+- name: Provide information about a standalone ESXi server
+  vmware_about_facts:
+    hostname: '{{ esxi_hostname }}'
+    username: '{{ esxi_username }}'
+    password: '{{ esxi_password }}'
+  delegate_to: localhost
+  register: esxi_about_info
+
+
+RETURN VALUES:
+
+about_facts:
+    description:
+    - dict about VMware server
+    returned: success
+    type: str
+    sample:
+        {
+            "api_type": "VirtualCenter",
+            "api_version": "6.5",
+            "build": "5973321",
+            "instance_uuid": "dbed6e0c-bd88-4ef6-b594-21283e1c677f",
+            "license_product_name": "VMware VirtualCenter Server",
+            "license_product_version": "6.0",
+            "locale_build": "000",
+            "locale_version": "INTL",
+            "os_type": "darwin-amd64",
+            "product_full_name": "VMware vCenter Server 6.5.0 build-5973321",
+            "product_line_id": "vpx",
+            "product_name": "VMware vCenter Server (govmomi simulator)",
+            "vendor": "VMware, Inc.",
+            "version": "6.5.0"
+        }
+

@@ -1,0 +1,65 @@
+EXAMPLES:
+
+- name: List VM instances in Virtual Machine ScaleSet
+    azure_rm_computevirtualmachinescalesetinstance_facts:
+      resource_group: myResourceGroup
+      vmss_name: myVMSS
+
+
+RETURN VALUES:
+
+instances:
+    description: A list of dictionaries containing facts for Virtual Machine Scale Set VM.
+    returned: always
+    type: complex
+    contains:
+        id:
+            description:
+                - Resource Id
+            returned: always
+            type: str
+            sample: "/subscriptions/xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx/resourceGroups/myResourceGroup/providers/Microsoft.Compute/virtualMachineScaleSets/my
+                     VMSS/virtualMachines/2"
+        tags:
+            description:
+                - Resource tags
+            returned: always
+            type: complex
+            sample: { 'tag1': 'abc' }
+        instance_id:
+            description:
+                - Virtual Machine instance Id
+            returned: always
+            type: str
+            sample: 0
+        name:
+            description:
+                - Virtual Machine name
+            returned: always
+            type: str
+            sample: myVMSS_2
+        latest_model:
+            description:
+                - Is latest model applied?
+            returned: always
+            type: bool
+            sample: True
+        provisioning_state:
+            description:
+                - Provisioning state of the Virtual Machine
+            returned: always
+            type: str
+            sample: Succeeded
+        power_state:
+            description:
+                - Provisioning state of the Virtual Machine
+            returned: always
+            type: str
+            sample: running
+        vm_id:
+            description:
+                - Virtual Machine Id
+            returned: always
+            type: str
+            sample: 94a141a9-4530-46ac-b151-2c7ff09aa823
+

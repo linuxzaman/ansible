@@ -1,0 +1,163 @@
+> BIGIP_FACTS    (/usr/lib/python2.7/dist-packages/ansible/modules/network/f5/_bigip_facts.py)
+
+        Collect facts from F5 BIG-IP devices via iControl SOAP API
+
+DEPRECATED: 
+
+	Reason: The bigip_facts module relies on SOAP to communicate with the BIG-IP, and has a large amount of code that does not conform to existing F5 standards. The M(bigip_device_facts) module is easier to maintain and use.
+
+	Will be removed in: Ansible 2.11
+	Alternatives: bigip_device_facts
+
+
+  * This module is maintained by an Ansible Partner
+OPTIONS (= is mandatory):
+
+- filter
+        Shell-style glob matching string used to filter fact keys. Not applicable for software, provision, and system_info fact
+        categories.
+        [Default: (null)]
+
+= include
+        Fact category or list of categories to collect
+        (Choices: address_class, certificate, client_ssl_profile, device, device_group, interface, key, node, pool, provision, rule,
+        self_ip, software, system_info, traffic_group, trunk, virtual_address, virtual_server, vlan)
+
+= password
+        The password for the user account used to connect to the BIG-IP.
+        You may omit this option by setting the environment variable `F5_PASSWORD'.
+        (Aliases: pass, pwd)
+        type: str
+
+- provider
+        A dict object containing connection details.
+        [Default: (null)]
+        suboptions:
+          password:
+            aliases:
+            - pass
+            - pwd
+            description:
+            - The password for the user account used to connect to the BIG-IP.
+            - You may omit this option by setting the environment variable `F5_PASSWORD'.
+            required: true
+            type: str
+          server:
+            description:
+            - The BIG-IP host.
+            - You may omit this option by setting the environment variable `F5_SERVER'.
+            required: true
+            type: str
+          server_port:
+            default: 443
+            description:
+            - The BIG-IP server port.
+            - You may omit this option by setting the environment variable `F5_SERVER_PORT'.
+            type: int
+          ssh_keyfile:
+            description:
+            - Specifies the SSH keyfile to use to authenticate the connection to the remote
+              device.  This argument is only used for `cli' transports.
+            - You may omit this option by setting the environment variable `ANSIBLE_NET_SSH_KEYFILE'.
+            type: path
+          timeout:
+            default: 10
+            description:
+            - Specifies the timeout in seconds for communicating with the network device for
+              either connecting or sending commands.  If the timeout is exceeded before the
+              operation is completed, the module will error.
+            type: int
+          transport:
+            choices:
+            - cli
+            - rest
+            default: rest
+            description:
+            - Configures the transport connection to use when connecting to the remote device.
+            type: str
+          user:
+            description:
+            - The username to connect to the BIG-IP with. This user must have administrative
+              privileges on the device.
+            - You may omit this option by setting the environment variable `F5_USER'.
+            required: true
+            type: str
+          validate_certs:
+            default: true
+            description:
+            - If `no', SSL certificates are not validated. Use this only on personally controlled
+              sites using self-signed certificates.
+            - You may omit this option by setting the environment variable `F5_VALIDATE_CERTS'.
+            type: bool
+        
+        type: dict
+        version_added: 2.5
+
+= server
+        The BIG-IP host.
+        You may omit this option by setting the environment variable `F5_SERVER'.
+
+        type: str
+
+- server_port
+        The BIG-IP server port.
+        You may omit this option by setting the environment variable `F5_SERVER_PORT'.
+        [Default: 443]
+        type: int
+        version_added: 2.2
+
+- session
+        BIG-IP session support; may be useful to avoid concurrency issues in certain circumstances.
+        [Default: False]
+        type: bool
+
+= user
+        The username to connect to the BIG-IP with. This user must have administrative privileges on the device.
+        You may omit this option by setting the environment variable `F5_USER'.
+
+        type: str
+
+- validate_certs
+        If `no', SSL certificates are not validated. Use this only on personally controlled sites using self-signed certificates.
+        You may omit this option by setting the environment variable `F5_VALIDATE_CERTS'.
+        [Default: True]
+        type: bool
+        version_added: 2.0
+
+
+NOTES:
+      * Requires BIG-IP software version >= 11.4
+      * F5 developed module 'bigsuds' required (see http://devcentral.f5.com)
+      * Best run as a local_action in your playbook
+      * Tested with manager and above account privilege level
+      * `provision' facts were added in 2.2
+      * This module is deprecated. Use the `bigip_device_facts' module instead.
+      * For more information on using Ansible to manage F5 Networks devices see https://www.ansible.com/integrations/networks/f5.
+      * Requires BIG-IP software version >= 12.
+      * The F5 modules only manipulate the running configuration of the F5 product. To ensure that BIG-IP specific configuration
+        persists to disk, be sure to include at least one task that uses the [bigip_config] module to save the running
+        configuration. Refer to the module's documentation for the correct usage of the module to save your running configuration.
+
+
+REQUIREMENTS:  bigsuds
+
+AUTHOR: Matt Hite (@mhite), Tim Rupp (@caphrim007)
+        METADATA:
+          status:
+          - deprecated
+          supported_by: certified
+        
+
+EXAMPLES:
+
+- name: Collect BIG-IP facts
+  bigip_facts:
+    server: lb.mydomain.com
+    user: admin
+    password: secret
+    include:
+      - interface
+      - vlan
+  delegate_to: localhost
+
+

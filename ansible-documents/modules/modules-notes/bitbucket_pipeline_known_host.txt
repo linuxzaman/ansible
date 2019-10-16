@@ -1,0 +1,90 @@
+> BITBUCKET_PIPELINE_KNOWN_HOST    (/usr/lib/python2.7/dist-packages/ansible/modules/source_control/bitbucket/bitbucket_pipeline_known_host.py)
+
+        Manages Bitbucket pipeline known hosts under the "SSH Keys" menu. The host fingerprint will be retrieved automatically, but in
+        case of an error, one can use `key' field to specify it manually.
+
+  * This module is maintained by The Ansible Community
+OPTIONS (= is mandatory):
+
+- client_id
+        The OAuth consumer key.
+        If not set the environment variable `BITBUCKET_CLIENT_ID' will be used.
+        [Default: (null)]
+        type: str
+
+- client_secret
+        The OAuth consumer secret.
+        If not set the environment variable `BITBUCKET_CLIENT_SECRET' will be used.
+        [Default: (null)]
+        type: str
+
+- key
+        The public key.
+        [Default: (null)]
+        type: str
+
+= name
+        The FQDN of the known host.
+
+        type: str
+
+= repository
+        The repository name.
+
+        type: str
+
+= state
+        Indicates desired state of the record.
+        (Choices: absent, present)
+        type: str
+
+= username
+        The repository owner.
+
+        type: str
+
+
+NOTES:
+      * Bitbucket OAuth consumer key and secret can be obtained from Bitbucket profile -> Settings -> Access Management -> OAuth.
+      * Check mode is supported.
+
+
+REQUIREMENTS:  paramiko
+
+AUTHOR: Evgeniy Krysanov (@catcombo)
+        METADATA:
+          status:
+          - preview
+          supported_by: community
+        
+
+EXAMPLES:
+
+- name: Create known hosts from the list
+  bitbucket_pipeline_known_host:
+    repository: 'bitbucket-repo'
+    username: bitbucket_username
+    name: '{{ item }}'
+    state: present
+  with_items:
+    - bitbucket.org
+    - example.com
+
+- name: Remove known host
+  bitbucket_pipeline_known_host:
+    repository: bitbucket-repo
+    username: bitbucket_username
+    name: bitbucket.org
+    state: absent
+
+- name: Specify public key file
+  bitbucket_pipeline_known_host:
+    repository: bitbucket-repo
+    username: bitbucket_username
+    name: bitbucket.org
+    key: '{{lookup("file", "bitbucket.pub") }}'
+    state: absent
+
+
+RETURN VALUES:
+ # 

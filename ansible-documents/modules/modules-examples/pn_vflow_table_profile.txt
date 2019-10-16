@@ -1,0 +1,37 @@
+EXAMPLES:
+
+- name: Modify vflow table profile
+  pn_vflow_table_profile:
+    pn_cliswitch: 'sw01'
+    state: 'update'
+    pn_profile: 'ipv6'
+    pn_hw_tbl: 'switch-main'
+    pn_enable: true
+
+- name: Modify vflow table profile
+  pn_vflow_table_profile:
+    state: 'update'
+    pn_profile: 'qos'
+    pn_hw_tbl: 'switch-main'
+    pn_enable: false
+
+
+RETURN VALUES:
+
+command:
+  description: the CLI command run on the target node.
+  returned: always
+  type: str
+stdout:
+  description: set of responses from the vflow-table-profile command.
+  returned: always
+  type: list
+stderr:
+  description: set of error responses from the vflow-table-profile command.
+  returned: on error
+  type: list
+changed:
+  description: indicates whether the CLI caused changes on the target.
+  returned: always
+  type: bool
+

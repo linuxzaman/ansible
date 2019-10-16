@@ -1,0 +1,323 @@
+EXAMPLES:
+
+# Note: These examples do not set authentication details, see the AWS Guide for details.
+- name: create minimal aurora instance in default VPC and default subnet group
+  rds_instance:
+    engine: aurora
+    db_instance_identifier: ansible-test-aurora-db-instance
+    instance_type: db.t2.small
+    password: "{{ password }}"
+    username: "{{ username }}"
+    cluster_id: ansible-test-cluster  # This cluster must exist - see rds_cluster to manage it
+
+- name: Create a DB instance using the default AWS KMS encryption key
+  rds_instance:
+    id: test-encrypted-db
+    state: present
+    engine: mariadb
+    storage_encrypted: True
+    db_instance_class: db.t2.medium
+    username: "{{ username }}"
+    password: "{{ password }}"
+    allocated_storage: "{{ allocated_storage }}"
+
+- name: remove the DB instance without a final snapshot
+  rds_instance:
+    id: "{{ instance_id }}"
+    state: absent
+    skip_final_snapshot: True
+
+- name: remove the DB instance with a final snapshot
+  rds_instance:
+    id: "{{ instance_id }}"
+    state: absent
+    final_snapshot_identifier: "{{ snapshot_id }}"
+
+
+RETURN VALUES:
+
+allocated_storage:
+  description: The allocated storage size in gibibytes. This is always 1 for aurora database engines.
+  returned: always
+  type: int
+  sample: 20
+auto_minor_version_upgrade:
+  description: Whether minor engine upgrades are applied automatically to the DB instance during the maintenance window.
+  returned: always
+  type: bool
+  sample: true
+availability_zone:
+  description: The availability zone for the DB instance.
+  returned: always
+  type: str
+  sample: us-east-1f
+backup_retention_period:
+  description: The number of days for which automated backups are retained.
+  returned: always
+  type: int
+  sample: 1
+ca_certificate_identifier:
+  description: The identifier of the CA certificate for the DB instance.
+  returned: always
+  type: str
+  sample: rds-ca-2015
+copy_tags_to_snapshot:
+  description: Whether tags are copied from the DB instance to snapshots of the DB instance.
+  returned: always
+  type: bool
+  sample: false
+db_instance_arn:
+  description: The Amazon Resource Name (ARN) for the DB instance.
+  returned: always
+  type: str
+  sample: arn:aws:rds:us-east-1:123456789012:db:ansible-test
+db_instance_class:
+  description: The name of the compute and memory capacity class of the DB instance.
+  returned: always
+  type: str
+  sample: db.m4.large
+db_instance_identifier:
+  description: The identifier of the DB instance
+  returned: always
+  type: str
+  sample: ansible-test
+db_instance_port:
+  description: The port that the DB instance listens on.
+  returned: always
+  type: int
+  sample: 0
+db_instance_status:
+  description: The current state of this database.
+  returned: always
+  type: str
+  sample: stopped
+db_parameter_groups:
+  description: The list of DB parameter groups applied to this DB instance.
+  returned: always
+  type: complex
+  contains:
+    db_parameter_group_name:
+      description: The name of the DP parameter group.
+      returned: always
+      type: str
+      sample: default.mariadb10.0
+    parameter_apply_status:
+      description: The status of parameter updates.
+      returned: always
+      type: str
+      sample: in-sync
+db_security_groups:
+  description: A list of DB security groups associated with this DB instance.
+  returned: always
+  type: list
+  sample: []
+db_subnet_group:
+  description: The subnet group associated with the DB instance.
+  returned: always
+  type: complex
+  contains:
+    db_subnet_group_description:
+      description: The description of the DB subnet group.
+      returned: always
+      type: str
+      sample: default
+    db_subnet_group_name:
+      description: The name of the DB subnet group.
+      returned: always
+      type: str
+      sample: default
+    subnet_group_status:
+      description: The status of the DB subnet group.
+      returned: always
+      type: str
+      sample: Complete
+    subnets:
+      description: A list of Subnet elements.
+      returned: always
+      type: complex
+      contains:
+        subnet_availability_zone:
+          description: The availability zone of the subnet.
+          returned: always
+          type: complex
+          contains:
+            name:
+              description: The name of the Availability Zone.
+              returned: always
+              type: str
+              sample: us-east-1c
+        subnet_identifier:
+          description: The ID of the subnet.
+          returned: always
+          type: str
+          sample: subnet-12345678
+        subnet_status:
+          description: The status of the subnet.
+          returned: always
+          type: str
+          sample: Active
+    vpc_id:
+      description: The VpcId of the DB subnet group.
+      returned: always
+      type: str
+      sample: vpc-12345678
+dbi_resource_id:
+  description: The AWS Region-unique, immutable identifier for the DB instance.
+  returned: always
+  type: str
+  sample: db-UHV3QRNWX4KB6GALCIGRML6QFA
+domain_memberships:
+  description: The Active Directory Domain membership records associated with the DB instance.
+  returned: always
+  type: list
+  sample: []
+endpoint:
+  description: The connection endpoint.
+  returned: always
+  type: complex
+  contains:
+    address:
+      description: The DNS address of the DB instance.
+      returned: always
+      type: str
+      sample: ansible-test.cvlrtwiennww.us-east-1.rds.amazonaws.com
+    hosted_zone_id:
+      description: The ID that Amazon Route 53 assigns when you create a hosted zone.
+      returned: always
+      type: str
+      sample: ZTR2ITUGPA61AM
+    port:
+      description: The port that the database engine is listening on.
+      returned: always
+      type: int
+      sample: 3306
+engine:
+  description: The database engine version.
+  returned: always
+  type: str
+  sample: mariadb
+engine_version:
+  description: The database engine version.
+  returned: always
+  type: str
+  sample: 10.0.35
+iam_database_authentication_enabled:
+  description: Whether mapping of AWS Identity and Access Management (IAM) accounts to database accounts is enabled.
+  returned: always
+  type: bool
+  sample: false
+instance_create_time:
+  description: The date and time the DB instance was created.
+  returned: always
+  type: str
+  sample: '2018-07-04T16:48:35.332000+00:00'
+kms_key_id:
+  description: The AWS KMS key identifier for the encrypted DB instance when storage_encrypted is true.
+  returned: When storage_encrypted is true
+  type: str
+  sample: arn:aws:kms:us-east-1:123456789012:key/70c45553-ad2e-4a85-9f14-cfeb47555c33
+latest_restorable_time:
+  description: The latest time to which a database can be restored with point-in-time restore.
+  returned: always
+  type: str
+  sample: '2018-07-04T16:50:50.642000+00:00'
+license_model:
+  description: The License model information for this DB instance.
+  returned: always
+  type: str
+  sample: general-public-license
+master_username:
+  description: The master username for the DB instance.
+  returned: always
+  type: str
+  sample: test
+monitoring_interval:
+  description:
+    - The interval, in seconds, between points when Enhanced Monitoring metrics are collected for the DB instance.
+      0 means collecting Enhanced Monitoring metrics is disabled.
+  returned: always
+  type: int
+  sample: 0
+multi_az:
+  description: Whether the DB instance is a Multi-AZ deployment.
+  returned: always
+  type: bool
+  sample: false
+option_group_memberships:
+  description: The list of option group memberships for this DB instance.
+  returned: always
+  type: complex
+  contains:
+    option_group_name:
+      description: The name of the option group that the instance belongs to.
+      returned: always
+      type: str
+      sample: default:mariadb-10-0
+    status:
+      description: The status of the DB instance's option group membership.
+      returned: always
+      type: str
+      sample: in-sync
+pending_modified_values:
+  description: The changes to the DB instance that are pending.
+  returned: always
+  type: complex
+  contains: {}
+performance_insights_enabled:
+  description: True if Performance Insights is enabled for the DB instance, and otherwise false.
+  returned: always
+  type: bool
+  sample: false
+preferred_backup_window:
+  description: The daily time range during which automated backups are created if automated backups are enabled.
+  returned: always
+  type: str
+  sample: 07:01-07:31
+preferred_maintenance_window:
+  description: The weekly time range (in UTC) during which system maintenance can occur.
+  returned: always
+  type: str
+  sample: sun:09:31-sun:10:01
+publicly_accessible:
+  description:
+    - True for an Internet-facing instance with a publicly resolvable DNS name, False to indicate an
+      internal instance with a DNS name that resolves to a private IP address.
+  returned: always
+  type: bool
+  sample: true
+read_replica_db_instance_identifiers:
+  description: Identifiers of the Read Replicas associated with this DB instance.
+  returned: always
+  type: list
+  sample: []
+storage_encrypted:
+  description: Whether the DB instance is encrypted.
+  returned: always
+  type: bool
+  sample: false
+storage_type:
+  description: The storage type to be associated with the DB instance.
+  returned: always
+  type: str
+  sample: standard
+tags:
+  description: A dictionary of tags associated with the DB instance.
+  returned: always
+  type: complex
+  contains: {}
+vpc_security_groups:
+  description: A list of VPC security group elements that the DB instance belongs to.
+  returned: always
+  type: complex
+  contains:
+    status:
+      description: The status of the VPC security group.
+      returned: always
+      type: str
+      sample: active
+    vpc_security_group_id:
+      description: The name of the VPC security group.
+      returned: always
+      type: str
+      sample: sg-12345678
+

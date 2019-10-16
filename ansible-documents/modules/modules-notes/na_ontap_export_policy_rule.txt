@@ -1,0 +1,153 @@
+> NA_ONTAP_EXPORT_POLICY_RULE    (/usr/lib/python2.7/dist-packages/ansible/modules/storage/netapp/na_ontap_export_policy_rule.py)
+
+        Create or delete or modify export rules in ONTAP
+
+  * This module is maintained by an Ansible Partner
+OPTIONS (= is mandatory):
+
+- allow_suid
+        If 'true', NFS server will honor SetUID bits in SETATTR operation. Default value on creation is 'true'
+        [Default: (null)]
+        type: bool
+
+- client_match
+        List of Client Match host names, IP Addresses, Netgroups, or Domains
+        If rule_index is not provided, client_match is used as a key to fetch current rule to determine create,delete,modify actions. If
+        a rule with provided client_match exists, a new rule will not be created, but the existing rule will be modified or deleted. If a
+        rule with provided client_match doesn't exist, a new rule will be created if state is present.
+        [Default: (null)]
+
+= hostname
+        The hostname or IP address of the ONTAP instance.
+
+        type: str
+
+- http_port
+        Override the default port (80 or 443) with this port
+        [Default: (null)]
+        type: int
+
+- https
+        Enable and disable https
+        [Default: False]
+        type: bool
+
+= name
+        The name of the export rule to manage.
+        (Aliases: policy_name)
+
+- ontapi
+        The ontap api version to use
+        [Default: (null)]
+        type: int
+
+= password
+        Password for the specified user.
+        (Aliases: pass)
+        type: str
+
+- protocol
+        List of Client access protocols.
+        Default value is set to 'any' during create.
+        (Choices: any, nfs, nfs3, nfs4, cifs, flexcache)[Default: (null)]
+
+- ro_rule
+        List of Read only access specifications for the rule
+        (Choices: any, none, never, krb5, krb5i, krb5p, ntlm, sys)[Default: (null)]
+
+- rule_index
+        rule index of the export policy
+        [Default: (null)]
+
+- rw_rule
+        List of Read Write access specifications for the rule
+        (Choices: any, none, never, krb5, krb5i, krb5p, ntlm, sys)[Default: (null)]
+
+- state
+        Whether the specified export policy rule should exist or not.
+        (Choices: present, absent)[Default: present]
+
+- super_user_security
+        List of Read Write access specifications for the rule
+        (Choices: any, none, never, krb5, krb5i, krb5p, ntlm, sys)[Default: (null)]
+
+= username
+        This can be a Cluster-scoped or SVM-scoped account, depending on whether a Cluster-level or SVM-level API is required. For more
+        information, please read the documentation https://mysupport.netapp.com/NOW/download/software/nmsdk/9.4/.
+        (Aliases: user)
+        type: str
+
+- validate_certs
+        If set to `no', the SSL certificates will not be validated.
+        This should only set to `False' used on personally controlled sites using self-signed certificates.
+        [Default: True]
+        type: bool
+
+= vserver
+        Name of the vserver to use.
+
+
+
+NOTES:
+      * The modules prefixed with na\\_ontap are built to support the ONTAP storage platform.
+
+
+REQUIREMENTS:  A physical or virtual clustered Data ONTAP system. The modules support Data ONTAP 9.1 and onward, Ansible 2.6, Python2
+        netapp-lib (2017.10.30) or later. Install using 'pip install netapp-lib', Python3 netapp-lib (2018.11.13) or
+        later. Install using 'pip install netapp-lib', To enable http on the cluster you must run the following commands
+        'set -privilege advanced;' 'system services web modify -http-enabled true;'
+
+AUTHOR: NetApp Ansible Team (@carchi8py) <ng-ansibleteam@netapp.com>
+        METADATA:
+          status:
+          - preview
+          supported_by: certified
+        
+
+EXAMPLES:
+
+- name: Create ExportPolicyRule
+      na_ontap_export_policy_rule:
+        state: present
+        name: default123
+        vserver: ci_dev
+        client_match: 0.0.0.0/0,1.1.1.0/24
+        ro_rule: krb5,krb5i
+        rw_rule: any
+        protocol: nfs,nfs3
+        super_user_security: any
+        allow_suid: true
+        hostname: "{{ netapp_hostname }}"
+        username: "{{ netapp_username }}"
+        password: "{{ netapp_password }}"
+
+    - name: Modify ExportPolicyRule
+      na_ontap_export_policy_rule:
+        state: present
+        name: default123
+        rule_index: 100
+        client_match: 0.0.0.0/0
+        ro_rule: ntlm
+        rw_rule: any
+        protocol: any
+        allow_suid: false
+        hostname: "{{ netapp_hostname }}"
+        username: "{{ netapp_username }}"
+        password: "{{ netapp_password }}"
+
+    - name: Delete ExportPolicyRule
+      na_ontap_export_policy_rule:
+        state: absent
+        name: default123
+        rule_index: 100
+        vserver: ci_dev
+        hostname: "{{ netapp_hostname }}"
+        username: "{{ netapp_username }}"
+        password: "{{ netapp_password }}"
+
+
+RETURN VALUES:
+
+
+
+

@@ -1,0 +1,140 @@
+> PN_CONNECTION_STATS_SETTINGS    (/usr/lib/python2.7/dist-packages/ansible/modules/network/netvisor/pn_connection_stats_settings.py)
+
+        This module can be used to modify the settings for collecting statistical data about connections.
+
+  * This module is maintained by The Ansible Community
+OPTIONS (= is mandatory):
+
+- pn_client_server_stats_log_disk_space
+        disk-space allocated for statistics (including rotated log files).
+        [Default: (null)]
+        type: str
+
+- pn_client_server_stats_log_enable
+        Enable or disable statistics.
+        [Default: (null)]
+        type: bool
+
+- pn_client_server_stats_log_interval
+        interval to collect statistics.
+        [Default: (null)]
+        type: str
+
+- pn_client_server_stats_max_memory
+        maximum memory for client server statistics.
+        [Default: (null)]
+        type: str
+
+- pn_cliswitch
+        Target switch to run the CLI on.
+        [Default: (null)]
+        type: str
+
+- pn_connection_backup_enable
+        Enable backup for connection statistics collection.
+        [Default: (null)]
+        type: bool
+
+- pn_connection_backup_interval
+        backup interval for connection statistics collection.
+        [Default: (null)]
+        type: str
+
+- pn_connection_max_memory
+        maximum memory allowed for connection statistics.
+        [Default: (null)]
+        type: str
+
+- pn_connection_stats_log_disk_space
+        disk-space allocated for statistics (including rotated log files).
+        [Default: (null)]
+        type: str
+
+- pn_connection_stats_log_enable
+        enable or disable statistics.
+        [Default: (null)]
+        type: bool
+
+- pn_connection_stats_log_interval
+        interval to collect statistics.
+        [Default: (null)]
+        type: str
+
+- pn_connection_stats_max_memory
+        maximum memory allowed for connection statistics.
+        [Default: (null)]
+        type: str
+
+- pn_enable
+        Enable or disable collecting connections statistics.
+        [Default: (null)]
+        type: bool
+
+- pn_fabric_connection_backup_enable
+        enable backup for fabric connection statistics collection.
+        [Default: (null)]
+        type: bool
+
+- pn_fabric_connection_backup_interval
+        backup interval for fabric connection statistics collection.
+        [Default: (null)]
+        type: str
+
+- pn_fabric_connection_max_memory
+        maximum memory allowed for fabric connection statistics.
+        [Default: (null)]
+        type: str
+
+- pn_service_stat_max_memory
+        maximum memory allowed for service statistics.
+        [Default: (null)]
+        type: str
+
+= state
+        State the action to perform. Use `update' to modify the connection-stats-settings.
+        (Choices: update)
+        type: str
+
+
+AUTHOR: Pluribus Networks (@rajaspachipulusu17)
+        METADATA:
+          status:
+          - preview
+          supported_by: community
+        
+
+EXAMPLES:
+
+- name: "Modify connection stats settings"
+  pn_connection_stats_settings:
+    pn_cliswitch: "sw01"
+    state: "update"
+    pn_enable: False
+    pn_fabric_connection_max_memory: "1000"
+
+- name: "Modify connection stats settings"
+  pn_connection_stats_settings:
+    pn_cliswitch: "sw01"
+    state: "update"
+    pn_enable: True
+
+
+RETURN VALUES:
+
+command:
+  description: the CLI command run on the target node.
+  returned: always
+  type: str
+stdout:
+  description: set of responses from the connection-stats-settings command.
+  returned: always
+  type: list
+stderr:
+  description: set of error responses from the connection-stats-settings command.
+  returned: on error
+  type: list
+changed:
+  description: indicates whether the CLI caused changes on the target.
+  returned: always
+  type: bool
+

@@ -1,0 +1,35 @@
+EXAMPLES:
+
+- name: Create a public ip address
+      azure_rm_publicipaddress:
+        resource_group: myResourceGroup
+        name: my_public_ip
+        allocation_method: static
+        domain_name: foobar
+
+    - name: Delete public ip
+      azure_rm_publicipaddress:
+        resource_group: myResourceGroup
+        name: my_public_ip
+        state: absent
+
+
+RETURN VALUES:
+
+state:
+    description: Facts about the current state of the object.
+    returned: always
+    type: dict
+    sample: {
+        "dns_settings": {},
+        "etag": '"/"a5e56955-12df-445a-bda4-dc129d22c12f"',
+        "idle_timeout_in_minutes": 4,
+        "ip_address": "52.160.103.93",
+        "location": "westus",
+        "name": "publicip002",
+        "provisioning_state": "Succeeded",
+        "public_ip_allocation_method": "static",
+        "tags": {},
+        "type": "Microsoft.Network/publicIPAddresses"
+    }
+

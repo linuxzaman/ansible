@@ -1,0 +1,119 @@
+EXAMPLES:
+
+- hosts: localhost
+  vars:
+   host: "192.168.122.40"
+   username: "admin"
+   password: ""
+   vdom: "root"
+  tasks:
+  - name: Configure threat weight settings.
+    fortios_log_threat_weight:
+      host:  "{{ host }}"
+      username: "{{ username }}"
+      password: "{{ password }}"
+      vdom:  "{{ vdom }}"
+      https: "False"
+      log_threat_weight:
+        application:
+         -
+            category: "4"
+            id:  "5"
+            level: "disable"
+        blocked-connection: "disable"
+        failed-connection: "disable"
+        geolocation:
+         -
+            country: "<your_own_value>"
+            id:  "11"
+            level: "disable"
+        ips:
+            critical-severity: "disable"
+            high-severity: "disable"
+            info-severity: "disable"
+            low-severity: "disable"
+            medium-severity: "disable"
+        level:
+            critical: "20"
+            high: "21"
+            low: "22"
+            medium: "23"
+        malware:
+            botnet-connection: "disable"
+            command-blocked: "disable"
+            mimefragmented: "disable"
+            oversized: "disable"
+            switch-proto: "disable"
+            virus-blocked: "disable"
+            virus-file-type-executable: "disable"
+            virus-infected: "disable"
+            virus-outbreak-prevention: "disable"
+            virus-scan-error: "disable"
+        status: "enable"
+        url-block-detected: "disable"
+        web:
+         -
+            category: "38"
+            id:  "39"
+            level: "disable"
+
+
+RETURN VALUES:
+
+build:
+  description: Build number of the fortigate image
+  returned: always
+  type: str
+  sample: '1547'
+http_method:
+  description: Last method used to provision the content into FortiGate
+  returned: always
+  type: str
+  sample: 'PUT'
+http_status:
+  description: Last result given by FortiGate on last operation applied
+  returned: always
+  type: str
+  sample: "200"
+mkey:
+  description: Master key (id) used in the last call to FortiGate
+  returned: success
+  type: str
+  sample: "id"
+name:
+  description: Name of the table used to fulfill the request
+  returned: always
+  type: str
+  sample: "urlfilter"
+path:
+  description: Path of the table used to fulfill the request
+  returned: always
+  type: str
+  sample: "webfilter"
+revision:
+  description: Internal revision number
+  returned: always
+  type: str
+  sample: "17.0.2.10658"
+serial:
+  description: Serial number of the unit
+  returned: always
+  type: str
+  sample: "FGVMEVYYQT3AB5352"
+status:
+  description: Indication of the operation's result
+  returned: always
+  type: str
+  sample: "success"
+vdom:
+  description: Virtual domain used
+  returned: always
+  type: str
+  sample: "root"
+version:
+  description: Version of the FortiGate
+  returned: always
+  type: str
+  sample: "v5.6.3"
+
+

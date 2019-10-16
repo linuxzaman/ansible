@@ -1,0 +1,37 @@
+EXAMPLES:
+
+- name: create spine cluster
+  pn_cluster:
+    state: 'present'
+    pn_name: 'spine-cluster'
+    pn_cluster_node1: 'spine01'
+    pn_cluster_node2: 'spine02'
+    pn_validate: True
+    pn_quiet: True
+
+- name: delete spine cluster
+  pn_cluster:
+    state: 'absent'
+    pn_name: 'spine-cluster'
+    pn_quiet: True
+
+
+RETURN VALUES:
+
+command:
+  description: The CLI command run on the target node(s).
+  returned: always
+  type: str
+stdout:
+  description: The set of responses from the cluster command.
+  returned: always
+  type: list
+stderr:
+  description: The set of error responses from the cluster command.
+  returned: on error
+  type: list
+changed:
+  description: Indicates whether the CLI caused changes on the target.
+  returned: always
+  type: bool
+

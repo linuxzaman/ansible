@@ -1,0 +1,108 @@
+> DIGITAL_OCEAN_VOLUME_FACTS    (/usr/lib/python2.7/dist-packages/ansible/modules/cloud/digital_ocean/digital_ocean_volume_facts.py)
+
+        This module can be used to gather facts about DigitalOcean provided volumes.
+
+  * This module is maintained by The Ansible Community
+OPTIONS (= is mandatory):
+
+- oauth_token
+        DigitalOcean OAuth token.
+        There are several other environment variables which can be used to provide this value.
+        i.e., - 'DO_API_TOKEN', 'DO_API_KEY', 'DO_OAUTH_TOKEN' and 'OAUTH_TOKEN'
+        (Aliases: api_token)[Default: (null)]
+        type: str
+
+- region_name
+        Name of region to restrict results to volumes available in a specific region.
+        Please use [digital_ocean_region_facts] for getting valid values related regions.
+        [Default: (null)]
+
+- timeout
+        The timeout in seconds used for polling DigitalOcean's API.
+        [Default: 30]
+        type: int
+
+- validate_certs
+        If set to `no', the SSL certificates will not be validated.
+        This should only set to `no' used on personally controlled sites using self-signed certificates.
+        [Default: True]
+        type: bool
+
+
+REQUIREMENTS:  python >= 2.6
+
+AUTHOR: Abhijeet Kasurde (@Akasurde)
+        METADATA:
+          status:
+          - preview
+          supported_by: community
+        
+
+EXAMPLES:
+
+- name: Gather facts about all volume
+  digital_ocean_volume_facts:
+    oauth_token: "{{ oauth_token }}"
+
+- name: Gather facts about volume in given region
+  digital_ocean_volume_facts:
+    region_name: nyc1
+    oauth_token: "{{ oauth_token }}"
+
+- name: Get facts about volume named nyc3-test-volume
+  digital_ocean_volume_facts:
+  register: resp_out
+- set_fact:
+    volume_id: "{{ item.id }}"
+  loop: "{{ resp_out.data|json_query(name) }}"
+  vars:
+    name: "[?name=='nyc3-test-volume']"
+- debug: var=volume_id
+
+
+RETURN VALUES:
+
+data:
+    description: DigitalOcean volume facts
+    returned: success
+    type: list
+    sample: [
+        {
+          "id": "506f78a4-e098-11e5-ad9f-000f53306ae1",
+          "region": {
+            "name": "New York 1",
+            "slug": "nyc1",
+            "sizes": [
+              "s-1vcpu-1gb",
+              "s-1vcpu-2gb",
+              "s-1vcpu-3gb",
+              "s-2vcpu-2gb",
+              "s-3vcpu-1gb",
+              "s-2vcpu-4gb",
+              "s-4vcpu-8gb",
+              "s-6vcpu-16gb",
+              "s-8vcpu-32gb",
+              "s-12vcpu-48gb",
+              "s-16vcpu-64gb",
+              "s-20vcpu-96gb",
+              "s-24vcpu-128gb",
+              "s-32vcpu-192gb"
+            ],
+            "features": [
+              "private_networking",
+              "backups",
+              "ipv6",
+              "metadata"
+            ],
+            "available": true
+          },
+          "droplet_ids": [
+
+          ],
+          "name": "example",
+          "description": "Block store for examples",
+          "size_gigabytes": 10,
+          "created_at": "2016-03-02T17:00:49Z"
+        }
+    ]
+

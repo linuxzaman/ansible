@@ -1,0 +1,30 @@
+EXAMPLES:
+
+- name: Create a volume
+  docker_volume:
+    name: volume_one
+
+- name: Remove a volume
+  docker_volume:
+    name: volume_one
+    state: absent
+
+- name: Create a volume with options
+  docker_volume:
+    name: volume_two
+    driver_options:
+      type: btrfs
+      device: /dev/sda2
+
+
+RETURN VALUES:
+
+volume:
+    description:
+    - Volume inspection results for the affected volume.
+    - Note that facts are part of the registered vars since Ansible 2.8. For compatibility reasons, the facts
+      are also accessible directly as C(docker_volume). Note that the returned fact will be removed in Ansible 2.12.
+    returned: success
+    type: dict
+    sample: {}
+

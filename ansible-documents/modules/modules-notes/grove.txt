@@ -1,0 +1,50 @@
+> GROVE    (/usr/lib/python2.7/dist-packages/ansible/modules/notification/grove.py)
+
+        The `grove' module sends a message for a service to a Grove.io channel.
+
+  * This module is maintained by The Ansible Community
+OPTIONS (= is mandatory):
+
+= channel_token
+        Token of the channel to post to.
+
+
+- icon_url
+        Icon for the service
+        [Default: (null)]
+
+= message
+        Message content
+
+
+- service
+        Name of the service (displayed as the "user" in the message)
+        [Default: ansible]
+
+- url
+        Service URL for the web client
+        [Default: (null)]
+
+- validate_certs
+        If `no', SSL certificates will not be validated. This should only be used on personally controlled sites using self-signed
+        certificates.
+        [Default: yes]
+        type: bool
+        version_added: 1.5.1
+
+
+AUTHOR: Jonas Pfenniger (@zimbatm)
+        METADATA:
+          status:
+          - preview
+          supported_by: community
+        
+
+EXAMPLES:
+
+- grove: >
+    channel_token=6Ph62VBBJOccmtTPZbubiPzdrhipZXtg
+    service=my-app
+    message=deployed {{ target }}
+
+

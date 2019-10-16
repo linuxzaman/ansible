@@ -1,0 +1,105 @@
+EXAMPLES:
+
+- name: BGP RR test
+  hosts: cloudengine
+  connection: local
+  gather_facts: no
+  vars:
+    cli:
+      host: "{{ inventory_hostname }}"
+      port: "{{ ansible_ssh_port }}"
+      username: "{{ username }}"
+      password: "{{ password }}"
+      transport: cli
+
+  tasks:
+
+  - name: "Configure BGP-EVPN address family view and ensure that BGP view has existed."
+    ce_evpn_bgp_rr:
+      as_number: 20
+      bgp_evpn_enable: enable
+      provider: "{{ cli }}"
+
+  - name: "Configure reflect client and ensure peer has existed."
+    ce_evpn_bgp_rr:
+      as_number: 20
+      peer_type: ipv4_address
+      peer: 192.8.3.3
+      reflect_client: enable
+      provider: "{{ cli }}"
+
+  - name: "Configure the VPN-Target filtering."
+    ce_evpn_bgp_rr:
+      as_number: 20
+      policy_vpn_target: enable
+      provider: "{{ cli }}"
+
+  - name: "Configure an RR in BGP-EVPN address family view."
+    ce_evpn_bgp_rr:
+      as_number: 20
+      bgp_evpn_enable: enable
+      peer_type: ipv4_address
+      peer: 192.8.3.3
+      reflect_client: enable
+      policy_vpn_target: disable
+      provider: "{{ cli }}"
+
+
+RETURN VALUES:
+
+proposed:
+    description: k/v pairs of parameters passed into module
+    returned: always
+    type: dict
+    sample: {
+                "as_number": "20",
+                "bgp_evpn_enable": "enable",
+                "bgp_instance": null,
+                "peer": "192.8.3.3",
+                "peer_type": "ipv4_address",
+                "policy_vpn_target": "disable",
+                "reflect_client": "enable"
+            }
+existing:
+    description: k/v pairs of existing attributes on the device
+    returned: always
+    type: dict
+    sample: {
+                "as_number": "20",
+                "bgp_evpn_enable": "disable",
+                "bgp_instance": null,
+                "peer": null,
+                "peer_type": null,
+                "policy_vpn_target": "disable",
+                "reflect_client": "disable"
+            }
+end_state:
+    description: k/v pairs of end attributes on the device
+    returned: always
+    type: dict
+    sample: {
+                "as_number": "20",
+                "bgp_evpn_enable": "enable",
+                "bgp_instance": null,
+                "peer": "192.8.3.3",
+                "peer_type": "ipv4_address",
+                "policy_vpn_target": "disable",
+                "reflect_client": "enable"
+            }
+updates:
+    description: command list sent to the device
+    returned: always
+    type: list
+    sample: [
+                "bgp 20",
+                "  l2vpn-family evpn",
+                "    peer 192.8.3.3 enable",
+                "    peer 192.8.3.3 reflect-client",
+                "    undo policy vpn-target"
+            ]
+changed:
+    description: check to see if a change was made on the device
+    returned: always
+    type: bool
+    sample: true
+

@@ -1,0 +1,210 @@
+> OS_POOL    (/usr/lib/python2.7/dist-packages/ansible/modules/cloud/openstack/os_pool.py)
+
+        Add or Remove a pool from the OpenStack load-balancer service.
+
+  * This module is maintained by The Ansible Community
+OPTIONS (= is mandatory):
+
+- api_timeout
+        How long should the socket layer wait before timing out for API calls. If this is omitted, nothing will be passed to the requests
+        library.
+        [Default: (null)]
+        type: int
+
+- auth
+        Dictionary containing auth information as needed by the cloud's auth plugin strategy. For the default `password' plugin, this
+        would contain `auth_url', `username', `password', `project_name' and any information about domains (for example,
+        `os_user_domain_name' or `os_project_domain_name') if the cloud supports them. For other plugins, this param will need to contain
+        whatever parameters that auth plugin requires. This parameter is not needed if a named cloud is provided or OpenStack OS_*
+        environment variables are present.
+        [Default: (null)]
+        type: dict
+
+- auth_type
+        Name of the auth plugin to use. If the cloud uses something other than password authentication, the name of the plugin should be
+        indicated here and the contents of the `auth' parameter should be updated accordingly.
+        [Default: (null)]
+        type: str
+
+- availability_zone
+        Ignored. Present for backwards compatibility
+        [Default: (null)]
+
+- ca_cert
+        A path to a CA Cert bundle that can be used as part of verifying SSL API requests.
+        (Aliases: cacert)[Default: (null)]
+        type: str
+
+- client_cert
+        A path to a client certificate to use as part of the SSL transaction.
+        (Aliases: cert)[Default: (null)]
+        type: str
+
+- client_key
+        A path to a client key to use as part of the SSL transaction.
+        (Aliases: key)[Default: (null)]
+        type: str
+
+- cloud
+        Named cloud or cloud config to operate against. If `cloud' is a string, it references a named cloud config as defined in an
+        OpenStack clouds.yaml file. Provides default values for `auth' and `auth_type'. This parameter is not needed if `auth' is
+        provided or if OpenStack OS_* environment variables are present. If `cloud' is a dict, it contains a complete cloud configuration
+        like would be in a section of clouds.yaml.
+        [Default: (null)]
+        type: raw
+
+- interface
+        Endpoint URL type to fetch from the service catalog.
+        (Aliases: endpoint_type)(Choices: admin, internal, public)[Default: public]
+        type: str
+        version_added: 2.3
+
+- lb_algorithm
+        The load balancing algorithm for the pool.
+        (Choices: LEAST_CONNECTIONS, ROUND_ROBIN, SOURCE_IP)[Default: ROUND_ROBIN]
+
+- listener
+        The name or id of the listener that this pool belongs to. Either loadbalancer or listener must be specified for pool creation.
+        [Default: (null)]
+
+- loadbalancer
+        The name or id of the load balancer that this pool belongs to. Either loadbalancer or listener must be specified for pool
+        creation.
+        [Default: (null)]
+
+= name
+        Name that has to be given to the pool
+
+
+- protocol
+        The protocol for the pool.
+        (Choices: HTTP, HTTPS, PROXY, TCP, UDP)[Default: HTTP]
+
+- region_name
+        Name of the region.
+        [Default: (null)]
+        type: str
+
+- state
+        Should the resource be present or absent.
+        (Choices: present, absent)[Default: present]
+
+- timeout
+        The amount of time the module should wait for the pool to get into ACTIVE state.
+        [Default: 180]
+        type: int
+
+- validate_certs
+        Whether or not SSL API requests should be verified.
+        Before Ansible 2.3 this defaulted to `yes'.
+        (Aliases: verify)[Default: False]
+        type: bool
+
+- wait
+        If the module should wait for the pool to be ACTIVE.
+        [Default: yes]
+        type: bool
+
+
+NOTES:
+      * The standard OpenStack environment variables, such as `OS_USERNAME' may be used instead of providing explicit values.
+      * Auth information is driven by openstacksdk, which means that values can come from a yaml config file in
+        /etc/ansible/openstack.yaml, /etc/openstack/clouds.yaml or ~/.config/openstack/clouds.yaml, then from standard environment
+        variables, then finally by explicit parameters in plays. More information can be found at
+        https://docs.openstack.org/openstacksdk/
+
+
+REQUIREMENTS:  openstacksdk, python >= 2.7
+
+AUTHOR: Lingxian Kong (@lingxiankong)
+        METADATA:
+          status:
+          - preview
+          supported_by: community
+        
+
+EXAMPLES:
+
+# Create a pool, wait for the pool to be active.
+- os_pool:
+    cloud: mycloud
+    endpoint_type: admin
+    state: present
+    name: test-pool
+    loadbalancer: test-loadbalancer
+    protocol: HTTP
+    lb_algorithm: ROUND_ROBIN
+
+# Delete a pool
+- os_pool:
+    cloud: mycloud
+    endpoint_type: admin
+    state: absent
+    name: test-pool
+
+
+RETURN VALUES:
+
+id:
+    description: The pool UUID.
+    returned: On success when I(state) is 'present'
+    type: str
+    sample: "39007a7e-ee4f-4d13-8283-b4da2e037c69"
+listener:
+    description: Dictionary describing the pool.
+    returned: On success when I(state) is 'present'
+    type: complex
+    contains:
+        id:
+            description: Unique UUID.
+            type: str
+            sample: "39007a7e-ee4f-4d13-8283-b4da2e037c69"
+        name:
+            description: Name given to the pool.
+            type: str
+            sample: "test"
+        description:
+            description: The pool description.
+            type: str
+            sample: "description"
+        loadbalancers:
+            description: A list of load balancer IDs.
+            type: list
+            sample: [{"id": "b32eef7e-d2a6-4ea4-a301-60a873f89b3b"}]
+        listeners:
+            description: A list of listener IDs.
+            type: list
+            sample: [{"id": "b32eef7e-d2a6-4ea4-a301-60a873f89b3b"}]
+        members:
+            description: A list of member IDs.
+            type: list
+            sample: [{"id": "b32eef7e-d2a6-4ea4-a301-60a873f89b3b"}]
+        loadbalancer_id:
+            description: The load balancer ID the pool belongs to. This field is set when the pool doesn't belong to any listener in the load balancer.
+            type: str
+            sample: "7c4be3f8-9c2f-11e8-83b3-44a8422643a4"
+        listener_id:
+            description: The listener ID the pool belongs to.
+            type: str
+            sample: "956aa716-9c2f-11e8-83b3-44a8422643a4"
+        provisioning_status:
+            description: The provisioning status of the pool.
+            type: str
+            sample: "ACTIVE"
+        operating_status:
+            description: The operating status of the pool.
+            type: str
+            sample: "ONLINE"
+        is_admin_state_up:
+            description: The administrative state of the pool.
+            type: bool
+            sample: true
+        protocol:
+            description: The protocol for the pool.
+            type: str
+            sample: "HTTP"
+        lb_algorithm:
+            description: The load balancing algorithm for the pool.
+            type: str
+            sample: "ROUND_ROBIN"
+

@@ -1,0 +1,54 @@
+EXAMPLES:
+
+# Create the zone 'test'
+- name: create zone
+  memset_zone:
+    name: test
+    state: present
+    api_key: 5eb86c9196ab03919abcf03857163741
+    ttl: 300
+  delegate_to: localhost
+
+# Force zone deletion
+- name: force delete zone
+  memset_zone:
+    name: test
+    state: absent
+    api_key: 5eb86c9196ab03919abcf03857163741
+    force: true
+  delegate_to: localhost
+
+
+RETURN VALUES:
+
+memset_api:
+  description: Zone info from the Memset API
+  returned: when state == present
+  type: complex
+  contains:
+    domains:
+      description: List of domains in this zone
+      returned: always
+      type: list
+      sample: []
+    id:
+      description: Zone id
+      returned: always
+      type: str
+      sample: "b0bb1ce851aeea6feeb2dc32fe83bf9c"
+    nickname:
+      description: Zone name
+      returned: always
+      type: str
+      sample: "example.com"
+    records:
+      description: List of DNS records for domains in this zone
+      returned: always
+      type: list
+      sample: []
+    ttl:
+      description: Default TTL for domains in this zone
+      returned: always
+      type: int
+      sample: 300
+

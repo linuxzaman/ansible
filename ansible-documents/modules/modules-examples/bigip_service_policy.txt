@@ -1,0 +1,35 @@
+EXAMPLES:
+
+- name: Create a service policy
+  bigip_service_policy:
+    name: foo
+    timer_policy: timer1
+    port_misuse_policy: misuse1
+    timer_policy_enabled: yes
+    port_misuse_policy_enabled: yes
+    state: present
+    provider:
+      user: admin
+      password: secret
+      server: lb.mydomain.com
+  delegate_to: localhost
+
+
+RETURN VALUES:
+
+timer_policy:
+  description: The new timer policy attached to the resource.
+  returned: changed
+  type: str
+  sample: /Common/timer1
+port_misuse_policy:
+  description: The new port misuse policy attached to the resource.
+  returned: changed
+  type: str
+  sample: /Common/misuse1
+description:
+  description: New description of the resource.
+  returned: changed
+  type: str
+  sample: My service policy description
+

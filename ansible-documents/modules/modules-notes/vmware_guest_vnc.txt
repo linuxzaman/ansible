@@ -1,0 +1,142 @@
+> VMWARE_GUEST_VNC    (/usr/lib/python2.7/dist-packages/ansible/modules/cloud/vmware/vmware_guest_vnc.py)
+
+        This module can be used to enable and disable VNC remote display on virtual machine.
+
+  * This module is maintained by The Ansible Community
+OPTIONS (= is mandatory):
+
+- datacenter
+        Destination datacenter for the deploy operation.
+        This parameter is case sensitive.
+        [Default: ha-datacenter]
+
+- folder
+        Destination folder, absolute or relative path to find an existing guest.
+        The folder should include the datacenter. ESX's datacenter is ha-datacenter
+        [Default: (null)]
+
+- hostname
+        The hostname or IP address of the vSphere vCenter or ESXi server.
+        If the value is not specified in the task, the value of environment variable `VMWARE_HOST' will be used instead.
+        Environment variable support added in Ansible 2.6.
+        [Default: (null)]
+        type: str
+
+- name
+        Name of the virtual machine to work with.
+        Virtual machine names in vCenter are not necessarily unique, which may be problematic, see `name_match'.
+        [Default: (null)]
+
+- name_match
+        If multiple virtual machines matching the name, use the first or last found.
+        (Choices: first, last)[Default: first]
+
+- password
+        The password of the vSphere vCenter or ESXi server.
+        If the value is not specified in the task, the value of environment variable `VMWARE_PASSWORD' will be used instead.
+        Environment variable support added in Ansible 2.6.
+        (Aliases: pass, pwd)[Default: (null)]
+        type: str
+
+- port
+        The port number of the vSphere vCenter or ESXi server.
+        If the value is not specified in the task, the value of environment variable `VMWARE_PORT' will be used instead.
+        Environment variable support added in Ansible 2.6.
+        [Default: 443]
+        type: int
+        version_added: 2.5
+
+- state
+        Set the state of VNC on virtual machine.
+        (Choices: present, absent)[Default: present]
+
+- username
+        The username of the vSphere vCenter or ESXi server.
+        If the value is not specified in the task, the value of environment variable `VMWARE_USER' will be used instead.
+        Environment variable support added in Ansible 2.6.
+        (Aliases: admin, user)[Default: (null)]
+        type: str
+
+- uuid
+        UUID of the instance to manage if known, this is VMware's unique identifier.
+        This is required, if `name' is not supplied.
+        [Default: (null)]
+
+- validate_certs
+        Allows connection when SSL certificates are not valid. Set to `false' when certificates are not trusted.
+        If the value is not specified in the task, the value of environment variable `VMWARE_VALIDATE_CERTS' will be used instead.
+        Environment variable support added in Ansible 2.6.
+        If set to `yes', please make sure Python >= 2.7.9 is installed on the given machine.
+        [Default: True]
+        type: bool
+
+- vnc_ip
+        Sets an IP for VNC on virtual machine.
+        This is required only when `state' is set to present and will be ignored if `state' is absent.
+        [Default: 0.0.0.0]
+
+- vnc_password
+        Sets a password for VNC on virtual machine.
+        This is required only when `state' is set to present and will be ignored if `state' is absent.
+        [Default: ]
+
+- vnc_port
+        The port that VNC listens on. Usually a number between 5900 and 7000 depending on your config.
+        This is required only when `state' is set to present and will be ignored if `state' is absent.
+        [Default: 0]
+
+
+REQUIREMENTS:  python >= 2.6, PyVmomi
+
+AUTHOR: Armin Ranjbar Daemi (@rmin)
+        METADATA:
+          status:
+          - preview
+          supported_by: community
+        
+
+EXAMPLES:
+
+- name: Enable VNC remote display on the VM
+  vmware_guest_vnc:
+    hostname: "{{ vcenter_hostname }}"
+    username: "{{ vcenter_username }}"
+    password: "{{ vcenter_password }}"
+    validate_certs: no
+    folder: /mydatacenter/vm
+    name: testvm1
+    vnc_port: 5990
+    vnc_password: vNc5ecr3t
+    datacenter: "{{ datacenter_name }}"
+    state: present
+  delegate_to: localhost
+  register: vnc_result
+
+- name: Disable VNC remote display on the VM
+  vmware_guest_vnc:
+    hostname: "{{ vcenter_hostname }}"
+    username: "{{ vcenter_username }}"
+    password: "{{ vcenter_password }}"
+    validate_certs: no
+    datacenter: "{{ datacenter_name }}"
+    uuid: 32074771-7d6b-699a-66a8-2d9cf8236fff
+    state: absent
+  delegate_to: localhost
+  register: vnc_result
+
+
+RETURN VALUES:
+
+changed:
+  description: If anything changed on VM's extraConfig.
+  returned: always
+  type: bool
+failed:
+  description: If changes failed.
+  returned: always
+  type: bool
+instance:
+  description: Dictionary describing the VM, including VNC info.
+  returned: On success in both I(state)
+  type: dict
+

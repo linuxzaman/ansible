@@ -1,0 +1,38 @@
+EXAMPLES:
+
+- digital_ocean_sshkey_facts:
+    oauth_token: "{{ my_do_key }}"
+
+- set_fact:
+    pubkey: "{{ item.public_key }}"
+  loop: "{{ ssh_keys|json_query(ssh_pubkey) }}"
+  vars:
+    ssh_pubkey: "[?name=='ansible_ctrl']"
+
+- debug:
+    msg: "{{ pubkey }}"
+
+
+RETURN VALUES:
+
+# Digital Ocean API info https://developers.digitalocean.com/documentation/v2/#list-all-keys
+data:
+    description: List of SSH keys on DigitalOcean
+    returned: success and no resource constraint
+    type: dict
+    sample: {
+      "ssh_keys": [
+        {
+          "id": 512189,
+          "fingerprint": "3b:16:bf:e4:8b:00:8b:b8:59:8c:a9:d3:f0:19:45:fa",
+          "public_key": "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAAAQQDDHr/jh2Jy4yALcK4JyWbVkPRaWmhck3IgCoeOO3z1e2dBowLh64QAM+Qb72pxekALga2oi4GvT+TlWNhzPH4V example",
+          "name": "My SSH Public Key"
+        }
+      ],
+      "links": {
+      },
+      "meta": {
+        "total": 1
+      }
+    }
+

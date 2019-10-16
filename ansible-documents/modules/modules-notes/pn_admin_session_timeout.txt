@@ -1,0 +1,70 @@
+> PN_ADMIN_SESSION_TIMEOUT    (/usr/lib/python2.7/dist-packages/ansible/modules/network/netvisor/pn_admin_session_timeout.py)
+
+        This module can be used to modify admin session timeout.
+
+  * This module is maintained by The Ansible Community
+OPTIONS (= is mandatory):
+
+- pn_cliswitch
+        Target switch to run the CLI on.
+        [Default: (null)]
+        type: str
+
+- pn_timeout
+        Maximum time to wait for user activity before terminating login session. Minimum should be 60s.
+        [Default: (null)]
+        type: str
+
+= state
+        State the action to perform. `update' to modify the admin-session-timeout.
+        (Choices: update)
+        type: str
+
+
+AUTHOR: Pluribus Networks (@rajaspachipulusu17)
+        METADATA:
+          status:
+          - preview
+          supported_by: community
+        
+
+EXAMPLES:
+
+- name: admin session timeout functionality
+  pn_admin_session_timeout:
+    pn_cliswitch: "sw01"
+    state: "update"
+    pn_timeout: "61s"
+
+- name: admin session timeout functionality
+  pn_admin_session_timeout:
+    pn_cliswitch: "sw01"
+    state: "update"
+    pn_timeout: "1d"
+
+- name: admin session timeout functionality
+  pn_admin_session_timeout:
+    pn_cliswitch: "sw01"
+    state: "update"
+    pn_timeout: "10d20m3h15s"
+
+
+RETURN VALUES:
+
+command:
+  description: the CLI command run on the target node.
+  returned: always
+  type: str
+stdout:
+  description: set of responses from the admin-session-timeout command.
+  returned: always
+  type: list
+stderr:
+  description: set of error responses from the admin-session-timeout command.
+  returned: on error
+  type: list
+changed:
+  description: indicates whether the CLI caused changes on the target.
+  returned: always
+  type: bool
+

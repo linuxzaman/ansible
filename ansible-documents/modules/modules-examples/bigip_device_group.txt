@@ -1,0 +1,60 @@
+EXAMPLES:
+
+- name: Create a sync-only device group
+  bigip_device_group:
+    name: foo-group
+    provider:
+      password: secret
+      server: lb.mydomain.com
+      user: admin
+  delegate_to: localhost
+
+- name: Create a sync-only device group with auto-sync enabled
+  bigip_device_group:
+    name: foo-group
+    auto_sync: yes
+    provider:
+      password: secret
+      server: lb.mydomain.com
+      user: admin
+  delegate_to: localhost
+
+
+RETURN VALUES:
+
+save_on_auto_sync:
+  description: The new save_on_auto_sync value of the device group.
+  returned: changed
+  type: bool
+  sample: true
+full_sync:
+  description: The new full_sync value of the device group.
+  returned: changed
+  type: bool
+  sample: false
+description:
+  description: The new description of the device group.
+  returned: changed
+  type: str
+  sample: this is a device group
+type:
+  description: The new type of the device group.
+  returned: changed
+  type: str
+  sample: sync-failover
+auto_sync:
+  description: The new auto_sync value of the device group.
+  returned: changed
+  type: bool
+  sample: true
+max_incremental_sync_size:
+  description: The new sync size of the device group
+  returned: changed
+  type: int
+  sample: 1000
+network_failover:
+  description: Whether or not network failover is enabled.
+  returned: changed
+  type: bool
+  sample: yes
+

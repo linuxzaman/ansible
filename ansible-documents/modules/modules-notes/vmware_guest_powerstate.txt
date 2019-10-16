@@ -1,0 +1,160 @@
+> VMWARE_GUEST_POWERSTATE    (/usr/lib/python2.7/dist-packages/ansible/modules/cloud/vmware/vmware_guest_powerstate.py)
+
+        Power on / Power off / Restart a virtual machine.
+
+  * This module is maintained by The Ansible Community
+OPTIONS (= is mandatory):
+
+- folder
+        Destination folder path to find an existing guest.
+        The folder should include the datacenter. ESX's datacenter is ha-datacenter
+        Examples:
+           folder: /ha-datacenter/vm
+           folder: ha-datacenter/vm
+           folder: /datacenter1/vm
+           folder: datacenter1/vm
+           folder: /datacenter1/vm/folder1
+           folder: datacenter1/vm/folder1
+           folder: /folder1/datacenter1/vm
+           folder: folder1/datacenter1/vm
+           folder: /folder1/datacenter1/vm/folder2
+        [Default: (null)]
+        type: str
+
+- force
+        Ignore warnings and complete the actions.
+        This parameter is useful while forcing virtual machine state.
+        [Default: False]
+        type: bool
+        version_added: 2.5
+        
+
+- hostname
+        The hostname or IP address of the vSphere vCenter or ESXi server.
+        If the value is not specified in the task, the value of environment variable `VMWARE_HOST' will be used instead.
+        Environment variable support added in Ansible 2.6.
+        [Default: (null)]
+        type: str
+
+- name
+        Name of the virtual machine to work with.
+        Virtual machine names in vCenter are not necessarily unique, which may be problematic, see `name_match'.
+        [Default: (null)]
+        type: str
+
+- name_match
+        If multiple virtual machines matching the name, use the first or last found.
+        (Choices: first, last)[Default: first]
+        type: str
+
+- password
+        The password of the vSphere vCenter or ESXi server.
+        If the value is not specified in the task, the value of environment variable `VMWARE_PASSWORD' will be used instead.
+        Environment variable support added in Ansible 2.6.
+        (Aliases: pass, pwd)[Default: (null)]
+        type: str
+
+- port
+        The port number of the vSphere vCenter or ESXi server.
+        If the value is not specified in the task, the value of environment variable `VMWARE_PORT' will be used instead.
+        Environment variable support added in Ansible 2.6.
+        [Default: 443]
+        type: int
+        version_added: 2.5
+
+- scheduled_at
+        Date and time in string format at which specificed task needs to be performed.
+        The required format for date and time - 'dd/mm/yyyy hh:mm'.
+        Scheduling task requires vCenter server. A standalone ESXi server does not support this option.
+        [Default: (null)]
+        type: str
+
+- state
+        Set the state of the virtual machine.
+        (Choices: powered-off, powered-on, reboot-guest, restarted, shutdown-guest, suspended, present)[Default: present]
+        type: str
+
+- state_change_timeout
+        If the `state' is set to `shutdown-guest', by default the module will return immediately after sending the shutdown signal.
+        If this argument is set to a positive integer, the module will instead wait for the VM to reach the poweredoff state.
+        The value sets a timeout in seconds for the module to wait for the state change.
+        [Default: 0]
+        version_added: 2.6
+
+- use_instance_uuid
+        Whether to use the VMWare instance UUID rather than the BIOS UUID.
+        [Default: False]
+        type: bool
+        version_added: 2.8
+
+- username
+        The username of the vSphere vCenter or ESXi server.
+        If the value is not specified in the task, the value of environment variable `VMWARE_USER' will be used instead.
+        Environment variable support added in Ansible 2.6.
+        (Aliases: admin, user)[Default: (null)]
+        type: str
+
+- uuid
+        UUID of the instance to manage if known, this is VMware's unique identifier.
+        This is required if name is not supplied.
+        [Default: (null)]
+        type: str
+
+- validate_certs
+        Allows connection when SSL certificates are not valid. Set to `false' when certificates are not trusted.
+        If the value is not specified in the task, the value of environment variable `VMWARE_VALIDATE_CERTS' will be used instead.
+        Environment variable support added in Ansible 2.6.
+        If set to `yes', please make sure Python >= 2.7.9 is installed on the given machine.
+        [Default: True]
+        type: bool
+
+
+REQUIREMENTS:  python >= 2.6, PyVmomi
+
+AUTHOR: Abhijeet Kasurde (@Akasurde) <akasurde@redhat.com>
+        METADATA:
+          status:
+          - preview
+          supported_by: community
+        
+
+EXAMPLES:
+
+- name: Set the state of a virtual machine to poweroff
+  vmware_guest_powerstate:
+    hostname: "{{ vcenter_hostname }}"
+    username: "{{ vcenter_username }}"
+    password: "{{ vcenter_password }}"
+    validate_certs: no
+    folder: "/{{ datacenter_name }}/vm/my_folder"
+    name: "{{ guest_name }}"
+    state: powered-off
+  delegate_to: localhost
+  register: deploy
+
+- name: Set the state of a virtual machine to poweroff at given scheduled time
+  vmware_guest_powerstate:
+    hostname: "{{ vcenter_hostname }}"
+    username: "{{ vcenter_username }}"
+    password: "{{ vcenter_password }}"
+    folder: "/{{ datacenter_name }}/vm/my_folder"
+    name: "{{ guest_name }}"
+    state: powered-off
+    scheduled_at: "09/01/2018 10:18"
+  delegate_to: localhost
+  register: deploy_at_schedule_datetime
+
+- name: Wait for the virtual machine to shutdown
+  vmware_guest_powerstate:
+    hostname: "{{ vcenter_hostname }}"
+    username: "{{ vcenter_username }}"
+    password: "{{ vcenter_password }}"
+    name: "{{ guest_name }}"
+    state: shutdown-guest
+    state_change_timeout: 200
+  delegate_to: localhost
+  register: deploy
+
+
+RETURN VALUES:
+ # 

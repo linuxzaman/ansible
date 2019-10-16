@@ -1,0 +1,308 @@
+> BIGIP_GTM_MONITOR_TCP    (/usr/lib/python2.7/dist-packages/ansible/modules/network/f5/bigip_gtm_monitor_tcp.py)
+
+        Manages F5 BIG-IP GTM tcp monitors.
+
+  * This module is maintained by an Ansible Partner
+OPTIONS (= is mandatory):
+
+- ignore_down_response
+        Specifies that the monitor allows more than one probe attempt per interval.
+        When `yes', specifies that the monitor ignores down responses for the duration of the monitor timeout. Once the monitor timeout
+        is reached without the system receiving an up response, the system marks the object down.
+        When `no', specifies that the monitor immediately marks an object down when it receives a down response.
+        When creating a new monitor, if this parameter is not provided, then the default value will be `no'.
+        [Default: (null)]
+        type: bool
+
+- interval
+        The interval specifying how frequently the monitor instance of this template will run.
+        If this parameter is not provided when creating a new monitor, then the default value will be 30.
+        This value *must* be less than the `timeout' value.
+        [Default: (null)]
+        type: int
+
+- ip
+        IP address part of the IP/port definition. If this parameter is not provided when creating a new monitor, then the default value
+        will be '*'.
+        If this value is an IP address, then a `port' number must be specified.
+        [Default: (null)]
+        type: str
+
+= name
+        Monitor name.
+
+        type: str
+
+- parent
+        The parent template of this monitor template. Once this value has been set, it cannot be changed. By default, this value is the
+        `tcp' parent on the `Common' partition.
+        [Default: /Common/tcp]
+        type: str
+
+- partition
+        Device partition to manage resources on.
+        [Default: Common]
+        type: str
+
+= password
+        The password for the user account used to connect to the BIG-IP.
+        You may omit this option by setting the environment variable `F5_PASSWORD'.
+        (Aliases: pass, pwd)
+        type: str
+
+- port
+        Port address part of the IP/port definition. If this parameter is not provided when creating a new monitor, then the default
+        value will be '*'. Note that if specifying an IP address, a value between 1 and 65535 must be specified
+        [Default: (null)]
+        type: str
+
+- probe_timeout
+        Specifies the number of seconds after which the system times out the probe request to the system.
+        When creating a new monitor, if this parameter is not provided, then the default value will be `5'.
+        [Default: (null)]
+        type: int
+
+- provider
+        A dict object containing connection details.
+        [Default: (null)]
+        suboptions:
+          password:
+            aliases:
+            - pass
+            - pwd
+            description:
+            - The password for the user account used to connect to the BIG-IP.
+            - You may omit this option by setting the environment variable `F5_PASSWORD'.
+            required: true
+            type: str
+          server:
+            description:
+            - The BIG-IP host.
+            - You may omit this option by setting the environment variable `F5_SERVER'.
+            required: true
+            type: str
+          server_port:
+            default: 443
+            description:
+            - The BIG-IP server port.
+            - You may omit this option by setting the environment variable `F5_SERVER_PORT'.
+            type: int
+          ssh_keyfile:
+            description:
+            - Specifies the SSH keyfile to use to authenticate the connection to the remote
+              device.  This argument is only used for `cli' transports.
+            - You may omit this option by setting the environment variable `ANSIBLE_NET_SSH_KEYFILE'.
+            type: path
+          timeout:
+            default: 10
+            description:
+            - Specifies the timeout in seconds for communicating with the network device for
+              either connecting or sending commands.  If the timeout is exceeded before the
+              operation is completed, the module will error.
+            type: int
+          transport:
+            choices:
+            - cli
+            - rest
+            default: rest
+            description:
+            - Configures the transport connection to use when connecting to the remote device.
+            type: str
+          user:
+            description:
+            - The username to connect to the BIG-IP with. This user must have administrative
+              privileges on the device.
+            - You may omit this option by setting the environment variable `F5_USER'.
+            required: true
+            type: str
+          validate_certs:
+            default: true
+            description:
+            - If `no', SSL certificates are not validated. Use this only on personally controlled
+              sites using self-signed certificates.
+            - You may omit this option by setting the environment variable `F5_VALIDATE_CERTS'.
+            type: bool
+        
+        type: dict
+        version_added: 2.5
+
+- receive
+        The receive string for the monitor call.
+        [Default: (null)]
+        type: str
+
+- reverse
+        Instructs the system to mark the target resource down when the test is successful. This setting is useful, for example, if the
+        content on your web site home page is dynamic and changes frequently, you may want to set up a reverse ECV service check that
+        looks for the string Error.
+        A match for this string means that the web server was down.
+        To use this option, you must specify values for `send' and `receive'.
+        [Default: (null)]
+        type: bool
+
+- send
+        The send string for the monitor call.
+        [Default: (null)]
+        type: str
+
+= server
+        The BIG-IP host.
+        You may omit this option by setting the environment variable `F5_SERVER'.
+
+        type: str
+
+- server_port
+        The BIG-IP server port.
+        You may omit this option by setting the environment variable `F5_SERVER_PORT'.
+        [Default: 443]
+        type: int
+        version_added: 2.2
+
+- state
+        When `present', ensures that the monitor exists.
+        When `absent', ensures the monitor is removed.
+        (Choices: present, absent)[Default: present]
+        type: str
+
+- timeout
+        The number of seconds in which the node or service must respond to the monitor request. If the target responds within the set
+        time period, it is considered up. If the target does not respond within the set time period, it is considered down. You can
+        change this number to any number you want, however, it should be 3 times the interval number of seconds plus 1 second.
+        If this parameter is not provided when creating a new monitor, then the default value will be 120.
+        [Default: (null)]
+        type: int
+
+- transparent
+        Specifies whether the monitor operates in transparent mode.
+        A monitor in transparent mode directs traffic through the associated pool members or nodes (usually a router or firewall) to the
+        aliased destination (that is, it probes the `ip'-`port' combination specified in the monitor).
+        If the monitor cannot successfully reach the aliased destination, the pool member or node through which the monitor traffic was
+        sent is marked down.
+        When creating a new monitor, if this parameter is not provided, then the default value will be `no'.
+        [Default: (null)]
+        type: bool
+
+= user
+        The username to connect to the BIG-IP with. This user must have administrative privileges on the device.
+        You may omit this option by setting the environment variable `F5_USER'.
+
+        type: str
+
+- validate_certs
+        If `no', SSL certificates are not validated. Use this only on personally controlled sites using self-signed certificates.
+        You may omit this option by setting the environment variable `F5_VALIDATE_CERTS'.
+        [Default: True]
+        type: bool
+        version_added: 2.0
+
+
+NOTES:
+      * For more information on using Ansible to manage F5 Networks devices see https://www.ansible.com/integrations/networks/f5.
+      * Requires BIG-IP software version >= 12.
+      * The F5 modules only manipulate the running configuration of the F5 product. To ensure that BIG-IP specific configuration
+        persists to disk, be sure to include at least one task that uses the [bigip_config] module to save the running
+        configuration. Refer to the module's documentation for the correct usage of the module to save your running configuration.
+
+
+AUTHOR: Tim Rupp (@caphrim007), Wojciech Wypior (@wojtek0806)
+        METADATA:
+          status:
+          - preview
+          supported_by: certified
+        
+
+EXAMPLES:
+
+- name: Create a GTM TCP monitor
+  bigip_gtm_monitor_tcp:
+    name: my_monitor
+    ip: 1.1.1.1
+    port: 80
+    send: my send string
+    receive: my receive string
+    state: present
+    provider:
+      user: admin
+      password: secret
+      server: lb.mydomain.com
+  delegate_to: localhost
+
+- name: Remove TCP Monitor
+  bigip_gtm_monitor_tcp:
+    name: my_monitor
+    state: absent
+    provider:
+      user: admin
+      password: secret
+      server: lb.mydomain.com
+  delegate_to: localhost
+
+- name: Add TCP monitor for all addresses, port 514
+  bigip_gtm_monitor_tcp:
+    name: my_monitor
+    port: 514
+    provider:
+      user: admin
+      password: secret
+      server: lb.mydomain.com
+  delegate_to: localhost
+
+
+RETURN VALUES:
+
+parent:
+  description: New parent template of the monitor.
+  returned: changed
+  type: str
+  sample: tcp
+ip:
+  description: The new IP of IP/port definition.
+  returned: changed
+  type: str
+  sample: 10.12.13.14
+port:
+  description: The new port the monitor checks the resource on.
+  returned: changed
+  type: str
+  sample: 8080
+interval:
+  description: The new interval in which to run the monitor check.
+  returned: changed
+  type: int
+  sample: 2
+timeout:
+  description: The new timeout in which the remote system must respond to the monitor.
+  returned: changed
+  type: int
+  sample: 10
+ignore_down_response:
+  description: Whether to ignore the down response or not.
+  returned: changed
+  type: bool
+  sample: True
+send:
+  description: The new send string for this monitor.
+  returned: changed
+  type: str
+  sample: tcp string to send
+receive:
+  description: The new receive string for this monitor.
+  returned: changed
+  type: str
+  sample: tcp string to receive
+probe_timeout:
+  description: The new timeout in which the system will timeout the monitor probe.
+  returned: changed
+  type: int
+  sample: 10
+reverse:
+  description: The new value for whether the monitor operates in reverse mode.
+  returned: changed
+  type: bool
+  sample: False
+transparent:
+  description: The new value for whether the monitor operates in transparent mode.
+  returned: changed
+  type: bool
+  sample: False
+

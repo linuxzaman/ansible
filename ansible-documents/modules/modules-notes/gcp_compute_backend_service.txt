@@ -1,0 +1,621 @@
+> GCP_COMPUTE_BACKEND_SERVICE    (/usr/lib/python2.7/dist-packages/ansible/modules/cloud/google/gcp_compute_backend_service.py)
+
+        Creates a BackendService resource in the specified project using the data included in the request.
+
+  * This module is maintained by The Ansible Community
+OPTIONS (= is mandatory):
+
+- affinity_cookie_ttl_sec
+        Lifetime of cookies in seconds if session_affinity is GENERATED_COOKIE. If set to 0, the cookie is non-persistent and lasts only
+        until the end of the browser session (or equivalent). The maximum allowed value for TTL is one day.
+        When the load balancing scheme is INTERNAL, this field is not used.
+        [Default: (null)]
+
+= auth_kind
+        The type of credential used.
+        (Choices: application, machineaccount, serviceaccount)
+        type: str
+
+- backends
+        The list of backends that serve this BackendService.
+        [Default: (null)]
+        suboptions:
+          balancing_mode:
+            choices:
+            - UTILIZATION
+            - RATE
+            - CONNECTION
+            default: UTILIZATION
+            description:
+            - Specifies the balancing mode for this backend.
+            - For global HTTP(S) or TCP/SSL load balancing, the default is UTILIZATION. Valid
+              values are UTILIZATION, RATE (for HTTP(S)) and CONNECTION (for TCP/SSL).
+            - This cannot be used for internal load balancing.
+            required: false
+          capacity_scaler:
+            default: '1.0'
+            description:
+            - A multiplier applied to the group's maximum servicing capacity (based on UTILIZATION,
+              RATE or CONNECTION).
+            - Default value is 1, which means the group will serve up to 100% of its configured
+              capacity (depending on balancingMode). A setting of 0 means the group is completely
+              drained, offering 0% of its available Capacity. Valid range is [0.0,1.0].
+            - This cannot be used for internal load balancing.
+            required: false
+          description:
+            description:
+            - An optional description of this resource.
+            - Provide this property when you create the resource.
+            required: false
+          group:
+            description:
+            - This instance group defines the list of instances that serve traffic. Member
+              virtual machine instances from each instance group must live in the same zone
+              as the instance group itself.
+            - No two backends in a backend service are allowed to use same Instance Group
+              resource.
+            - When the BackendService has load balancing scheme INTERNAL, the instance group
+              must be in a zone within the same region as the BackendService.
+            - 'This field represents a link to a InstanceGroup resource in GCP. It can be
+              specified in two ways. First, you can place a dictionary with key ''selfLink''
+              and value of your resource''s selfLink Alternatively, you can add `register:
+              name-of-resource` to a gcp_compute_instance_group task and then set this group
+              field to "{{ name-of-resource }}"'
+            required: false
+          max_connections:
+            description:
+            - The max number of simultaneous connections for the group. Can be used with either
+              CONNECTION or UTILIZATION balancing modes.
+            - For CONNECTION mode, either maxConnections or maxConnectionsPerInstance must
+              be set.
+            - This cannot be used for internal load balancing.
+            required: false
+          max_connections_per_instance:
+            description:
+            - The max number of simultaneous connections that a single backend instance can
+              handle. This is used to calculate the capacity of the group. Can be used in
+              either CONNECTION or UTILIZATION balancing modes.
+            - For CONNECTION mode, either maxConnections or maxConnectionsPerInstance must
+              be set.
+            - This cannot be used for internal load balancing.
+            required: false
+          max_rate:
+            description:
+            - The max requests per second (RPS) of the group.
+            - Can be used with either RATE or UTILIZATION balancing modes, but required if
+              RATE mode. For RATE mode, either maxRate or maxRatePerInstance must be set.
+            - This cannot be used for internal load balancing.
+            required: false
+          max_rate_per_instance:
+            description:
+            - The max requests per second (RPS) that a single backend instance can handle.
+              This is used to calculate the capacity of the group. Can be used in either balancing
+              mode. For RATE mode, either maxRate or maxRatePerInstance must be set.
+            - This cannot be used for internal load balancing.
+            required: false
+          max_utilization:
+            default: '0.8'
+            description:
+            - Used when balancingMode is UTILIZATION. This ratio defines the CPU utilization
+              target for the group. The default is 0.8. Valid range is [0.0, 1.0].
+            - This cannot be used for internal load balancing.
+            required: false
+        
+
+- cdn_policy
+        Cloud CDN configuration for this BackendService.
+        [Default: (null)]
+        suboptions:
+          cache_key_policy:
+            description:
+            - The CacheKeyPolicy for this CdnPolicy.
+            required: false
+            suboptions:
+              include_host:
+                description:
+                - If true requests to different hosts will be cached separately.
+                required: false
+                type: bool
+              include_protocol:
+                description:
+                - If true, http and https requests will be cached separately.
+                required: false
+                type: bool
+              include_query_string:
+                description:
+                - If true, include query string parameters in the cache key according to query_string_whitelist
+                  and query_string_blacklist. If neither is set, the entire query string will
+                  be included.
+                - If false, the query string will be excluded from the cache key entirely.
+                required: false
+                type: bool
+              query_string_blacklist:
+                description:
+                - Names of query string parameters to exclude in cache keys.
+                - All other parameters will be included. Either specify query_string_whitelist
+                  or query_string_blacklist, not both.
+                - '''&'' and ''='' will be percent encoded and not treated as delimiters.'
+                required: false
+              query_string_whitelist:
+                description:
+                - Names of query string parameters to include in cache keys.
+                - All other parameters will be excluded. Either specify query_string_whitelist
+                  or query_string_blacklist, not both.
+                - '''&'' and ''='' will be percent encoded and not treated as delimiters.'
+                required: false
+          signed_url_cache_max_age_sec:
+            default: '3600'
+            description:
+            - Maximum number of seconds the response to a signed URL request will be considered
+              fresh, defaults to 1hr (3600s). After this time period, the response will be
+              revalidated before being served.
+            - 'When serving responses to signed URL requests, Cloud CDN will internally behave
+              as though all responses from this backend had a "Cache-Control: public, max-age=[TTL]"
+              header, regardless of any existing Cache-Control header. The actual headers
+              served in responses will not be altered.'
+            required: false
+            version_added: 2.8
+        
+
+- connection_draining
+        Settings for connection draining .
+        [Default: (null)]
+        suboptions:
+          draining_timeout_sec:
+            default: '300'
+            description:
+            - Time for which instance will be drained (not accept new connections, but still
+              work to finish started).
+            required: false
+        
+
+- description
+        An optional description of this resource.
+        [Default: (null)]
+
+- enable_cdn
+        If true, enable Cloud CDN for this BackendService.
+        When the load balancing scheme is INTERNAL, this field is not used.
+        [Default: (null)]
+        type: bool
+
+= health_checks
+        The list of URLs to the HttpHealthCheck or HttpsHealthCheck resource for health checking this BackendService. Currently at most
+        one health check can be specified, and a health check is required.
+        For internal load balancing, a URL to a HealthCheck resource must be specified instead.
+
+
+- iap
+        Settings for enabling Cloud Identity Aware Proxy.
+        [Default: (null)]
+        suboptions:
+          enabled:
+            description:
+            - Enables IAP.
+            required: false
+            type: bool
+          oauth2_client_id:
+            description:
+            - OAuth2 Client ID for IAP .
+            required: true
+          oauth2_client_secret:
+            description:
+            - OAuth2 Client Secret for IAP .
+            required: true
+        
+        version_added: 2.7
+        
+
+- load_balancing_scheme
+        Indicates whether the backend service will be used with internal or external load balancing. A backend service created for one
+        type of load balancing cannot be used with the other. One of `INTERNAL` or `EXTERNAL`. Defaults to `EXTERNAL`.
+        (Choices: INTERNAL, EXTERNAL)[Default: EXTERNAL]
+        version_added: 2.7
+        
+
+= name
+        Name of the resource. Provided by the client when the resource is created. The name must be 1-63 characters long, and comply with
+        RFC1035. Specifically, the name must be 1-63 characters long and match the regular expression `[a-z]([-a-z0-9]*[a-z0-9])?` which
+        means the first character must be a lowercase letter, and all following characters must be a dash, lowercase letter, or digit,
+        except the last character, which cannot be a dash.
+
+
+- port_name
+        Name of backend port. The same name should appear in the instance groups referenced by this service. Required when the load
+        balancing scheme is EXTERNAL.
+        When the load balancing scheme is INTERNAL, this field is not used.
+        [Default: (null)]
+
+- project
+        The Google Cloud Platform project to use.
+        [Default: (null)]
+        type: str
+
+- protocol
+        The protocol this BackendService uses to communicate with backends.
+        Possible values are HTTP, HTTPS, TCP, and SSL. The default is HTTP.
+        For internal load balancing, the possible values are TCP and UDP, and the default is TCP.
+        (Choices: HTTP, HTTPS, TCP, SSL)[Default: (null)]
+
+- scopes
+        Array of scopes to be used.
+        [Default: (null)]
+        type: list
+
+- security_policy
+        The security policy associated with this backend service.
+        [Default: (null)]
+        version_added: 2.8
+        
+
+- service_account_contents
+        A string representing the contents of a Service Account JSON file.
+        This should not be passed in as a dictionary, but a string that has the exact contents of a service account json file (valid
+        JSON)
+        [Default: (null)]
+        type: str
+
+- service_account_email
+        An optional service account email address if machineaccount is selected and the user does not wish to use the default email.
+        [Default: (null)]
+        type: str
+
+- service_account_file
+        The path of a Service Account JSON file if serviceaccount is selected as type.
+        [Default: (null)]
+        type: path
+
+- session_affinity
+        Type of session affinity to use. The default is NONE.
+        When the load balancing scheme is EXTERNAL, can be NONE, CLIENT_IP, or GENERATED_COOKIE.
+        When the load balancing scheme is INTERNAL, can be NONE, CLIENT_IP, CLIENT_IP_PROTO, or CLIENT_IP_PORT_PROTO.
+        When the protocol is UDP, this field is not used.
+        (Choices: NONE, CLIENT_IP, GENERATED_COOKIE, CLIENT_IP_PROTO, CLIENT_IP_PORT_PROTO)[Default: (null)]
+
+- state
+        Whether the given object should exist in GCP
+        (Choices: present, absent)[Default: present]
+
+- timeout_sec
+        How many seconds to wait for the backend before considering it a failed request. Default is 30 seconds. Valid range is [1,
+        86400].
+        (Aliases: timeout_seconds)[Default: (null)]
+
+
+NOTES:
+      * For authentication, you can set service_account_file using the `GCP_SERVICE_ACCOUNT_FILE' env variable.
+      * For authentication, you can set service_account_email using the `GCP_SERVICE_ACCOUNT_EMAIL' env variable.
+      * For authentication, you can set service_account_contents using the `GCP_SERVICE_ACCOUNT_CONTENTS' env variable.
+      * For authentication, you can set auth_kind using the `GCP_AUTH_KIND' env variable.
+      * For authentication, you can set scopes using the `GCP_SCOPES' env variable.
+      * Environment variables values will only be used if the playbook values are not set.
+      * The `service_account_email' and `service_account_file' options are mutually exclusive.
+
+
+REQUIREMENTS:  python >= 2.6, requests >= 2.18.4, google-auth >= 1.3.0
+
+AUTHOR: Google Inc. (@googlecloudplatform)
+        METADATA:
+          status:
+          - preview
+          supported_by: community
+        
+
+EXAMPLES:
+
+- name: create a instance group
+  gcp_compute_instance_group:
+    name: instancegroup-backendservice
+    zone: us-central1-a
+    project: "{{ gcp_project }}"
+    auth_kind: "{{ gcp_cred_kind }}"
+    service_account_file: "{{ gcp_cred_file }}"
+    state: present
+  register: instancegroup
+
+- name: create a http health check
+  gcp_compute_http_health_check:
+    name: httphealthcheck-backendservice
+    healthy_threshold: 10
+    port: 8080
+    timeout_sec: 2
+    unhealthy_threshold: 5
+    project: "{{ gcp_project }}"
+    auth_kind: "{{ gcp_cred_kind }}"
+    service_account_file: "{{ gcp_cred_file }}"
+    state: present
+  register: healthcheck
+
+- name: create a backend service
+  gcp_compute_backend_service:
+    name: test_object
+    backends:
+    - group: "{{ instancegroup }}"
+    health_checks:
+    - "{{ healthcheck.selfLink }}"
+    enable_cdn: 'true'
+    project: test_project
+    auth_kind: serviceaccount
+    service_account_file: "/tmp/auth.pem"
+    state: present
+
+
+RETURN VALUES:
+
+affinityCookieTtlSec:
+  description:
+  - Lifetime of cookies in seconds if session_affinity is GENERATED_COOKIE. If set
+    to 0, the cookie is non-persistent and lasts only until the end of the browser
+    session (or equivalent). The maximum allowed value for TTL is one day.
+  - When the load balancing scheme is INTERNAL, this field is not used.
+  returned: success
+  type: int
+backends:
+  description:
+  - The list of backends that serve this BackendService.
+  returned: success
+  type: complex
+  contains:
+    balancingMode:
+      description:
+      - Specifies the balancing mode for this backend.
+      - For global HTTP(S) or TCP/SSL load balancing, the default is UTILIZATION.
+        Valid values are UTILIZATION, RATE (for HTTP(S)) and CONNECTION (for TCP/SSL).
+      - This cannot be used for internal load balancing.
+      returned: success
+      type: str
+    capacityScaler:
+      description:
+      - A multiplier applied to the group's maximum servicing capacity (based on UTILIZATION,
+        RATE or CONNECTION).
+      - Default value is 1, which means the group will serve up to 100% of its configured
+        capacity (depending on balancingMode). A setting of 0 means the group is completely
+        drained, offering 0% of its available Capacity. Valid range is [0.0,1.0].
+      - This cannot be used for internal load balancing.
+      returned: success
+      type: str
+    description:
+      description:
+      - An optional description of this resource.
+      - Provide this property when you create the resource.
+      returned: success
+      type: str
+    group:
+      description:
+      - This instance group defines the list of instances that serve traffic. Member
+        virtual machine instances from each instance group must live in the same zone
+        as the instance group itself.
+      - No two backends in a backend service are allowed to use same Instance Group
+        resource.
+      - When the BackendService has load balancing scheme INTERNAL, the instance group
+        must be in a zone within the same region as the BackendService.
+      returned: success
+      type: dict
+    maxConnections:
+      description:
+      - The max number of simultaneous connections for the group. Can be used with
+        either CONNECTION or UTILIZATION balancing modes.
+      - For CONNECTION mode, either maxConnections or maxConnectionsPerInstance must
+        be set.
+      - This cannot be used for internal load balancing.
+      returned: success
+      type: int
+    maxConnectionsPerInstance:
+      description:
+      - The max number of simultaneous connections that a single backend instance
+        can handle. This is used to calculate the capacity of the group. Can be used
+        in either CONNECTION or UTILIZATION balancing modes.
+      - For CONNECTION mode, either maxConnections or maxConnectionsPerInstance must
+        be set.
+      - This cannot be used for internal load balancing.
+      returned: success
+      type: int
+    maxRate:
+      description:
+      - The max requests per second (RPS) of the group.
+      - Can be used with either RATE or UTILIZATION balancing modes, but required
+        if RATE mode. For RATE mode, either maxRate or maxRatePerInstance must be
+        set.
+      - This cannot be used for internal load balancing.
+      returned: success
+      type: int
+    maxRatePerInstance:
+      description:
+      - The max requests per second (RPS) that a single backend instance can handle.
+        This is used to calculate the capacity of the group. Can be used in either
+        balancing mode. For RATE mode, either maxRate or maxRatePerInstance must be
+        set.
+      - This cannot be used for internal load balancing.
+      returned: success
+      type: str
+    maxUtilization:
+      description:
+      - Used when balancingMode is UTILIZATION. This ratio defines the CPU utilization
+        target for the group. The default is 0.8. Valid range is [0.0, 1.0].
+      - This cannot be used for internal load balancing.
+      returned: success
+      type: str
+cdnPolicy:
+  description:
+  - Cloud CDN configuration for this BackendService.
+  returned: success
+  type: complex
+  contains:
+    cacheKeyPolicy:
+      description:
+      - The CacheKeyPolicy for this CdnPolicy.
+      returned: success
+      type: complex
+      contains:
+        includeHost:
+          description:
+          - If true requests to different hosts will be cached separately.
+          returned: success
+          type: bool
+        includeProtocol:
+          description:
+          - If true, http and https requests will be cached separately.
+          returned: success
+          type: bool
+        includeQueryString:
+          description:
+          - If true, include query string parameters in the cache key according to
+            query_string_whitelist and query_string_blacklist. If neither is set,
+            the entire query string will be included.
+          - If false, the query string will be excluded from the cache key entirely.
+          returned: success
+          type: bool
+        queryStringBlacklist:
+          description:
+          - Names of query string parameters to exclude in cache keys.
+          - All other parameters will be included. Either specify query_string_whitelist
+            or query_string_blacklist, not both.
+          - "'&' and '=' will be percent encoded and not treated as delimiters."
+          returned: success
+          type: list
+        queryStringWhitelist:
+          description:
+          - Names of query string parameters to include in cache keys.
+          - All other parameters will be excluded. Either specify query_string_whitelist
+            or query_string_blacklist, not both.
+          - "'&' and '=' will be percent encoded and not treated as delimiters."
+          returned: success
+          type: list
+    signedUrlCacheMaxAgeSec:
+      description:
+      - Maximum number of seconds the response to a signed URL request will be considered
+        fresh, defaults to 1hr (3600s). After this time period, the response will
+        be revalidated before being served.
+      - 'When serving responses to signed URL requests, Cloud CDN will internally
+        behave as though all responses from this backend had a "Cache-Control: public,
+        max-age=[TTL]" header, regardless of any existing Cache-Control header. The
+        actual headers served in responses will not be altered.'
+      returned: success
+      type: int
+connectionDraining:
+  description:
+  - Settings for connection draining .
+  returned: success
+  type: complex
+  contains:
+    drainingTimeoutSec:
+      description:
+      - Time for which instance will be drained (not accept new connections, but still
+        work to finish started).
+      returned: success
+      type: int
+creationTimestamp:
+  description:
+  - Creation timestamp in RFC3339 text format.
+  returned: success
+  type: str
+fingerprint:
+  description:
+  - Fingerprint of this resource. A hash of the contents stored in this object. This
+    field is used in optimistic locking.
+  returned: success
+  type: str
+description:
+  description:
+  - An optional description of this resource.
+  returned: success
+  type: str
+enableCDN:
+  description:
+  - If true, enable Cloud CDN for this BackendService.
+  - When the load balancing scheme is INTERNAL, this field is not used.
+  returned: success
+  type: bool
+healthChecks:
+  description:
+  - The list of URLs to the HttpHealthCheck or HttpsHealthCheck resource for health
+    checking this BackendService. Currently at most one health check can be specified,
+    and a health check is required.
+  - For internal load balancing, a URL to a HealthCheck resource must be specified
+    instead.
+  returned: success
+  type: list
+id:
+  description:
+  - The unique identifier for the resource.
+  returned: success
+  type: int
+iap:
+  description:
+  - Settings for enabling Cloud Identity Aware Proxy.
+  returned: success
+  type: complex
+  contains:
+    enabled:
+      description:
+      - Enables IAP.
+      returned: success
+      type: bool
+    oauth2ClientId:
+      description:
+      - OAuth2 Client ID for IAP .
+      returned: success
+      type: str
+    oauth2ClientSecret:
+      description:
+      - OAuth2 Client Secret for IAP .
+      returned: success
+      type: str
+    oauth2ClientSecretSha256:
+      description:
+      - OAuth2 Client Secret SHA-256 for IAP .
+      returned: success
+      type: str
+loadBalancingScheme:
+  description:
+  - Indicates whether the backend service will be used with internal or external load
+    balancing. A backend service created for one type of load balancing cannot be
+    used with the other. One of `INTERNAL` or `EXTERNAL`. Defaults to `EXTERNAL`.
+  returned: success
+  type: str
+name:
+  description:
+  - Name of the resource. Provided by the client when the resource is created. The
+    name must be 1-63 characters long, and comply with RFC1035. Specifically, the
+    name must be 1-63 characters long and match the regular expression `[a-z]([-a-z0-9]*[a-z0-9])?`
+    which means the first character must be a lowercase letter, and all following
+    characters must be a dash, lowercase letter, or digit, except the last character,
+    which cannot be a dash.
+  returned: success
+  type: str
+portName:
+  description:
+  - Name of backend port. The same name should appear in the instance groups referenced
+    by this service. Required when the load balancing scheme is EXTERNAL.
+  - When the load balancing scheme is INTERNAL, this field is not used.
+  returned: success
+  type: str
+protocol:
+  description:
+  - The protocol this BackendService uses to communicate with backends.
+  - Possible values are HTTP, HTTPS, TCP, and SSL. The default is HTTP.
+  - For internal load balancing, the possible values are TCP and UDP, and the default
+    is TCP.
+  returned: success
+  type: str
+securityPolicy:
+  description:
+  - The security policy associated with this backend service.
+  returned: success
+  type: str
+sessionAffinity:
+  description:
+  - Type of session affinity to use. The default is NONE.
+  - When the load balancing scheme is EXTERNAL, can be NONE, CLIENT_IP, or GENERATED_COOKIE.
+  - When the load balancing scheme is INTERNAL, can be NONE, CLIENT_IP, CLIENT_IP_PROTO,
+    or CLIENT_IP_PORT_PROTO.
+  - When the protocol is UDP, this field is not used.
+  returned: success
+  type: str
+timeoutSec:
+  description:
+  - How many seconds to wait for the backend before considering it a failed request.
+    Default is 30 seconds. Valid range is [1, 86400].
+  returned: success
+  type: int
+

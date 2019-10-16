@@ -1,0 +1,46 @@
+EXAMPLES:
+
+# Get Plug parameters for all ports
+- name: Get the Plug parameters for ALL ports of a WTI Power device
+  cpm_plugconfig:
+    cpm_action: "getplugconfig"
+    cpm_url: "rest.wti.com"
+    cpm_username: "restpower"
+    cpm_password: "restfulpowerpass12"
+    use_https: true
+    validate_certs: true
+    plug_id: "all"
+
+# Get Plug parameters for port 2
+- name: Get the Plug parameters for the given port of a WTI Power device
+  cpm_plugconfig:
+    cpm_action: "getplugconfig"
+    cpm_url: "rest.wti.com"
+    cpm_username: "restpower"
+    cpm_password: "restfulpowerpass12"
+    use_https: true
+    validate_certs: false
+    plug_id: "2"
+
+# Configure plug 5
+- name: Configure parameters for Plug 5 on a given WTI Power device
+  cpm_plugconfig:
+    cpm_action: "setplugconfig"
+    cpm_url: "rest.wti.com"
+    cpm_username: "restpower"
+    cpm_password: "restfulpowerpass12"
+    use_https: true
+    plug_id: "5"
+    plug_name: "NewPlugNameFive"
+    plug_bootdelay: "3"
+    plug_default: "0"
+    plug_bootpriority: "1"
+
+
+RETURN VALUES:
+
+data:
+    description: The output JSON returned from the commands sent
+    returned: always
+    type: str
+

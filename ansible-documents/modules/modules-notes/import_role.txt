@@ -1,0 +1,101 @@
+> IMPORT_ROLE    (/usr/lib/python2.7/dist-packages/ansible/modules/utilities/logic/import_role.py)
+
+        Much like the `roles:' keyword, this task loads a role, but it allows you to control it when the role tasks run in between other
+        tasks of the play. Most keywords, loops and conditionals will only be applied to the imported tasks, not to this statement
+        itself. If you want the opposite behavior, use [include_role] instead.
+
+  * This module is maintained by The Ansible Core Team
+OPTIONS (= is mandatory):
+
+- allow_duplicates
+        Overrides the role's metadata setting to allow using a role more than once with the same parameters.
+        [Default: True]
+        type: bool
+
+- defaults_from
+        File to load from a role's `defaults/' directory.
+        [Default: main]
+        type: str
+
+- handlers_from
+        File to load from a role's `handlers/' directory.
+        [Default: main]
+        type: str
+        version_added: 2.8
+
+= name
+        The name of the role to be executed.
+
+        type: str
+
+- tasks_from
+        File to load from a role's `tasks/' directory.
+        [Default: main]
+        type: str
+
+- vars_from
+        File to load from a role's `vars/' directory.
+        [Default: main]
+        type: str
+
+
+NOTES:
+      * Handlers are made available to the whole play.
+      * Since Ansible 2.7 variables defined in `vars' and `defaults' for the role are exposed at playbook parsing time. Due to
+        this, these variables will be accessible to roles and tasks executed before the location of the [import_role] task.
+      * Unlike [include_role] variable exposure is not configurable, and will always be exposed.
+
+
+SEE ALSO:
+      * Module import_playbook
+           The official documentation on the import_playbook module.
+           https://docs.ansible.com/ansible/latest/modules/import_playbook_module.html
+      * Module import_tasks
+           The official documentation on the import_tasks module.
+           https://docs.ansible.com/ansible/latest/modules/import_tasks_module.html
+      * Module include_role
+           The official documentation on the include_role module.
+           https://docs.ansible.com/ansible/latest/modules/include_role_module.html
+      * Module include_tasks
+           The official documentation on the include_tasks module.
+           https://docs.ansible.com/ansible/latest/modules/include_tasks_module.html
+      * Ansible documentation [playbooks_reuse_includes]
+           More information related to including and importing playbooks, roles and tasks.
+           https://docs.ansible.com/ansible/latest/#stq=playbooks_reuse_includes&stp=1
+
+
+AUTHOR: Ansible Core Team (@ansible)
+        METADATA:
+          status:
+          - stableinterface
+          supported_by: core
+        
+
+EXAMPLES:
+
+- hosts: all
+  tasks:
+    - import_role:
+        name: myrole
+
+    - name: Run tasks/other.yaml instead of 'main'
+      import_role:
+        name: myrole
+        tasks_from: other
+
+    - name: Pass variables to role
+      import_role:
+        name: myrole
+      vars:
+        rolevar1: value from task
+
+    - name: Apply condition to each task in role
+      import_role:
+        name: myrole
+      when: not idontwanttorun
+
+
+RETURN VALUES:
+
+# This module does not return anything except tasks to execute.
+

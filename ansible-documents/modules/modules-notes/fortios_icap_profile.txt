@@ -1,0 +1,212 @@
+> FORTIOS_ICAP_PROFILE    (/usr/lib/python2.7/dist-packages/ansible/modules/network/fortios/fortios_icap_profile.py)
+
+        This module is able to configure a FortiGate or FortiOS by allowing the user to configure icap feature and profile category.
+        Examples includes all options and need to be adjusted to datasources before usage. Tested with FOS v6.0.2
+
+  * This module is maintained by The Ansible Community
+OPTIONS (= is mandatory):
+
+= host
+        FortiOS or FortiGate ip adress.
+
+
+- https
+        Indicates if the requests towards FortiGate must use HTTPS protocol
+        [Default: True]
+        type: bool
+
+- icap_profile
+        Configure ICAP profiles.
+        [Default: None]
+        suboptions:
+          methods:
+            choices:
+            - delete
+            - get
+            - head
+            - options
+            - post
+            - put
+            - trace
+            - other
+            description:
+            - The allowed HTTP methods that will be sent to ICAP server for further processing.
+          name:
+            description:
+            - ICAP profile name.
+            required: true
+          replacemsg-group:
+            description:
+            - Replacement message group. Source system.replacemsg-group.name.
+          request:
+            choices:
+            - disable
+            - enable
+            description:
+            - Enable/disable whether an HTTP request is passed to an ICAP server.
+          request-failure:
+            choices:
+            - error
+            - bypass
+            description:
+            - Action to take if the ICAP server cannot be contacted when processing an HTTP
+              request.
+          request-path:
+            description:
+            - Path component of the ICAP URI that identifies the HTTP request processing service.
+          request-server:
+            description:
+            - ICAP server to use for an HTTP request. Source icap.server.name.
+          response:
+            choices:
+            - disable
+            - enable
+            description:
+            - Enable/disable whether an HTTP response is passed to an ICAP server.
+          response-failure:
+            choices:
+            - error
+            - bypass
+            description:
+            - Action to take if the ICAP server cannot be contacted when processing an HTTP
+              response.
+          response-path:
+            description:
+            - Path component of the ICAP URI that identifies the HTTP response processing
+              service.
+          response-server:
+            description:
+            - ICAP server to use for an HTTP response. Source icap.server.name.
+          state:
+            choices:
+            - present
+            - absent
+            description:
+            - Indicates whether to create or remove the object
+          streaming-content-bypass:
+            choices:
+            - disable
+            - enable
+            description:
+            - Enable/disable bypassing of ICAP server for streaming content.
+        
+
+- password
+        FortiOS or FortiGate password.
+        [Default: ]
+
+= username
+        FortiOS or FortiGate username.
+
+
+- vdom
+        Virtual domain, among those defined previously. A vdom is a virtual instance of the FortiGate that can be configured and used as
+        a different unit.
+        [Default: root]
+
+
+NOTES:
+      * Requires fortiosapi library developed by Fortinet
+      * Run as a local_action in your playbook
+
+
+REQUIREMENTS:  fortiosapi>=0.9.8
+
+AUTHOR: Miguel Angel Munoz (@mamunozgonzalez), Nicolas Thomas (@thomnico)
+        METADATA:
+          status:
+          - preview
+          supported_by: community
+        
+
+EXAMPLES:
+
+- hosts: localhost
+  vars:
+   host: "192.168.122.40"
+   username: "admin"
+   password: ""
+   vdom: "root"
+  tasks:
+  - name: Configure ICAP profiles.
+    fortios_icap_profile:
+      host:  "{{ host }}"
+      username: "{{ username }}"
+      password: "{{ password }}"
+      vdom:  "{{ vdom }}"
+      https: "False"
+      icap_profile:
+        state: "present"
+        methods: "delete"
+        name: "default_name_4"
+        replacemsg-group: "<your_own_value> (source system.replacemsg-group.name)"
+        request: "disable"
+        request-failure: "error"
+        request-path: "<your_own_value>"
+        request-server: "<your_own_value> (source icap.server.name)"
+        response: "disable"
+        response-failure: "error"
+        response-path: "<your_own_value>"
+        response-server: "<your_own_value> (source icap.server.name)"
+        streaming-content-bypass: "disable"
+
+
+RETURN VALUES:
+
+build:
+  description: Build number of the fortigate image
+  returned: always
+  type: str
+  sample: '1547'
+http_method:
+  description: Last method used to provision the content into FortiGate
+  returned: always
+  type: str
+  sample: 'PUT'
+http_status:
+  description: Last result given by FortiGate on last operation applied
+  returned: always
+  type: str
+  sample: "200"
+mkey:
+  description: Master key (id) used in the last call to FortiGate
+  returned: success
+  type: str
+  sample: "id"
+name:
+  description: Name of the table used to fulfill the request
+  returned: always
+  type: str
+  sample: "urlfilter"
+path:
+  description: Path of the table used to fulfill the request
+  returned: always
+  type: str
+  sample: "webfilter"
+revision:
+  description: Internal revision number
+  returned: always
+  type: str
+  sample: "17.0.2.10658"
+serial:
+  description: Serial number of the unit
+  returned: always
+  type: str
+  sample: "FGVMEVYYQT3AB5352"
+status:
+  description: Indication of the operation's result
+  returned: always
+  type: str
+  sample: "success"
+vdom:
+  description: Virtual domain used
+  returned: always
+  type: str
+  sample: "root"
+version:
+  description: Version of the FortiGate
+  returned: always
+  type: str
+  sample: "v5.6.3"
+
+

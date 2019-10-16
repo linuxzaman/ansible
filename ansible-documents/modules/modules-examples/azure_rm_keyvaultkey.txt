@@ -1,0 +1,26 @@
+EXAMPLES:
+
+- name: Create a key
+      azure_rm_keyvaultkey:
+        key_name: MyKey
+        keyvault_uri: https://contoso.vault.azure.net/
+
+    - name: Delete a key
+      azure_rm_keyvaultkey:
+        key_name: MyKey
+        keyvault_uri: https://contoso.vault.azure.net/
+        state: absent
+
+
+RETURN VALUES:
+
+state:
+    description: Current state of the key.
+    returned: success
+    type: complex
+    contains:
+        key_id:
+          description: key resource path.
+          type: str
+          example: https://contoso.vault.azure.net/keys/hello/e924f053839f4431b35bc54393f98423
+

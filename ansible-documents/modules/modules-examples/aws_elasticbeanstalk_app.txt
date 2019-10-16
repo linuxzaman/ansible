@@ -1,0 +1,37 @@
+EXAMPLES:
+
+# Create or update an application
+- aws_elasticbeanstalk_app:
+    app_name: Sample_App
+    description: "Hello World App"
+    state: present
+
+# Delete application
+- aws_elasticbeanstalk_app:
+    app_name: Sample_App
+    state: absent
+
+
+RETURN VALUES:
+
+app:
+    description: beanstalk application
+    returned: always
+    type: dict
+    sample: {
+        "ApplicationName": "app-name",
+        "ConfigurationTemplates": [],
+        "DateCreated": "2016-12-28T14:50:03.185000+00:00",
+        "DateUpdated": "2016-12-28T14:50:03.185000+00:00",
+        "Description": "description",
+        "Versions": [
+            "1.0.0",
+            "1.0.1"
+        ]
+    }
+output:
+    description: message indicating what change will occur
+    returned: in check mode
+    type: str
+    sample: App is up-to-date
+

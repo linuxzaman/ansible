@@ -1,0 +1,203 @@
+> SL_VM    (/usr/lib/python2.7/dist-packages/ansible/modules/cloud/softlayer/sl_vm.py)
+
+        Creates or cancels SoftLayer instances. When created, optionally waits for it to be 'running'.
+
+  * This module is maintained by The Ansible Community
+OPTIONS (= is mandatory):
+
+= cpus
+        Count of cpus to be assigned to new virtual instance.
+
+
+- datacenter
+        Datacenter for the virtual instance to be deployed.
+        [Default: (null)]
+
+- dedicated
+        Flag to determine if the instance should be deployed in dedicated space.
+        [Default: no]
+        type: bool
+
+= disks
+        List of disk sizes to be assigned to new virtual instance.
+        [Default: [25]]
+
+- domain
+        Domain name to be provided to a virtual instance.
+        [Default: (null)]
+
+- hostname
+        Hostname to be provided to a virtual instance.
+        [Default: (null)]
+
+- hourly
+        Flag to determine if the instance should be hourly billed.
+        [Default: yes]
+        type: bool
+
+- image_id
+        Image Template to be used for new virtual instance.
+        [Default: (null)]
+
+- instance_id
+        Instance Id of the virtual instance to perform action option.
+        [Default: (null)]
+
+- local_disk
+        Flag to determine if local disk should be used for the new instance.
+        [Default: yes]
+        type: bool
+
+= memory
+        Amount of memory to be assigned to new virtual instance.
+
+
+- nic_speed
+        NIC Speed to be assigned to new virtual instance.
+        [Default: 10]
+
+- os_code
+        OS Code to be used for new virtual instance.
+        [Default: (null)]
+
+- post_uri
+        URL of a post provisioning script to be loaded and executed on virtual instance.
+        [Default: (null)]
+
+- private
+        Flag to determine if the instance should be private only.
+        [Default: no]
+        type: bool
+
+- private_vlan
+        VLAN by its Id to be assigned to the private NIC.
+        [Default: (null)]
+
+- public_vlan
+        VLAN by its Id to be assigned to the public NIC.
+        [Default: (null)]
+
+- ssh_keys
+        List of ssh keys by their Id to be assigned to a virtual instance.
+        [Default: (null)]
+
+- state
+        Create, or cancel a virtual instance.
+        Specify `present' for create, `absent' to cancel.
+        (Choices: absent, present)[Default: present]
+
+- tags
+        Tag or list of tags to be provided to a virtual instance.
+        [Default: (null)]
+
+- wait
+        Flag used to wait for active status before returning.
+        [Default: yes]
+        type: bool
+
+- wait_time
+        Time in seconds before wait returns.
+        [Default: 600]
+
+
+REQUIREMENTS:  python >= 2.6, softlayer >= 4.1.1
+
+AUTHOR: Matt Colton (@mcltn)
+        METADATA:
+          status:
+          - preview
+          supported_by: community
+        
+
+EXAMPLES:
+
+- name: Build instance
+  hosts: localhost
+  gather_facts: no
+  tasks:
+  - name: Build instance request
+    sl_vm:
+      hostname: instance-1
+      domain: anydomain.com
+      datacenter: dal09
+      tags: ansible-module-test
+      hourly: yes
+      private: no
+      dedicated: no
+      local_disk: yes
+      cpus: 1
+      memory: 1024
+      disks: [25]
+      os_code: UBUNTU_LATEST
+      wait: no
+
+- name: Build additional instances
+  hosts: localhost
+  gather_facts: no
+  tasks:
+  - name: Build instances request
+    sl_vm:
+      hostname: "{{ item.hostname }}"
+      domain: "{{ item.domain }}"
+      datacenter: "{{ item.datacenter }}"
+      tags: "{{ item.tags }}"
+      hourly: "{{ item.hourly }}"
+      private: "{{ item.private }}"
+      dedicated: "{{ item.dedicated }}"
+      local_disk: "{{ item.local_disk }}"
+      cpus: "{{ item.cpus }}"
+      memory: "{{ item.memory }}"
+      disks: "{{ item.disks }}"
+      os_code: "{{ item.os_code }}"
+      ssh_keys: "{{ item.ssh_keys }}"
+      wait: "{{ item.wait }}"
+    with_items:
+      - hostname: instance-2
+        domain: anydomain.com
+        datacenter: dal09
+        tags:
+          - ansible-module-test
+          - ansible-module-test-slaves
+        hourly: yes
+        private: no
+        dedicated: no
+        local_disk: yes
+        cpus: 1
+        memory: 1024
+        disks:
+          - 25
+          - 100
+        os_code: UBUNTU_LATEST
+        ssh_keys: []
+        wait: True
+      - hostname: instance-3
+        domain: anydomain.com
+        datacenter: dal09
+        tags:
+          - ansible-module-test
+          - ansible-module-test-slaves
+        hourly: yes
+        private: no
+        dedicated: no
+        local_disk: yes
+        cpus: 1
+        memory: 1024
+        disks:
+          - 25
+          - 100
+        os_code: UBUNTU_LATEST
+        ssh_keys: []
+        wait: yes
+
+- name: Cancel instances
+  hosts: localhost
+  gather_facts: no
+  tasks:
+  - name: Cancel by tag
+    sl_vm:
+      state: absent
+      tags: ansible-module-test
+
+
+RETURN VALUES:
+# 

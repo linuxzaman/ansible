@@ -1,0 +1,173 @@
+> OS_IRONIC_NODE    (/usr/lib/python2.7/dist-packages/ansible/modules/cloud/openstack/os_ironic_node.py)
+
+        Deploy to nodes controlled by Ironic.
+
+  * This module is maintained by The Ansible Community
+OPTIONS (= is mandatory):
+
+- api_timeout
+        How long should the socket layer wait before timing out for API calls. If this is omitted, nothing will be passed to the requests
+        library.
+        [Default: (null)]
+        type: int
+
+- auth
+        Dictionary containing auth information as needed by the cloud's auth plugin strategy. For the default `password' plugin, this
+        would contain `auth_url', `username', `password', `project_name' and any information about domains (for example,
+        `os_user_domain_name' or `os_project_domain_name') if the cloud supports them. For other plugins, this param will need to contain
+        whatever parameters that auth plugin requires. This parameter is not needed if a named cloud is provided or OpenStack OS_*
+        environment variables are present.
+        [Default: (null)]
+        type: dict
+
+- auth_type
+        Name of the auth plugin to use. If the cloud uses something other than password authentication, the name of the plugin should be
+        indicated here and the contents of the `auth' parameter should be updated accordingly.
+        [Default: (null)]
+        type: str
+
+- availability_zone
+        Ignored. Present for backwards compatibility
+        [Default: (null)]
+
+- ca_cert
+        A path to a CA Cert bundle that can be used as part of verifying SSL API requests.
+        (Aliases: cacert)[Default: (null)]
+        type: str
+
+- client_cert
+        A path to a client certificate to use as part of the SSL transaction.
+        (Aliases: cert)[Default: (null)]
+        type: str
+
+- client_key
+        A path to a client key to use as part of the SSL transaction.
+        (Aliases: key)[Default: (null)]
+        type: str
+
+- cloud
+        Named cloud or cloud config to operate against. If `cloud' is a string, it references a named cloud config as defined in an
+        OpenStack clouds.yaml file. Provides default values for `auth' and `auth_type'. This parameter is not needed if `auth' is
+        provided or if OpenStack OS_* environment variables are present. If `cloud' is a dict, it contains a complete cloud configuration
+        like would be in a section of clouds.yaml.
+        [Default: (null)]
+        type: raw
+
+- config_drive
+        A configdrive file or HTTP(S) URL that will be passed along to the node.
+        [Default: (null)]
+
+- deploy
+        Indicates if the resource should be deployed. Allows for deployment logic to be disengaged and control of the node power or
+        maintenance state to be changed.
+        [Default: yes]
+        type: bool
+
+- instance_info
+        Definition of the instance information which is used to deploy the node.  This information is only required when an instance is
+        set to present.
+        [Default: (null)]
+        suboptions:
+          image_checksum:
+            description:
+            - The checksum of image_source.
+          image_disk_format:
+            description:
+            - The type of image that has been requested to be deployed.
+          image_source:
+            description:
+            - An HTTP(S) URL where the image can be retrieved from.
+        
+
+- interface
+        Endpoint URL type to fetch from the service catalog.
+        (Aliases: endpoint_type)(Choices: admin, internal, public)[Default: public]
+        type: str
+        version_added: 2.3
+
+- ironic_url
+        If noauth mode is utilized, this is required to be set to the endpoint URL for the Ironic API.  Use with "auth" and "auth_type"
+        settings set to None.
+        [Default: (null)]
+
+- maintenance
+        A setting to allow the direct control if a node is in maintenance mode.
+        [Default: no]
+        type: bool
+
+- maintenance_reason
+        A string expression regarding the reason a node is in a maintenance mode.
+        [Default: (null)]
+
+- power
+        A setting to allow power state to be asserted allowing nodes that are not yet deployed to be powered on, and nodes that are
+        deployed to be powered off.
+        (Choices: present, absent)[Default: present]
+
+- region_name
+        Name of the region.
+        [Default: (null)]
+        type: str
+
+- state
+        Indicates desired state of the resource
+        (Choices: present, absent)[Default: present]
+
+- timeout
+        An integer value representing the number of seconds to wait for the node activation or deactivation to complete.
+        [Default: 180]
+        type: int
+        version_added: 2.1
+
+- uuid
+        globally unique identifier (UUID) to be given to the resource.
+        [Default: (null)]
+
+- validate_certs
+        Whether or not SSL API requests should be verified.
+        Before Ansible 2.3 this defaulted to `yes'.
+        (Aliases: verify)[Default: False]
+        type: bool
+
+- wait
+        A boolean value instructing the module to wait for node activation or deactivation to complete before returning.
+        [Default: no]
+        type: bool
+        version_added: 2.1
+
+
+NOTES:
+      * The standard OpenStack environment variables, such as `OS_USERNAME' may be used instead of providing explicit values.
+      * Auth information is driven by openstacksdk, which means that values can come from a yaml config file in
+        /etc/ansible/openstack.yaml, /etc/openstack/clouds.yaml or ~/.config/openstack/clouds.yaml, then from standard environment
+        variables, then finally by explicit parameters in plays. More information can be found at
+        https://docs.openstack.org/openstacksdk/
+
+
+REQUIREMENTS:  python >= 2.7, openstacksdk
+
+AUTHOR: Monty Taylor (@emonty)
+        METADATA:
+          status:
+          - preview
+          supported_by: community
+        
+
+EXAMPLES:
+
+# Activate a node by booting an image with a configdrive attached
+os_ironic_node:
+  cloud: "openstack"
+  uuid: "d44666e1-35b3-4f6b-acb0-88ab7052da69"
+  state: present
+  power: present
+  deploy: True
+  maintenance: False
+  config_drive: "http://192.168.1.1/host-configdrive.iso"
+  instance_info:
+    image_source: "http://192.168.1.1/deploy_image.img"
+    image_checksum: "356a6b55ecc511a20c33c946c4e678af"
+    image_disk_format: "qcow"
+  delegate_to: localhost
+
+

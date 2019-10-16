@@ -1,0 +1,190 @@
+> UCS_MANAGED_OBJECTS    (/usr/lib/python2.7/dist-packages/ansible/modules/remote_management/ucs/ucs_managed_objects.py)
+
+        Configures Managed Objects on Cisco UCS Manager. The Python SDK module, Python class within the module (UCSM Class), and all
+        properties must be directly specified. More information on the UCSM Python SDK and how to directly configure Managed Objects is
+        available at L(UCSM Python SDK,http://ucsmsdk.readthedocs.io/). Examples can be used with the UCS Platform Emulator
+        https://communities.cisco.com/ucspe.
+
+  * This module is maintained by The Ansible Community
+OPTIONS (= is mandatory):
+
+= hostname
+        IP address or hostname of Cisco UCS Manager.
+
+        type: str
+
+= objects
+        List of managed objects to configure.  Each managed object has suboptions the specify the Python SDK module, class, and
+        properties to configure.
+
+        suboptions:
+          children:
+            description:
+            - Optional list of child objects.  Each child has its own module, class, and properties
+              suboptions.
+            - The parent_mo_or_dn property for child objects is automatically set as the list
+              of children is configured.
+          class_name:
+            description:
+            - Name of the Python class that will be used to configure the Managed Object.
+            required: true
+          module:
+            description:
+            - Name of the Python SDK module implementing the required class.
+            required: true
+          properties:
+            description:
+            - List of properties to configure on the Managed Object.  See the UCSM Python
+              SDK for information on properties for each class.
+            required: true
+        
+
+= password
+        Password for Cisco UCS Manager authentication.
+
+        type: str
+
+- port
+        Port number to be used during connection (by default uses 443 for https and 80 for http connection).
+        [Default: (null)]
+        type: int
+
+- proxy
+        If use_proxy is no, specfies proxy to be used for connection. e.g. 'http://proxy.xy.z:8080'
+        [Default: (null)]
+        type: str
+
+- state
+        If `present', will verify that the Managed Objects are present and will create if needed.
+        If `absent', will verify that the Managed Objects are absent and will delete if needed.
+        (Choices: absent, present)[Default: present]
+
+- use_proxy
+        If `no', will not use the proxy as defined by system environment variable.
+        [Default: True]
+        type: bool
+
+- use_ssl
+        If `no', an HTTP connection will be used instead of the default HTTPS connection.
+        [Default: True]
+        type: bool
+
+- username
+        Username for Cisco UCS Manager authentication.
+        [Default: admin]
+        type: str
+
+
+REQUIREMENTS:  ucsmsdk
+
+AUTHOR: David Soper (@dsoper2), CiscoUcs (@CiscoUcs)
+        METADATA:
+          status:
+          - preview
+          supported_by: community
+        
+
+EXAMPLES:
+
+- name: Configure Network Control Policy
+  ucs_managed_objects:
+    hostname: 172.16.143.150
+    username: admin
+    password: password
+    objects:
+    - module: ucsmsdk.mometa.nwctrl.NwctrlDefinition
+      class: NwctrlDefinition
+      properties:
+        parent_mo_or_dn: org-root
+        cdp: enabled
+        descr: ''
+        lldp_receive: enabled
+        lldp_transmit: enabled
+        name: Enable-CDP-LLDP
+
+- name: Remove Network Control Policy
+  ucs_managed_objects:
+    hostname: 172.16.143.150
+    username: admin
+    password: password
+    objects:
+    - module: ucsmsdk.mometa.nwctrl.NwctrlDefinition
+      class: NwctrlDefinition
+      properties:
+        parent_mo_or_dn: org-root
+        name: Enable-CDP-LLDP
+    state: absent
+
+- name: Configure Boot Policy Using JSON objects list with children
+  ucs_managed_objects:
+    hostname: 172.16.143.150
+    username: admin
+    password: password
+    objects:
+    - {
+          "module": "ucsmsdk.mometa.lsboot.LsbootPolicy",
+          "class": "LsbootPolicy",
+          "properties": {
+              "parent_mo_or_dn": "org-root",
+              "name": "Python_SDS",
+              "enforce_vnic_name": "yes",
+              "boot_mode": "legacy",
+              "reboot_on_update": "no"
+          },
+          "children": [
+              {
+                  "module": "ucsmsdk.mometa.lsboot.LsbootVirtualMedia",
+                  "class": "LsbootVirtualMedia",
+                  "properties": {
+                      "access": "read-only-local",
+                      "lun_id": "0",
+                      "order": "2"
+                  }
+              },
+              {
+                  "module": "ucsmsdk.mometa.lsboot.LsbootStorage",
+                  "class": "LsbootStorage",
+                  "properties": {
+                      "order": "1"
+                  },
+                  "children": [
+                      {
+                          "module": "ucsmsdk.mometa.lsboot.LsbootLocalStorage",
+                          "class": "LsbootLocalStorage",
+                          "properties": {},
+                          "children": [
+                              {
+                                  "module": "ucsmsdk.mometa.lsboot.LsbootDefaultLocalImage",
+                                  "class": "LsbootDefaultLocalImage",
+                                  "properties": {
+                                      "order": "1"
+                                  }
+                              }
+                          ]
+                      }
+                  ]
+              }
+          ]
+      }
+
+- name: Remove Boot Policy Using JSON objects list
+  ucs_managed_objects:
+    hostname: 172.16.143.150
+    username: admin
+    password: password
+    objects:
+    - {
+          "module": "ucsmsdk.mometa.lsboot.LsbootPolicy",
+          "class": "LsbootPolicy",
+          "properties": {
+              "parent_mo_or_dn": "org-root",
+              "name": "Python_SDS"
+          }
+      }
+    state: absent
+
+
+RETURN VALUES:
+
+#
+

@@ -1,0 +1,78 @@
+EXAMPLES:
+
+- name: Gather facts about previously created networks
+  os_networks_facts:
+    auth:
+      auth_url: https://identity.example.com
+      username: user
+      password: password
+      project_name: someproject
+
+- name: Show openstack networks
+  debug:
+    var: openstack_networks
+
+- name: Gather facts about a previously created network by name
+  os_networks_facts:
+    auth:
+      auth_url: https://identity.example.com
+      username: user
+      password: password
+      project_name: someproject
+    name:  network1
+
+- name: Show openstack networks
+  debug:
+    var: openstack_networks
+
+- name: Gather facts about a previously created network with filter
+  # Note: name and filters parameters are Not mutually exclusive
+  os_networks_facts:
+    auth:
+      auth_url: https://identity.example.com
+      username: user
+      password: password
+      project_name: someproject
+    filters:
+      tenant_id: 55e2ce24b2a245b09f181bf025724cbe
+      subnets:
+        - 057d4bdf-6d4d-4728-bb0f-5ac45a6f7400
+        - 443d4dc0-91d4-4998-b21c-357d10433483
+
+- name: Show openstack networks
+  debug:
+    var: openstack_networks
+
+
+RETURN VALUES:
+
+openstack_networks:
+    description: has all the openstack facts about the networks
+    returned: always, but can be null
+    type: complex
+    contains:
+        id:
+            description: Unique UUID.
+            returned: success
+            type: str
+        name:
+            description: Name given to the network.
+            returned: success
+            type: str
+        status:
+            description: Network status.
+            returned: success
+            type: str
+        subnets:
+            description: Subnet(s) included in this network.
+            returned: success
+            type: list of strings
+        tenant_id:
+            description: Tenant id associated with this network.
+            returned: success
+            type: str
+        shared:
+            description: Network shared flag.
+            returned: success
+            type: bool
+

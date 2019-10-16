@@ -1,0 +1,45 @@
+EXAMPLES:
+
+- name: admin-syslog functionality
+  pn_admin_syslog:
+    pn_cliswitch: "sw01"
+    state: "absent"
+    pn_name: "foo"
+    pn_scope: "local"
+
+- name: admin-syslog functionality
+  pn_admin_syslog:
+    pn_cliswitch: "sw01"
+    state: "present"
+    pn_name: "foo"
+    pn_scope: "local"
+    pn_host: "166.68.224.46"
+    pn_message_format: "structured"
+
+- name: admin-syslog functionality
+  pn_admin_syslog:
+    pn_cliswitch: "sw01"
+    state: "update"
+    pn_name: "foo"
+    pn_host: "166.68.224.10"
+
+
+RETURN VALUES:
+
+command:
+  description: the CLI command run on the target node.
+  returned: always
+  type: str
+stdout:
+  description: set of responses from the admin-syslog command.
+  returned: always
+  type: list
+stderr:
+  description: set of error responses from the admin-syslog command.
+  returned: on error
+  type: list
+changed:
+  description: indicates whether the CLI caused changes on the target.
+  returned: always
+  type: bool
+

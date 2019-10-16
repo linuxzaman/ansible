@@ -1,0 +1,209 @@
+> CS_TRAFFIC_TYPE    (/usr/lib/python2.7/dist-packages/ansible/modules/cloud/cloudstack/cs_traffic_type.py)
+
+        Add, remove, update Traffic Types associated with CloudStack Physical Networks.
+
+  * This module is maintained by The Ansible Community
+OPTIONS (= is mandatory):
+
+- api_http_method
+        HTTP method used to query the API endpoint.
+        If not given, the `CLOUDSTACK_METHOD' env variable is considered.
+        As the last option, the value is taken from the ini config file, also see the notes.
+        Fallback value is `get' if not specified.
+        (Choices: get, post)[Default: (null)]
+        type: str
+
+- api_key
+        API key of the CloudStack API.
+        If not given, the `CLOUDSTACK_KEY' env variable is considered.
+        As the last option, the value is taken from the ini config file, also see the notes.
+        [Default: (null)]
+        type: str
+
+- api_region
+        Name of the ini section in the `cloustack.ini' file.
+        If not given, the `CLOUDSTACK_REGION' env variable is considered.
+        [Default: cloudstack]
+        type: str
+
+- api_secret
+        Secret key of the CloudStack API.
+        If not set, the `CLOUDSTACK_SECRET' env variable is considered.
+        As the last option, the value is taken from the ini config file, also see the notes.
+        [Default: (null)]
+        type: str
+
+- api_timeout
+        HTTP timeout in seconds.
+        If not given, the `CLOUDSTACK_TIMEOUT' env variable is considered.
+        As the last option, the value is taken from the ini config file, also see the notes.
+        Fallback value is 10 seconds if not specified.
+        [Default: (null)]
+        type: int
+
+- api_url
+        URL of the CloudStack API e.g. https://cloud.example.com/client/api.
+        If not given, the `CLOUDSTACK_ENDPOINT' env variable is considered.
+        As the last option, the value is taken from the ini config file, also see the notes.
+        [Default: (null)]
+        type: str
+
+- hyperv_networklabel
+        The network name label of the physical device dedicated to this traffic on a HyperV host.
+        [Default: (null)]
+        type: str
+
+- isolation_method
+        Use if the physical network has multiple isolation types and traffic type is public.
+        (Choices: vlan, vxlan)[Default: (null)]
+        type: str
+
+- kvm_networklabel
+        The network name label of the physical device dedicated to this traffic on a KVM host.
+        [Default: (null)]
+        type: str
+
+- ovm3_networklabel
+        The network name of the physical device dedicated to this traffic on an OVM3 host.
+        [Default: (null)]
+        type: str
+
+= physical_network
+        the name of the Physical Network
+
+        type: str
+
+- poll_async
+        Poll async jobs until job has finished.
+        [Default: True]
+        type: bool
+
+- state
+        State of the traffic type
+        (Choices: present, absent)[Default: present]
+        type: str
+
+= traffic_type
+        the trafficType to be added to the physical network.
+        (Choices: Management, Guest, Public, Storage)
+        type: str
+
+- vlan
+        The VLAN id to be used for Management traffic by VMware host.
+        [Default: (null)]
+        type: str
+
+- vmware_networklabel
+        The network name label of the physical device dedicated to this traffic on a VMware host.
+        [Default: (null)]
+        type: str
+
+- xen_networklabel
+        The network name label of the physical device dedicated to this traffic on a XenServer host.
+        [Default: (null)]
+        type: str
+
+- zone
+        Name of the zone with the physical network.
+        Default zone will be used if this is empty.
+        [Default: (null)]
+        type: str
+
+
+NOTES:
+      * Ansible uses the `cs' library's configuration method if credentials are not provided by the arguments `api_url', `api_key',
+        `api_secret'. Configuration is read from several locations, in the following order. The `CLOUDSTACK_ENDPOINT',
+        `CLOUDSTACK_KEY', `CLOUDSTACK_SECRET' and `CLOUDSTACK_METHOD'. `CLOUDSTACK_TIMEOUT' environment variables. A
+        `CLOUDSTACK_CONFIG' environment variable pointing to an `.ini' file. A `cloudstack.ini' file in the current working
+        directory. A `.cloudstack.ini' file in the users home directory. Optionally multiple credentials and endpoints can be
+        specified using ini sections in `cloudstack.ini'. Use the argument `api_region' to select the section name, default section
+        is `cloudstack'. See https://github.com/exoscale/cs for more information.
+      * A detailed guide about cloudstack modules can be found in the L(CloudStack Cloud
+        Guide,../scenario_guides/guide_cloudstack.html).
+      * This module supports check mode.
+
+
+REQUIREMENTS:  python >= 2.6, cs >= 0.6.10
+
+AUTHOR: Patryk Cichy (@PatTheSilent)
+        METADATA:
+          status:
+          - preview
+          supported_by: community
+        
+
+EXAMPLES:
+
+- name: add a traffic type
+  cs_traffic_type:
+    physical_network: public-network
+    traffic_type: Guest
+    zone: test-zone
+  delegate_to: localhost
+
+- name: update traffic type
+  cs_traffic_type:
+    physical_network: public-network
+    traffic_type: Guest
+    kvm_networklabel: cloudbr0
+    zone: test-zone
+  delegate_to: localhost
+
+- name: remove traffic type
+  cs_traffic_type:
+    physical_network: public-network
+    traffic_type: Public
+    state: absent
+    zone: test-zone
+  delegate_to: localhost
+
+
+RETURN VALUES:
+
+---
+id:
+  description: ID of the network provider
+  returned: success
+  type: str
+  sample: 659c1840-9374-440d-a412-55ca360c9d3c
+traffic_type:
+  description: the trafficType that was added to the physical network
+  returned: success
+  type: str
+  sample: Public
+hyperv_networklabel:
+  description: The network name label of the physical device dedicated to this traffic on a HyperV host
+  returned: success
+  type: str
+  sample: HyperV Internal Switch
+kvm_networklabel:
+  description: The network name label of the physical device dedicated to this traffic on a KVM host
+  returned: success
+  type: str
+  sample: cloudbr0
+ovm3_networklabel:
+  description: The network name of the physical device dedicated to this traffic on an OVM3 host
+  returned: success
+  type: str
+  sample: cloudbr0
+physical_network:
+  description: the physical network this belongs to
+  returned: success
+  type: str
+  sample: 28ed70b7-9a1f-41bf-94c3-53a9f22da8b6
+vmware_networklabel:
+  description: The network name label of the physical device dedicated to this traffic on a VMware host
+  returned: success
+  type: str
+  sample: Management Network
+xen_networklabel:
+  description: The network name label of the physical device dedicated to this traffic on a XenServer host
+  returned: success
+  type: str
+  sample: xenbr0
+zone:
+  description: Name of zone the physical network is in.
+  returned: success
+  type: str
+  sample: ch-gva-2
+

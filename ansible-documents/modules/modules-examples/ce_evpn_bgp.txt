@@ -1,0 +1,69 @@
+EXAMPLES:
+
+- name: evpn bgp module test
+  hosts: cloudengine
+  connection: local
+  gather_facts: no
+  vars:
+    cli:
+      host: "{{ inventory_hostname }}"
+      port: "{{ ansible_ssh_port }}"
+      username: "{{ username }}"
+      password: "{{ password }}"
+      transport: cli
+
+  tasks:
+
+  - name: Enable peer address.
+    ce_evpn_bgp:
+      bgp_instance: 100
+      peer_address: 1.1.1.1
+      as_number: 100
+      peer_enable: true
+      provider: "{{ cli }}"
+
+  - name: Enable peer group arp.
+    ce_evpn_bgp:
+      bgp_instance: 100
+      peer_group_name: aaa
+      advertise_router_type: arp
+      provider: "{{ cli }}"
+
+  - name: Enable advertise l2vpn evpn.
+    ce_evpn_bgp:
+      bgp_instance: 100
+      vpn_name: aaa
+      advertise_l2vpn_evpn: enable
+      provider: "{{ cli }}"
+
+
+RETURN VALUES:
+
+proposed:
+    description: k/v pairs of parameters passed into module
+    returned: always
+    type: dict
+    sample: {"advertise_router_type": "arp", "bgp_instance": "100", "peer_group_name": "aaa", "state": "present"}
+existing:
+    description: k/v pairs of existing rollback
+    returned: always
+    type: dict
+    sample: {"bgp_instance": "100", "peer_group_advertise_type": []}
+
+updates:
+    description: command sent to the device
+    returned: always
+    type: list
+    sample: ["peer 1.1.1.1 enable",
+             "peer aaa advertise arp"]
+changed:
+    description: check to see if a change was made on the device
+    returned: always
+    type: bool
+    sample: true
+end_state:
+    description: k/v pairs of configuration after module execution
+    returned: verbose mode
+    type: dict
+    sample: {"advertise_l2vpn_evpn": "enable", "bgp_instance": "100", "vpn_name": "aaa"}
+

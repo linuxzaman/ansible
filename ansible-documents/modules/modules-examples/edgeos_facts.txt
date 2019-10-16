@@ -1,0 +1,50 @@
+EXAMPLES:
+
+- name: collect all facts from the device
+  edgeos_facts:
+    gather_subset: all
+
+- name: collect only the config and default facts
+  edgeos_facts:
+    gather_subset: config
+
+- name: collect everything exception the config
+  edgeos_facts:
+    gather_subset: "!config"
+
+
+RETURN VALUES:
+
+ansible_net_config:
+  description: The running-config from the device
+  returned: when config is configured
+  type: str
+ansible_net_commits:
+  description: The set of available configuration revisions
+  returned: when present
+  type: list
+ansible_net_hostname:
+  description: The configured system hostname
+  returned: always
+  type: str
+ansible_net_model:
+  description: The device model string
+  returned: always
+  type: str
+ansible_net_serialnum:
+  description: The serial number of the device
+  returned: always
+  type: str
+ansible_net_version:
+  description: The version of the software running
+  returned: always
+  type: str
+ansible_net_neighbors:
+  description: The set of LLDP neighbors
+  returned: when interface is configured
+  type: list
+ansible_net_gather_subset:
+  description: The list of subsets gathered by the module
+  returned: always
+  type: list
+

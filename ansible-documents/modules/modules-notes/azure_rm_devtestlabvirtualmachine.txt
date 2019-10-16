@@ -1,0 +1,283 @@
+> AZURE_RM_DEVTESTLABVIRTUALMACHINE    (/usr/lib/python2.7/dist-packages/ansible/modules/cloud/azure/azure_rm_devtestlabvirtualmachine.py)
+
+        Create, update and delete instance of Azure DevTest Lab Virtual Machine.
+
+  * This module is maintained by The Ansible Community
+OPTIONS (= is mandatory):
+
+- ad_user
+        Active Directory username. Use when authenticating with an Active Directory user rather than service principal.
+        [Default: (null)]
+        type: str
+
+- adfs_authority_url
+        Azure AD authority url. Use when authenticating with Username/password, and has your own ADFS authority.
+        [Default: (null)]
+        type: str
+        version_added: 2.6
+
+- allow_claim
+        Indicates whether another user can take ownership of the virtual machine.
+        [Default: (null)]
+
+- api_profile
+        Selects an API profile to use when communicating with Azure services. Default value of `latest' is appropriate for public clouds;
+        future values will allow use with Azure Stack.
+        [Default: latest]
+        type: str
+        version_added: 2.5
+
+- append_tags
+        Use to control if tags field is canonical or just appends to existing tags.
+        When canonical, any tags not found in the tags parameter will be removed from the object's metadata.
+        [Default: True]
+        type: bool
+
+- artifacts
+        The artifacts to be installed on the virtual machine.
+        [Default: (null)]
+        suboptions:
+          parameters:
+            description:
+            - The parameters of the artifact.
+            suboptions:
+              name:
+                description:
+                - The name of the artifact parameter.
+              value:
+                description:
+                - The value of the artifact parameter.
+            type: list
+          source_name:
+            description:
+            - The artifact's source name.
+          source_path:
+            description:
+            - The artifact's path in the source repository.
+        
+        type: list
+
+- auth_source
+        Controls the source of the credentials to use for authentication.
+        If not specified, ANSIBLE_AZURE_AUTH_SOURCE environment variable will be used and default to `auto' if variable is not defined.
+        `auto' will follow the default precedence of module parameters -> environment variables -> default profile in credential file
+        `~/.azure/credentials'.
+        When set to `cli', the credentials will be sources from the default Azure CLI profile.
+        Can also be set via the `ANSIBLE_AZURE_AUTH_SOURCE' environment variable.
+        When set to `msi', the host machine must be an azure resource with an enabled MSI extension. `subscription_id' or the environment
+        variable `AZURE_SUBSCRIPTION_ID' can be used to identify the subscription ID if the resource is granted access to more than one
+        subscription, otherwise the first subscription is chosen.
+        The `msi' was added in Ansible 2.6.
+        (Choices: auto, cli, credential_file, env, msi)[Default: (null)]
+        type: str
+        version_added: 2.5
+
+- cert_validation_mode
+        Controls the certificate validation behavior for Azure endpoints. By default, all modules will validate the server certificate,
+        but when an HTTPS proxy is in use, or against Azure Stack, it may be necessary to disable this behavior by passing `ignore'. Can
+        also be set via credential file profile or the `AZURE_CERT_VALIDATION' environment variable.
+        (Choices: ignore, validate)[Default: (null)]
+        type: str
+        version_added: 2.5
+
+- client_id
+        Azure client ID. Use when authenticating with a Service Principal.
+        [Default: (null)]
+        type: str
+
+- cloud_environment
+        For cloud environments other than the US public cloud, the environment name (as defined by Azure Python SDK, eg,
+        `AzureChinaCloud', `AzureUSGovernment'), or a metadata discovery endpoint URL (required for Azure Stack). Can also be set via
+        credential file profile or the `AZURE_CLOUD_ENVIRONMENT' environment variable.
+        [Default: AzureCloud]
+        type: str
+        version_added: 2.4
+
+- disallow_public_ip_address
+        Indicates whether the virtual machine is to be created without a public IP address.
+        [Default: (null)]
+
+- expiration_date
+        The expiration date for VM.
+        [Default: (null)]
+
+- image
+        The Microsoft Azure Marketplace image reference of the virtual machine.
+        [Default: (null)]
+        suboptions:
+          offer:
+            description:
+            - The offer of the gallery image.
+          os_type:
+            description:
+            - The OS type of the gallery image.
+          publisher:
+            description:
+            - The publisher of the gallery image.
+          sku:
+            description:
+            - The SKU of the gallery image.
+          version:
+            description:
+            - The version of the gallery image.
+        
+
+= lab_name
+        The name of the lab.
+
+
+- lab_subnet
+        An existing subnet within lab's virtual network
+        It can be the subnet's resource id.
+        It can be a dict which contains `virtual_network_name' and `name'.
+        [Default: (null)]
+
+= name
+        The name of the virtual machine.
+
+
+- notes
+        The notes of the virtual machine.
+        [Default: (null)]
+
+- os_type
+        Base type of operating system.
+        (Choices: windows, linux)[Default: (null)]
+
+- password
+        The password of the virtual machine administrator.
+        [Default: (null)]
+
+- profile
+        Security profile found in ~/.azure/credentials file.
+        [Default: (null)]
+        type: str
+
+= resource_group
+        The name of the resource group.
+
+
+- secret
+        Azure client secret. Use when authenticating with a Service Principal.
+        [Default: (null)]
+        type: str
+
+- ssh_key
+        The SSH key of the virtual machine administrator.
+        [Default: (null)]
+
+- state
+        Assert the state of the Virtual Machine.
+        Use 'present' to create or update an Virtual Machine and 'absent' to delete it.
+        (Choices: absent, present)[Default: present]
+
+- storage_type
+        Storage type to use for virtual machine.
+        (Choices: standard, premium)[Default: (null)]
+
+- subscription_id
+        Your Azure subscription Id.
+        [Default: (null)]
+        type: str
+
+- tags
+        Dictionary of string:string pairs to assign as metadata to the object.
+        Metadata tags on the object will be updated with any provided values.
+        To remove tags set append_tags option to false.
+        [Default: (null)]
+        type: dict
+
+- tenant
+        Azure tenant ID. Use when authenticating with a Service Principal.
+        [Default: (null)]
+        type: str
+
+- user_name
+        The user name of the virtual machine.
+        [Default: (null)]
+
+- vm_size
+        A valid Azure VM size value. For example, 'Standard_D4'. The list of choices varies depending on the subscription and location.
+        Check your subscription for available choices. Required when creating a VM.
+        Available values can be found here: https://docs.microsoft.com/en-us/azure/virtual-machines/windows/sizes-general
+        [Default: (null)]
+
+
+NOTES:
+      * For authentication with Azure you can pass parameters, set environment variables, use a profile stored in
+        ~/.azure/credentials, or log in before you run your tasks or playbook with `az login'.
+      * Authentication is also possible using a service principal or Active Directory user.
+      * To authenticate via service principal, pass subscription_id, client_id, secret and tenant or set environment variables
+        AZURE_SUBSCRIPTION_ID, AZURE_CLIENT_ID, AZURE_SECRET and AZURE_TENANT.
+      * To authenticate via Active Directory user, pass ad_user and password, or set AZURE_AD_USER and AZURE_PASSWORD in the
+        environment.
+      * Alternatively, credentials can be stored in ~/.azure/credentials. This is an ini file containing a [default] section and
+        the following keys: subscription_id, client_id, secret and tenant or subscription_id, ad_user and password. It is also
+        possible to add additional profiles. Specify the profile by passing profile or setting AZURE_PROFILE in the environment.
+
+
+SEE ALSO:
+      * Sign in with Azure CLI
+           How to authenticate using the `az login' command.
+           https://docs.microsoft.com/en-us/cli/azure/authenticate-azure-cli?view=azure-cli-latest
+
+
+REQUIREMENTS:  python >= 2.7, azure >= 2.0.0
+
+AUTHOR: Zim Kalinowski (@zikalino)
+        METADATA:
+          status:
+          - preview
+          supported_by: community
+        
+
+EXAMPLES:
+
+- name: Create (or update) Virtual Machine
+    azure_rm_devtestlabvirtualmachine:
+      resource_group: myrg
+      lab_name: mylab
+      name: myvm
+      notes: Virtual machine notes....
+      os_type: linux
+      vm_size: Standard_A2_v2
+      user_name: vmadmin
+      password: ZSuppas$$21!
+      lab_subnet:
+        name: myvnSubnet
+        virtual_network_name: myvn
+      disallow_public_ip_address: no
+      image:
+        offer: UbuntuServer
+        publisher: Canonical
+        sku: 16.04-LTS
+        os_type: Linux
+        version: latest
+      artifacts:
+        - source_name: myartifact
+          source_path: "/Artifacts/linux-install-mongodb"
+      allow_claim: no
+      expiration_date: "2019-02-22T01:49:12.117974Z"
+
+
+RETURN VALUES:
+
+id:
+    description:
+        - The identifier of the DTL Virtual Machine resource.
+    returned: always
+    type: str
+    sample: /subscriptions/xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx/resourcegroups/myrg/providers/microsoft.devtestlab/labs/mylab/virtualmachines/myvm
+compute_id:
+    description:
+        - The identifier of the underlying Compute Virtual Machine resource.
+    returned: always
+    type: str
+    sample: /subscriptions/xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx/resourcegroups/myrg/providers/microsoft.devtestlab/labs/mylab/virtualmachines/myvm
+fqdn:
+    description:
+        - Fully qualified domain name or IP Address of the virtual machine.
+    returned: always
+    type: str
+    sample: myvm.eastus.cloudapp.azure.com
+

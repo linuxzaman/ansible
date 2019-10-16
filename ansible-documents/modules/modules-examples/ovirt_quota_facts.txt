@@ -1,0 +1,21 @@
+EXAMPLES:
+
+# Examples don't contain auth parameter for simplicity,
+# look at ovirt_auth module to see how to reuse authentication:
+
+# Gather facts about quota named C<myquota> in Default datacenter:
+- ovirt_quota_facts:
+    data_center: Default
+    name: myquota
+- debug:
+    var: ovirt_quotas
+
+
+RETURN VALUES:
+
+ovirt_quotas:
+    description: "List of dictionaries describing the quotas. Quota attributes are mapped to dictionary keys,
+                  all quotas attributes can be found at following url: http://ovirt.github.io/ovirt-engine-api-model/master/#types/quota."
+    returned: On success.
+    type: list
+

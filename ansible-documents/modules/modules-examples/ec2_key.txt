@@ -1,0 +1,67 @@
+EXAMPLES:
+
+# Note: These examples do not set authentication details, see the AWS Guide for details.
+
+- name: create a new ec2 key pair, returns generated private key
+  ec2_key:
+    name: my_keypair
+
+- name: create key pair using provided key_material
+  ec2_key:
+    name: my_keypair
+    key_material: 'ssh-rsa AAAAxyz...== me@example.com'
+
+- name: create key pair using key_material obtained using 'file' lookup plugin
+  ec2_key:
+    name: my_keypair
+    key_material: "{{ lookup('file', '/path/to/public_key/id_rsa.pub') }}"
+
+# try creating a key pair with the name of an already existing keypair
+# but don't overwrite it even if the key is different (force=false)
+- name: try creating a key pair with name of an already existing keypair
+  ec2_key:
+    name: my_existing_keypair
+    key_material: 'ssh-rsa AAAAxyz...== me@example.com'
+    force: false
+
+- name: remove key pair by name
+  ec2_key:
+    name: my_keypair
+    state: absent
+
+
+RETURN VALUES:
+
+changed:
+  description: whether a keypair was created/deleted
+  returned: always
+  type: bool
+  sample: true
+msg:
+  description: short message describing the action taken
+  returned: always
+  type: str
+  sample: key pair created
+key:
+  description: details of the keypair (this is set to null when state is absent)
+  returned: always
+  type: complex
+  contains:
+    fingerprint:
+      description: fingerprint of the key
+      returned: when state is present
+      type: str
+      sample: 'b0:22:49:61:d9:44:9d:0c:7e:ac:8a:32:93:21:6c:e8:fb:59:62:43'
+    name:
+      description: name of the keypair
+      returned: when state is present
+      type: str
+      sample: my_keypair
+    private_key:
+      description: private key of a newly created keypair
+      returned: when a new keypair is created by AWS (key_material is not provided)
+      type: str
+      sample: '-----BEGIN RSA PRIVATE KEY-----
+        MIIEowIBAAKC...
+        -----END RSA PRIVATE KEY-----'
+

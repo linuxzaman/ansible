@@ -1,0 +1,104 @@
+EXAMPLES:
+
+- name: Allow inbound port 80/tcp from 1.2.3.4 to 4.3.2.1
+  cs_firewall:
+    ip_address: 4.3.2.1
+    port: 80
+    cidr: 1.2.3.4/32
+  delegate_to: localhost
+
+- name: Allow inbound tcp/udp port 53 to 4.3.2.1
+  cs_firewall:
+    ip_address: 4.3.2.1
+    port: 53
+    protocol: '{{ item }}'
+  with_items:
+  - tcp
+  - udp
+  delegate_to: localhost
+
+- name: Ensure firewall rule is removed
+  cs_firewall:
+    ip_address: 4.3.2.1
+    start_port: 8000
+    end_port: 8888
+    cidr: 17.0.0.0/8
+    state: absent
+  delegate_to: localhost
+
+- name: Allow all outbound traffic
+  cs_firewall:
+    network: my_network
+    type: egress
+    protocol: all
+  delegate_to: localhost
+
+- name: Allow only HTTP outbound traffic for an IP
+  cs_firewall:
+    network: my_network
+    type: egress
+    port: 80
+    cidr: 10.101.1.20
+  delegate_to: localhost
+
+
+RETURN VALUES:
+
+---
+id:
+  description: UUID of the rule.
+  returned: success
+  type: str
+  sample: 04589590-ac63-4ffc-93f5-b698b8ac38b6
+ip_address:
+  description: IP address of the rule if C(type=ingress)
+  returned: success
+  type: str
+  sample: 10.100.212.10
+type:
+  description: Type of the rule.
+  returned: success
+  type: str
+  sample: ingress
+cidr:
+  description: CIDR string of the rule.
+  returned: success
+  type: str
+  sample: 0.0.0.0/0
+cidrs:
+  description: CIDR list of the rule.
+  returned: success
+  type: list
+  sample: [ '0.0.0.0/0' ]
+  version_added: '2.5'
+protocol:
+  description: Protocol of the rule.
+  returned: success
+  type: str
+  sample: tcp
+start_port:
+  description: Start port of the rule.
+  returned: success
+  type: int
+  sample: 80
+end_port:
+  description: End port of the rule.
+  returned: success
+  type: int
+  sample: 80
+icmp_code:
+  description: ICMP code of the rule.
+  returned: success
+  type: int
+  sample: 1
+icmp_type:
+  description: ICMP type of the rule.
+  returned: success
+  type: int
+  sample: 1
+network:
+  description: Name of the network if C(type=egress)
+  returned: success
+  type: str
+  sample: my_network
+

@@ -1,0 +1,670 @@
+> FORTIOS_FIREWALL_PROFILE_PROTOCOL_OPTIONS    (/usr/lib/python2.7/dist-packages/ansible/modules/network/fortios/fortios_firewall_profile_protocol_options.py)
+
+        This module is able to configure a FortiGate or FortiOS by allowing the user to configure firewall feature and
+        profile_protocol_options category. Examples includes all options and need to be adjusted to datasources before usage. Tested with
+        FOS v6.0.2
+
+  * This module is maintained by The Ansible Community
+OPTIONS (= is mandatory):
+
+- firewall_profile_protocol_options
+        Configure protocol options.
+        [Default: None]
+        suboptions:
+          comment:
+            description:
+            - Optional comments.
+          dns:
+            description:
+            - Configure DNS protocol options.
+            suboptions:
+              ports:
+                description:
+                - Ports to scan for content (1 - 65535, default = 53).
+              status:
+                choices:
+                - enable
+                - disable
+                description:
+                - Enable/disable the active status of scanning for this protocol.
+          ftp:
+            description:
+            - Configure FTP protocol options.
+            suboptions:
+              comfort-amount:
+                description:
+                - Amount of data to send in a transmission for client comforting (1 - 10240
+                  bytes, default = 1).
+              comfort-interval:
+                description:
+                - Period of time between start, or last transmission, and the next client
+                  comfort transmission of data (1 - 900 sec, default = 10).
+              inspect-all:
+                choices:
+                - enable
+                - disable
+                description:
+                - Enable/disable the inspection of all ports for the protocol.
+              options:
+                choices:
+                - clientcomfort
+                - oversize
+                - splice
+                - bypass-rest-command
+                - bypass-mode-command
+                description:
+                - One or more options that can be applied to the session.
+              oversize-limit:
+                description:
+                - Maximum in-memory file size that can be scanned (1 - 383 MB, default = 10).
+              ports:
+                description:
+                - Ports to scan for content (1 - 65535, default = 21).
+              scan-bzip2:
+                choices:
+                - enable
+                - disable
+                description:
+                - Enable/disable scanning of BZip2 compressed files.
+              status:
+                choices:
+                - enable
+                - disable
+                description:
+                - Enable/disable the active status of scanning for this protocol.
+              uncompressed-nest-limit:
+                description:
+                - Maximum nested levels of compression that can be uncompressed and scanned
+                  (2 - 100, default = 12).
+              uncompressed-oversize-limit:
+                description:
+                - Maximum in-memory uncompressed file size that can be scanned (0 - 383 MB,
+                  0 = unlimited, default = 10).
+          http:
+            description:
+            - Configure HTTP protocol options.
+            suboptions:
+              block-page-status-code:
+                description:
+                - Code number returned for blocked HTTP pages (non-FortiGuard only) (100 -
+                  599, default = 403).
+              comfort-amount:
+                description:
+                - Amount of data to send in a transmission for client comforting (1 - 10240
+                  bytes, default = 1).
+              comfort-interval:
+                description:
+                - Period of time between start, or last transmission, and the next client
+                  comfort transmission of data (1 - 900 sec, default = 10).
+              fortinet-bar:
+                choices:
+                - enable
+                - disable
+                description:
+                - Enable/disable Fortinet bar on HTML content.
+              fortinet-bar-port:
+                description:
+                - Port for use by Fortinet Bar (1 - 65535, default = 8011).
+              http-policy:
+                choices:
+                - disable
+                - enable
+                description:
+                - Enable/disable HTTP policy check.
+              inspect-all:
+                choices:
+                - enable
+                - disable
+                description:
+                - Enable/disable the inspection of all ports for the protocol.
+              options:
+                choices:
+                - clientcomfort
+                - servercomfort
+                - oversize
+                - chunkedbypass
+                description:
+                - One or more options that can be applied to the session.
+              oversize-limit:
+                description:
+                - Maximum in-memory file size that can be scanned (1 - 383 MB, default = 10).
+              ports:
+                description:
+                - Ports to scan for content (1 - 65535, default = 80).
+              post-lang:
+                choices:
+                - jisx0201
+                - jisx0208
+                - jisx0212
+                - gb2312
+                - ksc5601-ex
+                - euc-jp
+                - sjis
+                - iso2022-jp
+                - iso2022-jp-1
+                - iso2022-jp-2
+                - euc-cn
+                - ces-gbk
+                - hz
+                - ces-big5
+                - euc-kr
+                - iso2022-jp-3
+                - iso8859-1
+                - tis620
+                - cp874
+                - cp1252
+                - cp1251
+                description:
+                - ID codes for character sets to be used to convert to UTF-8 for banned words
+                  and DLP on HTTP posts (maximum of 5 character sets).
+              range-block:
+                choices:
+                - disable
+                - enable
+                description:
+                - Enable/disable blocking of partial downloads.
+              retry-count:
+                description:
+                - Number of attempts to retry HTTP connection (0 - 100, default = 0).
+              scan-bzip2:
+                choices:
+                - enable
+                - disable
+                description:
+                - Enable/disable scanning of BZip2 compressed files.
+              status:
+                choices:
+                - enable
+                - disable
+                description:
+                - Enable/disable the active status of scanning for this protocol.
+              streaming-content-bypass:
+                choices:
+                - enable
+                - disable
+                description:
+                - Enable/disable bypassing of streaming content from buffering.
+              strip-x-forwarded-for:
+                choices:
+                - disable
+                - enable
+                description:
+                - Enable/disable stripping of HTTP X-Forwarded-For header.
+              switching-protocols:
+                choices:
+                - bypass
+                - block
+                description:
+                - Bypass from scanning, or block a connection that attempts to switch protocol.
+              uncompressed-nest-limit:
+                description:
+                - Maximum nested levels of compression that can be uncompressed and scanned
+                  (2 - 100, default = 12).
+              uncompressed-oversize-limit:
+                description:
+                - Maximum in-memory uncompressed file size that can be scanned (0 - 383 MB,
+                  0 = unlimited, default = 10).
+          imap:
+            description:
+            - Configure IMAP protocol options.
+            suboptions:
+              inspect-all:
+                choices:
+                - enable
+                - disable
+                description:
+                - Enable/disable the inspection of all ports for the protocol.
+              options:
+                choices:
+                - fragmail
+                - oversize
+                description:
+                - One or more options that can be applied to the session.
+              oversize-limit:
+                description:
+                - Maximum in-memory file size that can be scanned (1 - 383 MB, default = 10).
+              ports:
+                description:
+                - Ports to scan for content (1 - 65535, default = 143).
+              scan-bzip2:
+                choices:
+                - enable
+                - disable
+                description:
+                - Enable/disable scanning of BZip2 compressed files.
+              status:
+                choices:
+                - enable
+                - disable
+                description:
+                - Enable/disable the active status of scanning for this protocol.
+              uncompressed-nest-limit:
+                description:
+                - Maximum nested levels of compression that can be uncompressed and scanned
+                  (2 - 100, default = 12).
+              uncompressed-oversize-limit:
+                description:
+                - Maximum in-memory uncompressed file size that can be scanned (0 - 383 MB,
+                  0 = unlimited, default = 10).
+          mail-signature:
+            description:
+            - Configure Mail signature.
+            suboptions:
+              signature:
+                description:
+                - Email signature to be added to outgoing email (if the signature contains
+                  spaces, enclose with quotation marks).
+              status:
+                choices:
+                - disable
+                - enable
+                description:
+                - Enable/disable adding an email signature to SMTP email messages as they
+                  pass through the FortiGate.
+          mapi:
+            description:
+            - Configure MAPI protocol options.
+            suboptions:
+              options:
+                choices:
+                - fragmail
+                - oversize
+                description:
+                - One or more options that can be applied to the session.
+              oversize-limit:
+                description:
+                - Maximum in-memory file size that can be scanned (1 - 383 MB, default = 10).
+              ports:
+                description:
+                - Ports to scan for content (1 - 65535, default = 135).
+              scan-bzip2:
+                choices:
+                - enable
+                - disable
+                description:
+                - Enable/disable scanning of BZip2 compressed files.
+              status:
+                choices:
+                - enable
+                - disable
+                description:
+                - Enable/disable the active status of scanning for this protocol.
+              uncompressed-nest-limit:
+                description:
+                - Maximum nested levels of compression that can be uncompressed and scanned
+                  (2 - 100, default = 12).
+              uncompressed-oversize-limit:
+                description:
+                - Maximum in-memory uncompressed file size that can be scanned (0 - 383 MB,
+                  0 = unlimited, default = 10).
+          name:
+            description:
+            - Name.
+            required: true
+          nntp:
+            description:
+            - Configure NNTP protocol options.
+            suboptions:
+              inspect-all:
+                choices:
+                - enable
+                - disable
+                description:
+                - Enable/disable the inspection of all ports for the protocol.
+              options:
+                choices:
+                - oversize
+                - splice
+                description:
+                - One or more options that can be applied to the session.
+              oversize-limit:
+                description:
+                - Maximum in-memory file size that can be scanned (1 - 383 MB, default = 10).
+              ports:
+                description:
+                - Ports to scan for content (1 - 65535, default = 119).
+              scan-bzip2:
+                choices:
+                - enable
+                - disable
+                description:
+                - Enable/disable scanning of BZip2 compressed files.
+              status:
+                choices:
+                - enable
+                - disable
+                description:
+                - Enable/disable the active status of scanning for this protocol.
+              uncompressed-nest-limit:
+                description:
+                - Maximum nested levels of compression that can be uncompressed and scanned
+                  (2 - 100, default = 12).
+              uncompressed-oversize-limit:
+                description:
+                - Maximum in-memory uncompressed file size that can be scanned (0 - 383 MB,
+                  0 = unlimited, default = 10).
+          oversize-log:
+            choices:
+            - disable
+            - enable
+            description:
+            - Enable/disable logging for antivirus oversize file blocking.
+          pop3:
+            description:
+            - Configure POP3 protocol options.
+            suboptions:
+              inspect-all:
+                choices:
+                - enable
+                - disable
+                description:
+                - Enable/disable the inspection of all ports for the protocol.
+              options:
+                choices:
+                - fragmail
+                - oversize
+                description:
+                - One or more options that can be applied to the session.
+              oversize-limit:
+                description:
+                - Maximum in-memory file size that can be scanned (1 - 383 MB, default = 10).
+              ports:
+                description:
+                - Ports to scan for content (1 - 65535, default = 110).
+              scan-bzip2:
+                choices:
+                - enable
+                - disable
+                description:
+                - Enable/disable scanning of BZip2 compressed files.
+              status:
+                choices:
+                - enable
+                - disable
+                description:
+                - Enable/disable the active status of scanning for this protocol.
+              uncompressed-nest-limit:
+                description:
+                - Maximum nested levels of compression that can be uncompressed and scanned
+                  (2 - 100, default = 12).
+              uncompressed-oversize-limit:
+                description:
+                - Maximum in-memory uncompressed file size that can be scanned (0 - 383 MB,
+                  0 = unlimited, default = 10).
+          replacemsg-group:
+            description:
+            - Name of the replacement message group to be used Source system.replacemsg-group.name.
+          rpc-over-http:
+            choices:
+            - enable
+            - disable
+            description:
+            - Enable/disable inspection of RPC over HTTP.
+          smtp:
+            description:
+            - Configure SMTP protocol options.
+            suboptions:
+              inspect-all:
+                choices:
+                - enable
+                - disable
+                description:
+                - Enable/disable the inspection of all ports for the protocol.
+              options:
+                choices:
+                - fragmail
+                - oversize
+                - splice
+                description:
+                - One or more options that can be applied to the session.
+              oversize-limit:
+                description:
+                - Maximum in-memory file size that can be scanned (1 - 383 MB, default = 10).
+              ports:
+                description:
+                - Ports to scan for content (1 - 65535, default = 25).
+              scan-bzip2:
+                choices:
+                - enable
+                - disable
+                description:
+                - Enable/disable scanning of BZip2 compressed files.
+              server-busy:
+                choices:
+                - enable
+                - disable
+                description:
+                - Enable/disable SMTP server busy when server not available.
+              status:
+                choices:
+                - enable
+                - disable
+                description:
+                - Enable/disable the active status of scanning for this protocol.
+              uncompressed-nest-limit:
+                description:
+                - Maximum nested levels of compression that can be uncompressed and scanned
+                  (2 - 100, default = 12).
+              uncompressed-oversize-limit:
+                description:
+                - Maximum in-memory uncompressed file size that can be scanned (0 - 383 MB,
+                  0 = unlimited, default = 10).
+          state:
+            choices:
+            - present
+            - absent
+            description:
+            - Indicates whether to create or remove the object
+          switching-protocols-log:
+            choices:
+            - disable
+            - enable
+            description:
+            - Enable/disable logging for HTTP/HTTPS switching protocols.
+        
+
+= host
+        FortiOS or FortiGate ip address.
+
+
+- https
+        Indicates if the requests towards FortiGate must use HTTPS protocol
+        [Default: True]
+        type: bool
+
+- password
+        FortiOS or FortiGate password.
+        [Default: ]
+
+= username
+        FortiOS or FortiGate username.
+
+
+- vdom
+        Virtual domain, among those defined previously. A vdom is a virtual instance of the FortiGate that can be configured and used as
+        a different unit.
+        [Default: root]
+
+
+NOTES:
+      * Requires fortiosapi library developed by Fortinet
+      * Run as a local_action in your playbook
+
+
+REQUIREMENTS:  fortiosapi>=0.9.8
+
+AUTHOR: Miguel Angel Munoz (@mamunozgonzalez), Nicolas Thomas (@thomnico)
+        METADATA:
+          status:
+          - preview
+          supported_by: community
+        
+
+EXAMPLES:
+
+- hosts: localhost
+  vars:
+   host: "192.168.122.40"
+   username: "admin"
+   password: ""
+   vdom: "root"
+  tasks:
+  - name: Configure protocol options.
+    fortios_firewall_profile_protocol_options:
+      host:  "{{ host }}"
+      username: "{{ username }}"
+      password: "{{ password }}"
+      vdom:  "{{ vdom }}"
+      https: "False"
+      firewall_profile_protocol_options:
+        state: "present"
+        comment: "Optional comments."
+        dns:
+            ports: "5"
+            status: "enable"
+        ftp:
+            comfort-amount: "8"
+            comfort-interval: "9"
+            inspect-all: "enable"
+            options: "clientcomfort"
+            oversize-limit: "12"
+            ports: "13"
+            scan-bzip2: "enable"
+            status: "enable"
+            uncompressed-nest-limit: "16"
+            uncompressed-oversize-limit: "17"
+        http:
+            block-page-status-code: "19"
+            comfort-amount: "20"
+            comfort-interval: "21"
+            fortinet-bar: "enable"
+            fortinet-bar-port: "23"
+            http-policy: "disable"
+            inspect-all: "enable"
+            options: "clientcomfort"
+            oversize-limit: "27"
+            ports: "28"
+            post-lang: "jisx0201"
+            range-block: "disable"
+            retry-count: "31"
+            scan-bzip2: "enable"
+            status: "enable"
+            streaming-content-bypass: "enable"
+            strip-x-forwarded-for: "disable"
+            switching-protocols: "bypass"
+            uncompressed-nest-limit: "37"
+            uncompressed-oversize-limit: "38"
+        imap:
+            inspect-all: "enable"
+            options: "fragmail"
+            oversize-limit: "42"
+            ports: "43"
+            scan-bzip2: "enable"
+            status: "enable"
+            uncompressed-nest-limit: "46"
+            uncompressed-oversize-limit: "47"
+        mail-signature:
+            signature: "<your_own_value>"
+            status: "disable"
+        mapi:
+            options: "fragmail"
+            oversize-limit: "53"
+            ports: "54"
+            scan-bzip2: "enable"
+            status: "enable"
+            uncompressed-nest-limit: "57"
+            uncompressed-oversize-limit: "58"
+        name: "default_name_59"
+        nntp:
+            inspect-all: "enable"
+            options: "oversize"
+            oversize-limit: "63"
+            ports: "64"
+            scan-bzip2: "enable"
+            status: "enable"
+            uncompressed-nest-limit: "67"
+            uncompressed-oversize-limit: "68"
+        oversize-log: "disable"
+        pop3:
+            inspect-all: "enable"
+            options: "fragmail"
+            oversize-limit: "73"
+            ports: "74"
+            scan-bzip2: "enable"
+            status: "enable"
+            uncompressed-nest-limit: "77"
+            uncompressed-oversize-limit: "78"
+        replacemsg-group: "<your_own_value> (source system.replacemsg-group.name)"
+        rpc-over-http: "enable"
+        smtp:
+            inspect-all: "enable"
+            options: "fragmail"
+            oversize-limit: "84"
+            ports: "85"
+            scan-bzip2: "enable"
+            server-busy: "enable"
+            status: "enable"
+            uncompressed-nest-limit: "89"
+            uncompressed-oversize-limit: "90"
+        switching-protocols-log: "disable"
+
+
+RETURN VALUES:
+
+build:
+  description: Build number of the fortigate image
+  returned: always
+  type: str
+  sample: '1547'
+http_method:
+  description: Last method used to provision the content into FortiGate
+  returned: always
+  type: str
+  sample: 'PUT'
+http_status:
+  description: Last result given by FortiGate on last operation applied
+  returned: always
+  type: str
+  sample: "200"
+mkey:
+  description: Master key (id) used in the last call to FortiGate
+  returned: success
+  type: str
+  sample: "id"
+name:
+  description: Name of the table used to fulfill the request
+  returned: always
+  type: str
+  sample: "urlfilter"
+path:
+  description: Path of the table used to fulfill the request
+  returned: always
+  type: str
+  sample: "webfilter"
+revision:
+  description: Internal revision number
+  returned: always
+  type: str
+  sample: "17.0.2.10658"
+serial:
+  description: Serial number of the unit
+  returned: always
+  type: str
+  sample: "FGVMEVYYQT3AB5352"
+status:
+  description: Indication of the operation's result
+  returned: always
+  type: str
+  sample: "success"
+vdom:
+  description: Virtual domain used
+  returned: always
+  type: str
+  sample: "root"
+version:
+  description: Version of the FortiGate
+  returned: always
+  type: str
+  sample: "v5.6.3"
+
+

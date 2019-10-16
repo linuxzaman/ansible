@@ -1,0 +1,48 @@
+EXAMPLES:
+
+# Always run those modules on localhost using delegate_to:localhost, or localaction
+
+- name: query a list of hosts
+  logicmonitor_facts:
+    target: host
+    company: yourcompany
+    user: Luigi
+    password: ImaLuigi,number1!
+  delegate_to: localhost
+
+- name: query a host group
+  logicmonitor_facts:
+    target: hostgroup
+    fullpath: /servers/production
+    company: yourcompany
+    user: mario
+    password: itsame.Mario!
+  delegate_to: localhost
+
+
+RETURN VALUES:
+
+---
+    ansible_facts:
+        description: LogicMonitor properties set for the specified object
+        returned: success
+        type: list
+        example: >
+            {
+                "name": "dc",
+                "value": "1"
+            },
+            {
+                "name": "type",
+                "value": "prod"
+            },
+            {
+                "name": "system.categories",
+                "value": ""
+            },
+            {
+                "name": "snmp.community",
+                "value": "********"
+            }
+...
+

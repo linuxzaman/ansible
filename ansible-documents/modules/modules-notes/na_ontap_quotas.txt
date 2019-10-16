@@ -1,0 +1,166 @@
+> NA_ONTAP_QUOTAS    (/usr/lib/python2.7/dist-packages/ansible/modules/storage/netapp/na_ontap_quotas.py)
+
+        Set/Modify/Delete quota on ONTAP
+
+  * This module is maintained by an Ansible Partner
+OPTIONS (= is mandatory):
+
+- disk_limit
+        The amount of disk space that is reserved for the target.
+        [Default: -]
+        type: str
+
+- file_limit
+        The number of files that the target can have.
+        [Default: -]
+        type: str
+
+= hostname
+        The hostname or IP address of the ONTAP instance.
+
+        type: str
+
+- http_port
+        Override the default port (80 or 443) with this port
+        [Default: (null)]
+        type: int
+
+- https
+        Enable and disable https
+        [Default: False]
+        type: bool
+
+- ontapi
+        The ontap api version to use
+        [Default: (null)]
+        type: int
+
+= password
+        Password for the specified user.
+        (Aliases: pass)
+        type: str
+
+- policy
+        Name of the quota policy from which the quota rule should be obtained.
+        [Default: (null)]
+        type: str
+
+- qtree
+        Name of the qtree for the quota.
+        For user or group rules, it can be the qtree name or "" if no qtree.
+        For tree type rules, this field must be "".
+        [Default: ]
+        type: str
+
+= quota_target
+        The quota target of the type specified.
+
+        type: str
+
+- set_quota_status
+        Whether the specified volume should have quota status on or off.
+        [Default: (null)]
+        type: bool
+
+- state
+        Whether the specified quota should exist or not.
+        (Choices: present, absent)[Default: present]
+        type: str
+
+- threshold
+        The amount of disk space the target would have to exceed before a message is logged.
+        [Default: -]
+        type: str
+
+= type
+        The type of quota rule
+        (Choices: user, group, tree)
+        type: str
+
+= username
+        This can be a Cluster-scoped or SVM-scoped account, depending on whether a Cluster-level or SVM-level API is required. For more
+        information, please read the documentation https://mysupport.netapp.com/NOW/download/software/nmsdk/9.4/.
+        (Aliases: user)
+        type: str
+
+- validate_certs
+        If set to `no', the SSL certificates will not be validated.
+        This should only set to `False' used on personally controlled sites using self-signed certificates.
+        [Default: True]
+        type: bool
+
+= volume
+        The name of the volume that the quota resides on.
+
+        type: str
+
+= vserver
+        Name of the vserver to use.
+
+        type: str
+
+
+NOTES:
+      * The modules prefixed with na\\_ontap are built to support the ONTAP storage platform.
+
+
+REQUIREMENTS:  A physical or virtual clustered Data ONTAP system. The modules support Data ONTAP 9.1 and onward, Ansible 2.6, Python2
+        netapp-lib (2017.10.30) or later. Install using 'pip install netapp-lib', Python3 netapp-lib (2018.11.13) or
+        later. Install using 'pip install netapp-lib', To enable http on the cluster you must run the following commands
+        'set -privilege advanced;' 'system services web modify -http-enabled true;'
+
+AUTHOR: NetApp Ansible Team (@carchi8py) <ng-ansibleteam@netapp.com>
+        METADATA:
+          status:
+          - preview
+          supported_by: certified
+        
+
+EXAMPLES:
+
+- name: Add/Set quota
+      na_ontap_quotas:
+        state: present
+        vserver: ansible
+        volume: ansible
+        quota_target: /vol/ansible
+        type: user
+        policy: ansible
+        file_limit: 2
+        disk_limit: 3
+        set_quota_status: True
+        hostname: "{{ netapp_hostname }}"
+        username: "{{ netapp_username }}"
+        password: "{{ netapp_password }}"
+    - name: modify quota
+      na_ontap_quotas:
+        state: present
+        vserver: ansible
+        volume: ansible
+        quota_target: /vol/ansible
+        type: user
+        policy: ansible
+        file_limit: 2
+        disk_limit: 3
+        threshold: 3
+        set_quota_status: False
+        hostname: "{{ netapp_hostname }}"
+        username: "{{ netapp_username }}"
+        password: "{{ netapp_password }}"
+    - name: Delete quota
+      na_ontap_quotas:
+        state: absent
+        vserver: ansible
+        volume: ansible
+        quota_target: /vol/ansible
+        type: user
+        policy: ansible
+        hostname: "{{ netapp_hostname }}"
+        username: "{{ netapp_username }}"
+        password: "{{ netapp_password }}"
+
+
+RETURN VALUES:
+
+
+

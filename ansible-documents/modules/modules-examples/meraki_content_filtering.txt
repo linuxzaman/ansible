@@ -1,0 +1,44 @@
+EXAMPLES:
+
+- name: Set single allowed URL pattern
+    meraki_content_filtering:
+      auth_key: abc123
+      org_name: YourOrg
+      net_name: YourMXNet
+      allowed_urls:
+        - "http://www.ansible.com/*"
+
+  - name: Set blocked URL category
+    meraki_content_filtering:
+      auth_key: abc123
+      org_name: YourOrg
+      net_name: YourMXNet
+      state: present
+      category_list_size: full list
+      blocked_categories:
+        - "Adult and Pornography"
+
+  - name: Remove match patterns and categories
+    meraki_content_filtering:
+      auth_key: abc123
+      org_name: YourOrg
+      net_name: YourMXNet
+      state: present
+      category_list_size: full list
+      allowed_urls: []
+      blocked_urls: []
+
+
+RETURN VALUES:
+
+data:
+    description: Information about the created or manipulated object.
+    returned: info
+    type: complex
+    contains:
+      id:
+        description: Identification string of network.
+        returned: success
+        type: str
+        sample: N_12345
+

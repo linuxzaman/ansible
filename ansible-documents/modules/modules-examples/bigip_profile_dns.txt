@@ -1,0 +1,71 @@
+EXAMPLES:
+
+- name: Create a DNS profile
+  bigip_profile_dns:
+    name: foo
+    enable_dns_express: no
+    enable_dnssec: no
+    enable_gtm: no
+    process_recursion_desired: no
+    use_local_bind: no
+    enable_dns_firewall: yes
+    provider:
+      password: secret
+      server: lb.mydomain.com
+      user: admin
+  delegate_to: localhost
+
+
+RETURN VALUES:
+
+enable_dns_express:
+  description: Whether DNS Express is enabled on the resource or not.
+  returned: changed
+  type: bool
+  sample: yes
+enable_zone_transfer:
+  description: Whether zone transfer are enabled on the resource or not.
+  returned: changed
+  type: bool
+  sample: no
+enable_dnssec:
+  description: Whether DNSSEC is enabled on the resource or not.
+  returned: changed
+  type: bool
+  sample: no
+enable_gtm:
+  description: Whether GTM is used to manage the resource or not.
+  returned: changed
+  type: bool
+  sample: yes
+process_recursion_desired:
+  description: Whether client-side DNS packets are processed with Recursion Desired set.
+  returned: changed
+  type: bool
+  sample: yes
+use_local_bind:
+  description: Whether non-wide IP queries are forwarded to the local BIND server or not.
+  returned: changed
+  type: bool
+  sample: no
+enable_dns_firewall:
+  description: Whether DNS firewall capability is enabled or not.
+  returned: changed
+  type: bool
+  sample: no
+enable_cache:
+  description: Whether DNS caching is enabled or not.
+  returned: changed
+  type: bool
+  sample: no
+cache_name:
+  description: Name of the cache used by DNS.
+  returned: changed
+  type: str
+  sample: /Common/cache1
+unhandled_query_action:
+  description: What to do with unhandled queries
+  returned: changed
+  type: str
+  sample: allow
+

@@ -1,0 +1,104 @@
+> AOS_ASN_POOL    (/usr/lib/python2.7/dist-packages/ansible/modules/network/aos/_aos_asn_pool.py)
+
+        Apstra AOS ASN Pool module let you manage your ASN Pool easily. You can create and delete ASN Pool by Name, ID or by using a JSON
+        File. This module is idempotent and support the `check' mode. It's using the AOS REST API.
+
+DEPRECATED: 
+
+	Reason: This module does not support AOS 2.1 or later
+	Will be removed in: Ansible 2.9
+	Alternatives: See new modules at U(https://www.ansible.com/ansible-apstra).
+
+
+  * This module is maintained by The Ansible Community
+OPTIONS (= is mandatory):
+
+- content
+        Datastructure of the ASN Pool to manage. The data can be in YAML / JSON or directly a variable. It's the same datastructure that
+        is returned on success in `value'.
+        [Default: (null)]
+
+- id
+        AOS Id of the ASN Pool to manage. Only one of `name', `id' or `content' can be set.
+        [Default: (null)]
+
+- name
+        Name of the ASN Pool to manage. Only one of `name', `id' or `content' can be set.
+        [Default: (null)]
+
+- ranges
+        List of ASNs ranges to add to the ASN Pool. Each range must have 2 values.
+        [Default: (null)]
+
+= session
+        An existing AOS session as obtained by [aos_login] module.
+
+
+- state
+        Indicate what is the expected state of the ASN Pool (present or not).
+        (Choices: present, absent)[Default: present]
+
+
+REQUIREMENTS:  aos-pyez >= 0.6.0
+
+AUTHOR: Damien Garros (@dgarros)
+        METADATA:
+          status:
+          - deprecated
+          supported_by: community
+        
+
+EXAMPLES:
+
+- name: "Create ASN Pool"
+  aos_asn_pool:
+    session: "{{ aos_session }}"
+    name: "my-asn-pool"
+    ranges:
+      - [ 100, 200 ]
+    state: present
+  register: asnpool
+
+- name: "Save ASN Pool into a file in JSON"
+  copy:
+    content: "{{ asnpool.value | to_nice_json }}"
+    dest: resources/asn_pool_saved.json
+
+- name: "Save ASN Pool into a file in YAML"
+  copy:
+    content: "{{ asnpool.value | to_nice_yaml }}"
+    dest: resources/asn_pool_saved.yaml
+
+
+- name: "Delete ASN Pool"
+  aos_asn_pool:
+    session: "{{ aos_session }}"
+    name: "my-asn-pool"
+    state: absent
+
+- name: "Load ASN Pool from File(JSON)"
+  aos_asn_pool:
+    session: "{{ aos_session }}"
+    content: "{{ lookup('file', 'resources/asn_pool_saved.json') }}"
+    state: present
+
+- name: "Delete ASN Pool from File(JSON)"
+  aos_asn_pool:
+    session: "{{ aos_session }}"
+    content: "{{ lookup('file', 'resources/asn_pool_saved.json') }}"
+    state: absent
+
+- name: "Load ASN Pool from File(Yaml)"
+  aos_asn_pool:
+    session: "{{ aos_session }}"
+    content: "{{ lookup('file', 'resources/asn_pool_saved.yaml') }}"
+    state: present
+  register: test
+
+- name: "Delete ASN Pool from File(Yaml)"
+  aos_asn_pool:
+    session: "{{ aos_session }}"
+    content: "{{ lookup('file', 'resources/asn_pool_saved.yaml') }}"
+    state: absent
+
+

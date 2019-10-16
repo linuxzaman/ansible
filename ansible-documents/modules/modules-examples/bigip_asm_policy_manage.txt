@@ -1,0 +1,79 @@
+EXAMPLES:
+
+- name: Create ASM policy from template
+  bigip_asm_policy:
+    name: new_sharepoint_policy
+    template: SharePoint 2007 (http)
+    state: present
+    provider:
+      server: lb.mydomain.com
+      user: admin
+      password: secret
+  delegate_to: localhost
+
+- name: Create blank ASM policy
+  bigip_asm_policy:
+    name: new_blank_policy
+    state: present
+    provider:
+      server: lb.mydomain.com
+      user: admin
+      password: secret
+  delegate_to: localhost
+
+- name: Create blank ASM policy and activate
+  bigip_asm_policy:
+    name: new_blank_policy
+    active: yes
+    state: present
+    provider:
+      server: lb.mydomain.com
+      user: admin
+      password: secret
+  delegate_to: localhost
+
+- name: Activate ASM policy
+  bigip_asm_policy:
+    name: inactive_policy
+    active: yes
+    state: present
+    provider:
+      server: lb.mydomain.com
+      user: admin
+      password: secret
+  delegate_to: localhost
+
+- name: Deactivate ASM policy
+  bigip_asm_policy_manage:
+    name: active_policy
+    state: present
+    provider:
+      server: lb.mydomain.com
+      user: admin
+      password: secret
+  delegate_to: localhost
+
+
+RETURN VALUES:
+
+active:
+  description: Set when activating/deactivating ASM policy
+  returned: changed
+  type: bool
+  sample: yes
+state:
+  description: Action performed on the target device.
+  returned: changed
+  type: str
+  sample: absent
+template:
+  description: Name of the built-in ASM policy template
+  returned: changed
+  type: str
+  sample: OWA Exchange 2007 (https)
+name:
+  description: Name of the ASM policy to be managed/created
+  returned: changed
+  type: str
+  sample: Asm_APP1_Transparent
+

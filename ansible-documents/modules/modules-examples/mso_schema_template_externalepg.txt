@@ -1,0 +1,51 @@
+EXAMPLES:
+
+- name: Add a new external EPG
+  mso_schema_template_externalepg:
+    host: mso_host
+    username: admin
+    password: SomeSecretPassword
+    schema: Schema 1
+    template: Template 1
+    externalepg: External EPG 1
+    state: present
+  delegate_to: localhost
+
+- name: Remove an external EPG
+  mso_schema_template_externalepg:
+    host: mso_host
+    username: admin
+    password: SomeSecretPassword
+    schema: Schema 1
+    template: Template 1
+    externalepg: external EPG1
+    state: absent
+  delegate_to: localhost
+
+- name: Query a specific external EPGs
+  mso_schema_template_externalepg:
+    host: mso_host
+    username: admin
+    password: SomeSecretPassword
+    schema: Schema 1
+    template: Template 1
+    externalepg: external EPG1
+    state: query
+  delegate_to: localhost
+  register: query_result
+
+- name: Query all external EPGs
+  mso_schema_template_externalepg:
+    host: mso_host
+    username: admin
+    password: SomeSecretPassword
+    schema: Schema 1
+    template: Template 1
+    state: query
+  delegate_to: localhost
+  register: query_result
+
+
+RETURN VALUES:
+
+

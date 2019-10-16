@@ -1,0 +1,77 @@
+> PN_VFLOW_TABLE_PROFILE    (/usr/lib/python2.7/dist-packages/ansible/modules/network/netvisor/pn_vflow_table_profile.py)
+
+        This module can be used to modify a vFlow table profile.
+
+  * This module is maintained by The Ansible Community
+OPTIONS (= is mandatory):
+
+- pn_cliswitch
+        Target switch to run the CLI on.
+        [Default: (null)]
+        type: str
+
+- pn_enable
+        enable or disable vflow profile table.
+        [Default: (null)]
+        type: bool
+
+- pn_hw_tbl
+        hardware table used by vFlow.
+        (Choices: switch-main, switch-hash, npu-main, npu-hash)[Default: (null)]
+        type: str
+
+- pn_profile
+        type of vFlow profile.
+        (Choices: application, ipv6, qos)[Default: (null)]
+        type: str
+
+= state
+        State the action to perform. Use `update' to modify the vflow-table-profile.
+        (Choices: update)
+        type: str
+
+
+AUTHOR: Pluribus Networks (@rajaspachipulusu17)
+        METADATA:
+          status:
+          - preview
+          supported_by: community
+        
+
+EXAMPLES:
+
+- name: Modify vflow table profile
+  pn_vflow_table_profile:
+    pn_cliswitch: 'sw01'
+    state: 'update'
+    pn_profile: 'ipv6'
+    pn_hw_tbl: 'switch-main'
+    pn_enable: true
+
+- name: Modify vflow table profile
+  pn_vflow_table_profile:
+    state: 'update'
+    pn_profile: 'qos'
+    pn_hw_tbl: 'switch-main'
+    pn_enable: false
+
+
+RETURN VALUES:
+
+command:
+  description: the CLI command run on the target node.
+  returned: always
+  type: str
+stdout:
+  description: set of responses from the vflow-table-profile command.
+  returned: always
+  type: list
+stderr:
+  description: set of error responses from the vflow-table-profile command.
+  returned: on error
+  type: list
+changed:
+  description: indicates whether the CLI caused changes on the target.
+  returned: always
+  type: bool
+

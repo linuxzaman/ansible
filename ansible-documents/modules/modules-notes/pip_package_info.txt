@@ -1,0 +1,82 @@
+> PIP_PACKAGE_INFO    (/usr/lib/python2.7/dist-packages/ansible/modules/packaging/language/pip_package_info.py)
+
+        Return information about installed pip packages
+
+  * This module is maintained by The Ansible Community
+OPTIONS (= is mandatory):
+
+- clients
+        A list of the pip executables that will be used to get the packages. They can be supplied with the full path or just the
+        executable name, i.e `pip3.7`.
+        [Default: [u'pip']]
+        type: list
+
+
+REQUIREMENTS:  The requested pip executables must be installed on the target.
+
+AUTHOR: Matthew Jones (@matburt), Brian Coca (@bcoca), Adam Miller (@maxamillion)
+        METADATA:
+          status:
+          - preview
+          supported_by: community
+        
+
+EXAMPLES:
+
+- name: Just get the list from default pip
+  pip_package_info:
+
+- name: get the facts for default pip, pip2 and pip3.6
+  pip_package_info:
+    clients: ['pip', 'pip2', 'pip3.6']
+
+- name: get from specific paths (virtualenvs?)
+  pip_package_info:
+    clients: '/home/me/projec42/python/pip3.5'
+
+
+RETURN VALUES:
+
+packages:
+  description: a dictionary of installed package data
+  returned: always
+  type: dict
+  contains:
+    python:
+      description: A dictionary with each pip client which then contains a list of dicts with python package information
+      returned: always
+      type: dict
+      sample:
+        "packages": {
+            "pip": {
+                "Babel": [
+                    {
+                        "name": "Babel",
+                        "source": "pip",
+                        "version": "2.6.0"
+                    }
+                ],
+                "Flask": [
+                    {
+                        "name": "Flask",
+                        "source": "pip",
+                        "version": "1.0.2"
+                    }
+                ],
+                "Flask-SQLAlchemy": [
+                    {
+                        "name": "Flask-SQLAlchemy",
+                        "source": "pip",
+                        "version": "2.3.2"
+                    }
+                ],
+                "Jinja2": [
+                    {
+                        "name": "Jinja2",
+                        "source": "pip",
+                        "version": "2.10"
+                    }
+                ],
+            },
+        }
+

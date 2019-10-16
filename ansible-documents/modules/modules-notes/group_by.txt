@@ -1,0 +1,56 @@
+> GROUP_BY    (/usr/lib/python2.7/dist-packages/ansible/modules/inventory/group_by.py)
+
+        Use facts to create ad-hoc groups that can be used later in a playbook. This module is also supported for Windows targets.
+
+  * This module is maintained by The Ansible Core Team
+  * note: This module has a corresponding action plugin.
+
+OPTIONS (= is mandatory):
+
+= key
+        The variables whose values will be used as groups.
+
+        type: str
+
+- parents
+        The list of the parent groups.
+        [Default: all]
+        type: list
+        version_added: 2.4
+
+
+NOTES:
+      * Spaces in group names are converted to dashes '-'.
+      * This module is also supported for Windows targets.
+
+
+SEE ALSO:
+      * Module add_host
+           The official documentation on the add_host module.
+           https://docs.ansible.com/ansible/latest/modules/add_host_module.html
+
+
+AUTHOR: Jeroen Hoekx (@jhoekx)
+        METADATA:
+          status:
+          - stableinterface
+          supported_by: core
+        
+
+EXAMPLES:
+
+# Create groups based on the machine architecture
+- group_by:
+    key: machine_{{ ansible_machine }}
+
+# Create groups like 'virt_kvm_host'
+- group_by:
+    key: virt_{{ ansible_virtualization_type }}_{{ ansible_virtualization_role }}
+
+# Create nested groups
+- group_by:
+    key: el{{ ansible_distribution_major_version }}-{{ ansible_architecture }}
+    parents:
+      - el{{ ansible_distribution_major_version }}
+
+

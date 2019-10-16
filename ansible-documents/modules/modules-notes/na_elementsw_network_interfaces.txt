@@ -1,0 +1,142 @@
+> NA_ELEMENTSW_NETWORK_INTERFACES    (/usr/lib/python2.7/dist-packages/ansible/modules/storage/netapp/na_elementsw_network_interfaces.py)
+
+        Configure Element SW Node Network Interfaces for Bond 1G and 10G IP address.
+
+  * This module is maintained by an Ansible Partner
+OPTIONS (= is mandatory):
+
+- bond_mode_10g
+        Bond mode for 10GbE configuration.
+        (Choices: ActivePassive, ALB, LACP)[Default: ActivePassive]
+
+- bond_mode_1g
+        Bond mode for 1GbE configuration.
+        (Choices: ActivePassive, ALB, LACP)[Default: ActivePassive]
+
+- dns_nameservers
+        List of addresses for domain name servers.
+        [Default: (null)]
+
+- dns_search_domains
+        List of DNS search domains.
+        [Default: (null)]
+
+= gateway_address_10g
+        Router network address to send packets out of the local network.
+
+
+= gateway_address_1g
+        Router network address to send packets out of the local network.
+
+
+= hostname
+        The hostname or IP address of the SolidFire cluster.
+
+
+= ip_address_10g
+        IP address for the 10G network.
+
+
+= ip_address_1g
+        IP address for the 1G network.
+
+
+- lacp_10g
+        Link Aggregation Control Protocol useful only if LACP is selected as the Bond Mode.
+        Slow - Packets are transmitted at 30 second intervals.
+        Fast - Packets are transmitted in 1 second intervals.
+        (Choices: Fast, Slow)[Default: Slow]
+
+- lacp_1g
+        Link Aggregation Control Protocol useful only if LACP is selected as the Bond Mode.
+        Slow - Packets are transmitted at 30 second intervals.
+        Fast - Packets are transmitted in 1 second intervals.
+        (Choices: Fast, Slow)[Default: Slow]
+
+= method
+        Type of Method used to configure the interface.
+        method depends on other settings such as the use of a static IP address, which will change the method to static.
+        loopback - Used to define the IPv4 loopback interface.
+        manual - Used to define interfaces for which no configuration is done by default.
+        dhcp - May be used to obtain an IP address via DHCP.
+        static - Used to define Ethernet interfaces with statically allocated IPv4 addresses.
+        (Choices: loopback, manual, dhcp, static)
+
+- mtu_10g
+        Maximum Transmission Unit for 10GbE, Largest packet size that a network protocol can transmit.
+        Must be greater than or equal to 1500 bytes.
+        [Default: 1500]
+
+- mtu_1g
+        Maximum Transmission Unit for 1GbE, Largest packet size that a network protocol can transmit.
+        Must be greater than or equal to 1500 bytes.
+        [Default: 1500]
+
+= password
+        Password for the specified user.
+        (Aliases: pass)
+
+= subnet_10g
+        10GbE Subnet Mask.
+
+
+= subnet_1g
+        1GbE Subnet Mask.
+
+
+= username
+        Please ensure that the user has the adequate permissions. For more information, please read the official documentation
+        https://mysupport.netapp.com/documentation/docweb/index.html?productID=62636&language=en-US.
+        (Aliases: user)
+
+- virtual_network_tag
+        This is the primary network tag. All nodes in a cluster have the same VLAN tag.
+        [Default: (null)]
+
+
+NOTES:
+      * The modules prefixed with na\\_elementsw are built to support the SolidFire storage platform.
+
+
+REQUIREMENTS:  The modules were developed with SolidFire 10.1, solidfire-sdk-python (1.1.0.92) or greater. Install using 'pip install
+        solidfire-sdk-python'
+
+AUTHOR: NetApp Ansible Team (@carchi8py) <ng-ansibleteam@netapp.com>
+        METADATA:
+          status:
+          - preview
+          supported_by: certified
+        
+
+EXAMPLES:
+
+- name: Set Node network interfaces configuration for Bond 1G and 10G properties
+    tags:
+    - elementsw_network_interfaces
+    na_elementsw_network_interfaces:
+      hostname: "{{ elementsw_hostname }}"
+      username: "{{ elementsw_username }}"
+      password: "{{ elementsw_password }}"
+      method: static
+      ip_address_1g: 10.226.109.68
+      ip_address_10g: 10.226.201.72
+      subnet_1g: 255.255.255.0
+      subnet_10g: 255.255.255.0
+      gateway_address_1g: 10.193.139.1
+      gateway_address_10g: 10.193.140.1
+      mtu_1g: 1500
+      mtu_10g: 9000
+      bond_mode_1g: ActivePassive
+      bond_mode_10g: LACP
+      lacp_10g: Fast
+
+
+RETURN VALUES:
+
+
+msg:
+    description: Success message
+    returned: success
+    type: str
+
+

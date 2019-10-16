@@ -1,0 +1,173 @@
+> GITLAB_PROJECT    (/usr/lib/python2.7/dist-packages/ansible/modules/source_control/gitlab_project.py)
+
+        When the project does not exist in Gitlab, it will be created. When the project does exists and state=absent, the project will be
+        deleted. When changes are made to the project, the project will be updated.
+
+  * This module is maintained by The Ansible Community
+OPTIONS (= is mandatory):
+
+- api_password
+        The password to use for authentication against the API
+        [Default: (null)]
+        type: str
+
+- api_token
+        Gitlab token for logging in.
+        (Aliases: login_token)[Default: (null)]
+        type: str
+
+- api_url
+        The resolvable endpoint for the API
+        [Default: (null)]
+        type: str
+
+- api_username
+        The username to use for authentication against the API
+        [Default: (null)]
+        type: str
+
+- description
+        An description for the project.
+        [Default: (null)]
+        type: str
+
+- group
+        Id or The full path of the group of which this projects belongs to.
+        [Default: (null)]
+        type: str
+
+- import_url
+        Git repository which will be imported into gitlab.
+        Gitlab server needs read access to this git repository.
+        [Default: (null)]
+        type: str
+
+- issues_enabled
+        Whether you want to create issues or not.
+        Possible values are true and false.
+        [Default: True]
+        type: bool
+
+- login_password
+        Gitlab password for login_user
+        [Default: (null)]
+        type: str
+
+- login_user
+        Gitlab user name.
+        [Default: (null)]
+        type: str
+
+- merge_requests_enabled
+        If merge requests can be made or not.
+        Possible values are true and false.
+        [Default: True]
+        type: bool
+
+= name
+        The name of the project
+
+        type: str
+
+- path
+        The path of the project you want to create, this will be server_url/<group>/path
+        If not supplied, name will be used.
+        [Default: (null)]
+        type: str
+
+= server_url
+        The URL of the Gitlab server, with protocol (i.e. http or https).
+
+        type: str
+
+- snippets_enabled
+        If creating snippets should be available or not.
+        Possible values are true and false.
+        [Default: True]
+        type: bool
+
+- state
+        create or delete project.
+        Possible values are present and absent.
+        (Choices: present, absent)[Default: present]
+        type: str
+
+- validate_certs
+        Whether or not to validate SSL certs when supplying a https endpoint.
+        [Default: True]
+        type: bool
+
+- visibility
+        Private. Project access must be granted explicitly for each user.
+        Internal. The project can be cloned by any logged in user.
+        Public. The project can be cloned without any authentication.
+        (Aliases: visibility_level)(Choices: private, internal, public)[Default: private]
+        type: str
+
+- wiki_enabled
+        If an wiki for this project should be available or not.
+        Possible values are true and false.
+        [Default: True]
+        type: bool
+
+
+REQUIREMENTS:  python >= 2.7, python-gitlab python module
+
+AUTHOR: Werner Dijkerman (@dj-wasabi), Guillaume Martinez (@Lunik)
+        METADATA:
+          status:
+          - preview
+          supported_by: community
+        
+
+EXAMPLES:
+
+- name: Delete Gitlab Project
+  gitlab_project:
+    api_url: https://gitlab.example.com/
+    api_token: "{{ access_token }}"
+    validate_certs: False
+    name: my_first_project
+    state: absent
+  delegate_to: localhost
+
+- name: Create Gitlab Project in group Ansible
+  gitlab_project:
+    api_url: https://gitlab.example.com/
+    validate_certs: True
+    api_username: dj-wasabi
+    api_password: "MySecretPassword"
+    name: my_first_project
+    group: ansible
+    issues_enabled: False
+    wiki_enabled: True
+    snippets_enabled: True
+    import_url: http://git.example.com/example/lab.git
+    state: present
+  delegate_to: localhost
+
+
+RETURN VALUES:
+
+msg:
+  description: Success or failure message
+  returned: always
+  type: str
+  sample: "Success"
+
+result:
+  description: json parsed response from the server
+  returned: always
+  type: dict
+
+error:
+  description: the error message returned by the Gitlab API
+  returned: failed
+  type: str
+  sample: "400: path is already in use"
+
+project:
+  description: API object
+  returned: always
+  type: dict
+

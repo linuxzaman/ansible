@@ -1,0 +1,168 @@
+> IPA_GROUP    (/usr/lib/python2.7/dist-packages/ansible/modules/identity/ipa/ipa_group.py)
+
+        Add, modify and delete group within IPA server
+
+  * This module is maintained by The Ansible Community
+OPTIONS (= is mandatory):
+
+= cn
+        Canonical name.
+        Can not be changed as it is the unique identifier.
+        (Aliases: name)
+
+- description
+        Description of the group.
+        [Default: (null)]
+
+- external
+        Allow adding external non-IPA members from trusted domains.
+        [Default: (null)]
+        type: bool
+
+- gidnumber
+        GID (use this option to set it manually).
+        (Aliases: gid)[Default: (null)]
+
+- group
+        List of group names assigned to this group.
+        If an empty list is passed all groups will be removed from this group.
+        If option is omitted assigned groups will not be checked or changed.
+        Groups that are already assigned but not passed will be removed.
+        [Default: (null)]
+
+- ipa_host
+        IP or hostname of IPA server.
+        If the value is not specified in the task, the value of environment variable `IPA_HOST' will be used instead.
+        If both the environment variable `IPA_HOST' and the value are not specified in the task, then DNS will be used to try to discover
+        the FreeIPA server.
+        The relevant entry needed in FreeIPA is the 'ipa-ca' entry.
+        If neither the DNS entry, nor the environment `IPA_HOST', nor the value are available in the task, then the default value will be
+        used.
+        Environment variable fallback mechanism is added in Ansible 2.5.
+        [Default: ipa.example.com]
+        type: str
+
+= ipa_pass
+        Password of administrative user.
+        If the value is not specified in the task, the value of environment variable `IPA_PASS' will be used instead.
+        Note that if the 'urllib_gssapi' library is available, it is possible to use GSSAPI to authenticate to FreeIPA.
+        If the environment variable `KRB5CCNAME' is available, the module will use this kerberos credentials cache to authenticate to the
+        FreeIPA server.
+        If the environment variable `KRB5_CLIENT_KTNAME' is available, and `KRB5CCNAME' is not; the module will use this kerberos keytab
+        to authenticate.
+        If GSSAPI is not available, the usage of 'ipa_pass' is required.
+        Environment variable fallback mechanism is added in Ansible 2.5.
+
+        type: str
+
+- ipa_port
+        Port of FreeIPA / IPA server.
+        If the value is not specified in the task, the value of environment variable `IPA_PORT' will be used instead.
+        If both the environment variable `IPA_PORT' and the value are not specified in the task, then default value is set.
+        Environment variable fallback mechanism is added in Ansible 2.5.
+        [Default: 443]
+        type: int
+
+- ipa_prot
+        Protocol used by IPA server.
+        If the value is not specified in the task, the value of environment variable `IPA_PROT' will be used instead.
+        If both the environment variable `IPA_PROT' and the value are not specified in the task, then default value is set.
+        Environment variable fallback mechanism is added in Ansible 2.5.
+        (Choices: http, https)[Default: https]
+        type: str
+
+- ipa_timeout
+        Specifies idle timeout (in seconds) for the connection.
+        For bulk operations, you may want to increase this in order to avoid timeout from IPA server.
+        If the value is not specified in the task, the value of environment variable `IPA_TIMEOUT' will be used instead.
+        If both the environment variable `IPA_TIMEOUT' and the value are not specified in the task, then default value is set.
+        [Default: 10]
+        type: int
+        version_added: 2.7
+
+- ipa_user
+        Administrative account used on IPA server.
+        If the value is not specified in the task, the value of environment variable `IPA_USER' will be used instead.
+        If both the environment variable `IPA_USER' and the value are not specified in the task, then default value is set.
+        Environment variable fallback mechanism is added in Ansible 2.5.
+        [Default: admin]
+        type: str
+
+- nonposix
+        Create as a non-POSIX group.
+        [Default: (null)]
+        type: bool
+
+- state
+        State to ensure
+        (Choices: present, absent)[Default: present]
+
+- user
+        List of user names assigned to this group.
+        If an empty list is passed all users will be removed from this group.
+        If option is omitted assigned users will not be checked or changed.
+        Users that are already assigned but not passed will be removed.
+        [Default: (null)]
+
+- validate_certs
+        This only applies if `ipa_prot' is `https'.
+        If set to `no', the SSL certificates will not be validated.
+        This should only set to `no' used on personally controlled sites using self-signed certificates.
+        [Default: True]
+        type: bool
+
+
+AUTHOR: Thomas Krahn (@Nosmoht)
+        METADATA:
+          status:
+          - preview
+          supported_by: community
+        
+
+EXAMPLES:
+
+# Ensure group is present
+- ipa_group:
+    name: oinstall
+    gidnumber: 54321
+    state: present
+    ipa_host: ipa.example.com
+    ipa_user: admin
+    ipa_pass: topsecret
+
+# Ensure that groups sysops and appops are assigned to ops but no other group
+- ipa_group:
+    name: ops
+    group:
+    - sysops
+    - appops
+    ipa_host: ipa.example.com
+    ipa_user: admin
+    ipa_pass: topsecret
+
+# Ensure that users linus and larry are assign to the group, but no other user
+- ipa_group:
+    name: sysops
+    user:
+    - linus
+    - larry
+    ipa_host: ipa.example.com
+    ipa_user: admin
+    ipa_pass: topsecret
+
+# Ensure group is absent
+- ipa_group:
+    name: sysops
+    state: absent
+    ipa_host: ipa.example.com
+    ipa_user: admin
+    ipa_pass: topsecret
+
+
+RETURN VALUES:
+
+group:
+  description: Group as returned by IPA API
+  returned: always
+  type: dict
+

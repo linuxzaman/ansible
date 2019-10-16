@@ -1,0 +1,146 @@
+EXAMPLES:
+
+- name: create single region cloudtrail
+  cloudtrail:
+    state: present
+    name: default
+    s3_bucket_name: mylogbucket
+    s3_key_prefix: cloudtrail
+    region: us-east-1
+
+- name: create multi-region trail with validation and tags
+  cloudtrail:
+    state: present
+    name: default
+    s3_bucket_name: mylogbucket
+    region: us-east-1
+    is_multi_region_trail: true
+    enable_log_file_validation: true
+    cloudwatch_logs_role_arn: "arn:aws:iam::123456789012:role/CloudTrail_CloudWatchLogs_Role"
+    cloudwatch_logs_log_group_arn: "arn:aws:logs:us-east-1:123456789012:log-group:CloudTrail/DefaultLogGroup:*"
+    kms_key_id: "alias/MyAliasName"
+    tags:
+      environment: dev
+      Name: default
+
+- name: show another valid kms_key_id
+  cloudtrail:
+    state: present
+    name: default
+    s3_bucket_name: mylogbucket
+    kms_key_id: "arn:aws:kms:us-east-1:123456789012:key/12345678-1234-1234-1234-123456789012"
+    # simply "12345678-1234-1234-1234-123456789012" would be valid too.
+
+- name: pause logging the trail we just created
+  cloudtrail:
+    state: present
+    name: default
+    enable_logging: false
+    s3_bucket_name: mylogbucket
+    region: us-east-1
+    is_multi_region_trail: true
+    enable_log_file_validation: true
+    tags:
+      environment: dev
+      Name: default
+
+- name: delete a trail
+  cloudtrail:
+    state: absent
+    name: default
+
+
+RETURN VALUES:
+
+exists:
+    description: whether the resource exists
+    returned: always
+    type: bool
+    sample: true
+trail:
+    description: CloudTrail resource details
+    returned: always
+    type: complex
+    sample: hash/dictionary of values
+    contains:
+        trail_arn:
+            description: Full ARN of the CloudTrail resource
+            returned: success
+            type: str
+            sample: arn:aws:cloudtrail:us-east-1:123456789012:trail/default
+        name:
+            description: Name of the CloudTrail resource
+            returned: success
+            type: str
+            sample: default
+        is_logging:
+            description: Whether logging is turned on or paused for the Trail
+            returned: success
+            type: bool
+            sample: True
+        s3_bucket_name:
+            description: S3 bucket name where log files are delivered
+            returned: success
+            type: str
+            sample: myBucket
+        s3_key_prefix:
+            description: Key prefix in bucket where log files are delivered (if any)
+            returned: success when present
+            type: str
+            sample: myKeyPrefix
+        log_file_validation_enabled:
+            description: Whether log file validation is enabled on the trail
+            returned: success
+            type: bool
+            sample: true
+        include_global_service_events:
+            description: Whether global services (IAM, STS) are logged with this trail
+            returned: success
+            type: bool
+            sample: true
+        is_multi_region_trail:
+            description: Whether the trail applies to all regions or just one
+            returned: success
+            type: bool
+            sample: true
+        has_custom_event_selectors:
+            description: Whether any custom event selectors are used for this trail.
+            returned: success
+            type: bool
+            sample: False
+        home_region:
+            description: The home region where the trail was originally created and must be edited.
+            returned: success
+            type: str
+            sample: us-east-1
+        sns_topic_name:
+            description: The SNS topic name where log delivery notifications are sent.
+            returned: success when present
+            type: str
+            sample: myTopic
+        sns_topic_arn:
+            description: Full ARN of the SNS topic where log delivery notifications are sent.
+            returned: success when present
+            type: str
+            sample: arn:aws:sns:us-east-1:123456789012:topic/myTopic
+        cloud_watch_logs_log_group_arn:
+            description: Full ARN of the CloudWatch Logs log group where events are delivered.
+            returned: success when present
+            type: str
+            sample: arn:aws:logs:us-east-1:123456789012:log-group:CloudTrail/DefaultLogGroup:*
+        cloud_watch_logs_role_arn:
+            description: Full ARN of the IAM role that CloudTrail assumes to deliver events.
+            returned: success when present
+            type: str
+            sample: arn:aws:iam::123456789012:role/CloudTrail_CloudWatchLogs_Role
+        kms_key_id:
+            description: Full ARN of the KMS Key used to encrypt log files.
+            returned: success when present
+            type: str
+            sample: arn:aws:kms::123456789012:key/12345678-1234-1234-1234-123456789012
+        tags:
+            description: hash/dictionary of tags applied to this resource
+            returned: success
+            type: dict
+            sample: {'environment': 'dev', 'Name': 'default'}
+

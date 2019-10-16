@@ -1,0 +1,128 @@
+> APK    (/usr/lib/python2.7/dist-packages/ansible/modules/packaging/os/apk.py)
+
+        Manages `apk' packages for Alpine Linux.
+
+  * This module is maintained by The Ansible Community
+OPTIONS (= is mandatory):
+
+- available
+        During upgrade, reset versioned world dependencies and change logic to prefer replacing or downgrading packages (instead of
+        holding them) if the currently installed package is no longer available from any repository.
+        [Default: no]
+        type: bool
+        version_added: 2.4
+
+- name
+        A package name, like `foo', or multiple packages, like `foo, bar'.
+        [Default: (null)]
+
+- repository
+        A package repository or multiple repositories. Unlike with the underlying apk command, this list will override the system
+        repositories rather than supplement them.
+        [Default: (null)]
+        version_added: 2.4
+
+- state
+        Indicates the desired package(s) state.
+        `present' ensures the package(s) is/are present.
+        `absent' ensures the package(s) is/are absent.
+        `latest' ensures the package(s) is/are present and the latest version(s).
+        (Choices: present, absent, latest)[Default: present]
+
+- update_cache
+        Update repository indexes. Can be run with other steps or on it's own.
+        [Default: no]
+        type: bool
+
+- upgrade
+        Upgrade all installed packages to their latest version.
+        [Default: no]
+        type: bool
+
+
+NOTES:
+      * "name" and "upgrade" are mutually exclusive.
+      * When used with a `loop:` each package will be processed individually, it is much more efficient to pass the list directly
+        to the `name` option.
+
+
+AUTHOR: Kevin Brebanov (@kbrebanov)
+        METADATA:
+          status:
+          - stableinterface
+          supported_by: community
+        
+
+EXAMPLES:
+
+# Update repositories and install "foo" package
+- apk:
+    name: foo
+    update_cache: yes
+
+# Update repositories and install "foo" and "bar" packages
+- apk:
+    name: foo,bar
+    update_cache: yes
+
+# Remove "foo" package
+- apk:
+    name: foo
+    state: absent
+
+# Remove "foo" and "bar" packages
+- apk:
+    name: foo,bar
+    state: absent
+
+# Install the package "foo"
+- apk:
+    name: foo
+    state: present
+
+# Install the packages "foo" and "bar"
+- apk:
+    name: foo,bar
+    state: present
+
+# Update repositories and update package "foo" to latest version
+- apk:
+    name: foo
+    state: latest
+    update_cache: yes
+
+# Update repositories and update packages "foo" and "bar" to latest versions
+- apk:
+    name: foo,bar
+    state: latest
+    update_cache: yes
+
+# Update all installed packages to the latest versions
+- apk:
+    upgrade: yes
+
+# Upgrade / replace / downgrade / uninstall all installed packages to the latest versions available
+- apk:
+    available: yes
+    upgrade: yes
+
+# Update repositories as a separate step
+- apk:
+    update_cache: yes
+
+# Install package from a specific repository
+- apk:
+    name: foo
+    state: latest
+    update_cache: yes
+    repository: http://dl-3.alpinelinux.org/alpine/edge/main
+
+
+RETURN VALUES:
+
+packages:
+    description: a list of packages that have been changed
+    returned: when packages have changed
+    type: list
+    sample: ['package', 'other-package']
+

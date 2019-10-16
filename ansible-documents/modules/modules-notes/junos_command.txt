@@ -1,0 +1,188 @@
+> JUNOS_COMMAND    (/usr/lib/python2.7/dist-packages/ansible/modules/network/junos/junos_command.py)
+
+        Sends an arbitrary set of commands to an JUNOS node and returns the results read from the device.  This module includes an
+        argument that will cause the module to wait for a specific condition before returning or timing out if the condition is not met.
+
+  * This module is maintained by The Ansible Network Team
+OPTIONS (= is mandatory):
+
+- commands
+        The commands to send to the remote junos device over the configured provider.  The resulting output from the command is returned.
+        If the `wait_for' argument is provided, the module is not returned until the condition is satisfied or the number of `retries'
+        has been exceeded.
+        [Default: (null)]
+
+- display
+        Encoding scheme to use when serializing output from the device. This handles how to properly understand the output and apply the
+        conditionals path to the result set. For `rpcs' argument default display is `xml' and for `commands' argument default display is
+        `text'. Value `set' is applicable only for fetching configuration from device.
+        (Aliases: format, output)(Choices: text, json, xml, set)[Default: depends on input argument `rpcs' or `commands']
+        version_added: 2.3
+
+- interval
+        Configures the interval in seconds to wait between retries of the command.  If the command does not pass the specified
+        conditional, the interval indicates how to long to wait before trying the command again.
+        [Default: 1]
+
+- match
+        The `match' argument is used in conjunction with the `wait_for' argument to specify the match policy.  Valid values are `all' or
+        `any'.  If the value is set to `all' then all conditionals in the `wait_for' must be satisfied.  If the value is set to `any'
+        then only one of the values must be satisfied.
+        (Choices: any, all)[Default: all]
+        version_added: 2.2
+
+- provider
+        *Deprecated*
+        Starting with Ansible 2.5 we recommend using `connection: network_cli' or `connection: netconf'.
+        For more information please see the L(Junos OS Platform Options guide, ../network/user_guide/platform_junos.html).
+        HORIZONTALLINE
+        A dict object containing connection details.
+        [Default: (null)]
+        suboptions:
+          host:
+            description:
+            - Specifies the DNS host name or address for connecting to the remote device over
+              the specified transport.  The value of host is used as the destination address
+              for the transport.
+            required: true
+            type: str
+          password:
+            description:
+            - Specifies the password to use to authenticate the connection to the remote device.   This
+              value is used to authenticate the SSH session. If the value is not specified
+              in the task, the value of environment variable `ANSIBLE_NET_PASSWORD' will
+              be used instead.
+            type: str
+          port:
+            default: 22
+            description:
+            - Specifies the port to use when building the connection to the remote device.  The
+              port value will default to the well known SSH port of 22 (for `transport=cli')
+              or port 830 (for `transport=netconf') device.
+            type: int
+          ssh_keyfile:
+            description:
+            - Specifies the SSH key to use to authenticate the connection to the remote device.   This
+              value is the path to the key used to authenticate the SSH session. If the value
+              is not specified in the task, the value of environment variable `ANSIBLE_NET_SSH_KEYFILE'
+              will be used instead.
+            type: path
+          timeout:
+            default: 10
+            description:
+            - Specifies the timeout in seconds for communicating with the network device for
+              either connecting or sending commands.  If the timeout is exceeded before the
+              operation is completed, the module will error.
+            type: int
+          username:
+            description:
+            - Configures the username to use to authenticate the connection to the remote
+              device.  This value is used to authenticate the SSH session. If the value is
+              not specified in the task, the value of environment variable `ANSIBLE_NET_USERNAME'
+              will be used instead.
+            type: str
+        
+        type: dict
+
+- retries
+        Specifies the number of retries a command should be tried before it is considered failed.  The command is run on the target
+        device every retry and evaluated against the `wait_for' conditionals.
+        [Default: 10]
+
+- rpcs
+        The `rpcs' argument accepts a list of RPCs to be executed over a netconf session and the results from the RPC execution is return
+        to the playbook via the modules results dictionary.
+        [Default: (null)]
+        version_added: 2.3
+
+- wait_for
+        Specifies what to evaluate from the output of the command and what conditionals to apply.  This argument will cause the task to
+        wait for a particular conditional to be true before moving forward.   If the conditional is not true by the configured retries,
+        the task fails.  See examples.
+        (Aliases: waitfor)[Default: (null)]
+        version_added: 2.2
+
+
+NOTES:
+      * This module requires the netconf system service be enabled on the remote device being managed.
+      * Tested against vSRX JUNOS version 15.1X49-D15.4, vqfx-10000 JUNOS Version 15.1X53-D60.4.
+      * Recommended connection is `netconf'. See L(the Junos OS Platform Options,../network/user_guide/platform_junos.html).
+      * This module also works with `network_cli' connections and with `local' connections for legacy playbooks.
+      * For information on using CLI and netconf see the :ref:`Junos OS Platform Options guide <junos_platform_options>`
+      * For more information on using Ansible to manage network devices see the :ref:`Ansible Network Guide <network_guide>`
+      * For more information on using Ansible to manage Juniper network devices see https://www.ansible.com/ansible-juniper.
+
+
+REQUIREMENTS:  jxmlease, ncclient (>=v0.5.2)
+
+AUTHOR: Peter Sprygada (@privateip)
+        METADATA:
+          status:
+          - preview
+          supported_by: network
+        
+
+EXAMPLES:
+
+- name: run show version on remote devices
+  junos_command:
+    commands: show version
+
+- name: run show version and check to see if output contains Juniper
+  junos_command:
+    commands: show version
+    wait_for: result[0] contains Juniper
+
+- name: run multiple commands on remote nodes
+  junos_command:
+    commands:
+      - show version
+      - show interfaces
+
+- name: run multiple commands and evaluate the output
+  junos_command:
+    commands:
+      - show version
+      - show interfaces
+    wait_for:
+      - result[0] contains Juniper
+      - result[1] contains Loopback0
+
+- name: run commands and specify the output format
+  junos_command:
+    commands: show version
+    display: json
+
+- name: run rpc on the remote device
+  junos_command:
+    commands: show configuration
+    display: set
+
+- name: run rpc on the remote device
+  junos_command:
+    rpcs: get-software-information
+
+
+RETURN VALUES:
+
+stdout:
+  description: The set of responses from the commands
+  returned: always apart from low level errors (such as action plugin)
+  type: list
+  sample: ['...', '...']
+stdout_lines:
+  description: The value of stdout split into a list
+  returned: always apart from low level errors (such as action plugin)
+  type: list
+  sample: [['...', '...'], ['...'], ['...']]
+output:
+  description: The set of transformed xml to json format from the commands responses
+  returned: If the I(display) is in C(xml) format.
+  type: list
+  sample: ['...', '...']
+failed_conditions:
+  description: The list of conditionals that have failed
+  returned: failed
+  type: list
+  sample: ['...', '...']
+

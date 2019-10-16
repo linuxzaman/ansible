@@ -1,0 +1,47 @@
+EXAMPLES:
+
+- name: Remove ethernet1 IPv4 and IPv6 address
+  eos_l3_interface:
+    name: ethernet1
+    state: absent
+
+- name: Set ethernet1 IPv4 address
+  eos_l3_interface:
+    name: ethernet1
+    ipv4: 192.168.0.1/24
+
+- name: Set ethernet1 IPv6 address
+  eos_l3_interface:
+    name: ethernet1
+    ipv6: "fd5d:12c9:2201:1::1/64"
+
+- name: Set interface Vlan1 (SVI) IPv4 address
+  eos_l3_interface:
+    name: Vlan1
+    ipv4: 192.168.0.5/24
+
+- name: Set IP addresses on aggregate
+  eos_l3_interface:
+    aggregate:
+      - { name: ethernet1, ipv4: 192.168.2.10/24 }
+      - { name: ethernet1, ipv4: 192.168.3.10/24, ipv6: "fd5d:12c9:2201:1::1/64" }
+
+- name: Remove IP addresses on aggregate
+  eos_l3_interface:
+    aggregate:
+      - { name: ethernet1, ipv4: 192.168.2.10/24 }
+      - { name: ethernet1, ipv4: 192.168.3.10/24, ipv6: "fd5d:12c9:2201:1::1/64" }
+    state: absent
+
+
+RETURN VALUES:
+
+commands:
+  description: The list of configuration mode commands to send to the device
+  returned: always, except for the platforms that use Netconf transport to manage the device.
+  type: list
+  sample:
+    - interface ethernet1
+    - ip address 192.168.0.1/24
+    - ipv6 address fd5d:12c9:2201:1::1/64
+

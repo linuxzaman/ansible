@@ -1,0 +1,251 @@
+> MYSQL_USER    (/usr/lib/python2.7/dist-packages/ansible/modules/database/mysql/mysql_user.py)
+
+        Adds or removes a user from a MySQL database.
+
+  * This module is maintained by The Ansible Community
+OPTIONS (= is mandatory):
+
+- append_privs
+        Append the privileges defined by priv to the existing ones for this user instead of overwriting existing ones.
+        [Default: False]
+        type: bool
+        version_added: 1.4
+
+- ca_cert
+        The path to a Certificate Authority (CA) certificate. This option, if used, must specify the same certificate as used by the
+        server.
+        (Aliases: ssl_ca)[Default: (null)]
+        type: path
+        version_added: 2.0
+
+- check_implicit_admin
+        Check if mysql allows login as root/nopassword before trying supplied credentials.
+        [Default: False]
+        type: bool
+        version_added: 1.3
+
+- client_cert
+        The path to a client public key certificate.
+        (Aliases: ssl_cert)[Default: (null)]
+        type: path
+        version_added: 2.0
+
+- client_key
+        The path to the client private key.
+        (Aliases: ssl_key)[Default: (null)]
+        type: path
+        version_added: 2.0
+
+- config_file
+        Specify a config file from which user and password are to be read.
+        [Default: ~/.my.cnf]
+        type: path
+        version_added: 2.0
+
+- connect_timeout
+        The connection timeout when connecting to the MySQL server.
+        [Default: 30]
+        type: int
+        version_added: 2.1
+
+- encrypted
+        Indicate that the 'password' field is a `mysql_native_password` hash.
+        [Default: False]
+        type: bool
+        version_added: 2.0
+
+- host
+        The 'host' part of the MySQL username.
+        [Default: localhost]
+        type: str
+
+- host_all
+        Override the host option, making ansible apply changes to all hostnames for a given user.
+        This option cannot be used when creating users.
+        [Default: False]
+        type: bool
+        version_added: 2.1
+
+- login_host
+        Host running the database.
+        [Default: localhost]
+        type: str
+
+- login_password
+        The password used to authenticate with.
+        [Default: (null)]
+        type: str
+
+- login_port
+        Port of the MySQL server. Requires `login_host' be defined as other than localhost if login_port is used.
+        [Default: 3306]
+        type: int
+
+- login_unix_socket
+        The path to a Unix domain socket for local connections.
+        [Default: (null)]
+        type: str
+
+- login_user
+        The username used to authenticate with.
+        [Default: (null)]
+        type: str
+
+= name
+        Name of the user (role) to add or remove.
+
+        type: str
+
+- password
+        Set the user's password..
+        [Default: (null)]
+        type: str
+
+- priv
+        MySQL privileges string in the format: `db.table:priv1,priv2'.
+        Multiple privileges can be specified by separating each one using a forward slash: `db.table:priv/db.table:priv'.
+        The format is based on MySQL `GRANT' statement.
+        Database and table names can be quoted, MySQL-style.
+        If column privileges are used, the `priv1,priv2' part must be exactly as returned by a `SHOW GRANT' statement. If not followed,
+        the module will always report changes. It includes grouping columns by permission (`SELECT(col1,col2') instead of
+        `SELECT(col1',SELECT(col2))).
+        [Default: (null)]
+        type: str
+
+- sql_log_bin
+        Whether binary logging should be enabled or disabled for the connection.
+        [Default: True]
+        type: bool
+        version_added: 2.1
+
+- state
+        Whether the user should exist.
+        When `absent', removes the user.
+        (Choices: absent, present)[Default: present]
+        type: str
+
+- update_password
+        `always' will update passwords if they differ.
+        `on_create' will only set the password for newly created users.
+        (Choices: always, on_create)[Default: always]
+        type: str
+        version_added: 2.0
+
+
+NOTES:
+      * MySQL server installs with default login_user of 'root' and no password. To secure this user as part of an idempotent
+        playbook, you must create at least two tasks: the first must change the root user's password, without providing any
+        login_user/login_password details. The second must drop a ~/.my.cnf file containing the new root credentials. Subsequent
+        runs of the playbook will then succeed by reading the new credentials from the file.
+      * Currently, there is only support for the `mysql_native_password` encrypted password hash module.
+      * Requires the PyMySQL (Python 2.7 and Python 3.X) or MySQL-python (Python 2.X) package on the remote host. The Python
+        package may be installed with apt-get install python-pymysql (Ubuntu; see [apt]) or yum install python2-PyMySQL
+        (RHEL/CentOS/Fedora; see [yum]). You can also use dnf install python2-PyMySQL for newer versions of Fedora; see [dnf].
+      * Both `login_password' and `login_user' are required when you are passing credentials. If none are present, the module will
+        attempt to read the credentials from `~/.my.cnf', and finally fall back to using the MySQL default login of 'root' with no
+        password.
+
+
+REQUIREMENTS:  PyMySQL (Python 2.7 and Python 3.X), or, MySQLdb (Python 2.x)
+
+AUTHOR: Jonathan Mainguy (@Jmainguy), Benjamin Malynovytch (@bmalynovytch)
+        METADATA:
+          status:
+          - preview
+          supported_by: community
+        
+
+EXAMPLES:
+
+- name: Removes anonymous user account for localhost
+  mysql_user:
+    name: ''
+    host: localhost
+    state: absent
+
+- name: Removes all anonymous user accounts
+  mysql_user:
+    name: ''
+    host_all: yes
+    state: absent
+
+- name: Create database user with name 'bob' and password '12345' with all database privileges
+  mysql_user:
+    name: bob
+    password: 12345
+    priv: '*.*:ALL'
+    state: present
+
+- name: Create database user using hashed password with all database privileges
+  mysql_user:
+    name: bob
+    password: '*EE0D72C1085C46C5278932678FBE2C6A782821B4'
+    encrypted: yes
+    priv: '*.*:ALL'
+    state: present
+
+- name: Create database user with password and all database privileges and 'WITH GRANT OPTION'
+  mysql_user:
+    name: bob
+    password: 12345
+    priv: '*.*:ALL,GRANT'
+    state: present
+
+# Note that REQUIRESSL is a special privilege that should only apply to *.* by itself.
+- name: Modify user to require SSL connections.
+  mysql_user:
+    name: bob
+    append_privs: yes
+    priv: '*.*:REQUIRESSL'
+    state: present
+
+- name: Ensure no user named 'sally'@'localhost' exists, also passing in the auth credentials.
+  mysql_user:
+    login_user: root
+    login_password: 123456
+    name: sally
+    state: absent
+
+- name: Ensure no user named 'sally' exists at all
+  mysql_user:
+    name: sally
+    host_all: yes
+    state: absent
+
+- name: Specify grants composed of more than one word
+  mysql_user:
+    name: replication
+    password: 12345
+    priv: "*.*:REPLICATION CLIENT"
+    state: present
+
+- name: Revoke all privileges for user 'bob' and password '12345'
+  mysql_user:
+    name: bob
+    password: 12345
+    priv: "*.*:USAGE"
+    state: present
+
+# Example privileges string format
+# mydb.*:INSERT,UPDATE/anotherdb.*:SELECT/yetanotherdb.*:ALL
+
+- name: Example using login_unix_socket to connect to server
+  mysql_user:
+    name: root
+    password: abc123
+    login_unix_socket: /var/run/mysqld/mysqld.sock
+
+- name: Example of skipping binary logging while adding user 'bob'
+  mysql_user:
+    name: bob
+    password: 12345
+    priv: "*.*:USAGE"
+    state: present
+    sql_log_bin: no
+
+# Example .my.cnf file for setting the root password
+# [client]
+# user=root
+# password=n<_665{vS43y
+
+

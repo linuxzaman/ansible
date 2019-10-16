@@ -1,0 +1,180 @@
+> EC2_METRIC_ALARM    (/usr/lib/python2.7/dist-packages/ansible/modules/cloud/amazon/ec2_metric_alarm.py)
+
+        Can create or delete AWS metric alarms. Metrics you wish to alarm on must already exist.
+
+  * This module is maintained by The Ansible Community
+OPTIONS (= is mandatory):
+
+- alarm_actions
+        A list of the names action(s) taken when the alarm is in the 'alarm' status, denoted as Amazon Resource Name(s)
+        [Default: (null)]
+
+- aws_access_key
+        AWS access key. If not set then the value of the AWS_ACCESS_KEY_ID, AWS_ACCESS_KEY or EC2_ACCESS_KEY environment variable is
+        used.
+        (Aliases: ec2_access_key, access_key)[Default: (null)]
+        type: str
+
+- aws_secret_key
+        AWS secret key. If not set then the value of the AWS_SECRET_ACCESS_KEY, AWS_SECRET_KEY, or EC2_SECRET_KEY environment variable is
+        used.
+        (Aliases: ec2_secret_key, secret_key)[Default: (null)]
+        type: str
+
+- comparison
+        Determines how the threshold value is compared
+        (Choices: <=, <, >, >=)[Default: (null)]
+
+- debug_botocore_endpoint_logs
+        Use a botocore.endpoint logger to parse the unique (rather than total) "resource:action" API calls made during a task, outputing
+        the set to the resource_actions key in the task results. Use the aws_resource_action callback to output to total list made during
+        a playbook. The ANSIBLE_DEBUG_BOTOCORE_LOGS environment variable may also be used.
+        [Default: no]
+        type: bool
+        version_added: 2.8
+
+- description
+        A longer description of the alarm
+        [Default: (null)]
+
+- dimensions
+        Describes to what the alarm is applied
+        [Default: (null)]
+
+- ec2_url
+        Url to use to connect to EC2 or your Eucalyptus cloud (by default the module will use EC2 endpoints). Ignored for modules where
+        region is required. Must be specified for all other modules if region is not used. If not set then the value of the EC2_URL
+        environment variable, if any, is used.
+        [Default: (null)]
+        type: str
+
+- evaluation_periods
+        The number of times in which the metric is evaluated before final calculation
+        [Default: (null)]
+
+- insufficient_data_actions
+        A list of the names of action(s) to take when the alarm is in the 'insufficient_data' status
+        [Default: (null)]
+
+- metric
+        Name of the monitored metric (e.g. CPUUtilization)
+        Metric must already exist
+        [Default: (null)]
+
+= name
+        Unique name for the alarm
+
+
+- namespace
+        Name of the appropriate namespace ('AWS/EC2', 'System/Linux', etc.), which determines the category it will appear under in
+        cloudwatch
+        [Default: (null)]
+
+- ok_actions
+        A list of the names of action(s) to take when the alarm is in the 'ok' status, denoted as Amazon Resource Name(s)
+        [Default: (null)]
+
+- period
+        The time (in seconds) between metric evaluations
+        [Default: (null)]
+
+- profile
+        Uses a boto profile. Only works with boto >= 2.24.0.
+        [Default: (null)]
+        type: str
+        version_added: 1.6
+
+- region
+        The AWS region to use. If not specified then the value of the AWS_REGION or EC2_REGION environment variable, if any, is used. See
+        http://docs.aws.amazon.com/general/latest/gr/rande.html#ec2_region
+        (Aliases: aws_region, ec2_region)[Default: (null)]
+        type: str
+
+- security_token
+        AWS STS security token. If not set then the value of the AWS_SECURITY_TOKEN or EC2_SECURITY_TOKEN environment variable is used.
+        (Aliases: access_token)[Default: (null)]
+        type: str
+        version_added: 1.6
+
+= state
+        register or deregister the alarm
+        (Choices: present, absent)
+
+- statistic
+        Operation applied to the metric
+        Works in conjunction with period and evaluation_periods to determine the comparison value
+        (Choices: SampleCount, Average, Sum, Minimum, Maximum)[Default: (null)]
+
+- threshold
+        Sets the min/max bound for triggering the alarm
+        [Default: (null)]
+
+- unit
+        The threshold's unit of measurement
+        (Choices: Seconds, Microseconds, Milliseconds, Bytes, Kilobytes, Megabytes, Gigabytes, Terabytes, Bits, Kilobits, Megabits,
+        Gigabits, Terabits, Percent, Count, Bytes/Second, Kilobytes/Second, Megabytes/Second, Gigabytes/Second, Terabytes/Second,
+        Bits/Second, Kilobits/Second, Megabits/Second, Gigabits/Second, Terabits/Second, Count/Second, None)[Default: (null)]
+
+- validate_certs
+        When set to "no", SSL certificates will not be validated for boto versions >= 2.6.0.
+        [Default: True]
+        type: bool
+        version_added: 1.5
+
+
+NOTES:
+      * If parameters are not set within the module, the following environment variables can be used in decreasing order of
+        precedence `AWS_URL' or `EC2_URL', `AWS_ACCESS_KEY_ID' or `AWS_ACCESS_KEY' or `EC2_ACCESS_KEY', `AWS_SECRET_ACCESS_KEY' or
+        `AWS_SECRET_KEY' or `EC2_SECRET_KEY', `AWS_SECURITY_TOKEN' or `EC2_SECURITY_TOKEN', `AWS_REGION' or `EC2_REGION'
+      * Ansible uses the boto configuration file (typically ~/.boto) if no credentials are provided. See
+        https://boto.readthedocs.io/en/latest/boto_config_tut.html
+      * `AWS_REGION' or `EC2_REGION' can be typically be used to specify the AWS region, when required, but this can also be
+        configured in the boto config file
+
+
+REQUIREMENTS:  python >= 2.6, boto
+
+AUTHOR: Zacharie Eakin (@Zeekin)
+        METADATA:
+          status:
+          - stableinterface
+          supported_by: community
+        
+
+EXAMPLES:
+
+- name: create alarm
+    ec2_metric_alarm:
+      state: present
+      region: ap-southeast-2
+      name: "cpu-low"
+      metric: "CPUUtilization"
+      namespace: "AWS/EC2"
+      statistic: Average
+      comparison: "<="
+      threshold: 5.0
+      period: 300
+      evaluation_periods: 3
+      unit: "Percent"
+      description: "This will alarm when a bamboo slave's cpu usage average is lower than 5% for 15 minutes "
+      dimensions: {'InstanceId':'i-XXX'}
+      alarm_actions: ["action1","action2"]
+
+  - name: Create an alarm to recover a failed instance
+    ec2_metric_alarm:
+      state: present
+      region: us-west-1
+      name: "recover-instance"
+      metric: "StatusCheckFailed_System"
+      namespace: "AWS/EC2"
+      statistic: "Minimum"
+      comparison: ">="
+      threshold: 1.0
+      period: 60
+      evaluation_periods: 2
+      unit: "Seconds"
+      description: "This will recover an instance when it fails"
+      dimensions: {"InstanceId":'i-XXX'}
+      alarm_actions: ["arn:aws:automate:us-west-1:ec2:recover"]
+
+

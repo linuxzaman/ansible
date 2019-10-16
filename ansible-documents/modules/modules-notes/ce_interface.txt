@@ -1,0 +1,132 @@
+> CE_INTERFACE    (/usr/lib/python2.7/dist-packages/ansible/modules/network/cloudengine/ce_interface.py)
+
+        Manages physical attributes of interfaces on HUAWEI CloudEngine switches.
+
+  * This module is maintained by The Ansible Community
+OPTIONS (= is mandatory):
+
+- admin_state
+        Specifies the interface management status. The value is an enumerated type. up, An interface is in the administrative Up state.
+        down, An interface is in the administrative Down state.
+        (Choices: up, down)[Default: (null)]
+
+- description
+        Specifies an interface description. The value is a string of 1 to 242 case-sensitive characters, spaces supported but question
+        marks (?) not supported.
+        [Default: (null)]
+
+- interface
+        Full name of interface, i.e. 40GE1/0/10, Tunnel1.
+        [Default: (null)]
+
+- interface_type
+        Interface type to be configured from the device.
+        (Choices: ge, 10ge, 25ge, 4x10ge, 40ge, 100ge, vlanif, loopback, meth, eth-trunk, nve, tunnel, ethernet, fcoe-port, fabric-port,
+        stack-port, null)[Default: (null)]
+
+- l2sub
+        Specifies whether the interface is a Layer 2 sub-interface.
+        [Default: no]
+        type: bool
+
+- mode
+        Manage Layer 2 or Layer 3 state of the interface.
+        (Choices: layer2, layer3)[Default: (null)]
+
+- state
+        Specify desired state of the resource.
+        (Choices: present, absent, default)[Default: present]
+
+
+NOTES:
+      * This module is also used to create logical interfaces such as vlanif and loopbacks.
+
+
+AUTHOR: QijunPan (@QijunPan)
+        METADATA:
+          status:
+          - preview
+          supported_by: community
+        
+
+EXAMPLES:
+
+- name: interface module test
+  hosts: cloudengine
+  connection: local
+  gather_facts: no
+  vars:
+    cli:
+      host: "{{ inventory_hostname }}"
+      port: "{{ ansible_ssh_port }}"
+      username: "{{ username }}"
+      password: "{{ password }}"
+      transport: cli
+
+  tasks:
+  - name: Ensure an interface is a Layer 3 port and that it has the proper description
+    ce_interface:
+      interface: 10GE1/0/22
+      description: 'Configured by Ansible'
+      mode: layer3
+      provider: '{{ cli }}'
+
+  - name: Admin down an interface
+    ce_interface:
+      interface: 10GE1/0/22
+      admin_state: down
+      provider: '{{ cli }}'
+
+  - name: Remove all tunnel interfaces
+    ce_interface:
+      interface_type: tunnel
+      state: absent
+      provider: '{{ cli }}'
+
+  - name: Remove all logical interfaces
+    ce_interface:
+      interface_type: '{{ item }}'
+      state: absent
+      provider: '{{ cli }}'
+    with_items:
+      - loopback
+      - eth-trunk
+      - nve
+
+  - name: Admin up all 10GE interfaces
+    ce_interface:
+      interface_type: 10GE
+      admin_state: up
+      provider: '{{ cli }}'
+
+
+RETURN VALUES:
+
+proposed:
+    description: k/v pairs of parameters passed into module
+    returned: always
+    type: dict
+    sample: {"interface": "10GE1/0/10", "admin_state": "down"}
+existing:
+    description: k/v pairs of existing switchport
+    returned: always
+    type: dict
+    sample:  {"admin_state": "up", "description": "None",
+              "interface": "10GE1/0/10", "mode": "layer2"}
+end_state:
+    description: k/v pairs of switchport after module execution
+    returned: always
+    type: dict
+    sample:  {"admin_state": "down", "description": "None",
+              "interface": "10GE1/0/10", "mode": "layer2"}
+updates:
+    description: command list sent to the device
+    returned: always
+    type: list
+    sample: ["interface 10GE1/0/10", "shutdown"]
+changed:
+    description: check to see if a change was made on the device
+    returned: always
+    type: bool
+    sample: true
+

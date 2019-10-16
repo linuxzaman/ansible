@@ -1,0 +1,40 @@
+EXAMPLES:
+
+---
+  - hosts: Windows
+    tasks:
+      - name: Replace SNMP communities and managers
+        win_snmp:
+          communities:
+            - public
+          managers:
+            - 192.168.1.2
+          action: set
+
+  - hosts: Windows
+    tasks:
+      - name: Replace SNMP communities and clear managers
+        win_snmp:
+          communities:
+            - public
+          managers: []
+          action: set
+
+
+RETURN VALUES:
+
+community_strings:
+    description: The list of community strings for this machine.
+    type: list
+    returned: always
+    sample:
+      - public
+      - snmp-ro
+permitted_managers:
+    description: The list of permitted managers for this machine.
+    type: list
+    returned: always
+    sample:
+      - 192.168.1.1
+      - 192.168.1.2
+

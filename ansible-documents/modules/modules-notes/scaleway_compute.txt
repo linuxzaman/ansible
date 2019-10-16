@@ -1,0 +1,147 @@
+> SCALEWAY_COMPUTE    (/usr/lib/python2.7/dist-packages/ansible/modules/cloud/scaleway/scaleway_compute.py)
+
+        This module manages compute instances on Scaleway.
+
+  * This module is maintained by The Ansible Community
+OPTIONS (= is mandatory):
+
+- api_timeout
+        HTTP timeout to Scaleway API in seconds.
+        (Aliases: timeout)[Default: 30]
+        type: int
+
+- api_token
+        Scaleway OAuth token.
+        (Aliases: oauth_token)[Default: (null)]
+        type: str
+
+- api_url
+        Scaleway API URL.
+        (Aliases: base_url)[Default: https://api.scaleway.com]
+        type: str
+
+= commercial_type
+        Commercial name of the compute node
+
+
+- enable_ipv6
+        Enable public IPv6 connectivity on the instance
+        [Default: False]
+        type: bool
+
+= image
+        Image identifier used to start the instance with
+
+
+- name
+        Name of the instance
+        [Default: (null)]
+
+= organization
+        Organization identifier
+
+
+- public_ip
+        Manage public IP on a Scaleway server
+        Could be Scaleway IP address UUID
+        `dynamic' Means that IP is destroyed at the same time the host is destroyed
+        `absent' Means no public IP at all
+        [Default: absent]
+        version_added: 2.8
+
+- query_parameters
+        List of parameters passed to the query string.
+        [Default: {}]
+        type: dict
+
+= region
+        Scaleway compute zone
+        (Choices: ams1, EMEA-NL-EVS, par1, EMEA-FR-PAR1)
+
+- security_group
+        Security group unique identifier
+        If no value provided, the default security group or current security group will be used
+        [Default: (null)]
+        version_added: 2.8
+
+- state
+        Indicate desired state of the instance.
+        (Choices: present, absent, running, restarted, stopped)[Default: present]
+
+- tags
+        List of tags to apply to the instance (5 max)
+        [Default: []]
+
+- validate_certs
+        Validate SSL certs of the Scaleway API.
+        [Default: True]
+        type: bool
+
+- wait
+        Wait for the instance to reach its desired state before returning.
+        [Default: no]
+        type: bool
+
+- wait_sleep_time
+        Time to wait before every attempt to check the state of the server
+        [Default: 3]
+
+- wait_timeout
+        Time to wait for the server to reach the expected state
+        [Default: 300]
+
+
+NOTES:
+      * Also see the API documentation on https://developer.scaleway.com/
+      * If `api_token' is not set within the module, the following environment variables can be used in decreasing order of
+        precedence `SCW_TOKEN', `SCW_API_KEY', `SCW_OAUTH_TOKEN' or `SCW_API_TOKEN'.
+      * If one wants to use a different `api_url' one can also set the `SCW_API_URL' environment variable.
+
+
+AUTHOR: Remy Leone (@sieben)
+        METADATA:
+          status:
+          - preview
+          supported_by: community
+        
+
+EXAMPLES:
+
+- name: Create a server
+  scaleway_compute:
+    name: foobar
+    state: present
+    image: 89ee4018-f8c3-4dc4-a6b5-bca14f985ebe
+    organization: 951df375-e094-4d26-97c1-ba548eeb9c42
+    region: ams1
+    commercial_type: VC1S
+    tags:
+      - test
+      - www
+
+- name: Create a server attached to a security group
+  scaleway_compute:
+    name: foobar
+    state: present
+    image: 89ee4018-f8c3-4dc4-a6b5-bca14f985ebe
+    organization: 951df375-e094-4d26-97c1-ba548eeb9c42
+    region: ams1
+    commercial_type: VC1S
+    security_group: 4a31b633-118e-4900-bd52-facf1085fc8d
+    tags:
+      - test
+      - www
+
+- name: Destroy it right after
+  scaleway_compute:
+    name: foobar
+    state: absent
+    image: 89ee4018-f8c3-4dc4-a6b5-bca14f985ebe
+    organization: 951df375-e094-4d26-97c1-ba548eeb9c42
+    region: ams1
+    commercial_type: VC1S
+
+
+RETURN VALUES:
+
+

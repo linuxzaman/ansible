@@ -1,0 +1,37 @@
+EXAMPLES:
+
+# Monitor monitor-1 must have been already setup
+
+- name: Setup http service
+  gather_facts: False
+  delegate_to: localhost
+  netscaler_service:
+    nsip: 172.18.0.2
+    nitro_user: nsroot
+    nitro_pass: nsroot
+
+    state: present
+
+    name: service-http-1
+    servicetype: HTTP
+    ipaddress: 10.78.0.1
+    port: 80
+
+    monitor_bindings:
+      - monitor-1
+
+
+RETURN VALUES:
+
+loglines:
+    description: list of logged messages by the module
+    returned: always
+    type: list
+    sample: "['message 1', 'message 2']"
+
+diff:
+    description: A dictionary with a list of differences between the actual configured object and the configuration specified in the module
+    returned: failure
+    type: dict
+    sample: "{ 'clttimeout': 'difference. ours: (float) 10.0 other: (float) 20.0' }"
+

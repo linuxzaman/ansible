@@ -1,0 +1,122 @@
+EXAMPLES:
+
+- name: Create static_route
+  meraki_static_route:
+    auth_key: abc123
+    state: present
+    org_name: YourOrg
+    net_name: YourNet
+    name: Test Route
+    subnet: 192.0.1.0/24
+    gateway_ip: 192.168.128.1
+  delegate_to: localhost
+
+- name: Update static route with fixed IP assignment
+  meraki_static_route:
+    auth_key: abc123
+    state: present
+    org_name: YourOrg
+    net_name: YourNet
+    route_id: d6fa4821-1234-4dfa-af6b-ae8b16c20c39
+    fixed_ip_assignments:
+      - mac: aa:bb:cc:dd:ee:ff
+        ip: 192.0.1.11
+        comment: Server
+  delegate_to: localhost
+
+- name: Query static routes
+  meraki_static_route:
+    auth_key: abc123
+    state: query
+    org_name: YourOrg
+    net_name: YourNet
+  delegate_to: localhost
+
+- name: Delete static routes
+  meraki_static_route:
+    auth_key: abc123
+    state: absent
+    org_name: YourOrg
+    net_name: YourNet
+    route_id: '{{item}}'
+  delegate_to: localhost
+
+
+RETURN VALUES:
+
+data:
+  description: Information about the created or manipulated object.
+  returned: info
+  type: complex
+  contains:
+    id:
+      description: Unique identification string assigned to each static route.
+      returned: success
+      type: string
+      sample: d6fa4821-1234-4dfa-af6b-ae8b16c20c39
+    net_id:
+      description: Identification string of network.
+      returned: query or update
+      type: string
+      sample: N_12345
+    name:
+      description: Name of static route.
+      returned: success
+      type: string
+      sample: Data Center static route
+    subnet:
+      description: CIDR notation subnet for static route.
+      returned: success
+      type: string
+      sample: 192.0.1.0/24
+    gatewayIp:
+      description: Next hop IP address.
+      returned: success
+      type: string
+      sample: 192.1.1.1
+    enabled:
+      description: Enabled state of static route.
+      returned: query or update
+      type: bool
+      sample: True
+    reservedIpRanges:
+      description: List of IP address ranges which are reserved for static assignment.
+      returned: query or update
+      type: complex
+      contains:
+        start:
+          description: First address in reservation range, inclusive.
+          returned: query or update
+          type: string
+          sample: 192.0.1.2
+        end:
+          description: Last address in reservation range, inclusive.
+          returned: query or update
+          type: string
+          sample: 192.0.1.10
+        comment:
+          description: Human readable description of range.
+          returned: query or update
+          type: string
+          sample: Server range
+    fixedIpAssignments:
+      description: List of static MAC to IP address bindings.
+      returned: query or update
+      type: complex
+      contains:
+        mac:
+          description: Key is MAC address of endpoint.
+          returned: query or update
+          type: complex
+          contains:
+            ip:
+              description: IP address to be bound to the endpoint.
+              returned: query or update
+              type: string
+              sample: 192.0.1.11
+            name:
+              description: Hostname given to the endpoint.
+              returned: query or update
+              type: string
+              sample: JimLaptop
+

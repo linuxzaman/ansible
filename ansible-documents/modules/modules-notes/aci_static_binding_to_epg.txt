@@ -1,0 +1,350 @@
+> ACI_STATIC_BINDING_TO_EPG    (/usr/lib/python2.7/dist-packages/ansible/modules/network/aci/aci_static_binding_to_epg.py)
+
+        Bind static paths to EPGs on Cisco ACI fabrics.
+
+  * This module is maintained by an Ansible Partner
+OPTIONS (= is mandatory):
+
+- ap
+        Name of an existing application network profile, that will contain the EPGs.
+        (Aliases: app_profile, app_profile_name)[Default: (null)]
+        type: str
+
+- certificate_name
+        The X.509 certificate name attached to the APIC AAA user used for signature-based authentication.
+        If a `private_key' filename was provided, this defaults to the `private_key' basename, without extension.
+        If PEM-formatted content was provided for `private_key', this defaults to the `username' value.
+        (Aliases: cert_name)[Default: (null)]
+        type: str
+
+- deploy_immediacy
+        The Deployement Immediacy of Static EPG on PC, VPC or Interface.
+        The APIC defaults to `lazy' when unset during creation.
+        (Choices: immediate, lazy)[Default: (null)]
+        type: str
+
+- description
+        Description for the static path to EPG binding.
+        (Aliases: descr)[Default: (null)]
+        type: str
+        version_added: 2.7
+
+- encap_id
+        The encapsulation ID associating the `epg' with the interface path.
+        This acts as the secondary `encap_id' when using micro-segmentation.
+        Accepted values are any valid encap ID for specified encap, currently ranges between `1' and `4096'.
+        (Aliases: vlan, vlan_id)[Default: (null)]
+        type: int
+
+- epg
+        The name of the end point group.
+        (Aliases: epg_name)[Default: (null)]
+        type: str
+
+- extpaths
+        The `extpaths' integer value part of the tDn.
+        `extpaths' is only used if `interface_type' is `fex'.
+        Usually something like `1011'.
+        [Default: (null)]
+        type: int
+
+= host
+        IP Address or hostname of APIC resolvable by Ansible control host.
+        (Aliases: hostname)
+        type: str
+
+- interface
+        The `interface' string value part of the tDn.
+        Usually a policy group like `test-IntPolGrp' or an interface of the following format `1/7' depending on `interface_type'.
+        [Default: (null)]
+        type: str
+
+- interface_mode
+        Determines how layer 2 tags will be read from and added to frames.
+        Values `802.1p' and `native' are identical.
+        Values `access' and `untagged' are identical.
+        Values `regular', `tagged' and `trunk' are identical.
+        The APIC defaults to `trunk' when unset during creation.
+        (Aliases: interface_mode_name, mode)(Choices: 802.1p, access, native, regular, tagged, trunk, untagged)[Default: (null)]
+        type: str
+
+- interface_type
+        The type of interface for the static EPG deployement.
+        (Choices: fex, port_channel, switch_port, vpc)[Default: switch_port]
+        type: str
+
+- leafs
+        The switch ID(s) that the `interface' belongs to.
+        When `interface_type' is `switch_port', `port_channel', or `fex', then `leafs' is a string of the leaf ID.
+        When `interface_type' is `vpc', then `leafs' is a list with both leaf IDs.
+        The `leafs' value is usually something like '101' or '101-102' depending on `connection_type'.
+        (Aliases: leaves, nodes, paths, switches)[Default: (null)]
+        type: list
+
+- output_level
+        Influence the output of this ACI module.
+        `normal' means the standard output, incl. `current' dict
+        `info' adds informational output, incl. `previous', `proposed' and `sent' dicts
+        `debug' adds debugging output, incl. `filter_string', `method', `response', `status' and `url' information
+        (Choices: debug, info, normal)[Default: normal]
+        type: str
+
+= password
+        The password to use for authentication.
+        This option is mutual exclusive with `private_key'. If `private_key' is provided too, it will be used instead.
+
+        type: str
+
+- pod_id
+        The pod number part of the tDn.
+        `pod_id' is usually an integer below `10'.
+        (Aliases: pod, pod_number)[Default: (null)]
+        type: int
+
+- port
+        Port number to be used for REST connection.
+        The default value depends on parameter `use_ssl'.
+        [Default: (null)]
+        type: int
+
+- primary_encap_id
+        Determines the primary encapsulation ID associating the `epg' with the interface path when using micro-segmentation.
+        Accepted values are any valid encap ID for specified encap, currently ranges between `1' and `4096'.
+        (Aliases: primary_vlan, primary_vlan_id)[Default: (null)]
+        type: int
+
+= private_key
+        Either a PEM-formatted private key file or the private key content used for signature-based authentication.
+        This value also influences the default `certificate_name' that is used.
+        This option is mutual exclusive with `password'. If `password' is provided too, it will be ignored.
+        (Aliases: cert_key)
+        type: str
+
+- state
+        Use `present' or `absent' for adding or removing.
+        Use `query' for listing an object or multiple objects.
+        (Choices: absent, present, query)[Default: present]
+        type: str
+
+- tenant
+        Name of an existing tenant.
+        (Aliases: tenant_name)[Default: (null)]
+        type: str
+
+- timeout
+        The socket level timeout in seconds.
+        [Default: 30]
+        type: int
+
+- use_proxy
+        If `no', it will not use a proxy, even if one is defined in an environment variable on the target hosts.
+        [Default: True]
+        type: bool
+
+- use_ssl
+        If `no', an HTTP connection will be used instead of the default HTTPS connection.
+        [Default: True]
+        type: bool
+
+- username
+        The username to use for authentication.
+        (Aliases: user)[Default: admin]
+        type: str
+
+- validate_certs
+        If `no', SSL certificates will not be validated.
+        This should only set to `no' when used on personally controlled sites using self-signed certificates.
+        [Default: True]
+        type: bool
+
+
+NOTES:
+      * The `tenant', `ap', `epg' used must exist before using this module in your playbook. The [aci_tenant], [aci_ap], [aci_epg]
+        modules can be used for this.
+
+
+SEE ALSO:
+      * Module aci_tenant
+           The official documentation on the aci_tenant module.
+           https://docs.ansible.com/ansible/latest/modules/aci_tenant_module.html
+      * Module aci_ap
+           The official documentation on the aci_ap module.
+           https://docs.ansible.com/ansible/latest/modules/aci_ap_module.html
+      * Module aci_epg
+           The official documentation on the aci_epg module.
+           https://docs.ansible.com/ansible/latest/modules/aci_epg_module.html
+      * APIC Management Information Model reference
+           More information about the internal APIC class *fv:RsPathAtt*.
+           https://developer.cisco.com/docs/apic-mim-ref/
+      * Ansible documentation [aci_guide]
+           Detailed information on how to manage your ACI infrastructure using Ansible.
+           https://docs.ansible.com/ansible/latest/#stq=aci_guide&stp=1
+      * Ansible documentation [aci_dev_guide]
+           Detailed guide on how to write your own Cisco ACI modules to contribute.
+           https://docs.ansible.com/ansible/latest/#stq=aci_dev_guide&stp=1
+
+
+AUTHOR: Bruno Calogero (@brunocalogero)
+        METADATA:
+          status:
+          - preview
+          supported_by: certified
+        
+
+EXAMPLES:
+
+- name: Deploy Static Path binding for given EPG
+  aci_static_binding_to_epg:
+    host: apic
+    username: admin
+    password: SomeSecretPassword
+    tenant: accessport-code-cert
+    ap: accessport_code_app
+    epg: accessport_epg1
+    encap_id: 222
+    deploy_immediacy: lazy
+    interface_mode: untagged
+    interface_type: switch_port
+    pod_id: 1
+    leafs: 101
+    interface: '1/7'
+    state: present
+  delegate_to: localhost
+
+- name: Remove Static Path binding for given EPG
+  aci_static_binding_to_epg:
+    host: apic
+    username: admin
+    password: SomeSecretPassword
+    tenant: accessport-code-cert
+    ap: accessport_code_app
+    epg: accessport_epg1
+    interface_type: switch_port
+    pod: 1
+    leafs: 101
+    interface: '1/7'
+    state: absent
+  delegate_to: localhost
+
+- name: Get specific Static Path binding for given EPG
+  aci_static_binding_to_epg:
+    host: apic
+    username: admin
+    password: SomeSecretPassword
+    tenant: accessport-code-cert
+    ap: accessport_code_app
+    epg: accessport_epg1
+    interface_type: switch_port
+    pod: 1
+    leafs: 101
+    interface: '1/7'
+    state: query
+  delegate_to: localhost
+  register: query_result
+
+
+RETURN VALUES:
+
+current:
+  description: The existing configuration from the APIC after the module has finished
+  returned: success
+  type: list
+  sample:
+    [
+        {
+            "fvTenant": {
+                "attributes": {
+                    "descr": "Production environment",
+                    "dn": "uni/tn-production",
+                    "name": "production",
+                    "nameAlias": "",
+                    "ownerKey": "",
+                    "ownerTag": ""
+                }
+            }
+        }
+    ]
+error:
+  description: The error information as returned from the APIC
+  returned: failure
+  type: dict
+  sample:
+    {
+        "code": "122",
+        "text": "unknown managed object class foo"
+    }
+raw:
+  description: The raw output returned by the APIC REST API (xml or json)
+  returned: parse error
+  type: str
+  sample: '<?xml version="1.0" encoding="UTF-8"?><imdata totalCount="1"><error code="122" text="unknown managed object class foo"/></imdata>'
+sent:
+  description: The actual/minimal configuration pushed to the APIC
+  returned: info
+  type: list
+  sample:
+    {
+        "fvTenant": {
+            "attributes": {
+                "descr": "Production environment"
+            }
+        }
+    }
+previous:
+  description: The original configuration from the APIC before the module has started
+  returned: info
+  type: list
+  sample:
+    [
+        {
+            "fvTenant": {
+                "attributes": {
+                    "descr": "Production",
+                    "dn": "uni/tn-production",
+                    "name": "production",
+                    "nameAlias": "",
+                    "ownerKey": "",
+                    "ownerTag": ""
+                }
+            }
+        }
+    ]
+proposed:
+  description: The assembled configuration from the user-provided parameters
+  returned: info
+  type: dict
+  sample:
+    {
+        "fvTenant": {
+            "attributes": {
+                "descr": "Production environment",
+                "name": "production"
+            }
+        }
+    }
+filter_string:
+  description: The filter string used for the request
+  returned: failure or debug
+  type: str
+  sample: ?rsp-prop-include=config-only
+method:
+  description: The HTTP method used for the request to the APIC
+  returned: failure or debug
+  type: str
+  sample: POST
+response:
+  description: The HTTP response from the APIC
+  returned: failure or debug
+  type: str
+  sample: OK (30 bytes)
+status:
+  description: The HTTP status from the APIC
+  returned: failure or debug
+  type: int
+  sample: 200
+url:
+  description: The HTTP url used for the request to the APIC
+  returned: failure or debug
+  type: str
+  sample: https://10.11.12.13/api/mo/uni/tn-production.json
+

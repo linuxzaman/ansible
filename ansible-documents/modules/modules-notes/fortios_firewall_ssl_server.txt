@@ -1,0 +1,228 @@
+> FORTIOS_FIREWALL_SSL_SERVER    (/usr/lib/python2.7/dist-packages/ansible/modules/network/fortios/fortios_firewall_ssl_server.py)
+
+        This module is able to configure a FortiGate or FortiOS by allowing the user to configure firewall feature and ssl_server
+        category. Examples includes all options and need to be adjusted to datasources before usage. Tested with FOS v6.0.2
+
+  * This module is maintained by The Ansible Community
+OPTIONS (= is mandatory):
+
+- firewall_ssl_server
+        Configure SSL servers.
+        [Default: None]
+        suboptions:
+          add-header-x-forwarded-proto:
+            choices:
+            - enable
+            - disable
+            description:
+            - Enable/disable adding an X-Forwarded-Proto header to forwarded requests.
+          ip:
+            description:
+            - IPv4 address of the SSL server.
+          mapped-port:
+            description:
+            - Mapped server service port (1 - 65535, default = 80).
+          name:
+            description:
+            - Server name.
+            required: true
+          port:
+            description:
+            - Server service port (1 - 65535, default = 443).
+          ssl-algorithm:
+            choices:
+            - high
+            - medium
+            - low
+            description:
+            - Relative strength of encryption algorithms accepted in negotiation.
+          ssl-cert:
+            description:
+            - Name of certificate for SSL connections to this server (default = "Fortinet_CA_SSL").
+              Source vpn.certificate.local.name.
+          ssl-client-renegotiation:
+            choices:
+            - allow
+            - deny
+            - secure
+            description:
+            - Allow or block client renegotiation by server.
+          ssl-dh-bits:
+            choices:
+            - 768
+            - 1024
+            - 1536
+            - 2048
+            description:
+            - Bit-size of Diffie-Hellman (DH) prime used in DHE-RSA negotiation (default =
+              2048).
+          ssl-max-version:
+            choices:
+            - tls-1.0
+            - tls-1.1
+            - tls-1.2
+            description:
+            - Highest SSL/TLS version to negotiate.
+          ssl-min-version:
+            choices:
+            - tls-1.0
+            - tls-1.1
+            - tls-1.2
+            description:
+            - Lowest SSL/TLS version to negotiate.
+          ssl-mode:
+            choices:
+            - half
+            - full
+            description:
+            - SSL/TLS mode for encryption and decryption of traffic.
+          ssl-send-empty-frags:
+            choices:
+            - enable
+            - disable
+            description:
+            - Enable/disable sending empty fragments to avoid attack on CBC IV.
+          state:
+            choices:
+            - present
+            - absent
+            description:
+            - Indicates whether to create or remove the object
+          url-rewrite:
+            choices:
+            - enable
+            - disable
+            description:
+            - Enable/disable rewriting the URL.
+        
+
+= host
+        FortiOS or FortiGate ip adress.
+
+
+- https
+        Indicates if the requests towards FortiGate must use HTTPS protocol
+        [Default: True]
+        type: bool
+
+- password
+        FortiOS or FortiGate password.
+        [Default: ]
+
+= username
+        FortiOS or FortiGate username.
+
+
+- vdom
+        Virtual domain, among those defined previously. A vdom is a virtual instance of the FortiGate that can be configured and used as
+        a different unit.
+        [Default: root]
+
+
+NOTES:
+      * Requires fortiosapi library developed by Fortinet
+      * Run as a local_action in your playbook
+
+
+REQUIREMENTS:  fortiosapi>=0.9.8
+
+AUTHOR: Miguel Angel Munoz (@mamunozgonzalez), Nicolas Thomas (@thomnico)
+        METADATA:
+          status:
+          - preview
+          supported_by: community
+        
+
+EXAMPLES:
+
+- hosts: localhost
+  vars:
+   host: "192.168.122.40"
+   username: "admin"
+   password: ""
+   vdom: "root"
+  tasks:
+  - name: Configure SSL servers.
+    fortios_firewall_ssl_server:
+      host:  "{{ host }}"
+      username: "{{ username }}"
+      password: "{{ password }}"
+      vdom:  "{{ vdom }}"
+      https: "False"
+      firewall_ssl_server:
+        state: "present"
+        add-header-x-forwarded-proto: "enable"
+        ip: "<your_own_value>"
+        mapped-port: "5"
+        name: "default_name_6"
+        port: "7"
+        ssl-algorithm: "high"
+        ssl-cert: "<your_own_value> (source vpn.certificate.local.name)"
+        ssl-client-renegotiation: "allow"
+        ssl-dh-bits: "768"
+        ssl-max-version: "tls-1.0"
+        ssl-min-version: "tls-1.0"
+        ssl-mode: "half"
+        ssl-send-empty-frags: "enable"
+        url-rewrite: "enable"
+
+
+RETURN VALUES:
+
+build:
+  description: Build number of the fortigate image
+  returned: always
+  type: str
+  sample: '1547'
+http_method:
+  description: Last method used to provision the content into FortiGate
+  returned: always
+  type: str
+  sample: 'PUT'
+http_status:
+  description: Last result given by FortiGate on last operation applied
+  returned: always
+  type: str
+  sample: "200"
+mkey:
+  description: Master key (id) used in the last call to FortiGate
+  returned: success
+  type: str
+  sample: "id"
+name:
+  description: Name of the table used to fulfill the request
+  returned: always
+  type: str
+  sample: "urlfilter"
+path:
+  description: Path of the table used to fulfill the request
+  returned: always
+  type: str
+  sample: "webfilter"
+revision:
+  description: Internal revision number
+  returned: always
+  type: str
+  sample: "17.0.2.10658"
+serial:
+  description: Serial number of the unit
+  returned: always
+  type: str
+  sample: "FGVMEVYYQT3AB5352"
+status:
+  description: Indication of the operation's result
+  returned: always
+  type: str
+  sample: "success"
+vdom:
+  description: Virtual domain used
+  returned: always
+  type: str
+  sample: "root"
+version:
+  description: Version of the FortiGate
+  returned: always
+  type: str
+  sample: "v5.6.3"
+
+

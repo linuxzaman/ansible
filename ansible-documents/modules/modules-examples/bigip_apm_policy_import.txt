@@ -1,0 +1,58 @@
+EXAMPLES:
+
+- name: Import APM profile
+  bigip_apm_policy_import:
+    name: new_apm_profile
+    source: /root/apm_profile.tar.gz
+    provider:
+      server: lb.mydomain.com
+      user: admin
+      password: secret
+  delegate_to: localhost
+
+- name: Import APM policy
+  bigip_apm_policy_import:
+    name: new_apm_policy
+    source: /root/apm_policy.tar.gz
+    type: access_policy
+    provider:
+      server: lb.mydomain.com
+      user: admin
+      password: secret
+  delegate_to: localhost
+
+- name: Override existing APM policy
+  bigip_asm_policy:
+    name: new_apm_policy
+    source: /root/apm_policy.tar.gz
+    force: yes
+    provider:
+      server: lb.mydomain.com
+      user: admin
+      password: secret
+  delegate_to: localhost
+
+
+RETURN VALUES:
+
+source:
+  description: Local path to APM policy file.
+  returned: changed
+  type: str
+  sample: /root/some_policy.tar.gz
+name:
+  description: Name of the APM policy or APM access profile to be created/overwritten.
+  returned: changed
+  type: str
+  sample: APM_policy_global
+type:
+  description: Set to specify type of item to export.
+  returned: changed
+  type: str
+  sample: access_policy
+force:
+  description: Set when overwriting an existing policy or profile.
+  returned: changed
+  type: bool
+  sample: yes
+

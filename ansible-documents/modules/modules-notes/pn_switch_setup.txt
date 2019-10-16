@@ -1,0 +1,216 @@
+> PN_SWITCH_SETUP    (/usr/lib/python2.7/dist-packages/ansible/modules/network/netvisor/pn_switch_setup.py)
+
+        This module can be used to modify switch setup.
+
+  * This module is maintained by The Ansible Community
+OPTIONS (= is mandatory):
+
+- pn_analytics_store
+        type of disk storage for analytics.
+        (Choices: default, optimized)[Default: (null)]
+        type: str
+
+- pn_banner
+        Banner to display on server-switch.
+        [Default: (null)]
+        type: str
+
+- pn_cliswitch
+        Target switch to run the CLI on.
+        [Default: (null)]
+        type: str
+
+- pn_date
+        Date.
+        [Default: (null)]
+        type: str
+
+- pn_dns_ip
+        DNS IP address.
+        [Default: (null)]
+        type: str
+
+- pn_dns_secondary_ip
+        secondary DNS IP address.
+        [Default: (null)]
+        type: str
+
+- pn_domain_name
+        Domain name.
+        [Default: (null)]
+        type: str
+
+- pn_enable_host_ports
+        Enable host ports by default.
+        [Default: (null)]
+        type: bool
+
+- pn_eula_accepted
+        Accept EULA.
+        (Choices: true, false)[Default: (null)]
+        type: str
+
+- pn_eula_timestamp
+        EULA timestamp.
+        [Default: (null)]
+        type: str
+
+- pn_force
+        Force analytics-store change even if it involves removing data.
+        [Default: (null)]
+        type: bool
+
+- pn_gateway_ip
+        gateway IPv4 address.
+        [Default: (null)]
+        type: str
+
+- pn_gateway_ip6
+        Gateway IPv6 address.
+        [Default: (null)]
+        type: str
+
+- pn_in_band_ip
+        data in-band IP address.
+        [Default: (null)]
+        type: str
+
+- pn_in_band_ip6
+        Data in-band IPv6 address.
+        [Default: (null)]
+        type: str
+
+- pn_in_band_ip6_assign
+        Data IPv6 address assignment.
+        (Choices: none, autoconf)[Default: (null)]
+        type: str
+
+- pn_in_band_netmask
+        Data in-band netmask.
+        [Default: (null)]
+        type: str
+
+- pn_in_band_netmask_ip6
+        Data in-band IPv6 netmask.
+        [Default: (null)]
+        type: str
+
+- pn_loopback_ip
+        loopback IPv4 address.
+        [Default: (null)]
+        type: str
+
+- pn_loopback_ip6
+        loopback IPv6 address.
+        [Default: (null)]
+        type: str
+
+- pn_mgmt_ip
+        Management IP address.
+        [Default: (null)]
+        type: str
+
+- pn_mgmt_ip6
+        IPv6 address.
+        [Default: (null)]
+        type: str
+
+- pn_mgmt_ip6_assignment
+        IPv6 address assignment.
+        (Choices: none, autoconf)[Default: (null)]
+
+- pn_mgmt_ip_assignment
+        IP address assignment.
+        (Choices: none, dhcp)[Default: (null)]
+        type: str
+
+- pn_mgmt_netmask
+        Netmask.
+        [Default: (null)]
+        type: str
+
+- pn_mgmt_netmask_ip6
+        IPv6 netmask.
+        [Default: (null)]
+        type: str
+
+- pn_motd
+        Message of the Day.
+        [Default: (null)]
+        type: str
+
+- pn_ntp_secondary_server
+        Secondary NTP server.
+        [Default: (null)]
+        type: str
+
+- pn_ntp_server
+        NTP server.
+        [Default: (null)]
+        type: str
+
+- pn_password
+        plain text password.
+        [Default: (null)]
+        type: str
+
+- pn_switch_name
+        switch name.
+        [Default: (null)]
+        type: str
+
+- pn_timezone
+        Timezone to be configured.
+        [Default: (null)]
+        type: str
+
+= state
+        State the action to perform. Use `update' to modify the switch-setup.
+        (Choices: update)
+        type: str
+
+
+AUTHOR: Pluribus Networks (@rajaspachipulusu17)
+        METADATA:
+          status:
+          - preview
+          supported_by: community
+        
+
+EXAMPLES:
+
+- name: Modify switch
+  pn_switch_setup:
+    pn_cliswitch: "sw01"
+    state: "update"
+    pn_timezone: "America/New_York"
+    pn_in_band_ip: "20.20.1.1"
+    pn_in_band_netmask: "24"
+
+- name: Modify switch
+  pn_switch_setup:
+    pn_cliswitch: "sw01"
+    state: "update"
+    pn_in_band_ip6: "2001:0db8:85a3::8a2e:0370:7334"
+    pn_in_band_netmask_ip6: "127"
+
+
+RETURN VALUES:
+
+command:
+  description: the CLI command run on the target node.
+  returned: always
+  type: str
+stdout:
+  description: set of responses from the switch-setup command.
+  returned: always
+  type: list
+stderr:
+  description: set of error responses from the switch-setup command.
+  returned: on error
+  type: list
+changed:
+  description: indicates whether the CLI caused changes on the target.
+  returned: always
+  type: bool
+

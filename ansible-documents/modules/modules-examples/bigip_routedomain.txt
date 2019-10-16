@@ -1,0 +1,85 @@
+EXAMPLES:
+
+- name: Create a route domain
+  bigip_routedomain:
+    name: foo
+    id: 1234
+    state: present
+    provider:
+      user: admin
+      password: secret
+      server: lb.mydomain.com
+  delegate_to: localhost
+
+- name: Set VLANs on the route domain
+  bigip_routedomain:
+    name: bar
+    state: present
+    vlans:
+      - net1
+      - foo
+    provider:
+      password: secret
+      server: lb.mydomain.com
+      user: admin
+  delegate_to: localhost
+
+
+RETURN VALUES:
+
+id:
+  description: The ID of the route domain that was changed.
+  returned: changed
+  type: int
+  sample: 2
+description:
+  description: The description of the route domain.
+  returned: changed
+  type: str
+  sample: route domain foo
+strict:
+  description: The new strict isolation setting.
+  returned: changed
+  type: str
+  sample: enabled
+parent:
+  description: The new parent route domain.
+  returned: changed
+  type: int
+  sample: 0
+vlans:
+  description: List of new VLANs the route domain is applied to.
+  returned: changed
+  type: list
+  sample: ['/Common/http-tunnel', '/Common/socks-tunnel']
+routing_protocol:
+  description: List of routing protocols applied to the route domain.
+  returned: changed
+  type: list
+  sample: ['bfd', 'bgp']
+bwc_policy:
+  description: The new bandwidth controller.
+  returned: changed
+  type: str
+  sample: /Common/foo
+connection_limit:
+  description: The new connection limit for the route domain.
+  returned: changed
+  type: int
+  sample: 100
+flow_eviction_policy:
+  description: The new eviction policy to use with this route domain.
+  returned: changed
+  type: str
+  sample: /Common/default-eviction-policy
+service_policy:
+  description: The new service policy to use with this route domain.
+  returned: changed
+  type: str
+  sample: /Common-my-service-policy
+fw_enforced_policy:
+  description: Specfies AFM policy to be attached to route domain.
+  returned: changed
+  type: str
+  sample: /Common/afm-blocking-policy
+

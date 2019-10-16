@@ -1,0 +1,96 @@
+EXAMPLES:
+
+- name: Enable DNS AAAA vector mitigation
+  bigip_firewall_dos_vector:
+    name: aaaa
+    state: mitigate
+    provider:
+      password: secret
+      server: lb.mydomain.com
+      user: admin
+  delegate_to: localhost
+
+
+RETURN VALUES:
+
+allow_advertisement:
+  description: The new Allow External Advertisement setting.
+  returned: changed
+  type: bool
+  sample: yes
+auto_blacklist:
+  description: The new Auto Blacklist setting.
+  returned: changed
+  type: bool
+  sample: no
+bad_actor_detection:
+  description: The new Bad Actor Detection setting.
+  returned: changed
+  type: bool
+  sample: no
+blacklist_detection_seconds:
+  description: The new Sustained Attack Detection Time setting.
+  returned: changed
+  type: int
+  sample: 60
+blacklist_duration:
+  description: The new Category Duration Time setting.
+  returned: changed
+  type: int
+  sample: 14400
+attack_ceiling:
+  description: The new Attack Ceiling EPS setting.
+  returned: changed
+  type: str
+  sample: infinite
+attack_floor:
+  description: The new Attack Floor EPS setting.
+  returned: changed
+  type: str
+  sample: infinite
+blacklist_category:
+  description: The new Category Name setting.
+  returned: changed
+  type: str
+  sample: /Common/cloud_provider_networks
+per_source_ip_detection_threshold:
+  description: The new Per Source IP Detection Threshold EPS setting.
+  returned: changed
+  type: str
+  sample: 23
+per_source_ip_mitigation_threshold:
+  description: The new Per Source IP Mitigation Threshold EPS setting.
+  returned: changed
+  type: str
+  sample: infinite
+detection_threshold_percent:
+  description: The new Detection Threshold Percent setting.
+  returned: changed
+  type: str
+  sample: infinite
+detection_threshold_eps:
+  description: The new Detection Threshold EPS setting.
+  returned: changed
+  type: str
+  sample: infinite
+mitigation_threshold_eps:
+  description: The new Mitigation Threshold EPS setting.
+  returned: changed
+  type: str
+  sample: infinite
+threshold_mode:
+  description: The new Mitigation Threshold EPS setting.
+  returned: changed
+  type: str
+  sample: infinite
+simulate_auto_threshold:
+  description: The new Simulate Auto Threshold setting.
+  returned: changed
+  type: bool
+  sample: no
+state:
+  description: The new state of the vector.
+  returned: changed
+  type: str
+  sample: mitigate
+

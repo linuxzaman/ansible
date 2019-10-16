@@ -1,0 +1,164 @@
+> FMGR_FWPOL_PACKAGE    (/usr/lib/python2.7/dist-packages/ansible/modules/network/fortimanager/fmgr_fwpol_package.py)
+
+        Manages FortiManager Firewall Policies Packages. Policy Packages contain one or more Firewall Policies/Rules and are distritbuted
+        via FortiManager to Fortigates. This module controls the creation/edit/delete/assign of these packages.
+
+  * This module is maintained by The Ansible Community
+OPTIONS (= is mandatory):
+
+- adom
+        The ADOM the configuration should belong to.
+        [Default: root]
+
+- central_nat
+        Central NAT setting.
+        (Choices: enable, disable)[Default: disable]
+
+- fwpolicy6_implicit_log
+        Implicit Log setting for all IPv6 policies in package.
+        (Choices: enable, disable)[Default: disable]
+
+- fwpolicy_implicit_log
+        Implicit Log setting for all IPv4 policies in package.
+        (Choices: enable, disable)[Default: disable]
+
+- inspection_mode
+        Inspection mode setting for the policies flow or proxy.
+        (Choices: flow, proxy)[Default: flow]
+
+- mode
+        Sets one of three modes for managing the object.
+        (Choices: add, set, delete)[Default: add]
+
+= name
+        Name of the FortiManager package or folder.
+
+
+- ngfw_mode
+        NGFW mode setting for the policies flow or proxy.
+        (Choices: profile-based, policy-based)[Default: profile-based]
+
+= object_type
+        Are we managing packages or folders, or installing packages?
+        (Choices: pkg, folder, install)
+
+- package_folder
+        Name of the folder you want to put the package into.
+        [Default: (null)]
+
+- parent_folder
+        The parent folder name you want to add this object under.
+        [Default: (null)]
+
+- scope_members
+        The devices or scope that you want to assign this policy package to.
+        [Default: (null)]
+
+- scope_members_vdom
+        The members VDOM you want to assign the package to.
+        [Default: root]
+
+- ssl_ssh_profile
+        if policy-based ngfw-mode, refer to firewall ssl-ssh-profile.
+        [Default: (null)]
+
+
+NOTES:
+      * Full Documentation at https://ftnt-ansible-docs.readthedocs.io/en/latest/.
+
+
+AUTHOR: Luke Weighall (@lweighall), Andrew Welsh (@Ghilli3), Jim Huber (@p4r4n0y1ng)
+        METADATA:
+          status:
+          - preview
+          supported_by: community
+        
+
+EXAMPLES:
+
+- name: CREATE BASIC POLICY PACKAGE
+  fmgr_fwpol_package:
+    adom: "ansible"
+    mode: "add"
+    name: "testPackage"
+    object_type: "pkg"
+
+- name: ADD PACKAGE WITH TARGETS
+  fmgr_fwpol_package:
+    mode: "add"
+    adom: "ansible"
+    name: "ansibleTestPackage1"
+    object_type: "pkg"
+    inspection_mode: "flow"
+    ngfw_mode: "profile-based"
+    scope_members: "seattle-fgt02, seattle-fgt03"
+
+- name: ADD FOLDER
+  fmgr_fwpol_package:
+    mode: "add"
+    adom: "ansible"
+    name: "ansibleTestFolder1"
+    object_type: "folder"
+
+- name: ADD PACKAGE INTO PARENT FOLDER
+  fmgr_fwpol_package:
+    mode: "set"
+    adom: "ansible"
+    name: "ansibleTestPackage2"
+    object_type: "pkg"
+    parent_folder: "ansibleTestFolder1"
+
+- name: ADD FOLDER INTO PARENT FOLDER
+  fmgr_fwpol_package:
+    mode: "set"
+    adom: "ansible"
+    name: "ansibleTestFolder2"
+    object_type: "folder"
+    parent_folder: "ansibleTestFolder1"
+
+- name: INSTALL PACKAGE
+  fmgr_fwpol_package:
+    mode: "set"
+    adom: "ansible"
+    name: "ansibleTestPackage1"
+    object_type: "install"
+    scope_members: "seattle-fgt03, seattle-fgt02"
+
+- name: REMOVE PACKAGE
+  fmgr_fwpol_package:
+    mode: "delete"
+    adom: "ansible"
+    name: "ansibleTestPackage1"
+    object_type: "pkg"
+
+- name: REMOVE NESTED PACKAGE
+  fmgr_fwpol_package:
+    mode: "delete"
+    adom: "ansible"
+    name: "ansibleTestPackage2"
+    object_type: "pkg"
+    parent_folder: "ansibleTestFolder1"
+
+- name: REMOVE NESTED FOLDER
+  fmgr_fwpol_package:
+    mode: "delete"
+    adom: "ansible"
+    name: "ansibleTestFolder2"
+    object_type: "folder"
+    parent_folder: "ansibleTestFolder1"
+
+- name: REMOVE FOLDER
+  fmgr_fwpol_package:
+    mode: "delete"
+    adom: "ansible"
+    name: "ansibleTestFolder1"
+    object_type: "folder"
+
+
+RETURN VALUES:
+
+api_result:
+  description: full API response, includes status code and message
+  returned: always
+  type: str
+

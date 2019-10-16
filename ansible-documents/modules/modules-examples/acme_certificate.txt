@@ -1,0 +1,176 @@
+EXAMPLES:
+
+### Example with HTTP challenge ###
+
+- name: Create a challenge for sample.com using a account key from a variable.
+  acme_certificate:
+    account_key_content: "{{ account_private_key }}"
+    csr: /etc/pki/cert/csr/sample.com.csr
+    dest: /etc/httpd/ssl/sample.com.crt
+  register: sample_com_challenge
+
+# Alternative first step:
+- name: Create a challenge for sample.com using a account key from hashi vault.
+  acme_certificate:
+    account_key_content: "{{ lookup('hashi_vault', 'secret=secret/account_private_key:value') }}"
+    csr: /etc/pki/cert/csr/sample.com.csr
+    fullchain_dest: /etc/httpd/ssl/sample.com-fullchain.crt
+  register: sample_com_challenge
+
+# Alternative first step:
+- name: Create a challenge for sample.com using a account key file.
+  acme_certificate:
+    account_key_src: /etc/pki/cert/private/account.key
+    csr: /etc/pki/cert/csr/sample.com.csr
+    dest: /etc/httpd/ssl/sample.com.crt
+    fullchain_dest: /etc/httpd/ssl/sample.com-fullchain.crt
+  register: sample_com_challenge
+
+# perform the necessary steps to fulfill the challenge
+# for example:
+#
+# - copy:
+#     dest: /var/www/html/{{ sample_com_challenge['challenge_data']['sample.com']['http-01']['resource'] }}
+#     content: "{{ sample_com_challenge['challenge_data']['sample.com']['http-01']['resource_value'] }}"
+#     when: sample_com_challenge is changed
+
+- name: Let the challenge be validated and retrieve the cert and intermediate certificate
+  acme_certificate:
+    account_key_src: /etc/pki/cert/private/account.key
+    csr: /etc/pki/cert/csr/sample.com.csr
+    dest: /etc/httpd/ssl/sample.com.crt
+    fullchain_dest: /etc/httpd/ssl/sample.com-fullchain.crt
+    chain_dest: /etc/httpd/ssl/sample.com-intermediate.crt
+    data: "{{ sample_com_challenge }}"
+
+### Example with DNS challenge against production ACME server ###
+
+- name: Create a challenge for sample.com using a account key file.
+  acme_certificate:
+    account_key_src: /etc/pki/cert/private/account.key
+    account_email: myself@sample.com
+    src: /etc/pki/cert/csr/sample.com.csr
+    cert: /etc/httpd/ssl/sample.com.crt
+    challenge: dns-01
+    acme_directory: https://acme-v01.api.letsencrypt.org/directory
+    # Renew if the certificate is at least 30 days old
+    remaining_days: 60
+  register: sample_com_challenge
+
+# perform the necessary steps to fulfill the challenge
+# for example:
+#
+# - route53:
+#     zone: sample.com
+#     record: "{{ sample_com_challenge.challenge_data['sample.com']['dns-01'].record }}"
+#     type: TXT
+#     ttl: 60
+#     state: present
+#     wait: yes
+#     # Note: route53 requires TXT entries to be enclosed in quotes
+#     value: "{{ sample_com_challenge.challenge_data['sample.com']['dns-01'].resource_value | regex_replace('^(.*)$', '\"\\1\"') }}"
+#   when: sample_com_challenge is changed
+#
+# Alternative way:
+#
+# - route53:
+#     zone: sample.com
+#     record: "{{ item.key }}"
+#     type: TXT
+#     ttl: 60
+#     state: present
+#     wait: yes
+#     # Note: item.value is a list of TXT entries, and route53
+#     # requires every entry to be enclosed in quotes
+#     value: "{{ item.value | map('regex_replace', '^(.*)$', '\"\\1\"' ) | list }}"
+#   loop: "{{ sample_com_challenge.challenge_data_dns | dictsort }}"
+#   when: sample_com_challenge is changed
+
+- name: Let the challenge be validated and retrieve the cert and intermediate certificate
+  acme_certificate:
+    account_key_src: /etc/pki/cert/private/account.key
+    account_email: myself@sample.com
+    src: /etc/pki/cert/csr/sample.com.csr
+    cert: /etc/httpd/ssl/sample.com.crt
+    fullchain: /etc/httpd/ssl/sample.com-fullchain.crt
+    chain: /etc/httpd/ssl/sample.com-intermediate.crt
+    challenge: dns-01
+    acme_directory: https://acme-v01.api.letsencrypt.org/directory
+    remaining_days: 60
+    data: "{{ sample_com_challenge }}"
+  when: sample_com_challenge is changed
+
+
+RETURN VALUES:
+
+cert_days:
+  description: The number of days the certificate remains valid.
+  returned: success
+  type: int
+challenge_data:
+  description: Per identifier / challenge type challenge data.
+  returned: changed
+  type: complex
+  contains:
+    resource:
+      description: The challenge resource that must be created for validation.
+      returned: changed
+      type: str
+      sample: .well-known/acme-challenge/evaGxfADs6pSRb2LAv9IZf17Dt3juxGJ-PCt92wr-oA
+    resource_original:
+      description:
+        - The original challenge resource including type identifier for C(tls-alpn-01)
+          challenges.
+      returned: changed and challenge is C(tls-alpn-01)
+      type: str
+      sample: DNS:example.com
+      version_added: "2.8"
+    resource_value:
+      description:
+        - The value the resource has to produce for the validation.
+        - For C(http-01) and C(dns-01) challenges, the value can be used as-is.
+        - "For C(tls-alpn-01) challenges, note that this return value contains a
+           Base64 encoded version of the correct binary blob which has to be put
+           into the acmeValidation x509 extension; see
+           U(https://tools.ietf.org/html/draft-ietf-acme-tls-alpn-05#section-3)
+           for details. To do this, you might need the C(b64decode) Jinja filter
+           to extract the binary blob from this return value."
+      returned: changed
+      type: str
+      sample: IlirfxKKXA...17Dt3juxGJ-PCt92wr-oA
+    record:
+      description: The full DNS record's name for the challenge.
+      returned: changed and challenge is C(dns-01)
+      type: str
+      sample: _acme-challenge.example.com
+      version_added: "2.5"
+challenge_data_dns:
+  description: List of TXT values per DNS record, in case challenge is C(dns-01).
+  returned: changed
+  type: dict
+  version_added: "2.5"
+authorizations:
+  description: ACME authorization data.
+  returned: changed
+  type: complex
+  contains:
+      authorization:
+        description: ACME authorization object. See U(https://tools.ietf.org/html/rfc8555#section-7.1.4)
+        returned: success
+        type: dict
+order_uri:
+  description: ACME order URI.
+  returned: changed
+  type: str
+  version_added: "2.5"
+finalization_uri:
+  description: ACME finalization URI.
+  returned: changed
+  type: str
+  version_added: "2.5"
+account_uri:
+  description: ACME account URI.
+  returned: changed
+  type: str
+  version_added: "2.5"
+

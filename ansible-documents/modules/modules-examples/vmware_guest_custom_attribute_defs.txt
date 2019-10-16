@@ -1,0 +1,31 @@
+EXAMPLES:
+
+- name: Add VMWare Attribute Definition
+  vmware_guest_custom_attribute_defs:
+    hostname: "{{ vcenter_hostname }}"
+    username: "{{ vcenter_username }}"
+    password: "{{ vcenter_password }}"
+    state: present
+    attribute_key: custom_attr_def_1
+  delegate_to: localhost
+  register: defs
+
+- name: Remove VMWare Attribute Definition
+  vmware_guest_custom_attribute_defs:
+    hostname: "{{ vcenter_hostname }}"
+    username: "{{ vcenter_username }}"
+    password: "{{ vcenter_password }}"
+    state: absent
+    attribute_key: custom_attr_def_1
+  delegate_to: localhost
+  register: defs
+
+
+RETURN VALUES:
+
+custom_attribute_defs:
+    description: list of all current attribute definitions
+    returned: always
+    type: list
+    sample: ["sample_5", "sample_4"]
+

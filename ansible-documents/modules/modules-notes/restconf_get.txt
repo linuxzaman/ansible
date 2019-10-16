@@ -1,0 +1,59 @@
+> RESTCONF_GET    (/usr/lib/python2.7/dist-packages/ansible/modules/network/restconf/restconf_get.py)
+
+        RESTCONF is a standard mechanisms to allow web applications to access the configuration data and state data developed and
+        standardized by the IETF. It is documented in RFC 8040. This module allows the user to fetch configuration and state data from
+        RESTCONF enabled devices.
+
+  * This module is maintained by The Ansible Network Team
+OPTIONS (= is mandatory):
+
+- content
+        The `content' is a query parameter that controls how descendant nodes of the requested data nodes in `path' will be processed in
+        the reply. If value is `config' return only configuration descendant data nodes of value in `path'. If value is `nonconfig'
+        return only non-configuration descendant data nodes of value in `path'. If value is `all' return all descendant data nodes of
+        value in `path'
+        (Choices: config, nonconfig, all)[Default: (null)]
+
+- output
+        The output of response received.
+        (Choices: json, xml)[Default: json]
+
+= path
+        URI being used to execute API calls.
+
+
+
+AUTHOR: Ganesh Nalawade (@ganeshrn)
+        METADATA:
+          status:
+          - preview
+          supported_by: network
+        
+
+EXAMPLES:
+
+- name: get l3vpn services
+  restconf_get:
+      path: /config/ietf-l3vpn-svc:l3vpn-svc/vpn-services
+
+
+RETURN VALUES:
+
+response:
+  description: A dictionary representing a JSON-formatted response
+  returned: when the device response is valid JSON
+  type: dict
+  sample: |
+        {
+            "vpn-services": {
+                "vpn-service": [
+                    {
+                        "customer-name": "red",
+                        "vpn-id": "blue_vpn1",
+                        "vpn-service-topology": "ietf-l3vpn-svc:any-to-any"
+                    }
+                ]
+            }
+        }
+
+

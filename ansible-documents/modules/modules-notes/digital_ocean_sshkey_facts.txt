@@ -1,0 +1,77 @@
+> DIGITAL_OCEAN_SSHKEY_FACTS    (/usr/lib/python2.7/dist-packages/ansible/modules/cloud/digital_ocean/digital_ocean_sshkey_facts.py)
+
+        Fetch DigitalOcean SSH keys facts.
+
+  * This module is maintained by The Ansible Community
+OPTIONS (= is mandatory):
+
+- oauth_token
+        DigitalOcean OAuth token.
+        There are several other environment variables which can be used to provide this value.
+        i.e., - 'DO_API_TOKEN', 'DO_API_KEY', 'DO_OAUTH_TOKEN' and 'OAUTH_TOKEN'
+        (Aliases: api_token)[Default: (null)]
+        type: str
+
+- timeout
+        The timeout in seconds used for polling DigitalOcean's API.
+        [Default: 30]
+        type: int
+
+- validate_certs
+        If set to `no', the SSL certificates will not be validated.
+        This should only set to `no' used on personally controlled sites using self-signed certificates.
+        [Default: True]
+        type: bool
+
+
+NOTES:
+      * Version 2 of DigitalOcean API is used.
+
+
+REQUIREMENTS:  python >= 2.6
+
+AUTHOR: Patrick Marques (@pmarques)
+        METADATA:
+          status:
+          - preview
+          supported_by: community
+        
+
+EXAMPLES:
+
+- digital_ocean_sshkey_facts:
+    oauth_token: "{{ my_do_key }}"
+
+- set_fact:
+    pubkey: "{{ item.public_key }}"
+  loop: "{{ ssh_keys|json_query(ssh_pubkey) }}"
+  vars:
+    ssh_pubkey: "[?name=='ansible_ctrl']"
+
+- debug:
+    msg: "{{ pubkey }}"
+
+
+RETURN VALUES:
+
+# Digital Ocean API info https://developers.digitalocean.com/documentation/v2/#list-all-keys
+data:
+    description: List of SSH keys on DigitalOcean
+    returned: success and no resource constraint
+    type: dict
+    sample: {
+      "ssh_keys": [
+        {
+          "id": 512189,
+          "fingerprint": "3b:16:bf:e4:8b:00:8b:b8:59:8c:a9:d3:f0:19:45:fa",
+          "public_key": "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAAAQQDDHr/jh2Jy4yALcK4JyWbVkPRaWmhck3IgCoeOO3z1e2dBowLh64QAM+Qb72pxekALga2oi4GvT+TlWNhzPH4V example",
+          "name": "My SSH Public Key"
+        }
+      ],
+      "links": {
+      },
+      "meta": {
+        "total": 1
+      }
+    }
+

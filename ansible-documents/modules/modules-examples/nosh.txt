@@ -1,0 +1,129 @@
+EXAMPLES:
+
+- name: start dnscache if not running
+  nosh: name=dnscache state=started
+
+- name: stop mpd, if running
+  nosh: name=mpd state=stopped
+
+- name: restart unbound or start it if not already running
+  nosh:
+    name: unbound
+    state: restarted
+
+- name: reload fail2ban or start it if not already running
+  nosh:
+    name: fail2ban
+    state: reloaded
+
+- name: disable nsd
+  nosh: name=nsd enabled=no
+
+- name: for package installers, set nginx running state according to local enable settings, preset and reset
+  nosh: name=nginx preset=True state=reset
+
+- name: reboot the host if nosh is the system manager, would need a "wait_for*" task at least, not recommended as-is
+  nosh: name=reboot state=started
+
+- name: using conditionals with the module facts
+  tasks:
+    - name: obtain information on tinydns service
+      nosh: name=tinydns
+      register: result
+
+    - name: fail if service not loaded
+      fail: msg="The {{ result.name }} service is not loaded"
+      when: not result.status
+
+    - name: fail if service is running
+      fail: msg="The {{ result.name }} service is running"
+      when: result.status and result.status['DaemontoolsEncoreState'] == "running"
+
+
+RETURN VALUES:
+
+name:
+    description: name used to find the service
+    returned: success
+    type: str
+    sample: "sshd"
+service_path:
+    description: resolved path for the service
+    returned: success
+    type: str
+    sample: "/var/sv/sshd"
+enabled:
+    description: whether the service is enabled at system bootstrap
+    returned: success
+    type: bool
+    sample: True
+preset:
+    description: whether the enabled status reflects the one set in the relevant C(*.preset) file
+    returned: success
+    type: bool
+    sample: False
+state:
+    description: service process run state, C(None) if the service is not loaded and will not be started
+    returned: if state option is used
+    type: str
+    sample: "reloaded"
+status:
+    description: a dictionary with the key=value pairs returned by `system-control show-json` or C(None) if the service is not loaded
+    returned: success
+    type: complex
+    contains: {
+            "After": [
+                "/etc/service-bundles/targets/basic",
+                "../sshdgenkeys",
+                "log"
+            ],
+            "Before": [
+                "/etc/service-bundles/targets/shutdown"
+            ],
+            "Conflicts": [],
+            "DaemontoolsEncoreState": "running",
+            "DaemontoolsState": "up",
+            "Enabled": true,
+            "LogService": "../cyclog@sshd",
+            "MainPID": 661,
+            "Paused": false,
+            "ReadyAfterRun": false,
+            "RemainAfterExit": false,
+            "Required-By": [],
+            "RestartExitStatusCode": 0,
+            "RestartExitStatusNumber": 0,
+            "RestartTimestamp": 4611686019935648081,
+            "RestartUTCTimestamp": 1508260140,
+            "RunExitStatusCode": 0,
+            "RunExitStatusNumber": 0,
+            "RunTimestamp": 4611686019935648081,
+            "RunUTCTimestamp": 1508260140,
+            "StartExitStatusCode": 1,
+            "StartExitStatusNumber": 0,
+            "StartTimestamp": 4611686019935648081,
+            "StartUTCTimestamp": 1508260140,
+            "StopExitStatusCode": 0,
+            "StopExitStatusNumber": 0,
+            "StopTimestamp": 4611686019935648081,
+            "StopUTCTimestamp": 1508260140,
+            "Stopped-By": [
+                "/etc/service-bundles/targets/shutdown"
+            ],
+            "Timestamp": 4611686019935648081,
+            "UTCTimestamp": 1508260140,
+            "Want": "nothing",
+            "Wanted-By": [
+                "/etc/service-bundles/targets/server",
+                "/etc/service-bundles/targets/sockets"
+            ],
+            "Wants": [
+                "/etc/service-bundles/targets/basic",
+                "../sshdgenkeys"
+            ]
+        }
+user:
+    description: whether the user-level service manager is called
+    returned: success
+    type: bool
+    sample: False
+

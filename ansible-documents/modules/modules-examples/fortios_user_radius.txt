@@ -1,0 +1,126 @@
+EXAMPLES:
+
+- hosts: localhost
+  vars:
+   host: "192.168.122.40"
+   username: "admin"
+   password: ""
+   vdom: "root"
+  tasks:
+  - name: Configure RADIUS server entries.
+    fortios_user_radius:
+      host:  "{{ host }}"
+      username: "{{ username }}"
+      password: "{{ password }}"
+      vdom:  "{{ vdom }}"
+      https: "False"
+      user_radius:
+        state: "present"
+        accounting-server:
+         -
+            id:  "4"
+            port: "5"
+            secret: "<your_own_value>"
+            server: "192.168.100.40"
+            source-ip: "84.230.14.43"
+            status: "enable"
+        acct-all-servers: "enable"
+        acct-interim-interval: "11"
+        all-usergroup: "disable"
+        auth-type: "auto"
+        class:
+         -
+            name: "default_name_15"
+        h3c-compatibility: "enable"
+        name: "default_name_17"
+        nas-ip: "<your_own_value>"
+        password-encoding: "auto"
+        password-renewal: "enable"
+        radius-coa: "enable"
+        radius-port: "22"
+        rsso: "enable"
+        rsso-context-timeout: "24"
+        rsso-endpoint-attribute: "User-Name"
+        rsso-endpoint-block-attribute: "User-Name"
+        rsso-ep-one-ip-only: "enable"
+        rsso-flush-ip-session: "enable"
+        rsso-log-flags: "protocol-error"
+        rsso-log-period: "30"
+        rsso-radius-response: "enable"
+        rsso-radius-server-port: "32"
+        rsso-secret: "<your_own_value>"
+        rsso-validate-request-secret: "enable"
+        secondary-secret: "<your_own_value>"
+        secondary-server: "<your_own_value>"
+        secret: "<your_own_value>"
+        server: "192.168.100.40"
+        source-ip: "84.230.14.43"
+        sso-attribute: "User-Name"
+        sso-attribute-key: "<your_own_value>"
+        sso-attribute-value-override: "enable"
+        tertiary-secret: "<your_own_value>"
+        tertiary-server: "<your_own_value>"
+        timeout: "45"
+        use-management-vdom: "enable"
+        username-case-sensitive: "enable"
+
+
+RETURN VALUES:
+
+build:
+  description: Build number of the fortigate image
+  returned: always
+  type: str
+  sample: '1547'
+http_method:
+  description: Last method used to provision the content into FortiGate
+  returned: always
+  type: str
+  sample: 'PUT'
+http_status:
+  description: Last result given by FortiGate on last operation applied
+  returned: always
+  type: str
+  sample: "200"
+mkey:
+  description: Master key (id) used in the last call to FortiGate
+  returned: success
+  type: str
+  sample: "id"
+name:
+  description: Name of the table used to fulfill the request
+  returned: always
+  type: str
+  sample: "urlfilter"
+path:
+  description: Path of the table used to fulfill the request
+  returned: always
+  type: str
+  sample: "webfilter"
+revision:
+  description: Internal revision number
+  returned: always
+  type: str
+  sample: "17.0.2.10658"
+serial:
+  description: Serial number of the unit
+  returned: always
+  type: str
+  sample: "FGVMEVYYQT3AB5352"
+status:
+  description: Indication of the operation's result
+  returned: always
+  type: str
+  sample: "success"
+vdom:
+  description: Virtual domain used
+  returned: always
+  type: str
+  sample: "root"
+version:
+  description: Version of the FortiGate
+  returned: always
+  type: str
+  sample: "v5.6.3"
+
+

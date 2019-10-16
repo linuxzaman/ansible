@@ -1,0 +1,126 @@
+> NETAPP_E_STORAGEPOOL    (/usr/lib/python2.7/dist-packages/ansible/modules/storage/netapp/netapp_e_storagepool.py)
+
+        Create or remove disk groups and disk pools for NetApp E-series storage arrays.
+
+  * This module is maintained by The Ansible Community
+OPTIONS (= is mandatory):
+
+= api_password
+        The password to authenticate with the SANtricity Web Services Proxy or Embedded Web Services API.
+
+
+= api_url
+        The url to the SANtricity Web Services Proxy or Embedded Web Services API. Example https://prod-1.wahoo.acme.com/devmgr/v2
+
+
+= api_username
+        The username to authenticate with the SANtricity Web Services Proxy or Embedded Web Services API.
+
+
+- criteria_drive_count
+        The number of disks to use for building the storage pool. The pool will be expanded if this number exceeds the number of disks
+        already in place
+        [Default: (null)]
+
+- criteria_drive_interface_type
+        The interface type to use when selecting drives for the storage pool (no value means all interface types will be considered)
+        (Choices: sas, sas4k, fibre, fibre520b, scsi, sata, pata)[Default: (null)]
+
+- criteria_drive_min_size
+        The minimum individual drive size (in size_unit) to consider when choosing drives for the storage pool.
+        [Default: (null)]
+
+- criteria_drive_require_fde
+        Whether full disk encryption ability is required for drives to be added to the storage pool
+        [Default: (null)]
+        type: bool
+
+- criteria_drive_type
+        The type of disk (hdd or ssd) to use when searching for candidates to use.
+        (Choices: hdd, ssd)[Default: (null)]
+
+- criteria_min_usable_capacity
+        The minimum size of the storage pool (in size_unit). The pool will be expanded if this value exceeds itscurrent size.
+        [Default: (null)]
+
+- criteria_size_unit
+        The unit used to interpret size parameters
+        (Choices: bytes, b, kb, mb, gb, tb, pb, eb, zb, yb)[Default: gb]
+
+- erase_secured_drives
+        Whether to erase secured disks before adding to storage pool
+        [Default: (null)]
+        type: bool
+
+= name
+        The name of the storage pool to manage
+
+
+= raid_level
+        Only required when the requested state is 'present'.  The RAID level of the storage pool to be created.
+        (Choices: raidAll, raid0, raid1, raid3, raid5, raid6, raidDiskPool)
+
+- remove_volumes
+        Prior to removing a storage pool, delete all volumes in the pool.
+        [Default: False]
+        type: bool
+
+- reserve_drive_count
+        Set the number of drives reserved by the storage pool for reconstruction operations. Only valide on raid disk pools.
+        [Default: (null)]
+
+- secure_pool
+        Whether to convert to a secure storage pool. Will only work if all drives in the pool are security capable.
+        [Default: (null)]
+        type: bool
+
+- ssid
+        The ID of the array to manage. This value must be unique for each array.
+        [Default: 1]
+
+= state
+        Whether the specified storage pool should exist or not.
+        Note that removing a storage pool currently requires the removal of all defined volumes first.
+        (Choices: present, absent)
+
+- validate_certs
+        Should https certificates be validated?
+        [Default: True]
+        type: bool
+
+
+NOTES:
+      * The E-Series Ansible modules require either an instance of the Web Services Proxy (WSP), to be available to manage the
+        storage-system, or an E-Series storage-system that supports the Embedded Web Services API.
+      * Embedded Web Services is currently available on the E2800, E5700, EF570, and newer hardware models.
+      * [netapp_e_storage_system] may be utilized for configuring the systems managed by a WSP instance.
+
+
+AUTHOR: Kevin Hulquest (@hulquest)
+        METADATA:
+          status:
+          - preview
+          supported_by: community
+        
+
+EXAMPLES:
+
+- name: No disk groups
+      netapp_e_storagepool:
+        ssid: "{{ ssid }}"
+        name: "{{ item }}"
+        state: absent
+        api_url: "{{ netapp_api_url }}"
+        api_username: "{{ netapp_api_username }}"
+        api_password: "{{ netapp_api_password }}"
+        validate_certs: "{{ netapp_api_validate_certs }}"
+
+
+RETURN VALUES:
+
+msg:
+    description: Success message
+    returned: success
+    type: str
+    sample: Json facts for the pool that was created.
+

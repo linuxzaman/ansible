@@ -1,0 +1,61 @@
+> TIMEZONE    (/usr/lib/python2.7/dist-packages/ansible/modules/system/timezone.py)
+
+        This module configures the timezone setting, both of the system clock and of the hardware clock. If you want to set up the NTP,
+        use [service] module. It is recommended to restart `crond' after changing the timezone, otherwise the jobs may run at the wrong
+        time. Several different tools are used depending on the OS/Distribution involved. For Linux it can use `timedatectl' or edit
+        `/etc/sysconfig/clock' or `/etc/timezone' and `hwclock'. On SmartOS, `sm-set-timezone', for macOS, `systemsetup', for BSD,
+        `/etc/localtime' is modified. As of Ansible 2.3 support was added for SmartOS and BSDs. As of Ansible 2.4 support was added for
+        macOS. Windows, AIX and HPUX are not supported, please let us know if you find any other OS/distro in which this fails.
+
+  * This module is maintained by The Ansible Community
+OPTIONS (= is mandatory):
+
+- hwclock
+        Whether the hardware clock is in UTC or in local timezone.
+        Default is to keep current setting.
+        Note that this option is recommended not to change and may fail to configure, especially on virtual environments such as AWS.
+        *At least one of name and hwclock are required.*
+        `Only used on Linux.'
+        (Aliases: rtc)(Choices: local, UTC)[Default: (null)]
+        type: str
+
+- name
+        Name of the timezone for the system clock.
+        Default is to keep current setting.
+        *At least one of name and hwclock are required.*
+        [Default: (null)]
+        type: str
+
+
+NOTES:
+      * On SmartOS the `sm-set-timezone' utility (part of the smtools package) is required to set the zone timezone
+
+
+AUTHOR: Shinichi TAMURA (@tmshn), Jasper Lievisse Adriaanse (@jasperla), Indrajit Raychaudhuri (@indrajitr)
+        METADATA:
+          status:
+          - preview
+          supported_by: community
+        
+
+EXAMPLES:
+
+- name: Set timezone to Asia/Tokyo
+  timezone:
+    name: Asia/Tokyo
+
+
+RETURN VALUES:
+
+diff:
+  description: The differences about the given arguments.
+  returned: success
+  type: complex
+  contains:
+    before:
+      description: The values before change
+      type: dict
+    after:
+      description: The values after change
+      type: dict
+

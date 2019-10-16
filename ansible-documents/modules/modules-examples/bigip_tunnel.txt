@@ -1,0 +1,34 @@
+EXAMPLES:
+
+- name: Create a VXLAN tunnel
+  bigip_tunnel:
+    name: openshift-tunnel
+    local_address: 192.1681.240
+    key: 0
+    secondary_address: 192.168.1.100
+    mtu: 0
+    use_pmtu: yes
+    tos: preserve
+    auto_last_hop: default
+    traffic_group: traffic-group-1
+    state: present
+    provider:
+      password: secret
+      server: lb.mydomain.com
+      user: admin
+  delegate_to: localhost
+
+
+RETURN VALUES:
+
+param1:
+  description: The new param1 value of the resource.
+  returned: changed
+  type: bool
+  sample: true
+param2:
+  description: The new param2 value of the resource.
+  returned: changed
+  type: str
+  sample: Foo is bar
+

@@ -1,0 +1,320 @@
+> RHEVM    (/usr/lib/python2.7/dist-packages/ansible/modules/cloud/misc/rhevm.py)
+
+        This module only supports oVirt/RHEV version 3. A newer module [ovirt_vm] supports oVirt/RHV version 4. Allows you to
+        create/remove/update or powermanage virtual machines on a RHEV/oVirt platform.
+
+  * This module is maintained by The Ansible Community
+OPTIONS (= is mandatory):
+
+- boot_order
+        This option uses complex arguments and is a list of items that specify the bootorder.
+        [Default: [u'hd', u'network']]
+        type: list
+
+- cd_drive
+        The CD you wish to have mounted on the VM when `state = 'CD''.
+        [Default: (null)]
+        type: str
+
+- cluster
+        The RHEV/oVirt cluster in which you want you VM to start.
+        [Default: (null)]
+        type: str
+
+- cpu_share
+        This parameter is used to configure the CPU share.
+        [Default: 0]
+        type: int
+
+- datacenter
+        The RHEV/oVirt datacenter in which you want you VM to start.
+        [Default: Default]
+        type: str
+
+- del_prot
+        This option sets the delete protection checkbox.
+        [Default: True]
+        type: bool
+
+- disks
+        This option uses complex arguments and is a list of disks with the options name, size and domain.
+        [Default: (null)]
+        type: list
+
+- ifaces
+        This option uses complex arguments and is a list of interfaces with the options name and vlan.
+        (Aliases: interfaces, nics)[Default: (null)]
+        type: list
+
+- image
+        The template to use for the VM.
+        [Default: (null)]
+        type: str
+
+- insecure_api
+        A boolean switch to make a secure or insecure connection to the server.
+        [Default: False]
+        type: bool
+
+- mempol
+        The minimum amount of memory you wish to reserve for this system.
+        [Default: 1]
+        type: int
+
+- name
+        The name of the VM.
+        [Default: (null)]
+        type: str
+
+- osver
+        The operating system option in RHEV/oVirt.
+        [Default: rhel_6x64]
+        type: str
+
+- password
+        The password for user authentication.
+        [Default: (null)]
+        type: str
+
+- port
+        The port on which the API is reacheable.
+        [Default: 443]
+        type: int
+
+- server
+        The name/IP of your RHEV-m/oVirt instance.
+        [Default: 127.0.0.1]
+        type: str
+
+- state
+        This serves to create/remove/update or powermanage your VM.
+        (Choices: absent, cd, down, info, ping, present, restarted, up)[Default: present]
+        type: str
+
+- timeout
+        The timeout you wish to define for power actions.
+        When `state = 'up''.
+        When `state = 'down''.
+        When `state = 'restarted''.
+        [Default: (null)]
+        type: int
+
+- type
+        To define if the VM is a server or desktop.
+        (Choices: desktop, host, server)[Default: server]
+        type: str
+
+- user
+        The user to authenticate with.
+        [Default: admin@internal]
+        type: str
+
+- vm_ha
+        To make your VM High Available.
+        [Default: True]
+        type: bool
+
+- vmcpu
+        The number of CPUs you want in your VM.
+        [Default: 2]
+        type: int
+
+- vmhost
+        The host you wish your VM to run on.
+        [Default: (null)]
+        type: str
+
+- vmmem
+        The amount of memory you want your VM to use (in GB).
+        [Default: 1]
+        type: int
+
+
+REQUIREMENTS:  ovirtsdk
+
+AUTHOR: Timothy Vandenbrande (@TimothyVandenbrande)
+        METADATA:
+          status:
+          - preview
+          supported_by: community
+        
+
+EXAMPLES:
+
+- name: Basic get info from VM
+  rhevm:
+    server: rhevm01
+    user: '{{ rhev.admin.name }}'
+    password: '{{ rhev.admin.pass }}'
+    name: demo
+    state: info
+
+- name: Basic create example from image
+  rhevm:
+    server: rhevm01
+    user: '{{ rhev.admin.name }}'
+    password: '{{ rhev.admin.pass }}'
+    name: demo
+    cluster: centos
+    image: centos7_x64
+    state: present
+
+- name: Power management
+  rhevm:
+    server: rhevm01
+    user: '{{ rhev.admin.name }}'
+    password: '{{ rhev.admin.pass }}'
+    cluster: RH
+    name: uptime_server
+    image: centos7_x64
+    state: down
+
+- name: Multi disk, multi nic create example
+  rhevm:
+    server: rhevm01
+    user: '{{ rhev.admin.name }}'
+    password: '{{ rhev.admin.pass }}'
+    cluster: RH
+    name: server007
+    type: server
+    vmcpu: 4
+    vmmem: 2
+    ifaces:
+    - name: eth0
+      vlan: vlan2202
+    - name: eth1
+      vlan: vlan36
+    - name: eth2
+      vlan: vlan38
+    - name: eth3
+      vlan: vlan2202
+    disks:
+    - name: root
+      size: 10
+      domain: ssd-san
+    - name: swap
+      size: 10
+      domain: 15kiscsi-san
+    - name: opt
+      size: 10
+      domain: 15kiscsi-san
+    - name: var
+      size: 10
+      domain: 10kiscsi-san
+    - name: home
+      size: 10
+      domain: sata-san
+    boot_order:
+    - network
+    - hd
+    state: present
+
+- name: Add a CD to the disk cd_drive
+  rhevm:
+    user: '{{ rhev.admin.name }}'
+    password: '{{ rhev.admin.pass }}'
+    name: server007
+    cd_drive: rhev-tools-setup.iso
+    state: cd
+
+- name: New host deployment + host network configuration
+  rhevm:
+    password: '{{ rhevm.admin.pass }}'
+    name: ovirt_node007
+    type: host
+    cluster: rhevm01
+    ifaces:
+    - name: em1
+    - name: em2
+    - name: p3p1
+      ip: 172.31.224.200
+      netmask: 255.255.254.0
+    - name: p3p2
+      ip: 172.31.225.200
+      netmask: 255.255.254.0
+    - name: bond0
+      bond:
+      - em1
+      - em2
+      network: rhevm
+      ip: 172.31.222.200
+      netmask: 255.255.255.0
+      management: yes
+    - name: bond0.36
+      network: vlan36
+      ip: 10.2.36.200
+      netmask: 255.255.254.0
+      gateway: 10.2.36.254
+    - name: bond0.2202
+      network: vlan2202
+    - name: bond0.38
+      network: vlan38
+    state: present
+
+
+RETURN VALUES:
+
+vm:
+    description: Returns all of the VMs variables and execution.
+    returned: always
+    type: dict
+    sample: '{
+        "boot_order": [
+            "hd",
+            "network"
+        ],
+        "changed": true,
+        "changes": [
+            "Delete Protection"
+        ],
+        "cluster": "C1",
+        "cpu_share": "0",
+        "created": false,
+        "datacenter": "Default",
+        "del_prot": true,
+        "disks": [
+            {
+                "domain": "ssd-san",
+                "name": "OS",
+                "size": 40
+            }
+        ],
+        "eth0": "00:00:5E:00:53:00",
+        "eth1": "00:00:5E:00:53:01",
+        "eth2": "00:00:5E:00:53:02",
+        "exists": true,
+        "failed": false,
+        "ifaces": [
+            {
+                "name": "eth0",
+                "vlan": "Management"
+            },
+            {
+                "name": "eth1",
+                "vlan": "Internal"
+            },
+            {
+                "name": "eth2",
+                "vlan": "External"
+            }
+        ],
+        "image": false,
+        "mempol": "0",
+        "msg": [
+            "VM exists",
+            "cpu_share was already set to 0",
+            "VM high availability was already set to True",
+            "The boot order has already been set",
+            "VM delete protection has been set to True",
+            "Disk web2_Disk0_OS already exists",
+            "The VM starting host was already set to host416"
+        ],
+        "name": "web2",
+        "type": "server",
+        "uuid": "4ba5a1be-e60b-4368-9533-920f156c817b",
+        "vm_ha": true,
+        "vmcpu": "4",
+        "vmhost": "host416",
+        "vmmem": "16"
+    }'
+

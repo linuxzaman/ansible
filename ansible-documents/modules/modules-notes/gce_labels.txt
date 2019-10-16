@@ -1,0 +1,117 @@
+> GCE_LABELS    (/usr/lib/python2.7/dist-packages/ansible/modules/cloud/google/gce_labels.py)
+
+        Create, Update or Destroy GCE Labels on instances, disks, snapshots, etc. When specifying the GCE resource, users may specifiy
+        the full URL for the resource (its 'self_link'), or the individual parameters of the resource (type, location, name). Examples
+        for the two options can be seen in the documentaion. See https://cloud.google.com/compute/docs/label-or-tag-resources for more
+        information about GCE Labels. Labels are gradually being added to more GCE resources, so this module will need to be updated as
+        new resources are added to the GCE (v1) API.
+
+  * This module is maintained by The Ansible Community
+OPTIONS (= is mandatory):
+
+- labels
+        A list of labels (key/value pairs) to add or remove for the resource.
+        [Default: (null)]
+
+- resource_location
+        The location of resource (global, us-central1-f, etc.)
+        [Default: (null)]
+
+- resource_name
+        The name of resource.
+        [Default: (null)]
+
+- resource_type
+        The type of resource (instances, disks, snapshots, images)
+        [Default: (null)]
+
+- resource_url
+        The 'self_link' for the resource (instance, disk, snapshot, etc)
+        [Default: (null)]
+
+
+NOTES:
+      * Labels support resources such as  instances, disks, images, etc. See https://cloud.google.com/compute/docs/labeling-
+        resources for the list of resources available in the GCE v1 API (not alpha or beta).
+
+
+REQUIREMENTS:  python >= 2.6, google-api-python-client >= 1.6.2, google-auth >= 1.0.0, google-auth-httplib2 >= 0.0.2
+
+AUTHOR: Eric Johnson (@erjohnso) <erjohnso@google.com>
+        METADATA:
+          status:
+          - preview
+          supported_by: community
+        
+
+EXAMPLES:
+
+- name: Add labels on an existing instance (using resource_url)
+  gce_labels:
+    service_account_email: "{{ service_account_email }}"
+    credentials_file: "{{ credentials_file }}"
+    project_id: "{{ project_id }}"
+    labels:
+      webserver-frontend: homepage
+      environment: test
+      experiment-name: kennedy
+    resource_url: https://www.googleapis.com/compute/beta/projects/myproject/zones/us-central1-f/instances/example-instance
+    state: present
+- name: Add labels on an image (using resource params)
+  gce_labels:
+    service_account_email: "{{ service_account_email }}"
+    credentials_file: "{{ credentials_file }}"
+    project_id: "{{ project_id }}"
+    labels:
+      webserver-frontend: homepage
+      environment: test
+      experiment-name: kennedy
+    resource_type: images
+    resource_location: global
+    resource_name: my-custom-image
+    state: present
+- name: Remove specified labels from the GCE instance
+  gce_labels:
+    service_account_email: "{{ service_account_email }}"
+    credentials_file: "{{ credentials_file }}"
+    project_id: "{{ project_id }}"
+    labels:
+      environment: prod
+      experiment-name: kennedy
+    resource_url: https://www.googleapis.com/compute/beta/projects/myproject/zones/us-central1-f/instances/example-instance
+    state: absent
+
+
+RETURN VALUES:
+
+labels:
+    description: List of labels that exist on the resource.
+    returned: Always.
+    type: dict
+    sample: [ { 'webserver-frontend': 'homepage', 'environment': 'test', 'environment-name': 'kennedy' } ]
+resource_url:
+    description: The 'self_link' of the GCE resource.
+    returned: Always.
+    type: str
+    sample: 'https://www.googleapis.com/compute/beta/projects/myproject/zones/us-central1-f/instances/example-instance'
+resource_type:
+    description: The type of the GCE resource.
+    returned: Always.
+    type: str
+    sample: instances
+resource_location:
+    description: The location of the GCE resource.
+    returned: Always.
+    type: str
+    sample: us-central1-f
+resource_name:
+    description: The name of the GCE resource.
+    returned: Always.
+    type: str
+    sample: my-happy-little-instance
+state:
+    description: state of the labels
+    returned: Always.
+    type: str
+    sample: present
+

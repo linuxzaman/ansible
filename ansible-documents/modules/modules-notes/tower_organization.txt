@@ -1,0 +1,71 @@
+> TOWER_ORGANIZATION    (/usr/lib/python2.7/dist-packages/ansible/modules/web_infrastructure/ansible_tower/tower_organization.py)
+
+        Create, update, or destroy Ansible Tower organizations. See https://www.ansible.com/tower for an overview.
+
+  * This module is maintained by The Ansible Community
+OPTIONS (= is mandatory):
+
+- description
+        The description to use for the organization.
+        [Default: (null)]
+
+= name
+        Name to use for the organization.
+
+
+- state
+        Desired state of the resource.
+        (Choices: present, absent)[Default: present]
+
+- tower_config_file
+        Path to the Tower config file.
+        [Default: (null)]
+        type: path
+
+- tower_host
+        URL to your Tower instance.
+        [Default: (null)]
+        type: str
+
+- tower_password
+        Password for your Tower instance.
+        [Default: (null)]
+        type: str
+
+- tower_username
+        Username for your Tower instance.
+        [Default: (null)]
+        type: str
+
+- validate_certs
+        Whether to allow insecure connections to Tower.
+        If `no', SSL certificates will not be validated.
+        This should only be used on personally controlled sites using self-signed certificates.
+        (Aliases: tower_verify_ssl)[Default: (null)]
+        type: bool
+
+
+NOTES:
+      * If no `config_file' is provided we will attempt to use the tower-cli library defaults to find your Tower host information.
+      * `config_file' should contain Tower configuration in the following format host=hostname username=username password=password
+
+
+REQUIREMENTS:  ansible-tower-cli >= 3.0.2
+
+AUTHOR: Wayne Witzel III (@wwitzel3)
+        METADATA:
+          status:
+          - preview
+          supported_by: community
+        
+
+EXAMPLES:
+
+- name: Create tower organization
+  tower_organization:
+    name: "Foo"
+    description: "Foo bar organization"
+    state: present
+    tower_config_file: "~/tower_cli.cfg"
+
+

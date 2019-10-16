@@ -1,0 +1,112 @@
+> NETAPP_E_HOSTGROUP    (/usr/lib/python2.7/dist-packages/ansible/modules/storage/netapp/netapp_e_hostgroup.py)
+
+        Create, update or destroy host groups on a NetApp E-Series storage array.
+
+  * This module is maintained by The Ansible Community
+OPTIONS (= is mandatory):
+
+= api_password
+        The password to authenticate with the SANtricity WebServices Proxy or embedded REST API.
+
+
+= api_url
+        The url to the SANtricity WebServices Proxy or embedded REST API.
+
+
+= api_username
+        The username to authenticate with the SANtricity WebServices Proxy or embedded REST API.
+
+
+- hosts
+        a list of host names/labels to add to the group
+        [Default: (null)]
+
+- id
+        The id number of the host group to manage. Either this or `name' must be supplied.
+        [Default: (null)]
+
+- name
+        The name of the host group to manage. Either this or `id_num' must be supplied.
+        [Default: (null)]
+
+- new_name
+        specify this when you need to update the name of a host group
+        [Default: (null)]
+
+= ssid
+        The ID of the array to manage (as configured on the web services proxy).
+
+
+= state
+        Whether the specified host group should exist or not.
+        (Choices: present, absent)
+
+- validate_certs
+        Should https certificates be validated?
+        [Default: True]
+
+
+AUTHOR: Kevin Hulquest (@hulquest)
+        METADATA:
+          status:
+          - preview
+          supported_by: community
+        
+
+EXAMPLES:
+
+- name: Configure Hostgroup
+      netapp_e_hostgroup:
+        ssid: "{{ ssid }}"
+        api_url: "{{ netapp_api_url }}"
+        api_username: "{{ netapp_api_username }}"
+        api_password: "{{ netapp_api_password }}"
+        validate_certs: "{{ netapp_api_validate_certs }}"
+        state: present
+
+
+RETURN VALUES:
+
+clusterRef:
+    description: The unique identification value for this object. Other objects may use this reference value to refer to the cluster.
+    returned: always except when state is absent
+    type: str
+    sample: "3233343536373839303132333100000000000000"
+confirmLUNMappingCreation:
+    description: If true, indicates that creation of LUN-to-volume mappings should require careful confirmation from the end-user, since such a mapping
+                 will alter the volume access rights of other clusters, in addition to this one.
+    returned: always
+    type: bool
+    sample: false
+hosts:
+    description: A list of the hosts that are part of the host group after all operations.
+    returned: always except when state is absent
+    type: list
+    sample: ["HostA","HostB"]
+id:
+    description: The id number of the hostgroup
+    returned: always except when state is absent
+    type: str
+    sample: "3233343536373839303132333100000000000000"
+isSAControlled:
+    description: If true, indicates that I/O accesses from this cluster are subject to the storage array's default LUN-to-volume mappings. If false,
+                 indicates that I/O accesses from the cluster are subject to cluster-specific LUN-to-volume mappings.
+    returned: always except when state is absent
+    type: bool
+    sample: false
+label:
+    description: The user-assigned, descriptive label string for the cluster.
+    returned: always
+    type: str
+    sample: "MyHostGroup"
+name:
+    description: same as label
+    returned: always except when state is absent
+    type: str
+    sample: "MyHostGroup"
+protectionInformationCapableAccessMethod:
+    description: This field is true if the host has a PI capable access method.
+    returned: always except when state is absent
+    type: bool
+    sample: true
+

@@ -1,0 +1,99 @@
+> CNOS_LOGGING    (/usr/lib/python2.7/dist-packages/ansible/modules/network/cnos/cnos_logging.py)
+
+        This module provides declarative management of logging on Cisco Cnos devices.
+
+  * This module is maintained by The Ansible Community
+OPTIONS (= is mandatory):
+
+- aggregate
+        List of logging definitions.
+        [Default: (null)]
+
+- dest
+        Destination of the logs. Lenovo uses the term server instead of host in its CLI.
+        (Choices: server, console, monitor, logfile)[Default: (null)]
+
+- facility
+        Set logging facility. This is applicable only for server logging
+        [Default: (null)]
+
+- level
+        Set logging severity levels. 0-emerg;1-alert;2-crit;3-err;4-warn; 5-notif;6-inform;7-debug
+        [Default: 5]
+
+- name
+        If value of `dest' is `file' it indicates file-name and for `server' indicates the server name to be notified.
+        [Default: (null)]
+
+- size
+        Size of buffer. The acceptable value is in range from 4096 to 4294967295 bytes.
+        [Default: 10485760]
+
+- state
+        State of the logging configuration.
+        (Choices: present, absent)[Default: present]
+
+
+NOTES:
+      * Tested against CNOS 10.9.1
+
+
+AUTHOR: Anil Kumar Muraleedharan (@amuraleedhar)
+        METADATA:
+          status:
+          - preview
+          supported_by: community
+        
+
+EXAMPLES:
+
+- name: configure server logging
+  cnos_logging:
+    dest: server
+    name: 10.241.107.224
+    facility: local7
+    state: present
+
+- name: remove server logging configuration
+  cnos_logging:
+    dest: server
+    name: 10.241.107.224
+    state: absent
+
+- name: configure console logging level and facility
+  cnos_logging:
+    dest: console
+    level: 7
+    state: present
+
+- name: configure buffer size
+  cnos_logging:
+    dest: logfile
+    level: 5
+    name: testfile
+    size: 5000
+
+- name: Configure logging using aggregate
+  cnos_logging:
+    aggregate:
+      - { dest: console, level: 6 }
+      - { dest: logfile, size: 9000 }
+
+- name: remove logging using aggregate
+  cnos_logging:
+    aggregate:
+      - { dest: console, level: 6 }
+      - { dest: logfile, name: anil, size: 9000 }
+    state: absent
+
+
+RETURN VALUES:
+
+commands:
+  description: The list of configuration mode commands to send to the device
+  returned: always
+  type: list
+  sample:
+    - logging console 7
+    - logging server 10.241.107.224
+

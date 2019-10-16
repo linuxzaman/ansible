@@ -1,0 +1,63 @@
+> ONYX_L2_INTERFACE    (/usr/lib/python2.7/dist-packages/ansible/modules/network/onyx/onyx_l2_interface.py)
+
+        This module provides declarative management of Layer-2 interface on Mellanox ONYX network devices.
+
+  * This module is maintained by The Ansible Community
+OPTIONS (= is mandatory):
+
+- access_vlan
+        Configure given VLAN in access port.
+        [Default: (null)]
+
+- aggregate
+        List of Layer-2 interface definitions.
+        [Default: (null)]
+
+- mode
+        Mode in which interface needs to be configured.
+        (Choices: access, trunk, hybrid)[Default: access]
+
+- name
+        Name of the interface.
+        [Default: (null)]
+
+- state
+        State of the Layer-2 Interface configuration.
+        (Choices: present, absent)[Default: present]
+
+- trunk_allowed_vlans
+        List of allowed VLANs in a given trunk port.
+        [Default: (null)]
+
+
+AUTHOR: Samer Deeb (@samerd)
+        METADATA:
+          status:
+          - preview
+          supported_by: community
+        
+
+EXAMPLES:
+
+- name: configure Layer-2 interface
+  onyx_l2_interface:
+    name: Eth1/1
+    mode: access
+    access_vlan: 30
+- name: remove Layer-2 interface configuration
+  onyx_l2_interface:
+    name: Eth1/1
+    state: absent
+
+
+RETURN VALUES:
+
+commands:
+  description: The list of configuration mode commands to send to the device
+  returned: always.
+  type: list
+  sample:
+    - interface ethernet 1/1
+    - switchport mode access
+    - switchport access vlan 30
+

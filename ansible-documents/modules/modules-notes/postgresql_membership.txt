@@ -1,0 +1,155 @@
+> POSTGRESQL_MEMBERSHIP    (/usr/lib/python2.7/dist-packages/ansible/modules/database/postgresql/postgresql_membership.py)
+
+        Adds or removes PostgreSQL roles from groups (other roles) https://www.postgresql.org/docs/current/role-membership.html. Users
+        are roles with login privilege (see https://www.postgresql.org/docs/current/role-attributes.html for more information). Groups
+        are PostgreSQL roles usually without LOGIN privelege. Common use case: 1) add a new group (groups) by [postgresql_user] module
+        https://docs.ansible.com/ansible/latest/modules/postgresql_user_module.html with `role_attr_flags=NOLOGIN' 2) grant them desired
+        privileges by [postgresql_privs] module https://docs.ansible.com/ansible/latest/modules/postgresql_privs_module.html 3) add
+        desired PostgreSQL users to the new group (groups) by this module
+
+  * This module is maintained by The Ansible Community
+OPTIONS (= is mandatory):
+
+- ca_cert
+        Specifies the name of a file containing SSL certificate authority (CA) certificate(s).
+        If the file exists, the server's certificate will be verified to be signed by one of these authorities.
+        (Aliases: ssl_rootcert)[Default: (null)]
+        type: str
+
+- db
+        Name of database to connect to.
+        (Aliases: login_db)[Default: (null)]
+        type: str
+
+- fail_on_role
+        If `yes', fail when group or target_role doesn't exist. If `no', just warn and continue.
+        [Default: True]
+        type: bool
+
+= groups
+        The list of groups (roles) that need to be granted to or revoked from `target_roles'.
+        (Aliases: group, source_role, source_roles)
+        type: list
+
+- login_host
+        Host running the database.
+        [Default: (null)]
+        type: str
+
+- login_password
+        The password used to authenticate with.
+        [Default: (null)]
+        type: str
+
+- login_unix_socket
+        Path to a Unix domain socket for local connections.
+        [Default: (null)]
+        type: str
+
+- login_user
+        The username used to authenticate with.
+        [Default: postgres]
+        type: str
+
+- port
+        Database port to connect to.
+        (Aliases: login_port)[Default: 5432]
+        type: int
+
+- session_role
+        Switch to session_role after connecting. The specified session_role must be a role that the current login_user is a member of.
+        Permissions checking for SQL commands is carried out as though the session_role were the one that had logged in originally.
+        [Default: (null)]
+        type: str
+
+- ssl_mode
+        Determines whether or with what priority a secure SSL TCP/IP connection will be negotiated with the server.
+        See https://www.postgresql.org/docs/current/static/libpq-ssl.html for more information on the modes.
+        Default of `prefer' matches libpq default.
+        (Choices: allow, disable, prefer, require, verify-ca, verify-full)[Default: prefer]
+        type: str
+
+- state
+        Membership state.
+        `state=present' implies the `groups'must be granted to `target_roles'.
+        `state=absent' implies the `groups' must be revoked from `target_roles'.
+        (Choices: absent, present)[Default: present]
+        type: str
+
+= target_roles
+        The list of target roles (groups will be granted to them).
+        (Aliases: target_role, users, user)
+        type: list
+
+
+NOTES:
+      * The default authentication assumes that you are either logging in as or sudo'ing to the postgres account on the host.
+      * To avoid "Peer authentication failed for user postgres" error, use postgres user as a `become_user'.
+      * This module uses psycopg2, a Python PostgreSQL database adapter. You must ensure that psycopg2 is installed on the host
+        before using this module.
+      * If the remote host is the PostgreSQL server (which is the default case), then PostgreSQL must also be installed on the
+        remote host.
+      * For Ubuntu-based systems, install the postgresql, libpq-dev, and python-psycopg2 packages on the remote host before using
+        this module.
+      * The default authentication assumes that you are either logging in as or sudo'ing to the `postgres' account on the host.
+      * This module uses `psycopg2', a Python PostgreSQL database adapter. You must ensure that psycopg2 is installed on the host
+        before using this module. If the remote host is the PostgreSQL server (which is the default case), then PostgreSQL must
+        also be installed on the remote host. For Ubuntu-based systems, install the `postgresql', `libpq-dev', and `python-
+        psycopg2' packages on the remote host before using this module.
+      * The ca_cert parameter requires at least Postgres version 8.4 and `psycopg2' version 2.4.3.
+
+
+REQUIREMENTS:  psycopg2
+
+AUTHOR: Andrew Klychkov (@Andersson007)
+        METADATA:
+          status:
+          - preview
+          supported_by: community
+        
+
+EXAMPLES:
+
+- name: Grant role read_only to alice and bob
+  postgresql_membership:
+    group: read_only
+    target_roles:
+    - alice
+    - bob
+    state: present
+
+# you can also use target_roles: alice,bob,etc to pass the role list
+
+- name: Revoke role read_only and exec_func from bob. Ignore if roles don't exist
+  postgresql_membership:
+    groups:
+    - read_only
+    - exec_func
+    target_role: bob
+    fail_on_role: no
+    state: absent
+
+
+RETURN VALUES:
+
+queries:
+    description: List of executed queries.
+    returned: always
+    type: str
+    sample: [ "GRANT \"user_ro\" TO \"alice\"" ]
+granted:
+    description: Dict of granted groups and roles.
+    returned: if I(state=present)
+    type: dict
+    sample: { "ro_group": [ "alice", "bob" ] }
+revoked:
+    description: Dict of revoked groups and roles.
+    returned: if I(state=absent)
+    type: dict
+    sample: { "ro_group": [ "alice", "bob" ] }
+state:
+    description: Membership state that tried to be set.
+    returned: always
+    type: str
+    sample: "present"
+

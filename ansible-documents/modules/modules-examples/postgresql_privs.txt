@@ -1,0 +1,195 @@
+EXAMPLES:
+
+# On database "library":
+# GRANT SELECT, INSERT, UPDATE ON TABLE public.books, public.authors
+# TO librarian, reader WITH GRANT OPTION
+- name: Grant privs to librarian and reader on database library
+  postgresql_privs:
+    database: library
+    state: present
+    privs: SELECT,INSERT,UPDATE
+    type: table
+    objs: books,authors
+    schema: public
+    roles: librarian,reader
+    grant_option: yes
+
+- name: Same as above leveraging default values
+  postgresql_privs:
+    db: library
+    privs: SELECT,INSERT,UPDATE
+    objs: books,authors
+    roles: librarian,reader
+    grant_option: yes
+
+# REVOKE GRANT OPTION FOR INSERT ON TABLE books FROM reader
+# Note that role "reader" will be *granted* INSERT privilege itself if this
+# isn't already the case (since state: present).
+- name: Revoke privs from reader
+  postgresql_privs:
+    db: library
+    state: present
+    priv: INSERT
+    obj: books
+    role: reader
+    grant_option: no
+
+# "public" is the default schema. This also works for PostgreSQL 8.x.
+- name: REVOKE INSERT, UPDATE ON ALL TABLES IN SCHEMA public FROM reader
+  postgresql_privs:
+    db: library
+    state: absent
+    privs: INSERT,UPDATE
+    objs: ALL_IN_SCHEMA
+    role: reader
+
+- name: GRANT ALL PRIVILEGES ON SCHEMA public, math TO librarian
+  postgresql_privs:
+    db: library
+    privs: ALL
+    type: schema
+    objs: public,math
+    role: librarian
+
+# Note the separation of arguments with colons.
+- name: GRANT ALL PRIVILEGES ON FUNCTION math.add(int, int) TO librarian, reader
+  postgresql_privs:
+    db: library
+    privs: ALL
+    type: function
+    obj: add(int:int)
+    schema: math
+    roles: librarian,reader
+
+# Note that group role memberships apply cluster-wide and therefore are not
+# restricted to database "library" here.
+- name: GRANT librarian, reader TO alice, bob WITH ADMIN OPTION
+  postgresql_privs:
+    db: library
+    type: group
+    objs: librarian,reader
+    roles: alice,bob
+    admin_option: yes
+
+# Note that here "db: postgres" specifies the database to connect to, not the
+# database to grant privileges on (which is specified via the "objs" param)
+- name: GRANT ALL PRIVILEGES ON DATABASE library TO librarian
+  postgresql_privs:
+    db: postgres
+    privs: ALL
+    type: database
+    obj: library
+    role: librarian
+
+# If objs is omitted for type "database", it defaults to the database
+# to which the connection is established
+- name: GRANT ALL PRIVILEGES ON DATABASE library TO librarian
+  postgresql_privs:
+    db: library
+    privs: ALL
+    type: database
+    role: librarian
+
+# Available since version 2.7
+# Objs must be set, ALL_DEFAULT to TABLES/SEQUENCES/TYPES/FUNCTIONS
+# ALL_DEFAULT works only with privs=ALL
+# For specific
+- name: ALTER DEFAULT PRIVILEGES ON DATABASE library TO librarian
+  postgresql_privs:
+    db: library
+    objs: ALL_DEFAULT
+    privs: ALL
+    type: default_privs
+    role: librarian
+    grant_option: yes
+
+# Available since version 2.7
+# Objs must be set, ALL_DEFAULT to TABLES/SEQUENCES/TYPES/FUNCTIONS
+# ALL_DEFAULT works only with privs=ALL
+# For specific
+- name: ALTER DEFAULT PRIVILEGES ON DATABASE library TO reader, step 1
+  postgresql_privs:
+    db: library
+    objs: TABLES,SEQUENCES
+    privs: SELECT
+    type: default_privs
+    role: reader
+
+- name: ALTER DEFAULT PRIVILEGES ON DATABASE library TO reader, step 2
+  postgresql_privs:
+    db: library
+    objs: TYPES
+    privs: USAGE
+    type: default_privs
+    role: reader
+
+# Available since version 2.8
+- name: GRANT ALL PRIVILEGES ON FOREIGN DATA WRAPPER fdw TO reader
+  postgresql_privs:
+    db: test
+    objs: fdw
+    privs: ALL
+    type: foreign_data_wrapper
+    role: reader
+
+# Available since version 2.8
+- name: GRANT ALL PRIVILEGES ON FOREIGN SERVER fdw_server TO reader
+  postgresql_privs:
+    db: test
+    objs: fdw_server
+    privs: ALL
+    type: foreign_server
+    role: reader
+
+# Available since version 2.8
+# Grant 'execute' permissions on all functions in schema 'common' to role 'caller'
+- name: GRANT EXECUTE ON ALL FUNCTIONS IN SCHEMA common TO caller
+  postgresql_privs:
+    type: function
+    state: present
+    privs: EXECUTE
+    roles: caller
+    objs: ALL_IN_SCHEMA
+    schema: common
+
+# Available since version 2.8
+# ALTER DEFAULT PRIVILEGES FOR ROLE librarian IN SCHEMA library GRANT SELECT ON TABLES TO reader
+# GRANT SELECT privileges for new TABLES objects created by librarian as
+# default to the role reader.
+# For specific
+- name: ALTER privs
+  postgresql_privs:
+    db: library
+    schema: library
+    objs: TABLES
+    privs: SELECT
+    type: default_privs
+    role: reader
+    target_roles: librarian
+
+# Available since version 2.8
+# ALTER DEFAULT PRIVILEGES FOR ROLE librarian IN SCHEMA library REVOKE SELECT ON TABLES FROM reader
+# REVOKE SELECT privileges for new TABLES objects created by librarian as
+# default from the role reader.
+# For specific
+- name: ALTER privs
+  postgresql_privs:
+    db: library
+    state: absent
+    schema: library
+    objs: TABLES
+    privs: SELECT
+    type: default_privs
+    role: reader
+    target_roles: librarian
+
+
+RETURN VALUES:
+
+queries:
+  description: List of executed queries.
+  returned: always
+  type: list
+  sample: ['REVOKE GRANT OPTION FOR INSERT ON TABLE "books" FROM "reader";']
+  version_added: '2.8'
+

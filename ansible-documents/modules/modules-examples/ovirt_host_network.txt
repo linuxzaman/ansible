@@ -1,0 +1,82 @@
+EXAMPLES:
+
+# Examples don't contain auth parameter for simplicity,
+# look at ovirt_auth module to see how to reuse authentication:
+
+# In all examples the durability of the configuration created is dependent on the 'save' option value:
+
+# Create bond on eth0 and eth1 interface, and put 'myvlan' network on top of it and persist the new configuration:
+- name: Bonds
+  ovirt_host_network:
+    name: myhost
+    save: yes
+    bond:
+      name: bond0
+      mode: 2
+      interfaces:
+        - eth1
+        - eth2
+    networks:
+      - name: myvlan
+        boot_protocol: static
+        address: 1.2.3.4
+        netmask: 255.255.255.0
+        gateway: 1.2.3.4
+        version: v4
+
+# Create bond on eth1 and eth2 interface, specifiyng both mode and miimon:
+- name: Bonds
+  ovirt_host_network:
+    name: myhost
+    bond:
+      name: bond0
+      mode: 1
+      options:
+        miimon: 200
+      interfaces:
+        - eth1
+        - eth2
+
+# Remove bond0 bond from host interfaces:
+- ovirt_host_network:
+    state: absent
+    name: myhost
+    bond:
+      name: bond0
+
+# Assign myvlan1 and myvlan2 vlans to host eth0 interface:
+- ovirt_host_network:
+    name: myhost
+    interface: eth0
+    networks:
+      - name: myvlan1
+      - name: myvlan2
+
+# Remove myvlan2 vlan from host eth0 interface:
+- ovirt_host_network:
+    state: absent
+    name: myhost
+    interface: eth0
+    networks:
+      - name: myvlan2
+
+# Remove all networks/vlans from host eth0 interface:
+- ovirt_host_network:
+    state: absent
+    name: myhost
+    interface: eth0
+
+
+RETURN VALUES:
+
+id:
+    description: ID of the host NIC which is managed
+    returned: On success if host NIC is found.
+    type: str
+    sample: 7de90f31-222c-436c-a1ca-7e655bd5b60c
+host_nic:
+    description: "Dictionary of all the host NIC attributes. Host NIC attributes can be found on your oVirt/RHV instance
+                  at following url: http://ovirt.github.io/ovirt-engine-api-model/master/#types/host_nic."
+    returned: On success if host NIC is found.
+    type: dict
+

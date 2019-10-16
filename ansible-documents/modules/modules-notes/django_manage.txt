@@ -1,0 +1,133 @@
+> DJANGO_MANAGE    (/usr/lib/python2.7/dist-packages/ansible/modules/web_infrastructure/django_manage.py)
+
+        Manages a Django application using the `manage.py' application frontend to `django-admin'. With the `virtualenv' parameter, all
+        management commands will be executed by the given `virtualenv' installation.
+
+  * This module is maintained by The Ansible Community
+OPTIONS (= is mandatory):
+
+= app_path
+        The path to the root of the Django application where *manage.py* lives.
+
+
+- apps
+        A list of space-delimited apps to target. Used by the 'test' command.
+        [Default: (null)]
+
+- cache_table
+        The name of the table used for database-backed caching. Used by the 'createcachetable' command.
+        [Default: (null)]
+
+- clear
+        Clear the existing files before trying to copy or link the original file.
+        Used only with the 'collectstatic' command. The `--noinput' argument will be added automatically.
+        [Default: False]
+        type: bool
+
+= command
+        The name of the Django management command to run. Built in commands are cleanup, collectstatic, flush, loaddata, migrate,
+        runfcgi, syncdb, test, and validate.
+        Other commands can be entered, but will fail if they're unknown to Django.  Other commands that may prompt for user input should
+        be run with the `--noinput' flag.
+        (Choices: cleanup, collectstatic, flush, loaddata, migrate, runfcgi, syncdb, test, validate)
+
+- database
+        The database to target. Used by the 'createcachetable', 'flush', 'loaddata', and 'syncdb' commands.
+        [Default: (null)]
+
+- failfast
+        Fail the command immediately if a test fails. Used by the 'test' command.
+        [Default: no]
+        type: bool
+
+- fixtures
+        A space-delimited list of fixture file names to load in the database. *Required* by the 'loaddata' command.
+        [Default: (null)]
+
+- link
+        Will create links to the files instead of copying them, you can only use this parameter with 'collectstatic' command
+        [Default: (null)]
+        type: bool
+        version_added: 1.3
+
+- merge
+        Will run out-of-order or missing migrations as they are not rollback migrations, you can only use this parameter with 'migrate'
+        command
+        [Default: (null)]
+        type: bool
+        version_added: 1.3
+
+- pythonpath
+        A directory to add to the Python path. Typically used to include the settings module if it is located external to the application
+        directory.
+        [Default: (null)]
+
+- settings
+        The Python path to the application's settings module, such as 'myapp.settings'.
+        [Default: (null)]
+
+- skip
+        Will skip over out-of-order missing migrations, you can only use this parameter with `migrate'
+        [Default: (null)]
+        type: bool
+        version_added: 1.3
+
+- virtualenv
+        An optional path to a `virtualenv' installation to use while running the manage application.
+        (Aliases: virtualenv)[Default: (null)]
+
+
+NOTES:
+      * `virtualenv' (http://www.virtualenv.org) must be installed on the remote host if the virtualenv parameter is specified.
+      * This module will create a virtualenv if the virtualenv parameter is specified and a virtualenv does not already exist at
+        the given location.
+      * This module assumes English error messages for the 'createcachetable' command to detect table existence, unfortunately.
+      * To be able to use the migrate command with django versions < 1.7, you must have south installed and added as an app in your
+        settings.
+      * To be able to use the collectstatic command, you must have enabled staticfiles in your settings.
+      * As of ansible 2.x, your `manage.py' application must be executable (rwxr-xr-x), and must have a valid `shebang', i.e.
+        "#!/usr/bin/env python", for invoking the appropriate Python interpreter.
+
+
+REQUIREMENTS:  virtualenv, django
+
+AUTHOR: Scott Anderson (@tastychutney)
+        METADATA:
+          status:
+          - preview
+          supported_by: community
+        
+
+EXAMPLES:
+
+# Run cleanup on the application installed in 'django_dir'.
+- django_manage:
+    command: cleanup
+    app_path: "{{ django_dir }}"
+
+# Load the initial_data fixture into the application
+- django_manage:
+    command: loaddata
+    app_path: "{{ django_dir }}"
+    fixtures: "{{ initial_data }}"
+
+# Run syncdb on the application
+- django_manage:
+    command: syncdb
+    app_path: "{{ django_dir }}"
+    settings: "{{ settings_app_name }}"
+    pythonpath: "{{ settings_dir }}"
+    virtualenv: "{{ virtualenv_dir }}"
+
+# Run the SmokeTest test case from the main app. Useful for testing deploys.
+- django_manage:
+    command: test
+    app_path: "{{ django_dir }}"
+    apps: main.SmokeTest
+
+# Create an initial superuser.
+- django_manage:
+    command: "createsuperuser --noinput --username=admin --email=admin@example.com"
+    app_path: "{{ django_dir }}"
+
+

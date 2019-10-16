@@ -1,0 +1,281 @@
+EXAMPLES:
+
+# Examples use the django example at U(https://docs.docker.com/compose/django/). Follow it to create the flask
+# directory
+
+- name: Run using a project directory
+  hosts: localhost
+  gather_facts: no
+  tasks:
+    - docker_compose:
+        project_src: flask
+        state: absent
+
+    - docker_compose:
+        project_src: flask
+      register: output
+
+    - debug:
+        var: output
+
+    - docker_compose:
+        project_src: flask
+        build: no
+      register: output
+
+    - debug:
+        var: output
+
+    - assert:
+        that: "not output.changed "
+
+    - docker_compose:
+        project_src: flask
+        build: no
+        stopped: true
+      register: output
+
+    - debug:
+        var: output
+
+    - assert:
+        that:
+          - "not web.flask_web_1.state.running"
+          - "not db.flask_db_1.state.running"
+
+    - docker_compose:
+        project_src: flask
+        build: no
+        restarted: true
+      register: output
+
+    - debug:
+        var: output
+
+    - assert:
+        that:
+          - "web.flask_web_1.state.running"
+          - "db.flask_db_1.state.running"
+
+- name: Scale the web service to 2
+  hosts: localhost
+  gather_facts: no
+  tasks:
+    - docker_compose:
+        project_src: flask
+        scale:
+          web: 2
+      register: output
+
+    - debug:
+        var: output
+
+- name: Run with inline v2 compose
+  hosts: localhost
+  gather_facts: no
+  tasks:
+    - docker_compose:
+        project_src: flask
+        state: absent
+
+    - docker_compose:
+        project_name: flask
+        definition:
+          version: '2'
+          services:
+            db:
+              image: postgres
+            web:
+              build: "{{ playbook_dir }}/flask"
+              command: "python manage.py runserver 0.0.0.0:8000"
+              volumes:
+                - "{{ playbook_dir }}/flask:/code"
+              ports:
+                - "8000:8000"
+              depends_on:
+                - db
+      register: output
+
+    - debug:
+        var: output
+
+    - assert:
+        that:
+          - "web.flask_web_1.state.running"
+          - "db.flask_db_1.state.running"
+
+- name: Run with inline v1 compose
+  hosts: localhost
+  gather_facts: no
+  tasks:
+    - docker_compose:
+        project_src: flask
+        state: absent
+
+    - docker_compose:
+        project_name: flask
+        definition:
+            db:
+              image: postgres
+            web:
+              build: "{{ playbook_dir }}/flask"
+              command: "python manage.py runserver 0.0.0.0:8000"
+              volumes:
+                - "{{ playbook_dir }}/flask:/code"
+              ports:
+                - "8000:8000"
+              links:
+                - db
+      register: output
+
+    - debug:
+        var: output
+
+    - assert:
+        that:
+          - "web.flask_web_1.state.running"
+          - "db.flask_db_1.state.running"
+
+
+RETURN VALUES:
+
+services:
+  description:
+  - A dictionary mapping the service's name to a dictionary of containers.
+  - Note that facts are part of the registered vars since Ansible 2.8. For compatibility reasons, the facts
+    are also accessible directly. The service's name is the variable with which the container dictionary
+    can be accessed. Note that the returned facts will be removed in Ansible 2.12.
+  returned: success
+  type: complex
+  contains:
+      container_name:
+          description: Name of the container. Format is I(project_service_#).
+          returned: success
+          type: complex
+          contains:
+              cmd:
+                  description: One or more commands to be executed in the container.
+                  returned: success
+                  type: list
+                  example: ["postgres"]
+              image:
+                  description: Name of the image from which the container was built.
+                  returned: success
+                  type: str
+                  example: postgres
+              labels:
+                  description: Meta data assigned to the container.
+                  returned: success
+                  type: complex
+                  example: {...}
+              networks:
+                  description: Contains a dictionary for each network to which the container is a member.
+                  returned: success
+                  type: complex
+                  contains:
+                      IPAddress:
+                          description: The IP address assigned to the container.
+                          returned: success
+                          type: str
+                          example: 172.17.0.2
+                      IPPrefixLen:
+                          description: Number of bits used by the subnet.
+                          returned: success
+                          type: int
+                          example: 16
+                      aliases:
+                          description: Aliases assigned to the container by the network.
+                          returned: success
+                          type: list
+                          example: ['db']
+                      globalIPv6:
+                          description: IPv6 address assigned to the container.
+                          returned: success
+                          type: str
+                          example: ''
+                      globalIPv6PrefixLen:
+                          description: IPv6 subnet length.
+                          returned: success
+                          type: int
+                          example: 0
+                      links:
+                          description: List of container names to which this container is linked.
+                          returned: success
+                          type: list
+                          example: null
+                      macAddress:
+                          description: Mac Address assigned to the virtual NIC.
+                          returned: success
+                          type: str
+                          example: "02:42:ac:11:00:02"
+              state:
+                  description: Information regarding the current disposition of the container.
+                  returned: success
+                  type: complex
+                  contains:
+                      running:
+                          description: Whether or not the container is up with a running process.
+                          returned: success
+                          type: bool
+                          example: true
+                      status:
+                          description: Description of the running state.
+                          returned: success
+                          type: str
+                          example: running
+
+actions:
+  description: Provides the actions to be taken on each service as determined by compose.
+  returned: when in check mode or I(debug) true
+  type: complex
+  contains:
+      service_name:
+          description: Name of the service.
+          returned: always
+          type: complex
+          contains:
+              pulled_image:
+                  description: Provides image details when a new image is pulled for the service.
+                  returned: on image pull
+                  type: complex
+                  contains:
+                      name:
+                          description: name of the image
+                          returned: always
+                          type: str
+                      id:
+                          description: image hash
+                          returned: always
+                          type: str
+              built_image:
+                  description: Provides image details when a new image is built for the service.
+                  returned: on image build
+                  type: complex
+                  contains:
+                      name:
+                          description: name of the image
+                          returned: always
+                          type: str
+                      id:
+                          description: image hash
+                          returned: always
+                          type: str
+
+              action:
+                  description: A descriptive name of the action to be performed on the service's containers.
+                  returned: always
+                  type: list
+                  contains:
+                      id:
+                          description: the container's long ID
+                          returned: always
+                          type: str
+                      name:
+                          description: the container's name
+                          returned: always
+                          type: str
+                      short_id:
+                          description: the container's short ID
+                          returned: always
+                          type: str
+

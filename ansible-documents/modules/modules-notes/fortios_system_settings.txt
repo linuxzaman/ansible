@@ -1,0 +1,862 @@
+> FORTIOS_SYSTEM_SETTINGS    (/usr/lib/python2.7/dist-packages/ansible/modules/network/fortios/fortios_system_settings.py)
+
+        This module is able to configure a FortiGate or FortiOS by allowing the user to configure system feature and settings category.
+        Examples includes all options and need to be adjusted to datasources before usage. Tested with FOS v6.0.2
+
+  * This module is maintained by The Ansible Community
+OPTIONS (= is mandatory):
+
+= host
+        FortiOS or FortiGate ip adress.
+
+
+- https
+        Indicates if the requests towards FortiGate must use HTTPS protocol
+        [Default: True]
+        type: bool
+
+- password
+        FortiOS or FortiGate password.
+        [Default: ]
+
+- system_settings
+        Configure VDOM settings.
+        [Default: None]
+        suboptions:
+          allow-subnet-overlap:
+            choices:
+            - enable
+            - disable
+            description:
+            - Enable/disable allowing interface subnets to use overlapping IP addresses.
+          asymroute:
+            choices:
+            - enable
+            - disable
+            description:
+            - Enable/disable IPv4 asymmetric routing.
+          asymroute-icmp:
+            choices:
+            - enable
+            - disable
+            description:
+            - Enable/disable ICMP asymmetric routing.
+          asymroute6:
+            choices:
+            - enable
+            - disable
+            description:
+            - Enable/disable asymmetric IPv6 routing.
+          asymroute6-icmp:
+            choices:
+            - enable
+            - disable
+            description:
+            - Enable/disable asymmetric ICMPv6 routing.
+          bfd:
+            choices:
+            - enable
+            - disable
+            description:
+            - Enable/disable Bi-directional Forwarding Detection (BFD) on all interfaces.
+          bfd-desired-min-tx:
+            description:
+            - BFD desired minimal transmit interval (1 - 100000 ms, default = 50).
+          bfd-detect-mult:
+            description:
+            - BFD detection multiplier (1 - 50, default = 3).
+          bfd-dont-enforce-src-port:
+            choices:
+            - enable
+            - disable
+            description:
+            - Enable to not enforce verifying the source port of BFD Packets.
+          bfd-required-min-rx:
+            description:
+            - BFD required minimal receive interval (1 - 100000 ms, default = 50).
+          block-land-attack:
+            choices:
+            - disable
+            - enable
+            description:
+            - Enable/disable blocking of land attacks.
+          central-nat:
+            choices:
+            - enable
+            - disable
+            description:
+            - Enable/disable central NAT.
+          comments:
+            description:
+            - VDOM comments.
+          compliance-check:
+            choices:
+            - enable
+            - disable
+            description:
+            - Enable/disable PCI DSS compliance checking.
+          default-voip-alg-mode:
+            choices:
+            - proxy-based
+            - kernel-helper-based
+            description:
+            - Configure how the FortiGate handles VoIP traffic when a policy that accepts
+              the traffic doesn't include a VoIP profile.
+          deny-tcp-with-icmp:
+            choices:
+            - enable
+            - disable
+            description:
+            - Enable/disable denying TCP by sending an ICMP communication prohibited packet.
+          device:
+            description:
+            - Interface to use for management access for NAT mode. Source system.interface.name.
+          dhcp-proxy:
+            choices:
+            - enable
+            - disable
+            description:
+            - Enable/disable the DHCP Proxy.
+          dhcp-server-ip:
+            description:
+            - DHCP Server IPv4 address.
+          dhcp6-server-ip:
+            description:
+            - DHCPv6 server IPv6 address.
+          discovered-device-timeout:
+            description:
+            - Timeout for discovered devices (1 - 365 days, default = 28).
+          ecmp-max-paths:
+            description:
+            - Maximum number of Equal Cost Multi-Path (ECMP) next-hops. Set to 1 to disable
+              ECMP routing (1 - 100, default = 10).
+          email-portal-check-dns:
+            choices:
+            - disable
+            - enable
+            description:
+            - Enable/disable using DNS to validate email addresses collected by a captive
+              portal.
+          firewall-session-dirty:
+            choices:
+            - check-all
+            - check-new
+            - check-policy-option
+            description:
+            - Select how to manage sessions affected by firewall policy configuration changes.
+          fw-session-hairpin:
+            choices:
+            - enable
+            - disable
+            description:
+            - Enable/disable checking for a matching policy each time hairpin traffic goes
+              through the FortiGate.
+          gateway:
+            description:
+            - Transparent mode IPv4 default gateway IP address.
+          gateway6:
+            description:
+            - Transparent mode IPv4 default gateway IP address.
+          gui-advanced-policy:
+            choices:
+            - enable
+            - disable
+            description:
+            - Enable/disable advanced policy configuration on the GUI.
+          gui-allow-unnamed-policy:
+            choices:
+            - enable
+            - disable
+            description:
+            - Enable/disable the requirement for policy naming on the GUI.
+          gui-antivirus:
+            choices:
+            - enable
+            - disable
+            description:
+            - Enable/disable AntiVirus on the GUI.
+          gui-ap-profile:
+            choices:
+            - enable
+            - disable
+            description:
+            - Enable/disable FortiAP profiles on the GUI.
+          gui-application-control:
+            choices:
+            - enable
+            - disable
+            description:
+            - Enable/disable application control on the GUI.
+          gui-default-policy-columns:
+            description:
+            - Default columns to display for policy lists on GUI.
+            suboptions:
+              name:
+                description:
+                - Select column name.
+                required: true
+          gui-dhcp-advanced:
+            choices:
+            - enable
+            - disable
+            description:
+            - Enable/disable advanced DHCP options on the GUI.
+          gui-dlp:
+            choices:
+            - enable
+            - disable
+            description:
+            - Enable/disable DLP on the GUI.
+          gui-dns-database:
+            choices:
+            - enable
+            - disable
+            description:
+            - Enable/disable DNS database settings on the GUI.
+          gui-dnsfilter:
+            choices:
+            - enable
+            - disable
+            description:
+            - Enable/disable DNS Filtering on the GUI.
+          gui-domain-ip-reputation:
+            choices:
+            - enable
+            - disable
+            description:
+            - Enable/disable Domain and IP Reputation on the GUI.
+          gui-dos-policy:
+            choices:
+            - enable
+            - disable
+            description:
+            - Enable/disable DoS policies on the GUI.
+          gui-dynamic-profile-display:
+            choices:
+            - enable
+            - disable
+            description:
+            - Enable/disable RADIUS Single Sign On (RSSO) on the GUI.
+          gui-dynamic-routing:
+            choices:
+            - enable
+            - disable
+            description:
+            - Enable/disable dynamic routing on the GUI.
+          gui-email-collection:
+            choices:
+            - enable
+            - disable
+            description:
+            - Enable/disable email collection on the GUI.
+          gui-endpoint-control:
+            choices:
+            - enable
+            - disable
+            description:
+            - Enable/disable endpoint control on the GUI.
+          gui-endpoint-control-advanced:
+            choices:
+            - enable
+            - disable
+            description:
+            - Enable/disable advanced endpoint control options on the GUI.
+          gui-explicit-proxy:
+            choices:
+            - enable
+            - disable
+            description:
+            - Enable/disable the explicit proxy on the GUI.
+          gui-fortiap-split-tunneling:
+            choices:
+            - enable
+            - disable
+            description:
+            - Enable/disable FortiAP split tunneling on the GUI.
+          gui-fortiextender-controller:
+            choices:
+            - enable
+            - disable
+            description:
+            - Enable/disable FortiExtender on the GUI.
+          gui-icap:
+            choices:
+            - enable
+            - disable
+            description:
+            - Enable/disable ICAP on the GUI.
+          gui-implicit-policy:
+            choices:
+            - enable
+            - disable
+            description:
+            - Enable/disable implicit firewall policies on the GUI.
+          gui-ips:
+            choices:
+            - enable
+            - disable
+            description:
+            - Enable/disable IPS on the GUI.
+          gui-load-balance:
+            choices:
+            - enable
+            - disable
+            description:
+            - Enable/disable server load balancing on the GUI.
+          gui-local-in-policy:
+            choices:
+            - enable
+            - disable
+            description:
+            - Enable/disable Local-In policies on the GUI.
+          gui-local-reports:
+            choices:
+            - enable
+            - disable
+            description:
+            - Enable/disable local reports on the GUI.
+          gui-multicast-policy:
+            choices:
+            - enable
+            - disable
+            description:
+            - Enable/disable multicast firewall policies on the GUI.
+          gui-multiple-interface-policy:
+            choices:
+            - enable
+            - disable
+            description:
+            - Enable/disable adding multiple interfaces to a policy on the GUI.
+          gui-multiple-utm-profiles:
+            choices:
+            - enable
+            - disable
+            description:
+            - Enable/disable multiple UTM profiles on the GUI.
+          gui-nat46-64:
+            choices:
+            - enable
+            - disable
+            description:
+            - Enable/disable NAT46 and NAT64 settings on the GUI.
+          gui-object-colors:
+            choices:
+            - enable
+            - disable
+            description:
+            - Enable/disable object colors on the GUI.
+          gui-policy-based-ipsec:
+            choices:
+            - enable
+            - disable
+            description:
+            - Enable/disable policy-based IPsec VPN on the GUI.
+          gui-policy-learning:
+            choices:
+            - enable
+            - disable
+            description:
+            - Enable/disable firewall policy learning mode on the GUI.
+          gui-replacement-message-groups:
+            choices:
+            - enable
+            - disable
+            description:
+            - Enable/disable replacement message groups on the GUI.
+          gui-spamfilter:
+            choices:
+            - enable
+            - disable
+            description:
+            - Enable/disable Antispam on the GUI.
+          gui-sslvpn-personal-bookmarks:
+            choices:
+            - enable
+            - disable
+            description:
+            - Enable/disable SSL-VPN personal bookmark management on the GUI.
+          gui-sslvpn-realms:
+            choices:
+            - enable
+            - disable
+            description:
+            - Enable/disable SSL-VPN realms on the GUI.
+          gui-switch-controller:
+            choices:
+            - enable
+            - disable
+            description:
+            - Enable/disable the switch controller on the GUI.
+          gui-threat-weight:
+            choices:
+            - enable
+            - disable
+            description:
+            - Enable/disable threat weight on the GUI.
+          gui-traffic-shaping:
+            choices:
+            - enable
+            - disable
+            description:
+            - Enable/disable traffic shaping on the GUI.
+          gui-voip-profile:
+            choices:
+            - enable
+            - disable
+            description:
+            - Enable/disable VoIP profiles on the GUI.
+          gui-vpn:
+            choices:
+            - enable
+            - disable
+            description:
+            - Enable/disable VPN tunnels on the GUI.
+          gui-waf-profile:
+            choices:
+            - enable
+            - disable
+            description:
+            - Enable/disable Web Application Firewall on the GUI.
+          gui-wan-load-balancing:
+            choices:
+            - enable
+            - disable
+            description:
+            - Enable/disable SD-WAN on the GUI.
+          gui-wanopt-cache:
+            choices:
+            - enable
+            - disable
+            description:
+            - Enable/disable WAN Optimization and Web Caching on the GUI.
+          gui-webfilter:
+            choices:
+            - enable
+            - disable
+            description:
+            - Enable/disable Web filtering on the GUI.
+          gui-webfilter-advanced:
+            choices:
+            - enable
+            - disable
+            description:
+            - Enable/disable advanced web filtering on the GUI.
+          gui-wireless-controller:
+            choices:
+            - enable
+            - disable
+            description:
+            - Enable/disable the wireless controller on the GUI.
+          http-external-dest:
+            choices:
+            - fortiweb
+            - forticache
+            description:
+            - Offload HTTP traffic to FortiWeb or FortiCache.
+          ike-dn-format:
+            choices:
+            - with-space
+            - no-space
+            description:
+            - Configure IKE ASN.1 Distinguished Name format conventions.
+          ike-quick-crash-detect:
+            choices:
+            - enable
+            - disable
+            description:
+            - Enable/disable IKE quick crash detection (RFC 6290).
+          ike-session-resume:
+            choices:
+            - enable
+            - disable
+            description:
+            - Enable/disable IKEv2 session resumption (RFC 5723).
+          implicit-allow-dns:
+            choices:
+            - enable
+            - disable
+            description:
+            - Enable/disable implicitly allowing DNS traffic.
+          inspection-mode:
+            choices:
+            - proxy
+            - flow
+            description:
+            - Inspection mode (proxy-based or flow-based).
+          ip:
+            description:
+            - IP address and netmask.
+          ip6:
+            description:
+            - IPv6 address prefix for NAT mode.
+          link-down-access:
+            choices:
+            - enable
+            - disable
+            description:
+            - Enable/disable link down access traffic.
+          lldp-transmission:
+            choices:
+            - enable
+            - disable
+            - global
+            description:
+            - Enable/disable Link Layer Discovery Protocol (LLDP) for this VDOM or apply global
+              settings to this VDOM.
+          mac-ttl:
+            description:
+            - Duration of MAC addresses in Transparent mode (300 - 8640000 sec, default =
+              300).
+          manageip:
+            description:
+            - Transparent mode IPv4 management IP address and netmask.
+          manageip6:
+            description:
+            - Transparent mode IPv6 management IP address and netmask.
+          multicast-forward:
+            choices:
+            - enable
+            - disable
+            description:
+            - Enable/disable multicast forwarding.
+          multicast-skip-policy:
+            choices:
+            - enable
+            - disable
+            description:
+            - Enable/disable allowing multicast traffic through the FortiGate without a policy
+              check.
+          multicast-ttl-notchange:
+            choices:
+            - enable
+            - disable
+            description:
+            - Enable/disable preventing the FortiGate from changing the TTL for forwarded
+              multicast packets.
+          ngfw-mode:
+            choices:
+            - profile-based
+            - policy-based
+            description:
+            - Next Generation Firewall (NGFW) mode.
+          opmode:
+            choices:
+            - nat
+            - transparent
+            description:
+            - Firewall operation mode (NAT or Transparent).
+          prp-trailer-action:
+            choices:
+            - enable
+            - disable
+            description:
+            - Enable/disable action to take on PRP trailer.
+          sccp-port:
+            description:
+            - TCP port the SCCP proxy monitors for SCCP traffic (0 - 65535, default = 2000).
+          ses-denied-traffic:
+            choices:
+            - enable
+            - disable
+            description:
+            - Enable/disable including denied session in the session table.
+          sip-helper:
+            choices:
+            - enable
+            - disable
+            description:
+            - Enable/disable the SIP session helper to process SIP sessions unless SIP sessions
+              are accepted by the SIP application layer gateway (ALG).
+          sip-nat-trace:
+            choices:
+            - enable
+            - disable
+            description:
+            - Enable/disable recording the original SIP source IP address when NAT is used.
+          sip-ssl-port:
+            description:
+            - TCP port the SIP proxy monitors for SIP SSL/TLS traffic (0 - 65535, default
+              = 5061).
+          sip-tcp-port:
+            description:
+            - TCP port the SIP proxy monitors for SIP traffic (0 - 65535, default = 5060).
+          sip-udp-port:
+            description:
+            - UDP port the SIP proxy monitors for SIP traffic (0 - 65535, default = 5060).
+          snat-hairpin-traffic:
+            choices:
+            - enable
+            - disable
+            description:
+            - Enable/disable source NAT (SNAT) for hairpin traffic.
+          ssl-ssh-profile:
+            description:
+            - Profile for SSL/SSH inspection. Source firewall.ssl-ssh-profile.name.
+          status:
+            choices:
+            - enable
+            - disable
+            description:
+            - Enable/disable this VDOM.
+          strict-src-check:
+            choices:
+            - enable
+            - disable
+            description:
+            - Enable/disable strict source verification.
+          tcp-session-without-syn:
+            choices:
+            - enable
+            - disable
+            description:
+            - Enable/disable allowing TCP session without SYN flags.
+          utf8-spam-tagging:
+            choices:
+            - enable
+            - disable
+            description:
+            - Enable/disable converting antispam tags to UTF-8 for better non-ASCII character
+              support.
+          v4-ecmp-mode:
+            choices:
+            - source-ip-based
+            - weight-based
+            - usage-based
+            - source-dest-ip-based
+            description:
+            - IPv4 Equal-cost multi-path (ECMP) routing and load balancing mode.
+          vpn-stats-log:
+            choices:
+            - ipsec
+            - pptp
+            - l2tp
+            - ssl
+            description:
+            - Enable/disable periodic VPN log statistics for one or more types of VPN. Separate
+              names with a space.
+          vpn-stats-period:
+            description:
+            - Period to send VPN log statistics (60 - 86400 sec).
+          wccp-cache-engine:
+            choices:
+            - enable
+            - disable
+            description:
+            - Enable/disable WCCP cache engine.
+        
+
+= username
+        FortiOS or FortiGate username.
+
+
+- vdom
+        Virtual domain, among those defined previously. A vdom is a virtual instance of the FortiGate that can be configured and used as
+        a different unit.
+        [Default: root]
+
+
+NOTES:
+      * Requires fortiosapi library developed by Fortinet
+      * Run as a local_action in your playbook
+
+
+REQUIREMENTS:  fortiosapi>=0.9.8
+
+AUTHOR: Miguel Angel Munoz (@mamunozgonzalez), Nicolas Thomas (@thomnico)
+        METADATA:
+          status:
+          - preview
+          supported_by: community
+        
+
+EXAMPLES:
+
+- hosts: localhost
+  vars:
+   host: "192.168.122.40"
+   username: "admin"
+   password: ""
+   vdom: "root"
+  tasks:
+  - name: Configure VDOM settings.
+    fortios_system_settings:
+      host:  "{{ host }}"
+      username: "{{ username }}"
+      password: "{{ password }}"
+      vdom:  "{{ vdom }}"
+      https: "False"
+      system_settings:
+        allow-subnet-overlap: "enable"
+        asymroute: "enable"
+        asymroute-icmp: "enable"
+        asymroute6: "enable"
+        asymroute6-icmp: "enable"
+        bfd: "enable"
+        bfd-desired-min-tx: "9"
+        bfd-detect-mult: "10"
+        bfd-dont-enforce-src-port: "enable"
+        bfd-required-min-rx: "12"
+        block-land-attack: "disable"
+        central-nat: "enable"
+        comments: "<your_own_value>"
+        compliance-check: "enable"
+        default-voip-alg-mode: "proxy-based"
+        deny-tcp-with-icmp: "enable"
+        device: "<your_own_value> (source system.interface.name)"
+        dhcp-proxy: "enable"
+        dhcp-server-ip: "<your_own_value>"
+        dhcp6-server-ip: "<your_own_value>"
+        discovered-device-timeout: "23"
+        ecmp-max-paths: "24"
+        email-portal-check-dns: "disable"
+        firewall-session-dirty: "check-all"
+        fw-session-hairpin: "enable"
+        gateway: "<your_own_value>"
+        gateway6: "<your_own_value>"
+        gui-advanced-policy: "enable"
+        gui-allow-unnamed-policy: "enable"
+        gui-antivirus: "enable"
+        gui-ap-profile: "enable"
+        gui-application-control: "enable"
+        gui-default-policy-columns:
+         -
+            name: "default_name_36"
+        gui-dhcp-advanced: "enable"
+        gui-dlp: "enable"
+        gui-dns-database: "enable"
+        gui-dnsfilter: "enable"
+        gui-domain-ip-reputation: "enable"
+        gui-dos-policy: "enable"
+        gui-dynamic-profile-display: "enable"
+        gui-dynamic-routing: "enable"
+        gui-email-collection: "enable"
+        gui-endpoint-control: "enable"
+        gui-endpoint-control-advanced: "enable"
+        gui-explicit-proxy: "enable"
+        gui-fortiap-split-tunneling: "enable"
+        gui-fortiextender-controller: "enable"
+        gui-icap: "enable"
+        gui-implicit-policy: "enable"
+        gui-ips: "enable"
+        gui-load-balance: "enable"
+        gui-local-in-policy: "enable"
+        gui-local-reports: "enable"
+        gui-multicast-policy: "enable"
+        gui-multiple-interface-policy: "enable"
+        gui-multiple-utm-profiles: "enable"
+        gui-nat46-64: "enable"
+        gui-object-colors: "enable"
+        gui-policy-based-ipsec: "enable"
+        gui-policy-learning: "enable"
+        gui-replacement-message-groups: "enable"
+        gui-spamfilter: "enable"
+        gui-sslvpn-personal-bookmarks: "enable"
+        gui-sslvpn-realms: "enable"
+        gui-switch-controller: "enable"
+        gui-threat-weight: "enable"
+        gui-traffic-shaping: "enable"
+        gui-voip-profile: "enable"
+        gui-vpn: "enable"
+        gui-waf-profile: "enable"
+        gui-wan-load-balancing: "enable"
+        gui-wanopt-cache: "enable"
+        gui-webfilter: "enable"
+        gui-webfilter-advanced: "enable"
+        gui-wireless-controller: "enable"
+        http-external-dest: "fortiweb"
+        ike-dn-format: "with-space"
+        ike-quick-crash-detect: "enable"
+        ike-session-resume: "enable"
+        implicit-allow-dns: "enable"
+        inspection-mode: "proxy"
+        ip: "<your_own_value>"
+        ip6: "<your_own_value>"
+        link-down-access: "enable"
+        lldp-transmission: "enable"
+        mac-ttl: "89"
+        manageip: "<your_own_value>"
+        manageip6: "<your_own_value>"
+        multicast-forward: "enable"
+        multicast-skip-policy: "enable"
+        multicast-ttl-notchange: "enable"
+        ngfw-mode: "profile-based"
+        opmode: "nat"
+        prp-trailer-action: "enable"
+        sccp-port: "98"
+        ses-denied-traffic: "enable"
+        sip-helper: "enable"
+        sip-nat-trace: "enable"
+        sip-ssl-port: "102"
+        sip-tcp-port: "103"
+        sip-udp-port: "104"
+        snat-hairpin-traffic: "enable"
+        ssl-ssh-profile: "<your_own_value> (source firewall.ssl-ssh-profile.name)"
+        status: "enable"
+        strict-src-check: "enable"
+        tcp-session-without-syn: "enable"
+        utf8-spam-tagging: "enable"
+        v4-ecmp-mode: "source-ip-based"
+        vpn-stats-log: "ipsec"
+        vpn-stats-period: "113"
+        wccp-cache-engine: "enable"
+
+
+RETURN VALUES:
+
+build:
+  description: Build number of the fortigate image
+  returned: always
+  type: str
+  sample: '1547'
+http_method:
+  description: Last method used to provision the content into FortiGate
+  returned: always
+  type: str
+  sample: 'PUT'
+http_status:
+  description: Last result given by FortiGate on last operation applied
+  returned: always
+  type: str
+  sample: "200"
+mkey:
+  description: Master key (id) used in the last call to FortiGate
+  returned: success
+  type: str
+  sample: "id"
+name:
+  description: Name of the table used to fulfill the request
+  returned: always
+  type: str
+  sample: "urlfilter"
+path:
+  description: Path of the table used to fulfill the request
+  returned: always
+  type: str
+  sample: "webfilter"
+revision:
+  description: Internal revision number
+  returned: always
+  type: str
+  sample: "17.0.2.10658"
+serial:
+  description: Serial number of the unit
+  returned: always
+  type: str
+  sample: "FGVMEVYYQT3AB5352"
+status:
+  description: Indication of the operation's result
+  returned: always
+  type: str
+  sample: "success"
+vdom:
+  description: Virtual domain used
+  returned: always
+  type: str
+  sample: "root"
+version:
+  description: Version of the FortiGate
+  returned: always
+  type: str
+  sample: "v5.6.3"
+
+

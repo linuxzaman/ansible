@@ -1,0 +1,129 @@
+EXAMPLES:
+
+---
+# Creates a new Zabbix template from linked template
+- name: Create Zabbix template using linked template
+  local_action:
+    module: zabbix_template
+    server_url: http://127.0.0.1
+    login_user: username
+    login_password: password
+    template_name: ExampleHost
+    template_json: "{'zabbix_export': {}}"
+    template_groups:
+      - Role
+      - Role2
+    link_templates:
+      - Example template1
+      - Example template2
+    clear_templates:
+      - Example template3
+      - Example template4
+    macros:
+      - macro: '{$EXAMPLE_MACRO1}'
+        value: 30000
+      - macro: '{$EXAMPLE_MACRO2}'
+        value: 3
+      - macro: '{$EXAMPLE_MACRO3}'
+        value: 'Example'
+    state: present
+
+# Create a new template from a JSON config definition
+- name: Import Zabbix JSON template configuration
+  local_action:
+    module: zabbix_template
+    server_url: http://127.0.0.1
+    login_user: username
+    login_password: password
+    template_name: Apache2
+    template_json: "{{ lookup('file', 'zabbix_apache2.json') }}"
+    template_groups:
+      - Webservers
+    state: present
+
+# Import a template from Ansible variable dict
+- name: Import Zabbix template
+  zabbix_template:
+    login_user: username
+    login_password: password
+    server_url: http://127.0.0.1
+    template_name: Test Template
+    template_json:
+      zabbix_export:
+        version: '3.2'
+        templates:
+          - name: Template for Testing
+            description: 'Testing template import'
+            template: Test Template
+            groups:
+              - name: Templates
+            applications:
+              - name: Test Application
+    template_groups: Templates
+    state: present
+
+# Add a macro to a template
+- name: Set a macro on the Zabbix template
+  local_action:
+    module: zabbix_template
+    server_url: http://127.0.0.1
+    login_user: username
+    login_password: password
+    template_name: Template
+    macros:
+      - macro: '{$TEST_MACRO}'
+        value: 'Example'
+    state: present
+
+# Remove a template
+- name: Delete Zabbix template
+  local_action:
+    module: zabbix_template
+    server_url: http://127.0.0.1
+    login_user: username
+    login_password: password
+    template_name: Template
+    state: absent
+
+# Export template JSON definition
+- name: Dump Zabbix template
+  local_action:
+    module: zabbix_template
+    server_url: http://127.0.0.1
+    login_user: username
+    login_password: password
+    template_name: Template
+    state: dump
+  register: template_dump
+
+
+RETURN VALUES:
+
+---
+template_json:
+  description: The JSON dump of the template
+  returned: when state is dump
+  type: str
+  sample: {
+        "zabbix_export":{
+            "date":"2017-11-29T16:37:24Z",
+            "templates":[{
+                "templates":[],
+                "description":"",
+                "httptests":[],
+                "screens":[],
+                "applications":[],
+                "discovery_rules":[],
+                "groups":[{"name":"Templates"}],
+                "name":"Test Template",
+                "items":[],
+                "macros":[],
+                "template":"test"
+            }],
+            "version":"3.2",
+            "groups":[{
+                "name":"Templates"
+            }]
+        }
+    }
+

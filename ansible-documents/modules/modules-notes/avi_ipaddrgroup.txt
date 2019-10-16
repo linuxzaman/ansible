@@ -1,0 +1,163 @@
+> AVI_IPADDRGROUP    (/usr/lib/python2.7/dist-packages/ansible/modules/network/avi/avi_ipaddrgroup.py)
+
+        This module is used to configure IpAddrGroup object more examples at https://github.com/avinetworks/devops
+
+  * This module is maintained by The Ansible Community
+OPTIONS (= is mandatory):
+
+- addrs
+        Configure ip address(es).
+        [Default: (null)]
+
+- api_context
+        Avi API context that includes current session ID and CSRF Token.
+        This allows user to perform single login and re-use the session.
+        [Default: (null)]
+        type: dict
+        version_added: 2.5
+
+- api_version
+        Avi API version of to use for Avi API and objects.
+        [Default: 16.4.4]
+        type: str
+
+- apic_epg_name
+        Populate ip addresses from members of this cisco apic epg.
+        [Default: (null)]
+
+- avi_api_patch_op
+        Patch operation to use when using avi_api_update_method as patch.
+        (Choices: add, replace, delete)[Default: (null)]
+        version_added: 2.5
+
+- avi_api_update_method
+        Default method for object update is HTTP PUT.
+        Setting to patch will override that behavior to use HTTP PATCH.
+        (Choices: put, patch)[Default: put]
+        version_added: 2.5
+
+- avi_credentials
+        Avi Credentials dictionary which can be used in lieu of enumerating Avi Controller login details.
+        [Default: (null)]
+        type: dict
+        version_added: 2.5
+
+- controller
+        IP address or hostname of the controller. The default value is the environment variable `AVI_CONTROLLER'.
+        [Default: ]
+        type: str
+
+- country_codes
+        Populate the ip address ranges from the geo database for this country.
+        [Default: (null)]
+
+- description
+        User defined description for the object.
+        [Default: (null)]
+
+- ip_ports
+        Configure (ip address, port) tuple(s).
+        [Default: (null)]
+
+- marathon_app_name
+        Populate ip addresses from tasks of this marathon app.
+        [Default: (null)]
+
+- marathon_service_port
+        Task port associated with marathon service port.
+        If marathon app has multiple service ports, this is required.
+        Else, the first task port is used.
+        [Default: (null)]
+
+= name
+        Name of the ip address group.
+
+
+- password
+        Password of Avi user in Avi controller. The default value is the environment variable `AVI_PASSWORD'.
+        [Default: ]
+        type: str
+
+- prefixes
+        Configure ip address prefix(es).
+        [Default: (null)]
+
+- ranges
+        Configure ip address range(s).
+        [Default: (null)]
+
+- state
+        The state that should be applied on the entity.
+        (Choices: absent, present)[Default: present]
+
+- tenant
+        Name of tenant used for all Avi API calls and context of object.
+        [Default: admin]
+        type: str
+
+- tenant_ref
+        It is a reference to an object of type tenant.
+        [Default: (null)]
+
+- tenant_uuid
+        UUID of tenant used for all Avi API calls and context of object.
+        [Default: ]
+        type: str
+
+- url
+        Avi controller URL of the object.
+        [Default: (null)]
+
+- username
+        Username used for accessing Avi controller. The default value is the environment variable `AVI_USERNAME'.
+        [Default: ]
+        type: str
+
+- uuid
+        Uuid of the ip address group.
+        [Default: (null)]
+
+
+NOTES:
+      * For more information on using Ansible to manage Avi Network devices see https://www.ansible.com/ansible-avi-networks.
+
+
+REQUIREMENTS:  avisdk
+
+AUTHOR: Gaurav Rastogi (@grastogi23) <grastogi@avinetworks.com>
+        METADATA:
+          status:
+          - preview
+          supported_by: community
+        
+
+EXAMPLES:
+
+- name: Create an IP Address Group configuration
+    avi_ipaddrgroup:
+      controller: '{{ controller }}'
+      username: '{{ username }}'
+      password: '{{ password }}'
+      name: Client-Source-Block
+      prefixes:
+      - ip_addr:
+          addr: 10.0.0.0
+          type: V4
+        mask: 8
+      - ip_addr:
+          addr: 172.16.0.0
+          type: V4
+        mask: 12
+      - ip_addr:
+          addr: 192.168.0.0
+          type: V4
+        mask: 16
+
+
+RETURN VALUES:
+
+obj:
+    description: IpAddrGroup (api/ipaddrgroup) object
+    returned: success, changed
+    type: dict
+

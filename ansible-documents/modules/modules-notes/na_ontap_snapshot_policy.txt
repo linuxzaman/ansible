@@ -1,0 +1,114 @@
+> NA_ONTAP_SNAPSHOT_POLICY    (/usr/lib/python2.7/dist-packages/ansible/modules/storage/netapp/na_ontap_snapshot_policy.py)
+
+        Create/Delete ONTAP snapshot policies
+
+  * This module is maintained by The Ansible Community
+OPTIONS (= is mandatory):
+
+- comment
+        A human readable comment attached with the snapshot. The size of the comment can be at most 255 characters.
+        [Default: (null)]
+
+- count
+        Retention count for the snapshots created by the schedule.
+        [Default: (null)]
+        type: int
+
+- enabled
+        Status of the snapshot policy indicating whether the policy will be enabled or disabled.
+        [Default: (null)]
+        type: bool
+
+= hostname
+        The hostname or IP address of the ONTAP instance.
+
+        type: str
+
+- http_port
+        Override the default port (80 or 443) with this port
+        [Default: (null)]
+        type: int
+
+- https
+        Enable and disable https
+        [Default: False]
+        type: bool
+
+= name
+        Name of the snapshot policy to be managed. The maximum string length is 256 characters.
+
+
+- ontapi
+        The ontap api version to use
+        [Default: (null)]
+        type: int
+
+= password
+        Password for the specified user.
+        (Aliases: pass)
+        type: str
+
+- schedule
+        schedule to be added inside the policy.
+        [Default: (null)]
+
+- state
+        If you want to create or delete a snapshot policy.
+        (Choices: present, absent)[Default: present]
+
+= username
+        This can be a Cluster-scoped or SVM-scoped account, depending on whether a Cluster-level or SVM-level API is required. For more
+        information, please read the documentation https://mysupport.netapp.com/NOW/download/software/nmsdk/9.4/.
+        (Aliases: user)
+        type: str
+
+- validate_certs
+        If set to `no', the SSL certificates will not be validated.
+        This should only set to `False' used on personally controlled sites using self-signed certificates.
+        [Default: True]
+        type: bool
+
+
+NOTES:
+      * The modules prefixed with na\\_ontap are built to support the ONTAP storage platform.
+
+
+REQUIREMENTS:  A physical or virtual clustered Data ONTAP system. The modules support Data ONTAP 9.1 and onward, Ansible 2.6, Python2
+        netapp-lib (2017.10.30) or later. Install using 'pip install netapp-lib', Python3 netapp-lib (2018.11.13) or
+        later. Install using 'pip install netapp-lib', To enable http on the cluster you must run the following commands
+        'set -privilege advanced;' 'system services web modify -http-enabled true;'
+
+AUTHOR: NetApp Ansible Team (@carchi8py) <ng-ansibleteam@netapp.com>
+        METADATA:
+          status:
+          - preview
+          supported_by: community
+        
+
+EXAMPLES:
+
+- name: create Snapshot policy
+      na_ontap_snapshot_policy:
+        state: present
+        name: ansible2
+        schedule: hourly
+        count: 150
+        enabled: True
+        username: "{{ netapp username }}"
+        password: "{{ netapp password }}"
+        hostname: "{{ netapp hostname }}"
+        https: False
+
+    - name: delete Snapshot policy
+      na_ontap_snapshot_policy:
+        state: absent
+        name: ansible2
+        username: "{{ netapp username }}"
+        password: "{{ netapp password }}"
+        hostname: "{{ netapp hostname }}"
+        https: False
+
+
+RETURN VALUES:
+
+

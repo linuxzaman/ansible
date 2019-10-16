@@ -1,0 +1,68 @@
+> WIN_RDS_SETTINGS    (/usr/lib/python2.7/dist-packages/ansible/modules/windows/win_rds_settings.py)
+
+        Configure general settings of a Remote Desktop Gateway server.
+
+  * This module is maintained by The Ansible Community
+OPTIONS (= is mandatory):
+
+- certificate_hash
+        Certificate hash (thumbprint) for the Remote Desktop Gateway server. The certificate hash is the unique identifier for the
+        certificate.
+        [Default: (null)]
+        type: str
+
+- enable_only_messaging_capable_clients
+        If enabled, only clients that support logon messages and administrator messages can connect.
+        [Default: (null)]
+        type: bool
+
+- max_connections
+        The maximum number of connections allowed.
+        If set to `0', no new connections are allowed.
+        If set to `-1', the number of connections is unlimited.
+        [Default: (null)]
+        type: int
+
+- ssl_bridging
+        Specifies whether to use SSL Bridging.
+        `none': no SSL bridging.
+        `https_http': HTTPS-HTTP bridging.
+        `https_https': HTTPS-HTTPS bridging.
+        (Choices: https_http, https_https, none)[Default: (null)]
+        type: str
+
+
+SEE ALSO:
+      * Module win_rds_cap
+           The official documentation on the win_rds_cap module.
+           https://docs.ansible.com/ansible/latest/modules/win_rds_cap_module.html
+      * Module win_rds_rap
+           The official documentation on the win_rds_rap module.
+           https://docs.ansible.com/ansible/latest/modules/win_rds_rap_module.html
+      * Module win_rds_settings
+           The official documentation on the win_rds_settings module.
+           https://docs.ansible.com/ansible/latest/modules/win_rds_settings_module.html
+
+
+REQUIREMENTS:  Windows Server 2008R2 (6.1) or higher., The Windows Feature "RDS-Gateway" must be enabled.
+
+AUTHOR: Kevin Subileau (@ksubileau)
+        METADATA:
+          status:
+          - preview
+          supported_by: community
+        
+
+EXAMPLES:
+
+- name: Configure the Remote Desktop Gateway
+  win_rds_settings:
+    certificate_hash: B0D0FA8408FC67B230338FCA584D03792DA73F4C
+    max_connections: 50
+  notify:
+    - Restart TSGateway service
+
+
+RETURN VALUES:
+
+

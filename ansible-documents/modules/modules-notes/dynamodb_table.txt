@@ -1,0 +1,184 @@
+> DYNAMODB_TABLE    (/usr/lib/python2.7/dist-packages/ansible/modules/cloud/amazon/dynamodb_table.py)
+
+        Create or delete AWS Dynamo DB tables. Can update the provisioned throughput on existing tables. Returns the status of the
+        specified table.
+
+  * This module is maintained by The Ansible Community
+OPTIONS (= is mandatory):
+
+- aws_access_key
+        AWS access key. If not set then the value of the AWS_ACCESS_KEY_ID, AWS_ACCESS_KEY or EC2_ACCESS_KEY environment variable is
+        used.
+        (Aliases: ec2_access_key, access_key)[Default: (null)]
+        type: str
+
+- aws_secret_key
+        AWS secret key. If not set then the value of the AWS_SECRET_ACCESS_KEY, AWS_SECRET_KEY, or EC2_SECRET_KEY environment variable is
+        used.
+        (Aliases: ec2_secret_key, secret_key)[Default: (null)]
+        type: str
+
+- debug_botocore_endpoint_logs
+        Use a botocore.endpoint logger to parse the unique (rather than total) "resource:action" API calls made during a task, outputing
+        the set to the resource_actions key in the task results. Use the aws_resource_action callback to output to total list made during
+        a playbook. The ANSIBLE_DEBUG_BOTOCORE_LOGS environment variable may also be used.
+        [Default: no]
+        type: bool
+        version_added: 2.8
+
+- ec2_url
+        Url to use to connect to EC2 or your Eucalyptus cloud (by default the module will use EC2 endpoints). Ignored for modules where
+        region is required. Must be specified for all other modules if region is not used. If not set then the value of the EC2_URL
+        environment variable, if any, is used.
+        [Default: (null)]
+        type: str
+
+- hash_key_name
+        Name of the hash key.
+        Required when `state=present'.
+        [Default: (null)]
+
+- hash_key_type
+        Type of the hash key.
+        (Choices: STRING, NUMBER, BINARY)[Default: STRING]
+
+- indexes
+        list of dictionaries describing indexes to add to the table. global indexes can be updated. local indexes don't support updates
+        or have throughput.
+        required options: ['name', 'type', 'hash_key_name']
+        valid types: ['all', 'global_all', 'global_include', 'global_keys_only', 'include', 'keys_only']
+        other options: ['hash_key_type', 'range_key_name', 'range_key_type', 'includes', 'read_capacity', 'write_capacity']
+        [Default: []]
+        version_added: 2.1
+
+= name
+        Name of the table.
+
+
+- profile
+        Uses a boto profile. Only works with boto >= 2.24.0.
+        [Default: (null)]
+        type: str
+        version_added: 1.6
+
+- range_key_name
+        Name of the range key.
+        [Default: (null)]
+
+- range_key_type
+        Type of the range key.
+        (Choices: STRING, NUMBER, BINARY)[Default: STRING]
+
+- read_capacity
+        Read throughput capacity (units) to provision.
+        [Default: 1]
+
+- region
+        The AWS region to use. If not specified then the value of the AWS_REGION or EC2_REGION environment variable, if any, is used. See
+        http://docs.aws.amazon.com/general/latest/gr/rande.html#ec2_region
+        (Aliases: aws_region, ec2_region)[Default: (null)]
+        type: str
+
+- security_token
+        AWS STS security token. If not set then the value of the AWS_SECURITY_TOKEN or EC2_SECURITY_TOKEN environment variable is used.
+        (Aliases: access_token)[Default: (null)]
+        type: str
+        version_added: 1.6
+
+- state
+        Create or delete the table
+        (Choices: present, absent)[Default: present]
+
+- tags
+        a hash/dictionary of tags to add to the new instance or for starting/stopping instance by tag; '{"key":"value"}' and
+        '{"key":"value","key":"value"}'
+        [Default: (null)]
+        version_added: 2.4
+
+- validate_certs
+        When set to "no", SSL certificates will not be validated for boto versions >= 2.6.0.
+        [Default: True]
+        type: bool
+        version_added: 1.5
+
+- wait_for_active_timeout
+        how long before wait gives up, in seconds. only used when tags is set
+        [Default: 60]
+        version_added: 2.4
+
+- write_capacity
+        Write throughput capacity (units) to provision.
+        [Default: 1]
+
+
+NOTES:
+      * If parameters are not set within the module, the following environment variables can be used in decreasing order of
+        precedence `AWS_URL' or `EC2_URL', `AWS_ACCESS_KEY_ID' or `AWS_ACCESS_KEY' or `EC2_ACCESS_KEY', `AWS_SECRET_ACCESS_KEY' or
+        `AWS_SECRET_KEY' or `EC2_SECRET_KEY', `AWS_SECURITY_TOKEN' or `EC2_SECURITY_TOKEN', `AWS_REGION' or `EC2_REGION'
+      * Ansible uses the boto configuration file (typically ~/.boto) if no credentials are provided. See
+        https://boto.readthedocs.io/en/latest/boto_config_tut.html
+      * `AWS_REGION' or `EC2_REGION' can be typically be used to specify the AWS region, when required, but this can also be
+        configured in the boto config file
+
+
+REQUIREMENTS:  boto, boto >= 2.37.0, boto3 >= 1.4.4 (for tagging), python >= 2.6
+
+AUTHOR: Alan Loi (@loia)
+        METADATA:
+          status:
+          - preview
+          supported_by: community
+        
+
+EXAMPLES:
+
+# Create dynamo table with hash and range primary key
+- dynamodb_table:
+    name: my-table
+    region: us-east-1
+    hash_key_name: id
+    hash_key_type: STRING
+    range_key_name: create_time
+    range_key_type: NUMBER
+    read_capacity: 2
+    write_capacity: 2
+    tags:
+      tag_name: tag_value
+
+# Update capacity on existing dynamo table
+- dynamodb_table:
+    name: my-table
+    region: us-east-1
+    read_capacity: 10
+    write_capacity: 10
+
+# set index on existing dynamo table
+- dynamodb_table:
+    name: my-table
+    region: us-east-1
+    indexes:
+      - name: NamedIndex
+        type: global_include
+        hash_key_name: id
+        range_key_name: create_time
+        includes:
+          - other_field
+          - other_field2
+        read_capacity: 10
+        write_capacity: 10
+
+# Delete dynamo table
+- dynamodb_table:
+    name: my-table
+    region: us-east-1
+    state: absent
+
+
+RETURN VALUES:
+
+table_status:
+    description: The current status of the table.
+    returned: success
+    type: str
+    sample: ACTIVE
+

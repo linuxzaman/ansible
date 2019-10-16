@@ -1,0 +1,188 @@
+> ACME_ACCOUNT    (/usr/lib/python2.7/dist-packages/ansible/modules/crypto/acme/acme_account.py)
+
+        Allows to create, modify or delete accounts with a CA supporting the L(ACME protocol,https://tools.ietf.org/html/rfc8555), such
+        as L(Let's Encrypt,https://letsencrypt.org/). This module only works with the ACME v2 protocol.
+
+  * This module is maintained by The Ansible Community
+OPTIONS (= is mandatory):
+
+- account_key_content
+        Content of the ACME account RSA or Elliptic Curve key.
+        Mutually exclusive with `account_key_src'.
+        Required if `account_key_src' is not used.
+        `Warning': the content will be written into a temporary file, which will be deleted by Ansible when the module completes. Since
+        this is an important private key — it can be used to change the account key, or to revoke your certificates without knowing their
+        private keys —, this might not be acceptable.
+        In case `cryptography' is used, the content is not written into a temporary file. It can still happen that it is written to disk
+        by Ansible in the process of moving the module with its argument to the node where it is executed.
+        [Default: (null)]
+        type: str
+        version_added: 2.5
+
+- account_key_src
+        Path to a file containing the ACME account RSA or Elliptic Curve key.
+        RSA keys can be created with `openssl genrsa ...'. Elliptic curve keys can be created with `openssl ecparam -genkey ...'. Any
+        other tool creating private keys in PEM format can be used as well.
+        Mutually exclusive with `account_key_content'.
+        Required if `account_key_content' is not used.
+        (Aliases: account_key)[Default: (null)]
+        type: path
+
+- account_uri
+        If specified, assumes that the account URI is as given. If the account key does not match this account, or an account with this
+        URI does not exist, the module fails.
+        [Default: (null)]
+        type: str
+        version_added: 2.7
+
+- acme_directory
+        The ACME directory to use. This is the entry point URL to access CA server API.
+        For safety reasons the default is set to the Let's Encrypt staging server (for the ACME v1 protocol). This will create
+        technically correct, but untrusted certificates.
+        For Let's Encrypt, all staging endpoints can be found here: https://letsencrypt.org/docs/staging-environment/
+        For Let's Encrypt, the production directory URL for ACME v1 is https://acme-v01.api.letsencrypt.org/directory, and the production
+        directory URL for ACME v2 is https://acme-v02.api.letsencrypt.org/directory.
+        `Warning': So far, the module has only been tested against Let's Encrypt (staging and production) and against the L(Pebble
+        testing server,https://github.com/letsencrypt/Pebble).
+        [Default: https://acme-staging.api.letsencrypt.org/directory]
+        type: str
+
+- acme_version
+        The ACME version of the endpoint.
+        Must be 1 for the classic Let's Encrypt ACME endpoint, or 2 for the new standardized ACME v2 endpoint.
+        (Choices: 1, 2)[Default: 1]
+        type: int
+        version_added: 2.5
+
+- allow_creation
+        Whether account creation is allowed (when state is `present').
+        [Default: True]
+        type: bool
+
+- contact
+        A list of contact URLs.
+        Email addresses must be prefixed with `mailto:'.
+        See https://tools.ietf.org/html/rfc8555#section-7.3 for what is allowed.
+        Must be specified when state is `present'. Will be ignored if state is `absent' or `changed_key'.
+        [Default: []]
+        type: list
+
+- new_account_key_content
+        Content of the ACME account RSA or Elliptic Curve key to change to.
+        Same restrictions apply as to `account_key_content'.
+        Mutually exclusive with `new_account_key_src'.
+        Required if `new_account_key_src' is not used and state is `changed_key'.
+        [Default: (null)]
+        type: str
+
+- new_account_key_src
+        Path to a file containing the ACME account RSA or Elliptic Curve key to change to.
+        Same restrictions apply as to `account_key_src'.
+        Mutually exclusive with `new_account_key_content'.
+        Required if `new_account_key_content' is not used and state is `changed_key'.
+        [Default: (null)]
+        type: path
+
+- select_crypto_backend
+        Determines which crypto backend to use.
+        The default choice is `auto', which tries to use `cryptography' if available, and falls back to `openssl'.
+        If set to `openssl', will try to use the `openssl' binary.
+        If set to `cryptography', will try to use the L(cryptography,https://cryptography.io/) library.
+        (Choices: auto, cryptography, openssl)[Default: auto]
+        type: str
+        version_added: 2.7
+
+= state
+        The state of the account, to be identified by its account key.
+        If the state is `absent', the account will either not exist or be deactivated.
+        If the state is `changed_key', the account must exist. The account key will be changed; no other information will be touched.
+        (Choices: present, absent, changed_key)
+        type: str
+
+- terms_agreed
+        Boolean indicating whether you agree to the terms of service document.
+        ACME servers can require this to be true.
+        [Default: False]
+        type: bool
+
+- validate_certs
+        Whether calls to the ACME directory will validate TLS certificates.
+        `Warning': Should `only ever' be set to `no' for testing purposes, for example when testing against a local Pebble server.
+        [Default: True]
+        type: bool
+        version_added: 2.5
+
+
+NOTES:
+      * The [acme_certificate] module also allows to do basic account management. When using both modules, it is recommended to
+        disable account management for [acme_certificate]. For that, use the `modify_account' option of [acme_certificate].
+      * If a new enough version of the `cryptography' library is available (see Requirements for details), it will be used instead
+        of the `openssl' binary. This can be explicitly disabled or enabled with the `select_crypto_backend' option. Note that
+        using the `openssl' binary will be slower and less secure, as private key contents always have to be stored on disk (see
+        `account_key_content').
+      * Although the defaults are chosen so that the module can be used with the L(Let's Encrypt,https://letsencrypt.org/) CA, the
+        module can in principle be used with any CA providing an ACME endpoint.
+
+
+SEE ALSO:
+      * Automatic Certificate Management Environment (ACME)
+           The specification of the ACME protocol (RFC 8555).
+           https://tools.ietf.org/html/rfc8555
+      * Module acme_account_info
+        Retrieves facts about an ACME account.
+           https://docs.ansible.com/ansible/latest/modules/acme_account_info_module.html
+      * Module openssl_privatekey
+        Can be used to create a private account key.
+           https://docs.ansible.com/ansible/latest/modules/openssl_privatekey_module.html
+      * Module acme_inspect
+        Allows to debug problems.
+           https://docs.ansible.com/ansible/latest/modules/acme_inspect_module.html
+
+
+REQUIREMENTS:  python >= 2.6, either openssl or L(cryptography,https://cryptography.io/) >= 1.5
+
+AUTHOR: Felix Fontein (@felixfontein)
+        METADATA:
+          status:
+          - preview
+          supported_by: community
+        
+
+EXAMPLES:
+
+- name: Make sure account exists and has given contacts. We agree to TOS.
+  acme_account:
+    account_key_src: /etc/pki/cert/private/account.key
+    state: present
+    terms_agreed: yes
+    contact:
+    - mailto:me@example.com
+    - mailto:myself@example.org
+
+- name: Make sure account has given email address. Don't create account if it doesn't exist
+  acme_account:
+    account_key_src: /etc/pki/cert/private/account.key
+    state: present
+    allow_creation: no
+    contact:
+    - mailto:me@example.com
+
+- name: Change account's key to the one stored in the variable new_account_key
+  acme_account:
+    account_key_src: /etc/pki/cert/private/account.key
+    new_account_key_content: '{{ new_account_key }}'
+    state: changed_key
+
+- name: Delete account (we have to use the new key)
+  acme_account:
+    account_key_content: '{{ new_account_key }}'
+    state: absent
+
+
+RETURN VALUES:
+
+account_uri:
+  description: ACME account URI, or None if account does not exist.
+  returned: always
+  type: str
+

@@ -1,0 +1,214 @@
+> FORTIOS_IPS_GLOBAL    (/usr/lib/python2.7/dist-packages/ansible/modules/network/fortios/fortios_ips_global.py)
+
+        This module is able to configure a FortiGate or FortiOS by allowing the user to configure ips feature and global category.
+        Examples includes all options and need to be adjusted to datasources before usage. Tested with FOS v6.0.2
+
+  * This module is maintained by The Ansible Community
+OPTIONS (= is mandatory):
+
+= host
+        FortiOS or FortiGate ip adress.
+
+
+- https
+        Indicates if the requests towards FortiGate must use HTTPS protocol
+        [Default: True]
+        type: bool
+
+- ips_global
+        Configure IPS global parameter.
+        [Default: None]
+        suboptions:
+          anomaly-mode:
+            choices:
+            - periodical
+            - continuous
+            description:
+            - Global blocking mode for rate-based anomalies.
+          database:
+            choices:
+            - regular
+            - extended
+            description:
+            - Regular or extended IPS database. Regular protects against the latest common
+              and in-the-wild attacks. Extended includes protection from legacy attacks.
+          deep-app-insp-db-limit:
+            description:
+            - Limit on number of entries in deep application inspection database (1 - 2147483647,
+              0 = use recommended setting)
+          deep-app-insp-timeout:
+            description:
+            - Timeout for Deep application inspection (1 - 2147483647 sec., 0 = use recommended
+              setting).
+          engine-count:
+            description:
+            - Number of IPS engines running. If set to the default value of 0, FortiOS sets
+              the number to optimize performance depending on the number of CPU cores.
+          exclude-signatures:
+            choices:
+            - none
+            - industrial
+            description:
+            - Excluded signatures.
+          fail-open:
+            choices:
+            - enable
+            - disable
+            description:
+            - Enable to allow traffic if the IPS process crashes. Default is disable and IPS
+              traffic is blocked when the IPS process crashes.
+          intelligent-mode:
+            choices:
+            - enable
+            - disable
+            description:
+            - Enable/disable IPS adaptive scanning (intelligent mode). Intelligent mode optimizes
+              the scanning method for the type of traffic.
+          session-limit-mode:
+            choices:
+            - accurate
+            - heuristic
+            description:
+            - Method of counting concurrent sessions used by session limit anomalies. Choose
+              between greater accuracy (accurate) or improved performance (heuristics).
+          skype-client-public-ipaddr:
+            description:
+            - Public IP addresses of your network that receive Skype sessions. Helps identify
+              Skype sessions. Separate IP addresses with commas.
+          socket-size:
+            description:
+            - IPS socket buffer size (0 - 256 MB). Default depends on available memory. Can
+              be changed to tune performance.
+          sync-session-ttl:
+            choices:
+            - enable
+            - disable
+            description:
+            - Enable/disable use of kernel session TTL for IPS sessions.
+          traffic-submit:
+            choices:
+            - enable
+            - disable
+            description:
+            - Enable/disable submitting attack data found by this FortiGate to FortiGuard.
+        
+
+- password
+        FortiOS or FortiGate password.
+        [Default: ]
+
+= username
+        FortiOS or FortiGate username.
+
+
+- vdom
+        Virtual domain, among those defined previously. A vdom is a virtual instance of the FortiGate that can be configured and used as
+        a different unit.
+        [Default: root]
+
+
+NOTES:
+      * Requires fortiosapi library developed by Fortinet
+      * Run as a local_action in your playbook
+
+
+REQUIREMENTS:  fortiosapi>=0.9.8
+
+AUTHOR: Miguel Angel Munoz (@mamunozgonzalez), Nicolas Thomas (@thomnico)
+        METADATA:
+          status:
+          - preview
+          supported_by: community
+        
+
+EXAMPLES:
+
+- hosts: localhost
+  vars:
+   host: "192.168.122.40"
+   username: "admin"
+   password: ""
+   vdom: "root"
+  tasks:
+  - name: Configure IPS global parameter.
+    fortios_ips_global:
+      host:  "{{ host }}"
+      username: "{{ username }}"
+      password: "{{ password }}"
+      vdom:  "{{ vdom }}"
+      https: "False"
+      ips_global:
+        anomaly-mode: "periodical"
+        database: "regular"
+        deep-app-insp-db-limit: "5"
+        deep-app-insp-timeout: "6"
+        engine-count: "7"
+        exclude-signatures: "none"
+        fail-open: "enable"
+        intelligent-mode: "enable"
+        session-limit-mode: "accurate"
+        skype-client-public-ipaddr: "<your_own_value>"
+        socket-size: "13"
+        sync-session-ttl: "enable"
+        traffic-submit: "enable"
+
+
+RETURN VALUES:
+
+build:
+  description: Build number of the fortigate image
+  returned: always
+  type: str
+  sample: '1547'
+http_method:
+  description: Last method used to provision the content into FortiGate
+  returned: always
+  type: str
+  sample: 'PUT'
+http_status:
+  description: Last result given by FortiGate on last operation applied
+  returned: always
+  type: str
+  sample: "200"
+mkey:
+  description: Master key (id) used in the last call to FortiGate
+  returned: success
+  type: str
+  sample: "id"
+name:
+  description: Name of the table used to fulfill the request
+  returned: always
+  type: str
+  sample: "urlfilter"
+path:
+  description: Path of the table used to fulfill the request
+  returned: always
+  type: str
+  sample: "webfilter"
+revision:
+  description: Internal revision number
+  returned: always
+  type: str
+  sample: "17.0.2.10658"
+serial:
+  description: Serial number of the unit
+  returned: always
+  type: str
+  sample: "FGVMEVYYQT3AB5352"
+status:
+  description: Indication of the operation's result
+  returned: always
+  type: str
+  sample: "success"
+vdom:
+  description: Virtual domain used
+  returned: always
+  type: str
+  sample: "root"
+version:
+  description: Version of the FortiGate
+  returned: always
+  type: str
+  sample: "v5.6.3"
+
+

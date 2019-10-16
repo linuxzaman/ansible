@@ -1,0 +1,42 @@
+EXAMPLES:
+
+Tasks: The following are examples of using the module cnos_config.
+---
+- name: configure top level configuration
+  cnos_config:
+    "lines: hostname {{ inventory_hostname }}"
+
+- name: configure interface settings
+  cnos_config:
+    lines:
+      - enable
+      - ip ospf enable
+    parents: interface ip 13
+
+- name: load a config from disk and replace the current config
+  cnos_config:
+    src: config.cfg
+    backup: yes
+
+- name: configurable backup path
+  cnos_config:
+    src: config.cfg
+    backup: yes
+    backup_options:
+      filename: backup.cfg
+      dir_path: /home/user
+
+
+RETURN VALUES:
+
+updates:
+  description: The set of commands that will be pushed to the remote device
+  returned: Only when lines is specified.
+  type: list
+  sample: ['...', '...']
+backup_path:
+  description: The full path to the backup file
+  returned: when backup is yes
+  type: str
+  sample: /playbooks/ansible/backup/cnos01.2016-07-16@22:28:34
+

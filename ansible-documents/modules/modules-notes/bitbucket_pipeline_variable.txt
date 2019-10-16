@@ -1,0 +1,87 @@
+> BITBUCKET_PIPELINE_VARIABLE    (/usr/lib/python2.7/dist-packages/ansible/modules/source_control/bitbucket/bitbucket_pipeline_variable.py)
+
+        Manages Bitbucket pipeline variables.
+
+  * This module is maintained by The Ansible Community
+OPTIONS (= is mandatory):
+
+- client_id
+        The OAuth consumer key.
+        If not set the environment variable `BITBUCKET_CLIENT_ID' will be used.
+        [Default: (null)]
+        type: str
+
+- client_secret
+        The OAuth consumer secret.
+        If not set the environment variable `BITBUCKET_CLIENT_SECRET' will be used.
+        [Default: (null)]
+        type: str
+
+= name
+        The pipeline variable name.
+
+        type: str
+
+= repository
+        The repository name.
+
+        type: str
+
+- secured
+        Whether to encrypt the variable value.
+        [Default: False]
+        type: bool
+
+= state
+        Indicates desired state of the variable.
+        (Choices: absent, present)
+        type: str
+
+= username
+        The repository owner.
+
+        type: str
+
+- value
+        The pipeline variable value.
+        [Default: (null)]
+        type: str
+
+
+NOTES:
+      * Bitbucket OAuth consumer key and secret can be obtained from Bitbucket profile -> Settings -> Access Management -> OAuth.
+      * Check mode is supported.
+      * For secured values return parameter `changed' is always `True'.
+
+
+AUTHOR: Evgeniy Krysanov (@catcombo)
+        METADATA:
+          status:
+          - preview
+          supported_by: community
+        
+
+EXAMPLES:
+
+- name: Create or update pipeline variables from the list
+  bitbucket_pipeline_variable:
+    repository: 'bitbucket-repo'
+    username: bitbucket_username
+    name: '{{ item.name }}'
+    value: '{{ item.value }}'
+    secured: '{{ item.secured }}'
+    state: present
+  with_items:
+    - { name: AWS_ACCESS_KEY, value: ABCD1234 }
+    - { name: AWS_SECRET, value: qwe789poi123vbn0, secured: True }
+
+- name: Remove pipeline variable
+  bitbucket_pipeline_variable:
+    repository: bitbucket-repo
+    username: bitbucket_username
+    name: AWS_ACCESS_KEY
+    state: absent
+
+
+RETURN VALUES:
+ # 

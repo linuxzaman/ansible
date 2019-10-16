@@ -1,0 +1,96 @@
+> TOWER_USER    (/usr/lib/python2.7/dist-packages/ansible/modules/web_infrastructure/ansible_tower/tower_user.py)
+
+        Create, update, or destroy Ansible Tower users. See https://www.ansible.com/tower for an overview.
+
+  * This module is maintained by The Ansible Community
+OPTIONS (= is mandatory):
+
+- auditor
+        User is a system wide auditor.
+        [Default: no]
+        type: bool
+
+= email
+        Email address of the user.
+
+
+- first_name
+        First name of the user.
+        [Default: (null)]
+
+- last_name
+        Last name of the user.
+        [Default: (null)]
+
+- password
+        Password of the user.
+        [Default: (null)]
+
+- state
+        Desired state of the resource.
+        (Choices: present, absent)[Default: present]
+
+- superuser
+        User is a system wide administator.
+        [Default: no]
+        type: bool
+
+- tower_config_file
+        Path to the Tower config file.
+        [Default: (null)]
+        type: path
+
+- tower_host
+        URL to your Tower instance.
+        [Default: (null)]
+        type: str
+
+- tower_password
+        Password for your Tower instance.
+        [Default: (null)]
+        type: str
+
+- tower_username
+        Username for your Tower instance.
+        [Default: (null)]
+        type: str
+
+= username
+        The username of the user.
+
+
+- validate_certs
+        Whether to allow insecure connections to Tower.
+        If `no', SSL certificates will not be validated.
+        This should only be used on personally controlled sites using self-signed certificates.
+        (Aliases: tower_verify_ssl)[Default: (null)]
+        type: bool
+
+
+NOTES:
+      * If no `config_file' is provided we will attempt to use the tower-cli library defaults to find your Tower host information.
+      * `config_file' should contain Tower configuration in the following format host=hostname username=username password=password
+
+
+REQUIREMENTS:  ansible-tower-cli >= 3.0.2
+
+AUTHOR: Wayne Witzel III (@wwitzel3)
+        METADATA:
+          status:
+          - preview
+          supported_by: community
+        
+
+EXAMPLES:
+
+- name: Add tower user
+  tower_user:
+    username: jdoe
+    password: foobarbaz
+    email: jdoe@example.org
+    first_name: John
+    last_name: Doe
+    state: present
+    tower_config_file: "~/tower_cli.cfg"
+
+

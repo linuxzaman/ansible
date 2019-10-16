@@ -1,0 +1,97 @@
+> CE_ACL_INTERFACE    (/usr/lib/python2.7/dist-packages/ansible/modules/network/cloudengine/ce_acl_interface.py)
+
+        Manages applying ACLs to interfaces on HUAWEI CloudEngine switches.
+
+  * This module is maintained by The Ansible Community
+OPTIONS (= is mandatory):
+
+= acl_name
+        ACL number or name. For a numbered rule group, the value ranging from 2000 to 4999. For a named rule group, the value is a string
+        of 1 to 32 case-sensitive characters starting with a letter, spaces not supported.
+
+
+= direction
+        Direction ACL to be applied in on the interface.
+        (Choices: inbound, outbound)
+
+= interface
+        Interface name. Only support interface full name, such as "40GE2/0/1".
+
+
+- state
+        Determines whether the config should be present or not on the device.
+        (Choices: present, absent)[Default: present]
+
+
+AUTHOR: wangdezhuang (@QijunPan)
+        METADATA:
+          status:
+          - preview
+          supported_by: community
+        
+
+EXAMPLES:
+
+- name: CloudEngine acl interface test
+  hosts: cloudengine
+  connection: local
+  gather_facts: no
+  vars:
+    cli:
+      host: "{{ inventory_hostname }}"
+      port: "{{ ansible_ssh_port }}"
+      username: "{{ username }}"
+      password: "{{ password }}"
+      transport: cli
+
+  tasks:
+
+  - name: "Apply acl to interface"
+    ce_acl_interface:
+      state: present
+      acl_name: 2000
+      interface: 40GE1/0/1
+      direction: outbound
+      provider: "{{ cli }}"
+
+  - name: "Undo acl from interface"
+    ce_acl_interface:
+      state: absent
+      acl_name: 2000
+      interface: 40GE1/0/1
+      direction: outbound
+      provider: "{{ cli }}"
+
+
+RETURN VALUES:
+
+changed:
+    description: check to see if a change was made on the device
+    returned: always
+    type: bool
+    sample: true
+proposed:
+    description: k/v pairs of parameters passed into module
+    returned: always
+    type: dict
+    sample: {"acl_name": "2000",
+             "direction": "outbound",
+             "interface": "40GE2/0/1",
+             "state": "present"}
+existing:
+    description: k/v pairs of existing aaa server
+    returned: always
+    type: dict
+    sample: {"acl interface": "traffic-filter acl lb inbound"}
+end_state:
+    description: k/v pairs of aaa params after module execution
+    returned: always
+    type: dict
+    sample: {"acl interface": ["traffic-filter acl lb inbound", "traffic-filter acl 2000 outbound"]}
+updates:
+    description: command sent to the device
+    returned: always
+    type: list
+    sample: ["interface 40ge2/0/1",
+             "traffic-filter acl 2000 outbound"]
+

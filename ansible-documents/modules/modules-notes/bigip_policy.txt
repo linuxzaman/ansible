@@ -1,0 +1,275 @@
+> BIGIP_POLICY    (/usr/lib/python2.7/dist-packages/ansible/modules/network/f5/bigip_policy.py)
+
+        Manages general policy configuration on a BIG-IP. This module is best used in conjunction with the `bigip_policy_rule' module.
+        This module can handle general configuration like setting the draft state of the policy, the description, and things unrelated to
+        the policy rules themselves. It is also the first module that should be used when creating rules as the `bigip_policy_rule'
+        module requires a policy parameter.
+
+  * This module is maintained by an Ansible Partner
+OPTIONS (= is mandatory):
+
+- description
+        The description to attach to the policy.
+        This parameter is only supported on versions of BIG-IP >= 12.1.0. On earlier versions it will simply be ignored.
+        [Default: (null)]
+        type: str
+
+= name
+        The name of the policy to create.
+
+        type: str
+
+- partition
+        Device partition to manage resources on.
+        [Default: Common]
+        type: str
+
+= password
+        The password for the user account used to connect to the BIG-IP.
+        You may omit this option by setting the environment variable `F5_PASSWORD'.
+        (Aliases: pass, pwd)
+        type: str
+
+- provider
+        A dict object containing connection details.
+        [Default: (null)]
+        suboptions:
+          password:
+            aliases:
+            - pass
+            - pwd
+            description:
+            - The password for the user account used to connect to the BIG-IP.
+            - You may omit this option by setting the environment variable `F5_PASSWORD'.
+            required: true
+            type: str
+          server:
+            description:
+            - The BIG-IP host.
+            - You may omit this option by setting the environment variable `F5_SERVER'.
+            required: true
+            type: str
+          server_port:
+            default: 443
+            description:
+            - The BIG-IP server port.
+            - You may omit this option by setting the environment variable `F5_SERVER_PORT'.
+            type: int
+          ssh_keyfile:
+            description:
+            - Specifies the SSH keyfile to use to authenticate the connection to the remote
+              device.  This argument is only used for `cli' transports.
+            - You may omit this option by setting the environment variable `ANSIBLE_NET_SSH_KEYFILE'.
+            type: path
+          timeout:
+            default: 10
+            description:
+            - Specifies the timeout in seconds for communicating with the network device for
+              either connecting or sending commands.  If the timeout is exceeded before the
+              operation is completed, the module will error.
+            type: int
+          transport:
+            choices:
+            - cli
+            - rest
+            default: rest
+            description:
+            - Configures the transport connection to use when connecting to the remote device.
+            type: str
+          user:
+            description:
+            - The username to connect to the BIG-IP with. This user must have administrative
+              privileges on the device.
+            - You may omit this option by setting the environment variable `F5_USER'.
+            required: true
+            type: str
+          validate_certs:
+            default: true
+            description:
+            - If `no', SSL certificates are not validated. Use this only on personally controlled
+              sites using self-signed certificates.
+            - You may omit this option by setting the environment variable `F5_VALIDATE_CERTS'.
+            type: bool
+        
+        type: dict
+        version_added: 2.5
+
+- rules
+        Specifies a list of rules that you want associated with this policy. The order of this list is the order they will be evaluated
+        by BIG-IP. If the specified rules do not exist (for example when creating a new policy) then they will be created.
+        The `conditions' for a default rule are `all'.
+        The `actions' for a default rule are `ignore'.
+        The `bigip_policy_rule' module can be used to create and edit existing and new rules.
+        [Default: (null)]
+        type: list
+
+= server
+        The BIG-IP host.
+        You may omit this option by setting the environment variable `F5_SERVER'.
+
+        type: str
+
+- server_port
+        The BIG-IP server port.
+        You may omit this option by setting the environment variable `F5_SERVER_PORT'.
+        [Default: 443]
+        type: int
+        version_added: 2.2
+
+- state
+        When `state' is `present', ensures that the policy exists and is published. When `state' is `absent', ensures that the policy is
+        removed, even if it is currently drafted.
+        When `state' is `draft', ensures that the policy exists and is drafted. When modifying rules, it is required that policies first
+        be in a draft.
+        Drafting is only supported on versions of BIG-IP >= 12.1.0. On versions prior to that, specifying a `state' of `draft' will raise
+        an error.
+        (Choices: present, absent, draft)[Default: present]
+        type: str
+
+- strategy
+        Specifies the method to determine which actions get executed in the case where there are multiple rules that match. When creating
+        new policies, the default is `first'.
+        This module does not allow you to specify the `best' strategy to use. It will choose the system default (`/Common/best-match')
+        for you instead.
+        (Choices: first, all, best)[Default: (null)]
+        type: str
+
+= user
+        The username to connect to the BIG-IP with. This user must have administrative privileges on the device.
+        You may omit this option by setting the environment variable `F5_USER'.
+
+        type: str
+
+- validate_certs
+        If `no', SSL certificates are not validated. Use this only on personally controlled sites using self-signed certificates.
+        You may omit this option by setting the environment variable `F5_VALIDATE_CERTS'.
+        [Default: True]
+        type: bool
+        version_added: 2.0
+
+
+NOTES:
+      * For more information on using Ansible to manage F5 Networks devices see https://www.ansible.com/integrations/networks/f5.
+      * Requires BIG-IP software version >= 12.
+      * The F5 modules only manipulate the running configuration of the F5 product. To ensure that BIG-IP specific configuration
+        persists to disk, be sure to include at least one task that uses the [bigip_config] module to save the running
+        configuration. Refer to the module's documentation for the correct usage of the module to save your running configuration.
+
+
+AUTHOR: Tim Rupp (@caphrim007), Wojciech Wypior (@wojtek0806)
+        METADATA:
+          status:
+          - preview
+          supported_by: certified
+        
+
+EXAMPLES:
+
+- name: Create policy which is immediately published
+  bigip_policy:
+    name: Policy-Foo
+    state: present
+    provider:
+      server: lb.mydomain.com
+      user: admin
+      password: secret
+  delegate_to: localhost
+
+- name: Add a rule to the new policy - Immediately published
+  bigip_policy_rule:
+    policy: Policy-Foo
+    name: ABC
+    conditions:
+      - type: http_uri
+        path_starts_with:
+          - /ABC
+          - foo
+          - bar
+        path_ends_with:
+          - baz
+    actions:
+      - forward: yes
+        select: yes
+        pool: pool-svrs
+    provider:
+      server: lb.mydomain.com
+      user: admin
+      password: secret
+  delegate_to: localhost
+
+- name: Add multiple rules to the new policy - Added in the order they are specified
+  bigip_policy_rule:
+    policy: Policy-Foo
+    name: "{{ item.name }}"
+    conditions: "{{ item.conditions }}"
+    actions: "{{ item.actions }}"
+    provider:
+      server: lb.mydomain.com
+      user: admin
+      password: secret
+  delegate_to: localhost
+  loop:
+    - name: rule1
+      actions:
+        - type: forward
+          pool: pool-svrs
+      conditions:
+        - type: http_uri
+          path_starts_with: /euro
+    - name: HomePage
+      actions:
+        - type: forward
+          pool: pool-svrs
+      conditions:
+        - type: http_uri
+          path_starts_with: /HomePage/
+
+- name: Create policy specify default rules - Immediately published
+  bigip_policy:
+    name: Policy-Bar
+    state: present
+    rules:
+      - rule1
+      - rule2
+      - rule3
+    provider:
+      server: lb.mydomain.com
+      user: admin
+      password: secret
+  delegate_to: localhost
+
+- name: Create policy specify default rules - Left in a draft
+  bigip_policy:
+    name: Policy-Baz
+    state: draft
+    rules:
+      - rule1
+      - rule2
+      - rule3
+    provider:
+      server: lb.mydomain.com
+      user: admin
+      password: secret
+  delegate_to: localhost
+
+
+RETURN VALUES:
+
+strategy:
+  description: The new strategy set on the policy.
+  returned: changed and success
+  type: int
+  sample: first-match
+description:
+  description:
+    - The new description of the policy.
+    - This value is only returned for BIG-IP devices >= 12.1.0.
+  returned: changed and success
+  type: str
+  sample: This is my description
+rules:
+  description: List of the rules, and their order, applied to the policy.
+  returned: changed and success
+  type: list
+  sample: ['/Common/rule1', '/Common/rule2']
+

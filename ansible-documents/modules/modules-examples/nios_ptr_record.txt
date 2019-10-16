@@ -1,0 +1,27 @@
+EXAMPLES:
+
+- name: Create a PTR Record
+  nios_ptr_record:
+    ipv4: 192.168.10.1
+    ptrdname: host.ansible.com
+    state: present
+    provider:
+      host: "{{ inventory_hostname_short }}"
+      username: admin
+      password: admin
+  connection: local
+
+- name: Delete a PTR Record
+  nios_ptr_record:
+    ipv4: 192.168.10.1
+    ptrdname: host.ansible.com
+    state: absent
+    provider:
+      host: "{{ inventory_hostname_short }}"
+      username: admin
+      password: admin
+  connection: local
+
+
+RETURN VALUES:
+ # 

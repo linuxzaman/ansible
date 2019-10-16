@@ -1,0 +1,60 @@
+> PINGDOM    (/usr/lib/python2.7/dist-packages/ansible/modules/monitoring/pingdom.py)
+
+        This module will let you pause/unpause Pingdom alerts
+
+  * This module is maintained by The Ansible Community
+OPTIONS (= is mandatory):
+
+= checkid
+        Pingdom ID of the check.
+
+
+= key
+        Pingdom API key.
+
+
+= passwd
+        Pingdom user password.
+
+
+= state
+        Define whether or not the check should be running or paused.
+        (Choices: running, paused)
+
+= uid
+        Pingdom user ID.
+
+
+
+NOTES:
+      * This module does not yet have support to add/remove checks.
+
+
+REQUIREMENTS:  This pingdom python library: https://github.com/mbabineau/pingdom-python
+
+AUTHOR: Dylan Silva (@thaumos), Justin Johns (!UNKNOWN)
+        METADATA:
+          status:
+          - preview
+          supported_by: community
+        
+
+EXAMPLES:
+
+# Pause the check with the ID of 12345.
+- pingdom:
+    uid: example@example.com
+    passwd: password123
+    key: apipassword123
+    checkid: 12345
+    state: paused
+
+# Unpause the check with the ID of 12345.
+- pingdom:
+    uid: example@example.com
+    passwd: password123
+    key: apipassword123
+    checkid: 12345
+    state: running
+
+

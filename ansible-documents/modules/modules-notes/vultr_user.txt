@@ -1,0 +1,179 @@
+> VULTR_USER    (/usr/lib/python2.7/dist-packages/ansible/modules/cloud/vultr/vultr_user.py)
+
+        Create, update and remove users.
+
+  * This module is maintained by The Ansible Community
+OPTIONS (= is mandatory):
+
+- acls
+        List of ACLs this users should have, see https://www.vultr.com/api/#user_user_list.
+        Required if `state=present'.
+        One or more of the choices list, some depend on each other.
+        (Aliases: acl)(Choices: manage_users, subscriptions, provisioning, billing, support, abuse, dns, upgrade)[Default: (null)]
+
+- api_account
+        Name of the ini section in the `vultr.ini' file.
+        The ENV variable `VULTR_API_ACCOUNT' is used as default, when defined.
+        [Default: default]
+        type: str
+
+- api_enabled
+        Whether the API is enabled or not.
+        [Default: True]
+        type: bool
+
+- api_endpoint
+        URL to API endpint (without trailing slash).
+        The ENV variable `VULTR_API_ENDPOINT' is used as default, when defined.
+        Fallback value is https://api.vultr.com if not specified.
+        [Default: (null)]
+        type: str
+
+- api_key
+        API key of the Vultr API.
+        The ENV variable `VULTR_API_KEY' is used as default, when defined.
+        [Default: (null)]
+        type: str
+
+- api_retries
+        Amount of retries in case of the Vultr API retuns an HTTP 503 code.
+        The ENV variable `VULTR_API_RETRIES' is used as default, when defined.
+        Fallback value is 5 retries if not specified.
+        [Default: (null)]
+        type: int
+
+- api_timeout
+        HTTP timeout to Vultr API.
+        The ENV variable `VULTR_API_TIMEOUT' is used as default, when defined.
+        Fallback value is 60 seconds if not specified.
+        [Default: (null)]
+        type: int
+
+- email
+        Email of the user.
+        Required if `state=present'.
+        [Default: (null)]
+
+- force
+        Password will only be changed with enforcement.
+        [Default: False]
+        type: bool
+
+= name
+        Name of the user
+
+
+- password
+        Password of the user.
+        Only considered while creating a user or when `force=yes'.
+        [Default: (null)]
+
+- state
+        State of the user.
+        (Choices: present, absent)[Default: present]
+
+- validate_certs
+        Validate SSL certs of the Vultr API.
+        [Default: True]
+        type: bool
+
+
+NOTES:
+      * Also see the API documentation on https://www.vultr.com/api/.
+
+
+REQUIREMENTS:  python >= 2.6
+
+AUTHOR: René Moser (@resmo)
+        METADATA:
+          status:
+          - preview
+          supported_by: community
+        
+
+EXAMPLES:
+
+- name: Ensure a user exists
+  local_action:
+    module: vultr_user
+    name: john
+    email: john.doe@example.com
+    password: s3cr3t
+    acls:
+      - upgrade
+      - dns
+      - manage_users
+      - subscriptions
+      - upgrade
+
+- name: Remove a user
+  local_action:
+    module: vultr_user
+    name: john
+    state: absent
+
+
+RETURN VALUES:
+
+---
+vultr_api:
+  description: Response from Vultr API with a few additions/modification
+  returned: success
+  type: complex
+  contains:
+    api_account:
+      description: Account used in the ini file to select the key
+      returned: success
+      type: str
+      sample: default
+    api_timeout:
+      description: Timeout used for the API requests
+      returned: success
+      type: int
+      sample: 60
+    api_retries:
+      description: Amount of max retries for the API requests
+      returned: success
+      type: int
+      sample: 5
+    api_endpoint:
+      description: Endpoint used for the API requests
+      returned: success
+      type: str
+      sample: "https://api.vultr.com"
+vultr_user:
+  description: Response from Vultr API
+  returned: success
+  type: complex
+  contains:
+    id:
+      description: ID of the user.
+      returned: success
+      type: str
+      sample: 5904bc6ed9234
+    api_key:
+      description: API key of the user.
+      returned: only after resource was created
+      type: str
+      sample: 567E6K567E6K567E6K567E6K567E6K
+    name:
+      description: Name of the user.
+      returned: success
+      type: str
+      sample: john
+    email:
+      description: Email of the user.
+      returned: success
+      type: str
+      sample: "john@exmaple.com"
+    api_enabled:
+      description: Whether the API is enabled or not.
+      returned: success
+      type: bool
+      sample: true
+    acls:
+      description: List of ACLs of the user.
+      returned: success
+      type: list
+      sample: [manage_users, support, upgrade]
+

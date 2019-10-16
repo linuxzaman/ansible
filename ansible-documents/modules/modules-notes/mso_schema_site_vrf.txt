@@ -1,0 +1,164 @@
+> MSO_SCHEMA_SITE_VRF    (/usr/lib/python2.7/dist-packages/ansible/modules/network/aci/mso_schema_site_vrf.py)
+
+        Manage site-local VRFs in schema template on Cisco ACI Multi-Site.
+
+  * This module is maintained by The Ansible Community
+OPTIONS (= is mandatory):
+
+= host
+        IP Address or hostname of the ACI Multi Site Orchestrator host.
+        (Aliases: hostname)
+        type: str
+
+- output_level
+        Influence the output of this ACI module.
+        `normal' means the standard output, incl. `current' dict
+        `info' adds informational output, incl. `previous', `proposed' and `sent' dicts
+        `debug' adds debugging output, incl. `filter_string', `method', `response', `status' and `url' information
+        (Choices: debug, info, normal)[Default: normal]
+        type: str
+
+= password
+        The password to use for authentication.
+        This option is mutual exclusive with `private_key'. If `private_key' is provided too, it will be used instead.
+
+        type: str
+
+- port
+        Port number to be used for the REST connection.
+        The default value depends on parameter `use_ssl`.
+        [Default: (null)]
+        type: int
+
+= schema
+        The name of the schema.
+
+        type: str
+
+= site
+        The name of the site.
+
+        type: str
+
+- state
+        Use `present' or `absent' for adding or removing.
+        Use `query' for listing an object or multiple objects.
+        (Choices: absent, present, query)[Default: present]
+        type: str
+
+= template
+        The name of the template.
+
+        type: str
+
+- timeout
+        The socket level timeout in seconds.
+        [Default: 30]
+        type: int
+
+- use_proxy
+        If `no', it will not use a proxy, even if one is defined in an environment variable on the target hosts.
+        [Default: True]
+        type: bool
+
+- use_ssl
+        If `no', an HTTP connection will be used instead of the default HTTPS connection.
+        [Default: True]
+        type: bool
+
+- username
+        The username to use for authentication.
+        [Default: admin]
+        type: str
+
+- validate_certs
+        If `no', SSL certificates will not be validated.
+        This should only set to `no' when used on personally controlled sites using self-signed certificates.
+        [Default: True]
+        type: bool
+
+- vrf
+        The name of the VRF to manage.
+        (Aliases: name)[Default: (null)]
+        type: str
+
+
+NOTES:
+      * Please read the :ref:`aci_guide` for more detailed information on how to manage your ACI infrastructure using Ansible.
+      * This module was written to support ACI Multi Site Orchestrator v2.1 or newer. Some or all functionality may not work on
+        earlier versions.
+
+
+SEE ALSO:
+      * Module mso_schema_site
+           The official documentation on the mso_schema_site module.
+           https://docs.ansible.com/ansible/latest/modules/mso_schema_site_module.html
+      * Module mso_schema_template_vrf
+           The official documentation on the mso_schema_template_vrf module.
+           https://docs.ansible.com/ansible/latest/modules/mso_schema_template_vrf_module.html
+
+
+REQUIREMENTS:  Multi Site Orchestrator v2.1 or newer
+
+AUTHOR: Dag Wieers (@dagwieers)
+        METADATA:
+          status:
+          - preview
+          supported_by: community
+        
+
+EXAMPLES:
+
+- name: Add a new site VRF
+  mso_schema_site_vrf:
+    host: mso_host
+    username: admin
+    password: SomeSecretPassword
+    schema: Schema1
+    site: Site1
+    template: Template1
+    vrf: VRF1
+    state: present
+  delegate_to: localhost
+
+- name: Remove a site VRF
+  mso_schema_site_vrf:
+    host: mso_host
+    username: admin
+    password: SomeSecretPassword
+    schema: Schema1
+    site: Site1
+    template: Template1
+    vrf: VRF1
+    state: absent
+  delegate_to: localhost
+
+- name: Query a specific site VRF
+  mso_schema_site_vrf:
+    host: mso_host
+    username: admin
+    password: SomeSecretPassword
+    schema: Schema1
+    site: Site1
+    template: Template1
+    vrf: VRF1
+    state: query
+  delegate_to: localhost
+  register: query_result
+
+- name: Query all site VRFs
+  mso_schema_site_vrf:
+    host: mso_host
+    username: admin
+    password: SomeSecretPassword
+    schema: Schema1
+    site: Site1
+    template: Template1
+    state: query
+  delegate_to: localhost
+  register: query_result
+
+
+RETURN VALUES:
+
+

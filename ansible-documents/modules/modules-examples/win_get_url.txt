@@ -1,0 +1,88 @@
+EXAMPLES:
+
+- name: Download earthrise.jpg to specified path
+  win_get_url:
+    url: http://www.example.com/earthrise.jpg
+    dest: C:\Users\RandomUser\earthrise.jpg
+
+- name: Download earthrise.jpg to specified path only if modified
+  win_get_url:
+    url: http://www.example.com/earthrise.jpg
+    dest: C:\Users\RandomUser\earthrise.jpg
+    force: no
+
+- name: Download earthrise.jpg to specified path through a proxy server.
+  win_get_url:
+    url: http://www.example.com/earthrise.jpg
+    dest: C:\Users\RandomUser\earthrise.jpg
+    proxy_url: http://10.0.0.1:8080
+    proxy_username: username
+    proxy_password: password
+
+- name: Download file from FTP with authentication
+  win_get_url:
+    url: ftp://server/file.txt
+    dest: '%TEMP%\ftp-file.txt'
+    url_username: ftp-user
+    url_password: ftp-password
+
+- name: Download src with sha256 checksum url
+  win_get_url:
+    url: http://www.example.com/earthrise.jpg
+    dest: C:\temp\earthrise.jpg
+    checksum_url: http://www.example.com/sha256sum.txt
+    checksum_algorithm: sha256
+    force: True
+
+- name: Download src with sha256 checksum url
+  win_get_url:
+    url: http://www.example.com/earthrise.jpg
+    dest: C:\temp\earthrise.jpg
+    checksum: a97e6837f60cec6da4491bab387296bbcd72bdba
+    checksum_algorithm: sha1
+    force: True
+
+
+RETURN VALUES:
+
+dest:
+    description: destination file/path
+    returned: always
+    type: str
+    sample: C:\Users\RandomUser\earthrise.jpg
+checksum_dest:
+    description: <algorithm> checksum of the file after the download
+    returned: success and dest has been downloaded
+    type: str
+    sample: 6e642bb8dd5c2e027bf21dd923337cbb4214f827
+checksum_src:
+    description: <algorithm> checksum of the remote resource
+    returned: force=yes or dest did not exist
+    type: str
+    sample: 6e642bb8dd5c2e027bf21dd923337cbb4214f827
+elapsed:
+    description: The elapsed seconds between the start of poll and the end of the module.
+    returned: always
+    type: float
+    sample: 2.1406487
+size:
+    description: size of the dest file
+    returned: success
+    type: int
+    sample: 1220
+url:
+    description: requested url
+    returned: always
+    type: str
+    sample: http://www.example.com/earthrise.jpg
+msg:
+    description: Error message, or HTTP status message from web-server
+    returned: always
+    type: str
+    sample: OK
+status_code:
+    description: HTTP status code
+    returned: always
+    type: int
+    sample: 200
+

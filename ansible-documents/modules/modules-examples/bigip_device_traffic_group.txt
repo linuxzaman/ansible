@@ -1,0 +1,95 @@
+EXAMPLES:
+
+- name: Create a traffic group
+  bigip_device_traffic_group:
+    name: foo1
+    state: present
+    provider:
+      user: admin
+      password: secret
+      server: lb.mydomain.com
+  delegate_to: localhost
+
+- name: Create a traffic group with ha_group failover
+  bigip_device_traffic_group:
+    name: foo2
+    state: present
+    ha_group: foo_HA_grp
+    provider:
+      user: admin
+      password: secret
+      server: lb.mydomain.com
+  delegate_to: localhost
+
+- name: Create a traffic group with ha_order failover
+  bigip_device_traffic_group:
+    name: foo3
+    state: present
+    ha_order:
+      - /Common/bigip1.lab.local
+      - /Common/bigip2.lab.local
+    auto_failback: yes
+    auto_failback_time: 40
+    provider:
+      user: admin
+      password: secret
+      server: lb.mydomain.com
+  delegate_to: localhost
+
+- name: Change traffic group ha_order to ha_group
+  bigip_device_traffic_group:
+    name: foo3
+    state: present
+    ha_group: foo_HA_grp
+    ha_order: ""
+    auto_failback: no
+    provider:
+      user: admin
+      password: secret
+      server: lb.mydomain.com
+  delegate_to: localhost
+
+- name: Remove traffic group
+  bigip_device_traffic_group:
+    name: foo
+    state: absent
+    provider:
+      user: admin
+      password: secret
+      server: lb.mydomain.com
+  delegate_to: localhost
+
+
+RETURN VALUES:
+
+mac_address:
+  description: The MAC masquerade address
+  returned: changed
+  type: str
+  sample: "02:01:d7:93:35:08"
+ha_group:
+  description: The configured HA group associated with traffic group
+  returned: changed
+  type: str
+  sample: foo_HA_grp
+ha_order:
+  description: Specifies the order in which the devices will failover
+  returned: changed
+  type: list
+  sample: ['/Common/bigip1', '/Common/bigip2']
+ha_load_factor:
+  description: The value of the load the traffic-group presents the system relative to other traffic groups
+  returned: changed
+  type: int
+  sample: 20
+auto_failback:
+  description: Specifies whether the traffic group fails back to the initial device specified in ha_order
+  returned: changed
+  type: bool
+  sample: yes
+auto_failback_time:
+  description: Specifies the number of seconds the system delays before failing back
+  returned: changed
+  type: int
+  sample: 60
+

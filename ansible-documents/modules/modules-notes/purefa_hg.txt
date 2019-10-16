@@ -1,0 +1,110 @@
+> PUREFA_HG    (/usr/lib/python2.7/dist-packages/ansible/modules/storage/purestorage/purefa_hg.py)
+
+        Create, delete or modifiy hostgroups on Pure Storage FlashArrays.
+
+  * This module is maintained by The Ansible Community
+OPTIONS (= is mandatory):
+
+= api_token
+        FlashArray API token for admin privileged user.
+
+        type: str
+
+= fa_url
+        FlashArray management IPv4 address or Hostname.
+
+        type: str
+
+- host
+        List of existing hosts to add to hostgroup.
+        [Default: (null)]
+        type: list
+
+= hostgroup
+        The name of the hostgroup.
+
+        type: str
+
+- state
+        Define whether the hostgroup should exist or not.
+        (Choices: absent, present)[Default: present]
+        type: str
+
+- volume
+        List of existing volumes to add to hostgroup.
+        [Default: (null)]
+        type: list
+
+
+NOTES:
+      * This module requires the `purestorage' Python library
+      * You must set `PUREFA_URL' and `PUREFA_API' environment variables if `fa_url' and `api_token' arguments are not passed to
+        the module directly
+
+
+REQUIREMENTS:  python >= 2.7, purestorage
+
+AUTHOR: Pure Storage ansible Team (@sdodsley) <pure-ansible-team@purestorage.com>
+        METADATA:
+          status:
+          - preview
+          supported_by: community
+        
+
+EXAMPLES:
+
+- name: Create empty hostgroup
+  purefa_hg:
+    hostgroup: foo
+    fa_url: 10.10.10.2
+    api_token: e31060a7-21fc-e277-6240-25983c6c4592
+
+- name: Add hosts and volumes to existing or new hostgroup
+  purefa_hg:
+    hostgroup: foo
+    host:
+      - host1
+      - host2
+    volume:
+      - vol1
+      - vol2
+    fa_url: 10.10.10.2
+    api_token: e31060a7-21fc-e277-6240-25983c6c4592
+
+- name: Delete hosts and volumes from hostgroup
+  purefa_hg:
+    hostgroup: foo
+    host:
+      - host1
+      - host2
+    volume:
+      - vol1
+      - vol2
+    fa_url: 10.10.10.2
+    api_token: e31060a7-21fc-e277-6240-25983c6c4592
+    state: absent
+
+# This will disconnect all hosts and volumes in the hostgroup
+- name: Delete hostgroup
+  purefa_hg:
+    hostgroup: foo
+    fa_url: 10.10.10.2
+    api_token: e31060a7-21fc-e277-6240-25983c6c4592
+    state: absent
+
+- name: Create host group with hosts and volumes
+  purefa_hg:
+    hostgroup: bar
+    host:
+      - host1
+      - host2
+    volume:
+      - vol1
+      - vol2
+    fa_url: 10.10.10.2
+    api_token: e31060a7-21fc-e277-6240-25983c6c4592
+
+
+RETURN VALUES:
+
+

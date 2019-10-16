@@ -1,0 +1,356 @@
+> ACI_EPG    (/usr/lib/python2.7/dist-packages/ansible/modules/network/aci/aci_epg.py)
+
+        Manage End Point Groups (EPG) on Cisco ACI fabrics.
+
+  * This module is maintained by an Ansible Partner
+OPTIONS (= is mandatory):
+
+= ap
+        Name of an existing application network profile, that will contain the EPGs.
+        (Aliases: app_profile, app_profile_name)
+        type: str
+
+- bd
+        Name of the bridge domain being associated with the EPG.
+        (Aliases: bd_name, bridge_domain)[Default: (null)]
+        type: str
+
+- certificate_name
+        The X.509 certificate name attached to the APIC AAA user used for signature-based authentication.
+        If a `private_key' filename was provided, this defaults to the `private_key' basename, without extension.
+        If PEM-formatted content was provided for `private_key', this defaults to the `username' value.
+        (Aliases: cert_name)[Default: (null)]
+        type: str
+
+- description
+        Description for the EPG.
+        (Aliases: descr)[Default: (null)]
+        type: str
+
+= epg
+        Name of the end point group.
+        (Aliases: epg_name, name)
+        type: str
+
+- fwd_control
+        The forwarding control used by the EPG.
+        The APIC defaults to `none' when unset during creation.
+        (Choices: none, proxy-arp)[Default: (null)]
+        type: str
+
+= host
+        IP Address or hostname of APIC resolvable by Ansible control host.
+        (Aliases: hostname)
+        type: str
+
+- intra_epg_isolation
+        The Intra EPG Isolation.
+        The APIC defaults to `unenforced' when unset during creation.
+        (Choices: enforced, unenforced)[Default: (null)]
+        type: str
+
+- output_level
+        Influence the output of this ACI module.
+        `normal' means the standard output, incl. `current' dict
+        `info' adds informational output, incl. `previous', `proposed' and `sent' dicts
+        `debug' adds debugging output, incl. `filter_string', `method', `response', `status' and `url' information
+        (Choices: debug, info, normal)[Default: normal]
+        type: str
+
+= password
+        The password to use for authentication.
+        This option is mutual exclusive with `private_key'. If `private_key' is provided too, it will be used instead.
+
+        type: str
+
+- port
+        Port number to be used for REST connection.
+        The default value depends on parameter `use_ssl'.
+        [Default: (null)]
+        type: int
+
+- preferred_group
+        Whether ot not the EPG is part of the Preferred Group and can communicate without contracts.
+        This is very convenient for migration scenarios, or when ACI is used for network automation but not for policy.
+        The APIC defaults to `no' when unset during creation.
+        [Default: (null)]
+        type: bool
+        version_added: 2.5
+
+- priority
+        The QoS class.
+        The APIC defaults to `unspecified' when unset during creation.
+        (Choices: level1, level2, level3, unspecified)[Default: (null)]
+        type: str
+
+= private_key
+        Either a PEM-formatted private key file or the private key content used for signature-based authentication.
+        This value also influences the default `certificate_name' that is used.
+        This option is mutual exclusive with `password'. If `password' is provided too, it will be ignored.
+        (Aliases: cert_key)
+        type: str
+
+- state
+        Use `present' or `absent' for adding or removing.
+        Use `query' for listing an object or multiple objects.
+        (Choices: absent, present, query)[Default: present]
+        type: str
+
+- tenant
+        Name of an existing tenant.
+        (Aliases: tenant_name)[Default: (null)]
+        type: str
+
+- timeout
+        The socket level timeout in seconds.
+        [Default: 30]
+        type: int
+
+- use_proxy
+        If `no', it will not use a proxy, even if one is defined in an environment variable on the target hosts.
+        [Default: True]
+        type: bool
+
+- use_ssl
+        If `no', an HTTP connection will be used instead of the default HTTPS connection.
+        [Default: True]
+        type: bool
+
+- username
+        The username to use for authentication.
+        (Aliases: user)[Default: admin]
+        type: str
+
+- validate_certs
+        If `no', SSL certificates will not be validated.
+        This should only set to `no' when used on personally controlled sites using self-signed certificates.
+        [Default: True]
+        type: bool
+
+
+NOTES:
+      * The `tenant' and `app_profile' used must exist before using this module in your playbook. The [aci_tenant] and [aci_ap]
+        modules can be used for this.
+
+
+SEE ALSO:
+      * Module aci_tenant
+           The official documentation on the aci_tenant module.
+           https://docs.ansible.com/ansible/latest/modules/aci_tenant_module.html
+      * Module aci_ap
+           The official documentation on the aci_ap module.
+           https://docs.ansible.com/ansible/latest/modules/aci_ap_module.html
+      * APIC Management Information Model reference
+           More information about the internal APIC class *fv:AEPg*.
+           https://developer.cisco.com/docs/apic-mim-ref/
+      * Ansible documentation [aci_guide]
+           Detailed information on how to manage your ACI infrastructure using Ansible.
+           https://docs.ansible.com/ansible/latest/#stq=aci_guide&stp=1
+      * Ansible documentation [aci_dev_guide]
+           Detailed guide on how to write your own Cisco ACI modules to contribute.
+           https://docs.ansible.com/ansible/latest/#stq=aci_dev_guide&stp=1
+
+
+AUTHOR: Swetha Chunduri (@schunduri)
+        METADATA:
+          status:
+          - preview
+          supported_by: certified
+        
+
+EXAMPLES:
+
+- name: Add a new EPG
+  aci_epg:
+    host: apic
+    username: admin
+    password: SomeSecretPassword
+    tenant: production
+    ap: intranet
+    epg: web_epg
+    description: Web Intranet EPG
+    bd: prod_bd
+    preferred_group: yes
+    state: present
+  delegate_to: localhost
+
+- aci_epg:
+    host: apic
+    username: admin
+    password: SomeSecretPassword
+    tenant: production
+    ap: ticketing
+    epg: "{{ item.epg }}"
+    description: Ticketing EPG
+    bd: "{{ item.bd }}"
+    priority: unspecified
+    intra_epg_isolation: unenforced
+    state: present
+  delegate_to: localhost
+  with_items:
+    - epg: web
+      bd: web_bd
+    - epg: database
+      bd: database_bd
+
+- name: Remove an EPG
+  aci_epg:
+    host: apic
+    username: admin
+    password: SomeSecretPassword
+    validate_certs: no
+    tenant: production
+    app_profile: intranet
+    epg: web_epg
+    state: absent
+  delegate_to: localhost
+
+- name: Query an EPG
+  aci_epg:
+    host: apic
+    username: admin
+    password: SomeSecretPassword
+    tenant: production
+    ap: ticketing
+    epg: web_epg
+    state: query
+  delegate_to: localhost
+  register: query_result
+
+- name: Query all EPGs
+  aci_epg:
+    host: apic
+    username: admin
+    password: SomeSecretPassword
+    state: query
+  delegate_to: localhost
+  register: query_result
+
+- name: Query all EPGs with a Specific Name
+  aci_epg:
+    host: apic
+    username: admin
+    password: SomeSecretPassword
+    validate_certs: no
+    epg: web_epg
+    state: query
+  delegate_to: localhost
+  register: query_result
+
+- name: Query all EPGs of an App Profile
+  aci_epg:
+    host: apic
+    username: admin
+    password: SomeSecretPassword
+    validate_certs: no
+    ap: ticketing
+    state: query
+  delegate_to: localhost
+  register: query_result
+
+
+RETURN VALUES:
+
+current:
+  description: The existing configuration from the APIC after the module has finished
+  returned: success
+  type: list
+  sample:
+    [
+        {
+            "fvTenant": {
+                "attributes": {
+                    "descr": "Production environment",
+                    "dn": "uni/tn-production",
+                    "name": "production",
+                    "nameAlias": "",
+                    "ownerKey": "",
+                    "ownerTag": ""
+                }
+            }
+        }
+    ]
+error:
+  description: The error information as returned from the APIC
+  returned: failure
+  type: dict
+  sample:
+    {
+        "code": "122",
+        "text": "unknown managed object class foo"
+    }
+raw:
+  description: The raw output returned by the APIC REST API (xml or json)
+  returned: parse error
+  type: str
+  sample: '<?xml version="1.0" encoding="UTF-8"?><imdata totalCount="1"><error code="122" text="unknown managed object class foo"/></imdata>'
+sent:
+  description: The actual/minimal configuration pushed to the APIC
+  returned: info
+  type: list
+  sample:
+    {
+        "fvTenant": {
+            "attributes": {
+                "descr": "Production environment"
+            }
+        }
+    }
+previous:
+  description: The original configuration from the APIC before the module has started
+  returned: info
+  type: list
+  sample:
+    [
+        {
+            "fvTenant": {
+                "attributes": {
+                    "descr": "Production",
+                    "dn": "uni/tn-production",
+                    "name": "production",
+                    "nameAlias": "",
+                    "ownerKey": "",
+                    "ownerTag": ""
+                }
+            }
+        }
+    ]
+proposed:
+  description: The assembled configuration from the user-provided parameters
+  returned: info
+  type: dict
+  sample:
+    {
+        "fvTenant": {
+            "attributes": {
+                "descr": "Production environment",
+                "name": "production"
+            }
+        }
+    }
+filter_string:
+  description: The filter string used for the request
+  returned: failure or debug
+  type: str
+  sample: ?rsp-prop-include=config-only
+method:
+  description: The HTTP method used for the request to the APIC
+  returned: failure or debug
+  type: str
+  sample: POST
+response:
+  description: The HTTP response from the APIC
+  returned: failure or debug
+  type: str
+  sample: OK (30 bytes)
+status:
+  description: The HTTP status from the APIC
+  returned: failure or debug
+  type: int
+  sample: 200
+url:
+  description: The HTTP url used for the request to the APIC
+  returned: failure or debug
+  type: str
+  sample: https://10.11.12.13/api/mo/uni/tn-production.json
+

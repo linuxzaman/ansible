@@ -1,0 +1,35 @@
+EXAMPLES:
+
+# Create a public IP.
+
+- oneandone_public_ip:
+    auth_token: oneandone_private_api_key
+    reverse_dns: example.com
+    datacenter: US
+    type: IPV4
+
+# Update a public IP.
+
+- oneandone_public_ip:
+    auth_token: oneandone_private_api_key
+    public_ip_id: public ip id
+    reverse_dns: secondexample.com
+    state: update
+
+
+# Delete a public IP
+
+- oneandone_public_ip:
+    auth_token: oneandone_private_api_key
+    public_ip_id: public ip id
+    state: absent
+
+
+RETURN VALUES:
+
+public_ip:
+    description: Information about the public ip that was processed
+    type: dict
+    sample: '{"id": "F77CC589EBC120905B4F4719217BFF6D", "ip": "10.5.132.106"}'
+    returned: always
+

@@ -1,0 +1,163 @@
+> AWS_SSM_PARAMETER_STORE    (/usr/lib/python2.7/dist-packages/ansible/modules/cloud/amazon/aws_ssm_parameter_store.py)
+
+        Manage key-value pairs in aws parameter store.
+
+  * This module is maintained by The Ansible Community
+OPTIONS (= is mandatory):
+
+- aws_access_key
+        AWS access key. If not set then the value of the AWS_ACCESS_KEY_ID, AWS_ACCESS_KEY or EC2_ACCESS_KEY environment variable is
+        used.
+        (Aliases: ec2_access_key, access_key)[Default: (null)]
+        type: str
+
+- aws_secret_key
+        AWS secret key. If not set then the value of the AWS_SECRET_ACCESS_KEY, AWS_SECRET_KEY, or EC2_SECRET_KEY environment variable is
+        used.
+        (Aliases: ec2_secret_key, secret_key)[Default: (null)]
+        type: str
+
+- debug_botocore_endpoint_logs
+        Use a botocore.endpoint logger to parse the unique (rather than total) "resource:action" API calls made during a task, outputing
+        the set to the resource_actions key in the task results. Use the aws_resource_action callback to output to total list made during
+        a playbook. The ANSIBLE_DEBUG_BOTOCORE_LOGS environment variable may also be used.
+        [Default: no]
+        type: bool
+        version_added: 2.8
+
+- decryption
+        Work with SecureString type to get plain text secrets
+        [Default: True]
+        type: bool
+
+- description
+        parameter key description.
+        [Default: (null)]
+
+- ec2_url
+        Url to use to connect to EC2 or your Eucalyptus cloud (by default the module will use EC2 endpoints). Ignored for modules where
+        region is required. Must be specified for all other modules if region is not used. If not set then the value of the EC2_URL
+        environment variable, if any, is used.
+        [Default: (null)]
+        type: str
+
+- key_id
+        aws KMS key to decrypt the secrets.
+        [Default: aws/ssm (this key is automatically generated at the first parameter created).]
+
+= name
+        parameter key name.
+
+
+- overwrite_value
+        Option to overwrite an existing value if it already exists.
+        String
+        (Choices: never, changed, always)[Default: changed]
+        version_added: 2.6
+
+- profile
+        Uses a boto profile. Only works with boto >= 2.24.0.
+        [Default: (null)]
+        type: str
+        version_added: 1.6
+
+- region
+        region.
+        [Default: (null)]
+
+- security_token
+        AWS STS security token. If not set then the value of the AWS_SECURITY_TOKEN or EC2_SECURITY_TOKEN environment variable is used.
+        (Aliases: access_token)[Default: (null)]
+        type: str
+        version_added: 1.6
+
+- state
+        Creates or modifies an existing parameter
+        Deletes a parameter
+        (Choices: present, absent)[Default: present]
+
+- string_type
+        Parameter String type
+        (Choices: String, StringList, SecureString)[Default: String]
+
+- validate_certs
+        When set to "no", SSL certificates will not be validated for boto versions >= 2.6.0.
+        [Default: True]
+        type: bool
+        version_added: 1.5
+
+- value
+        Parameter value.
+        [Default: (null)]
+
+
+NOTES:
+      * If parameters are not set within the module, the following environment variables can be used in decreasing order of
+        precedence `AWS_URL' or `EC2_URL', `AWS_ACCESS_KEY_ID' or `AWS_ACCESS_KEY' or `EC2_ACCESS_KEY', `AWS_SECRET_ACCESS_KEY' or
+        `AWS_SECRET_KEY' or `EC2_SECRET_KEY', `AWS_SECURITY_TOKEN' or `EC2_SECURITY_TOKEN', `AWS_REGION' or `EC2_REGION'
+      * Ansible uses the boto configuration file (typically ~/.boto) if no credentials are provided. See
+        https://boto.readthedocs.io/en/latest/boto_config_tut.html
+      * `AWS_REGION' or `EC2_REGION' can be typically be used to specify the AWS region, when required, but this can also be
+        configured in the boto config file
+
+
+REQUIREMENTS:  boto, boto3, botocore, python >= 2.6
+
+AUTHOR: Nathan Webster (@nathanwebsterdotme), Bill Wang (@ozbillwang) <ozbillwang@gmail.com>, Michael De La Rue (@mikedlr)
+        METADATA:
+          status:
+          - preview
+          supported_by: community
+        
+
+EXAMPLES:
+
+- name: Create or update key/value pair in aws parameter store
+  aws_ssm_parameter_store:
+    name: "Hello"
+    description: "This is your first key"
+    value: "World"
+
+- name: Delete the key
+  aws_ssm_parameter_store:
+    name: "Hello"
+    state: absent
+
+- name: Create or update secure key/value pair with default kms key (aws/ssm)
+  aws_ssm_parameter_store:
+    name: "Hello"
+    description: "This is your first key"
+    string_type: "SecureString"
+    value: "World"
+
+- name: Create or update secure key/value pair with nominated kms key
+  aws_ssm_parameter_store:
+    name: "Hello"
+    description: "This is your first key"
+    string_type: "SecureString"
+    key_id: "alias/demo"
+    value: "World"
+
+- name: Always update a parameter store value and create a new version
+  aws_ssm_parameter_store:
+    name: "overwrite_example"
+    description: "This example will always overwrite the value"
+    string_type: "String"
+    value: "Test1234"
+    overwrite_value: "always"
+
+- name: recommend to use with aws_ssm lookup plugin
+  debug: msg="{{ lookup('aws_ssm', 'hello') }}"
+
+
+RETURN VALUES:
+
+put_parameter:
+    description: Add one or more parameters to the system.
+    returned: success
+    type: dict
+delete_parameter:
+    description: Delete a parameter from the system.
+    returned: success
+    type: dict
+

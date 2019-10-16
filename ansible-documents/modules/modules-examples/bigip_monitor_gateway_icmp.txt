@@ -1,0 +1,93 @@
+EXAMPLES:
+
+- name: Create a monitor
+  bigip_monitor_gateway_icmp:
+    name: gw1
+    adaptive: no
+    interval: 1
+    time_until_up: 0
+    timeout: 3
+    provider:
+      password: secret
+      server: lb.mydomain.com
+      user: admin
+  delegate_to: localhost
+
+
+RETURN VALUES:
+
+parent:
+  description: New parent template of the monitor.
+  returned: changed
+  type: str
+  sample: gateway-icmp
+ip:
+  description: The new IP of IP/port definition.
+  returned: changed
+  type: str
+  sample: 10.12.13.14
+interval:
+  description: The new interval in which to run the monitor check.
+  returned: changed
+  type: int
+  sample: 2
+timeout:
+  description: The new timeout in which the remote system must respond to the monitor.
+  returned: changed
+  type: int
+  sample: 10
+time_until_up:
+  description: The new time in which to mark a system as up after first successful response.
+  returned: changed
+  type: int
+  sample: 2
+adaptive:
+  description: Whether adaptive is enabled or not.
+  returned: changed
+  type: bool
+  sample: yes
+allowed_divergence_type:
+  description: Type of divergence used for adaptive response time monitoring.
+  returned: changed
+  type: str
+  sample: absolute
+allowed_divergence_value:
+  description:
+    - Value of the type of divergence used for adaptive response time monitoring.
+    - May be C(percent) or C(ms) depending on whether C(relative) or C(absolute).
+  returned: changed
+  type: int
+  sample: 25
+description:
+  description: The description of the monitor.
+  returned: changed
+  type: str
+  sample: Important Monitor
+adaptive_limit:
+  description: Absolute number of milliseconds that may not be exceeded by a monitor probe.
+  returned: changed
+  type: int
+  sample: 200
+sampling_timespan:
+  description: Absolute number of milliseconds that may not be exceeded by a monitor probe.
+  returned: changed
+  type: int
+  sample: 200
+up_interval:
+  description: Interval for the system to use to perform the health check when a resource is up.
+  returned: changed
+  type: int
+  sample: 0
+port:
+  description:
+    - Alias port or service for the monitor to check, on behalf of the pools or pool
+      members with which the monitor is associated.
+  returned: changed
+  type: str
+  sample: 80
+transparent:
+  description: Whether the monitor operates in transparent mode.
+  returned: changed
+  type: bool
+  sample: no
+

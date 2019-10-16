@@ -1,0 +1,112 @@
+> PROFITBRICKS_VOLUME    (/usr/lib/python2.7/dist-packages/ansible/modules/cloud/profitbricks/profitbricks_volume.py)
+
+        Allows you to create or remove a volume from a ProfitBricks datacenter. This module has a dependency on profitbricks >= 1.0.0
+
+  * This module is maintained by The Ansible Community
+OPTIONS (= is mandatory):
+
+- auto_increment
+        Whether or not to increment a single number in the name for created virtual machines.
+        [Default: True]
+        type: bool
+
+- bus
+        The bus type.
+        (Choices: IDE, VIRTIO)[Default: VIRTIO]
+
+- count
+        The number of volumes you wish to create.
+        [Default: 1]
+
+= datacenter
+        The datacenter in which to create the volumes.
+
+
+- disk_type
+        The disk type of the volume.
+        (Choices: HDD, SSD)[Default: HDD]
+
+= image
+        The system image ID for the volume, e.g. a3eae284-a2fe-11e4-b187-5f1f641608c8. This can also be a snapshot image ID.
+
+
+- image_password
+        Password set for the administrative user.
+        [Default: (null)]
+        version_added: 2.2
+
+- instance_ids
+        list of instance ids, currently only used when state='absent' to remove instances.
+        [Default: (null)]
+
+- licence_type
+        The licence type for the volume. This is used when the image is non-standard.
+        (Choices: LINUX, WINDOWS, UNKNOWN, OTHER)[Default: UNKNOWN]
+
+= name
+        The name of the volumes. You can enumerate the names using auto_increment.
+
+
+- size
+        The size of the volume.
+        [Default: 10]
+
+- ssh_keys
+        Public SSH keys allowing access to the virtual machine.
+        [Default: (null)]
+        version_added: 2.2
+
+- state
+        create or terminate datacenters
+        (Choices: present, absent)[Default: present]
+
+- subscription_password
+        THe ProfitBricks password. Overrides the PB_PASSWORD environment variable.
+        [Default: (null)]
+
+- subscription_user
+        The ProfitBricks username. Overrides the PB_SUBSCRIPTION_ID environment variable.
+        [Default: (null)]
+
+- wait
+        wait for the datacenter to be created before returning
+        [Default: yes]
+        type: bool
+
+- wait_timeout
+        how long before wait gives up, in seconds
+        [Default: 600]
+
+
+REQUIREMENTS:  profitbricks
+
+AUTHOR: Matt Baldwin (@baldwinSPC) <baldwin@stackpointcloud.com>
+        METADATA:
+          status:
+          - preview
+          supported_by: community
+        
+
+EXAMPLES:
+
+# Create Multiple Volumes
+
+- profitbricks_volume:
+    datacenter: Tardis One
+    name: vol%02d
+    count: 5
+    auto_increment: yes
+    wait_timeout: 500
+    state: present
+
+# Remove Volumes
+
+- profitbricks_volume:
+    datacenter: Tardis One
+    instance_ids:
+      - 'vol01'
+      - 'vol02'
+    wait_timeout: 500
+    state: absent
+
+

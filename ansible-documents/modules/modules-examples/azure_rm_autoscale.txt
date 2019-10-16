@@ -1,0 +1,131 @@
+EXAMPLES:
+
+- name: Create an auto scale
+  azure_rm_autoscale:
+      target: "/subscriptions/xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx/resourceGroups/myResourceGroup/providers/Microsoft.Compute/virtualMachineScaleSets/myVmss"
+      enabled: true
+      profiles:
+      - count: '1'
+        recurrence_days:
+        - Monday
+        name: Auto created scale condition
+        recurrence_timezone: China Standard Time
+        recurrence_mins:
+        - '0'
+        min_count: '1'
+        max_count: '1'
+        recurrence_frequency: Week
+        recurrence_hours:
+        - '18'
+      name: scale
+      resource_group: myResourceGroup
+
+- name: Create an auto scale with compicated profile
+  azure_rm_autoscale:
+      target: "/subscriptions/xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx/resourceGroups/myResourceGroup/providers/Microsoft.Compute/virtualMachineScaleSets
+               /myVmss"
+      enabled: true
+      profiles:
+      - count: '1'
+        recurrence_days:
+        - Monday
+        name: Auto created scale condition 0
+        rules:
+        - Time_aggregation: Average
+          time_window: 10
+          direction: Increase
+          metric_name: Percentage CPU
+          metric_resource_uri: "/subscriptions/xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx/resourceGroups/myResourceGroup/providers/Microsoft.Compute/virtua
+                                lMachineScaleSets/vmss"
+          value: '1'
+          threshold: 70
+          cooldown: 5
+          time_grain: 1
+          statistic: Average
+          operator: GreaterThan
+          type: ChangeCount
+        max_count: '1'
+        recurrence_mins:
+        - '0'
+        min_count: '1'
+        recurrence_timezone: China Standard Time
+        recurrence_frequency: Week
+        recurrence_hours:
+        - '6'
+      notifications:
+      - email_admin: True
+        email_co_admin: False
+        custom_emails:
+        - yuwzho@microsoft.com
+      name: scale
+      resource_group: myResourceGroup
+
+- name: Delete an Azure Auto Scale Setting
+  azure_rm_autoscale:
+    state: absent
+    resource_group: myResourceGroup
+    name: scale
+
+
+RETURN VALUES:
+
+state:
+    description: Current state of the resource.
+    returned: always
+    type: dict
+    sample: {
+        "changed": false,
+        "enabled": true,
+        "id": "/subscriptions/xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx/resourceGroups/myResourceGroup/providers/microsoft.insights/autoscalesettings/scale",
+        "location": "eastus",
+        "name": "scale",
+        "notifications": [
+            {
+                "custom_emails": [
+                    "yuwzho@microsoft.com"
+                ],
+                "send_to_subscription_administrator": true,
+                "send_to_subscription_co_administrators": false,
+                "webhooks": []
+            }
+        ],
+        "profiles": [
+            {
+                "count": "1",
+                "max_count": "1",
+                "min_count": "1",
+                "name": "Auto created scale condition 0",
+                "recurrence_days": [
+                    "Monday"
+                ],
+                "recurrence_frequency": "Week",
+                "recurrence_hours": [
+                    "6"
+                ],
+                "recurrence_mins": [
+                    "0"
+                ],
+                "recurrence_timezone": "China Standard Time",
+                "rules": [
+                    {
+                        "cooldown": 5.0,
+                        "direction": "Increase",
+                        "metric_name": "Percentage CPU",
+                        "metric_resource_uri": "/subscriptions/xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx/resourceGroups/myResourceGroup/providers/Microsof
+                                                t.Compute/virtualMachineScaleSets/MyVmss",
+                        "operator": "GreaterThan",
+                        "statistic": "Average",
+                        "threshold": 70.0,
+                        "time_aggregation": "Average",
+                        "time_grain": 1.0,
+                        "time_window": 10.0,
+                        "type": "ChangeCount",
+                        "value": "1"
+                    }
+                ]
+            }
+        ],
+        "target": "/subscriptions/xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx/resourceGroups/myResourceGroup/providers/Microsoft.Compute/virtualMachineScale
+                   Sets/myVmss"
+    }
+

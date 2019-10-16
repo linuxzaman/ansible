@@ -1,0 +1,388 @@
+> FORTIOS_SPAMFILTER_PROFILE    (/usr/lib/python2.7/dist-packages/ansible/modules/network/fortios/fortios_spamfilter_profile.py)
+
+        This module is able to configure a FortiGate or FortiOS by allowing the user to set and modify spamfilter feature and profile
+        category. Examples include all parameters and values need to be adjusted to datasources before usage. Tested with FOS v6.0.2
+
+  * This module is maintained by The Ansible Community
+OPTIONS (= is mandatory):
+
+= host
+        FortiOS or FortiGate ip address.
+
+
+- https
+        Indicates if the requests towards FortiGate must use HTTPS protocol
+        [Default: True]
+        type: bool
+
+- password
+        FortiOS or FortiGate password.
+        [Default: ]
+
+- spamfilter_profile
+        Configure AntiSpam profiles.
+        [Default: None]
+        suboptions:
+          comment:
+            description:
+            - Comment.
+          external:
+            choices:
+            - enable
+            - disable
+            description:
+            - Enable/disable external Email inspection.
+          flow-based:
+            choices:
+            - enable
+            - disable
+            description:
+            - Enable/disable flow-based spam filtering.
+          gmail:
+            description:
+            - Gmail.
+            suboptions:
+              log:
+                choices:
+                - enable
+                - disable
+                description:
+                - Enable/disable logging.
+          imap:
+            description:
+            - IMAP.
+            suboptions:
+              action:
+                choices:
+                - pass
+                - tag
+                description:
+                - Action for spam email.
+              log:
+                choices:
+                - enable
+                - disable
+                description:
+                - Enable/disable logging.
+              tag-msg:
+                description:
+                - Subject text or header added to spam email.
+              tag-type:
+                choices:
+                - subject
+                - header
+                - spaminfo
+                description:
+                - Tag subject or header for spam email.
+          mapi:
+            description:
+            - MAPI.
+            suboptions:
+              action:
+                choices:
+                - pass
+                - discard
+                description:
+                - Action for spam email.
+              log:
+                choices:
+                - enable
+                - disable
+                description:
+                - Enable/disable logging.
+          msn-hotmail:
+            description:
+            - MSN Hotmail.
+            suboptions:
+              log:
+                choices:
+                - enable
+                - disable
+                description:
+                - Enable/disable logging.
+          name:
+            description:
+            - Profile name.
+            required: true
+          options:
+            choices:
+            - bannedword
+            - spambwl
+            - spamfsip
+            - spamfssubmit
+            - spamfschksum
+            - spamfsurl
+            - spamhelodns
+            - spamraddrdns
+            - spamrbl
+            - spamhdrcheck
+            - spamfsphish
+            description:
+            - Options.
+          pop3:
+            description:
+            - POP3.
+            suboptions:
+              action:
+                choices:
+                - pass
+                - tag
+                description:
+                - Action for spam email.
+              log:
+                choices:
+                - enable
+                - disable
+                description:
+                - Enable/disable logging.
+              tag-msg:
+                description:
+                - Subject text or header added to spam email.
+              tag-type:
+                choices:
+                - subject
+                - header
+                - spaminfo
+                description:
+                - Tag subject or header for spam email.
+          replacemsg-group:
+            description:
+            - Replacement message group. Source system.replacemsg-group.name.
+          smtp:
+            description:
+            - SMTP.
+            suboptions:
+              action:
+                choices:
+                - pass
+                - tag
+                - discard
+                description:
+                - Action for spam email.
+              hdrip:
+                choices:
+                - disable
+                - enable
+                description:
+                - Enable/disable SMTP email header IP checks for spamfsip, spamrbl and spambwl
+                  filters.
+              local-override:
+                choices:
+                - disable
+                - enable
+                description:
+                - Enable/disable local filter to override SMTP remote check result.
+              log:
+                choices:
+                - enable
+                - disable
+                description:
+                - Enable/disable logging.
+              tag-msg:
+                description:
+                - Subject text or header added to spam email.
+              tag-type:
+                choices:
+                - subject
+                - header
+                - spaminfo
+                description:
+                - Tag subject or header for spam email.
+          spam-bwl-table:
+            description:
+            - Anti-spam black/white list table ID. Source spamfilter.bwl.id.
+          spam-bword-table:
+            description:
+            - Anti-spam banned word table ID. Source spamfilter.bword.id.
+          spam-bword-threshold:
+            description:
+            - Spam banned word threshold.
+          spam-filtering:
+            choices:
+            - enable
+            - disable
+            description:
+            - Enable/disable spam filtering.
+          spam-iptrust-table:
+            description:
+            - Anti-spam IP trust table ID. Source spamfilter.iptrust.id.
+          spam-log:
+            choices:
+            - disable
+            - enable
+            description:
+            - Enable/disable spam logging for email filtering.
+          spam-log-fortiguard-response:
+            choices:
+            - disable
+            - enable
+            description:
+            - Enable/disable logging FortiGuard spam response.
+          spam-mheader-table:
+            description:
+            - Anti-spam MIME header table ID. Source spamfilter.mheader.id.
+          spam-rbl-table:
+            description:
+            - Anti-spam DNSBL table ID. Source spamfilter.dnsbl.id.
+          state:
+            choices:
+            - present
+            - absent
+            description:
+            - Indicates whether to create or remove the object
+          yahoo-mail:
+            description:
+            - Yahoo! Mail.
+            suboptions:
+              log:
+                choices:
+                - enable
+                - disable
+                description:
+                - Enable/disable logging.
+        
+
+= username
+        FortiOS or FortiGate username.
+
+
+- vdom
+        Virtual domain, among those defined previously. A vdom is a virtual instance of the FortiGate that can be configured and used as
+        a different unit.
+        [Default: root]
+
+
+NOTES:
+      * Requires fortiosapi library developed by Fortinet
+      * Run as a local_action in your playbook
+
+
+REQUIREMENTS:  fortiosapi>=0.9.8
+
+AUTHOR: Miguel Angel Munoz (@mamunozgonzalez), Nicolas Thomas (@thomnico)
+        METADATA:
+          status:
+          - preview
+          supported_by: community
+        
+
+EXAMPLES:
+
+- hosts: localhost
+  vars:
+   host: "192.168.122.40"
+   username: "admin"
+   password: ""
+   vdom: "root"
+  tasks:
+  - name: Configure AntiSpam profiles.
+    fortios_spamfilter_profile:
+      host:  "{{ host }}"
+      username: "{{ username }}"
+      password: "{{ password }}"
+      vdom:  "{{ vdom }}"
+      https: "False"
+      spamfilter_profile:
+        state: "present"
+        comment: "Comment."
+        external: "enable"
+        flow-based: "enable"
+        gmail:
+            log: "enable"
+        imap:
+            action: "pass"
+            log: "enable"
+            tag-msg: "<your_own_value>"
+            tag-type: "subject"
+        mapi:
+            action: "pass"
+            log: "enable"
+        msn-hotmail:
+            log: "enable"
+        name: "default_name_18"
+        options: "bannedword"
+        pop3:
+            action: "pass"
+            log: "enable"
+            tag-msg: "<your_own_value>"
+            tag-type: "subject"
+        replacemsg-group: "<your_own_value> (source system.replacemsg-group.name)"
+        smtp:
+            action: "pass"
+            hdrip: "disable"
+            local-override: "disable"
+            log: "enable"
+            tag-msg: "<your_own_value>"
+            tag-type: "subject"
+        spam-bwl-table: "33 (source spamfilter.bwl.id)"
+        spam-bword-table: "34 (source spamfilter.bword.id)"
+        spam-bword-threshold: "35"
+        spam-filtering: "enable"
+        spam-iptrust-table: "37 (source spamfilter.iptrust.id)"
+        spam-log: "disable"
+        spam-log-fortiguard-response: "disable"
+        spam-mheader-table: "40 (source spamfilter.mheader.id)"
+        spam-rbl-table: "41 (source spamfilter.dnsbl.id)"
+        yahoo-mail:
+            log: "enable"
+
+
+RETURN VALUES:
+
+build:
+  description: Build number of the fortigate image
+  returned: always
+  type: str
+  sample: '1547'
+http_method:
+  description: Last method used to provision the content into FortiGate
+  returned: always
+  type: str
+  sample: 'PUT'
+http_status:
+  description: Last result given by FortiGate on last operation applied
+  returned: always
+  type: str
+  sample: "200"
+mkey:
+  description: Master key (id) used in the last call to FortiGate
+  returned: success
+  type: str
+  sample: "id"
+name:
+  description: Name of the table used to fulfill the request
+  returned: always
+  type: str
+  sample: "urlfilter"
+path:
+  description: Path of the table used to fulfill the request
+  returned: always
+  type: str
+  sample: "webfilter"
+revision:
+  description: Internal revision number
+  returned: always
+  type: str
+  sample: "17.0.2.10658"
+serial:
+  description: Serial number of the unit
+  returned: always
+  type: str
+  sample: "FGVMEVYYQT3AB5352"
+status:
+  description: Indication of the operation's result
+  returned: always
+  type: str
+  sample: "success"
+vdom:
+  description: Virtual domain used
+  returned: always
+  type: str
+  sample: "root"
+version:
+  description: Version of the FortiGate
+  returned: always
+  type: str
+  sample: "v5.6.3"
+
+

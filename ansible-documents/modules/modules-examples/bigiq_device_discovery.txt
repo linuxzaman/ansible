@@ -1,0 +1,115 @@
+EXAMPLES:
+
+- name: Discover a new device and import config, use default conflict policy.
+  bigiq_device_discovery:
+    device_address: 192.168.1.1
+    device_username: bigipadmin
+    device_password: bigipsecret
+    modules:
+      - ltm
+      - afm
+      - shared_security
+    provider:
+      password: secret
+      server: lb.mydomain.com
+      user: admin
+  delegate_to: localhost
+
+- name: Discover a new device and import config, use non- default conflict policy.
+  bigiq_device_discovery:
+    device_address: 192.168.1.1
+    modules:
+      - ltm
+      - dns
+    conflict_policy: use_bigip
+    provider:
+      password: secret
+      server: lb.mydomain.com
+      user: admin
+  delegate_to: localhost
+
+- name: Force full device rediscovery
+  bigiq_device_discovery:
+    device_address: 192.168.1.1
+    modules:
+      - ltm
+      - afm
+      - dns
+      - shared_security
+    force: yes
+    provider:
+      password: secret
+      server: lb.mydomain.com
+      user: admin
+  delegate_to: localhost
+
+- name: Remove discovered device and its config
+  bigiq_device_discovery:
+    device_address: 192.168.1.1
+    state: absent
+    provider:
+      password: secret
+      server: lb.mydomain.com
+      user: admin
+  delegate_to: localhost
+
+
+RETURN VALUES:
+
+device_address:
+  description: The IP address of the BIG-IP device to be imported/managed.
+  returned: changed
+  type: str
+  sample: 192.168.1.1
+device_port:
+  description: The port on which a device trust setup between BIG-IQ and BIG-IP should happen.
+  returned: changed
+  type: int
+  sample: 10443
+ha_name:
+  description: DSC cluster name of the BIG-IP device to be managed.
+  returned: changed
+  type: str
+  sample: GROUP_1
+use_bigiq_sync:
+  description: Indicate if BIG-IQ should manually synchronise DSC configuration.
+  returned: changed
+  type: bool
+  sample: yes
+conflict_policy:
+  description: Sets the conflict resolution policy for shared objects across BIG-IP devices.
+  returned: changed
+  type: str
+  sample: use_bigip
+device_conflict_policy:
+  description: Sets the conflict resolution policy for objects that are specific to a particular to a BIG-IP device.
+  returned: changed
+  type: str
+  sample: use_bigip
+versioned_conflict_policy:
+  description: Sets the conflict resolution policy for LTM profile and monitor objects.
+  returned: changed
+  type: str
+  sample: keep_version
+access_conflict_policy:
+  description: Sets the conflict resolution policy for Access module C(apm) objects.
+  returned: changed
+  type: str
+  sample: keep_version
+access_group_name:
+  description: Access group name to import Access configuration for devices.
+  returned: changed
+  type: str
+  sample: foo_group
+access_group_first_device:
+  description: First device in the access group to import shared configuration for that access group.
+  returned: changed
+  type: bool
+  sample: yes
+modules:
+  description: List of modules to be discovered and imported into the device.
+  returned: changed
+  type: list
+  sample: ['ltm', 'dns']
+
+

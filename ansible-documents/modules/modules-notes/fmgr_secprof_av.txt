@@ -1,0 +1,508 @@
+> FMGR_SECPROF_AV    (/usr/lib/python2.7/dist-packages/ansible/modules/network/fortimanager/fmgr_secprof_av.py)
+
+        Manage security profile groups for FortiManager objects
+
+  * This module is maintained by The Ansible Community
+OPTIONS (= is mandatory):
+
+- adom
+        The ADOM the configuration should belong to.
+        [Default: root]
+
+- analytics_bl_filetype
+        Only submit files matching this DLP file-pattern to FortiSandbox.
+        [Default: (null)]
+
+- analytics_db
+        Enable/disable using the FortiSandbox signature database to supplement the AV signature databases.
+        (Choices: disable, enable)[Default: (null)]
+
+- analytics_max_upload
+        Maximum size of files that can be uploaded to FortiSandbox (1 - 395 MBytes, default = 10).
+        [Default: (null)]
+
+- analytics_wl_filetype
+        Do not submit files matching this DLP file-pattern to FortiSandbox.
+        [Default: (null)]
+
+- av_block_log
+        Enable/disable logging for AntiVirus file blocking.
+        (Choices: disable, enable)[Default: (null)]
+
+- av_virus_log
+        Enable/disable AntiVirus logging.
+        (Choices: disable, enable)[Default: (null)]
+
+- comment
+        Comment.
+        [Default: (null)]
+
+- content_disarm
+        EXPERTS ONLY! KNOWLEDGE OF FMGR JSON API IS REQUIRED!
+        List of multiple child objects to be added. Expects a list of dictionaries.
+        Dictionaries must use FortiManager API parameters, not the ansible ones listed below.
+        If submitted, all other prefixed sub-parameters ARE IGNORED.
+        This object is MUTUALLY EXCLUSIVE with its options.
+        We expect that you know what you are doing with these list parameters, and are leveraging the JSON API Guide.
+        WHEN IN DOUBT, USE THE SUB OPTIONS BELOW INSTEAD TO CREATE OBJECTS WITH MULTIPLE TASKS
+        [Default: (null)]
+
+- content_disarm_cover_page
+        Enable/disable inserting a cover page into the disarmed document.
+        (Choices: disable, enable)[Default: (null)]
+
+- content_disarm_detect_only
+        Enable/disable only detect disarmable files, do not alter content.
+        (Choices: disable, enable)[Default: (null)]
+
+- content_disarm_office_embed
+        Enable/disable stripping of embedded objects in Microsoft Office documents.
+        (Choices: disable, enable)[Default: (null)]
+
+- content_disarm_office_hylink
+        Enable/disable stripping of hyperlinks in Microsoft Office documents.
+        (Choices: disable, enable)[Default: (null)]
+
+- content_disarm_office_linked
+        Enable/disable stripping of linked objects in Microsoft Office documents.
+        (Choices: disable, enable)[Default: (null)]
+
+- content_disarm_office_macro
+        Enable/disable stripping of macros in Microsoft Office documents.
+        (Choices: disable, enable)[Default: (null)]
+
+- content_disarm_original_file_destination
+        Destination to send original file if active content is removed.
+        (Choices: fortisandbox, quarantine, discard)[Default: (null)]
+
+- content_disarm_pdf_act_form
+        Enable/disable stripping of actions that submit data to other targets in PDF documents.
+        (Choices: disable, enable)[Default: (null)]
+
+- content_disarm_pdf_act_gotor
+        Enable/disable stripping of links to other PDFs in PDF documents.
+        (Choices: disable, enable)[Default: (null)]
+
+- content_disarm_pdf_act_java
+        Enable/disable stripping of actions that execute JavaScript code in PDF documents.
+        (Choices: disable, enable)[Default: (null)]
+
+- content_disarm_pdf_act_launch
+        Enable/disable stripping of links to external applications in PDF documents.
+        (Choices: disable, enable)[Default: (null)]
+
+- content_disarm_pdf_act_movie
+        Enable/disable stripping of embedded movies in PDF documents.
+        (Choices: disable, enable)[Default: (null)]
+
+- content_disarm_pdf_act_sound
+        Enable/disable stripping of embedded sound files in PDF documents.
+        (Choices: disable, enable)[Default: (null)]
+
+- content_disarm_pdf_embedfile
+        Enable/disable stripping of embedded files in PDF documents.
+        (Choices: disable, enable)[Default: (null)]
+
+- content_disarm_pdf_hyperlink
+        Enable/disable stripping of hyperlinks from PDF documents.
+        (Choices: disable, enable)[Default: (null)]
+
+- content_disarm_pdf_javacode
+        Enable/disable stripping of JavaScript code in PDF documents.
+        (Choices: disable, enable)[Default: (null)]
+
+- extended_log
+        Enable/disable extended logging for antivirus.
+        (Choices: disable, enable)[Default: (null)]
+
+- ftgd_analytics
+        Settings to control which files are uploaded to FortiSandbox.
+        (Choices: disable, suspicious, everything)[Default: (null)]
+
+- ftp
+        EXPERTS ONLY! KNOWLEDGE OF FMGR JSON API IS REQUIRED!
+        List of multiple child objects to be added. Expects a list of dictionaries.
+        Dictionaries must use FortiManager API parameters, not the ansible ones listed below.
+        If submitted, all other prefixed sub-parameters ARE IGNORED.
+        This object is MUTUALLY EXCLUSIVE with its options.
+        We expect that you know what you are doing with these list parameters, and are leveraging the JSON API Guide.
+        WHEN IN DOUBT, USE THE SUB OPTIONS BELOW INSTEAD TO CREATE OBJECTS WITH MULTIPLE TASKS
+        [Default: (null)]
+
+- ftp_archive_block
+        Select the archive types to block.
+        FLAG Based Options. Specify multiple in list form.
+        (Choices: encrypted, corrupted, multipart, nested, mailbomb, unhandled, partiallycorrupted, fileslimit, timeout)[Default: (null)]
+
+- ftp_archive_log
+        Select the archive types to log.
+        FLAG Based Options. Specify multiple in list form.
+        (Choices: encrypted, corrupted, multipart, nested, mailbomb, unhandled, partiallycorrupted, fileslimit, timeout)[Default: (null)]
+
+- ftp_emulator
+        Enable/disable the virus emulator.
+        (Choices: disable, enable)[Default: (null)]
+
+- ftp_options
+        Enable/disable FTP AntiVirus scanning, monitoring, and quarantine.
+        FLAG Based Options. Specify multiple in list form.
+        (Choices: scan, quarantine, avmonitor)[Default: (null)]
+
+- ftp_outbreak_prevention
+        Enable FortiGuard Virus Outbreak Prevention service.
+        (Choices: disabled, files, full-archive)[Default: (null)]
+
+- http
+        EXPERTS ONLY! KNOWLEDGE OF FMGR JSON API IS REQUIRED!
+        List of multiple child objects to be added. Expects a list of dictionaries.
+        Dictionaries must use FortiManager API parameters, not the ansible ones listed below.
+        If submitted, all other prefixed sub-parameters ARE IGNORED.
+        This object is MUTUALLY EXCLUSIVE with its options.
+        We expect that you know what you are doing with these list parameters, and are leveraging the JSON API Guide.
+        WHEN IN DOUBT, USE THE SUB OPTIONS BELOW INSTEAD TO CREATE OBJECTS WITH MULTIPLE TASKS
+        [Default: (null)]
+
+- http_archive_block
+        Select the archive types to block.
+        FLAG Based Options. Specify multiple in list form.
+        (Choices: encrypted, corrupted, multipart, nested, mailbomb, unhandled, partiallycorrupted, fileslimit, timeout)[Default: (null)]
+
+- http_archive_log
+        Select the archive types to log.
+        FLAG Based Options. Specify multiple in list form.
+        (Choices: encrypted, corrupted, multipart, nested, mailbomb, unhandled, partiallycorrupted, fileslimit, timeout)[Default: (null)]
+
+- http_content_disarm
+        Enable Content Disarm and Reconstruction for this protocol.
+        (Choices: disable, enable)[Default: (null)]
+
+- http_emulator
+        Enable/disable the virus emulator.
+        (Choices: disable, enable)[Default: (null)]
+
+- http_options
+        Enable/disable HTTP AntiVirus scanning, monitoring, and quarantine.
+        FLAG Based Options. Specify multiple in list form.
+        (Choices: scan, quarantine, avmonitor)[Default: (null)]
+
+- http_outbreak_prevention
+        Enable FortiGuard Virus Outbreak Prevention service.
+        (Choices: disabled, files, full-archive)[Default: (null)]
+
+- imap
+        EXPERTS ONLY! KNOWLEDGE OF FMGR JSON API IS REQUIRED!
+        List of multiple child objects to be added. Expects a list of dictionaries.
+        Dictionaries must use FortiManager API parameters, not the ansible ones listed below.
+        If submitted, all other prefixed sub-parameters ARE IGNORED.
+        This object is MUTUALLY EXCLUSIVE with its options.
+        We expect that you know what you are doing with these list parameters, and are leveraging the JSON API Guide.
+        WHEN IN DOUBT, USE THE SUB OPTIONS BELOW INSTEAD TO CREATE OBJECTS WITH MULTIPLE TASKS
+        [Default: (null)]
+
+- imap_archive_block
+        Select the archive types to block.
+        FLAG Based Options. Specify multiple in list form.
+        (Choices: encrypted, corrupted, multipart, nested, mailbomb, unhandled, partiallycorrupted, fileslimit, timeout)[Default: (null)]
+
+- imap_archive_log
+        Select the archive types to log.
+        FLAG Based Options. Specify multiple in list form.
+        (Choices: encrypted, corrupted, multipart, nested, mailbomb, unhandled, partiallycorrupted, fileslimit, timeout)[Default: (null)]
+
+- imap_content_disarm
+        Enable Content Disarm and Reconstruction for this protocol.
+        (Choices: disable, enable)[Default: (null)]
+
+- imap_emulator
+        Enable/disable the virus emulator.
+        (Choices: disable, enable)[Default: (null)]
+
+- imap_executables
+        Treat Windows executable files as viruses for the purpose of blocking or monitoring.
+        (Choices: default, virus)[Default: (null)]
+
+- imap_options
+        Enable/disable IMAP AntiVirus scanning, monitoring, and quarantine.
+        FLAG Based Options. Specify multiple in list form.
+        (Choices: scan, quarantine, avmonitor)[Default: (null)]
+
+- imap_outbreak_prevention
+        Enable FortiGuard Virus Outbreak Prevention service.
+        (Choices: disabled, files, full-archive)[Default: (null)]
+
+- inspection_mode
+        Inspection mode.
+        (Choices: proxy, flow-based)[Default: (null)]
+
+- mapi
+        EXPERTS ONLY! KNOWLEDGE OF FMGR JSON API IS REQUIRED!
+        List of multiple child objects to be added. Expects a list of dictionaries.
+        Dictionaries must use FortiManager API parameters, not the ansible ones listed below.
+        If submitted, all other prefixed sub-parameters ARE IGNORED.
+        This object is MUTUALLY EXCLUSIVE with its options.
+        We expect that you know what you are doing with these list parameters, and are leveraging the JSON API Guide.
+        WHEN IN DOUBT, USE THE SUB OPTIONS BELOW INSTEAD TO CREATE OBJECTS WITH MULTIPLE TASKS
+        [Default: (null)]
+
+- mapi_archive_block
+        Select the archive types to block.
+        FLAG Based Options. Specify multiple in list form.
+        (Choices: encrypted, corrupted, multipart, nested, mailbomb, unhandled, partiallycorrupted, fileslimit, timeout)[Default: (null)]
+
+- mapi_archive_log
+        Select the archive types to log.
+        FLAG Based Options. Specify multiple in list form.
+        (Choices: encrypted, corrupted, multipart, nested, mailbomb, unhandled, partiallycorrupted, fileslimit, timeout)[Default: (null)]
+
+- mapi_emulator
+        Enable/disable the virus emulator.
+        (Choices: disable, enable)[Default: (null)]
+
+- mapi_executables
+        Treat Windows executable files as viruses for the purpose of blocking or monitoring.
+        (Choices: default, virus)[Default: (null)]
+
+- mapi_options
+        Enable/disable MAPI AntiVirus scanning, monitoring, and quarantine.
+        FLAG Based Options. Specify multiple in list form.
+        (Choices: scan, quarantine, avmonitor)[Default: (null)]
+
+- mapi_outbreak_prevention
+        Enable FortiGuard Virus Outbreak Prevention service.
+        (Choices: disabled, files, full-archive)[Default: (null)]
+
+- mobile_malware_db
+        Enable/disable using the mobile malware signature database.
+        (Choices: disable, enable)[Default: (null)]
+
+- mode
+        Sets one of three modes for managing the object.
+        Allows use of soft-adds instead of overwriting existing values
+        (Choices: add, set, delete, update)[Default: add]
+
+- nac_quar
+        EXPERTS ONLY! KNOWLEDGE OF FMGR JSON API IS REQUIRED!
+        List of multiple child objects to be added. Expects a list of dictionaries.
+        Dictionaries must use FortiManager API parameters, not the ansible ones listed below.
+        If submitted, all other prefixed sub-parameters ARE IGNORED.
+        This object is MUTUALLY EXCLUSIVE with its options.
+        We expect that you know what you are doing with these list parameters, and are leveraging the JSON API Guide.
+        WHEN IN DOUBT, USE THE SUB OPTIONS BELOW INSTEAD TO CREATE OBJECTS WITH MULTIPLE TASKS
+        [Default: (null)]
+
+- nac_quar_expiry
+        Duration of quarantine.
+        [Default: (null)]
+
+- nac_quar_infected
+        Enable/Disable quarantining infected hosts to the banned user list.
+        (Choices: none, quar-src-ip)[Default: (null)]
+
+- nac_quar_log
+        Enable/disable AntiVirus quarantine logging.
+        (Choices: disable, enable)[Default: (null)]
+
+- name
+        Profile name.
+        [Default: (null)]
+
+- nntp
+        EXPERTS ONLY! KNOWLEDGE OF FMGR JSON API IS REQUIRED!
+        List of multiple child objects to be added. Expects a list of dictionaries.
+        Dictionaries must use FortiManager API parameters, not the ansible ones listed below.
+        If submitted, all other prefixed sub-parameters ARE IGNORED.
+        This object is MUTUALLY EXCLUSIVE with its options.
+        We expect that you know what you are doing with these list parameters, and are leveraging the JSON API Guide.
+        WHEN IN DOUBT, USE THE SUB OPTIONS BELOW INSTEAD TO CREATE OBJECTS WITH MULTIPLE TASKS
+        [Default: (null)]
+
+- nntp_archive_block
+        Select the archive types to block.
+        FLAG Based Options. Specify multiple in list form.
+        (Choices: encrypted, corrupted, multipart, nested, mailbomb, unhandled, partiallycorrupted, fileslimit, timeout)[Default: (null)]
+
+- nntp_archive_log
+        Select the archive types to log.
+        FLAG Based Options. Specify multiple in list form.
+        (Choices: encrypted, corrupted, multipart, nested, mailbomb, unhandled, partiallycorrupted, fileslimit, timeout)[Default: (null)]
+
+- nntp_emulator
+        Enable/disable the virus emulator.
+        (Choices: disable, enable)[Default: (null)]
+
+- nntp_options
+        Enable/disable NNTP AntiVirus scanning, monitoring, and quarantine.
+        FLAG Based Options. Specify multiple in list form.
+        (Choices: scan, quarantine, avmonitor)[Default: (null)]
+
+- nntp_outbreak_prevention
+        Enable FortiGuard Virus Outbreak Prevention service.
+        (Choices: disabled, files, full-archive)[Default: (null)]
+
+- pop3
+        EXPERTS ONLY! KNOWLEDGE OF FMGR JSON API IS REQUIRED!
+        List of multiple child objects to be added. Expects a list of dictionaries.
+        Dictionaries must use FortiManager API parameters, not the ansible ones listed below.
+        If submitted, all other prefixed sub-parameters ARE IGNORED.
+        This object is MUTUALLY EXCLUSIVE with its options.
+        We expect that you know what you are doing with these list parameters, and are leveraging the JSON API Guide.
+        WHEN IN DOUBT, USE THE SUB OPTIONS BELOW INSTEAD TO CREATE OBJECTS WITH MULTIPLE TASKS
+        [Default: (null)]
+
+- pop3_archive_block
+        Select the archive types to block.
+        FLAG Based Options. Specify multiple in list form.
+        (Choices: encrypted, corrupted, multipart, nested, mailbomb, unhandled, partiallycorrupted, fileslimit, timeout)[Default: (null)]
+
+- pop3_archive_log
+        Select the archive types to log.
+        FLAG Based Options. Specify multiple in list form.
+        (Choices: encrypted, corrupted, multipart, nested, mailbomb, unhandled, partiallycorrupted, fileslimit, timeout)[Default: (null)]
+
+- pop3_content_disarm
+        Enable Content Disarm and Reconstruction for this protocol.
+        (Choices: disable, enable)[Default: (null)]
+
+- pop3_emulator
+        Enable/disable the virus emulator.
+        (Choices: disable, enable)[Default: (null)]
+
+- pop3_executables
+        Treat Windows executable files as viruses for the purpose of blocking or monitoring.
+        (Choices: default, virus)[Default: (null)]
+
+- pop3_options
+        Enable/disable POP3 AntiVirus scanning, monitoring, and quarantine.
+        FLAG Based Options. Specify multiple in list form.
+        (Choices: scan, quarantine, avmonitor)[Default: (null)]
+
+- pop3_outbreak_prevention
+        Enable FortiGuard Virus Outbreak Prevention service.
+        (Choices: disabled, files, full-archive)[Default: (null)]
+
+- replacemsg_group
+        Replacement message group customized for this profile.
+        [Default: (null)]
+
+- scan_mode
+        Choose between full scan mode and quick scan mode.
+        (Choices: quick, full)[Default: (null)]
+
+- smb
+        EXPERTS ONLY! KNOWLEDGE OF FMGR JSON API IS REQUIRED!
+        List of multiple child objects to be added. Expects a list of dictionaries.
+        Dictionaries must use FortiManager API parameters, not the ansible ones listed below.
+        If submitted, all other prefixed sub-parameters ARE IGNORED.
+        This object is MUTUALLY EXCLUSIVE with its options.
+        We expect that you know what you are doing with these list parameters, and are leveraging the JSON API Guide.
+        WHEN IN DOUBT, USE THE SUB OPTIONS BELOW INSTEAD TO CREATE OBJECTS WITH MULTIPLE TASKS
+        [Default: (null)]
+
+- smb_archive_block
+        Select the archive types to block.
+        FLAG Based Options. Specify multiple in list form.
+        (Choices: encrypted, corrupted, multipart, nested, mailbomb, unhandled, partiallycorrupted, fileslimit, timeout)[Default: (null)]
+
+- smb_archive_log
+        Select the archive types to log.
+        FLAG Based Options. Specify multiple in list form.
+        (Choices: encrypted, corrupted, multipart, nested, mailbomb, unhandled, partiallycorrupted, fileslimit, timeout)[Default: (null)]
+
+- smb_emulator
+        Enable/disable the virus emulator.
+        (Choices: disable, enable)[Default: (null)]
+
+- smb_options
+        Enable/disable SMB AntiVirus scanning, monitoring, and quarantine.
+        FLAG Based Options. Specify multiple in list form.
+        (Choices: scan, quarantine, avmonitor)[Default: (null)]
+
+- smb_outbreak_prevention
+        Enable FortiGuard Virus Outbreak Prevention service.
+        (Choices: disabled, files, full-archive)[Default: (null)]
+
+- smtp
+        EXPERTS ONLY! KNOWLEDGE OF FMGR JSON API IS REQUIRED!
+        List of multiple child objects to be added. Expects a list of dictionaries.
+        Dictionaries must use FortiManager API parameters, not the ansible ones listed below.
+        If submitted, all other prefixed sub-parameters ARE IGNORED.
+        This object is MUTUALLY EXCLUSIVE with its options.
+        We expect that you know what you are doing with these list parameters, and are leveraging the JSON API Guide.
+        WHEN IN DOUBT, USE THE SUB OPTIONS BELOW INSTEAD TO CREATE OBJECTS WITH MULTIPLE TASKS
+        [Default: (null)]
+
+- smtp_archive_block
+        Select the archive types to block.
+        FLAG Based Options. Specify multiple in list form.
+        (Choices: encrypted, corrupted, multipart, nested, mailbomb, unhandled, partiallycorrupted, fileslimit, timeout)[Default: (null)]
+
+- smtp_archive_log
+        Select the archive types to log.
+        FLAG Based Options. Specify multiple in list form.
+        (Choices: encrypted, corrupted, multipart, nested, mailbomb, unhandled, partiallycorrupted, fileslimit, timeout)[Default: (null)]
+
+- smtp_content_disarm
+        Enable Content Disarm and Reconstruction for this protocol.
+        (Choices: disable, enable)[Default: (null)]
+
+- smtp_emulator
+        Enable/disable the virus emulator.
+        (Choices: disable, enable)[Default: (null)]
+
+- smtp_executables
+        Treat Windows executable files as viruses for the purpose of blocking or monitoring.
+        (Choices: default, virus)[Default: (null)]
+
+- smtp_options
+        Enable/disable SMTP AntiVirus scanning, monitoring, and quarantine.
+        FLAG Based Options. Specify multiple in list form.
+        (Choices: scan, quarantine, avmonitor)[Default: (null)]
+
+- smtp_outbreak_prevention
+        Enable FortiGuard Virus Outbreak Prevention service.
+        (Choices: disabled, files, full-archive)[Default: (null)]
+
+
+NOTES:
+      * Full Documentation at https://ftnt-ansible-docs.readthedocs.io/en/latest/.
+
+
+AUTHOR: Luke Weighall (@lweighall), Andrew Welsh (@Ghilli3), Jim Huber (@p4r4n0y1ng)
+        METADATA:
+          status:
+          - preview
+          supported_by: community
+        
+
+EXAMPLES:
+
+- name: DELETE Profile
+    fmgr_secprof_av:
+      name: "Ansible_AV_Profile"
+      mode: "delete"
+
+  - name: CREATE Profile
+    fmgr_secprof_av:
+      name: "Ansible_AV_Profile"
+      comment: "Created by Ansible Module TEST"
+      mode: "set"
+      inspection_mode: "proxy"
+      ftgd_analytics: "everything"
+      av_block_log: "enable"
+      av_virus_log: "enable"
+      scan_mode: "full"
+      mobile_malware_db: "enable"
+      ftp_archive_block: "encrypted"
+      ftp_outbreak_prevention: "files"
+      ftp_archive_log: "timeout"
+      ftp_emulator: "disable"
+      ftp_options: "scan"
+
+
+RETURN VALUES:
+
+api_result:
+  description: full API response, includes status code and message
+  returned: always
+  type: str
+

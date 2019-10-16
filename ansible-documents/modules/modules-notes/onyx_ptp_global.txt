@@ -1,0 +1,61 @@
+> ONYX_PTP_GLOBAL    (/usr/lib/python2.7/dist-packages/ansible/modules/network/onyx/onyx_ptp_global.py)
+
+        This module provides declarative management of PTP Global configuration on Mellanox ONYX network devices.
+
+  * This module is maintained by The Ansible Community
+OPTIONS (= is mandatory):
+
+- domain
+        set PTP domain number Range 0-127
+        [Default: (null)]
+
+- ntp_state
+        NTP state.
+        (Choices: enabled, disabled)[Default: (null)]
+
+- primary_priority
+        set PTP primary priority Range 0-225
+        [Default: (null)]
+
+- ptp_state
+        PTP state.
+        (Choices: enabled, disabled)[Default: enabled]
+
+- secondary_priority
+        set PTP secondary priority Range 0-225
+        [Default: (null)]
+
+
+NOTES:
+      * Tested on ONYX 3.6.8130 ptp and ntp protocols cannot be enabled at the same time
+
+
+AUTHOR: Anas Badaha (@anasb)
+        METADATA:
+          status:
+          - preview
+          supported_by: community
+        
+
+EXAMPLES:
+
+- name: configure PTP
+  onyx_ptp_global:
+    ntp_state: enabled
+    ptp_state: disabled
+    domain: 127
+    primary_priority: 128
+    secondary_priority: 128
+
+
+RETURN VALUES:
+
+commands:
+  description: The list of configuration mode commands to send to the device.
+  returned: always
+  type: list
+  sample:
+    - no ntp enable
+    - protocol ptp
+    - ptp domain 127
+

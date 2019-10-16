@@ -1,0 +1,239 @@
+> BIGIP_SYS_DAEMON_LOG_TMM    (/usr/lib/python2.7/dist-packages/ansible/modules/network/f5/bigip_sys_daemon_log_tmm.py)
+
+        Manage BIG-IP tmm log settings.
+
+  * This module is maintained by an Ansible Partner
+OPTIONS (= is mandatory):
+
+- arp_log_level
+        Specifies the lowest level of ARP messages from the tmm daemon to include in the system log.
+        (Choices: debug, error, informational, notice, warning)[Default: (null)]
+        type: str
+
+- http_compression_log_level
+        Specifies the lowest level of HTTP compression messages from the tmm daemon to include in the system log.
+        (Choices: debug, error, informational, notice, warning)[Default: (null)]
+        type: str
+
+- http_log_level
+        Specifies the lowest level of HTTP messages from the tmm daemon to include in the system log.
+        (Choices: debug, error, informational, notice, warning)[Default: (null)]
+        type: str
+
+- ip_log_level
+        Specifies the lowest level of IP address messages from the tmm daemon to include in the system log.
+        (Choices: debug, informational, notice, warning)[Default: (null)]
+        type: str
+
+- irule_log_level
+        Specifies the lowest level of iRule messages from the tmm daemon to include in the system log.
+        (Choices: debug, error, informational, notice, warning)[Default: (null)]
+        type: str
+
+- layer4_log_level
+        Specifies the lowest level of Layer 4 messages from the tmm daemon to include in the system log.
+        (Choices: debug, informational, notice)[Default: (null)]
+        type: str
+
+- net_log_level
+        Specifies the lowest level of network messages from the tmm daemon to include in the system log.
+        (Choices: critical, debug, error, informational, notice, warning)[Default: (null)]
+        type: str
+
+- os_log_level
+        Specifies the lowest level of operating system messages from the tmm daemon to include in the system log.
+        (Choices: alert, critical, debug, emergency, error, informational, notice, warning)[Default: (null)]
+        type: str
+
+= password
+        The password for the user account used to connect to the BIG-IP.
+        You may omit this option by setting the environment variable `F5_PASSWORD'.
+        (Aliases: pass, pwd)
+        type: str
+
+- provider
+        A dict object containing connection details.
+        [Default: (null)]
+        suboptions:
+          password:
+            aliases:
+            - pass
+            - pwd
+            description:
+            - The password for the user account used to connect to the BIG-IP.
+            - You may omit this option by setting the environment variable `F5_PASSWORD'.
+            required: true
+            type: str
+          server:
+            description:
+            - The BIG-IP host.
+            - You may omit this option by setting the environment variable `F5_SERVER'.
+            required: true
+            type: str
+          server_port:
+            default: 443
+            description:
+            - The BIG-IP server port.
+            - You may omit this option by setting the environment variable `F5_SERVER_PORT'.
+            type: int
+          ssh_keyfile:
+            description:
+            - Specifies the SSH keyfile to use to authenticate the connection to the remote
+              device.  This argument is only used for `cli' transports.
+            - You may omit this option by setting the environment variable `ANSIBLE_NET_SSH_KEYFILE'.
+            type: path
+          timeout:
+            default: 10
+            description:
+            - Specifies the timeout in seconds for communicating with the network device for
+              either connecting or sending commands.  If the timeout is exceeded before the
+              operation is completed, the module will error.
+            type: int
+          transport:
+            choices:
+            - cli
+            - rest
+            default: rest
+            description:
+            - Configures the transport connection to use when connecting to the remote device.
+            type: str
+          user:
+            description:
+            - The username to connect to the BIG-IP with. This user must have administrative
+              privileges on the device.
+            - You may omit this option by setting the environment variable `F5_USER'.
+            required: true
+            type: str
+          validate_certs:
+            default: true
+            description:
+            - If `no', SSL certificates are not validated. Use this only on personally controlled
+              sites using self-signed certificates.
+            - You may omit this option by setting the environment variable `F5_VALIDATE_CERTS'.
+            type: bool
+        
+        type: dict
+        version_added: 2.5
+
+- pva_log_level
+        Specifies the lowest level of PVA messages from the tmm daemon to include in the system log.
+        (Choices: debug, informational, notice)[Default: (null)]
+        type: str
+
+= server
+        The BIG-IP host.
+        You may omit this option by setting the environment variable `F5_SERVER'.
+
+        type: str
+
+- server_port
+        The BIG-IP server port.
+        You may omit this option by setting the environment variable `F5_SERVER_PORT'.
+        [Default: 443]
+        type: int
+        version_added: 2.2
+
+- ssl_log_level
+        Specifies the lowest level of SSL messages from the tmm daemon to include in the system log.
+        (Choices: alert, critical, debug, emergency, error, informational, notice, warning)[Default: (null)]
+        type: str
+
+- state
+        The state of the log level on the system. When `present', guarantees that an existing log level is set to `value'.
+        (Choices: present)[Default: present]
+        type: str
+
+= user
+        The username to connect to the BIG-IP with. This user must have administrative privileges on the device.
+        You may omit this option by setting the environment variable `F5_USER'.
+
+        type: str
+
+- validate_certs
+        If `no', SSL certificates are not validated. Use this only on personally controlled sites using self-signed certificates.
+        You may omit this option by setting the environment variable `F5_VALIDATE_CERTS'.
+        [Default: True]
+        type: bool
+        version_added: 2.0
+
+
+NOTES:
+      * For more information on using Ansible to manage F5 Networks devices see https://www.ansible.com/integrations/networks/f5.
+      * Requires BIG-IP software version >= 12.
+      * The F5 modules only manipulate the running configuration of the F5 product. To ensure that BIG-IP specific configuration
+        persists to disk, be sure to include at least one task that uses the [bigip_config] module to save the running
+        configuration. Refer to the module's documentation for the correct usage of the module to save your running configuration.
+
+
+AUTHOR: Wojciech Wypior (@wojtek0806)
+        METADATA:
+          status:
+          - preview
+          supported_by: certified
+        
+
+EXAMPLES:
+
+- name: Set SSL log level to debug
+  bigip_sys_daemon_log_tmm:
+    provider:
+      password: secret
+      server: lb.mydomain.com
+      user: admin
+    ssl_log_level: debug
+  delegate_to: localhost
+
+
+RETURN VALUES:
+
+arp_log_level:
+  description: Lowest level of ARP messages from the tmm daemon to log.
+  returned: changed
+  type: str
+  sample: error
+http_compression_log_level:
+  description: Lowest level of HTTP compression messages from the tmm daemon to log.
+  returned: changed
+  type: str
+  sample: debug
+http_log_level:
+  description: Lowest level of HTTP messages from the tmm daemon to log.
+  returned: changed
+  type: str
+  sample: notice
+ip_log_level:
+  description: Lowest level of IP address messages from the tmm daemon to log.
+  returned: changed
+  type: str
+  sample: warning
+irule_log_level:
+  description: Lowest level of iRule messages from the tmm daemon to log.
+  returned: changed
+  type: str
+  sample: error
+layer4_log_level:
+  description: Lowest level of Layer 4 messages from the tmm daemon to log.
+  returned: changed
+  type: str
+  sample: notice
+net_log_level:
+  description: Lowest level of network messages from the tmm daemon to log.
+  returned: changed
+  type: str
+  sample: critical
+os_log_level:
+  description: Lowest level of operating system messages from the tmm daemon to log.
+  returned: changed
+  type: str
+  sample: critical
+pva_log_level:
+  description: Lowest level of PVA messages from the tmm daemon to log.
+  returned: changed
+  type: str
+  sample: debug
+ssl_log_level:
+  description: Lowest level of SSL messages from the tmm daemon to log.
+  returned: changed
+  type: str
+  sample: critical
+

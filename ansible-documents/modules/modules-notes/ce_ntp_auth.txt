@@ -1,0 +1,171 @@
+> CE_NTP_AUTH    (/usr/lib/python2.7/dist-packages/ansible/modules/network/cloudengine/ce_ntp_auth.py)
+
+        Manages NTP authentication configuration on HUAWEI CloudEngine switches.
+
+  * This module is maintained by The Ansible Community
+OPTIONS (= is mandatory):
+
+- auth_mode
+        Specify authentication algorithm.
+        (Choices: hmac-sha256, md5)[Default: (null)]
+
+- auth_pwd
+        Plain text with length of 1 to 255, encrypted text with length of 20 to 392.
+        [Default: (null)]
+
+- auth_type
+        Whether the given password is in cleartext or has been encrypted. If in cleartext, the device will encrypt it before storing it.
+        (Choices: text, encrypt)[Default: encrypt]
+
+- authentication
+        Configure ntp authentication enable or unconfigure ntp authentication enable.
+        (Choices: enable, disable)[Default: (null)]
+
+= key_id
+        Authentication key identifier (numeric).
+
+
+- state
+        Manage the state of the resource.
+        (Choices: present, absent)[Default: present]
+
+- trusted_key
+        Whether the given key is required to be supplied by a time source for the device to synchronize to the time source.
+        (Choices: enable, disable)[Default: disable]
+
+
+NOTES:
+      * If `state=absent', the module will attempt to remove the given key configuration. If a matching key configuration isn't
+        found on the device, the module will fail.
+      * If `state=absent' and `authentication=on', authentication will be turned on.
+      * If `state=absent' and `authentication=off', authentication will be turned off.
+
+
+AUTHOR: Zhijin Zhou (@QijunPan)
+        METADATA:
+          status:
+          - preview
+          supported_by: community
+        
+
+EXAMPLES:
+
+- name: NTP AUTH test
+  hosts: cloudengine
+  connection: local
+  gather_facts: no
+  vars:
+    cli:
+      host: "{{ inventory_hostname }}"
+      port: "{{ ansible_ssh_port }}"
+      username: "{{ username }}"
+      password: "{{ password }}"
+      transport: cli
+
+  tasks:
+
+  - name: "Configure ntp authentication key-id"
+    ce_ntp_auth:
+      key_id: 32
+      auth_mode: md5
+      auth_pwd: 11111111111111111111111
+      provider: "{{ cli }}"
+
+  - name: "Configure ntp authentication key-id and trusted authentication keyid"
+    ce_ntp_auth:
+      key_id: 32
+      auth_mode: md5
+      auth_pwd: 11111111111111111111111
+      trusted_key: enable
+      provider: "{{ cli }}"
+
+  - name: "Configure ntp authentication key-id and authentication enable"
+    ce_ntp_auth:
+      key_id: 32
+      auth_mode: md5
+      auth_pwd: 11111111111111111111111
+      authentication: enable
+      provider: "{{ cli }}"
+
+  - name: "Unconfigure ntp authentication key-id and trusted authentication keyid"
+    ce_ntp_auth:
+      key_id: 32
+      state: absent
+      provider: "{{ cli }}"
+
+  - name: "Unconfigure ntp authentication key-id and authentication enable"
+    ce_ntp_auth:
+      key_id: 32
+      authentication: enable
+      state: absent
+      provider: "{{ cli }}"
+
+
+RETURN VALUES:
+
+proposed:
+    description: k/v pairs of parameters passed into module
+    returned: always
+    type: dict
+    sample: {
+                "auth_type": "text",
+                "authentication": "enable",
+                "key_id": "32",
+                "auth_pwd": "1111",
+                "auth_mode": "md5",
+                "trusted_key": "enable",
+                "state": "present"
+            }
+existing:
+    description: k/v pairs of existing ntp authentication
+    returned: always
+    type: dict
+    sample: {
+                "authentication": "off",
+                "authentication-keyid": [
+                    {
+                        "auth_mode": "md5",
+                        "key_id": "1",
+                        "trusted_key": "disable"
+                    }
+                ]
+            }
+end_state:
+    description: k/v pairs of ntp authentication after module execution
+    returned: always
+    type: dict
+    sample: {
+                "authentication": "off",
+                "authentication-keyid": [
+                    {
+                        "auth_mode": "md5",
+                        "key_id": "1",
+                        "trusted_key": "disable"
+                    },
+                    {
+                        "auth_mode": "md5",
+                        "key_id": "32",
+                        "trusted_key": "enable"
+                    }
+                ]
+            }
+state:
+    description: state as sent in from the playbook
+    returned: always
+    type: str
+    sample: "present"
+updates:
+    description: command sent to the device
+    returned: always
+    type: list
+    sample: [
+                "ntp authentication-key 32 md5 1111",
+                "ntp trusted-key 32",
+                "ntp authentication enable"
+            ]
+changed:
+    description: check to see if a change was made on the device
+    returned: always
+    type: bool
+    sample: true
+

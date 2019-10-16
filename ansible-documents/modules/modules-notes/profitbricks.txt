@@ -1,0 +1,165 @@
+> PROFITBRICKS    (/usr/lib/python2.7/dist-packages/ansible/modules/cloud/profitbricks/profitbricks.py)
+
+        Create, destroy, update, start, stop, and reboot a ProfitBricks virtual machine. When the virtual machine is created it can
+        optionally wait for it to be 'running' before returning. This module has a dependency on profitbricks >= 1.0.0
+
+  * This module is maintained by The Ansible Community
+OPTIONS (= is mandatory):
+
+- assign_public_ip
+        This will assign the machine to the public LAN. If no LAN exists with public Internet access it is created.
+        [Default: no]
+        type: bool
+
+- auto_increment
+        Whether or not to increment a single number in the name for created virtual machines.
+        [Default: yes]
+        type: bool
+
+- bus
+        The bus type for the volume.
+        (Choices: IDE, VIRTIO)[Default: VIRTIO]
+
+- cores
+        The number of CPU cores to allocate to the virtual machine.
+        [Default: 2]
+
+- count
+        The number of virtual machines to create.
+        [Default: 1]
+
+- cpu_family
+        The CPU family type to allocate to the virtual machine.
+        (Choices: AMD_OPTERON, INTEL_XEON)[Default: AMD_OPTERON]
+        version_added: 2.2
+
+- datacenter
+        The datacenter to provision this virtual machine.
+        [Default: (null)]
+
+= image
+        The system image ID for creating the virtual machine, e.g. a3eae284-a2fe-11e4-b187-5f1f641608c8.
+
+
+- image_password
+        Password set for the administrative user.
+        [Default: (null)]
+        version_added: 2.2
+
+- instance_ids
+        list of instance ids, currently only used when state='absent' to remove instances.
+        [Default: (null)]
+
+- lan
+        The ID of the LAN you wish to add the servers to.
+        [Default: 1]
+
+- location
+        The datacenter location. Use only if you want to create the Datacenter or else this value is ignored.
+        (Choices: us/las, de/fra, de/fkb)[Default: us/las]
+
+= name
+        The name of the virtual machine.
+
+
+- ram
+        The amount of memory to allocate to the virtual machine.
+        [Default: 2048]
+
+- remove_boot_volume
+        remove the bootVolume of the virtual machine you're destroying.
+        [Default: yes]
+        type: bool
+
+- ssh_keys
+        Public SSH keys allowing access to the virtual machine.
+        [Default: (null)]
+        version_added: 2.2
+
+- state
+        create or terminate instances
+        (Choices: running, stopped, absent, present)[Default: present]
+
+- subscription_password
+        THe ProfitBricks password. Overrides the PB_PASSWORD environment variable.
+        [Default: (null)]
+
+- subscription_user
+        The ProfitBricks username. Overrides the PB_SUBSCRIPTION_ID environment variable.
+        [Default: (null)]
+
+- volume_size
+        The size in GB of the boot volume.
+        [Default: 10]
+
+- wait
+        wait for the instance to be in state 'running' before returning
+        [Default: yes]
+        type: bool
+
+- wait_timeout
+        how long before wait gives up, in seconds
+        [Default: 600]
+
+
+REQUIREMENTS:  profitbricks, python >= 2.6
+
+AUTHOR: Matt Baldwin (@baldwinSPC) <baldwin@stackpointcloud.com>
+        METADATA:
+          status:
+          - preview
+          supported_by: community
+        
+
+EXAMPLES:
+
+# Note: These examples do not set authentication details, see the AWS Guide for details.
+
+# Provisioning example. This will create three servers and enumerate their names.
+
+- profitbricks:
+    datacenter: Tardis One
+    name: web%02d.stackpointcloud.com
+    cores: 4
+    ram: 2048
+    volume_size: 50
+    cpu_family: INTEL_XEON
+    image: a3eae284-a2fe-11e4-b187-5f1f641608c8
+    location: us/las
+    count: 3
+    assign_public_ip: true
+
+# Removing Virtual machines
+
+- profitbricks:
+    datacenter: Tardis One
+    instance_ids:
+      - 'web001.stackpointcloud.com'
+      - 'web002.stackpointcloud.com'
+      - 'web003.stackpointcloud.com'
+    wait_timeout: 500
+    state: absent
+
+# Starting Virtual Machines.
+
+- profitbricks:
+    datacenter: Tardis One
+    instance_ids:
+      - 'web001.stackpointcloud.com'
+      - 'web002.stackpointcloud.com'
+      - 'web003.stackpointcloud.com'
+    wait_timeout: 500
+    state: running
+
+# Stopping Virtual Machines
+
+- profitbricks:
+    datacenter: Tardis One
+    instance_ids:
+      - 'web001.stackpointcloud.com'
+      - 'web002.stackpointcloud.com'
+      - 'web003.stackpointcloud.com'
+    wait_timeout: 500
+    state: stopped
+
+

@@ -1,0 +1,104 @@
+> HOMEBREW    (/usr/lib/python2.7/dist-packages/ansible/modules/packaging/os/homebrew.py)
+
+        Manages Homebrew packages
+
+  * This module is maintained by The Ansible Community
+OPTIONS (= is mandatory):
+
+- install_options
+        options flags to install a package
+        (Aliases: options)[Default: (null)]
+        version_added: 1.4
+
+- name
+        list of names of packages to install/remove
+        (Aliases: pkg, package, formula)[Default: (null)]
+
+- path
+        A ':' separated list of paths to search for 'brew' executable. Since a package (`formula' in homebrew parlance) location is
+        prefixed relative to the actual path of `brew' command, providing an alternative `brew' path enables managing different set of
+        packages in an alternative location in the system.
+        [Default: /usr/local/bin]
+
+- state
+        state of the package
+        (Choices: head, latest, present, absent, linked, unlinked)[Default: present]
+
+- update_homebrew
+        update homebrew itself first
+        (Aliases: update-brew)[Default: no]
+        type: bool
+
+- upgrade_all
+        upgrade all homebrew packages
+        (Aliases: upgrade)[Default: no]
+        type: bool
+
+
+NOTES:
+      * When used with a `loop:` each package will be processed individually, it is much more efficient to pass the list directly
+        to the `name` option.
+
+
+REQUIREMENTS:  python >= 2.6
+
+AUTHOR: Indrajit Raychaudhuri (@indrajitr), Daniel Jaouen (@danieljaouen), Andrew Dunham (@andrew-d)
+        METADATA:
+          status:
+          - preview
+          supported_by: community
+        
+
+EXAMPLES:
+
+# Install formula foo with 'brew' in default path (C(/usr/local/bin))
+- homebrew:
+    name: foo
+    state: present
+
+# Install formula foo with 'brew' in alternate path C(/my/other/location/bin)
+- homebrew:
+    name: foo
+    path: /my/other/location/bin
+    state: present
+
+# Update homebrew first and install formula foo with 'brew' in default path
+- homebrew:
+    name: foo
+    state: present
+    update_homebrew: yes
+
+# Update homebrew first and upgrade formula foo to latest available with 'brew' in default path
+- homebrew:
+    name: foo
+    state: latest
+    update_homebrew: yes
+
+# Update homebrew and upgrade all packages
+- homebrew:
+    update_homebrew: yes
+    upgrade_all: yes
+
+# Miscellaneous other examples
+- homebrew:
+    name: foo
+    state: head
+
+- homebrew:
+    name: foo
+    state: linked
+
+- homebrew:
+    name: foo
+    state: absent
+
+- homebrew:
+    name: foo,bar
+    state: absent
+
+- homebrew:
+    name: foo
+    state: present
+    install_options: with-baz,enable-debug
+
+

@@ -1,0 +1,90 @@
+> DIGITAL_OCEAN_DOMAIN_FACTS    (/usr/lib/python2.7/dist-packages/ansible/modules/cloud/digital_ocean/digital_ocean_domain_facts.py)
+
+        This module can be used to gather facts about DigitalOcean provided Domains.
+
+  * This module is maintained by The Ansible Community
+OPTIONS (= is mandatory):
+
+- domain_name
+        Name of the domain to gather facts for.
+        [Default: (null)]
+
+- oauth_token
+        DigitalOcean OAuth token.
+        There are several other environment variables which can be used to provide this value.
+        i.e., - 'DO_API_TOKEN', 'DO_API_KEY', 'DO_OAUTH_TOKEN' and 'OAUTH_TOKEN'
+        (Aliases: api_token)[Default: (null)]
+        type: str
+
+- timeout
+        The timeout in seconds used for polling DigitalOcean's API.
+        [Default: 30]
+        type: int
+
+- validate_certs
+        If set to `no', the SSL certificates will not be validated.
+        This should only set to `no' used on personally controlled sites using self-signed certificates.
+        [Default: True]
+        type: bool
+
+
+REQUIREMENTS:  python >= 2.6
+
+AUTHOR: Abhijeet Kasurde (@Akasurde)
+        METADATA:
+          status:
+          - preview
+          supported_by: community
+        
+
+EXAMPLES:
+
+- name: Gather facts about all domains
+  digital_ocean_domain_facts:
+    oauth_token: "{{ oauth_token }}"
+
+- name: Gather facts about domain with given name
+  digital_ocean_domain_facts:
+    oauth_token: "{{ oauth_token }}"
+    domain_name: "example.com"
+
+- name: Get ttl from domain
+  digital_ocean_domain_facts:
+  register: resp_out
+- set_fact:
+    domain_ttl: "{{ item.ttl }}"
+  loop: "{{ resp_out.data|json_query(name) }}"
+  vars:
+    name: "[?name=='example.com']"
+- debug: var=domain_ttl
+
+
+RETURN VALUES:
+
+data:
+    description: DigitalOcean Domain facts
+    returned: success
+    type: list
+    sample: [
+        {
+            "domain_records": [
+                {
+                    "data": "ns1.digitalocean.com",
+                    "flags": null,
+                    "id": 37826823,
+                    "name": "@",
+                    "port": null,
+                    "priority": null,
+                    "tag": null,
+                    "ttl": 1800,
+                    "type": "NS",
+                    "weight": null
+                },
+            ],
+            "name": "myexample123.com",
+            "ttl": 1800,
+            "zone_file": "myexample123.com. IN SOA ns1.digitalocean.com. hostmaster.myexample123.com. 1520702984 10800 3600 604800 1800
+",
+        },
+    ]
+

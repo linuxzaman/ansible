@@ -1,0 +1,116 @@
+> CPM_PLUGCONFIG    (/usr/lib/python2.7/dist-packages/ansible/modules/remote_management/cpm/cpm_plugconfig.py)
+
+        Get and Set Plug Parameters on WTI OOB and PDU devices
+
+  * This module is maintained by The Ansible Community
+OPTIONS (= is mandatory):
+
+= cpm_action
+        This is the Action to send the module.
+        (Choices: getplugconfig, setplugconfig)
+
+- cpm_password
+        This is the Password of the WTI device to send the module.
+        [Default: (null)]
+
+= cpm_url
+        This is the URL of the WTI device to send the module.
+
+
+- cpm_username
+        This is the Username of the WTI device to send the module.
+        [Default: (null)]
+
+- plug_bootdelay
+        On a reboot command, this is the time when a plug will turn on power, after it has been turned off. 0='0.5 Secs', 1='1 Sec', 2='2
+        Sec', 3='5 Sec', 4='15 Sec', 5='30 Sec', 6='1 Min', 7='2 Mins', 8='3 Mins', 9='5 Mins'.
+        (Choices: 0, 1, 2, 3, 4, 5, 6, 7, 8, 9)[Default: (null)]
+
+- plug_bootpriority
+        Prioritizes which plug gets its state changed first. The lower the number the higher the priority. Valid value can from 1 to the
+        maximum number of plugs of the WTI unit.
+        [Default: (null)]
+
+- plug_default
+        What the Plugs default state is when the device starts. 0 - Off, 1 - On.
+        (Choices: 0, 1)[Default: (null)]
+
+= plug_id
+        This is the plug number that is to be manipulated For the getplugconfig command, the plug_id 'all' will return the status of all
+        the plugs the user has rights to access.
+
+
+- plug_name
+        The new name of the Plug.
+        [Default: (null)]
+
+- use_https
+        Designates to use an https connection or http connection.
+        [Default: True]
+        type: bool
+
+- use_proxy
+        Flag to control if the lookup will observe HTTP proxy environment variables when present.
+        [Default: False]
+        type: bool
+
+- validate_certs
+        If false, SSL certificates will not be validated. This should only be used
+        on personally controlled sites using self-signed certificates.
+        [Default: True]
+        type: bool
+
+
+AUTHOR: Western Telematic Inc. (@wtinetworkgear)
+        METADATA:
+          status:
+          - preview
+          supported_by: community
+        
+
+EXAMPLES:
+
+# Get Plug parameters for all ports
+- name: Get the Plug parameters for ALL ports of a WTI Power device
+  cpm_plugconfig:
+    cpm_action: "getplugconfig"
+    cpm_url: "rest.wti.com"
+    cpm_username: "restpower"
+    cpm_password: "restfulpowerpass12"
+    use_https: true
+    validate_certs: true
+    plug_id: "all"
+
+# Get Plug parameters for port 2
+- name: Get the Plug parameters for the given port of a WTI Power device
+  cpm_plugconfig:
+    cpm_action: "getplugconfig"
+    cpm_url: "rest.wti.com"
+    cpm_username: "restpower"
+    cpm_password: "restfulpowerpass12"
+    use_https: true
+    validate_certs: false
+    plug_id: "2"
+
+# Configure plug 5
+- name: Configure parameters for Plug 5 on a given WTI Power device
+  cpm_plugconfig:
+    cpm_action: "setplugconfig"
+    cpm_url: "rest.wti.com"
+    cpm_username: "restpower"
+    cpm_password: "restfulpowerpass12"
+    use_https: true
+    plug_id: "5"
+    plug_name: "NewPlugNameFive"
+    plug_bootdelay: "3"
+    plug_default: "0"
+    plug_bootpriority: "1"
+
+
+RETURN VALUES:
+
+data:
+    description: The output JSON returned from the commands sent
+    returned: always
+    type: str
+

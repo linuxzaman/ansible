@@ -1,0 +1,185 @@
+> CS_PROJECT    (/usr/lib/python2.7/dist-packages/ansible/modules/cloud/cloudstack/cs_project.py)
+
+        Create, update, suspend, activate and remove projects.
+
+  * This module is maintained by The Ansible Community
+OPTIONS (= is mandatory):
+
+- account
+        Account the project is related to.
+        [Default: (null)]
+        type: str
+
+- api_http_method
+        HTTP method used to query the API endpoint.
+        If not given, the `CLOUDSTACK_METHOD' env variable is considered.
+        As the last option, the value is taken from the ini config file, also see the notes.
+        Fallback value is `get' if not specified.
+        (Choices: get, post)[Default: (null)]
+        type: str
+
+- api_key
+        API key of the CloudStack API.
+        If not given, the `CLOUDSTACK_KEY' env variable is considered.
+        As the last option, the value is taken from the ini config file, also see the notes.
+        [Default: (null)]
+        type: str
+
+- api_region
+        Name of the ini section in the `cloustack.ini' file.
+        If not given, the `CLOUDSTACK_REGION' env variable is considered.
+        [Default: cloudstack]
+        type: str
+
+- api_secret
+        Secret key of the CloudStack API.
+        If not set, the `CLOUDSTACK_SECRET' env variable is considered.
+        As the last option, the value is taken from the ini config file, also see the notes.
+        [Default: (null)]
+        type: str
+
+- api_timeout
+        HTTP timeout in seconds.
+        If not given, the `CLOUDSTACK_TIMEOUT' env variable is considered.
+        As the last option, the value is taken from the ini config file, also see the notes.
+        Fallback value is 10 seconds if not specified.
+        [Default: (null)]
+        type: int
+
+- api_url
+        URL of the CloudStack API e.g. https://cloud.example.com/client/api.
+        If not given, the `CLOUDSTACK_ENDPOINT' env variable is considered.
+        As the last option, the value is taken from the ini config file, also see the notes.
+        [Default: (null)]
+        type: str
+
+- display_text
+        Display text of the project.
+        If not specified, `name' will be used as `display_text'.
+        [Default: (null)]
+        type: str
+
+- domain
+        Domain the project is related to.
+        [Default: (null)]
+        type: str
+
+= name
+        Name of the project.
+
+        type: str
+
+- poll_async
+        Poll async jobs until job has finished.
+        [Default: True]
+        type: bool
+
+- state
+        State of the project.
+        (Choices: present, absent, active, suspended)[Default: present]
+        type: str
+
+- tags
+        List of tags. Tags are a list of dictionaries having keys `key' and `value'.
+        If you want to delete all tags, set a empty list e.g. `tags: []'.
+        (Aliases: tag)[Default: (null)]
+        type: list
+        version_added: 2.2
+
+
+NOTES:
+      * Ansible uses the `cs' library's configuration method if credentials are not provided by the arguments `api_url', `api_key',
+        `api_secret'. Configuration is read from several locations, in the following order. The `CLOUDSTACK_ENDPOINT',
+        `CLOUDSTACK_KEY', `CLOUDSTACK_SECRET' and `CLOUDSTACK_METHOD'. `CLOUDSTACK_TIMEOUT' environment variables. A
+        `CLOUDSTACK_CONFIG' environment variable pointing to an `.ini' file. A `cloudstack.ini' file in the current working
+        directory. A `.cloudstack.ini' file in the users home directory. Optionally multiple credentials and endpoints can be
+        specified using ini sections in `cloudstack.ini'. Use the argument `api_region' to select the section name, default section
+        is `cloudstack'. See https://github.com/exoscale/cs for more information.
+      * A detailed guide about cloudstack modules can be found in the L(CloudStack Cloud
+        Guide,../scenario_guides/guide_cloudstack.html).
+      * This module supports check mode.
+
+
+REQUIREMENTS:  python >= 2.6, cs >= 0.6.10
+
+AUTHOR: René Moser (@resmo)
+        METADATA:
+          status:
+          - stableinterface
+          supported_by: community
+        
+
+EXAMPLES:
+
+- name: Create a project
+  cs_project:
+    name: web
+    tags:
+      - { key: admin, value: john }
+      - { key: foo,   value: bar }
+  delegate_to: localhost
+
+- name: Rename a project
+  cs_project:
+    name: web
+    display_text: my web project
+  delegate_to: localhost
+
+- name: Suspend an existing project
+  cs_project:
+    name: web
+    state: suspended
+  delegate_to: localhost
+
+- name: Activate an existing project
+  cs_project:
+    name: web
+    state: active
+  delegate_to: localhost
+
+- name: Remove a project
+  cs_project:
+    name: web
+    state: absent
+  delegate_to: localhost
+
+
+RETURN VALUES:
+
+---
+id:
+  description: UUID of the project.
+  returned: success
+  type: str
+  sample: 04589590-ac63-4ffc-93f5-b698b8ac38b6
+name:
+  description: Name of the project.
+  returned: success
+  type: str
+  sample: web project
+display_text:
+  description: Display text of the project.
+  returned: success
+  type: str
+  sample: web project
+state:
+  description: State of the project.
+  returned: success
+  type: str
+  sample: Active
+domain:
+  description: Domain the project is related to.
+  returned: success
+  type: str
+  sample: example domain
+account:
+  description: Account the project is related to.
+  returned: success
+  type: str
+  sample: example account
+tags:
+  description: List of resource tags associated with the project.
+  returned: success
+  type: list
+  sample: '[ { "key": "foo", "value": "bar" } ]'
+

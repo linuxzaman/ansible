@@ -1,0 +1,209 @@
+> FORTIOS_SYSTEM_API_USER    (/usr/lib/python2.7/dist-packages/ansible/modules/network/fortios/fortios_system_api_user.py)
+
+        This module is able to configure a FortiGate or FortiOS by allowing the user to set and modify system feature and api_user
+        category. Examples include all parameters and values need to be adjusted to datasources before usage. Tested with FOS v6.0.2
+
+  * This module is maintained by The Ansible Community
+OPTIONS (= is mandatory):
+
+= host
+        FortiOS or FortiGate ip address.
+
+
+- https
+        Indicates if the requests towards FortiGate must use HTTPS protocol
+        [Default: True]
+        type: bool
+
+- password
+        FortiOS or FortiGate password.
+        [Default: ]
+
+- system_api_user
+        Configure API users.
+        [Default: None]
+        suboptions:
+          accprofile:
+            description:
+            - Admin user access profile. Source system.accprofile.name.
+          api-key:
+            description:
+            - Admin user password.
+          comments:
+            description:
+            - Comment.
+          cors-allow-origin:
+            description:
+            - Value for Access-Control-Allow-Origin on API responses. Avoid using '*' if possible.
+          name:
+            description:
+            - User name.
+            required: true
+          peer-auth:
+            choices:
+            - enable
+            - disable
+            description:
+            - Enable/disable peer authentication.
+          peer-group:
+            description:
+            - Peer group name.
+          schedule:
+            description:
+            - Schedule name.
+          state:
+            choices:
+            - present
+            - absent
+            description:
+            - Indicates whether to create or remove the object
+          trusthost:
+            description:
+            - Trusthost.
+            suboptions:
+              id:
+                description:
+                - Table ID.
+                required: true
+              ipv4-trusthost:
+                description:
+                - IPv4 trusted host address.
+              ipv6-trusthost:
+                description:
+                - IPv6 trusted host address.
+              type:
+                choices:
+                - ipv4-trusthost
+                - ipv6-trusthost
+                description:
+                - Trusthost type.
+          vdom:
+            description:
+            - Virtual domains.
+            suboptions:
+              name:
+                description:
+                - Virtual domain name. Source system.vdom.name.
+                required: true
+        
+
+= username
+        FortiOS or FortiGate username.
+
+
+- vdom
+        Virtual domain, among those defined previously. A vdom is a virtual instance of the FortiGate that can be configured and used as
+        a different unit.
+        [Default: root]
+
+
+NOTES:
+      * Requires fortiosapi library developed by Fortinet
+      * Run as a local_action in your playbook
+
+
+REQUIREMENTS:  fortiosapi>=0.9.8
+
+AUTHOR: Miguel Angel Munoz (@mamunozgonzalez), Nicolas Thomas (@thomnico)
+        METADATA:
+          status:
+          - preview
+          supported_by: community
+        
+
+EXAMPLES:
+
+- hosts: localhost
+  vars:
+   host: "192.168.122.40"
+   username: "admin"
+   password: ""
+   vdom: "root"
+  tasks:
+  - name: Configure API users.
+    fortios_system_api_user:
+      host:  "{{ host }}"
+      username: "{{ username }}"
+      password: "{{ password }}"
+      vdom:  "{{ vdom }}"
+      https: "False"
+      system_api_user:
+        state: "present"
+        accprofile: "<your_own_value> (source system.accprofile.name)"
+        api-key: "<your_own_value>"
+        comments: "<your_own_value>"
+        cors-allow-origin: "<your_own_value>"
+        name: "default_name_7"
+        peer-auth: "enable"
+        peer-group: "<your_own_value>"
+        schedule: "<your_own_value>"
+        trusthost:
+         -
+            id:  "12"
+            ipv4-trusthost: "<your_own_value>"
+            ipv6-trusthost: "<your_own_value>"
+            type: "ipv4-trusthost"
+        vdom:
+         -
+            name: "default_name_17 (source system.vdom.name)"
+
+
+RETURN VALUES:
+
+build:
+  description: Build number of the fortigate image
+  returned: always
+  type: str
+  sample: '1547'
+http_method:
+  description: Last method used to provision the content into FortiGate
+  returned: always
+  type: str
+  sample: 'PUT'
+http_status:
+  description: Last result given by FortiGate on last operation applied
+  returned: always
+  type: str
+  sample: "200"
+mkey:
+  description: Master key (id) used in the last call to FortiGate
+  returned: success
+  type: str
+  sample: "id"
+name:
+  description: Name of the table used to fulfill the request
+  returned: always
+  type: str
+  sample: "urlfilter"
+path:
+  description: Path of the table used to fulfill the request
+  returned: always
+  type: str
+  sample: "webfilter"
+revision:
+  description: Internal revision number
+  returned: always
+  type: str
+  sample: "17.0.2.10658"
+serial:
+  description: Serial number of the unit
+  returned: always
+  type: str
+  sample: "FGVMEVYYQT3AB5352"
+status:
+  description: Indication of the operation's result
+  returned: always
+  type: str
+  sample: "success"
+vdom:
+  description: Virtual domain used
+  returned: always
+  type: str
+  sample: "root"
+version:
+  description: Version of the FortiGate
+  returned: always
+  type: str
+  sample: "v5.6.3"
+
+

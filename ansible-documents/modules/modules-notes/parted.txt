@@ -1,0 +1,175 @@
+> PARTED    (/usr/lib/python2.7/dist-packages/ansible/modules/system/parted.py)
+
+        This module allows configuring block device partition using the `parted' command line tool. For a full description of the fields
+        and the options check the GNU parted manual.
+
+  * This module is maintained by The Ansible Community
+OPTIONS (= is mandatory):
+
+- align
+        Set alignment for newly created partitions.
+        (Choices: cylinder, minimal, none, optimal)[Default: optimal]
+        type: str
+
+= device
+        The block device (disk) where to operate.
+
+        type: str
+
+- flags
+        A list of the flags that has to be set on the partition.
+        [Default: (null)]
+        type: list
+
+- label
+        Creates a new disk label.
+        (Choices: aix, amiga, bsd, dvh, gpt, loop, mac, msdos, pc98, sun)[Default: msdos]
+        type: str
+
+- name
+        Sets the name for the partition number (GPT, Mac, MIPS and PC98 only).
+        [Default: (null)]
+        type: str
+
+- number
+        The number of the partition to work with or the number of the partition that will be created.
+        Required when performing any action on the disk, except fetching information.
+        [Default: (null)]
+        type: int
+
+- part_end
+        Where the partition will end as offset from the beginning of the disk, that is, the "distance" from the start of the disk.
+        The distance can be specified with all the units supported by parted (except compat) and it is case sensitive, e.g. `10GiB',
+        `15%'.
+        [Default: 100%]
+        type: str
+
+- part_start
+        Where the partition will start as offset from the beginning of the disk, that is, the "distance" from the start of the disk.
+        The distance can be specified with all the units supported by parted (except compat) and it is case sensitive, e.g. `10GiB',
+        `15%'.
+        [Default: 0%]
+        type: str
+
+- part_type
+        May be specified only with 'msdos' or 'dvh' partition tables.
+        A `name' must be specified for a 'gpt' partition table.
+        Neither `part_type' nor `name' may be used with a 'sun' partition table.
+        (Choices: extended, logical, primary)[Default: primary]
+        type: str
+
+- state
+        Whether to create or delete a partition.
+        If set to `info' the module will only return the device information.
+        (Choices: absent, present, info)[Default: info]
+        type: str
+
+- unit
+        Selects the current default unit that Parted will use to display locations and capacities on the disk and to interpret those
+        given by the user if they are not suffixed by an unit.
+        When fetching information about a disk, it is always recommended to specify a unit.
+        (Choices: s, B, KB, KiB, MB, MiB, GB, GiB, TB, TiB, %, cyl, chs, compact)[Default: KiB]
+        type: str
+
+
+NOTES:
+      * When fetching information about a new disk and when the version of parted installed on the system is before version 3.1,
+        the module queries the kernel through `/sys/' to obtain disk information. In this case the units CHS and CYL are not
+        supported.
+
+
+REQUIREMENTS:  This module requires parted version 1.8.3 and above., If the version of parted is below 3.1, it requires a Linux
+        version running the sysfs file system `/sys/'.
+
+AUTHOR: Fabrizio Colonna (@ColOfAbRiX)
+        METADATA:
+          status:
+          - preview
+          supported_by: community
+        
+
+EXAMPLES:
+
+- name: Create a new primary partition
+  parted:
+    device: /dev/sdb
+    number: 1
+    state: present
+
+- name: Remove partition number 1
+  parted:
+    device: /dev/sdb
+    number: 1
+    state: absent
+
+- name: Create a new primary partition with a size of 1GiB
+  parted:
+    device: /dev/sdb
+    number: 1
+    state: present
+    part_end: 1GiB
+
+- name: Create a new primary partition for LVM
+  parted:
+    device: /dev/sdb
+    number: 2
+    flags: [ lvm ]
+    state: present
+    part_start: 1GiB
+
+# Example on how to read info and reuse it in subsequent task
+- name: Read device information (always use unit when probing)
+  parted: device=/dev/sdb unit=MiB
+  register: sdb_info
+
+- name: Remove all partitions from disk
+  parted:
+    device: /dev/sdb
+    number: '{{ item.num }}'
+    state: absent
+  loop: '{{ sdb_info.partitions }}'
+
+
+RETURN VALUES:
+
+partition_info:
+  description: Current partition information
+  returned: success
+  type: complex
+  contains:
+    device:
+      description: Generic device information.
+      type: dict
+    partitions:
+      description: List of device partitions.
+      type: list
+    sample: >
+      {
+        "disk": {
+          "dev": "/dev/sdb",
+          "logical_block": 512,
+          "model": "VMware Virtual disk",
+          "physical_block": 512,
+          "size": 5.0,
+          "table": "msdos",
+          "unit": "gib"
+        },
+        "partitions": [{
+          "begin": 0.0,
+          "end": 1.0,
+          "flags": ["boot", "lvm"],
+          "fstype": "",
+          "name": "",
+          "num": 1,
+          "size": 1.0
+        }, {
+          "begin": 1.0,
+          "end": 5.0,
+          "flags": [],
+          "fstype": "",
+          "name": "",
+          "num": 2,
+          "size": 4.0
+        }]
+      }
+

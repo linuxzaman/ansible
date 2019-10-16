@@ -1,0 +1,42 @@
+> MODPROBE    (/usr/lib/python2.7/dist-packages/ansible/modules/system/modprobe.py)
+
+        Load or unload kernel modules.
+
+  * This module is maintained by The Ansible Community
+OPTIONS (= is mandatory):
+
+= name
+        Name of kernel module to manage.
+
+
+- params
+        Modules parameters.
+        [Default: ]
+        version_added: 1.6
+
+- state
+        Whether the module should be present or absent.
+        (Choices: absent, present)[Default: present]
+
+
+AUTHOR: David Stygstra (@stygstra), Julien Dauphant (@jdauphant), Matt Jeffery (@mattjeffery)
+        METADATA:
+          status:
+          - preview
+          supported_by: community
+        
+
+EXAMPLES:
+
+- name: Add the 802.1q module
+  modprobe:
+    name: 8021q
+    state: present
+
+- name: Add the dummy module
+  modprobe:
+    name: dummy
+    state: present
+    params: 'numdummies=2'
+
+

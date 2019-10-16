@@ -1,0 +1,80 @@
+EXAMPLES:
+
+- name: Get facts for one Record Set
+  azure_rm_dnsrecordset_facts:
+    resource_group: myResourceGroup
+    zone_name: example.com
+    relative_name: server10
+    record_type: A
+- name: Get facts for all Type A Record Sets in a Zone
+  azure_rm_dnsrecordset_facts:
+    resource_group: myResourceGroup
+    zone_name: example.com
+    record_type: A
+- name: Get all record sets in one zone
+  azure_rm_dnsrecordset_facts:
+    resource_group: myResourceGroup
+    zone_name: example.com
+
+
+RETURN VALUES:
+
+azure_dnsrecordset:
+    description: List of record set dicts.
+    returned: always
+    type: list
+    example: [
+    {
+        "etag": "60ac0480-44dd-4881-a2ed-680d20b3978e",
+        "id": "/subscriptions/xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx/resourceGroups/myResourceGroup/providers/Microsoft.Network/dnszones/newzone.com/A/servera",
+        "name": "servera",
+        "properties": {
+            "ARecords": [
+                {
+                    "ipv4Address": "10.4.5.7"
+                },
+                {
+                    "ipv4Address": "2.4.5.8"
+                }
+            ],
+            "TTL": 12900
+        },
+        "type": "Microsoft.Network/dnszones/A"
+    }]
+dnsrecordsets:
+    description: List of record set dicts, which shares the same hierarchy as azure_rm_dnsrecordset module's parameter.
+    returned: always
+    type: list
+    contains:
+        id:
+            description: ID of the dns recordset.
+            sample: "/subscriptions/xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx/resourceGroups/myResourceGroup/providers/Microsoft.Network/dnszones/newzone.
+                     com/A/servera"
+        relative_name:
+            description: Name of the dns recordset.
+            sample: servera
+        record_type:
+            description:
+                - The type of the record set.
+                - Can be C(A), C(AAAA), C(CNAME), C(MX), C(NS), C(SRV), C(TXT), C(PTR).
+            sample: A
+        time_to_live:
+            description: Time to live of the record set in seconds.
+            sample: 12900
+        records:
+            description: List of records depending on the type of recordset.
+            sample: [
+                        {
+                            "ipv4Address": "10.4.5.7"
+                        },
+                        {
+                            "ipv4Address": "2.4.5.8"
+                        }
+                    ]
+        provisioning_state:
+            description: Provision state of the resource.
+            sample: Successed
+        fqdn:
+            description: Fully qualified domain name of the record set.
+            sample: www.newzone.com
+

@@ -1,0 +1,101 @@
+EXAMPLES:
+
+- name: configure interface
+  iosxr_interface:
+      name: GigabitEthernet0/0/0/2
+      description: test-interface
+      speed: 100
+      duplex: half
+      mtu: 512
+
+- name: remove interface
+  iosxr_interface:
+    name: GigabitEthernet0/0/0/2
+    state: absent
+
+- name: make interface up
+  iosxr_interface:
+    name: GigabitEthernet0/0/0/2
+    enabled: True
+
+- name: make interface down
+  iosxr_interface:
+    name: GigabitEthernet0/0/0/2
+    enabled: False
+
+- name: Create interface using aggregate
+  iosxr_interface:
+    aggregate:
+    - name: GigabitEthernet0/0/0/3
+    - name: GigabitEthernet0/0/0/2
+    speed: 100
+    duplex: full
+    mtu: 512
+    state: present
+
+- name: Create interface using aggregate along with additional params in aggregate
+  iosxr_interface:
+    aggregate:
+    - { name: GigabitEthernet0/0/0/3, description: test-interface 3 }
+    - { name: GigabitEthernet0/0/0/2, description: test-interface 2 }
+    speed: 100
+    duplex: full
+    mtu: 512
+    state: present
+
+- name: Delete interface using aggregate
+  iosxr_interface:
+    aggregate:
+    - name: GigabitEthernet0/0/0/3
+    - name: GigabitEthernet0/0/0/2
+    state: absent
+
+- name: Check intent arguments
+  iosxr_interface:
+    name: GigabitEthernet0/0/0/5
+    state: up
+    delay: 20
+
+- name: Config + intent
+  iosxr_interface:
+    name: GigabitEthernet0/0/0/5
+    enabled: False
+    state: down
+    delay: 20
+
+
+RETURN VALUES:
+
+commands:
+  description: The list of configuration mode commands sent to device with transport C(cli)
+  returned: always (empty list when no commands to send)
+  type: list
+  sample:
+  - interface GigabitEthernet0/0/0/2
+  - description test-interface
+  - duplex half
+  - mtu 512
+
+xml:
+  description: NetConf rpc xml sent to device with transport C(netconf)
+  returned: always (empty list when no xml rpc to send)
+  type: list
+  version_added: 2.5
+  sample:
+  - '<config xmlns:xc="urn:ietf:params:xml:ns:netconf:base:1.0">
+    <interface-configurations xmlns="http://cisco.com/ns/yang/Cisco-IOS-XR-ifmgr-cfg">
+    <interface-configuration xc:operation="merge">
+    <active>act</active>
+    <interface-name>GigabitEthernet0/0/0/0</interface-name>
+    <description>test-interface-0</description>
+    <mtus><mtu>
+    <owner>GigabitEthernet</owner>
+    <mtu>512</mtu>
+    </mtu></mtus>
+    <ethernet xmlns="http://cisco.com/ns/yang/Cisco-IOS-XR-drivers-media-eth-cfg">
+    <speed>100</speed>
+    <duplex>half</duplex>
+    </ethernet>
+    </interface-configuration>
+    </interface-configurations></config>'
+

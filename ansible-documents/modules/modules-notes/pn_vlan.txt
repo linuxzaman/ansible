@@ -1,0 +1,99 @@
+> PN_VLAN    (/usr/lib/python2.7/dist-packages/ansible/modules/network/netvisor/_pn_vlan.py)
+
+        Execute vlan-create or vlan-delete command. VLANs are used to isolate network traffic at Layer 2.The VLAN identifiers 0 and 4095
+        are reserved and cannot be used per the IEEE 802.1Q standard. The range of configurable VLAN identifiers is 2 through 4092.
+
+DEPRECATED: 
+
+	Reason: Doesn't support latest Pluribus Networks netvisor
+	Will be removed in: Ansible 2.12
+	Alternatives: Latest modules will be pushed in Ansible future versions.
+
+
+  * This module is maintained by The Ansible Community
+OPTIONS (= is mandatory):
+
+- pn_clipassword
+        Provide login password if user is not root.
+        [Default: (null)]
+
+- pn_cliswitch
+        Target switch(es) to run the cli on.
+        [Default: local]
+
+- pn_cliusername
+        Provide login username if user is not root.
+        [Default: (null)]
+
+- pn_description
+        Specify a description for the VLAN.
+        [Default: (null)]
+
+- pn_ports
+        Specifies the switch network data port number, list of ports, or range of ports. Port numbers must ne in the range of 1 to 64.
+        [Default: (null)]
+
+- pn_scope
+        Specify a scope for the VLAN.
+        Required for vlan-create.
+        (Choices: fabric, local)[Default: (null)]
+
+- pn_stats
+        Specify if you want to collect statistics for a VLAN. Statistic collection is enabled by default.
+        [Default: (null)]
+        type: bool
+
+- pn_untagged_ports
+        Specifies the ports that should have untagged packets mapped to the VLAN. Untagged packets are packets that do not contain IEEE
+        802.1Q VLAN tags.
+        [Default: (null)]
+
+= pn_vlanid
+        Specify a VLAN identifier for the VLAN. This is a value between 2 and 4092.
+
+
+= state
+        State the action to perform. Use 'present' to create vlan and 'absent' to delete vlan.
+        (Choices: present, absent)
+
+
+AUTHOR: Pluribus Networks (@amitsi)
+        METADATA:
+          status:
+          - deprecated
+          supported_by: community
+        
+
+EXAMPLES:
+
+- name: create a VLAN
+  pn_vlan:
+    state: 'present'
+    pn_vlanid: 1854
+    pn_scope: fabric
+
+- name: delete VLANs
+  pn_vlan:
+    state: 'absent'
+    pn_vlanid: 1854
+
+
+RETURN VALUES:
+
+command:
+  description: The CLI command run on the target node(s).
+  returned: always
+  type: str
+stdout:
+  description: The set of responses from the vlan command.
+  returned: always
+  type: list
+stderr:
+  description: The set of error responses from the vlan command.
+  returned: on error
+  type: list
+changed:
+  description: Indicates whether the CLI caused changes on the target.
+  returned: always
+  type: bool
+

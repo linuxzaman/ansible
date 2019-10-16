@@ -1,0 +1,39 @@
+EXAMPLES:
+
+- name: Install .Net 3.5
+  win_optional_feature:
+    name: NetFx3
+    state: present
+
+- name: Install .Net 3.5 from source
+  win_optional_feature:
+    name: NetFx3
+    source: \\share01\win10\sources\sxs
+    state: present
+
+- name: Install Microsoft Subsystem for Linux
+  win_optional_feature:
+    name: Microsoft-Windows-Subsystem-Linux
+    state: present
+  register: wsl_status
+
+- name: Reboot if installing Linux Subsytem as feature requires it
+  win_reboot:
+  when: wsl_status.reboot_required
+
+- name: Install multiple features in one task
+  win_optional_feature:
+    name:
+    - NetFx3
+    - Microsoft-Windows-Subsystem-Linux
+    state: present
+
+
+RETURN VALUES:
+
+reboot_required:
+    description: True when the target server requires a reboot to complete updates
+    returned: success
+    type: bool
+    sample: true
+

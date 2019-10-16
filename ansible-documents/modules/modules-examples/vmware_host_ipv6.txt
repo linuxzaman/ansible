@@ -1,0 +1,46 @@
+EXAMPLES:
+
+- name: Enable IPv6 for an host system
+  vmware_host_ipv6:
+    hostname: '{{ vcenter_hostname }}'
+    username: '{{ vcenter_username }}'
+    password: '{{ vcenter_password }}'
+    esxi_hostname: '{{ esxi_hostname }}'
+    state: enabled
+    validate_certs: no
+  delegate_to: localhost
+
+- name: Disable IPv6 for an host system
+  vmware_host_ipv6:
+    hostname: '{{ vcenter_hostname }}'
+    username: '{{ vcenter_username }}'
+    password: '{{ vcenter_password }}'
+    esxi_hostname: '{{ esxi_hostname }}'
+    state: disabled
+    validate_certs: no
+  delegate_to: localhost
+
+- name: Disable IPv6 for all host systems from cluster
+  vmware_host_ipv6:
+    hostname: '{{ vcenter_hostname }}'
+    username: '{{ vcenter_username }}'
+    password: '{{ vcenter_password }}'
+    cluster_name: '{{ cluster_name }}'
+    state: disabled
+    validate_certs: no
+  delegate_to: localhost
+
+
+RETURN VALUES:
+
+result:
+    description: metadata about host system's IPv6 configuration
+    returned: always
+    type: dict
+    sample: {
+        "esxi01": {
+            "changed": false,
+            "msg": "IPv6 is already enabled and active for host 'esxi01'",
+        },
+    }
+

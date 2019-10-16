@@ -1,0 +1,88 @@
+EXAMPLES:
+
+- name: Install IIS (Web-Server only)
+  win_feature:
+    name: Web-Server
+    state: present
+
+- name: Install IIS (Web-Server and Web-Common-Http)
+  win_feature:
+    name:
+    - Web-Server
+    - Web-Common-Http
+    state: present
+
+- name: Install NET-Framework-Core from file
+  win_feature:
+    name: NET-Framework-Core
+    source: C:\Temp\iso\sources\sxs
+    state: present
+
+- name: Install IIS Web-Server with sub features and management tools
+  win_feature:
+    name: Web-Server
+    state: present
+    include_sub_features: yes
+    include_management_tools: yes
+  register: win_feature
+
+- name: Reboot if installing Web-Server feature requires it
+  win_reboot:
+  when: win_feature.reboot_required
+
+
+RETURN VALUES:
+
+exitcode:
+    description: The stringified exit code from the feature installation/removal command.
+    returned: always
+    type: str
+    sample: Success
+feature_result:
+    description: List of features that were installed or removed.
+    returned: success
+    type: complex
+    sample:
+    contains:
+        display_name:
+            description: Feature display name.
+            returned: always
+            type: str
+            sample: "Telnet Client"
+        id:
+            description: A list of KB article IDs that apply to the update.
+            returned: always
+            type: int
+            sample: 44
+        message:
+            description: Any messages returned from the feature subsystem that occurred during installation or removal of this feature.
+            returned: always
+            type: list of strings
+            sample: []
+        reboot_required:
+            description: True when the target server requires a reboot as a result of installing or removing this feature.
+            returned: always
+            type: bool
+            sample: true
+        restart_needed:
+            description: DEPRECATED in Ansible 2.4 (refer to C(reboot_required) instead). True when the target server requires a reboot as a
+                         result of installing or removing this feature.
+            returned: always
+            type: bool
+            sample: true
+        skip_reason:
+            description: The reason a feature installation or removal was skipped.
+            returned: always
+            type: str
+            sample: NotSkipped
+        success:
+            description: If the feature installation or removal was successful.
+            returned: always
+            type: bool
+            sample: true
+reboot_required:
+    description: True when the target server requires a reboot to complete updates (no further updates can be installed until after a reboot).
+    returned: success
+    type: bool
+    sample: true
+

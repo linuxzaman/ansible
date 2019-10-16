@@ -1,0 +1,116 @@
+> WIN_MAPPED_DRIVE    (/usr/lib/python2.7/dist-packages/ansible/modules/windows/win_mapped_drive.py)
+
+        Allows you to modify mapped network drives for individual users.
+
+  * This module is maintained by The Ansible Community
+OPTIONS (= is mandatory):
+
+= letter
+        The letter of the network path to map to.
+        This letter must not already be in use with Windows.
+
+        type: str
+
+- password
+        The password for `username' that is used when testing the initial connection.
+        This is never saved with a mapped drive, use the [win_credential] module to persist a username and password for a host.
+        [Default: (null)]
+        type: str
+
+- path
+        The UNC path to map the drive to.
+        This is required if `state=present'.
+        If `state=absent' and `path' is not set, the module will delete the mapped drive regardless of the target.
+        If `state=absent' and the `path' is set, the module will throw an error if path does not match the target of the mapped drive.
+        [Default: (null)]
+        type: path
+
+- state
+        If `present' will ensure the mapped drive exists.
+        If `absent' will ensure the mapped drive does not exist.
+        (Choices: absent, present)[Default: present]
+        type: str
+
+- username
+        The username that is used when testing the initial connection.
+        This is never saved with a mapped drive, the the [win_credential] module to persist a username and password for a host.
+        This is required if the mapped drive requires authentication with custom credentials and become, or CredSSP cannot be used.
+        If become or CredSSP is used, any credentials saved with [win_credential] will automatically be used instead.
+        [Default: (null)]
+        type: str
+
+
+NOTES:
+      * You cannot use this module to access a mapped drive in another Ansible task, drives mapped with this module are only
+        accessible when logging in interactively with the user through the console or RDP.
+      * It is recommend to run this module with become or CredSSP when the remote path requires authentication.
+      * When using become or CredSSP, the task will have access to any local credentials stored in the user's vault.
+      * If become or CredSSP is not available, the `username' and `password' options can be used for the initial authentication but
+        these are not persisted.
+
+
+SEE ALSO:
+      * Module win_credential
+           The official documentation on the win_credential module.
+           https://docs.ansible.com/ansible/latest/modules/win_credential_module.html
+
+
+AUTHOR: Jordan Borean (@jborean93)
+        METADATA:
+          status:
+          - preview
+          supported_by: community
+        
+
+EXAMPLES:
+
+- name: Create a mapped drive under Z
+  win_mapped_drive:
+    letter: Z
+    path: \\domain\appdata\accounting
+
+- name: Delete any mapped drives under Z
+  win_mapped_drive:
+    letter: Z
+    state: absent
+
+- name: Only delete the mapped drive Z if the paths match (error is thrown otherwise)
+  win_mapped_drive:
+    letter: Z
+    path: \\domain\appdata\accounting
+    state: absent
+
+- name: Create mapped drive with credentials and save the username and password
+  block:
+  - name: Save the network credentials required for the mapped drive
+    win_credential:
+      name: server
+      type: domain_password
+      username: username@DOMAIN
+      secret: Password01
+      state: present
+
+  - name: Create a mapped drive that requires authentication
+    win_mapped_drive:
+      letter: M
+      path: \\SERVER\C$
+      state: present
+  vars:
+    # become is required to save and retrieve the credentials in the tasks
+    ansible_become: yes
+    ansible_become_method: runas
+    ansible_become_user: '{{ ansible_user }}'
+    ansible_become_pass: '{{ ansible_password }}'
+
+- name: Create mapped drive with credentials that do not persist on the next logon
+  win_mapped_drive:
+    letter: M
+    path: \\SERVER\C$
+    state: present
+    username: '{{ ansible_user }}'
+    password: '{{ ansible_password }}'
+
+
+RETURN VALUES:
+
+

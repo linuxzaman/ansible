@@ -1,0 +1,42 @@
+EXAMPLES:
+
+- name: configure SnmpNetwork
+    tags:
+    - elementsw_cluster_snmp
+    na_elementsw_cluster_snmp:
+      hostname: "{{ elementsw_hostname }}"
+      username: "{{ elementsw_username }}"
+      password: "{{ elementsw_password }}"
+      state: present
+      snmp_v3_enabled: True
+      usm_users:
+        access: rouser
+        name: testuser
+        password: ChangeMe123
+        passphrase: ChangeMe123
+        secLevel: auth
+      networks:
+        access: ro
+        cidr: 24
+        community: TestNetwork
+        network: 192.168.0.1
+
+  - name: Disable SnmpNetwork
+    tags:
+    - elementsw_cluster_snmp
+    na_elementsw_cluster_snmp:
+      hostname: "{{ elementsw_hostname }}"
+      username: "{{ elementsw_username }}"
+      password: "{{ elementsw_password }}"
+      state: absent
+
+
+RETURN VALUES:
+
+
+msg:
+    description: Success message
+    returned: success
+    type: str
+
+

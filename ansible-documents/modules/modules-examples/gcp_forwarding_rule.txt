@@ -1,0 +1,51 @@
+EXAMPLES:
+
+- name: Create Minimum GLOBAL Forwarding_Rule
+  gcp_forwarding_rule:
+    service_account_email: "{{ service_account_email }}"
+    credentials_file: "{{ credentials_file }}"
+    project_id: "{{ project_id }}"
+    forwarding_rule_name: my-forwarding_rule
+    protocol: TCP
+    port_range: 80
+    region: global
+    target: my-target-proxy
+    state: present
+
+- name: Create Forwarding_Rule w/reserved static address
+  gcp_forwarding_rule:
+    service_account_email: "{{ service_account_email }}"
+    credentials_file: "{{ credentials_file }}"
+    project_id: "{{ project_id }}"
+    forwarding_rule_name: my-forwarding_rule
+    protocol: TCP
+    port_range: 80
+    address: my-reserved-static-address-name
+    region: global
+    target: my-target-proxy
+    state: present
+
+
+RETURN VALUES:
+
+forwarding_rule_name:
+    description: Name of the Forwarding_Rule
+    returned: Always
+    type: str
+    sample: my-target-proxy
+forwarding_rule:
+    description: GCP Forwarding_Rule dictionary
+    returned: Always. Refer to GCP documentation for detailed field descriptions.
+    type: dict
+    sample: { "name": "my-forwarding_rule", "target": "..." }
+region:
+    description: Region for Forwarding Rule.
+    returned: Always
+    type: bool
+    sample: true
+state:
+    description: state of the Forwarding_Rule
+    returned: Always.
+    type: str
+    sample: present
+

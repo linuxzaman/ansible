@@ -1,0 +1,35 @@
+EXAMPLES:
+
+- name: configure static route
+  eos_static_route:
+    address: 10.0.2.0/24
+    next_hop: 10.8.38.1
+    admin_distance: 2
+- name: delete static route
+  eos_static_route:
+    address: 10.0.2.0/24
+    next_hop: 10.8.38.1
+    state: absent
+- name: configure static routes using aggregate
+  eos_static_route:
+    aggregate:
+      - { address: 10.0.1.0/24, next_hop: 10.8.38.1 }
+      - { address: 10.0.3.0/24, next_hop: 10.8.38.1 }
+- name: Delete static route using aggregate
+  eos_static_route:
+    aggregate:
+      - { address: 10.0.1.0/24, next_hop: 10.8.38.1 }
+      - { address: 10.0.3.0/24, next_hop: 10.8.38.1 }
+    state: absent
+
+
+RETURN VALUES:
+
+commands:
+  description: The list of configuration mode commands to send to the device
+  returned: always
+  type: list
+  sample:
+    - ip route 10.0.2.0/24 10.8.38.1 3
+    - no ip route 10.0.2.0/24 10.8.38.1
+

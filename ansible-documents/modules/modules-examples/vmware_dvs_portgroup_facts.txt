@@ -1,0 +1,62 @@
+EXAMPLES:
+
+- name: Get facts about DVPG
+  vmware_dvs_portgroup_facts:
+    hostname: "{{ vcenter_server }}"
+    username: "{{ vcenter_user }}"
+    password: "{{ vcenter_pass }}"
+    validate_certs: no
+    datacenter: "{{ datacenter_name }}"
+  register: dvpg_facts
+
+- name: Get number of ports for portgroup 'dvpg_001' in 'dvs_001'
+  debug:
+    msg: "{{ item.num_ports }}"
+  with_items:
+    - "{{ dvpg_facts.dvs_portgroup_facts['dvs_001'] | json_query(query) }}"
+  vars:
+    query: "[?portgroup_name=='dvpg_001']"
+
+
+RETURN VALUES:
+
+dvs_portgroup_facts:
+    description: metadata about DVS portgroup configuration
+    returned: on success
+    type: dict
+    sample: {
+        "dvs_0":[
+            {
+                "description": null,
+                "dvswitch_name": "dvs_001",
+                "network_policy": {
+                    "forged_transmits": false,
+                    "mac_changes": false,
+                    "promiscuous": false
+                },
+                "num_ports": 8,
+                "port_policy": {
+                    "block_override": true,
+                    "ipfix_override": false,
+                    "live_port_move": false,
+                    "network_rp_override": false,
+                    "port_config_reset_at_disconnect": true,
+                    "security_override": false,
+                    "shaping_override": false,
+                    "traffic_filter_override": false,
+                    "uplink_teaming_override": false,
+                    "vendor_config_override": false,
+                    "vlan_override": false
+                },
+                "portgroup_name": "dvpg_001",
+                "teaming_policy": {
+                    "inbound_policy": true,
+                    "notify_switches": true,
+                    "policy": "loadbalance_srcid",
+                    "rolling_order": false
+                },
+                "type": "earlyBinding"
+            },
+        ]
+    }
+

@@ -1,0 +1,248 @@
+> UDM_USER    (/usr/lib/python2.7/dist-packages/ansible/modules/cloud/univention/udm_user.py)
+
+        This module allows to manage posix users on a univention corporate server (UCS). It uses the python API of the UCS to create a
+        new object or edit it.
+
+  * This module is maintained by The Ansible Community
+OPTIONS (= is mandatory):
+
+- birthday
+        Birthday
+        [Default: (null)]
+
+- city
+        City of users business address.
+        [Default: (null)]
+
+- country
+        Country of users business address.
+        [Default: (null)]
+
+- department_number
+        Department number of users business address.
+        (Aliases: departmentNumber)[Default: (null)]
+
+- description
+        Description (not gecos)
+        [Default: (null)]
+
+- display_name
+        Display name (not gecos)
+        (Aliases: displayName)[Default: (null)]
+
+- email
+        A list of e-mail addresses.
+        [Default: []]
+
+- employee_number
+        Employee number
+        (Aliases: employeeNumber)[Default: (null)]
+
+- employee_type
+        Employee type
+        (Aliases: employeeType)[Default: (null)]
+
+- firstname
+        First name. Required if `state=present'.
+        [Default: (null)]
+
+- gecos
+        GECOS
+        [Default: (null)]
+
+- groups
+        POSIX groups, the LDAP DNs of the groups will be found with the LDAP filter for each group as $GROUP:
+        `(&(objectClass=posixGroup'(cn=$GROUP))).
+        [Default: []]
+
+- home_share
+        Home NFS share. Must be a LDAP DN, e.g. `cn=home,cn=shares,ou=school,dc=example,dc=com'.
+        (Aliases: homeShare)[Default: (null)]
+
+- home_share_path
+        Path to home NFS share, inside the homeShare.
+        (Aliases: homeSharePath)[Default: (null)]
+
+- home_telephone_number
+        List of private telephone numbers.
+        (Aliases: homeTelephoneNumber)[Default: []]
+
+- homedrive
+        Windows home drive, e.g. `"H:"'.
+        [Default: (null)]
+
+- lastname
+        Last name. Required if `state=present'.
+        [Default: (null)]
+
+- mail_alternative_address
+        List of alternative e-mail addresses.
+        (Aliases: mailAlternativeAddress)[Default: []]
+
+- mail_home_server
+        FQDN of mail server
+        (Aliases: mailHomeServer)[Default: (null)]
+
+- mail_primary_address
+        Primary e-mail address
+        (Aliases: mailPrimaryAddress)[Default: (null)]
+
+- mobile_telephone_number
+        Mobile phone number
+        (Aliases: mobileTelephoneNumber)[Default: []]
+
+- organisation
+        Organisation
+        (Aliases: organization)[Default: (null)]
+
+- ou
+        Organizational Unit inside the LDAP Base DN, e.g. `school' for LDAP OU `ou=school,dc=example,dc=com'.
+        [Default: ]
+
+- override_pw_history
+        Override password history
+        (Aliases: overridePWHistory)[Default: no]
+        type: bool
+
+- override_pw_length
+        Override password check
+        (Aliases: overridePWLength)[Default: no]
+        type: bool
+
+- pager_telephonenumber
+        List of pager telephone numbers.
+        (Aliases: pagerTelephonenumber)[Default: []]
+
+- password
+        Password. Required if `state=present'.
+        [Default: (null)]
+
+- phone
+        List of telephone numbers.
+        [Default: (null)]
+
+- position
+        Define the whole position of users object inside the LDAP tree, e.g. `cn=employee,cn=users,ou=school,dc=example,dc=com'.
+        [Default: ]
+
+- postcode
+        Postal code of users business address.
+        [Default: (null)]
+
+- primary_group
+        Primary group. This must be the group LDAP DN.
+        (Aliases: primaryGroup)[Default: cn=Domain Users,cn=groups,$LDAP_BASE_DN]
+
+- profilepath
+        Windows profile directory
+        [Default: (null)]
+
+- pwd_change_next_login
+        Change password on next login.
+        (Aliases: pwdChangeNextLogin)(Choices: 0, 1)[Default: (null)]
+
+- room_number
+        Room number of users business address.
+        (Aliases: roomNumber)[Default: (null)]
+
+- samba_privileges
+        Samba privilege, like allow printer administration, do domain join.
+        (Aliases: sambaPrivileges)[Default: (null)]
+
+- samba_user_workstations
+        Allow the authentication only on this Microsoft Windows host.
+        (Aliases: sambaUserWorkstations)[Default: (null)]
+
+- sambahome
+        Windows home path, e.g. `'\\$FQDN\$USERNAME''.
+        [Default: (null)]
+
+- scriptpath
+        Windows logon script.
+        [Default: (null)]
+
+- secretary
+        A list of superiors as LDAP DNs.
+        [Default: []]
+
+- serviceprovider
+        Enable user for the following service providers.
+        [Default: []]
+
+- shell
+        Login shell
+        [Default: /bin/bash]
+
+- state
+        Whether the user is present or not.
+        (Choices: present, absent)[Default: present]
+
+- street
+        Street of users business address.
+        [Default: (null)]
+
+- subpath
+        LDAP subpath inside the organizational unit, e.g. `cn=teachers,cn=users' for LDAP container
+        `cn=teachers,cn=users,dc=example,dc=com'.
+        [Default: cn=users]
+
+- title
+        Title, e.g. `Prof.'.
+        [Default: (null)]
+
+- unixhome
+        Unix home directory
+        [Default: /home/$USERNAME]
+
+- update_password
+        `always' will update passwords if they differ. `on_create' will only set the password for newly created users.
+        [Default: always]
+        version_added: 2.3
+
+- userexpiry
+        Account expiry date, e.g. `1999-12-31'.
+        [Default: Today + 1 year]
+
+= username
+        User name
+        (Aliases: name)
+
+
+REQUIREMENTS:  Python >= 2.6
+
+AUTHOR: Tobias Rüetschi (@keachi)
+        METADATA:
+          status:
+          - preview
+          supported_by: community
+        
+
+EXAMPLES:
+
+# Create a user on a UCS
+- udm_user:
+    name: FooBar
+    password: secure_password
+    firstname: Foo
+    lastname: Bar
+
+# Create a user with the DN
+# C(uid=foo,cn=teachers,cn=users,ou=school,dc=school,dc=example,dc=com)
+- udm_user:
+    name: foo
+    password: secure_password
+    firstname: Foo
+    lastname: Bar
+    ou: school
+    subpath: 'cn=teachers,cn=users'
+# or define the position
+- udm_user:
+    name: foo
+    password: secure_password
+    firstname: Foo
+    lastname: Bar
+    position: 'cn=teachers,cn=users,ou=school,dc=school,dc=example,dc=com'
+
+
+RETURN VALUES:
+# 

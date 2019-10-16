@@ -1,0 +1,84 @@
+> ONYX_BGP    (/usr/lib/python2.7/dist-packages/ansible/modules/network/onyx/onyx_bgp.py)
+
+        This module provides declarative management of BGP router and neighbors on Mellanox ONYX network devices.
+
+  * This module is maintained by The Ansible Community
+OPTIONS (= is mandatory):
+
+= as_number
+        Local AS number.
+
+
+- neighbors
+        List of neighbors. Required if `state=present'.
+        [Default: (null)]
+        suboptions:
+          neighbor:
+            description:
+            - Neighbor IP address.
+            required: true
+          remote_as:
+            description:
+            - Remote AS number.
+            required: true
+        
+
+- networks
+        List of advertised networks.
+        [Default: (null)]
+
+- purge
+        will remove all neighbors when it is True.
+        [Default: False]
+        type: bool
+        version_added: 2.8
+        
+
+- router_id
+        Router IP address. Required if `state=present'.
+        [Default: (null)]
+
+- state
+        BGP state.
+        (Choices: present, absent)[Default: present]
+
+
+NOTES:
+      * Tested on ONYX 3.6.4000
+
+
+AUTHOR: Samer Deeb (@samerd)
+        METADATA:
+          status:
+          - preview
+          supported_by: community
+        
+
+EXAMPLES:
+
+- name: configure bgp
+  onyx_bgp:
+    as_number: 320
+    router_id: 10.3.3.3
+    neighbors:
+      - remote_as: 321
+        neighbor: 10.3.3.4
+    purge: True
+    state: present
+    networks:
+      - 172.16.1.0/24
+
+
+RETURN VALUES:
+
+commands:
+  description: The list of configuration mode commands to send to the device.
+  returned: always
+  type: list
+  sample:
+    - router bgp 172
+    - exit
+    - router bgp 172 router-id 2.3.4.5 force
+    - router bgp 172 neighbor 2.3.4.6 remote-as 173
+    - router bgp 172 network 172.16.1.0 /24
+

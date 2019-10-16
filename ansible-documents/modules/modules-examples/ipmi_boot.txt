@@ -1,0 +1,36 @@
+EXAMPLES:
+
+# Ensure bootdevice is HD.
+- ipmi_boot:
+    name: test.testdomain.com
+    user: admin
+    password: password
+    bootdev: hd
+
+# Ensure bootdevice is not Network
+- ipmi_boot:
+    name: test.testdomain.com
+    user: admin
+    password: password
+    bootdev: network
+    state: absent
+
+
+RETURN VALUES:
+
+bootdev:
+    description: The boot device name which will be used beyond next boot.
+    returned: success
+    type: str
+    sample: default
+persistent:
+    description: If True, system firmware will use this device beyond next boot.
+    returned: success
+    type: bool
+    sample: false
+uefimode:
+    description: If True, system firmware will use UEFI boot explicitly beyond next boot.
+    returned: success
+    type: bool
+    sample: false
+

@@ -1,0 +1,154 @@
+EXAMPLES:
+
+- name: Get facts for all virtual machines of a resource group
+    azure_rm_virtualmachine_facts:
+      resource_group: myResourceGroup
+
+  - name: Get facts by name
+    azure_rm_virtualmachine_facts:
+      resource_group: myResourceGroup
+      name: myVm
+
+  - name: Get facts by tags
+    azure_rm_virtualmachine_facts:
+      resource_group: myResourceGroup
+      tags:
+        - testing
+        - foo:bar
+
+
+RETURN VALUES:
+
+vms:
+    description: List of virtual machines.
+    returned: always
+    type: complex
+    contains:
+        admin_username:
+            description:
+                - Administrator user name.
+            returned: always
+            type: str
+            sample: admin
+        data_disks:
+            description:
+                - List of attached data disks.
+            returned: always
+            type: complex
+            contains:
+                caching:
+                    description:
+                        - Type of data disk caching.
+                    type: str
+                    sample: ReadOnly
+                disk_size_gb:
+                    description:
+                        - The initial disk size in GB for blank data disks
+                    type: int
+                    sample: 64
+                lun:
+                    description:
+                        - The logical unit number for data disk
+                    type: int
+                    sample: 0
+                managed_disk_type:
+                    description:
+                        - Managed data disk type
+                    type: str
+                    sample: Standard_LRS
+        id:
+            description:
+                - Resource ID.
+            returned: always
+            type: str
+            sample: /subscriptions/xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx/resourceGroups/myResourceGroup/providers/Microsoft.Compute/virtualMachines/myVm
+        image:
+            description:
+                - Image specification
+            returned: always
+            type: complex
+            contains:
+                offer:
+                    description:
+                        - Offer.
+                    type: str
+                    returned: when created from marketplace image
+                    sample: RHEL
+                publisher:
+                    description:
+                        - Publisher name.
+                    type: str
+                    returned: when created from marketplace image
+                    sample: RedHat
+                sku:
+                    description:
+                        - SKU name.
+                    type: str
+                    returned: when created from marketplace image
+                    sample: 7-RAW
+                version:
+                    description:
+                        - Image version.
+                    type: str
+                    returned: when created from marketplace image
+                    sample: 7.5.2018050901
+                id:
+                    description:
+                        - Custom image resource id.
+                    type: str
+                    returned: when created from custom image
+                    sample: /subscriptions/xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx/resourceGroups/myResourceGroup/providers/Microsoft.Compute/images/myImage
+        location:
+            description:
+                - Resource location.
+            returned: always
+            type: str
+            sample: japaneast
+        name:
+            description:
+                - Resource name.
+            returned: always
+            type: str
+            sample: myVm
+        network_interface_names:
+            description:
+                - List of attached network interfaces.
+            type: list
+            sample: [
+                "myNetworkInterface"
+            ]
+        os_disk_caching:
+            description:
+                - Type of OS disk caching.
+            type: str
+            sample: ReadOnly
+        os_type:
+            description:
+                - Base type of operating system.
+            type: str
+            sample: Linux
+        resource_group:
+            description:
+                - Resource group.
+            type: str
+            sample: myResourceGroup
+        state:
+            description:
+                - State of the resource.
+            type: str
+            sample: present
+        tags:
+            description:
+                - Tags.
+            type: dict
+        vm_size:
+            description:
+                - Virtual machine size.
+            type: str
+            sample: Standard_D4
+        power_state:
+            description:
+                - Power state of the virtual machine.
+            type: str
+            sample: running
+

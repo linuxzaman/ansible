@@ -1,0 +1,194 @@
+> PN_PORT_CONFIG    (/usr/lib/python2.7/dist-packages/ansible/modules/network/netvisor/pn_port_config.py)
+
+        This module can be used to modify a port configuration.
+
+  * This module is maintained by The Ansible Community
+OPTIONS (= is mandatory):
+
+- pn_allowed_tpid
+        Allowed TPID in addition to 0x8100 on Vlan header.
+        (Choices: vlan, q-in-q, q-in-q-old)[Default: (null)]
+        type: str
+
+- pn_autoneg
+        physical port autonegotiation.
+        [Default: (null)]
+        type: bool
+
+- pn_cliswitch
+        Target switch to run the CLI on.
+        [Default: (null)]
+        type: str
+
+- pn_crc_check_enable
+        CRC check on ingress and rewrite on egress.
+        [Default: (null)]
+        type: bool
+
+- pn_defer_bringup
+        defer port bringup.
+        [Default: (null)]
+        type: bool
+
+- pn_description
+        physical port description.
+        [Default: (null)]
+        type: str
+
+- pn_dscp_map
+        DSCP map name to enable on port.
+        [Default: (null)]
+        type: str
+
+- pn_edge_switch
+        physical port edge switch.
+        [Default: (null)]
+        type: bool
+
+- pn_egress_rate_limit
+        max egress port data rate limit.
+        [Default: (null)]
+        type: str
+
+- pn_enable
+        physical port enable.
+        [Default: (null)]
+        type: bool
+
+- pn_eth_mode
+        physical Ethernet mode.
+        (Choices: 1000base-x, sgmii, disabled, GMII)[Default: (null)]
+
+- pn_fabric_guard
+        Fabric guard configuration.
+        [Default: (null)]
+        type: bool
+
+- pn_host_enable
+        Host facing port control setting.
+        [Default: (null)]
+        type: bool
+
+- pn_intf
+        physical interface.
+        [Default: (null)]
+        type: str
+
+- pn_jumbo
+        jumbo frames on physical port.
+        [Default: (null)]
+        type: bool
+
+- pn_lacp_priority
+        LACP priority from 1 to 65535.
+        [Default: (null)]
+        type: str
+
+- pn_local_switching
+        no-local-switching port cannot bridge traffic to another no-local-switching port.
+        [Default: (null)]
+        type: bool
+
+- pn_loop_vlans
+        looping vlans.
+        [Default: (null)]
+        type: str
+
+- pn_loopback
+        physical port loopback.
+        [Default: (null)]
+        type: bool
+
+- pn_mirror_only
+        physical port mirror only.
+        [Default: (null)]
+        type: bool
+
+- pn_pause
+        physical port pause.
+        [Default: (null)]
+        type: bool
+
+- pn_port
+        physical port.
+        [Default: (null)]
+        type: str
+
+- pn_port_mac_address
+        physical port MAC Address.
+        [Default: (null)]
+        type: str
+
+- pn_reflect
+        physical port reflection.
+        [Default: (null)]
+        type: bool
+
+- pn_routing
+        routing.
+        [Default: (null)]
+        type: bool
+
+- pn_send_port
+        send port.
+        [Default: (null)]
+        type: str
+
+- pn_speed
+        physical port speed.
+        (Choices: disable, 10m, 100m, 1g, 2.5g, 10g, 25g, 40g, 50g, 100g)[Default: (null)]
+
+- pn_vxlan_termination
+        physical port vxlan termination setting.
+        [Default: (null)]
+        type: bool
+
+= state
+        State the action to perform. Use `update' to modify the port-config.
+        (Choices: update)
+        type: str
+
+
+AUTHOR: Pluribus Networks (@rajaspachipulusu17)
+        METADATA:
+          status:
+          - preview
+          supported_by: community
+        
+
+EXAMPLES:
+
+- name: port config modify
+  pn_port_config:
+    pn_cliswitch: "sw01"
+    state: "update"
+    pn_port: "all"
+    pn_dscp_map: "foo"
+
+- name: port config modify
+  pn_port_config:
+    pn_cliswitch: "sw01"
+    state: "update"
+    pn_port: "all"
+    pn_host_enable: true
+
+
+RETURN VALUES:
+
+command:
+  description: the CLI command run on the target node.
+  returned: always
+  type: str
+stdout:
+  description: set of responses from the port-config command.
+  returned: always
+  type: list
+stderr:
+  description: set of error responses from the port-config command.
+  returned: on error
+  type: list
+changed:
+  description: indicates whether the CLI caused changes on the target.
+  returned: always
+  type: bool
+

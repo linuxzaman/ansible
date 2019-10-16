@@ -1,0 +1,637 @@
+> FORTIOS_FIREWALL_POLICY6    (/usr/lib/python2.7/dist-packages/ansible/modules/network/fortios/fortios_firewall_policy6.py)
+
+        This module is able to configure a FortiGate or FortiOS by allowing the user to configure firewall feature and policy6 category.
+        Examples includes all options and need to be adjusted to datasources before usage. Tested with FOS v6.0.2
+
+  * This module is maintained by The Ansible Community
+OPTIONS (= is mandatory):
+
+- firewall_policy6
+        Configure IPv6 policies.
+        [Default: None]
+        suboptions:
+          action:
+            choices:
+            - accept
+            - deny
+            - ipsec
+            description:
+            - Policy action (allow/deny/ipsec).
+          app-category:
+            description:
+            - Application category ID list.
+            suboptions:
+              id:
+                description:
+                - Category IDs.
+                required: true
+          app-group:
+            description:
+            - Application group names.
+            suboptions:
+              name:
+                description:
+                - Application group names. Source application.group.name.
+                required: true
+          application:
+            description:
+            - Application ID list.
+            suboptions:
+              id:
+                description:
+                - Application IDs.
+                required: true
+          application-list:
+            description:
+            - Name of an existing Application list. Source application.list.name.
+          av-profile:
+            description:
+            - Name of an existing Antivirus profile. Source antivirus.profile.name.
+          comments:
+            description:
+            - Comment.
+          custom-log-fields:
+            description:
+            - Log field index numbers to append custom log fields to log messages for this
+              policy.
+            suboptions:
+              field-id:
+                description:
+                - Custom log field. Source log.custom-field.id.
+                required: true
+          devices:
+            description:
+            - Names of devices or device groups that can be matched by the policy.
+            suboptions:
+              name:
+                description:
+                - Device or group name. Source user.device.alias user.device-group.name user.device-category.name.
+                required: true
+          diffserv-forward:
+            choices:
+            - enable
+            - disable
+            description:
+            - Enable to change packet's DiffServ values to the specified diffservcode-forward
+              value.
+          diffserv-reverse:
+            choices:
+            - enable
+            - disable
+            description:
+            - Enable to change packet's reverse (reply) DiffServ values to the specified diffservcode-rev
+              value.
+          diffservcode-forward:
+            description:
+            - Change packet's DiffServ to this value.
+          diffservcode-rev:
+            description:
+            - Change packet's reverse (reply) DiffServ to this value.
+          dlp-sensor:
+            description:
+            - Name of an existing DLP sensor. Source dlp.sensor.name.
+          dscp-match:
+            choices:
+            - enable
+            - disable
+            description:
+            - Enable DSCP check.
+          dscp-negate:
+            choices:
+            - enable
+            - disable
+            description:
+            - Enable negated DSCP match.
+          dscp-value:
+            description:
+            - DSCP value.
+          dsri:
+            choices:
+            - enable
+            - disable
+            description:
+            - Enable DSRI to ignore HTTP server responses.
+          dstaddr:
+            description:
+            - Destination address and address group names.
+            suboptions:
+              name:
+                description:
+                - Address name. Source firewall.address6.name firewall.addrgrp6.name firewall.vip6.name
+                  firewall.vipgrp6.name.
+                required: true
+          dstaddr-negate:
+            choices:
+            - enable
+            - disable
+            description:
+            - When enabled dstaddr specifies what the destination address must NOT be.
+          dstintf:
+            description:
+            - Outgoing (egress) interface.
+            suboptions:
+              name:
+                description:
+                - Interface name. Source system.interface.name system.zone.name.
+                required: true
+          firewall-session-dirty:
+            choices:
+            - check-all
+            - check-new
+            description:
+            - How to handle sessions if the configuration of this firewall policy changes.
+          fixedport:
+            choices:
+            - enable
+            - disable
+            description:
+            - Enable to prevent source NAT from changing a session's source port.
+          global-label:
+            description:
+            - Label for the policy that appears when the GUI is in Global View mode.
+          groups:
+            description:
+            - Names of user groups that can authenticate with this policy.
+            suboptions:
+              name:
+                description:
+                - Group name. Source user.group.name.
+                required: true
+          icap-profile:
+            description:
+            - Name of an existing ICAP profile. Source icap.profile.name.
+          inbound:
+            choices:
+            - enable
+            - disable
+            description:
+            - 'Policy-based IPsec VPN: only traffic from the remote network can initiate a
+              VPN.'
+          ippool:
+            choices:
+            - enable
+            - disable
+            description:
+            - Enable to use IP Pools for source NAT.
+          ips-sensor:
+            description:
+            - Name of an existing IPS sensor. Source ips.sensor.name.
+          label:
+            description:
+            - Label for the policy that appears when the GUI is in Section View mode.
+          logtraffic:
+            choices:
+            - all
+            - utm
+            - disable
+            description:
+            - Enable or disable logging. Log all sessions or security profile sessions.
+          logtraffic-start:
+            choices:
+            - enable
+            - disable
+            description:
+            - Record logs when a session starts and ends.
+          name:
+            description:
+            - Policy name.
+          nat:
+            choices:
+            - enable
+            - disable
+            description:
+            - Enable/disable source NAT.
+          natinbound:
+            choices:
+            - enable
+            - disable
+            description:
+            - 'Policy-based IPsec VPN: apply destination NAT to inbound traffic.'
+          natoutbound:
+            choices:
+            - enable
+            - disable
+            description:
+            - 'Policy-based IPsec VPN: apply source NAT to outbound traffic.'
+          outbound:
+            choices:
+            - enable
+            - disable
+            description:
+            - 'Policy-based IPsec VPN: only traffic from the internal network can initiate
+              a VPN.'
+          per-ip-shaper:
+            description:
+            - Per-IP traffic shaper. Source firewall.shaper.per-ip-shaper.name.
+          policyid:
+            description:
+            - Policy ID.
+            required: true
+          poolname:
+            description:
+            - IP Pool names.
+            suboptions:
+              name:
+                description:
+                - IP pool name. Source firewall.ippool6.name.
+                required: true
+          profile-group:
+            description:
+            - Name of profile group. Source firewall.profile-group.name.
+          profile-protocol-options:
+            description:
+            - Name of an existing Protocol options profile. Source firewall.profile-protocol-options.name.
+          profile-type:
+            choices:
+            - single
+            - group
+            description:
+            - Determine whether the firewall policy allows security profile groups or single
+              profiles only.
+          replacemsg-override-group:
+            description:
+            - Override the default replacement message group for this policy. Source system.replacemsg-group.name.
+          rsso:
+            choices:
+            - enable
+            - disable
+            description:
+            - Enable/disable RADIUS single sign-on (RSSO).
+          schedule:
+            description:
+            - Schedule name. Source firewall.schedule.onetime.name firewall.schedule.recurring.name
+              firewall.schedule.group.name.
+          send-deny-packet:
+            choices:
+            - enable
+            - disable
+            description:
+            - Enable/disable return of deny-packet.
+          service:
+            description:
+            - Service and service group names.
+            suboptions:
+              name:
+                description:
+                - Address name. Source firewall.service.custom.name firewall.service.group.name.
+                required: true
+          service-negate:
+            choices:
+            - enable
+            - disable
+            description:
+            - When enabled service specifies what the service must NOT be.
+          session-ttl:
+            description:
+            - Session TTL in seconds for sessions accepted by this policy. 0 means use the
+              system default session TTL.
+          spamfilter-profile:
+            description:
+            - Name of an existing Spam filter profile. Source spamfilter.profile.name.
+          srcaddr:
+            description:
+            - Source address and address group names.
+            suboptions:
+              name:
+                description:
+                - Address name. Source firewall.address6.name firewall.addrgrp6.name.
+                required: true
+          srcaddr-negate:
+            choices:
+            - enable
+            - disable
+            description:
+            - When enabled srcaddr specifies what the source address must NOT be.
+          srcintf:
+            description:
+            - Incoming (ingress) interface.
+            suboptions:
+              name:
+                description:
+                - Interface name. Source system.zone.name system.interface.name.
+                required: true
+          ssh-filter-profile:
+            description:
+            - Name of an existing SSH filter profile. Source ssh-filter.profile.name.
+          ssl-mirror:
+            choices:
+            - enable
+            - disable
+            description:
+            - Enable to copy decrypted SSL traffic to a FortiGate interface (called SSL mirroring).
+          ssl-mirror-intf:
+            description:
+            - SSL mirror interface name.
+            suboptions:
+              name:
+                description:
+                - Interface name. Source system.zone.name system.interface.name.
+                required: true
+          ssl-ssh-profile:
+            description:
+            - Name of an existing SSL SSH profile. Source firewall.ssl-ssh-profile.name.
+          state:
+            choices:
+            - present
+            - absent
+            description:
+            - Indicates whether to create or remove the object
+          status:
+            choices:
+            - enable
+            - disable
+            description:
+            - Enable or disable this policy.
+          tcp-mss-receiver:
+            description:
+            - Receiver TCP maximum segment size (MSS).
+          tcp-mss-sender:
+            description:
+            - Sender TCP maximum segment size (MSS).
+          tcp-session-without-syn:
+            choices:
+            - all
+            - data-only
+            - disable
+            description:
+            - Enable/disable creation of TCP session without SYN flag.
+          timeout-send-rst:
+            choices:
+            - enable
+            - disable
+            description:
+            - Enable/disable sending RST packets when TCP sessions expire.
+          traffic-shaper:
+            description:
+            - Reverse traffic shaper. Source firewall.shaper.traffic-shaper.name.
+          traffic-shaper-reverse:
+            description:
+            - Reverse traffic shaper. Source firewall.shaper.traffic-shaper.name.
+          url-category:
+            description:
+            - URL category ID list.
+            suboptions:
+              id:
+                description:
+                - URL category ID.
+                required: true
+          users:
+            description:
+            - Names of individual users that can authenticate with this policy.
+            suboptions:
+              name:
+                description:
+                - Names of individual users that can authenticate with this policy. Source
+                  user.local.name.
+                required: true
+          utm-status:
+            choices:
+            - enable
+            - disable
+            description:
+            - Enable AV/web/ips protection profile.
+          uuid:
+            description:
+            - Universally Unique Identifier (UUID; automatically assigned but can be manually
+              reset).
+          vlan-cos-fwd:
+            description:
+            - 'VLAN forward direction user priority: 255 passthrough, 0 lowest, 7 highest'
+          vlan-cos-rev:
+            description:
+            - 'VLAN reverse direction user priority: 255 passthrough, 0 lowest, 7 highest'
+          vlan-filter:
+            description:
+            - Set VLAN filters.
+          voip-profile:
+            description:
+            - Name of an existing VoIP profile. Source voip.profile.name.
+          vpntunnel:
+            description:
+            - 'Policy-based IPsec VPN: name of the IPsec VPN Phase 1. Source vpn.ipsec.phase1.name
+              vpn.ipsec.manualkey.name.'
+          webfilter-profile:
+            description:
+            - Name of an existing Web filter profile. Source webfilter.profile.name.
+        
+
+= host
+        FortiOS or FortiGate ip address.
+
+
+- https
+        Indicates if the requests towards FortiGate must use HTTPS protocol
+        [Default: False]
+        type: bool
+
+- password
+        FortiOS or FortiGate password.
+        [Default: ]
+
+= username
+        FortiOS or FortiGate username.
+
+
+- vdom
+        Virtual domain, among those defined previously. A vdom is a virtual instance of the FortiGate that can be configured and used as
+        a different unit.
+        [Default: root]
+
+
+NOTES:
+      * Requires fortiosapi library developed by Fortinet
+      * Run as a local_action in your playbook
+
+
+REQUIREMENTS:  fortiosapi>=0.9.8
+
+AUTHOR: Miguel Angel Munoz (@mamunozgonzalez), Nicolas Thomas (@thomnico)
+        METADATA:
+          status:
+          - preview
+          supported_by: community
+        
+
+EXAMPLES:
+
+- hosts: localhost
+  vars:
+   host: "192.168.122.40"
+   username: "admin"
+   password: ""
+   vdom: "root"
+  tasks:
+  - name: Configure IPv6 policies.
+    fortios_firewall_policy6:
+      host:  "{{ host }}"
+      username: "{{ username }}"
+      password: "{{ password }}"
+      vdom:  "{{ vdom }}"
+      firewall_policy6:
+        state: "present"
+        action: "accept"
+        app-category:
+         -
+            id:  "5"
+        app-group:
+         -
+            name: "default_name_7 (source application.group.name)"
+        application:
+         -
+            id:  "9"
+        application-list: "<your_own_value> (source application.list.name)"
+        av-profile: "<your_own_value> (source antivirus.profile.name)"
+        comments: "<your_own_value>"
+        custom-log-fields:
+         -
+            field-id: "<your_own_value> (source log.custom-field.id)"
+        devices:
+         -
+            name: "default_name_16 (source user.device.alias user.device-group.name user.device-category.name)"
+        diffserv-forward: "enable"
+        diffserv-reverse: "enable"
+        diffservcode-forward: "<your_own_value>"
+        diffservcode-rev: "<your_own_value>"
+        dlp-sensor: "<your_own_value> (source dlp.sensor.name)"
+        dscp-match: "enable"
+        dscp-negate: "enable"
+        dscp-value: "<your_own_value>"
+        dsri: "enable"
+        dstaddr:
+         -
+            name: "default_name_27 (source firewall.address6.name firewall.addrgrp6.name firewall.vip6.name firewall.vipgrp6.name)"
+        dstaddr-negate: "enable"
+        dstintf:
+         -
+            name: "default_name_30 (source system.interface.name system.zone.name)"
+        firewall-session-dirty: "check-all"
+        fixedport: "enable"
+        global-label: "<your_own_value>"
+        groups:
+         -
+            name: "default_name_35 (source user.group.name)"
+        icap-profile: "<your_own_value> (source icap.profile.name)"
+        inbound: "enable"
+        ippool: "enable"
+        ips-sensor: "<your_own_value> (source ips.sensor.name)"
+        label: "<your_own_value>"
+        logtraffic: "all"
+        logtraffic-start: "enable"
+        name: "default_name_43"
+        nat: "enable"
+        natinbound: "enable"
+        natoutbound: "enable"
+        outbound: "enable"
+        per-ip-shaper: "<your_own_value> (source firewall.shaper.per-ip-shaper.name)"
+        policyid: "49"
+        poolname:
+         -
+            name: "default_name_51 (source firewall.ippool6.name)"
+        profile-group: "<your_own_value> (source firewall.profile-group.name)"
+        profile-protocol-options: "<your_own_value> (source firewall.profile-protocol-options.name)"
+        profile-type: "single"
+        replacemsg-override-group: "<your_own_value> (source system.replacemsg-group.name)"
+        rsso: "enable"
+        schedule: "<your_own_value> (source firewall.schedule.onetime.name firewall.schedule.recurring.name firewall.schedule.group.name)"
+        send-deny-packet: "enable"
+        service:
+         -
+            name: "default_name_60 (source firewall.service.custom.name firewall.service.group.name)"
+        service-negate: "enable"
+        session-ttl: "62"
+        spamfilter-profile: "<your_own_value> (source spamfilter.profile.name)"
+        srcaddr:
+         -
+            name: "default_name_65 (source firewall.address6.name firewall.addrgrp6.name)"
+        srcaddr-negate: "enable"
+        srcintf:
+         -
+            name: "default_name_68 (source system.zone.name system.interface.name)"
+        ssh-filter-profile: "<your_own_value> (source ssh-filter.profile.name)"
+        ssl-mirror: "enable"
+        ssl-mirror-intf:
+         -
+            name: "default_name_72 (source system.zone.name system.interface.name)"
+        ssl-ssh-profile: "<your_own_value> (source firewall.ssl-ssh-profile.name)"
+        status: "enable"
+        tcp-mss-receiver: "75"
+        tcp-mss-sender: "76"
+        tcp-session-without-syn: "all"
+        timeout-send-rst: "enable"
+        traffic-shaper: "<your_own_value> (source firewall.shaper.traffic-shaper.name)"
+        traffic-shaper-reverse: "<your_own_value> (source firewall.shaper.traffic-shaper.name)"
+        url-category:
+         -
+            id:  "82"
+        users:
+         -
+            name: "default_name_84 (source user.local.name)"
+        utm-status: "enable"
+        uuid: "<your_own_value>"
+        vlan-cos-fwd: "87"
+        vlan-cos-rev: "88"
+        vlan-filter: "<your_own_value>"
+        voip-profile: "<your_own_value> (source voip.profile.name)"
+        vpntunnel: "<your_own_value> (source vpn.ipsec.phase1.name vpn.ipsec.manualkey.name)"
+        webfilter-profile: "<your_own_value> (source webfilter.profile.name)"
+
+
+RETURN VALUES:
+
+build:
+  description: Build number of the fortigate image
+  returned: always
+  type: str
+  sample: '1547'
+http_method:
+  description: Last method used to provision the content into FortiGate
+  returned: always
+  type: str
+  sample: 'PUT'
+http_status:
+  description: Last result given by FortiGate on last operation applied
+  returned: always
+  type: str
+  sample: "200"
+mkey:
+  description: Master key (id) used in the last call to FortiGate
+  returned: success
+  type: str
+  sample: "key1"
+name:
+  description: Name of the table used to fulfill the request
+  returned: always
+  type: str
+  sample: "urlfilter"
+path:
+  description: Path of the table used to fulfill the request
+  returned: always
+  type: str
+  sample: "webfilter"
+revision:
+  description: Internal revision number
+  returned: always
+  type: str
+  sample: "17.0.2.10658"
+serial:
+  description: Serial number of the unit
+  returned: always
+  type: str
+  sample: "FGVMEVYYQT3AB5352"
+status:
+  description: Indication of the operation's result
+  returned: always
+  type: str
+  sample: "success"
+vdom:
+  description: Virtual domain used
+  returned: always
+  type: str
+  sample: "root"
+version:
+  description: Version of the FortiGate
+  returned: always
+  type: str
+  sample: "v5.6.3"
+
+

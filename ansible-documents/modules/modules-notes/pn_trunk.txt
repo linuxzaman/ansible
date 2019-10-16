@@ -1,0 +1,168 @@
+> PN_TRUNK    (/usr/lib/python2.7/dist-packages/ansible/modules/network/netvisor/_pn_trunk.py)
+
+        Execute trunk-create or trunk-delete command. Trunks can be used to aggregate network links at Layer 2 on the local switch. Use
+        this command to create a new trunk.
+
+DEPRECATED: 
+
+	Reason: Doesn't support latest Pluribus Networks netvisor
+	Will be removed in: Ansible 2.12
+	Alternatives: Latest modules will be pushed in Ansible future versions.
+
+
+  * This module is maintained by The Ansible Community
+OPTIONS (= is mandatory):
+
+- pn_broadcast_level
+        Specify a broadcast level in percent. The default value is 100%.
+        [Default: (null)]
+
+- pn_clipassword
+        Provide login password if user is not root.
+        [Default: (null)]
+
+- pn_cliswitch
+        Target switch(es) to run the cli on.
+        [Default: local]
+
+- pn_cliusername
+        Provide login username if user is not root.
+        [Default: (null)]
+
+- pn_description
+        Specify a description for the trunk configuration.
+        [Default: (null)]
+
+- pn_edge_switch
+        Specify if the switch is an edge switch.
+        [Default: (null)]
+        type: bool
+
+- pn_egress_rate_limit
+        Specify an egress port data rate limit for the configuration.
+        [Default: (null)]
+
+- pn_host
+        Host facing port control setting.
+        [Default: (null)]
+        type: bool
+
+- pn_jumbo
+        Specify if the port can receive jumbo frames.
+        [Default: (null)]
+        type: bool
+
+- pn_lacp_fallback
+        Specify the LACP fallback mode as bundles or individual.
+        (Choices: bundle, individual)[Default: (null)]
+
+- pn_lacp_fallback_timeout
+        Specify the LACP fallback timeout in seconds. The range is between 30 and 60 seconds with a default value of 50 seconds.
+        [Default: (null)]
+
+- pn_lacp_mode
+        Specify the LACP mode for the configuration.
+        (Choices: off, passive, active)[Default: (null)]
+
+- pn_lacp_priority
+        Specify the LACP priority. This is a number between 1 and 65535 with a default value of 32768.
+        [Default: (null)]
+
+- pn_lacp_timeout
+        Specify the LACP time out as slow (30 seconds) or fast (4seconds). The default value is slow.
+        (Choices: slow, fast)[Default: (null)]
+
+- pn_loopback
+        Specify loopback if you want to use loopback.
+        [Default: (null)]
+        type: bool
+
+- pn_loopvlans
+        Specify a list of looping vlans.
+        [Default: (null)]
+
+- pn_mirror_receive
+        Specify if the configuration receives mirrored traffic.
+        [Default: (null)]
+        type: bool
+
+= pn_name
+        Specify the name for the trunk configuration.
+
+
+- pn_pause
+        Specify if pause frames are sent.
+        [Default: (null)]
+        type: bool
+
+- pn_port_macaddr
+        Specify the MAC address of the port.
+        [Default: (null)]
+
+- pn_ports
+        Specify the port number(s) for the link(s) to aggregate into the trunk.
+        Required for trunk-create.
+        [Default: (null)]
+
+- pn_routing
+        Specify if the port participates in routing on the network.
+        [Default: (null)]
+        type: bool
+
+- pn_speed
+        Specify the port speed or disable the port.
+        (Choices: disable, 10m, 100m, 1g, 2.5g, 10g, 40g)[Default: (null)]
+
+- pn_unknown_mcast_level
+        Specify an unknown multicast level in percent. The default value is 100%.
+        [Default: (null)]
+
+- pn_unknown_ucast_level
+        Specify an unknown unicast level in percent. The default value is 100%.
+        [Default: (null)]
+
+= state
+        State the action to perform. Use 'present' to create trunk, 'absent' to delete trunk and 'update' to modify trunk.
+        (Choices: present, absent, update)
+
+
+AUTHOR: Pluribus Networks (@amitsi)
+        METADATA:
+          status:
+          - deprecated
+          supported_by: community
+        
+
+EXAMPLES:
+
+- name: create trunk
+  pn_trunk:
+    state: 'present'
+    pn_name: 'spine-to-leaf'
+    pn_ports: '11,12,13,14'
+
+- name: delete trunk
+  pn_trunk:
+    state: 'absent'
+    pn_name: 'spine-to-leaf'
+
+
+RETURN VALUES:
+
+command:
+  description: The CLI command run on the target node(s).
+  returned: always
+  type: str
+stdout:
+  description: The set of responses from the trunk command.
+  returned: always
+  type: list
+stderr:
+  description: The set of error responses from the trunk command.
+  returned: on error
+  type: list
+changed:
+  description: Indicates whether the CLI caused changes on the target.
+  returned: always
+  type: bool
+

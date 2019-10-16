@@ -1,0 +1,60 @@
+EXAMPLES:
+
+- name: Connect to acme database, create django user, and grant access to database and products table
+  postgresql_user:
+    db: acme
+    name: django
+    password: ceec4eif7ya
+    priv: "CONNECT/products:ALL"
+    expires: "Jan 31 2020"
+
+# Connect to default database, create rails user, set its password (MD5-hashed),
+# and grant privilege to create other databases and demote rails from super user status if user exists
+- name: Create rails user, set MD5-hashed password, grant privs
+  postgresql_user:
+    name: rails
+    password: md59543f1d82624df2b31672ec0f7050460
+    role_attr_flags: CREATEDB,NOSUPERUSER
+
+- name: Connect to acme database and remove test user privileges from there
+  postgresql_user:
+    db: acme
+    name: test
+    priv: "ALL/products:ALL"
+    state: absent
+    fail_on_user: no
+
+- name: Connect to test database, remove test user from cluster
+  postgresql_user:
+    db: test
+    name: test
+    priv: ALL
+    state: absent
+
+- name: Connect to acme database and set user's password with no expire date
+  postgresql_user:
+    db: acme
+    name: django
+    password: mysupersecretword
+    priv: "CONNECT/products:ALL"
+    expires: infinity
+
+# Example privileges string format
+# INSERT,UPDATE/table:SELECT/anothertable:ALL
+
+- name: Connect to test database and remove an existing user's password
+  postgresql_user:
+    db: test
+    user: test
+    password: ""
+
+
+RETURN VALUES:
+
+queries:
+  description: List of executed queries.
+  returned: always
+  type: list
+  sample: ['CREATE USER "alice"', 'GRANT CONNECT ON DATABASE "acme" TO "alice"']
+  version_added: '2.8'
+

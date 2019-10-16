@@ -1,0 +1,76 @@
+> BIGMON_POLICY    (/usr/lib/python2.7/dist-packages/ansible/modules/network/bigswitch/bigmon_policy.py)
+
+        Create and remove a bigmon out-of-band policy.
+
+  * This module is maintained by The Ansible Community
+OPTIONS (= is mandatory):
+
+- access_token
+        Bigmon access token. If this isn't set, the environment variable `BIGSWITCH_ACCESS_TOKEN' is used.
+        [Default: (null)]
+
+- action
+        Forward matching packets to delivery interfaces, Drop is for measure rate of matching packets, but do not forward to delivery
+        interfaces, capture packets and write to a PCAP file, or enable NetFlow generation.
+        (Choices: forward, drop, flow-gen)[Default: forward]
+
+= controller
+        The controller address.
+
+
+- delivery_packet_count
+        Run policy until delivery_packet_count packets are delivered.
+        [Default: 0]
+
+- duration
+        Run policy for duration duration or until delivery_packet_count packets are delivered, whichever comes first.
+        [Default: 0]
+
+= name
+        The name of the policy.
+
+
+- policy_description
+        Description of policy.
+        [Default: (null)]
+
+- priority
+        A priority associated with this policy. The higher priority policy takes precedence over a lower priority.
+        [Default: 100]
+
+- start_time
+        Date the policy becomes active
+        [Default: ansible_date_time.iso8601]
+
+- state
+        Whether the policy should be present or absent.
+        (Choices: present, absent)[Default: present]
+
+- validate_certs
+        If `false', SSL certificates will not be validated. This should only be used on personally controlled devices using self-signed
+        certificates.
+        [Default: True]
+        type: bool
+
+
+AUTHOR: Ted (@tedelhourani)
+        METADATA:
+          status:
+          - preview
+          supported_by: community
+        
+
+EXAMPLES:
+
+- name: policy to aggregate filter and deliver data center (DC) 1 traffic
+  bigmon_policy:
+    name: policy1
+    policy_description: DC 1 traffic policy
+    action: drop
+    controller: '{{ inventory_hostname }}'
+    state: present
+    validate_certs: false
+
+
+RETURN VALUES:
+ # 

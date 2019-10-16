@@ -1,0 +1,39 @@
+EXAMPLES:
+
+---
+- name: Update firmware from repository on a Network Share
+  idrac_firmware:
+       idrac_ip: "192.168.0.1"
+       idrac_user: "user_name"
+       idrac_password: "user_password"
+       share_name: "192.168.0.0:/share"
+       share_user: "share_user_name"
+       share_password: "share_user_pwd"
+       share_mnt: "/mnt/share"
+       reboot: True
+       job_wait: True
+       catalog_file_name: "Catalog.xml"
+
+
+RETURN VALUES:
+
+---
+msg:
+  type: str
+  description: Over all firmware update status.
+  returned: always
+  sample: "Successfully updated the firmware."
+update_status:
+  type: dict
+  description: Firmware Update job and progress details from the iDRAC.
+  returned: success
+  sample: {
+        'InstanceID': 'JID_XXXXXXXXXXXX',
+        'JobState': 'Completed',
+        'Message': 'Job completed successfully.',
+        'MessageId': 'REDXXX',
+        'Name': 'Repository Update',
+        'JobStartTime': 'NA',
+        'Status': 'Success',
+    }
+

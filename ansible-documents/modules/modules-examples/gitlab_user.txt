@@ -1,0 +1,53 @@
+EXAMPLES:
+
+- name: "Delete Gitlab User"
+  gitlab_user:
+    api_url: https://gitlab.example.com/
+    api_token: "{{ access_token }}"
+    validate_certs: False
+    username: myusername
+    state: absent
+  delegate_to: localhost
+
+- name: "Create Gitlab User"
+  gitlab_user:
+    api_url: https://gitlab.example.com/
+    validate_certs: True
+    api_username: dj-wasabi
+    api_password: "MySecretPassword"
+    name: My Name
+    username: myusername
+    password: mysecretpassword
+    email: me@example.com
+    sshkey_name: MySSH
+    sshkey_file: ssh-rsa AAAAB3NzaC1yc...
+    state: present
+    group: super_group/mon_group
+    access_level: owner
+  delegate_to: localhost
+
+
+RETURN VALUES:
+
+msg:
+  description: Success or failure message
+  returned: always
+  type: str
+  sample: "Success"
+
+result:
+  description: json parsed response from the server
+  returned: always
+  type: dict
+
+error:
+  description: the error message returned by the Gitlab API
+  returned: failed
+  type: str
+  sample: "400: path is already in use"
+
+user:
+  description: API object
+  returned: always
+  type: dict
+

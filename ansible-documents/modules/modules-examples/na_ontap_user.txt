@@ -1,0 +1,32 @@
+EXAMPLES:
+
+- name: Create User
+      na_ontap_user:
+        state: present
+        name: SampleUser
+        applications: ssh,console
+        authentication_method: password
+        set_password: apn1242183u1298u41
+        lock_user: True
+        role_name: vsadmin
+        vserver: ansibleVServer
+        hostname: "{{ netapp_hostname }}"
+        username: "{{ netapp_username }}"
+        password: "{{ netapp_password }}"
+
+    - name: Delete User
+      na_ontap_user:
+        state: absent
+        name: SampleUser
+        applications: ssh
+        authentication_method: password
+        vserver: ansibleVServer
+        hostname: "{{ netapp_hostname }}"
+        username: "{{ netapp_username }}"
+        password: "{{ netapp_password }}"
+
+
+RETURN VALUES:
+
+
+

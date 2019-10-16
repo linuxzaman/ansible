@@ -1,0 +1,60 @@
+EXAMPLES:
+
+- name: CloudEngine BGP neighbor test
+  hosts: cloudengine
+  connection: local
+  gather_facts: no
+  vars:
+    cli:
+      host: "{{ inventory_hostname }}"
+      port: "{{ ansible_ssh_port }}"
+      username: "{{ username }}"
+      password: "{{ password }}"
+      transport: cli
+
+  tasks:
+
+  - name: "Config bgp peer"
+    ce_bgp_neighbor:
+      state: present
+      vrf_name: js
+      peer_addr: 192.168.10.10
+      remote_as: 500
+      provider: "{{ cli }}"
+
+  - name: "Config bgp route id"
+    ce_bgp_neighbor:
+      state: absent
+      vrf_name: js
+      peer_addr: 192.168.10.10
+      provider: "{{ cli }}"
+
+
+RETURN VALUES:
+
+changed:
+    description: check to see if a change was made on the device
+    returned: always
+    type: bool
+    sample: true
+proposed:
+    description: k/v pairs of parameters passed into module
+    returned: always
+    type: dict
+    sample: {"peer_addr": "192.168.10.10", "remote_as": "500", "state": "present", "vrf_name": "js"}
+existing:
+    description: k/v pairs of existing aaa server
+    returned: always
+    type: dict
+    sample: {"bgp peer": []}
+end_state:
+    description: k/v pairs of aaa params after module execution
+    returned: always
+    type: dict
+    sample: {"bgp peer": [["192.168.10.10", "500"]]}
+updates:
+    description: command sent to the device
+    returned: always
+    type: list
+    sample: ["peer 192.168.10.10 as-number 500"]
+

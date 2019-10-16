@@ -1,0 +1,71 @@
+EXAMPLES:
+
+- name: CloudEngine BGP neighbor address family test
+  hosts: cloudengine
+  connection: local
+  gather_facts: no
+  vars:
+    cli:
+      host: "{{ inventory_hostname }}"
+      port: "{{ ansible_ssh_port }}"
+      username: "{{ username }}"
+      password: "{{ password }}"
+      transport: cli
+
+  tasks:
+
+  - name: "Config BGP peer Address_Family"
+    ce_bgp_neighbor_af:
+      state: present
+      vrf_name: js
+      af_type: ipv4uni
+      remote_address: 192.168.10.10
+      nexthop_configure: local
+      provider: "{{ cli }}"
+
+  - name: "Undo BGP peer Address_Family"
+    ce_bgp_neighbor_af:
+      state: absent
+      vrf_name: js
+      af_type: ipv4uni
+      remote_address: 192.168.10.10
+      nexthop_configure: local
+      provider: "{{ cli }}"
+
+
+RETURN VALUES:
+
+changed:
+    description: check to see if a change was made on the device
+    returned: always
+    type: bool
+    sample: true
+proposed:
+    description: k/v pairs of parameters passed into module
+    returned: always
+    type: dict
+    sample: {"af_type": "ipv4uni", "nexthop_configure": "local",
+             "remote_address": "192.168.10.10",
+             "state": "present", "vrf_name": "js"}
+existing:
+    description: k/v pairs of existing aaa server
+    returned: always
+    type: dict
+    sample: {"bgp neighbor af": {"af_type": "ipv4uni", "remote_address": "192.168.10.10",
+                                 "vrf_name": "js"},
+             "bgp neighbor af other": {"af_type": "ipv4uni", "nexthop_configure": "null",
+                                  "vrf_name": "js"}}
+end_state:
+    description: k/v pairs of aaa params after module execution
+    returned: always
+    type: dict
+    sample: {"bgp neighbor af": {"af_type": "ipv4uni", "remote_address": "192.168.10.10",
+                                 "vrf_name": "js"},
+             "bgp neighbor af other": {"af_type": "ipv4uni", "nexthop_configure": "local",
+                                  "vrf_name": "js"}}
+updates:
+    description: command sent to the device
+    returned: always
+    type: list
+    sample: ["peer 192.168.10.10 next-hop-local"]
+

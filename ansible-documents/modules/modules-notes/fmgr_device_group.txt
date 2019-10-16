@@ -1,0 +1,92 @@
+> FMGR_DEVICE_GROUP    (/usr/lib/python2.7/dist-packages/ansible/modules/network/fortimanager/fmgr_device_group.py)
+
+        Add or edit device groups and assign devices to device groups FortiManager Device Manager using JSON RPC API.
+
+  * This module is maintained by The Ansible Community
+OPTIONS (= is mandatory):
+
+- adom
+        The ADOM the configuration should belong to.
+        [Default: root]
+
+- grp_desc
+        The description of the device group.
+        [Default: (null)]
+
+- grp_members
+        A comma separated list of device names or device groups to be added as members to the device group.
+        If Group Members are defined, and mode="delete", only group members will be removed.
+        If you want to delete a group itself, you must omit this parameter from the task in playbook.
+        [Default: (null)]
+
+- grp_name
+        The name of the device group.
+        [Default: (null)]
+
+- mode
+        Sets one of three modes for managing the object.
+        Allows use of soft-adds instead of overwriting existing values
+        (Choices: add, set, delete, update)[Default: add]
+
+- vdom
+        The VDOM of the Fortigate you want to add, must match the device in FMGR. Usually root.
+        [Default: root]
+
+
+NOTES:
+      * Full Documentation at https://ftnt-ansible-docs.readthedocs.io/en/latest/.
+
+
+AUTHOR: Luke Weighall (@lweighall), Andrew Welsh (@Ghilli3), Jim Huber (@p4r4n0y1ng)
+        METADATA:
+          status:
+          - preview
+          supported_by: community
+        
+
+EXAMPLES:
+
+- name: CREATE DEVICE GROUP
+  fmgr_device_group:
+    grp_name: "TestGroup"
+    grp_desc: "CreatedbyAnsible"
+    adom: "ansible"
+    mode: "add"
+
+- name: CREATE DEVICE GROUP 2
+  fmgr_device_group:
+    grp_name: "AnsibleGroup"
+    grp_desc: "CreatedbyAnsible"
+    adom: "ansible"
+    mode: "add"
+
+- name: ADD DEVICES TO DEVICE GROUP
+  fmgr_device_group:
+    mode: "add"
+    grp_name: "TestGroup"
+    grp_members: "FGT1,FGT2"
+    adom: "ansible"
+    vdom: "root"
+
+- name: REMOVE DEVICES TO DEVICE GROUP
+  fmgr_device_group:
+    mode: "delete"
+    grp_name: "TestGroup"
+    grp_members: "FGT1,FGT2"
+    adom: "ansible"
+
+- name: DELETE DEVICE GROUP
+  fmgr_device_group:
+    grp_name: "AnsibleGroup"
+    grp_desc: "CreatedbyAnsible"
+    mode: "delete"
+    adom: "ansible"
+
+
+RETURN VALUES:
+
+api_result:
+  description: full API response, includes status code and message
+  returned: always
+  type: str
+

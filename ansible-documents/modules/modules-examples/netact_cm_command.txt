@@ -1,0 +1,63 @@
+EXAMPLES:
+
+# Pass in a message
+- name: Upload
+  netact_cm_command:
+    operation: "Upload"
+    opsname: 'Uploading_test'
+    dn: "PLMN-PLMN/MRBTS-746"
+    extra_opts: '-btsContentInUse true'
+
+- name: Provision
+  netact_cm_command:
+    operation: "Provision"
+    opsname: 'Provision_test'
+    dn: "PLMN-PLMN/MRBTS-746"
+    planName: 'mySiteTemplate'
+    type: 'actual'
+    createBackupPlan: true
+    backupPlanName: 'myBackupPlanName'
+
+- name: Export and fetching data from target
+  netact_cm_command:
+    operation: "Export"
+    opsname: 'Export_test'
+    planName: 'mySiteTemplate'
+    type: 'actual'
+    fileName: 'exportTest.xml'
+- fetch:
+    src: /var/opt/nokia/oss/global/racops/export/exportTest.xml
+    dest: fetched
+
+- name: Import
+  netact_cm_command:
+    operation: "Import"
+    opsname: 'Import_test'
+    fileFormat: 'CSV'
+    type: 'plan'
+    fileName: 'myCSVFile'
+    planName: 'myPlanName'
+    extra_ops: 'enablePolicyPlans true'
+
+# fail the module
+- name: Test failure of the module
+  netact_cm_command:
+    name: fail me
+
+
+RETURN VALUES:
+
+original_message:
+    description: The original name param that was passed in
+    returned: Command line
+    type: str
+    sample: '/opt/oss/bin/racclimx.sh -op Upload -opsName Uploading_testi -DN PLMN-PLMN/MRBTS-746'
+message:
+    description: The output message that the netact_cm_command module generates
+    returned: Command output message
+    type: str
+changed:
+    description: data changed
+    returned: true if data is changed
+    type: bool
+

@@ -1,0 +1,106 @@
+> GCP_SQL_DATABASE_FACTS    (/usr/lib/python2.7/dist-packages/ansible/modules/cloud/google/gcp_sql_database_facts.py)
+
+        Gather facts for GCP Database
+
+  * This module is maintained by The Ansible Community
+OPTIONS (= is mandatory):
+
+= auth_kind
+        The type of credential used.
+        (Choices: application, machineaccount, serviceaccount)
+        type: str
+
+= instance
+        The name of the Cloud SQL instance. This does not include the project ID.
+        This field represents a link to a Instance resource in GCP. It can be specified in two ways. First, you can place a dictionary
+        with key 'name' and value of your resource's name Alternatively, you can add `register: name-of-resource` to a gcp_sql_instance
+        task and then set this instance field to "{{ name-of-resource }}"
+
+
+- project
+        The Google Cloud Platform project to use.
+        [Default: (null)]
+        type: str
+
+- scopes
+        Array of scopes to be used.
+        [Default: (null)]
+        type: list
+
+- service_account_contents
+        A string representing the contents of a Service Account JSON file.
+        This should not be passed in as a dictionary, but a string that has the exact contents of a service account json file (valid
+        JSON)
+        [Default: (null)]
+        type: str
+
+- service_account_email
+        An optional service account email address if machineaccount is selected and the user does not wish to use the default email.
+        [Default: (null)]
+        type: str
+
+- service_account_file
+        The path of a Service Account JSON file if serviceaccount is selected as type.
+        [Default: (null)]
+        type: path
+
+
+NOTES:
+      * For authentication, you can set service_account_file using the `GCP_SERVICE_ACCOUNT_FILE' env variable.
+      * For authentication, you can set service_account_email using the `GCP_SERVICE_ACCOUNT_EMAIL' env variable.
+      * For authentication, you can set service_account_contents using the `GCP_SERVICE_ACCOUNT_CONTENTS' env variable.
+      * For authentication, you can set auth_kind using the `GCP_AUTH_KIND' env variable.
+      * For authentication, you can set scopes using the `GCP_SCOPES' env variable.
+      * Environment variables values will only be used if the playbook values are not set.
+      * The `service_account_email' and `service_account_file' options are mutually exclusive.
+
+
+REQUIREMENTS:  python >= 2.6, requests >= 2.18.4, google-auth >= 1.3.0
+
+AUTHOR: Google Inc. (@googlecloudplatform)
+        METADATA:
+          status:
+          - preview
+          supported_by: community
+        
+
+EXAMPLES:
+
+- name: " a database facts"
+  gcp_sql_database_facts:
+    instance: "{{ instance }}"
+    project: test_project
+    auth_kind: serviceaccount
+    service_account_file: "/tmp/auth.pem"
+    state: facts
+
+
+RETURN VALUES:
+
+items:
+  description: List of items
+  returned: always
+  type: complex
+  contains:
+    charset:
+      description:
+      - The MySQL charset value.
+      returned: success
+      type: str
+    collation:
+      description:
+      - The MySQL collation value.
+      returned: success
+      type: str
+    name:
+      description:
+      - The name of the database in the Cloud SQL instance.
+      - This does not include the project ID or instance name.
+      returned: success
+      type: str
+    instance:
+      description:
+      - The name of the Cloud SQL instance. This does not include the project ID.
+      returned: success
+      type: dict
+

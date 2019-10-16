@@ -1,0 +1,40 @@
+EXAMPLES:
+
+- name: Configure WWNN/WWPN pools
+  ucs_wwn_pool:
+    hostname: 172.16.143.150
+    username: admin
+    password: password
+    name: WWNN-Pool
+    purpose: node
+    first_addr: 20:00:00:25:B5:48:00:00
+    last_addr: 20:00:00:25:B5:48:00:0F
+- ucs_wwn_pool:
+    hostname: 172.16.143.150
+    username: admin
+    password: password
+    name: WWPN-Pool-A
+    purpose: port
+    order: sequential
+    first_addr: 20:00:00:25:B5:48:0A:00
+    last_addr: 20:00:00:25:B5:48:0A:0F
+
+- name: Remove WWNN/WWPN pools
+  ucs_wwn_pool:
+    hostname: 172.16.143.150
+    username: admin
+    password: password
+    name: WWNN-Pool
+    state: absent
+- ucs_wwn_pool:
+    hostname: 172.16.143.150
+    username: admin
+    password: password
+    name: WWPN-Pool-A
+    state: absent
+
+
+RETURN VALUES:
+
+#
+

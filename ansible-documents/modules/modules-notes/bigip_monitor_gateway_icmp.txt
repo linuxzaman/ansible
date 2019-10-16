@@ -1,0 +1,342 @@
+> BIGIP_MONITOR_GATEWAY_ICMP    (/usr/lib/python2.7/dist-packages/ansible/modules/network/f5/bigip_monitor_gateway_icmp.py)
+
+        Manages gateway ICMP monitors on a BIG-IP.
+
+  * This module is maintained by an Ansible Partner
+OPTIONS (= is mandatory):
+
+- adaptive
+        Specifies whether adaptive response time monitoring is enabled for this monitor.
+        When `yes', the monitor determines the state of a service based on how divergent from the mean latency a monitor probe for that
+        service is allowed to be. Also, values for the `allowed_divergence', `adaptive_limit', and and `sampling_timespan' will be
+        enforced.
+        When `disabled', the monitor determines the state of a service based on the `interval', `up_interval', `time_until_up', and
+        `timeout' monitor settings.
+        [Default: (null)]
+        type: bool
+
+- adaptive_limit
+        Specifies the absolute number of milliseconds that may not be exceeded by a monitor probe, regardless of `allowed_divergence'
+        setting, for a probe to be considered successful.
+        This value applies regardless of the value of the `allowed_divergence' setting.
+        While this value can be configured when `adaptive' is `no', it will not take effect on the system until `adaptive' is `yes'.
+        [Default: (null)]
+        type: int
+
+- allowed_divergence_type
+        When specifying a new monitor, if `adaptive' is `yes', the default is `relative'
+        When `absolute', the number of milliseconds the latency of a monitor probe can exceed the mean latency of a monitor probe for the
+        service being probed. In typical cases, if the monitor detects three probes in a row that miss the latency value you set, the
+        pool member or node is marked down.
+        When `relative', the percentage of deviation the latency of a monitor probe can exceed the mean latency of a monitor probe for
+        the service being probed.
+        (Choices: relative, absolute)[Default: (null)]
+        type: str
+
+- allowed_divergence_value
+        When specifying a new monitor, if `adaptive' is `yes', and `type' is `relative', the default is `25' percent.
+        [Default: (null)]
+        type: int
+
+- description
+        The description of the monitor.
+        [Default: (null)]
+        type: str
+
+- interval
+        Specifies, in seconds, the frequency at which the system issues the monitor check when either the resource is down or the status
+        of the resource is unknown.
+        [Default: (null)]
+        type: int
+
+- ip
+        IP address part of the IP/port definition. If this parameter is not provided when creating a new monitor, then the default value
+        will be '*'.
+        [Default: (null)]
+        type: str
+
+- manual_resume
+        Specifies whether the system automatically changes the status of a resource to *enabled* at the next successful monitor check.
+        If you set this option to `yes', you must manually re-enable the resource before the system can use it for load balancing
+        connections.
+        When `yes', specifies that you must manually re-enable the resource after an unsuccessful monitor check.
+        When `no', specifies that the system automatically changes the status of a resource to *enabled* at the next successful monitor
+        check.
+        [Default: (null)]
+        type: bool
+
+= name
+        Monitor name.
+
+        type: str
+
+- parent
+        The parent template of this monitor template. Once this value has been set, it cannot be changed. By default, this value is the
+        `gateway_icmp' parent on the `Common' partition.
+        [Default: /Common/gateway_icmp]
+        type: str
+
+- partition
+        Device partition to manage resources on.
+        [Default: Common]
+        type: str
+
+= password
+        The password for the user account used to connect to the BIG-IP.
+        You may omit this option by setting the environment variable `F5_PASSWORD'.
+        (Aliases: pass, pwd)
+        type: str
+
+- port
+        Port address part of the IP/port definition. If this parameter is not provided when creating a new monitor, then the default
+        value will be '*'. Note that if specifying an IP address, a value between 1 and 65535 must be specified.
+        [Default: (null)]
+        type: str
+
+- provider
+        A dict object containing connection details.
+        [Default: (null)]
+        suboptions:
+          password:
+            aliases:
+            - pass
+            - pwd
+            description:
+            - The password for the user account used to connect to the BIG-IP.
+            - You may omit this option by setting the environment variable `F5_PASSWORD'.
+            required: true
+            type: str
+          server:
+            description:
+            - The BIG-IP host.
+            - You may omit this option by setting the environment variable `F5_SERVER'.
+            required: true
+            type: str
+          server_port:
+            default: 443
+            description:
+            - The BIG-IP server port.
+            - You may omit this option by setting the environment variable `F5_SERVER_PORT'.
+            type: int
+          ssh_keyfile:
+            description:
+            - Specifies the SSH keyfile to use to authenticate the connection to the remote
+              device.  This argument is only used for `cli' transports.
+            - You may omit this option by setting the environment variable `ANSIBLE_NET_SSH_KEYFILE'.
+            type: path
+          timeout:
+            default: 10
+            description:
+            - Specifies the timeout in seconds for communicating with the network device for
+              either connecting or sending commands.  If the timeout is exceeded before the
+              operation is completed, the module will error.
+            type: int
+          transport:
+            choices:
+            - cli
+            - rest
+            default: rest
+            description:
+            - Configures the transport connection to use when connecting to the remote device.
+            type: str
+          user:
+            description:
+            - The username to connect to the BIG-IP with. This user must have administrative
+              privileges on the device.
+            - You may omit this option by setting the environment variable `F5_USER'.
+            required: true
+            type: str
+          validate_certs:
+            default: true
+            description:
+            - If `no', SSL certificates are not validated. Use this only on personally controlled
+              sites using self-signed certificates.
+            - You may omit this option by setting the environment variable `F5_VALIDATE_CERTS'.
+            type: bool
+        
+        type: dict
+        version_added: 2.5
+
+- sampling_timespan
+        Specifies the length, in seconds, of the probe history window that the system uses to calculate the mean latency and standard
+        deviation of a monitor probe.
+        While this value can be configured when `adaptive' is `no', it will not take effect on the system until `adaptive' is `yes'.
+        [Default: (null)]
+        type: int
+
+= server
+        The BIG-IP host.
+        You may omit this option by setting the environment variable `F5_SERVER'.
+
+        type: str
+
+- server_port
+        The BIG-IP server port.
+        You may omit this option by setting the environment variable `F5_SERVER_PORT'.
+        [Default: 443]
+        type: int
+        version_added: 2.2
+
+- state
+        When `present', ensures that the monitor exists.
+        When `absent', ensures the monitor is removed.
+        (Choices: present, absent)[Default: present]
+        type: str
+
+- time_until_up
+        Specifies the number of seconds to wait after a resource first responds correctly to the monitor before setting the resource to
+        'up'.
+        During the interval, all responses from the resource must be correct.
+        When the interval expires, the resource is marked 'up'.
+        A value of 0, means that the resource is marked up immediately upon receipt of the first correct response.
+        [Default: (null)]
+        type: int
+
+- timeout
+        Specifies the number of seconds the target has in which to respond to the monitor request.
+        If the target responds within the set time period, it is considered 'up'. If the target does not respond within the set time
+        period, it is considered 'down'. When this value is set to 0 (zero), the system uses the interval from the parent monitor.
+        Note that `timeout' and `time_until_up' combine to control when a resource is set to up.
+        [Default: (null)]
+        type: int
+
+- transparent
+        Specifies whether the monitor operates in transparent mode.
+        A monitor in transparent mode directs traffic through the associated pool members or nodes (usually a router or firewall) to the
+        aliased destination (that is, it probes the `ip'-`port' combination specified in the monitor).
+        If the monitor cannot successfully reach the aliased destination, the pool member or node through which the monitor traffic was
+        sent is marked down.
+        When creating a new monitor, if this parameter is not provided, then the default value will be whatever is provided by the
+        `parent'.
+        [Default: (null)]
+        type: bool
+
+- up_interval
+        Specifies the interval for the system to use to perform the health check when a resource is up.
+        When `0', specifies that the system uses the interval specified in `interval' to check the health of the resource.
+        When any other number, enables specification of a different interval to use when checking the health of a resource that is up.
+        [Default: (null)]
+        type: int
+
+= user
+        The username to connect to the BIG-IP with. This user must have administrative privileges on the device.
+        You may omit this option by setting the environment variable `F5_USER'.
+
+        type: str
+
+- validate_certs
+        If `no', SSL certificates are not validated. Use this only on personally controlled sites using self-signed certificates.
+        You may omit this option by setting the environment variable `F5_VALIDATE_CERTS'.
+        [Default: True]
+        type: bool
+        version_added: 2.0
+
+
+NOTES:
+      * For more information on using Ansible to manage F5 Networks devices see https://www.ansible.com/integrations/networks/f5.
+      * Requires BIG-IP software version >= 12.
+      * The F5 modules only manipulate the running configuration of the F5 product. To ensure that BIG-IP specific configuration
+        persists to disk, be sure to include at least one task that uses the [bigip_config] module to save the running
+        configuration. Refer to the module's documentation for the correct usage of the module to save your running configuration.
+
+
+AUTHOR: Tim Rupp (@caphrim007)
+        METADATA:
+          status:
+          - preview
+          supported_by: certified
+        
+
+EXAMPLES:
+
+- name: Create a monitor
+  bigip_monitor_gateway_icmp:
+    name: gw1
+    adaptive: no
+    interval: 1
+    time_until_up: 0
+    timeout: 3
+    provider:
+      password: secret
+      server: lb.mydomain.com
+      user: admin
+  delegate_to: localhost
+
+
+RETURN VALUES:
+
+parent:
+  description: New parent template of the monitor.
+  returned: changed
+  type: str
+  sample: gateway-icmp
+ip:
+  description: The new IP of IP/port definition.
+  returned: changed
+  type: str
+  sample: 10.12.13.14
+interval:
+  description: The new interval in which to run the monitor check.
+  returned: changed
+  type: int
+  sample: 2
+timeout:
+  description: The new timeout in which the remote system must respond to the monitor.
+  returned: changed
+  type: int
+  sample: 10
+time_until_up:
+  description: The new time in which to mark a system as up after first successful response.
+  returned: changed
+  type: int
+  sample: 2
+adaptive:
+  description: Whether adaptive is enabled or not.
+  returned: changed
+  type: bool
+  sample: yes
+allowed_divergence_type:
+  description: Type of divergence used for adaptive response time monitoring.
+  returned: changed
+  type: str
+  sample: absolute
+allowed_divergence_value:
+  description:
+    - Value of the type of divergence used for adaptive response time monitoring.
+    - May be C(percent) or C(ms) depending on whether C(relative) or C(absolute).
+  returned: changed
+  type: int
+  sample: 25
+description:
+  description: The description of the monitor.
+  returned: changed
+  type: str
+  sample: Important Monitor
+adaptive_limit:
+  description: Absolute number of milliseconds that may not be exceeded by a monitor probe.
+  returned: changed
+  type: int
+  sample: 200
+sampling_timespan:
+  description: Absolute number of milliseconds that may not be exceeded by a monitor probe.
+  returned: changed
+  type: int
+  sample: 200
+up_interval:
+  description: Interval for the system to use to perform the health check when a resource is up.
+  returned: changed
+  type: int
+  sample: 0
+port:
+  description:
+    - Alias port or service for the monitor to check, on behalf of the pools or pool
+      members with which the monitor is associated.
+  returned: changed
+  type: str
+  sample: 80
+transparent:
+  description: Whether the monitor operates in transparent mode.
+  returned: changed
+  type: bool
+  sample: no
+

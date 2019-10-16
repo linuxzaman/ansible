@@ -1,0 +1,345 @@
+> FORTIOS_FIREWALL_SNIFFER    (/usr/lib/python2.7/dist-packages/ansible/modules/network/fortios/fortios_firewall_sniffer.py)
+
+        This module is able to configure a FortiGate or FortiOS by allowing the user to configure firewall feature and sniffer category.
+        Examples includes all options and need to be adjusted to datasources before usage. Tested with FOS v6.0.2
+
+  * This module is maintained by The Ansible Community
+OPTIONS (= is mandatory):
+
+- firewall_sniffer
+        Configure sniffer.
+        [Default: None]
+        suboptions:
+          anomaly:
+            description:
+            - Configuration method to edit Denial of Service (DoS) anomaly settings.
+            suboptions:
+              action:
+                choices:
+                - pass
+                - block
+                description:
+                - Action taken when the threshold is reached.
+              log:
+                choices:
+                - enable
+                - disable
+                description:
+                - Enable/disable anomaly logging.
+              name:
+                description:
+                - Anomaly name.
+                required: true
+              quarantine:
+                choices:
+                - none
+                - attacker
+                description:
+                - Quarantine method.
+              quarantine-expiry:
+                description:
+                - Duration of quarantine. (Format
+              quarantine-log:
+                choices:
+                - disable
+                - enable
+                description:
+                - Enable/disable quarantine logging.
+              status:
+                choices:
+                - disable
+                - enable
+                description:
+                - Enable/disable this anomaly.
+              threshold:
+                description:
+                - Anomaly threshold. Number of detected instances per minute that triggers
+                  the anomaly action.
+              threshold(default):
+                description:
+                - Number of detected instances per minute which triggers action (1 - 2147483647,
+                  default = 1000). Note that each anomaly has a different threshold value
+                  assigned to it.
+          application-list:
+            description:
+            - Name of an existing application list. Source application.list.name.
+          application-list-status:
+            choices:
+            - enable
+            - disable
+            description:
+            - Enable/disable application control profile.
+          av-profile:
+            description:
+            - Name of an existing antivirus profile. Source antivirus.profile.name.
+          av-profile-status:
+            choices:
+            - enable
+            - disable
+            description:
+            - Enable/disable antivirus profile.
+          dlp-sensor:
+            description:
+            - Name of an existing DLP sensor. Source dlp.sensor.name.
+          dlp-sensor-status:
+            choices:
+            - enable
+            - disable
+            description:
+            - Enable/disable DLP sensor.
+          dsri:
+            choices:
+            - enable
+            - disable
+            description:
+            - Enable/disable DSRI.
+          host:
+            description:
+            - 'Hosts to filter for in sniffer traffic (Format examples: 1.1.1.1, 2.2.2.0/24,
+              3.3.3.3/255.255.255.0, 4.4.4.0-4.4.4.240).'
+          id:
+            description:
+            - Sniffer ID.
+            required: true
+          interface:
+            description:
+            - Interface name that traffic sniffing will take place on. Source system.interface.name.
+          ips-dos-status:
+            choices:
+            - enable
+            - disable
+            description:
+            - Enable/disable IPS DoS anomaly detection.
+          ips-sensor:
+            description:
+            - Name of an existing IPS sensor. Source ips.sensor.name.
+          ips-sensor-status:
+            choices:
+            - enable
+            - disable
+            description:
+            - Enable/disable IPS sensor.
+          ipv6:
+            choices:
+            - enable
+            - disable
+            description:
+            - Enable/disable sniffing IPv6 packets.
+          logtraffic:
+            choices:
+            - all
+            - utm
+            - disable
+            description:
+            - Either log all sessions, only sessions that have a security profile applied,
+              or disable all logging for this policy.
+          max-packet-count:
+            description:
+            - Maximum packet count (1 - 1000000, default = 10000).
+          non-ip:
+            choices:
+            - enable
+            - disable
+            description:
+            - Enable/disable sniffing non-IP packets.
+          port:
+            description:
+            - 'Ports to sniff (Format examples: 10, :20, 30:40, 50-, 100-200).'
+          protocol:
+            description:
+            - Integer value for the protocol type as defined by IANA (0 - 255).
+          scan-botnet-connections:
+            choices:
+            - disable
+            - block
+            - monitor
+            description:
+            - Enable/disable scanning of connections to Botnet servers.
+          spamfilter-profile:
+            description:
+            - Name of an existing spam filter profile. Source spamfilter.profile.name.
+          spamfilter-profile-status:
+            choices:
+            - enable
+            - disable
+            description:
+            - Enable/disable spam filter.
+          state:
+            choices:
+            - present
+            - absent
+            description:
+            - Indicates whether to create or remove the object
+          status:
+            choices:
+            - enable
+            - disable
+            description:
+            - Enable/disable the active status of the sniffer.
+          vlan:
+            description:
+            - List of VLANs to sniff.
+          webfilter-profile:
+            description:
+            - Name of an existing web filter profile. Source webfilter.profile.name.
+          webfilter-profile-status:
+            choices:
+            - enable
+            - disable
+            description:
+            - Enable/disable web filter profile.
+        
+
+= host
+        FortiOS or FortiGate ip adress.
+
+
+- https
+        Indicates if the requests towards FortiGate must use HTTPS protocol
+        [Default: True]
+        type: bool
+
+- password
+        FortiOS or FortiGate password.
+        [Default: ]
+
+= username
+        FortiOS or FortiGate username.
+
+
+- vdom
+        Virtual domain, among those defined previously. A vdom is a virtual instance of the FortiGate that can be configured and used as
+        a different unit.
+        [Default: root]
+
+
+NOTES:
+      * Requires fortiosapi library developed by Fortinet
+      * Run as a local_action in your playbook
+
+
+REQUIREMENTS:  fortiosapi>=0.9.8
+
+AUTHOR: Miguel Angel Munoz (@mamunozgonzalez), Nicolas Thomas (@thomnico)
+        METADATA:
+          status:
+          - preview
+          supported_by: community
+        
+
+EXAMPLES:
+
+- hosts: localhost
+  vars:
+   host: "192.168.122.40"
+   username: "admin"
+   password: ""
+   vdom: "root"
+  tasks:
+  - name: Configure sniffer.
+    fortios_firewall_sniffer:
+      host:  "{{ host }}"
+      username: "{{ username }}"
+      password: "{{ password }}"
+      vdom:  "{{ vdom }}"
+      https: "False"
+      firewall_sniffer:
+        state: "present"
+        anomaly:
+         -
+            action: "pass"
+            log: "enable"
+            name: "default_name_6"
+            quarantine: "none"
+            quarantine-expiry: "<your_own_value>"
+            quarantine-log: "disable"
+            status: "disable"
+            threshold: "11"
+            threshold(default): "12"
+        application-list: "<your_own_value> (source application.list.name)"
+        application-list-status: "enable"
+        av-profile: "<your_own_value> (source antivirus.profile.name)"
+        av-profile-status: "enable"
+        dlp-sensor: "<your_own_value> (source dlp.sensor.name)"
+        dlp-sensor-status: "enable"
+        dsri: "enable"
+        host: "myhostname"
+        id:  "21"
+        interface: "<your_own_value> (source system.interface.name)"
+        ips-dos-status: "enable"
+        ips-sensor: "<your_own_value> (source ips.sensor.name)"
+        ips-sensor-status: "enable"
+        ipv6: "enable"
+        logtraffic: "all"
+        max-packet-count: "28"
+        non-ip: "enable"
+        port: "<your_own_value>"
+        protocol: "<your_own_value>"
+        scan-botnet-connections: "disable"
+        spamfilter-profile: "<your_own_value> (source spamfilter.profile.name)"
+        spamfilter-profile-status: "enable"
+        status: "enable"
+        vlan: "<your_own_value>"
+        webfilter-profile: "<your_own_value> (source webfilter.profile.name)"
+        webfilter-profile-status: "enable"
+
+
+RETURN VALUES:
+
+build:
+  description: Build number of the fortigate image
+  returned: always
+  type: str
+  sample: '1547'
+http_method:
+  description: Last method used to provision the content into FortiGate
+  returned: always
+  type: str
+  sample: 'PUT'
+http_status:
+  description: Last result given by FortiGate on last operation applied
+  returned: always
+  type: str
+  sample: "200"
+mkey:
+  description: Master key (id) used in the last call to FortiGate
+  returned: success
+  type: str
+  sample: "id"
+name:
+  description: Name of the table used to fulfill the request
+  returned: always
+  type: str
+  sample: "urlfilter"
+path:
+  description: Path of the table used to fulfill the request
+  returned: always
+  type: str
+  sample: "webfilter"
+revision:
+  description: Internal revision number
+  returned: always
+  type: str
+  sample: "17.0.2.10658"
+serial:
+  description: Serial number of the unit
+  returned: always
+  type: str
+  sample: "FGVMEVYYQT3AB5352"
+status:
+  description: Indication of the operation's result
+  returned: always
+  type: str
+  sample: "success"
+vdom:
+  description: Virtual domain used
+  returned: always
+  type: str
+  sample: "root"
+version:
+  description: Version of the FortiGate
+  returned: always
+  type: str
+  sample: "v5.6.3"
+
+

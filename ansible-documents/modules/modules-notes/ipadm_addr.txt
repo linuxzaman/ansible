@@ -1,0 +1,90 @@
+> IPADM_ADDR    (/usr/lib/python2.7/dist-packages/ansible/modules/network/illumos/ipadm_addr.py)
+
+        Create/delete static/dynamic IP addresses on network interfaces on Solaris/illumos systems. Up/down static/dynamic IP addresses
+        on network interfaces on Solaris/illumos systems. Manage IPv6 link-local addresses on network interfaces on Solaris/illumos
+        systems.
+
+  * This module is maintained by The Ansible Community
+OPTIONS (= is mandatory):
+
+- address
+        Specifiies an IP address to configure in CIDR notation.
+        (Aliases: addr)[Default: (null)]
+
+= addrobj
+        Specifies an unique IP address on the system.
+
+
+- addrtype
+        Specifiies a type of IP address to configure.
+        (Choices: static, dhcp, addrconf)[Default: static]
+
+- state
+        Create/delete/enable/disable an IP address on the network interface.
+        (Choices: absent, present, up, down, enabled, disabled, refreshed)[Default: present]
+
+- temporary
+        Specifies that the configured IP address is temporary. Temporary IP addresses do not persist across reboots.
+        [Default: False]
+        type: bool
+
+- wait
+        Specifies the time in seconds we wait for obtaining address via DHCP.
+        [Default: 60]
+
+
+AUTHOR: Adam Števko (@xen0l)
+        METADATA:
+          status:
+          - preview
+          supported_by: community
+        
+
+EXAMPLES:
+
+- name: Configure IP address 10.0.0.1 on e1000g0
+  ipadm_addr: addr=10.0.0.1/32 addrobj=e1000g0/v4 state=present
+
+- name: Delete addrobj
+  ipadm_addr: addrobj=e1000g0/v4 state=absent
+
+- name: Configure link-local IPv6 address
+  ipadm_addr: addtype=addrconf addrobj=vnic0/v6
+
+- name: Configure address via DHCP and wait 180 seconds for address obtaining
+  ipadm_addr: addrobj=vnic0/dhcp addrtype=dhcp wait=180
+
+
+RETURN VALUES:
+
+addrobj:
+    description: address object name
+    returned: always
+    type: str
+    sample: bge0/v4
+state:
+    description: state of the target
+    returned: always
+    type: str
+    sample: present
+temporary:
+    description: specifies if operation will persist across reboots
+    returned: always
+    type: bool
+    sample: True
+addrtype:
+    description: address type
+    returned: always
+    type: str
+    sample: static
+address:
+    description: IP address
+    returned: only if addrtype is 'static'
+    type: str
+    sample: 1.3.3.7/32
+wait:
+    description: time we wait for DHCP
+    returned: only if addrtype is 'dhcp'
+    type: str
+    sample: 10
+

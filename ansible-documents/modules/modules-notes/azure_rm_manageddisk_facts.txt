@@ -1,0 +1,205 @@
+> AZURE_RM_MANAGEDDISK_FACTS    (/usr/lib/python2.7/dist-packages/ansible/modules/cloud/azure/azure_rm_manageddisk_facts.py)
+
+        Get facts for a specific managed disk or all managed disks.
+
+  * This module is maintained by The Ansible Community
+OPTIONS (= is mandatory):
+
+- ad_user
+        Active Directory username. Use when authenticating with an Active Directory user rather than service principal.
+        [Default: (null)]
+        type: str
+
+- adfs_authority_url
+        Azure AD authority url. Use when authenticating with Username/password, and has your own ADFS authority.
+        [Default: (null)]
+        type: str
+        version_added: 2.6
+
+- api_profile
+        Selects an API profile to use when communicating with Azure services. Default value of `latest' is appropriate for public clouds;
+        future values will allow use with Azure Stack.
+        [Default: latest]
+        type: str
+        version_added: 2.5
+
+- append_tags
+        Use to control if tags field is canonical or just appends to existing tags.
+        When canonical, any tags not found in the tags parameter will be removed from the object's metadata.
+        [Default: True]
+        type: bool
+
+- auth_source
+        Controls the source of the credentials to use for authentication.
+        If not specified, ANSIBLE_AZURE_AUTH_SOURCE environment variable will be used and default to `auto' if variable is not defined.
+        `auto' will follow the default precedence of module parameters -> environment variables -> default profile in credential file
+        `~/.azure/credentials'.
+        When set to `cli', the credentials will be sources from the default Azure CLI profile.
+        Can also be set via the `ANSIBLE_AZURE_AUTH_SOURCE' environment variable.
+        When set to `msi', the host machine must be an azure resource with an enabled MSI extension. `subscription_id' or the environment
+        variable `AZURE_SUBSCRIPTION_ID' can be used to identify the subscription ID if the resource is granted access to more than one
+        subscription, otherwise the first subscription is chosen.
+        The `msi' was added in Ansible 2.6.
+        (Choices: auto, cli, credential_file, env, msi)[Default: (null)]
+        type: str
+        version_added: 2.5
+
+- cert_validation_mode
+        Controls the certificate validation behavior for Azure endpoints. By default, all modules will validate the server certificate,
+        but when an HTTPS proxy is in use, or against Azure Stack, it may be necessary to disable this behavior by passing `ignore'. Can
+        also be set via credential file profile or the `AZURE_CERT_VALIDATION' environment variable.
+        (Choices: ignore, validate)[Default: (null)]
+        type: str
+        version_added: 2.5
+
+- client_id
+        Azure client ID. Use when authenticating with a Service Principal.
+        [Default: (null)]
+        type: str
+
+- cloud_environment
+        For cloud environments other than the US public cloud, the environment name (as defined by Azure Python SDK, eg,
+        `AzureChinaCloud', `AzureUSGovernment'), or a metadata discovery endpoint URL (required for Azure Stack). Can also be set via
+        credential file profile or the `AZURE_CLOUD_ENVIRONMENT' environment variable.
+        [Default: AzureCloud]
+        type: str
+        version_added: 2.4
+
+- name
+        Limit results to a specific managed disk.
+        [Default: (null)]
+        type: str
+
+- password
+        Active Directory user password. Use when authenticating with an Active Directory user rather than service principal.
+        [Default: (null)]
+
+- profile
+        Security profile found in ~/.azure/credentials file.
+        [Default: (null)]
+        type: str
+
+- resource_group
+        Limit results to a specific resource group.
+        [Default: (null)]
+        type: str
+
+- secret
+        Azure client secret. Use when authenticating with a Service Principal.
+        [Default: (null)]
+        type: str
+
+- subscription_id
+        Your Azure subscription Id.
+        [Default: (null)]
+        type: str
+
+- tags
+        Limit results by providing a list of tags.
+        Format tags as 'key' or 'key:value'.
+        [Default: (null)]
+        type: list
+
+- tenant
+        Azure tenant ID. Use when authenticating with a Service Principal.
+        [Default: (null)]
+        type: str
+
+
+NOTES:
+      * This module was called `azure_rm_managed_disk_facts' before Ansible 2.8. The usage did not change.
+      * For authentication with Azure you can pass parameters, set environment variables, use a profile stored in
+        ~/.azure/credentials, or log in before you run your tasks or playbook with `az login'.
+      * Authentication is also possible using a service principal or Active Directory user.
+      * To authenticate via service principal, pass subscription_id, client_id, secret and tenant or set environment variables
+        AZURE_SUBSCRIPTION_ID, AZURE_CLIENT_ID, AZURE_SECRET and AZURE_TENANT.
+      * To authenticate via Active Directory user, pass ad_user and password, or set AZURE_AD_USER and AZURE_PASSWORD in the
+        environment.
+      * Alternatively, credentials can be stored in ~/.azure/credentials. This is an ini file containing a [default] section and
+        the following keys: subscription_id, client_id, secret and tenant or subscription_id, ad_user and password. It is also
+        possible to add additional profiles. Specify the profile by passing profile or setting AZURE_PROFILE in the environment.
+
+
+SEE ALSO:
+      * Sign in with Azure CLI
+           How to authenticate using the `az login' command.
+           https://docs.microsoft.com/en-us/cli/azure/authenticate-azure-cli?view=azure-cli-latest
+
+
+REQUIREMENTS:  python >= 2.7, azure >= 2.0.0
+
+AUTHOR: Bruno Medina (@brusMX)
+        METADATA:
+          status:
+          - preview
+          supported_by: community
+        
+
+EXAMPLES:
+
+- name: Get facts for one managed disk
+  azure_rm_manageddisk_facts:
+    name: Testing
+    resource_group: myResourceGroup
+
+- name: Get facts for all managed disks
+  azure_rm_manageddisk_facts:
+
+- name: Get facts by tags
+  azure_rm_manageddisk_facts:
+    tags:
+    - testing
+
+
+RETURN VALUES:
+
+azure_managed_disk:
+    description: List of managed disk dicts.
+    returned: always
+    type: list
+    contains:
+        id:
+            description:
+                - Resource id.
+            type: str
+        name:
+            description:
+                - Name of the managed disk.
+            type: str
+        location:
+            description:
+                - Valid Azure location.
+            type: str
+        storage_account_type:
+            description:
+                - Type of storage for the managed disk.
+                - See https://docs.microsoft.com/en-us/azure/virtual-machines/windows/disks-types for more information about this type.
+            type: str
+            sample: Standard_LRS
+        create_option:
+            description:
+                - Create option of the disk
+            type: str
+            sample: copy
+        source_uri:
+            description:
+                - URI to a valid VHD file to be used or the resource ID of the managed disk to copy.
+            type: str
+        os_type:
+            description:
+                - "Type of Operating System: C(linux) or C(windows)."
+            type: str
+        disk_size_gb:
+            description:
+                - Size in GB of the managed disk to be created.
+            type: str
+        managed_by:
+            description:
+                - Name of an existing virtual machine with which the disk is or will be associated, this VM should be in the same resource group.
+            type: str
+        tags:
+            description:
+                - Tags to assign to the managed disk.
+            type: dict
+            sample: { "tag": "value" }
+

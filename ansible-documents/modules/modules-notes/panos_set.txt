@@ -1,0 +1,79 @@
+> PANOS_SET    (/usr/lib/python2.7/dist-packages/ansible/modules/network/panos/_panos_set.py)
+
+        Run an arbitrary 'xapi' command taking an XPath (i.e get) or XPath and element (i.e set). See https://github.com/kevinsteves/pan-
+        python/blob/master/doc/pan.xapi.rst for details Runs a 'set' command by default This should support _all_ commands that your PAN-
+        OS device accepts vi it's cli cli commands are found as Once logged in issue 'debug cli on' Enter configuration mode by issuing
+        'configure' Enter your set (or other) command, for example 'set deviceconfig system timezone Australia/Melbourne' returns
+        "<request cmd="set" obj="/config/devices/entry[@name='localhost.localdomain']/deviceconfig/system"
+        cookie=XXXX><timezone>Australia/Melbourne</timezone></request>  The 'xpath' is
+        "/config/devices/entry[@name='localhost.localdomain']/deviceconfig/system" The 'element' is
+        "<timezone>Australia/Melbourne</timezone>"
+
+DEPRECATED: 
+
+	Reason: Consolidating code base.
+	Will be removed in: Ansible 2.12
+	Alternatives: Use U(https://galaxy.ansible.com/PaloAltoNetworks/paloaltonetworks) instead.
+
+
+  * This module is maintained by The Ansible Community
+OPTIONS (= is mandatory):
+
+- command
+        Xapi method name which supports 'xpath' or 'xpath' and 'element'
+        (Choices: set, edit, delete, get, show, override)[Default: set]
+
+- element
+        The 'element' for the 'xpath' if required
+        [Default: (null)]
+
+= ip_address
+        IP address or host FQDN of the target PAN-OS NVA
+
+        type: str
+
+= password
+        Password for the given 'username'
+
+        type: str
+
+- username
+        User name for a user with admin rights on the PAN-OS NVA
+        [Default: admin]
+        type: str
+
+= xpath
+        The 'xpath' for the commands configurable
+
+
+
+REQUIREMENTS:  pan-python
+
+AUTHOR: Jasper Mackenzie (@spmp)
+        METADATA:
+          status:
+          - deprecated
+          supported_by: community
+        
+
+EXAMPLES:
+
+- name: Set timezone on PA NVA
+  panos_set:
+    ip_address: "192.168.1.1"
+    username: "my-random-admin"
+    password: "admin1234"
+    xpath: "/config/devices/entry/deviceconfig/system"
+    element: "<timezone>Australia/Melbourne</timezone>"
+
+- name: Commit configuration
+  panos_commit:
+    ip_address: "192.168.1.1"
+    username: "my-random-admin"
+    password: "admin1234"
+
+
+RETURN VALUES:
+
+# Default return values
+

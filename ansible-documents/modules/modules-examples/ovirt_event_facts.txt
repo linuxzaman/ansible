@@ -1,0 +1,26 @@
+EXAMPLES:
+
+# Examples don't contain the auth parameter for simplicity,
+# look at the ovirt_auth module to see how to reuse authentication.
+
+- name: Return all events
+  ovirt_event_facts:
+
+- name: Return the last 10 events
+  ovirt_event_facts:
+    max: 10
+
+- name: Return all events of type alert
+  ovirt_event_facts:
+    search: "severity=alert"
+
+
+RETURN VALUES:
+
+ovirt_facts:
+    description: "List of dictionaries describing the events. Event attributes are mapped to dictionary keys.
+                  All event attributes can be found at the following url:
+                  http://ovirt.github.io/ovirt-engine-api-model/master/#types/event"
+    returned: On success."
+    type: list
+

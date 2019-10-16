@@ -1,0 +1,33 @@
+EXAMPLES:
+
+- name: Make instance with an instance_role
+  ec2_launch_template:
+    name: "test-with-instance-role"
+    image_id: "ami-foobarbaz"
+    key_name: my_ssh_key
+    instance_type: t2.micro
+    iam_instance_profile: myTestProfile
+    disable_api_termination: true
+
+- name: Make one with a different instance type, but leave the older version as default
+  ec2_launch_template:
+    name: "test-with-instance-role"
+    image_id: "ami-foobarbaz"
+    default_version: 1
+    key_name: my_ssh_key
+    instance_type: c5.4xlarge
+    iam_instance_profile: myTestProfile
+    disable_api_termination: true
+
+
+RETURN VALUES:
+
+latest_version:
+  description: Latest available version of the launch template
+  returned: when state=present
+  type: int
+default_version:
+  description: The version that will be used if only the template name is specified. Often this is the same as the latest version, but not always.
+  returned: when state=present
+  type: int
+

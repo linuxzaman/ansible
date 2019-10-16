@@ -1,0 +1,124 @@
+> PANOS_NAT_POLICY    (/usr/lib/python2.7/dist-packages/ansible/modules/network/panos/_panos_nat_policy.py)
+
+        Create a policy nat rule. Keep in mind that we can either end up configuring source NAT, destination NAT, or both. Instead of
+        splitting it into two we will make a fair attempt to determine which one the user wants.
+
+DEPRECATED: 
+
+	Reason: This module depended on outdated and old SDK, use M(panos_nat_rule) instead.
+	Will be removed in: Ansible 2.9
+	Alternatives: Use M(panos_nat_rule) instead.
+
+
+  * This module is maintained by The Ansible Community
+OPTIONS (= is mandatory):
+
+- commit
+        commit if changed
+        [Default: yes]
+        type: bool
+
+- destination
+        list of destination addresses
+        [Default: [u'any']]
+
+- dnat_address
+        dnat translated address
+        [Default: (null)]
+
+- dnat_port
+        dnat translated port
+        [Default: (null)]
+
+= from_zone
+        list of source zones
+
+
+= ip_address
+        IP address (or hostname) of PAN-OS device
+
+
+- override
+        attempt to override rule if one with the same name already exists
+        [Default: no]
+        type: bool
+
+= password
+        password for authentication
+
+
+= rule_name
+        name of the SNAT rule
+
+
+- service
+        service
+        [Default: any]
+
+- snat_address
+        snat translated address
+        [Default: (null)]
+
+- snat_bidirectional
+        bidirectional flag
+        [Default: no]
+        type: bool
+
+- snat_interface
+        snat interface
+        [Default: (null)]
+
+- snat_interface_address
+        snat interface address
+        [Default: (null)]
+
+- snat_type
+        type of source translation
+        [Default: (null)]
+
+- source
+        list of source addresses
+        [Default: [u'any']]
+
+= to_zone
+        destination zone
+
+
+- username
+        username for authentication
+        [Default: admin]
+
+
+REQUIREMENTS:  pan-python
+
+AUTHOR: Luigi Mori (@jtschichold), Ivan Bojer (@ivanbojer)
+        METADATA:
+          status:
+          - deprecated
+          supported_by: community
+        
+
+EXAMPLES:
+
+# Create a source and destination nat rule
+  - name: create nat SSH221 rule for 10.0.1.101
+    panos_nat:
+      ip_address: "192.168.1.1"
+      password: "admin"
+      rule_name: "Web SSH"
+      from_zone: ["external"]
+      to_zone: "external"
+      source: ["any"]
+      destination: ["10.0.0.100"]
+      service: "service-tcp-221"
+      snat_type: "dynamic-ip-and-port"
+      snat_interface: "ethernet1/2"
+      dnat_address: "10.0.1.101"
+      dnat_port: "22"
+      commit: False
+
+
+RETURN VALUES:
+
+# Default return values
+

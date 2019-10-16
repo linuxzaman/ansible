@@ -1,0 +1,125 @@
+> JUNOS_SCP    (/usr/lib/python2.7/dist-packages/ansible/modules/network/junos/junos_scp.py)
+
+        This module transfers files via SCP from or to remote devices running Junos.
+
+  * This module is maintained by The Ansible Network Team
+OPTIONS (= is mandatory):
+
+- dest
+        The `dest' argument specifies the path in which to receive the files.
+        [Default: .]
+
+- provider
+        *Deprecated*
+        Starting with Ansible 2.5 we recommend using `connection: network_cli' or `connection: netconf'.
+        For more information please see the L(Junos OS Platform Options guide, ../network/user_guide/platform_junos.html).
+        HORIZONTALLINE
+        A dict object containing connection details.
+        [Default: (null)]
+        suboptions:
+          host:
+            description:
+            - Specifies the DNS host name or address for connecting to the remote device over
+              the specified transport.  The value of host is used as the destination address
+              for the transport.
+            required: true
+            type: str
+          password:
+            description:
+            - Specifies the password to use to authenticate the connection to the remote device.   This
+              value is used to authenticate the SSH session. If the value is not specified
+              in the task, the value of environment variable `ANSIBLE_NET_PASSWORD' will
+              be used instead.
+            type: str
+          port:
+            default: 22
+            description:
+            - Specifies the port to use when building the connection to the remote device.  The
+              port value will default to the well known SSH port of 22 (for `transport=cli')
+              or port 830 (for `transport=netconf') device.
+            type: int
+          ssh_keyfile:
+            description:
+            - Specifies the SSH key to use to authenticate the connection to the remote device.   This
+              value is the path to the key used to authenticate the SSH session. If the value
+              is not specified in the task, the value of environment variable `ANSIBLE_NET_SSH_KEYFILE'
+              will be used instead.
+            type: path
+          timeout:
+            default: 10
+            description:
+            - Specifies the timeout in seconds for communicating with the network device for
+              either connecting or sending commands.  If the timeout is exceeded before the
+              operation is completed, the module will error.
+            type: int
+          username:
+            description:
+            - Configures the username to use to authenticate the connection to the remote
+              device.  This value is used to authenticate the SSH session. If the value is
+              not specified in the task, the value of environment variable `ANSIBLE_NET_USERNAME'
+              will be used instead.
+            type: str
+        
+        type: dict
+
+- recursive
+        The `recursive' argument enables recursive transfer of files and directories.
+        [Default: no]
+        type: bool
+
+- remote_src
+        The `remote_src' argument enables the download of files (`scp get') from the remote device. The default behavior is to upload
+        files (`scp put') to the remote device.
+        [Default: no]
+        type: bool
+
+= src
+        The `src' argument takes a single path, or a list of paths to be transfered. The argument `recursive' must be `true' to transfer
+        directories.
+
+
+
+NOTES:
+      * This module requires the netconf system service be enabled on the remote device being managed.
+      * Tested against vMX JUNOS version 17.3R1.10.
+      * Works with `local' connections only.
+      * For information on using CLI and netconf see the :ref:`Junos OS Platform Options guide <junos_platform_options>`
+      * For more information on using Ansible to manage network devices see the :ref:`Ansible Network Guide <network_guide>`
+      * For more information on using Ansible to manage Juniper network devices see https://www.ansible.com/ansible-juniper.
+
+
+REQUIREMENTS:  junos-eznc, ncclient (>=v0.5.2)
+
+AUTHOR: Christian Giese (@GIC-de)
+        METADATA:
+          status:
+          - preview
+          supported_by: network
+        
+
+EXAMPLES:
+
+# the required set of connection arguments have been purposely left off
+# the examples for brevity
+- name: upload local file to home directory on remote device
+  junos_scp:
+    src: test.tgz
+
+- name: upload local file to tmp directory on remote device
+  junos_scp:
+    src: test.tgz
+    dest: /tmp/
+
+- name: download file from remote device
+  junos_scp:
+    src: test.tgz
+    remote_src: true
+
+
+RETURN VALUES:
+
+changed:
+  description: always true
+  returned: always
+  type: bool
+

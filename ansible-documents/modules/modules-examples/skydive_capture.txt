@@ -1,0 +1,53 @@
+EXAMPLES:
+
+- name: start a new flow capture directly from gremlin query
+  skydive_capture:
+    query: G.V().Has('Name', 'eth0', 'Type', 'device')
+    state: present
+    provider:
+      endpoint: localhost:8082
+      username: admin
+      password: admin
+
+- name: stop the flow capture directly from gremlin query
+  skydive_capture:
+    query: G.V().Has('Name', 'eth0', 'Type', 'device')
+    state: absent
+    provider:
+      endpoint: localhost:8082
+      username: admin
+      password: admin
+
+- name: start a new flow capture from user's input
+  skydive_capture:
+    interface_name: Node1
+    type: myhost
+    capture_name: test_capture
+    description: test description
+    extra_tcp_metric: true
+    ip_defrag: true
+    reassemble_tcp: true
+    state: present
+    provider:
+      endpoint: localhost:8082
+      username: admin
+      password: admin
+
+- name: stop the flow capture
+  skydive_capture:
+    interface_name: Node1
+    type: myhost
+    capture_name: test_capture
+    description: test description
+    extra_tcp_metric: true
+    ip_defrag: true
+    reassemble_tcp: true
+    state: absent
+    provider:
+      endpoint: localhost:8082
+      username: admin
+      password: admin
+
+
+RETURN VALUES:
+ # 

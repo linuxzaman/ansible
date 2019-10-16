@@ -1,0 +1,273 @@
+> LINODE    (/usr/lib/python2.7/dist-packages/ansible/modules/cloud/linode/linode.py)
+
+        Manage Linode Public Cloud instances and optionally wait for it to be 'running'.
+
+  * This module is maintained by The Ansible Community
+OPTIONS (= is mandatory):
+
+- additional_disks
+        List of dictionaries for creating additional disks that are added to the Linode configuration settings.
+        Dictionary takes Size, Label, Type. Size is in MB.
+        [Default: (null)]
+        version_added: 2.3
+
+- alert_bwin_enabled
+        Set status of bandwidth in alerts.
+        [Default: (null)]
+        type: bool
+        version_added: 2.3
+
+- alert_bwin_threshold
+        Set threshold in MB of bandwidth in alerts.
+        [Default: (null)]
+        version_added: 2.3
+
+- alert_bwout_enabled
+        Set status of bandwidth out alerts.
+        [Default: (null)]
+        type: bool
+        version_added: 2.3
+
+- alert_bwout_threshold
+        Set threshold in MB of bandwidth out alerts.
+        [Default: (null)]
+        version_added: 2.3
+
+- alert_bwquota_enabled
+        Set status of bandwidth quota alerts as percentage of network transfer quota.
+        [Default: (null)]
+        type: bool
+        version_added: 2.3
+
+- alert_bwquota_threshold
+        Set threshold in MB of bandwidth quota alerts.
+        [Default: (null)]
+        version_added: 2.3
+
+- alert_cpu_enabled
+        Set status of receiving CPU usage alerts.
+        [Default: (null)]
+        type: bool
+        version_added: 2.3
+
+- alert_cpu_threshold
+        Set percentage threshold for receiving CPU usage alerts. Each CPU core adds 100% to total.
+        [Default: (null)]
+        version_added: 2.3
+
+- alert_diskio_enabled
+        Set status of receiving disk IO alerts.
+        [Default: (null)]
+        type: bool
+        version_added: 2.3
+
+- alert_diskio_threshold
+        Set threshold for average IO ops/sec over 2 hour period.
+        [Default: (null)]
+        version_added: 2.3
+
+- api_key
+        Linode API key
+        [Default: (null)]
+
+- backupweeklyday
+        Integer value for what day of the week to store weekly backups.
+        [Default: (null)]
+        version_added: 2.3
+
+- datacenter
+        datacenter to create an instance in (Linode Datacenter)
+        [Default: (null)]
+
+- displaygroup
+        Add the instance to a Display Group in Linode Manager.
+        [Default: (null)]
+        version_added: 2.3
+
+- distribution
+        distribution to use for the instance (Linode Distribution)
+        [Default: (null)]
+
+- kernel_id
+        kernel to use for the instance (Linode Kernel)
+        [Default: (null)]
+        version_added: 2.4
+
+- linode_id
+        Unique ID of a linode server. This value is read-only in the sense that if you specify it on creation of a Linode it will not be
+        used. The Linode API generates these IDs and we can those generated value here to reference a Linode more specifically. This is
+        useful for idempotence.
+        (Aliases: lid)[Default: (null)]
+
+= name
+        Name to give the instance (alphanumeric, dashes, underscore).
+        To keep sanity on the Linode Web Console, name is prepended with `LinodeID-'.
+
+
+- password
+        root password to apply to a new server (auto generated if missing)
+        [Default: (null)]
+
+- payment_term
+        payment term to use for the instance (payment term in months)
+        (Choices: 1, 12, 24)[Default: 1]
+
+- plan
+        plan to use for the instance (Linode plan)
+        [Default: (null)]
+
+- private_ip
+        Add private IPv4 address when Linode is created.
+        [Default: no]
+        type: bool
+        version_added: 2.3
+
+- ssh_pub_key
+        SSH public key applied to root user
+        [Default: (null)]
+
+- state
+        Indicate desired state of the resource
+        (Choices: absent, active, deleted, present, restarted, started, stopped)[Default: present]
+
+- swap
+        swap size in MB
+        [Default: 512]
+
+- wait
+        wait for the instance to be in state `running' before returning
+        [Default: no]
+        type: bool
+
+- wait_timeout
+        how long before wait gives up, in seconds
+        [Default: 300]
+
+- watchdog
+        Set status of Lassie watchdog.
+        [Default: True]
+        type: bool
+        version_added: 2.2
+
+
+NOTES:
+      * Please note, linode-python does not have python 3 support.
+      * This module uses the now deprecated v3 of the Linode API.
+      * `LINODE_API_KEY' env variable can be used instead.
+      * Please review https://www.linode.com/api/linode for determining the required parameters.
+
+
+REQUIREMENTS:  python >= 2.6, linode-python
+
+AUTHOR: Vincent Viallet (@zbal)
+        METADATA:
+          status:
+          - preview
+          supported_by: community
+        
+
+EXAMPLES:
+
+- name: Create a new Linode
+  linode:
+    name: linode-test1
+    plan: 1
+    datacenter: 7
+    distribution: 129
+    state: present
+  register: linode_creation
+
+- name: Create a server with a private IP Address
+  linode:
+     module: linode
+     api_key: 'longStringFromLinodeApi'
+     name: linode-test1
+     plan: 1
+     datacenter: 2
+     distribution: 99
+     password: 'superSecureRootPassword'
+     private_ip: yes
+     ssh_pub_key: 'ssh-rsa qwerty'
+     swap: 768
+     wait: yes
+     wait_timeout: 600
+     state: present
+  delegate_to: localhost
+  register: linode_creation
+
+- name: Fully configure new server
+  linode:
+     api_key: 'longStringFromLinodeApi'
+     name: linode-test1
+     plan: 4
+     datacenter: 2
+     distribution: 99
+     kernel_id: 138
+     password: 'superSecureRootPassword'
+     private_ip: yes
+     ssh_pub_key: 'ssh-rsa qwerty'
+     swap: 768
+     wait: yes
+     wait_timeout: 600
+     state: present
+     alert_bwquota_enabled: True
+     alert_bwquota_threshold: 80
+     alert_bwin_enabled: True
+     alert_bwin_threshold: 10
+     alert_cpu_enabled: True
+     alert_cpu_threshold: 210
+     alert_bwout_enabled: True
+     alert_bwout_threshold: 10
+     alert_diskio_enabled: True
+     alert_diskio_threshold: 10000
+     backupweeklyday: 1
+     backupwindow: 2
+     displaygroup: 'test'
+     additional_disks:
+      - {Label: 'disk1', Size: 2500, Type: 'raw'}
+      - {Label: 'newdisk', Size: 2000}
+     watchdog: True
+  delegate_to: localhost
+  register: linode_creation
+
+- name: Ensure a running server (create if missing)
+  linode:
+     api_key: 'longStringFromLinodeApi'
+     name: linode-test1
+     plan: 1
+     datacenter: 2
+     distribution: 99
+     password: 'superSecureRootPassword'
+     ssh_pub_key: 'ssh-rsa qwerty'
+     swap: 768
+     wait: yes
+     wait_timeout: 600
+     state: present
+  delegate_to: localhost
+  register: linode_creation
+
+- name: Delete a server
+  linode:
+     api_key: 'longStringFromLinodeApi'
+     name: linode-test1
+     linode_id: "{{ linode_creation.instance.id }}"
+     state: absent
+  delegate_to: localhost
+
+- name: Stop a server
+  linode:
+     api_key: 'longStringFromLinodeApi'
+     name: linode-test1
+     linode_id: "{{ linode_creation.instance.id }}"
+     state: stopped
+  delegate_to: localhost
+
+- name: Reboot a server
+  linode:
+     api_key: 'longStringFromLinodeApi'
+     name: linode-test1
+     linode_id: "{{ linode_creation.instance.id }}"
+     state: restarted
+  delegate_to: localhost
+
+

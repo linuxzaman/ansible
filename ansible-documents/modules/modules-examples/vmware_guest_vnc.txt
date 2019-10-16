@@ -1,0 +1,45 @@
+EXAMPLES:
+
+- name: Enable VNC remote display on the VM
+  vmware_guest_vnc:
+    hostname: "{{ vcenter_hostname }}"
+    username: "{{ vcenter_username }}"
+    password: "{{ vcenter_password }}"
+    validate_certs: no
+    folder: /mydatacenter/vm
+    name: testvm1
+    vnc_port: 5990
+    vnc_password: vNc5ecr3t
+    datacenter: "{{ datacenter_name }}"
+    state: present
+  delegate_to: localhost
+  register: vnc_result
+
+- name: Disable VNC remote display on the VM
+  vmware_guest_vnc:
+    hostname: "{{ vcenter_hostname }}"
+    username: "{{ vcenter_username }}"
+    password: "{{ vcenter_password }}"
+    validate_certs: no
+    datacenter: "{{ datacenter_name }}"
+    uuid: 32074771-7d6b-699a-66a8-2d9cf8236fff
+    state: absent
+  delegate_to: localhost
+  register: vnc_result
+
+
+RETURN VALUES:
+
+changed:
+  description: If anything changed on VM's extraConfig.
+  returned: always
+  type: bool
+failed:
+  description: If changes failed.
+  returned: always
+  type: bool
+instance:
+  description: Dictionary describing the VM, including VNC info.
+  returned: On success in both I(state)
+  type: dict
+

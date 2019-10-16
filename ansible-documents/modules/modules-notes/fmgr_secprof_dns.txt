@@ -1,0 +1,152 @@
+> FMGR_SECPROF_DNS    (/usr/lib/python2.7/dist-packages/ansible/modules/network/fortimanager/fmgr_secprof_dns.py)
+
+        Manage DNS security profiles in FortiManager
+
+  * This module is maintained by The Ansible Community
+OPTIONS (= is mandatory):
+
+- adom
+        The ADOM the configuration should belong to.
+        [Default: root]
+
+- block_action
+        Action to take for blocked domains.
+        choice | block | Return NXDOMAIN for blocked domains.
+        choice | redirect | Redirect blocked domains to SDNS portal.
+        (Choices: block, redirect)[Default: (null)]
+        type: str
+
+- block_botnet
+        Enable/disable blocking botnet C&C; DNS lookups.
+        choice | disable | Disable blocking botnet C&C; DNS lookups.
+        choice | enable | Enable blocking botnet C&C; DNS lookups.
+        (Choices: disable, enable)[Default: (null)]
+        type: str
+
+- comment
+        Comment for the security profile to show in the FortiManager GUI.
+        [Default: (null)]
+        type: str
+
+- domain_filter_domain_filter_table
+        DNS domain filter table ID.
+        [Default: (null)]
+        type: str
+
+- external_ip_blocklist
+        One or more external IP block lists.
+        [Default: (null)]
+        type: str
+
+- ftgd_dns_filters_action
+        Action to take for DNS requests matching the category.
+        choice | monitor | Allow DNS requests matching the category and log the result.
+        choice | block | Block DNS requests matching the category.
+        (Choices: monitor, block)[Default: (null)]
+        type: str
+
+- ftgd_dns_filters_category
+        Category number.
+        [Default: (null)]
+        type: str
+
+- ftgd_dns_filters_log
+        Enable/disable DNS filter logging for this DNS profile.
+        choice | disable | Disable DNS filter logging.
+        choice | enable | Enable DNS filter logging.
+        (Choices: disable, enable)[Default: (null)]
+        type: str
+
+- ftgd_dns_options
+        FortiGuard DNS filter options.
+        FLAG Based Options. Specify multiple in list form.
+        flag | error-allow | Allow all domains when FortiGuard DNS servers fail.
+        flag | ftgd-disable | Disable FortiGuard DNS domain rating.
+        (Choices: error-allow, ftgd-disable)[Default: (null)]
+        type: str
+
+- log_all_domain
+        Enable/disable logging of all domains visited (detailed DNS logging).
+        choice | disable | Disable logging of all domains visited.
+        choice | enable | Enable logging of all domains visited.
+        (Choices: disable, enable)[Default: (null)]
+        type: str
+
+- mode
+        Sets one of three modes for managing the object.
+        Allows use of soft-adds instead of overwriting existing values.
+        (Choices: add, set, delete, update)[Default: add]
+
+- name
+        Profile name.
+        [Default: (null)]
+        type: str
+
+- redirect_portal
+        IP address of the SDNS redirect portal.
+        [Default: (null)]
+        type: str
+
+- safe_search
+        Enable/disable Google, Bing, and YouTube safe search.
+        choice | disable | Disable Google, Bing, and YouTube safe search.
+        choice | enable | Enable Google, Bing, and YouTube safe search.
+        (Choices: disable, enable)[Default: (null)]
+        type: str
+
+- sdns_domain_log
+        Enable/disable domain filtering and botnet domain logging.
+        choice | disable | Disable domain filtering and botnet domain logging.
+        choice | enable | Enable domain filtering and botnet domain logging.
+        (Choices: disable, enable)[Default: (null)]
+        type: str
+
+- sdns_ftgd_err_log
+        Enable/disable FortiGuard SDNS rating error logging.
+        choice | disable | Disable FortiGuard SDNS rating error logging.
+        choice | enable | Enable FortiGuard SDNS rating error logging.
+        (Choices: disable, enable)[Default: (null)]
+        type: str
+
+- youtube_restrict
+        Set safe search for YouTube restriction level.
+        choice | strict | Enable strict safe seach for YouTube.
+        choice | moderate | Enable moderate safe search for YouTube.
+        (Choices: strict, moderate)[Default: (null)]
+        type: str
+
+
+NOTES:
+      * Full Documentation at https://ftnt-ansible-docs.readthedocs.io/en/latest/.
+
+
+AUTHOR: Luke Weighall (@lweighall), Andrew Welsh (@Ghilli3), Jim Huber (@p4r4n0y1ng)
+        METADATA:
+          status:
+          - preview
+          supported_by: community
+        
+
+EXAMPLES:
+
+- name: DELETE Profile
+    fmgr_secprof_dns:
+      name: "Ansible_DNS_Profile"
+      comment: "Created by Ansible Module TEST"
+      mode: "delete"
+
+  - name: CREATE Profile
+    fmgr_secprof_dns:
+      name: "Ansible_DNS_Profile"
+      comment: "Created by Ansible Module TEST"
+      mode: "set"
+      block_action: "block"
+
+
+RETURN VALUES:
+
+api_result:
+  description: full API response, includes status code and message
+  returned: always
+  type: str
+

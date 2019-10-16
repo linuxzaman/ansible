@@ -1,0 +1,169 @@
+EXAMPLES:
+
+# practical use case - dynamically deregistering and reregistering nodes
+
+  - name: Get EC2 Metadata
+    action: ec2_metadata_facts
+
+  - name: Get initial list of target groups
+    delegate_to: localhost
+    elb_target_facts:
+      instance_id: "{{ ansible_ec2_instance_id }}"
+      region: "{{ ansible_ec2_placement_region }}"
+    register: target_facts
+
+  - name: save fact for later
+    set_fact:
+      original_tgs: "{{ target_facts.instance_target_groups }}"
+
+  - name: Deregister instance from all target groups
+    delegate_to: localhost
+    elb_target:
+        target_group_arn: "{{ item.0.target_group_arn }}"
+        target_port: "{{ item.1.target_port }}"
+        target_az: "{{ item.1.target_az }}"
+        target_id: "{{ item.1.target_id }}"
+        state: absent
+        target_status: "draining"
+        region: "{{ ansible_ec2_placement_region }}"
+    with_subelements:
+      - "{{ original_tgs }}"
+      - "targets"
+
+    # This avoids having to wait for 'elb_target' to serially deregister each
+    # target group.  An alternative would be to run all of the 'elb_target'
+    # tasks async and wait for them to finish.
+
+  - name: wait for all targets to deregister simultaneously
+    delegate_to: localhost
+    elb_target_facts:
+      get_unused_target_groups: false
+      instance_id: "{{ ansible_ec2_instance_id }}"
+      region: "{{ ansible_ec2_placement_region }}"
+    register: target_facts
+    until: (target_facts.instance_target_groups | length) == 0
+    retries: 60
+    delay: 10
+
+  - name: reregister in elbv2s
+    elb_target:
+      region: "{{ ansible_ec2_placement_region }}"
+      target_group_arn: "{{ item.0.target_group_arn }}"
+      target_port: "{{ item.1.target_port }}"
+      target_az: "{{ item.1.target_az }}"
+      target_id: "{{ item.1.target_id }}"
+      state: present
+      target_status: "initial"
+    with_subelements:
+      - "{{ original_tgs }}"
+      - "targets"
+
+  # wait until all groups associated with this instance are 'healthy' or
+  # 'unused'
+  - name: wait for registration
+    elb_target_facts:
+      get_unused_target_groups: false
+      instance_id: "{{ ansible_ec2_instance_id }}"
+      region: "{{ ansible_ec2_placement_region }}"
+    register: target_facts
+    until: (target_facts.instance_target_groups |
+            map(attribute='targets') |
+            flatten |
+            map(attribute='target_health') |
+            rejectattr('state', 'equalto', 'healthy') |
+            rejectattr('state', 'equalto', 'unused') |
+            list |
+            length) == 0
+    retries: 61
+    delay: 10
+
+# using the target groups to generate AWS CLI commands to reregister the
+# instance - useful in case the playbook fails mid-run and manual
+#            rollback is required
+  - name: "reregistration commands: ELBv2s"
+    debug:
+      msg: >
+             aws --region {{ansible_ec2_placement_region}} elbv2
+             register-targets --target-group-arn {{item.target_group_arn}}
+             --targets{%for target in item.targets%}
+             Id={{target.target_id}},
+             Port={{target.target_port}}{%if target.target_az%},AvailabilityZone={{target.target_az}}
+             {%endif%}
+             {%endfor%}
+    loop: "{{target_facts.instance_target_groups}}"
+
+
+RETURN VALUES:
+
+instance_target_groups:
+    description: a list of target groups to which the instance is registered to
+    returned: always
+    type: complex
+    contains:
+        target_group_arn:
+            description: The ARN of the target group
+            type: str
+            returned: always
+            sample:
+                - "arn:aws:elasticloadbalancing:eu-west-1:111111111111:targetgroup/target-group/deadbeefdeadbeef"
+        target_group_type:
+            description: Which target type is used for this group
+            returned: always
+            type: str
+            sample:
+                - ip
+                - instance
+        targets:
+            description: A list of targets that point to this instance ID
+            returned: always
+            type: complex
+            contains:
+                target_id:
+                    description: the target ID referiing to this instance
+                    type: str
+                    returned: always
+                    sample:
+                        - i-deadbeef
+                        - 1.2.3.4
+                target_port:
+                    description: which port this target is listening on
+                    type: str
+                    returned: always
+                    sample:
+                        - 80
+                target_az:
+                    description: which availability zone is explicitly
+                                 associated with this target
+                    type: str
+                    returned: when an AZ is associated with this instance
+                    sample:
+                        - us-west-2a
+                target_health:
+                    description: the target health description
+                                 (see U(https://boto3.readthedocs.io/en/latest/
+                                  reference/services/elbv2.html#ElasticLoadBalancingv2.Client.describe_target_health))
+                                 for all possible values
+                    returned: always
+                    type: complex
+                    contains:
+                        description:
+                            description: description of target health
+                            returned: if I(state!=present)
+                            sample:
+                                - "Target desregistration is in progress"
+                        reason:
+                            description: reason code for target health
+                            returned: if I(state!=healthy)
+                            sample:
+                                - "Target.Deregistration in progress"
+                        state:
+                            description: health state
+                            returned: always
+                            sample:
+                                - "healthy"
+                                - "draining"
+                                - "initial"
+                                - "unhealthy"
+                                - "unused"
+                                - "unavailable"
+

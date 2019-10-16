@@ -1,0 +1,244 @@
+> MSO_SCHEMA_TEMPLATE_ANP_EPG    (/usr/lib/python2.7/dist-packages/ansible/modules/network/aci/mso_schema_template_anp_epg.py)
+
+        Manage EPGs in schema templates on Cisco ACI Multi-Site.
+
+  * This module is maintained by The Ansible Community
+OPTIONS (= is mandatory):
+
+= anp
+        The name of the ANP.
+
+        type: str
+
+- bd
+        The BD associated to this ANP.
+        [Default: (null)]
+        suboptions:
+          name:
+            description:
+            - The name of the BD to associate with.
+            required: true
+            type: str
+          schema:
+            description:
+            - The schema that defines the referenced BD.
+            - If this parameter is unspecified, it defaults to the current schema.
+            type: str
+          template:
+            description:
+            - The template that defines the referenced BD.
+            type: str
+        
+        type: dict
+
+- display_name
+        The name as displayed on the MSO web interface.
+        [Default: (null)]
+        type: str
+
+- epg
+        The name of the EPG to manage.
+        (Aliases: name)[Default: (null)]
+        type: str
+
+= host
+        IP Address or hostname of the ACI Multi Site Orchestrator host.
+        (Aliases: hostname)
+        type: str
+
+- intersite_multicaste_source
+        Whether intersite multicase source is enabled.
+        When not specified, this parameter defaults to `no'.
+        [Default: (null)]
+        type: bool
+
+- intra_epg_isolation
+        Whether intra EPG isolation is enforced.
+        When not specified, this parameter defaults to `unenforced'.
+        (Choices: enforced, unenforced)[Default: (null)]
+        type: str
+
+- output_level
+        Influence the output of this ACI module.
+        `normal' means the standard output, incl. `current' dict
+        `info' adds informational output, incl. `previous', `proposed' and `sent' dicts
+        `debug' adds debugging output, incl. `filter_string', `method', `response', `status' and `url' information
+        (Choices: debug, info, normal)[Default: normal]
+        type: str
+
+= password
+        The password to use for authentication.
+        This option is mutual exclusive with `private_key'. If `private_key' is provided too, it will be used instead.
+
+        type: str
+
+- port
+        Port number to be used for the REST connection.
+        The default value depends on parameter `use_ssl`.
+        [Default: (null)]
+        type: int
+
+= schema
+        The name of the schema.
+
+        type: str
+
+- state
+        Use `present' or `absent' for adding or removing.
+        Use `query' for listing an object or multiple objects.
+        (Choices: absent, present, query)[Default: present]
+        type: str
+
+- subnets
+        The subnets associated to this ANP.
+        [Default: (null)]
+        suboptions:
+          description:
+            description:
+            - The description of this subnet.
+            type: str
+          ip:
+            description:
+            - The IP range in CIDR notation.
+            required: true
+            type: str
+          no_default_gateway:
+            description:
+            - Whether this subnet has a default gateway.
+            type: bool
+          scope:
+            choices:
+            - private
+            - public
+            description:
+            - The scope of the subnet.
+            type: str
+          shared:
+            description:
+            - Whether this subnet is shared between VRFs.
+            type: bool
+        
+        type: list
+
+= template
+        The name of the template.
+
+        type: str
+
+- timeout
+        The socket level timeout in seconds.
+        [Default: 30]
+        type: int
+
+- use_proxy
+        If `no', it will not use a proxy, even if one is defined in an environment variable on the target hosts.
+        [Default: True]
+        type: bool
+
+- use_ssl
+        If `no', an HTTP connection will be used instead of the default HTTPS connection.
+        [Default: True]
+        type: bool
+
+- useg_epg
+        Whether this is a USEG EPG.
+        [Default: (null)]
+        type: bool
+
+- username
+        The username to use for authentication.
+        [Default: admin]
+        type: str
+
+- validate_certs
+        If `no', SSL certificates will not be validated.
+        This should only set to `no' when used on personally controlled sites using self-signed certificates.
+        [Default: True]
+        type: bool
+
+
+NOTES:
+      * Please read the :ref:`aci_guide` for more detailed information on how to manage your ACI infrastructure using Ansible.
+      * This module was written to support ACI Multi Site Orchestrator v2.1 or newer. Some or all functionality may not work on
+        earlier versions.
+
+
+SEE ALSO:
+      * Module mso_schema_template_anp
+           The official documentation on the mso_schema_template_anp module.
+           https://docs.ansible.com/ansible/latest/modules/mso_schema_template_anp_module.html
+      * Module mso_schema_template_anp_epg_subnet
+           The official documentation on the mso_schema_template_anp_epg_subnet module.
+           https://docs.ansible.com/ansible/latest/modules/mso_schema_template_anp_epg_subnet_module.html
+      * Module mso_schema_template_bd
+           The official documentation on the mso_schema_template_bd module.
+           https://docs.ansible.com/ansible/latest/modules/mso_schema_template_bd_module.html
+      * Module mso_schema_template_contract_filter
+           The official documentation on the mso_schema_template_contract_filter module.
+           https://docs.ansible.com/ansible/latest/modules/mso_schema_template_contract_filter_module.html
+
+
+REQUIREMENTS:  Multi Site Orchestrator v2.1 or newer
+
+AUTHOR: Dag Wieers (@dagwieers)
+        METADATA:
+          status:
+          - preview
+          supported_by: community
+        
+
+EXAMPLES:
+
+- name: Add a new EPG
+  mso_schema_template_anp_epg:
+    host: mso_host
+    username: admin
+    password: SomeSecretPassword
+    schema: Schema 1
+    template: Template 1
+    anp: ANP 1
+    epg: EPG 1
+    state: present
+  delegate_to: localhost
+
+- name: Remove an EPG
+  mso_schema_template_anp_epg:
+    host: mso_host
+    username: admin
+    password: SomeSecretPassword
+    schema: Schema 1
+    template: Template 1
+    anp: ANP 1
+    epg: EPG 1
+    state: absent
+  delegate_to: localhost
+
+- name: Query a specific EPG
+  mso_schema_template_anp_epg:
+    host: mso_host
+    username: admin
+    password: SomeSecretPassword
+    schema: Schema 1
+    template: Template 1
+    anp: ANP 1
+    epg: EPG 1
+    state: query
+  delegate_to: localhost
+  register: query_result
+
+- name: Query all EPGs
+  mso_schema_template_anp_epg:
+    host: mso_host
+    username: admin
+    password: SomeSecretPassword
+    schema: Schema 1
+    template: Template 1
+    anp: ANP 1
+    state: query
+  delegate_to: localhost
+  register: query_result
+
+
+RETURN VALUES:
+
+

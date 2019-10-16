@@ -1,0 +1,35 @@
+EXAMPLES:
+
+- name: Set Eth1/1 IPv4 address
+  onyx_l3_interface:
+    name: Eth1/1
+    ipv4: 192.168.0.1/24
+
+- name: Remove Eth1/1 IPv4 address
+  onyx_l3_interface:
+    name: Eth1/1
+    state: absent
+
+- name: Set IP addresses on aggregate
+  onyx_l3_interface:
+    aggregate:
+      - { name: Eth1/1, ipv4: 192.168.2.10/24 }
+      - { name: Eth1/2, ipv4: 192.168.3.10/24 }
+
+- name: Remove IP addresses on aggregate
+  onyx_l3_interface:
+    aggregate:
+      - { name: Eth1/1, ipv4: 192.168.2.10/24 }
+      - { name: Eth1/2, ipv4: 192.168.3.10/24 }
+    state: absent
+
+
+RETURN VALUES:
+
+commands:
+  description: The list of configuration mode commands to send to the device
+  returned: always.
+  type: list
+  sample:
+    - interfaces ethernet 1/1 ip address 192.168.0.1 /24
+

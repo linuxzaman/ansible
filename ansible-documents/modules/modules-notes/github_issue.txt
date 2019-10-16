@@ -1,0 +1,57 @@
+> GITHUB_ISSUE    (/usr/lib/python2.7/dist-packages/ansible/modules/source_control/github_issue.py)
+
+        View GitHub issue for a given repository.
+
+  * This module is maintained by The Ansible Community
+OPTIONS (= is mandatory):
+
+- action
+        Get various details about issue depending upon action specified.
+        (Choices: [u'get_status'])[Default: get_status]
+
+= issue
+        Issue number for which information is required.
+
+
+= organization
+        Name of the GitHub organization in which the repository is hosted.
+
+
+= repo
+        Name of repository from which issue needs to be retrieved.
+
+
+
+REQUIREMENTS:  github3.py >= 1.0.0a4
+
+AUTHOR: Abhijeet Kasurde (@Akasurde)
+        METADATA:
+          status:
+          - preview
+          supported_by: community
+        
+
+EXAMPLES:
+
+- name: Check if GitHub issue is closed or not
+  github_issue:
+    organization: ansible
+    repo: ansible
+    issue: 23642
+    action: get_status
+  register: r
+
+- name: Take action depending upon issue status
+  debug:
+    msg: Do something when issue 23642 is open
+  when: r.issue_status == 'open'
+
+
+RETURN VALUES:
+
+get_status:
+    description: State of the GitHub issue
+    type: str
+    returned: success
+    sample: open, closed
+

@@ -1,0 +1,119 @@
+EXAMPLES:
+
+- name: ospf vrf module test
+  hosts: cloudengine
+  connection: local
+  gather_facts: no
+  vars:
+    cli:
+      host: "{{ inventory_hostname }}"
+      port: "{{ ansible_ssh_port }}"
+      username: "{{ username }}"
+      password: "{{ password }}"
+      transport: cli
+
+  tasks:
+
+  - name: Configure ospf route id
+    ce_ospf_vrf:
+      ospf: 2
+      route_id: 2.2.2.2
+      lsaointervalflag: False
+      lsaointerval: 2
+      provider: "{{ cli }}"
+
+
+RETURN VALUES:
+
+proposed:
+    description: k/v pairs of parameters passed into module
+    returned: verbose mode
+    type: dict
+    sample: {
+        "bandwidth": "100",
+        "description": null,
+        "lsaaholdinterval": "500",
+        "lsaainterval": null,
+        "lsaamaxinterval": "1000",
+        "lsaastartinterval": "500",
+        "lsaalflag": "False",
+        "lsaoholdinterval": "1000",
+        "lsaointerval": "2",
+        "lsaointervalflag": "False",
+        "lsaomaxinterval": "5000",
+        "lsaostartinterval": "500",
+        "process_id": "2",
+        "route_id": "2.2.2.2",
+        "spfholdinterval": "1000",
+        "spfinterval": null,
+        "spfintervalmi": null,
+        "spfintervaltype": "intelligent-timer",
+        "spfmaxinterval": "10000",
+        "spfstartinterval": "500",
+        "vrf": "_public_"
+    }
+existing:
+    description: k/v pairs of existing configuration
+    returned: verbose mode
+    type: dict
+    sample: {
+                "bandwidthReference": "100",
+                "description": null,
+                "lsaArrivalFlag": "false",
+                "lsaArrivalHoldInterval": "500",
+                "lsaArrivalInterval": null,
+                "lsaArrivalMaxInterval": "1000",
+                "lsaArrivalStartInterval": "500",
+                "lsaOriginateHoldInterval": "1000",
+                "lsaOriginateInterval": "2",
+                "lsaOriginateIntervalFlag": "false",
+                "lsaOriginateMaxInterval": "5000",
+                "lsaOriginateStartInterval": "500",
+                "processId": "2",
+                "routerId": "2.2.2.2",
+                "spfScheduleHoldInterval": "1000",
+                "spfScheduleInterval": null,
+                "spfScheduleIntervalMillisecond": null,
+                "spfScheduleIntervalType": "intelligent-timer",
+                "spfScheduleMaxInterval": "10000",
+                "spfScheduleStartInterval": "500",
+                "vrfName": "_public_"
+            }
+end_state:
+    description: k/v pairs of configuration after module execution
+    returned: verbose mode
+    type: dict
+    sample: {
+                "bandwidthReference": "100",
+                "description": null,
+                "lsaArrivalFlag": "false",
+                "lsaArrivalHoldInterval": "500",
+                "lsaArrivalInterval": null,
+                "lsaArrivalMaxInterval": "1000",
+                "lsaArrivalStartInterval": "500",
+                "lsaOriginateHoldInterval": "1000",
+                "lsaOriginateInterval": "2",
+                "lsaOriginateIntervalFlag": "false",
+                "lsaOriginateMaxInterval": "5000",
+                "lsaOriginateStartInterval": "500",
+                "processId": "2",
+                "routerId": "2.2.2.2",
+                "spfScheduleHoldInterval": "1000",
+                "spfScheduleInterval": null,
+                "spfScheduleIntervalMillisecond": null,
+                "spfScheduleIntervalType": "intelligent-timer",
+                "spfScheduleMaxInterval": "10000",
+                "spfScheduleStartInterval": "500",
+                "vrfName": "_public_"
+            }
+updates:
+    description: commands sent to the device
+    returned: always
+    type: list
+    sample: ["ospf 2"]
+changed:
+    description: check to see if a change was made on the device
+    returned: always
+    type: bool
+    sample: False
+

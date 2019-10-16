@@ -1,0 +1,125 @@
+> HCLOUD_SSH_KEY    (/usr/lib/python2.7/dist-packages/ansible/modules/cloud/hcloud/hcloud_ssh_key.py)
+
+        Create, update and manage ssh keys on the Hetzner Cloud.
+
+  * This module is maintained by The Ansible Community
+OPTIONS (= is mandatory):
+
+= api_token
+        This is the API Token for the Hetzner Cloud.
+
+        type: str
+
+- endpoint
+        This is the API Endpoint for the Hetzner Cloud.
+        [Default: https://api.hetzner.cloud/v1]
+        type: str
+
+- fingerprint
+        The Fingerprint of the Hetzner Cloud ssh_key to manage.
+        Only required if no ssh_key `id' or `name' is given.
+        [Default: (null)]
+        type: str
+
+- id
+        The ID of the Hetzner Cloud ssh_key to manage.
+        Only required if no ssh_key `name' is given
+        [Default: (null)]
+        type: int
+
+- labels
+        User-defined labels (key-value pairs)
+        [Default: (null)]
+        type: dict
+
+- name
+        The Name of the Hetzner Cloud ssh_key to manage.
+        Only required if no ssh_key `id' is given or a ssh_key does not exists.
+        [Default: (null)]
+        type: str
+
+- public_key
+        The Public Key to add.
+        Required if ssh_key does not exists.
+        [Default: (null)]
+        type: str
+
+- state
+        State of the ssh_key.
+        (Choices: absent, present)[Default: present]
+        type: str
+
+
+SEE ALSO:
+      * Documentation for Hetzner Cloud API
+           Complete reference for the Hetzner Cloud API.
+           https://docs.hetzner.cloud/
+
+
+REQUIREMENTS:  hcloud-python >= 1.0.0
+
+AUTHOR: Lukas Kaemmerling (@lkaemmerling)
+        METADATA:
+          status:
+          - preview
+          supported_by: community
+        
+
+EXAMPLES:
+
+- name: Create a basic ssh_key
+  hcloud_ssh_key:
+    name: my-ssh_key
+    public_key: "ssh-rsa AAAjjk76kgf...Xt"
+    state: present
+
+- name: Create a ssh_key with labels
+  hcloud_ssh_key:
+    name: my-ssh_key
+    public_key: "ssh-rsa AAAjjk76kgf...Xt"
+    labels:
+        key: value
+        mylabel: 123
+    state: present
+
+- name: Ensure the ssh_key is absent (remove if needed)
+  hcloud_ssh_key:
+    name: my-ssh_key
+    state: absent
+
+
+RETURN VALUES:
+
+hcloud_ssh_key:
+    description: The ssh_key instance
+    returned: Always
+    type: complex
+    contains:
+        id:
+            description: ID of the ssh_key
+            type: int
+            returned: Always
+            sample: 12345
+        name:
+            description: Name of the ssh_key
+            type: string
+            returned: Always
+            sample: my-ssh-key
+        fingerprint:
+            description: Fingerprint of the ssh_key
+            type: string
+            returned: Always
+            sample: b7:2f:30:a0:2f:6c:58:6c:21:04:58:61:ba:06:3b:2f
+        public_key:
+            description: Public key of the ssh_key
+            type: string
+            returned: Always
+            sample: "ssh-rsa AAAjjk76kgf...Xt"
+        labels:
+            description: User-defined labels (key-value pairs)
+            type: dict
+            returned: Always
+            sample:
+                key: value
+                mylabel: 123
+

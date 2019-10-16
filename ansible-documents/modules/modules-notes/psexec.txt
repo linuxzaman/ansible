@@ -1,0 +1,291 @@
+> PSEXEC    (/usr/lib/python2.7/dist-packages/ansible/modules/commands/psexec.py)
+
+        Runs a remote command from a Linux host to a Windows host without WinRM being set up. Can be run on the Ansible controller to
+        bootstrap Windows hosts to get them ready for WinRM.
+
+  * This module is maintained by The Ansible Community
+OPTIONS (= is mandatory):
+
+- arguments
+        Any arguments as a single string to use when running the executable.
+        [Default: (null)]
+        type: str
+
+- asynchronous
+        Will run the command as a detached process and the module returns immediately after starting the processs while the process
+        continues to run in the background.
+        The `stdout' and `stderr' return values will be null when this is set to `yes'.
+        The `stdin' option does not work with this type of process.
+        The `rc' return value is not set when this is `yes'
+        [Default: False]
+        type: bool
+
+- connection_password
+        The password for `connection_user'.
+        Required if the Kerberos requirements are not installed or the username is a local account to the Windows host.
+        Can be omitted to use a Kerberos principal ticket for the principal set by `connection_user' if the Kerberos library is installed
+        and the ticket has already been retrieved with the `kinit' command before.
+        [Default: (null)]
+        type: str
+
+- connection_timeout
+        The timeout in seconds to wait when receiving the initial SMB negotiate response from the server.
+        [Default: 60]
+        type: int
+
+- connection_username
+        The username to use when connecting to the remote Windows host.
+        This user must be a member of the `Administrators' group of the Windows host.
+        Required if the Kerberos requirements are not installed or the username is a local account to the Windows host.
+        Can be omitted to use the default Kerberos principal ticket in the local credential cache if the Kerberos library is installed.
+        If `process_username' is not specified, then the remote process will run under a Network Logon under this account.
+        [Default: (null)]
+        type: str
+
+- encrypt
+        Will use SMB encryption to encrypt the SMB messages sent to and from the host.
+        This requires the SMB 3 protocol which is only supported from Windows Server 2012 or Windows 8, older versions like Windows 7 or
+        Windows Server 2008 (R2) must set this to `no' and use no encryption.
+        When setting to `no', the packets are in plaintext and can be seen by anyone sniffing the network, any process options are
+        included in this.
+        [Default: True]
+        type: bool
+
+= executable
+        The executable to run on the Windows host.
+
+        type: str
+
+= hostname
+        The remote Windows host to connect to, can be either an IP address or a hostname.
+
+        type: str
+
+- integrity_level
+        The integrity level of the process when `process_username' is defined and is not equal to `System'.
+        When `default', the default integrity level based on the system setup.
+        When `elevated', the command will be run with Administrative rights.
+        When `limited', the command will be forced to run with non-Administrative rights.
+        (Choices: limited, default, elevated)[Default: default]
+        type: str
+
+- interactive
+        Will run the process as an interactive process that shows a process Window of the Windows session specified by
+        `interactive_session'.
+        The `stdout' and `stderr' return values will be null when this is set to `yes'.
+        The `stdin' option does not work with this type of process.
+        [Default: False]
+        type: bool
+
+- interactive_session
+        The Windows session ID to use when displaying the interactive process on the remote Windows host.
+        This is only valid when `interactive' is `yes'.
+        The default is `0' which is the console session of the Windows host.
+        [Default: 0]
+        type: int
+
+- load_profile
+        Runs the remote command with the user's profile loaded.
+        [Default: True]
+        type: bool
+
+- port
+        The port that the remote SMB service is listening on.
+        [Default: 445]
+        type: int
+
+- priority
+        Set the command's priority on the Windows host.
+        See https://msdn.microsoft.com/en-us/library/windows/desktop/ms683211.aspx for more details.
+        (Choices: above_normal, below_normal, high, idle, normal, realtime)[Default: normal]
+        type: str
+
+- process_password
+        The password for `process_username'.
+        Required if `process_username' is defined and not `System'.
+        [Default: (null)]
+        type: str
+
+- process_timeout
+        The timeout in seconds that is placed upon the running process.
+        A value of `0' means no timeout.
+        [Default: 0]
+        type: int
+
+- process_username
+        The user to run the process as.
+        This can be set to run the process under an Interactive logon of the specified account which bypasses limitations of a Network
+        logon used when this isn't specified.
+        If omitted then the process is run under the same account as `connection_username' with a Network logon.
+        Set to `System' to run as the builtin SYSTEM account, no password is required with this account.
+        If `encrypt' is `no', the username and password are sent as a simple XOR scrambled byte string that is not encrypted. No special
+        tools are required to get the username and password just knowledge of the protocol.
+        [Default: (null)]
+        type: str
+
+- show_ui_on_logon_screen
+        Shows the process UI on the Winlogon secure desktop when `process_username' is `System'.
+        [Default: False]
+        type: bool
+
+- stdin
+        Data to send on the stdin pipe once the process has started.
+        This option has no effect when `interactive' or `asynchronous' is `yes'.
+        [Default: (null)]
+        type: str
+
+- working_directory
+        Changes the working directory set when starting the process.
+        [Default: C:\Windows\System32]
+        type: str
+
+
+NOTES:
+      * This module requires the Windows host to have SMB configured and enabled, and port 445 opened on the firewall.
+      * This module will wait until the process is finished unless `asynchronous' is `yes', ensure the process is run as a non-
+        interactive command to avoid infinite hangs waiting for input.
+      * The `connection_username' must be a member of the local Administrator group of the Windows host. For non-domain joined
+        hosts, the `LocalAccountTokenFilterPolicy' should be set to `1' to ensure this works, see https://support.microsoft.com/en-
+        us/help/951016/description-of-user-account-control-and-remote-restrictions-in-windows.
+      * For more information on this module and the various host requirements, see https://github.com/jborean93/pypsexec.
+
+
+SEE ALSO:
+      * Module raw
+           The official documentation on the raw module.
+           https://docs.ansible.com/ansible/latest/modules/raw_module.html
+      * Module win_command
+           The official documentation on the win_command module.
+           https://docs.ansible.com/ansible/latest/modules/win_command_module.html
+      * Module win_psexec
+           The official documentation on the win_psexec module.
+           https://docs.ansible.com/ansible/latest/modules/win_psexec_module.html
+      * Module win_shell
+           The official documentation on the win_shell module.
+           https://docs.ansible.com/ansible/latest/modules/win_shell_module.html
+
+
+REQUIREMENTS:  pypsexec, smbprotocol[kerberos] for optional Kerberos authentication
+
+AUTHOR: Jordan Borean (@jborean93)
+        METADATA:
+          status:
+          - preview
+          supported_by: community
+        
+
+EXAMPLES:
+
+- name: Run a cmd.exe command
+  psexec:
+    hostname: server
+    connection_username: username
+    connection_password: password
+    executable: cmd.exe
+    arguments: /c echo Hello World
+
+- name: Run a PowerShell command
+  psexec:
+    hostname: server.domain.local
+    connection_username: username@DOMAIN.LOCAL
+    connection_password: password
+    executable: powershell.exe
+    arguments: Write-Host Hello World
+
+- name: Send data through stdin
+  psexec:
+    hostname: 192.168.1.2
+    connection_username: username
+    connection_password: password
+    executable: powershell.exe
+    arguments: '-'
+    stdin: |
+      Write-Host Hello World
+      Write-Error Error Message
+      exit 0
+
+- name: Run the process as a different user
+  psexec:
+    hostname: server
+    connection_user: username
+    connection_password: password
+    executable: whoami.exe
+    arguments: /all
+    process_username: anotheruser
+    process_password: anotherpassword
+
+- name: Run the process asynchronously
+  psexec:
+    hostname: server
+    connection_username: username
+    connection_password: password
+    executable: cmd.exe
+    arguments: /c rmdir C:\temp
+    asynchronous: yes
+
+- name: Use Kerberos authentication for the connection (requires smbprotocol[kerberos])
+  psexec:
+    hostname: host.domain.local
+    connection_username: user@DOMAIN.LOCAL
+    executable: C:\some\path\to\executable.exe
+    arguments: /s
+
+- name: Disable encryption to work with WIndows 7/Server 2008 (R2)
+  psexec:
+    hostanme: windows-pc
+    connection_username: Administrator
+    connection_password: Password01
+    encrypt: no
+    integrity_level: elevated
+    process_username: Administrator
+    process_password: Password01
+    executable: powershell.exe
+    arguments: (New-Object -ComObject Microsoft.Update.Session).CreateUpdateInstaller().IsBusy
+
+- name: Download and run ConfigureRemotingForAnsible.ps1 to setup WinRM
+  psexec:
+    hostname: '{{ ansible_host }}'
+    connection_username: '{{ ansible_user }}'
+    connection_password: '{{ ansible_password }}'
+    encrypt: yes
+    executable: powershell.exe
+    arguments: '-'
+    stdin: |
+      $ErrorActionPreference = "Stop"
+      $sec_protocols = [Net.ServicePointManager]::SecurityProtocol -bor [Net.SecurityProtocolType]::SystemDefault
+      $sec_protocols = $sec_protocols -bor [Net.SecurityProtocolType]::Tls12
+      [Net.ServicePointManager]::SecurityProtocol = $sec_protocols
+      $url = "https://github.com/ansible/ansible/raw/devel/examples/scripts/ConfigureRemotingForAnsible.ps1"
+      Invoke-Expression ((New-Object Net.WebClient).DownloadString($url))
+      exit
+  delegate_to: localhost
+
+
+RETURN VALUES:
+
+msg:
+  description: Any exception details when trying to run the process
+  returned: module failed
+  type: str
+  sample: 'Received exception from remote PAExec service: Failed to start "invalid.exe". The system cannot find the file specified. [Err=0x2, 2]'
+stdout:
+  description: The stdout from the remote process
+  returned: success and interactive or asynchronous is 'no'
+  type: str
+  sample: Hello World
+stderr:
+  description: The stderr from the remote process
+  returned: success and interactive or asynchronous is 'no'
+  type: str
+  sample: Error [10] running process
+pid:
+  description: The process ID of the asynchronous process that was created
+  returned: success and asynchronous is 'yes'
+  type: int
+  sample: 719
+rc:
+  description: The return code of the remote process
+  returned: success and asynchronous is 'no'
+  type: int
+  sample: 0
+

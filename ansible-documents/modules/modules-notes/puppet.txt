@@ -1,0 +1,144 @@
+> PUPPET    (/usr/lib/python2.7/dist-packages/ansible/modules/system/puppet.py)
+
+        Runs `puppet' agent or apply in a reliable manner.
+
+  * This module is maintained by The Ansible Community
+OPTIONS (= is mandatory):
+
+- certname
+        The name to use when handling certificates.
+        [Default: (null)]
+        type: str
+        version_added: 2.1
+
+- debug
+        Enable full debugging.
+        [Default: (null)]
+        type: bool
+        version_added: 2.7
+
+- environment
+        Puppet environment to be used.
+        [Default: (null)]
+        type: str
+
+- execute
+        Execute a specific piece of Puppet code.
+        It has no effect with a puppetmaster.
+        [Default: (null)]
+        type: str
+        version_added: 2.1
+
+- facter_basename
+        Basename of the facter output file.
+        [Default: ansible]
+        type: str
+
+- facts
+        A dict of values to pass in as persistent external facter facts.
+        [Default: (null)]
+        type: dict
+
+- logdest
+        Where the puppet logs should go, if puppet apply is being used.
+        `all' will go to both `stdout' and `syslog'.
+        (Choices: all, stdout, syslog)[Default: stdout]
+        type: str
+        version_added: 2.1
+
+- manifest
+        Path to the manifest file to run puppet apply on.
+        [Default: (null)]
+        type: str
+
+- modulepath
+        Path to an alternate location for puppet modules.
+        [Default: (null)]
+        type: str
+        version_added: 2.4
+
+- noop
+        Override puppet.conf noop mode.
+        When `yes', run Puppet agent with `--noop' switch set.
+        When `no', run Puppet agent with `--no-noop' switch set.
+        When unset (default), use default or puppet.conf value if defined.
+        [Default: (null)]
+        type: bool
+        version_added: 2.8
+
+- puppetmaster
+        The hostname of the puppetmaster to contact.
+        [Default: (null)]
+        type: str
+
+- summarize
+        Whether to print a transaction summary.
+        [Default: (null)]
+        type: bool
+        version_added: 2.7
+
+- tags
+        A list of puppet tags to be used.
+        [Default: (null)]
+        type: list
+        version_added: 2.1
+
+- timeout
+        How long to wait for `puppet' to finish.
+        [Default: 30m]
+        type: str
+
+- verbose
+        Print extra information.
+        [Default: (null)]
+        type: bool
+        version_added: 2.7
+
+
+REQUIREMENTS:  puppet
+
+AUTHOR: Monty Taylor (@emonty)
+        METADATA:
+          status:
+          - stableinterface
+          supported_by: community
+        
+
+EXAMPLES:
+
+- name: Run puppet agent and fail if anything goes wrong
+  puppet:
+
+- name: Run puppet and timeout in 5 minutes
+  puppet:
+    timeout: 5m
+
+- name: Run puppet using a different environment
+  puppet:
+    environment: testing
+
+- name: Run puppet using a specific certname
+  puppet:
+    certname: agent01.example.com
+
+- name: Run puppet using a specific piece of Puppet code. Has no effect with a puppetmaster
+  puppet:
+    execute: include ::mymodule
+
+- name: Run puppet using a specific tags
+  puppet:
+    tags:
+    - update
+    - nginx
+
+- name: Run puppet agent in noop mode
+  puppet:
+    noop: yes
+
+- name: Run a manifest with debug, log to both syslog and stdout, specify module path
+  puppet:
+    modulepath: /etc/puppet/modules:/opt/stack/puppet-modules:/usr/share/openstack-puppet/modules
+    logdest: all
+    manifest: /var/lib/example/puppet_step_config.pp
+
+

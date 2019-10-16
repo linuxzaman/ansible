@@ -1,0 +1,83 @@
+EXAMPLES:
+
+- name: Create FlexVol
+      na_ontap_volume:
+        state: present
+        name: ansibleVolume12
+        is_infinite: False
+        aggregate_name: ansible_aggr
+        size: 100
+        size_unit: mb
+        space_guarantee: none
+        policy: default
+        percent_snapshot_space: 60
+        vserver: ansibleVServer
+        wait_for_completion: True
+        hostname: "{{ netapp_hostname }}"
+        username: "{{ netapp_username }}"
+        password: "{{ netapp_password }}"
+
+    - name: Volume Delete
+      na_ontap_volume:
+        state: absent
+        name: ansibleVolume12
+        aggregate_name: ansible_aggr
+        vserver: ansibleVServer
+        hostname: "{{ netapp_hostname }}"
+        username: "{{ netapp_username }}"
+        password: "{{ netapp_password }}"
+
+    - name: Make FlexVol offline
+      na_ontap_volume:
+        state: present
+        name: ansibleVolume
+        is_infinite: False
+        is_online: False
+        vserver: ansibleVServer
+        hostname: "{{ netapp_hostname }}"
+        username: "{{ netapp_username }}"
+        password: "{{ netapp_password }}"
+
+    - name: Create flexGroup volume manually
+      na_ontap_volume:
+        state: present
+        name: ansibleVolume
+        is_infinite: False
+        aggr_list: "{{ aggr_list }}"
+        aggr_list_multiplier: 2
+        size: 200
+        size_unit: mb
+        space_guarantee: none
+        policy: default
+        vserver: "{{ vserver }}"
+        hostname: "{{ netapp_hostname }}"
+        username: "{{ netapp_username }}"
+        password: "{{ netapp_password }}"
+        https: False
+        unix_permissions: 777
+        snapshot_policy: default
+        time_out: 0
+
+    - name: Create flexGroup volume auto provsion as flex group
+      na_ontap_volume:
+        state: present
+        name: ansibleVolume
+        is_infinite: False
+        auto_provision_as: flexgroup
+        size: 200
+        size_unit: mb
+        space_guarantee: none
+        policy: default
+        vserver: "{{ vserver }}"
+        hostname: "{{ netapp_hostname }}"
+        username: "{{ netapp_username }}"
+        password: "{{ netapp_password }}"
+        https: False
+        unix_permissions: 777
+        snapshot_policy: default
+        time_out: 0
+
+
+RETURN VALUES:
+
+

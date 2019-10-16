@@ -1,0 +1,265 @@
+> EC2_VPC_PEER    (/usr/lib/python2.7/dist-packages/ansible/modules/cloud/amazon/ec2_vpc_peer.py)
+
+        Read the AWS documentation for VPC Peering Connections https://docs.aws.amazon.com/AmazonVPC/latest/UserGuide/vpc-peering.html.
+
+  * This module is maintained by The Ansible Community
+OPTIONS (= is mandatory):
+
+- aws_access_key
+        AWS access key. If not set then the value of the AWS_ACCESS_KEY_ID, AWS_ACCESS_KEY or EC2_ACCESS_KEY environment variable is
+        used.
+        (Aliases: ec2_access_key, access_key)[Default: (null)]
+        type: str
+
+- aws_secret_key
+        AWS secret key. If not set then the value of the AWS_SECRET_ACCESS_KEY, AWS_SECRET_KEY, or EC2_SECRET_KEY environment variable is
+        used.
+        (Aliases: ec2_secret_key, secret_key)[Default: (null)]
+        type: str
+
+- debug_botocore_endpoint_logs
+        Use a botocore.endpoint logger to parse the unique (rather than total) "resource:action" API calls made during a task, outputing
+        the set to the resource_actions key in the task results. Use the aws_resource_action callback to output to total list made during
+        a playbook. The ANSIBLE_DEBUG_BOTOCORE_LOGS environment variable may also be used.
+        [Default: no]
+        type: bool
+        version_added: 2.8
+
+- ec2_url
+        Url to use to connect to EC2 or your Eucalyptus cloud (by default the module will use EC2 endpoints). Ignored for modules where
+        region is required. Must be specified for all other modules if region is not used. If not set then the value of the EC2_URL
+        environment variable, if any, is used.
+        [Default: (null)]
+        type: str
+
+- peer_owner_id
+        The AWS account number for cross account peering.
+        [Default: (null)]
+
+- peer_region
+        Region of the accepting VPC.
+        [Default: (null)]
+        version_added: 2.5
+
+- peer_vpc_id
+        VPC id of the accepting VPC.
+        [Default: (null)]
+
+- peering_id
+        Peering connection id.
+        [Default: (null)]
+
+- profile
+        Uses a boto profile. Only works with boto >= 2.24.0.
+        [Default: (null)]
+        type: str
+        version_added: 1.6
+
+- region
+        The AWS region to use. If not specified then the value of the AWS_REGION or EC2_REGION environment variable, if any, is used. See
+        http://docs.aws.amazon.com/general/latest/gr/rande.html#ec2_region
+        (Aliases: aws_region, ec2_region)[Default: (null)]
+        type: str
+
+- security_token
+        AWS STS security token. If not set then the value of the AWS_SECURITY_TOKEN or EC2_SECURITY_TOKEN environment variable is used.
+        (Aliases: access_token)[Default: (null)]
+        type: str
+        version_added: 1.6
+
+- state
+        Create, delete, accept, reject a peering connection.
+        (Choices: present, absent, accept, reject)[Default: present]
+
+- tags
+        Dictionary of tags to look for and apply when creating a Peering Connection.
+        [Default: (null)]
+
+- validate_certs
+        When set to "no", SSL certificates will not be validated for boto versions >= 2.6.0.
+        [Default: True]
+        type: bool
+        version_added: 1.5
+
+- vpc_id
+        VPC id of the requesting VPC.
+        [Default: (null)]
+
+
+NOTES:
+      * If parameters are not set within the module, the following environment variables can be used in decreasing order of
+        precedence `AWS_URL' or `EC2_URL', `AWS_ACCESS_KEY_ID' or `AWS_ACCESS_KEY' or `EC2_ACCESS_KEY', `AWS_SECRET_ACCESS_KEY' or
+        `AWS_SECRET_KEY' or `EC2_SECRET_KEY', `AWS_SECURITY_TOKEN' or `EC2_SECURITY_TOKEN', `AWS_REGION' or `EC2_REGION'
+      * Ansible uses the boto configuration file (typically ~/.boto) if no credentials are provided. See
+        https://boto.readthedocs.io/en/latest/boto_config_tut.html
+      * `AWS_REGION' or `EC2_REGION' can be typically be used to specify the AWS region, when required, but this can also be
+        configured in the boto config file
+
+
+REQUIREMENTS:  boto, boto3, botocore, json, python >= 2.6
+
+AUTHOR: Mike Mochan (@mmochan)
+        METADATA:
+          status:
+          - stableinterface
+          supported_by: community
+        
+
+EXAMPLES:
+
+# Complete example to create and accept a local peering connection.
+- name: Create local account VPC peering Connection
+  ec2_vpc_peer:
+    region: ap-southeast-2
+    vpc_id: vpc-12345678
+    peer_vpc_id: vpc-87654321
+    state: present
+    tags:
+      Name: Peering connection for VPC 21 to VPC 22
+      CostCode: CC1234
+      Project: phoenix
+  register: vpc_peer
+
+- name: Accept local VPC peering request
+  ec2_vpc_peer:
+    region: ap-southeast-2
+    peering_id: "{{ vpc_peer.peering_id }}"
+    state: accept
+  register: action_peer
+
+# Complete example to delete a local peering connection.
+- name: Create local account VPC peering Connection
+  ec2_vpc_peer:
+    region: ap-southeast-2
+    vpc_id: vpc-12345678
+    peer_vpc_id: vpc-87654321
+    state: present
+    tags:
+      Name: Peering connection for VPC 21 to VPC 22
+      CostCode: CC1234
+      Project: phoenix
+  register: vpc_peer
+
+- name: delete a local VPC peering Connection
+  ec2_vpc_peer:
+    region: ap-southeast-2
+    peering_id: "{{ vpc_peer.peering_id }}"
+    state: absent
+  register: vpc_peer
+
+  # Complete example to create and accept a cross account peering connection.
+- name: Create cross account VPC peering Connection
+  ec2_vpc_peer:
+    region: ap-southeast-2
+    vpc_id: vpc-12345678
+    peer_vpc_id: vpc-12345678
+    peer_owner_id: 123456789102
+    state: present
+    tags:
+      Name: Peering connection for VPC 21 to VPC 22
+      CostCode: CC1234
+      Project: phoenix
+  register: vpc_peer
+
+- name: Accept peering connection from remote account
+  ec2_vpc_peer:
+    region: ap-southeast-2
+    peering_id: "{{ vpc_peer.peering_id }}"
+    profile: bot03_profile_for_cross_account
+    state: accept
+  register: vpc_peer
+
+# Complete example to create and accept an intra-region peering connection.
+- name: Create intra-region VPC peering Connection
+  ec2_vpc_peer:
+    region: us-east-1
+    vpc_id: vpc-12345678
+    peer_vpc_id: vpc-87654321
+    peer_region: us-west-2
+    state: present
+    tags:
+      Name: Peering connection for us-east-1 VPC to us-west-2 VPC
+      CostCode: CC1234
+      Project: phoenix
+  register: vpc_peer
+
+- name: Accept peering connection from peer region
+  ec2_vpc_peer:
+    region: us-west-2
+    peering_id: "{{ vpc_peer.peering_id }}"
+    state: accept
+  register: vpc_peer
+
+# Complete example to create and reject a local peering connection.
+- name: Create local account VPC peering Connection
+  ec2_vpc_peer:
+    region: ap-southeast-2
+    vpc_id: vpc-12345678
+    peer_vpc_id: vpc-87654321
+    state: present
+    tags:
+      Name: Peering connection for VPC 21 to VPC 22
+      CostCode: CC1234
+      Project: phoenix
+  register: vpc_peer
+
+- name: Reject a local VPC peering Connection
+  ec2_vpc_peer:
+    region: ap-southeast-2
+    peering_id: "{{ vpc_peer.peering_id }}"
+    state: reject
+
+# Complete example to create and accept a cross account peering connection.
+- name: Create cross account VPC peering Connection
+  ec2_vpc_peer:
+    region: ap-southeast-2
+    vpc_id: vpc-12345678
+    peer_vpc_id: vpc-12345678
+    peer_owner_id: 123456789102
+    state: present
+    tags:
+      Name: Peering connection for VPC 21 to VPC 22
+      CostCode: CC1234
+      Project: phoenix
+  register: vpc_peer
+
+- name: Accept a cross account VPC peering connection request
+  ec2_vpc_peer:
+    region: ap-southeast-2
+    peering_id: "{{ vpc_peer.peering_id }}"
+    profile: bot03_profile_for_cross_account
+    state: accept
+    tags:
+      Name: Peering connection for VPC 21 to VPC 22
+      CostCode: CC1234
+      Project: phoenix
+
+# Complete example to create and reject a cross account peering connection.
+- name: Create cross account VPC peering Connection
+  ec2_vpc_peer:
+    region: ap-southeast-2
+    vpc_id: vpc-12345678
+    peer_vpc_id: vpc-12345678
+    peer_owner_id: 123456789102
+    state: present
+    tags:
+      Name: Peering connection for VPC 21 to VPC 22
+      CostCode: CC1234
+      Project: phoenix
+  register: vpc_peer
+
+- name: Reject a cross account VPC peering Connection
+  ec2_vpc_peer:
+    region: ap-southeast-2
+    peering_id: "{{ vpc_peer.peering_id }}"
+    profile: bot03_profile_for_cross_account
+    state: reject
+
+
+RETURN VALUES:
+
+task:
+  description: The result of the create, accept, reject or delete action.
+  returned: success
+  type: dict
+

@@ -1,0 +1,90 @@
+> VMWARE_DVS_HOST    (/usr/lib/python2.7/dist-packages/ansible/modules/cloud/vmware/vmware_dvs_host.py)
+
+        Manage a host system from distributed virtual switch.
+
+  * This module is maintained by The Ansible Community
+OPTIONS (= is mandatory):
+
+= esxi_hostname
+        The ESXi hostname.
+
+
+- hostname
+        The hostname or IP address of the vSphere vCenter or ESXi server.
+        If the value is not specified in the task, the value of environment variable `VMWARE_HOST' will be used instead.
+        Environment variable support added in Ansible 2.6.
+        [Default: (null)]
+        type: str
+
+- password
+        The password of the vSphere vCenter or ESXi server.
+        If the value is not specified in the task, the value of environment variable `VMWARE_PASSWORD' will be used instead.
+        Environment variable support added in Ansible 2.6.
+        (Aliases: pass, pwd)[Default: (null)]
+        type: str
+
+- port
+        The port number of the vSphere vCenter or ESXi server.
+        If the value is not specified in the task, the value of environment variable `VMWARE_PORT' will be used instead.
+        Environment variable support added in Ansible 2.6.
+        [Default: 443]
+        type: int
+        version_added: 2.5
+
+= state
+        If the host should be present or absent attached to the vSwitch.
+        (Choices: present, absent)[Default: present]
+
+= switch_name
+        The name of the Distributed vSwitch.
+
+
+- username
+        The username of the vSphere vCenter or ESXi server.
+        If the value is not specified in the task, the value of environment variable `VMWARE_USER' will be used instead.
+        Environment variable support added in Ansible 2.6.
+        (Aliases: admin, user)[Default: (null)]
+        type: str
+
+- validate_certs
+        Allows connection when SSL certificates are not valid. Set to `false' when certificates are not trusted.
+        If the value is not specified in the task, the value of environment variable `VMWARE_VALIDATE_CERTS' will be used instead.
+        Environment variable support added in Ansible 2.6.
+        If set to `yes', please make sure Python >= 2.7.9 is installed on the given machine.
+        [Default: True]
+        type: bool
+
+= vmnics
+        The ESXi hosts vmnics to use with the Distributed vSwitch.
+
+
+
+NOTES:
+      * Tested on vSphere 5.5
+
+
+REQUIREMENTS:  python >= 2.7, PyVmomi
+
+AUTHOR: Joseph Callen (@jcpowermac), Abhijeet Kasurde (@Akasurde)
+        METADATA:
+          status:
+          - preview
+          supported_by: community
+        
+
+EXAMPLES:
+
+- name: Add Host to dVS
+  vmware_dvs_host:
+    hostname: '{{ vcenter_hostname }}'
+    username: '{{ vcenter_username }}'
+    password: '{{ vcenter_password }}'
+    esxi_hostname: '{{ esxi_hostname }}'
+    switch_name: dvSwitch
+    vmnics:
+        - vmnic0
+        - vmnic1
+    state: present
+  delegate_to: localhost
+
+

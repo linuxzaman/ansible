@@ -1,0 +1,68 @@
+EXAMPLES:
+
+- name: Ensure ntc VRF exists on switch
+  nxos_vrf:
+    name: ntc
+    description: testing
+    state: present
+
+- name: Aggregate definition of VRFs
+  nxos_vrf:
+    aggregate:
+      - { name: test1, description: Testing, admin_state: down }
+      - { name: test2, interfaces: Ethernet1/2 }
+
+- name: Aggregate definitions of VRFs with Purge
+  nxos_vrf:
+    aggregate:
+      - { name: ntc1, description: purge test1 }
+      - { name: ntc2, description: purge test2 }
+    state: present
+    purge: yes
+
+- name: Delete VRFs exist on switch
+  nxos_vrf:
+    aggregate:
+      - { name: ntc1 }
+      - { name: ntc2 }
+    state: absent
+
+- name: Assign interfaces to VRF declaratively
+  nxos_vrf:
+    name: test1
+    interfaces:
+      - Ethernet2/3
+      - Ethernet2/5
+
+- name: Check interfaces assigend to VRF
+  nxos_vrf:
+    name: test1
+    associated_interfaces:
+      - Ethernet2/3
+      - Ethernet2/5
+
+- name: Ensure VRF is tagged with interface Ethernet2/5 only (Removes from Ethernet2/3)
+  nxos_vrf:
+    name: test1
+    interfaces:
+      - Ethernet2/5
+
+- name: Delete VRF
+  nxos_vrf:
+    name: ntc
+    state: absent
+
+
+RETURN VALUES:
+
+commands:
+  description: commands sent to the device
+  returned: always
+  type: list
+  sample:
+    - vrf context ntc
+    - no shutdown
+    - interface Ethernet1/2
+    - no switchport
+    - vrf member test2
+

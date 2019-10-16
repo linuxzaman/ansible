@@ -1,0 +1,349 @@
+> CLOUDFORMATION    (/usr/lib/python2.7/dist-packages/ansible/modules/cloud/amazon/cloudformation.py)
+
+        Launches or updates an AWS CloudFormation stack and waits for it complete.
+
+  * This module is maintained by The Ansible Core Team
+OPTIONS (= is mandatory):
+
+- aws_access_key
+        AWS access key. If not set then the value of the AWS_ACCESS_KEY_ID, AWS_ACCESS_KEY or EC2_ACCESS_KEY environment variable is
+        used.
+        (Aliases: ec2_access_key, access_key)[Default: (null)]
+        type: str
+
+- aws_secret_key
+        AWS secret key. If not set then the value of the AWS_SECRET_ACCESS_KEY, AWS_SECRET_KEY, or EC2_SECRET_KEY environment variable is
+        used.
+        (Aliases: ec2_secret_key, secret_key)[Default: (null)]
+        type: str
+
+- backoff_delay
+        Number of seconds to wait for the next retry.
+        [Default: 3]
+        type: int
+        version_added: 2.8
+
+- backoff_max_delay
+        Maximum amount of time to wait between retries.
+        [Default: 30]
+        type: int
+        version_added: 2.8
+
+- backoff_retries
+        Number of times to retry operation.
+        AWS API throttling mechanism fails Cloudformation module so we have to retry a couple of times.
+        [Default: 10]
+        type: int
+        version_added: 2.8
+
+- capabilities
+        Specify capabilites that stack template contains.
+        Valid values are CAPABILITY_IAM, CAPABILITY_NAMED_IAM and CAPABILITY_AUTO_EXPAND.
+        [Default: [u'CAPABILITY_IAM', u'CAPABILITY_NAMED_IAM']]
+        type: list
+        version_added: 2.8
+
+- changeset_name
+        Name given to the changeset when creating a changeset, only used when create_changeset is true. By default a name prefixed with
+        Ansible-STACKNAME is generated based on input parameters. See the AWS Change Sets docs
+        https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/using-cfn-updating-stacks-changesets.html
+        [Default: (null)]
+        version_added: 2.4
+
+- create_changeset
+        If stack already exists create a changeset instead of directly applying changes. See the AWS Change Sets docs
+        https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/using-cfn-updating-stacks-changesets.html. WARNING: if the stack
+        does not exist, it will be created without changeset. If the state is absent, the stack will be deleted immediately with no
+        changeset.
+        [Default: no]
+        type: bool
+        version_added: 2.4
+
+- create_timeout
+        The amount of time (in minutes) that can pass before the stack status becomes CREATE_FAILED
+        [Default: (null)]
+        version_added: 2.6
+
+- debug_botocore_endpoint_logs
+        Use a botocore.endpoint logger to parse the unique (rather than total) "resource:action" API calls made during a task, outputing
+        the set to the resource_actions key in the task results. Use the aws_resource_action callback to output to total list made during
+        a playbook. The ANSIBLE_DEBUG_BOTOCORE_LOGS environment variable may also be used.
+        [Default: no]
+        type: bool
+        version_added: 2.8
+
+- disable_rollback
+        If a stacks fails to form, rollback will remove the stack
+        [Default: no]
+        type: bool
+
+- ec2_url
+        Url to use to connect to EC2 or your Eucalyptus cloud (by default the module will use EC2 endpoints). Ignored for modules where
+        region is required. Must be specified for all other modules if region is not used. If not set then the value of the EC2_URL
+        environment variable, if any, is used.
+        [Default: (null)]
+        type: str
+
+- events_limit
+        Maximum number of CloudFormation events to fetch from a stack when creating or updating it.
+        [Default: 200]
+        version_added: 2.7
+
+- notification_arns
+        The Simple Notification Service (SNS) topic ARNs to publish stack related events.
+        [Default: (null)]
+        version_added: 2.0
+
+- profile
+        Uses a boto profile. Only works with boto >= 2.24.0.
+        [Default: (null)]
+        type: str
+        version_added: 1.6
+
+- region
+        The AWS region to use. If not specified then the value of the AWS_REGION or EC2_REGION environment variable, if any, is used. See
+        http://docs.aws.amazon.com/general/latest/gr/rande.html#ec2_region
+        (Aliases: aws_region, ec2_region)[Default: (null)]
+        type: str
+
+- role_arn
+        The role that AWS CloudFormation assumes to create the stack. See the AWS CloudFormation Service Role docs
+        https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/using-iam-servicerole.html
+        [Default: (null)]
+        version_added: 2.3
+
+- security_token
+        AWS STS security token. If not set then the value of the AWS_SECURITY_TOKEN or EC2_SECURITY_TOKEN environment variable is used.
+        (Aliases: access_token)[Default: (null)]
+        type: str
+        version_added: 1.6
+
+= stack_name
+        name of the cloudformation stack
+
+
+- stack_policy
+        the path of the cloudformation stack policy. A policy cannot be removed once placed, but it can be modified. for instance, allow
+        all updates https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/protect-stack-resources.html#d0e9051
+        [Default: (null)]
+        version_added: 1.9
+
+- state
+        If state is "present", stack will be created.  If state is "present" and if stack exists and template has changed, it will be
+        updated. If state is "absent", stack will be removed.
+        (Choices: present, absent)[Default: present]
+
+- tags
+        Dictionary of tags to associate with stack and its resources during stack creation. Can be updated later, updating tags removes
+        previous entries.
+        [Default: (null)]
+        version_added: 1.4
+
+- template
+        The local path of the cloudformation template.
+        This must be the full path to the file, relative to the working directory. If using roles this may look like
+        "roles/cloudformation/files/cloudformation-example.json".
+        If 'state' is 'present' and the stack does not exist yet, either 'template', 'template_body' or 'template_url' must be specified
+        (but only one of them). If 'state' is 'present', the stack does exist, and neither 'template', 'template_body' nor 'template_url'
+        are specified, the previous template will be reused.
+        [Default: (null)]
+
+- template_body
+        Template body. Use this to pass in the actual body of the Cloudformation template.
+        If 'state' is 'present' and the stack does not exist yet, either 'template', 'template_body' or 'template_url' must be specified
+        (but only one of them). If 'state' is present, the stack does exist, and neither 'template', 'template_body' nor 'template_url'
+        are specified, the previous template will be reused.
+        [Default: (null)]
+        version_added: 2.5
+
+- template_format
+        (deprecated) For local templates, allows specification of json or yaml format. Templates are now passed raw to CloudFormation
+        regardless of format. This parameter is ignored since Ansible 2.3.
+        (Choices: json, yaml)[Default: json]
+        version_added: 2.0
+
+- template_parameters
+        A list of hashes of all the template variables for the stack. The value can be a string or a dict.
+        Dict can be used to set additional template parameter attributes like UsePreviousValue (see example).
+        [Default: {}]
+
+- template_url
+        Location of file containing the template body. The URL must point to a template (max size 307,200 bytes) located in an S3 bucket
+        in the same region as the stack.
+        If 'state' is 'present' and the stack does not exist yet, either 'template', 'template_body' or 'template_url' must be specified
+        (but only one of them). If 'state' is present, the stack does exist, and neither 'template', 'template_body' nor 'template_url'
+        are specified, the previous template will be reused.
+        [Default: (null)]
+        version_added: 2.0
+
+- termination_protection
+        enable or disable termination protection on the stack. Only works with botocore >= 1.7.18.
+        [Default: (null)]
+        type: bool
+        version_added: 2.5
+
+- validate_certs
+        When set to "no", SSL certificates will not be validated for boto versions >= 2.6.0.
+        [Default: True]
+        type: bool
+        version_added: 1.5
+
+
+NOTES:
+      * Cloudformation features change often, and this module tries to keep up. That means your botocore version should be fresh.
+        The version listed in the requirements is the oldest version that works with the module as a whole. Some features may
+        require recent versions, and we do not pinpoint a minimum version for each feature. Instead of relying on the minimum
+        version, keep botocore up to date. AWS is always releasing features and fixing bugs.
+      * If parameters are not set within the module, the following environment variables can be used in decreasing order of
+        precedence `AWS_URL' or `EC2_URL', `AWS_ACCESS_KEY_ID' or `AWS_ACCESS_KEY' or `EC2_ACCESS_KEY', `AWS_SECRET_ACCESS_KEY' or
+        `AWS_SECRET_KEY' or `EC2_SECRET_KEY', `AWS_SECURITY_TOKEN' or `EC2_SECURITY_TOKEN', `AWS_REGION' or `EC2_REGION'
+      * Ansible uses the boto configuration file (typically ~/.boto) if no credentials are provided. See
+        https://boto.readthedocs.io/en/latest/boto_config_tut.html
+      * `AWS_REGION' or `EC2_REGION' can be typically be used to specify the AWS region, when required, but this can also be
+        configured in the boto config file
+
+
+REQUIREMENTS:  boto, boto3, botocore>=1.5.45, python >= 2.6
+
+AUTHOR: James S. Martin (@jsmartin)
+        METADATA:
+          status:
+          - stableinterface
+          supported_by: core
+        
+
+EXAMPLES:
+
+- name: create a cloudformation stack
+  cloudformation:
+    stack_name: "ansible-cloudformation"
+    state: "present"
+    region: "us-east-1"
+    disable_rollback: true
+    template: "files/cloudformation-example.json"
+    template_parameters:
+      KeyName: "jmartin"
+      DiskType: "ephemeral"
+      InstanceType: "m1.small"
+      ClusterSize: 3
+    tags:
+      Stack: "ansible-cloudformation"
+
+# Basic role example
+- name: create a stack, specify role that cloudformation assumes
+  cloudformation:
+    stack_name: "ansible-cloudformation"
+    state: "present"
+    region: "us-east-1"
+    disable_rollback: true
+    template: "roles/cloudformation/files/cloudformation-example.json"
+    role_arn: 'arn:aws:iam::123456789012:role/cloudformation-iam-role'
+
+- name: delete a stack
+  cloudformation:
+    stack_name: "ansible-cloudformation-old"
+    state: "absent"
+
+# Create a stack, pass in template from a URL, disable rollback if stack creation fails,
+# pass in some parameters to the template, provide tags for resources created
+- name: create a stack, pass in the template via an URL
+  cloudformation:
+    stack_name: "ansible-cloudformation"
+    state: present
+    region: us-east-1
+    disable_rollback: true
+    template_url: https://s3.amazonaws.com/my-bucket/cloudformation.template
+    template_parameters:
+      KeyName: jmartin
+      DiskType: ephemeral
+      InstanceType: m1.small
+      ClusterSize: 3
+    tags:
+      Stack: ansible-cloudformation
+
+# Create a stack, passing in template body using lookup of Jinja2 template, disable rollback if stack creation fails,
+# pass in some parameters to the template, provide tags for resources created
+- name: create a stack, pass in the template body via lookup template
+  cloudformation:
+    stack_name: "ansible-cloudformation"
+    state: present
+    region: us-east-1
+    disable_rollback: true
+    template_body: "{{ lookup('template', 'cloudformation.j2') }}"
+    template_parameters:
+      KeyName: jmartin
+      DiskType: ephemeral
+      InstanceType: m1.small
+      ClusterSize: 3
+    tags:
+      Stack: ansible-cloudformation
+
+# Pass a template parameter which uses Cloudformation's UsePreviousValue attribute
+# When use_previous_value is set to True, the given value will be ignored and
+# Cloudformation will use the value from a previously submitted template.
+# If use_previous_value is set to False (default) the given value is used.
+- cloudformation:
+    stack_name: "ansible-cloudformation"
+    state: "present"
+    region: "us-east-1"
+    template: "files/cloudformation-example.json"
+    template_parameters:
+      DBSnapshotIdentifier:
+        use_previous_value: True
+        value: arn:aws:rds:es-east-1:000000000000:snapshot:rds:my-db-snapshot
+      DBName:
+        use_previous_value: True
+    tags:
+      Stack: "ansible-cloudformation"
+
+# Enable termination protection on a stack.
+# If the stack already exists, this will update its termination protection
+- name: enable termination protection during stack creation
+  cloudformation:
+    stack_name: my_stack
+    state: present
+    template_url: https://s3.amazonaws.com/my-bucket/cloudformation.template
+    termination_protection: yes
+
+# Configure TimeoutInMinutes before the stack status becomes CREATE_FAILED
+# In this case, if disable_rollback is not set or is set to false, the stack will be rolled back.
+- name: enable termination protection during stack creation
+  cloudformation:
+    stack_name: my_stack
+    state: present
+    template_url: https://s3.amazonaws.com/my-bucket/cloudformation.template
+    create_timeout: 5
+
+
+RETURN VALUES:
+
+events:
+  type: list
+  description: Most recent events in Cloudformation's event log. This may be from a previous run in some cases.
+  returned: always
+  sample: ["StackEvent AWS::CloudFormation::Stack stackname UPDATE_COMPLETE", "StackEvent AWS::CloudFormation::Stack stackname UPDATE_COMPLETE_CLEANUP_IN_PROGRESS"]
+log:
+  description: Debugging logs. Useful when modifying or finding an error.
+  returned: always
+  type: list
+  sample: ["updating stack"]
+stack_resources:
+  description: AWS stack resources and their status. List of dictionaries, one dict per resource.
+  returned: state == present
+  type: list
+  sample: [
+          {
+              "last_updated_time": "2016-10-11T19:40:14.979000+00:00",
+              "logical_resource_id": "CFTestSg",
+              "physical_resource_id": "cloudformation2-CFTestSg-16UQ4CYQ57O9F",
+              "resource_type": "AWS::EC2::SecurityGroup",
+              "status": "UPDATE_COMPLETE",
+              "status_reason": null
+          }
+      ]
+stack_outputs:
+  type: dict
+  description: A key:value dictionary of all the stack outputs currently defined. If there are no stack outputs, it is an empty dictionary.
+  returned: state == present
+  sample: {"MySg": "AnsibleModuleTestYAML-CFTestSg-C8UVS567B6NS"}
+

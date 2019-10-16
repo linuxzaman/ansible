@@ -1,0 +1,40 @@
+EXAMPLES:
+
+# Examples don't contain auth parameter for simplicity,
+# look at ovirt_auth module to see how to reuse authentication:
+
+# Create(if not exists) and assign affinity label to vms vm1 and vm2 and host host1
+- ovirt_affinity_label:
+    name: mylabel
+    cluster: mycluster
+    vms:
+      - vm1
+      - vm2
+    hosts:
+      - host1
+
+# To detach all VMs from label
+- ovirt_affinity_label:
+    name: mylabel
+    cluster: mycluster
+    vms: []
+
+# Remove affinity label
+- ovirt_affinity_label:
+    state: absent
+    name: mylabel
+
+
+RETURN VALUES:
+
+id:
+    description: ID of the affinity label which is managed
+    returned: On success if affinity label is found.
+    type: str
+    sample: 7de90f31-222c-436c-a1ca-7e655bd5b60c
+affinity_label:
+    description: "Dictionary of all the affinity label attributes. Affinity label attributes can be found on your oVirt/RHV instance
+                  at following url: http://ovirt.github.io/ovirt-engine-api-model/master/#types/affinity_label."
+    type: dict
+    returned: On success if affinity label is found.
+

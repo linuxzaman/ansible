@@ -1,0 +1,66 @@
+EXAMPLES:
+
+- name: Add a Image Store (NFS)
+  cs_image_store:
+    zone: zone-01
+    name: nfs-01
+    provider: NFS
+    url: nfs://192.168.21.16/exports/secondary
+  delegate_to: localhost
+
+# Change the NFS share URL and force a Image Store recreation
+- name: Change the NFS url
+  cs_image_store:
+    zone: zone-01
+    name: nfs-01
+    provider: NFS
+    force_recreate: yes
+    url: nfs://192.168.21.10/shares/secondary
+  delegate_to: localhost
+
+- name: delete the image store
+  cs_image_store:
+    name: nfs-01
+    zone: zone-01
+    state: absent
+  delegate_to: localhost
+
+
+RETURN VALUES:
+
+id:
+  description: the ID of the image store
+  type: str
+  returned: success
+  sample: feb11a84-a093-45eb-b84d-7f680313c40b
+name:
+  description: the name of the image store
+  type: str
+  returned: success
+  sample: nfs-01
+protocol:
+  description: the protocol of the image store
+  type: str
+  returned: success
+  sample: nfs
+provider_name:
+  description: the provider name of the image store
+  type: str
+  returned: success
+  sample: NFS
+scope:
+  description: the scope of the image store
+  type: str
+  returned: success
+  sample: ZONE
+url:
+  description: the url of the image store
+  type: str
+  sample: nfs://192.168.21.16/exports/secondary
+  returned: success
+zone:
+  description: the Zone name of the image store
+  type: str
+  returned: success
+  sample: zone-01
+

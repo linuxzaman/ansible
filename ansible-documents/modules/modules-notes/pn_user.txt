@@ -1,0 +1,88 @@
+> PN_USER    (/usr/lib/python2.7/dist-packages/ansible/modules/network/netvisor/pn_user.py)
+
+        This module can be used to create a user and apply a role, update a user and delete a user.
+
+  * This module is maintained by The Ansible Community
+OPTIONS (= is mandatory):
+
+- pn_cliswitch
+        Target switch to run the CLI on.
+        [Default: (null)]
+        type: str
+
+- pn_initial_role
+        initial role for user.
+        [Default: (null)]
+        type: str
+
+- pn_name
+        username.
+        [Default: (null)]
+        type: str
+
+- pn_password
+        plain text password.
+        [Default: (null)]
+        type: str
+
+- pn_scope
+        local or fabric.
+        (Choices: local, fabric)[Default: (null)]
+        type: str
+
+= state
+        State the action to perform. Use `present' to create user and `absent' to delete user `update' to update user.
+        (Choices: present, absent, update)
+        type: str
+
+
+AUTHOR: Pluribus Networks (@rajaspachipulusu17)
+        METADATA:
+          status:
+          - preview
+          supported_by: community
+        
+
+EXAMPLES:
+
+- name: Create user
+  pn_user:
+    pn_cliswitch: "sw01"
+    state: "present"
+    pn_scope: "fabric"
+    pn_password: "foo123"
+    pn_name: "foo"
+
+- name: Delete user
+  pn_user:
+    pn_cliswitch: "sw01"
+    state: "absent"
+    pn_name: "foo"
+
+- name: Modify user
+  pn_user:
+    pn_cliswitch: "sw01"
+    state: "update"
+    pn_password: "test1234"
+    pn_name: "foo"
+
+
+RETURN VALUES:
+
+command:
+  description: the CLI command run on the target node.
+  returned: always
+  type: str
+stdout:
+  description: set of responses from the user command.
+  returned: always
+  type: list
+stderr:
+  description: set of error responses from the user command.
+  returned: on error
+  type: list
+changed:
+  description: indicates whether the CLI caused changes on the target.
+  returned: always
+  type: bool
+

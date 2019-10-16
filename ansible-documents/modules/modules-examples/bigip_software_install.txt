@@ -1,0 +1,29 @@
+EXAMPLES:
+
+- name: Ensure an existing image is installed in specified volume
+  bigip_software_install:
+    image: BIGIP-13.0.0.0.0.1645.iso
+    volume: HD1.2
+    state: installed
+    provider:
+      password: secret
+      server: lb.mydomain.com
+      user: admin
+  delegate_to: localhost
+
+- name: Ensure an existing image is activated in specified volume
+  bigip_software_install:
+    image: BIGIP-13.0.0.0.0.1645.iso
+    state: activated
+    volume: HD1.2
+    provider:
+      password: secret
+      server: lb.mydomain.com
+      user: admin
+  delegate_to: localhost
+
+
+RETURN VALUES:
+
+# only common fields returned
+

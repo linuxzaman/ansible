@@ -1,0 +1,90 @@
+EXAMPLES:
+
+# Note: These examples do not set authentication details, see the AWS Guide for details.
+
+- name: Create a role with description
+  iam_role:
+    name: mynewrole
+    assume_role_policy_document: "{{ lookup('file','policy.json') }}"
+    description: This is My New Role
+
+- name: "Create a role and attach a managed policy called 'PowerUserAccess'"
+  iam_role:
+    name: mynewrole
+    assume_role_policy_document: "{{ lookup('file','policy.json') }}"
+    managed_policy:
+      - arn:aws:iam::aws:policy/PowerUserAccess
+
+- name: Keep the role created above but remove all managed policies
+  iam_role:
+    name: mynewrole
+    assume_role_policy_document: "{{ lookup('file','policy.json') }}"
+    managed_policy: []
+
+- name: Delete the role
+  iam_role:
+    name: mynewrole
+    assume_role_policy_document: "{{ lookup('file', 'policy.json') }}"
+    state: absent
+
+
+RETURN VALUES:
+
+iam_role:
+    description: dictionary containing the IAM Role data
+    returned: success
+    type: complex
+    contains:
+        path:
+            description: the path to the role
+            type: str
+            returned: always
+            sample: /
+        role_name:
+            description: the friendly name that identifies the role
+            type: str
+            returned: always
+            sample: myrole
+        role_id:
+            description: the stable and unique string identifying the role
+            type: str
+            returned: always
+            sample: ABCDEFF4EZ4ABCDEFV4ZC
+        arn:
+            description: the Amazon Resource Name (ARN) specifying the role
+            type: str
+            returned: always
+            sample: "arn:aws:iam::1234567890:role/mynewrole"
+        create_date:
+            description: the date and time, in ISO 8601 date-time format, when the role was created
+            type: str
+            returned: always
+            sample: "2016-08-14T04:36:28+00:00"
+        assume_role_policy_document:
+            description: the policy that grants an entity permission to assume the role
+            type: str
+            returned: always
+            sample: {
+                        'statement': [
+                            {
+                                'action': 'sts:AssumeRole',
+                                'effect': 'Allow',
+                                'principal': {
+                                    'service': 'ec2.amazonaws.com'
+                                },
+                                'sid': ''
+                            }
+                        ],
+                        'version': '2012-10-17'
+                    }
+        attached_policies:
+            description: a list of dicts containing the name and ARN of the managed IAM policies attached to the role
+            type: list
+            returned: always
+            sample: [
+                {
+                    'policy_arn': 'arn:aws:iam::aws:policy/PowerUserAccess',
+                    'policy_name': 'PowerUserAccess'
+                }
+            ]
+

@@ -1,0 +1,243 @@
+> TOWER_JOB_TEMPLATE    (/usr/lib/python2.7/dist-packages/ansible/modules/web_infrastructure/ansible_tower/tower_job_template.py)
+
+        Create, update, or destroy Ansible Tower job templates. See https://www.ansible.com/tower for an overview.
+
+  * This module is maintained by The Ansible Community
+OPTIONS (= is mandatory):
+
+- ask_credential
+        Prompt user for credential on launch.
+        [Default: no]
+        type: bool
+
+- ask_diff_mode
+        Prompt user to enable diff mode (show changes) to files when supported by modules.
+        [Default: no]
+        type: bool
+        version_added: 2.7
+        
+
+- ask_extra_vars
+        Prompt user for (extra_vars) on launch.
+        [Default: no]
+        type: bool
+
+- ask_inventory
+        Propmt user for inventory on launch.
+        [Default: no]
+        type: bool
+
+- ask_job_type
+        Prompt user for job type on launch.
+        [Default: no]
+        type: bool
+
+- ask_limit
+        Prompt user for a limit on launch.
+        [Default: no]
+        type: bool
+        version_added: 2.7
+        
+
+- ask_skip_tags
+        Prompt user for job tags to skip on launch.
+        [Default: no]
+        type: bool
+        version_added: 2.7
+        
+
+- ask_tags
+        Prompt user for job tags on launch.
+        [Default: no]
+        type: bool
+
+- ask_verbosity
+        Prompt user to choose a verbosity level on launch.
+        [Default: no]
+        type: bool
+        version_added: 2.7
+        
+
+- become_enabled
+        Activate privilege escalation.
+        [Default: no]
+        type: bool
+
+- concurrent_jobs_enabled
+        Allow simultaneous runs of the job template.
+        [Default: no]
+        type: bool
+        version_added: 2.7
+        
+
+- credential
+        Name of the credential to use for the job template.
+        [Default: (null)]
+        version_added: 2.7
+        
+
+- description
+        Description to use for the job template.
+        [Default: (null)]
+
+- diff_mode_enabled
+        Enable diff mode for the job template.
+        [Default: no]
+        type: bool
+        version_added: 2.7
+        
+
+- extra_vars_path
+        Path to the `extra_vars' YAML file.
+        [Default: (null)]
+
+- fact_caching_enabled
+        Enable use of fact caching for the job template.
+        [Default: no]
+        type: bool
+        version_added: 2.7
+        
+
+- force_handlers_enabled
+        Enable forcing playbook handlers to run even if a task fails.
+        [Default: no]
+        type: bool
+        version_added: 2.7
+        
+
+- forks
+        The number of parallel or simultaneous processes to use while executing the playbook.
+        [Default: (null)]
+
+- host_config_key
+        Allow provisioning callbacks using this host config key.
+        [Default: (null)]
+
+- inventory
+        Name of the inventory to use for the job template.
+        [Default: (null)]
+
+- job_tags
+        Comma separated list of the tags to use for the job template.
+        [Default: (null)]
+
+= job_type
+        The job type to use for the job template.
+        (Choices: run, check, scan)
+
+- limit
+        A host pattern to further constrain the list of hosts managed or affected by the playbook
+        [Default: (null)]
+
+= name
+        Name to use for the job template.
+
+
+= playbook
+        Path to the playbook to use for the job template within the project provided.
+
+
+= project
+        Name of the project to use for the job template.
+
+
+- skip_tags
+        Comma separated list of the tags to skip for the job template.
+        [Default: (null)]
+
+- start_at_task
+        Start the playbook at the task matching this name.
+        [Default: (null)]
+        version_added: 2.7
+        
+
+- state
+        Desired state of the resource.
+        (Choices: present, absent)[Default: present]
+
+- survey_enabled
+        Enable a survey on the job template.
+        [Default: no]
+        type: bool
+        version_added: 2.7
+        
+
+- survey_spec
+        JSON/YAML dict formatted survey definition.
+        [Default: (null)]
+        type: dict
+        version_added: 2.8
+        
+
+- tower_config_file
+        Path to the Tower config file.
+        [Default: (null)]
+        type: path
+
+- tower_host
+        URL to your Tower instance.
+        [Default: (null)]
+        type: str
+
+- tower_password
+        Password for your Tower instance.
+        [Default: (null)]
+        type: str
+
+- tower_username
+        Username for your Tower instance.
+        [Default: (null)]
+        type: str
+
+- validate_certs
+        Whether to allow insecure connections to Tower.
+        If `no', SSL certificates will not be validated.
+        This should only be used on personally controlled sites using self-signed certificates.
+        (Aliases: tower_verify_ssl)[Default: (null)]
+        type: bool
+
+- vault_credential
+        Name of the vault credential to use for the job template.
+        [Default: (null)]
+        version_added: 2.7
+        
+
+- verbosity
+        Control the output level Ansible produces as the playbook runs. 0 - Normal, 1 - Verbose, 2 - More Verbose, 3 - Debug, 4 -
+        Connection Debug.
+        (Choices: 0, 1, 2, 3, 4)[Default: 0]
+
+
+NOTES:
+      * JSON for survey_spec can be found in Tower API Documentation. See https://docs.ansible.com/ansible-
+        tower/latest/html/towerapi/api_ref.html#/Job_Templates/Job_Templates_job_templates_survey_spec_create for POST operation
+        payload example.
+      * If no `config_file' is provided we will attempt to use the tower-cli library defaults to find your Tower host information.
+      * `config_file' should contain Tower configuration in the following format host=hostname username=username password=password
+
+
+REQUIREMENTS:  ansible-tower-cli >= 3.0.2
+
+AUTHOR: Wayne Witzel III (@wwitzel3)
+        METADATA:
+          status:
+          - preview
+          supported_by: community
+        
+
+EXAMPLES:
+
+- name: Create tower Ping job template
+  tower_job_template:
+    name: "Ping"
+    job_type: "run"
+    inventory: "Local"
+    project: "Demo"
+    playbook: "ping.yml"
+    credential: "Local"
+    state: "present"
+    tower_config_file: "~/tower_cli.cfg"
+    survey_enabled: yes
+    survey_spec: "{{ lookup('file', 'my_survey.json') }}"
+
+

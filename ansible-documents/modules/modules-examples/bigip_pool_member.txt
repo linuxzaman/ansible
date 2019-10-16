@@ -1,0 +1,202 @@
+EXAMPLES:
+
+- name: Add pool member
+  bigip_pool_member:
+    pool: my-pool
+    partition: Common
+    host: "{{ ansible_default_ipv4['address'] }}"
+    port: 80
+    description: web server
+    connection_limit: 100
+    rate_limit: 50
+    ratio: 2
+    provider:
+      server: lb.mydomain.com
+      user: admin
+      password: secret
+  delegate_to: localhost
+
+- name: Modify pool member ratio and description
+  bigip_pool_member:
+    pool: my-pool
+    partition: Common
+    host: "{{ ansible_default_ipv4['address'] }}"
+    port: 80
+    ratio: 1
+    description: nginx server
+    provider:
+      server: lb.mydomain.com
+      user: admin
+      password: secret
+  delegate_to: localhost
+
+- name: Remove pool member from pool
+  bigip_pool_member:
+    state: absent
+    pool: my-pool
+    partition: Common
+    host: "{{ ansible_default_ipv4['address'] }}"
+    port: 80
+    provider:
+      server: lb.mydomain.com
+      user: admin
+      password: secret
+  delegate_to: localhost
+
+- name: Force pool member offline
+  bigip_pool_member:
+    state: forced_offline
+    pool: my-pool
+    partition: Common
+    host: "{{ ansible_default_ipv4['address'] }}"
+    port: 80
+    provider:
+      server: lb.mydomain.com
+      user: admin
+      password: secret
+  delegate_to: localhost
+
+- name: Create members with priority groups
+  bigip_pool_member:
+    pool: my-pool
+    partition: Common
+    host: "{{ item.address }}"
+    name: "{{ item.name }}"
+    priority_group: "{{ item.priority_group }}"
+    port: 80
+    provider:
+      server: lb.mydomain.com
+      user: admin
+      password: secret
+  delegate_to: localhost
+  loop:
+    - address: 1.1.1.1
+      name: web1
+      priority_group: 4
+    - address: 2.2.2.2
+      name: web2
+      priority_group: 3
+    - address: 3.3.3.3
+      name: web3
+      priority_group: 2
+    - address: 4.4.4.4
+      name: web4
+      priority_group: 1
+
+- name: Add pool members aggregate
+  bigip_pool_member:
+    pool: my-pool
+    aggregate:
+      - host: 192.168.1.1
+        partition: Common
+        port: 80
+        description: web server
+        connection_limit: 100
+        rate_limit: 50
+        ratio: 2
+      - host: 192.168.1.2
+        partition: Common
+        port: 80
+        description: web server
+        connection_limit: 100
+        rate_limit: 50
+        ratio: 2
+      - host: 192.168.1.3
+        partition: Common
+        port: 80
+        description: web server
+        connection_limit: 100
+        rate_limit: 50
+        ratio: 2
+    provider:
+      server: lb.mydomain.com
+      user: admin
+      password: secret
+  delegate_to: localhost
+
+- name: Add pool members aggregate, remove non aggregates
+  bigip_pool_member:
+    pool: my-pool
+    aggregate:
+      - host: 192.168.1.1
+        partition: Common
+        port: 80
+        description: web server
+        connection_limit: 100
+        rate_limit: 50
+        ratio: 2
+      - host: 192.168.1.2
+        partition: Common
+        port: 80
+        description: web server
+        connection_limit: 100
+        rate_limit: 50
+        ratio: 2
+      - host: 192.168.1.3
+        partition: Common
+        port: 80
+        description: web server
+        connection_limit: 100
+        rate_limit: 50
+        ratio: 2
+    replace_all_with: yes
+    provider:
+      server: lb.mydomain.com
+      user: admin
+      password: secret
+  delegate_to: localhost
+
+
+RETURN VALUES:
+
+rate_limit:
+  description: The new rate limit, in connections per second, of the pool member.
+  returned: changed
+  type: int
+  sample: 100
+connection_limit:
+  description: The new connection limit of the pool member
+  returned: changed
+  type: int
+  sample: 1000
+description:
+  description: The new description of pool member.
+  returned: changed
+  type: str
+  sample: My pool member
+ratio:
+  description: The new pool member ratio weight.
+  returned: changed
+  type: int
+  sample: 50
+priority_group:
+  description: The new priority group.
+  returned: changed
+  type: int
+  sample: 3
+fqdn_auto_populate:
+  description: Whether FQDN auto population was set on the member or not.
+  returned: changed
+  type: bool
+  sample: True
+fqdn:
+  description: The FQDN of the pool member.
+  returned: changed
+  type: str
+  sample: foo.bar.com
+address:
+  description: The address of the pool member.
+  returned: changed
+  type: str
+  sample: 1.2.3.4
+monitors:
+  description: The new list of monitors for the resource.
+  returned: changed
+  type: list
+  sample: ['/Common/monitor1', '/Common/monitor2']
+replace_all_with:
+  description: Purges all non-aggregate pool members from device
+  returned: changed
+  type: bool
+  sample: yes
+

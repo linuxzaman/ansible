@@ -1,0 +1,211 @@
+> NIOS_FIXED_ADDRESS    (/usr/lib/python2.7/dist-packages/ansible/modules/net_tools/nios/nios_fixed_address.py)
+
+        A fixed address is a specific IP address that a DHCP server always assigns when a lease request comes from a particular MAC
+        address of the clien. Supports both IPV4 and IPV6 internet protocols
+
+  * This module is maintained by an Ansible Partner
+OPTIONS (= is mandatory):
+
+- comment
+        Configures a text string comment to be associated with the instance of this object.  The provided text string will be configured
+        on the object instance.
+        [Default: (null)]
+
+- extattrs
+        Allows for the configuration of Extensible Attributes on the instance of the object.  This argument accepts a set of key / value
+        pairs for configuration.
+        [Default: (null)]
+
+= ipaddr
+        IPV4/V6 address of the fixed address.
+
+
+= mac
+        The MAC address of the interface.
+
+
+- name
+        Specifies the hostname with which fixed DHCP ip-address is stored for respective mac.
+        [Default: (null)]
+
+= network
+        Specifies the network range in which ipaddr exists.
+        (Aliases: network)
+
+- network_view
+        Configures the name of the network view to associate with this configured instance.
+        [Default: default]
+
+- options
+        Configures the set of DHCP options to be included as part of the configured network instance.  This argument accepts a list of
+        values (see suboptions).  When configuring suboptions at least one of `name' or `num' must be specified.
+        [Default: (null)]
+        suboptions:
+          name:
+            description:
+            - The name of the DHCP option to configure
+          num:
+            description:
+            - The number of the DHCP option to configure
+          use_option:
+            default: 'yes'
+            description:
+            - Only applies to a subset of options (see NIOS API documentation)
+            type: bool
+          value:
+            description:
+            - The value of the DHCP option specified by `name'
+            required: true
+          vendor_class:
+            default: DHCP
+            description:
+            - The name of the space this DHCP option is associated to
+        
+
+- provider
+        A dict object containing connection details.
+        [Default: (null)]
+        suboptions:
+          host:
+            description:
+            - Specifies the DNS host name or address for connecting to the remote instance
+              of NIOS WAPI over REST
+            - Value can also be specified using `INFOBLOX_HOST' environment variable.
+            required: true
+            type: str
+          http_request_timeout:
+            default: 10
+            description:
+            - The amount of time before to wait before receiving a response
+            - Value can also be specified using `INFOBLOX_HTTP_REQUEST_TIMEOUT' environment
+              variable.
+            type: int
+          max_results:
+            default: 1000
+            description:
+            - Specifies the maximum number of objects to be returned, if set to a negative
+              number the appliance will return an error when the number of returned objects
+              would exceed the setting.
+            - Value can also be specified using `INFOBLOX_MAX_RESULTS' environment variable.
+            type: int
+          max_retries:
+            default: 3
+            description:
+            - Configures the number of attempted retries before the connection is declared
+              usable
+            - Value can also be specified using `INFOBLOX_MAX_RETRIES' environment variable.
+            type: int
+          password:
+            description:
+            - Specifies the password to use to authenticate the connection to the remote instance
+              of NIOS.
+            - Value can also be specified using `INFOBLOX_PASSWORD' environment variable.
+            type: str
+          username:
+            description:
+            - Configures the username to use to authenticate the connection to the remote
+              instance of NIOS.
+            - Value can also be specified using `INFOBLOX_USERNAME' environment variable.
+            type: str
+          validate_certs:
+            aliases:
+            - ssl_verify
+            default: false
+            description:
+            - Boolean value to enable or disable verifying SSL certificates
+            - Value can also be specified using `INFOBLOX_SSL_VERIFY' environment variable.
+            type: bool
+          wapi_version:
+            default: '2.1'
+            description:
+            - Specifies the version of WAPI to use
+            - Value can also be specified using `INFOBLOX_WAP_VERSION' environment variable.
+            - Until ansible 2.8 the default WAPI was 1.4
+            type: str
+        
+        type: dict
+
+- state
+        Configures the intended state of the instance of the object on the NIOS server.  When this value is set to `present', the object
+        is configured on the device and when this value is set to `absent' the value is removed (if necessary) from the device.
+        (Choices: present, absent)[Default: present]
+
+
+NOTES:
+      * This module must be run locally, which can be achieved by specifying `connection: local'.
+      * Please read the :ref:`nios_guide` for more detailed information on how to use Infoblox with Ansible.
+
+
+REQUIREMENTS:  infoblox-client
+
+AUTHOR: Sumit Jaiswal (@sjaiswal)
+        METADATA:
+          status:
+          - preview
+          supported_by: certified
+        
+
+EXAMPLES:
+
+- name: configure ipv4 dhcp fixed address
+  nios_fixed_address:
+    name: ipv4_fixed
+    ipaddr: 192.168.10.1
+    mac: 08:6d:41:e8:fd:e8
+    network: 192.168.10.0/24
+    network_view: default
+    comment: this is a test comment
+    state: present
+    provider:
+      host: "{{ inventory_hostname_short }}"
+      username: admin
+      password: admin
+  connection: local
+- name: configure a ipv6 dhcp fixed address
+  nios_fixed_address:
+    name: ipv6_fixed
+    ipaddr: fe80::1/10
+    mac: 08:6d:41:e8:fd:e8
+    network: fe80::/64
+    network_view: default
+    comment: this is a test comment
+    state: present
+    provider:
+      host: "{{ inventory_hostname_short }}"
+      username: admin
+      password: admin
+  connection: local
+- name: set dhcp options for a ipv4 fixed address
+  nios_fixed_address:
+    name: ipv4_fixed
+    ipaddr: 192.168.10.1
+    mac: 08:6d:41:e8:fd:e8
+    network: 192.168.10.0/24
+    network_view: default
+    comment: this is a test comment
+    options:
+      - name: domain-name
+        value: ansible.com
+    state: present
+    provider:
+      host: "{{ inventory_hostname_short }}"
+      username: admin
+      password: admin
+  connection: local
+- name: remove a ipv4 dhcp fixed address
+  nios_fixed_address:
+    name: ipv4_fixed
+    ipaddr: 192.168.10.1
+    mac: 08:6d:41:e8:fd:e8
+    network: 192.168.10.0/24
+    network_view: default
+    state: absent
+    provider:
+      host: "{{ inventory_hostname_short }}"
+      username: admin
+      password: admin
+  connection: local
+
+
+RETURN VALUES:
+ # 

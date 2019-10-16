@@ -1,0 +1,346 @@
+> FORTIOS_SYSTEM_SDN_CONNECTOR    (/usr/lib/python2.7/dist-packages/ansible/modules/network/fortios/fortios_system_sdn_connector.py)
+
+        This module is able to configure a FortiGate or FortiOS by allowing the user to configure system feature and sdn_connector
+        category. Examples includes all options and need to be adjusted to datasources before usage. Tested with FOS v6.0.2
+
+  * This module is maintained by The Ansible Community
+OPTIONS (= is mandatory):
+
+= host
+        FortiOS or FortiGate ip address.
+
+
+- https
+        Indicates if the requests towards FortiGate must use HTTPS protocol
+        [Default: False]
+        type: bool
+
+- password
+        FortiOS or FortiGate password.
+        [Default: ]
+
+- system_sdn_connector
+        Configure connection to SDN Connector.
+        [Default: None]
+        suboptions:
+          access-key:
+            description:
+            - AWS access key ID.
+          azure-region:
+            choices:
+            - global
+            - china
+            - germany
+            - usgov
+            description:
+            - Azure server region.
+          client-id:
+            description:
+            - Azure client ID (application ID).
+          client-secret:
+            description:
+            - Azure client secret (application key).
+          compartment-id:
+            description:
+            - Compartment ID.
+          external-ip:
+            description:
+            - Configure GCP external IP.
+            suboptions:
+              name:
+                description:
+                - External IP name.
+                required: true
+          gcp-project:
+            description:
+            - GCP project name.
+          key-passwd:
+            description:
+            - Private key password.
+          name:
+            description:
+            - SDN connector name.
+            required: true
+          nic:
+            description:
+            - Configure Azure network interface.
+            suboptions:
+              ip:
+                description:
+                - Configure IP configuration.
+                suboptions:
+                  name:
+                    description:
+                    - IP configuration name.
+                    required: true
+                  public-ip:
+                    description:
+                    - Public IP name.
+              name:
+                description:
+                - Network interface name.
+                required: true
+          oci-cert:
+            description:
+            - OCI certificate. Source certificate.local.name.
+          oci-fingerprint:
+            description:
+            - OCI pubkey fingerprint.
+          oci-region:
+            choices:
+            - phoenix
+            - ashburn
+            - frankfurt
+            - london
+            description:
+            - OCI server region.
+          password:
+            description:
+            - Password of the remote SDN connector as login credentials.
+          private-key:
+            description:
+            - Private key of GCP service account.
+          region:
+            description:
+            - AWS region name.
+          resource-group:
+            description:
+            - Azure resource group.
+          route:
+            description:
+            - Configure GCP route.
+            suboptions:
+              name:
+                description:
+                - Route name.
+                required: true
+          route-table:
+            description:
+            - Configure Azure route table.
+            suboptions:
+              name:
+                description:
+                - Route table name.
+                required: true
+              route:
+                description:
+                - Configure Azure route.
+                suboptions:
+                  name:
+                    description:
+                    - Route name.
+                    required: true
+                  next-hop:
+                    description:
+                    - Next hop address.
+          secret-key:
+            description:
+            - AWS secret access key.
+          server:
+            description:
+            - Server address of the remote SDN connector.
+          server-port:
+            description:
+            - Port number of the remote SDN connector.
+          service-account:
+            description:
+            - GCP service account email.
+          state:
+            choices:
+            - present
+            - absent
+            description:
+            - Indicates whether to create or remove the object
+          status:
+            choices:
+            - disable
+            - enable
+            description:
+            - Enable/disable connection to the remote SDN connector.
+          subscription-id:
+            description:
+            - Azure subscription ID.
+          tenant-id:
+            description:
+            - Tenant ID (directory ID).
+          type:
+            choices:
+            - aci
+            - aws
+            - azure
+            - nsx
+            - nuage
+            - oci
+            - gcp
+            description:
+            - Type of SDN connector.
+          update-interval:
+            description:
+            - Dynamic object update interval (0 - 3600 sec, 0 means disabled, default = 60).
+          use-metadata-iam:
+            choices:
+            - disable
+            - enable
+            description:
+            - Enable/disable using IAM role from metadata to call API.
+          user-id:
+            description:
+            - User ID.
+          username:
+            description:
+            - Username of the remote SDN connector as login credentials.
+          vpc-id:
+            description:
+            - AWS VPC ID.
+        
+
+= username
+        FortiOS or FortiGate username.
+
+
+- vdom
+        Virtual domain, among those defined previously. A vdom is a virtual instance of the FortiGate that can be configured and used as
+        a different unit.
+        [Default: root]
+
+
+NOTES:
+      * Requires fortiosapi library developed by Fortinet
+      * Run as a local_action in your playbook
+
+
+REQUIREMENTS:  fortiosapi>=0.9.8
+
+AUTHOR: Miguel Angel Munoz (@mamunozgonzalez), Nicolas Thomas (@thomnico)
+        METADATA:
+          status:
+          - preview
+          supported_by: community
+        
+
+EXAMPLES:
+
+- hosts: localhost
+  vars:
+   host: "192.168.122.40"
+   username: "admin"
+   password: ""
+   vdom: "root"
+  tasks:
+  - name: Configure connection to SDN Connector.
+    fortios_system_sdn_connector:
+      host:  "{{  host }}"
+      username: "{{ username }}"
+      password: "{{ password }}"
+      vdom:  "{{  vdom }}"
+      system_sdn_connector:
+        state: "present"
+        access-key: "<your_own_value>"
+        azure-region: "global"
+        client-id: "<your_own_value>"
+        client-secret: "<your_own_value>"
+        compartment-id: "<your_own_value>"
+        external-ip:
+         -
+            name: "default_name_9"
+        gcp-project: "<your_own_value>"
+        key-passwd: "<your_own_value>"
+        name: "default_name_12"
+        nic:
+         -
+            ip:
+             -
+                name: "default_name_15"
+                public-ip: "<your_own_value>"
+            name: "default_name_17"
+        oci-cert: "<your_own_value> (source certificate.local.name)"
+        oci-fingerprint: "<your_own_value>"
+        oci-region: "phoenix"
+        password: "<your_own_value>"
+        private-key: "<your_own_value>"
+        region: "<your_own_value>"
+        resource-group: "<your_own_value>"
+        route:
+         -
+            name: "default_name_26"
+        route-table:
+         -
+            name: "default_name_28"
+            route:
+             -
+                name: "default_name_30"
+                next-hop: "<your_own_value>"
+        secret-key: "<your_own_value>"
+        server: "192.168.100.40"
+        server-port: "34"
+        service-account: "<your_own_value>"
+        status: "disable"
+        subscription-id: "<your_own_value>"
+        tenant-id: "<your_own_value>"
+        type: "aci"
+        update-interval: "40"
+        use-metadata-iam: "disable"
+        user-id: "<your_own_value>"
+        username: "<your_own_value>"
+        vpc-id: "<your_own_value>"
+
+
+RETURN VALUES:
+
+build:
+  description: Build number of the fortigate image
+  returned: always
+  type: str
+  sample: '1547'
+http_method:
+  description: Last method used to provision the content into FortiGate
+  returned: always
+  type: str
+  sample: 'PUT'
+http_status:
+  description: Last result given by FortiGate on last operation applied
+  returned: always
+  type: str
+  sample: "200"
+mkey:
+  description: Master key (id) used in the last call to FortiGate
+  returned: success
+  type: str
+  sample: "key1"
+name:
+  description: Name of the table used to fulfill the request
+  returned: always
+  type: str
+  sample: "urlfilter"
+path:
+  description: Path of the table used to fulfill the request
+  returned: always
+  type: str
+  sample: "webfilter"
+revision:
+  description: Internal revision number
+  returned: always
+  type: str
+  sample: "17.0.2.10658"
+serial:
+  description: Serial number of the unit
+  returned: always
+  type: str
+  sample: "FGVMEVYYQT3AB5352"
+status:
+  description: Indication of the operation's result
+  returned: always
+  type: str
+  sample: "success"
+vdom:
+  description: Virtual domain used
+  returned: always
+  type: str
+  sample: "root"
+version:
+  description: Version of the FortiGate
+  returned: always
+  type: str
+  sample: "v5.6.3"
+
+

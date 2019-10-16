@@ -1,0 +1,31 @@
+EXAMPLES:
+
+- name: Add two syslog server configurations to NetApp E-Series storage array.
+      netapp_e_syslog:
+        state: present
+        address: "{{ item }}"
+        port: 514
+        protocol: tcp
+        component: "auditLog"
+        api_url: "10.1.1.1:8443"
+        api_username: "admin"
+        api_password: "myPass"
+      loop:
+        - "192.168.1.1"
+        - "192.168.1.100"
+
+
+RETURN VALUES:
+
+msg:
+    description: Success message
+    returned: on success
+    type: str
+    sample: The settings have been updated.
+syslog:
+    description:
+        - True if syslog server configuration has been added to e-series storage array.
+    returned: on success
+    sample: True
+    type: bool
+

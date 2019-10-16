@@ -1,0 +1,50 @@
+EXAMPLES:
+
+- name: Create a category
+  vmware_category:
+    hostname: "{{ vcenter_server }}"
+    username: "{{ vcenter_user }}"
+    password: "{{ vcenter_pass }}"
+    category_name: Sample_Cat_0001
+    category_description: Sample Description
+    category_cardinality: 'multiple'
+    state: present
+
+- name: Rename category
+  vmware_category:
+    hostname: "{{ vcenter_server }}"
+    username: "{{ vcenter_user }}"
+    password: "{{ vcenter_pass }}"
+    category_name: Sample_Category_0001
+    new_category_name: Sample_Category_0002
+    state: present
+
+- name: Update category description
+  vmware_category:
+    hostname: "{{ vcenter_server }}"
+    username: "{{ vcenter_user }}"
+    password: "{{ vcenter_pass }}"
+    category_name: Sample_Category_0001
+    category_description: Some fancy description
+    state: present
+
+- name: Delete category
+  vmware_category:
+    hostname: "{{ vcenter_server }}"
+    username: "{{ vcenter_user }}"
+    password: "{{ vcenter_pass }}"
+    category_name: Sample_Category_0002
+    state: absent
+
+
+RETURN VALUES:
+
+category_results:
+  description: dictionary of category metadata
+  returned: on success
+  type: dict
+  sample: {
+        "category_id": "urn:vmomi:InventoryServiceCategory:d7120bda-9fa5-4f92-9d71-aa1acff2e5a8:GLOBAL",
+        "msg": "Category NewCat_0001 updated."
+    }
+

@@ -1,0 +1,52 @@
+> SENSU_SUBSCRIPTION    (/usr/lib/python2.7/dist-packages/ansible/modules/monitoring/sensu_subscription.py)
+
+        Manage which `sensu channels' a machine should subscribe to
+
+  * This module is maintained by The Ansible Community
+OPTIONS (= is mandatory):
+
+- backup
+        Create a backup file (if yes), including the timestamp information so you
+        can get the original file back if you somehow clobbered it incorrectly.
+        [Default: False]
+        type: bool
+
+= name
+        The name of the channel
+
+
+- path
+        Path to the subscriptions json file
+        [Default: /etc/sensu/conf.d/subscriptions.json]
+
+- state
+        Whether the machine should subscribe or unsubscribe from the channel
+        (Choices: present, absent)[Default: present]
+
+
+AUTHOR: Anders Ingemann (@andsens)
+        METADATA:
+          status:
+          - preview
+          supported_by: community
+        
+
+EXAMPLES:
+
+# Subscribe to the nginx channel
+- name: subscribe to nginx checks
+  sensu_subscription: name=nginx
+
+# Unsubscribe from the common checks channel
+- name: unsubscribe from common checks
+  sensu_subscription: name=common state=absent
+
+
+RETURN VALUES:
+
+reasons:
+    description: the reasons why the module changed or did not change something
+    returned: success
+    type: list
+    sample: ["channel subscription was absent and state is `present'"]
+

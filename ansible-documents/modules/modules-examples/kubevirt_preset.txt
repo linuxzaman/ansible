@@ -1,0 +1,30 @@
+EXAMPLES:
+
+- name: Create virtual machine preset 'vmi-preset-small'
+  kubevirt_preset:
+      state: present
+      name: vmi-preset-small
+      namespace: vms
+      memory: 64M
+      selector:
+        matchLabels:
+            kubevirt.io/vmPreset: vmi-preset-small
+
+- name: Remove virtual machine preset 'vmi-preset-small'
+  kubevirt_preset:
+      state: absent
+      name: vmi-preset-small
+      namespace: vms
+
+
+RETURN VALUES:
+
+kubevirt_preset:
+  description:
+    - The virtual machine preset managed by the user.
+    - "This dictionary contains all values returned by the KubeVirt API all options
+       are described here U(https://kubevirt.io/api-reference/master/definitions.html#_v1_virtualmachineinstancepreset)"
+  returned: success
+  type: complex
+  contains: {}
+

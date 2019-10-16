@@ -1,0 +1,198 @@
+> JUNOS_L2_INTERFACE    (/usr/lib/python2.7/dist-packages/ansible/modules/network/junos/junos_l2_interface.py)
+
+        This module provides declarative management of Layer-2 interface on Juniper JUNOS network devices.
+
+  * This module is maintained by The Ansible Network Team
+OPTIONS (= is mandatory):
+
+- access_vlan
+        Configure given VLAN in access port. The value of `access_vlan' should be vlan name.
+        [Default: (null)]
+
+- active
+        Specifies whether or not the configuration is active or deactivated
+        [Default: True]
+        type: bool
+
+- aggregate
+        List of Layer-2 interface definitions.
+        [Default: (null)]
+
+- description
+        Description of Interface.
+        [Default: (null)]
+
+- enhanced_layer
+        True if your device has Enhanced Layer 2 Software (ELS).
+        [Default: True]
+        type: bool
+        version_added: 2.7
+
+- filter_input
+        The name of input filter of ethernet-switching.
+        [Default: (null)]
+        version_added: 2.8
+
+- filter_output
+        The name of output filter of ethernet-switching.
+        [Default: (null)]
+        version_added: 2.8
+
+- mode
+        Mode in which interface needs to be configured.
+        (Choices: access, trunk)[Default: (null)]
+
+- name
+        Name of the interface excluding any logical unit number.
+        [Default: (null)]
+
+- native_vlan
+        Native VLAN to be configured in trunk port. The value of `native_vlan' should be vlan id.
+        [Default: (null)]
+
+- provider
+        *Deprecated*
+        Starting with Ansible 2.5 we recommend using `connection: network_cli' or `connection: netconf'.
+        For more information please see the L(Junos OS Platform Options guide, ../network/user_guide/platform_junos.html).
+        HORIZONTALLINE
+        A dict object containing connection details.
+        [Default: (null)]
+        suboptions:
+          host:
+            description:
+            - Specifies the DNS host name or address for connecting to the remote device over
+              the specified transport.  The value of host is used as the destination address
+              for the transport.
+            required: true
+            type: str
+          password:
+            description:
+            - Specifies the password to use to authenticate the connection to the remote device.   This
+              value is used to authenticate the SSH session. If the value is not specified
+              in the task, the value of environment variable `ANSIBLE_NET_PASSWORD' will
+              be used instead.
+            type: str
+          port:
+            default: 22
+            description:
+            - Specifies the port to use when building the connection to the remote device.  The
+              port value will default to the well known SSH port of 22 (for `transport=cli')
+              or port 830 (for `transport=netconf') device.
+            type: int
+          ssh_keyfile:
+            description:
+            - Specifies the SSH key to use to authenticate the connection to the remote device.   This
+              value is the path to the key used to authenticate the SSH session. If the value
+              is not specified in the task, the value of environment variable `ANSIBLE_NET_SSH_KEYFILE'
+              will be used instead.
+            type: path
+          timeout:
+            default: 10
+            description:
+            - Specifies the timeout in seconds for communicating with the network device for
+              either connecting or sending commands.  If the timeout is exceeded before the
+              operation is completed, the module will error.
+            type: int
+          username:
+            description:
+            - Configures the username to use to authenticate the connection to the remote
+              device.  This value is used to authenticate the SSH session. If the value is
+              not specified in the task, the value of environment variable `ANSIBLE_NET_USERNAME'
+              will be used instead.
+            type: str
+        
+        type: dict
+
+- state
+        State of the Layer-2 Interface configuration.
+        (Choices: present, absent)[Default: present]
+
+- trunk_vlans
+        List of VLAN names to be configured in trunk port. The value of `trunk_vlans' should be list of vlan names.
+        [Default: (null)]
+
+- unit
+        Logical interface number. Value of `unit' should be of type integer.
+        [Default: 0]
+
+
+NOTES:
+      * This module requires the netconf system service be enabled on the remote device being managed.
+      * Tested against vqfx-10000 JUNOS Version 15.1X53-D60.4.
+      * Recommended connection is `netconf'. See L(the Junos OS Platform Options,../network/user_guide/platform_junos.html).
+      * This module also works with `local' connections for legacy playbooks.
+      * For information on using CLI and netconf see the :ref:`Junos OS Platform Options guide <junos_platform_options>`
+      * For more information on using Ansible to manage network devices see the :ref:`Ansible Network Guide <network_guide>`
+      * For more information on using Ansible to manage Juniper network devices see https://www.ansible.com/ansible-juniper.
+
+
+REQUIREMENTS:  ncclient (>=v0.5.2)
+
+AUTHOR: Ganesh Nalawade (@ganeshrn)
+        METADATA:
+          status:
+          - preview
+          supported_by: network
+        
+
+EXAMPLES:
+
+- name: Configure interface in access mode
+  junos_l2_interface:
+    name: ge-0/0/1
+    description: interface-access
+    mode: access
+    access_vlan: red
+    active: True
+    state: present
+
+- name: Configure interface in trunk mode
+  junos_l2_interface:
+    name: ge-0/0/1
+    description: interface-trunk
+    mode: trunk
+    trunk_vlans:
+    - blue
+    - green
+    native_vlan: 100
+    active: True
+    state: present
+
+- name: Configure interface in access and trunk mode using aggregate
+  junos_l2_interface:
+    aggregate:
+    - name: ge-0/0/1
+      description: test-interface-access
+      mode: access
+      access_vlan: red
+    - name: ge-0/0/2
+      description: test-interface-trunk
+      mode: trunk
+      trunk_vlans:
+      - blue
+      - green
+      native_vlan: 100
+    active: True
+    state: present
+
+
+RETURN VALUES:
+
+diff:
+  description: Configuration difference before and after applying change.
+  returned: when configuration is changed and diff option is enabled.
+  type: str
+  sample: >
+        [edit interfaces]
+        +   ge-0/0/1 {
+        +       description "l2 interface configured by Ansible";
+        +       unit 0 {
+        +           family ethernet-switching {
+        +               interface-mode access;
+        +               vlan {
+        +                   members red;
+        +               }
+        +           }
+        +       }
+        +   }
+

@@ -1,0 +1,164 @@
+> CS_ROLE_PERMISSION    (/usr/lib/python2.7/dist-packages/ansible/modules/cloud/cloudstack/cs_role_permission.py)
+
+        Create, update and remove CloudStack role permissions. Managing role permissions only supported in CloudStack >= 4.9.
+
+  * This module is maintained by The Ansible Community
+OPTIONS (= is mandatory):
+
+- api_http_method
+        HTTP method used to query the API endpoint.
+        If not given, the `CLOUDSTACK_METHOD' env variable is considered.
+        As the last option, the value is taken from the ini config file, also see the notes.
+        Fallback value is `get' if not specified.
+        (Choices: get, post)[Default: (null)]
+        type: str
+
+- api_key
+        API key of the CloudStack API.
+        If not given, the `CLOUDSTACK_KEY' env variable is considered.
+        As the last option, the value is taken from the ini config file, also see the notes.
+        [Default: (null)]
+        type: str
+
+- api_region
+        Name of the ini section in the `cloustack.ini' file.
+        If not given, the `CLOUDSTACK_REGION' env variable is considered.
+        [Default: cloudstack]
+        type: str
+
+- api_secret
+        Secret key of the CloudStack API.
+        If not set, the `CLOUDSTACK_SECRET' env variable is considered.
+        As the last option, the value is taken from the ini config file, also see the notes.
+        [Default: (null)]
+        type: str
+
+- api_timeout
+        HTTP timeout in seconds.
+        If not given, the `CLOUDSTACK_TIMEOUT' env variable is considered.
+        As the last option, the value is taken from the ini config file, also see the notes.
+        Fallback value is 10 seconds if not specified.
+        [Default: (null)]
+        type: int
+
+- api_url
+        URL of the CloudStack API e.g. https://cloud.example.com/client/api.
+        If not given, the `CLOUDSTACK_ENDPOINT' env variable is considered.
+        As the last option, the value is taken from the ini config file, also see the notes.
+        [Default: (null)]
+        type: str
+
+- description
+        The description of the role permission.
+        [Default: (null)]
+        type: str
+
+= name
+        The API name of the permission.
+
+        type: str
+
+- parent
+        The parent role permission uuid. use 0 to move this rule at the top of the list.
+        [Default: (null)]
+        type: str
+
+- permission
+        The rule permission, allow or deny. Defaulted to deny.
+        (Choices: allow, deny)[Default: deny]
+        type: str
+
+= role
+        Name or ID of the role.
+
+        type: str
+
+- state
+        State of the role permission.
+        (Choices: present, absent)[Default: present]
+        type: str
+
+
+NOTES:
+      * Ansible uses the `cs' library's configuration method if credentials are not provided by the arguments `api_url', `api_key',
+        `api_secret'. Configuration is read from several locations, in the following order. The `CLOUDSTACK_ENDPOINT',
+        `CLOUDSTACK_KEY', `CLOUDSTACK_SECRET' and `CLOUDSTACK_METHOD'. `CLOUDSTACK_TIMEOUT' environment variables. A
+        `CLOUDSTACK_CONFIG' environment variable pointing to an `.ini' file. A `cloudstack.ini' file in the current working
+        directory. A `.cloudstack.ini' file in the users home directory. Optionally multiple credentials and endpoints can be
+        specified using ini sections in `cloudstack.ini'. Use the argument `api_region' to select the section name, default section
+        is `cloudstack'. See https://github.com/exoscale/cs for more information.
+      * A detailed guide about cloudstack modules can be found in the L(CloudStack Cloud
+        Guide,../scenario_guides/guide_cloudstack.html).
+      * This module supports check mode.
+
+
+REQUIREMENTS:  python >= 2.6, cs >= 0.6.10
+
+AUTHOR: David Passante (@dpassante)
+        METADATA:
+          status:
+          - preview
+          supported_by: community
+        
+
+EXAMPLES:
+
+- name: Create a role permission
+  cs_role_permission:
+    role: My_Custom_role
+    name: createVPC
+    permission: allow
+    description: My comments
+  delegate_to: localhost
+
+- name: Remove a role permission
+  cs_role_permission:
+    state: absent
+    role: My_Custom_role
+    name: createVPC
+  delegate_to: localhost
+
+- name: Update a system role permission
+  cs_role_permission:
+    role: Domain Admin
+    name: createVPC
+    permission: deny
+  delegate_to: localhost
+
+- name: Update rules order. Move the rule at the top of list
+  cs_role_permission:
+    role: Domain Admin
+    name: createVPC
+    parent: 0
+  delegate_to: localhost
+
+
+RETURN VALUES:
+
+---
+id:
+  description: The ID of the role permission.
+  returned: success
+  type: str
+  sample: a6f7a5fc-43f8-11e5-a151-feff819cdc9f
+name:
+  description: The API name of the permission.
+  returned: success
+  type: str
+  sample: createVPC
+permission:
+  description: The permission type of the api name.
+  returned: success
+  type: str
+  sample: allow
+role_id:
+  description: The ID of the role to which the role permission belongs.
+  returned: success
+  type: str
+  sample: c6f7a5fc-43f8-11e5-a151-feff819cdc7f
+description:
+  description: The description of the role permission
+  returned: success
+  type: str
+  sample: Deny createVPC for users
+

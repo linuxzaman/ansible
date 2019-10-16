@@ -1,0 +1,122 @@
+> CE_EVPN_BGP    (/usr/lib/python2.7/dist-packages/ansible/modules/network/cloudengine/ce_evpn_bgp.py)
+
+        This module offers the ability to configure a BGP EVPN peer relationship on HUAWEI CloudEngine switches.
+
+  * This module is maintained by The Ansible Community
+OPTIONS (= is mandatory):
+
+- advertise_l2vpn_evpn
+        Enable or disable a device to advertise IP routes imported to a VPN instance to its EVPN instance.
+        (Choices: enable, disable)[Default: (null)]
+
+- advertise_router_type
+        Configures a device to advertise routes to its BGP EVPN peers.
+        (Choices: arp, irb)[Default: (null)]
+
+- as_number
+        Specifies integral AS number. The value is an integer ranging from 1 to 4294967295.
+        [Default: (null)]
+
+= bgp_instance
+        Name of a BGP instance. The value is a string of 1 to 31 case-sensitive characters, spaces not supported.
+
+
+- peer_address
+        Specifies the IPv4 address of a BGP EVPN peer. The value is in dotted decimal notation.
+        [Default: (null)]
+
+- peer_enable
+        Enable or disable a BGP device to exchange routes with a specified peer or peer group in the address family view.
+        (Choices: true, false)[Default: (null)]
+
+- peer_group_name
+        Specify the name of a peer group that BGP peers need to join. The value is a string of 1 to 47 case-sensitive characters, spaces
+        not supported.
+        [Default: (null)]
+
+- state
+        Manage the state of the resource.
+        (Choices: present, absent)[Default: present]
+
+- vpn_name
+        Associates a specified VPN instance with the IPv4 address family. The value is a string of 1 to 31 case-sensitive characters,
+        spaces not supported.
+        [Default: (null)]
+
+
+AUTHOR: Li Yanfeng (@QijunPan)
+        METADATA:
+          status:
+          - preview
+          supported_by: community
+        
+
+EXAMPLES:
+
+- name: evpn bgp module test
+  hosts: cloudengine
+  connection: local
+  gather_facts: no
+  vars:
+    cli:
+      host: "{{ inventory_hostname }}"
+      port: "{{ ansible_ssh_port }}"
+      username: "{{ username }}"
+      password: "{{ password }}"
+      transport: cli
+
+  tasks:
+
+  - name: Enable peer address.
+    ce_evpn_bgp:
+      bgp_instance: 100
+      peer_address: 1.1.1.1
+      as_number: 100
+      peer_enable: true
+      provider: "{{ cli }}"
+
+  - name: Enable peer group arp.
+    ce_evpn_bgp:
+      bgp_instance: 100
+      peer_group_name: aaa
+      advertise_router_type: arp
+      provider: "{{ cli }}"
+
+  - name: Enable advertise l2vpn evpn.
+    ce_evpn_bgp:
+      bgp_instance: 100
+      vpn_name: aaa
+      advertise_l2vpn_evpn: enable
+      provider: "{{ cli }}"
+
+
+RETURN VALUES:
+
+proposed:
+    description: k/v pairs of parameters passed into module
+    returned: always
+    type: dict
+    sample: {"advertise_router_type": "arp", "bgp_instance": "100", "peer_group_name": "aaa", "state": "present"}
+existing:
+    description: k/v pairs of existing rollback
+    returned: always
+    type: dict
+    sample: {"bgp_instance": "100", "peer_group_advertise_type": []}
+
+updates:
+    description: command sent to the device
+    returned: always
+    type: list
+    sample: ["peer 1.1.1.1 enable",
+             "peer aaa advertise arp"]
+changed:
+    description: check to see if a change was made on the device
+    returned: always
+    type: bool
+    sample: true
+end_state:
+    description: k/v pairs of configuration after module execution
+    returned: verbose mode
+    type: dict
+    sample: {"advertise_l2vpn_evpn": "enable", "bgp_instance": "100", "vpn_name": "aaa"}
+

@@ -1,0 +1,61 @@
+> ALTERNATIVES    (/usr/lib/python2.7/dist-packages/ansible/modules/system/alternatives.py)
+
+        Manages symbolic links using the 'update-alternatives' tool. Useful when multiple programs are installed but provide similar
+        functionality (e.g. different editors).
+
+  * This module is maintained by The Ansible Community
+OPTIONS (= is mandatory):
+
+- link
+        The path to the symbolic link that should point to the real executable.
+        This option is always required on RHEL-based distributions. On Debian-based distributions this option is required when the
+        alternative `name' is unknown to the system.
+        [Default: (null)]
+        type: path
+
+= name
+        The generic name of the link.
+
+        type: str
+
+= path
+        The path to the real executable that the link should point to.
+
+        type: path
+
+- priority
+        The priority of the alternative.
+        [Default: 50]
+        type: int
+        version_added: 2.2
+
+
+REQUIREMENTS:  update-alternatives
+
+AUTHOR: David Wittman (@DavidWittman), Gabe Mulley (@mulby)
+        METADATA:
+          status:
+          - preview
+          supported_by: community
+        
+
+EXAMPLES:
+
+- name: Correct java version selected
+  alternatives:
+    name: java
+    path: /usr/lib/jvm/java-7-openjdk-amd64/jre/bin/java
+
+- name: Alternatives link created
+  alternatives:
+    name: hadoop-conf
+    link: /etc/hadoop/conf
+    path: /etc/hadoop/conf.ansible
+
+- name: Make java 32 bit an alternative with low priority
+  alternatives:
+    name: java
+    path: /usr/lib/jvm/java-7-openjdk-i386/jre/bin/java
+    priority: -10
+
+

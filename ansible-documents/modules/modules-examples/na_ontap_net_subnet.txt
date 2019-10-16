@@ -1,0 +1,37 @@
+EXAMPLES:
+
+- name: create subnet
+      na_ontap_net_subnet:
+        state: present
+        username: "{{ netapp_username }}"
+        password: "{{ netapp_password }}"
+        hostname: "{{ netapp_hostname }}"
+        subnet: 10.10.10.0/24
+        name: subnet-adm
+        ip_ranges: [ '10.10.10.30-10.10.10.40', '10.10.10.51' ]
+        gateway: 10.10.10.254
+        ipspace: Default
+        broadcast_domain: Default
+    - name: delete subnet
+      na_ontap_net_subnet:
+        state: absent
+        username: "{{ netapp_username }}"
+        password: "{{ netapp_password }}"
+        hostname: "{{ netapp_hostname }}"
+        name: subnet-adm
+        ipspace: Default
+    - name: rename subnet
+      na_ontap_net_subnet:
+        state: present
+        username: "{{ netapp_username }}"
+        password: "{{ netapp_password }}"
+        hostname: "{{ netapp_hostname }}"
+        name: subnet-adm-new
+        from_name: subnet-adm
+        ipspace: Default
+
+
+RETURN VALUES:
+
+
+

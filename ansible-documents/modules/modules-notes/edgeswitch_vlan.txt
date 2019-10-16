@@ -1,0 +1,121 @@
+> EDGESWITCH_VLAN    (/usr/lib/python2.7/dist-packages/ansible/modules/network/edgeswitch/edgeswitch_vlan.py)
+
+        This module provides declarative management of VLANs on Ubiquiti Edgeswitch network devices.
+
+  * This module is maintained by The Ansible Community
+OPTIONS (= is mandatory):
+
+- aggregate
+        List of VLANs definitions.
+        [Default: (null)]
+
+- auto_exclude
+        Each of the switch interfaces will be excluded from `vlan_id' unless defined in `*_interfaces'. This is a default setting for all
+        switch interfaces.
+        [Default: (null)]
+        type: bool
+
+- auto_tag
+        Each of the switch interfaces will be set to accept and transmit untagged frames for `vlan_id' unless defined in `*_interfaces'.
+        This is a default setting for all switch interfaces.
+        [Default: (null)]
+        type: bool
+
+- auto_untag
+        Each of the switch interfaces will be set to accept untagged frames and transmit them tagged for `vlan_id' unless defined in
+        `*_interfaces'. This is a default setting for all switch interfaces.
+        [Default: (null)]
+        type: bool
+
+- excluded_interfaces
+        List of interfaces that should be excluded of the VLAN. Accept range of interfaces.
+        [Default: (null)]
+
+- name
+        Name of the VLAN.
+        [Default: (null)]
+
+- purge
+        Purge VLANs not defined in the `aggregate' parameter.
+        [Default: False]
+        type: bool
+
+- state
+        action on the VLAN configuration.
+        (Choices: present, absent)[Default: present]
+
+- tagged_interfaces
+        List of interfaces that should accept and transmit tagged frames for the VLAN. Accept range of interfaces.
+        [Default: (null)]
+
+- untagged_interfaces
+        List of interfaces that should accept untagged frames and transmit them tagged for the VLAN. Accept range of interfaces.
+        [Default: (null)]
+
+- vlan_id
+        ID of the VLAN. Range 1-4093.
+        [Default: (null)]
+
+
+NOTES:
+      * Tested against edgeswitch 1.7.4
+      * This module use native Ubiquiti vlan syntax and does not support switchport compatibility syntax. For clarity, it is
+        strongly advised to not use both syntaxes on the same interface.
+      * Edgeswitch does not support deleting or changing name of VLAN 1
+      * As auto_tag, auto_untag and auto_exclude are a kind of default setting for all interfaces, they are mutually exclusive
+
+
+AUTHOR: Frederic Bor (@f-bor)
+        METADATA:
+          status:
+          - preview
+          supported_by: community
+        
+
+EXAMPLES:
+
+- name: Create vlan
+  edgeswitch_vlan:
+    vlan_id: 100
+    name: voice
+    action: present
+
+- name: Add interfaces to VLAN
+  edgeswitch_vlan:
+    vlan_id: 100
+    tagged_interfaces:
+      - 0/1
+      - 0/4-0/6
+
+- name: setup three vlans and delete the rest
+  edgeswitch_vlan:
+    purge: true
+    aggregate:
+      - { vlan_id: 1, name: default, auto_untag: true, excluded_interfaces: 0/45-0/48 }
+      - { vlan_id: 100, name: voice, auto_tag: true }
+      - { vlan_id: 200, name: video, auto_exclude: true, untagged_interfaces: 0/45-0/48, tagged_interfaces: 0/49 }
+
+- name: Delete vlan
+  edgeswitch_vlan:
+    vlan_id: 100
+    state: absent
+
+
+RETURN VALUES:
+
+commands:
+  description: The list of configuration mode commands to send to the device
+  returned: always
+  type: list
+  sample:
+    - vlan database
+    - vlan 100
+    - vlan name 100 "test vlan"
+    - exit
+    - interface 0/1
+    - vlan pvid 50
+    - vlan participation include 50,100
+    - vlan tagging 100
+    - vlan participation exclude 200
+    - no vlan tagging 200
+

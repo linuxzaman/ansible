@@ -1,0 +1,39 @@
+> WIN_WEBPICMD    (/usr/lib/python2.7/dist-packages/ansible/modules/windows/win_webpicmd.py)
+
+        Installs packages using Web Platform Installer command-line (http://www.iis.net/learn/install/web-platform-installer/web-
+        platform-installer-v4-command-line-webpicmdexe-rtw-release). Must be installed and present in PATH (see [win_chocolatey] module;
+        'webpicmd' is the package name, and you must install 'lessmsi' first too)? Install IIS first (see [win_feature] module).
+
+  * This module is maintained by The Ansible Community
+OPTIONS (= is mandatory):
+
+= name
+        Name of the package to be installed.
+
+        type: str
+
+
+NOTES:
+      * Accepts EULAs and suppresses reboot - you will need to check manage reboots yourself (see [win_reboot] module)
+
+
+SEE ALSO:
+      * Module win_package
+           The official documentation on the win_package module.
+           https://docs.ansible.com/ansible/latest/modules/win_package_module.html
+
+
+AUTHOR: Peter Mounce (@petemounce)
+        METADATA:
+          status:
+          - preview
+          supported_by: community
+        
+
+EXAMPLES:
+
+- name: Install URLRewrite2.
+  win_webpicmd:
+    name: URLRewrite2
+
+

@@ -1,0 +1,33 @@
+EXAMPLES:
+
+# Update API resources for development
+- name: update API
+  aws_api_gateway:
+    api_id: 'abc123321cba'
+    state: present
+    swagger_file: my_api.yml
+
+# update definitions and deploy API to production
+- name: deploy API
+  aws_api_gateway:
+    api_id: 'abc123321cba'
+    state: present
+    swagger_file: my_api.yml
+    stage: production
+    deploy_desc: Make auth fix available.
+
+
+RETURN VALUES:
+
+output:
+  description: the data returned by put_restapi in boto3
+  returned: success
+  type: dict
+  sample:
+    'data':
+      {
+          "id": "abc123321cba",
+          "name": "MY REST API",
+          "createdDate": 1484233401
+      }
+

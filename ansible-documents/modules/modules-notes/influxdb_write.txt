@@ -1,0 +1,119 @@
+> INFLUXDB_WRITE    (/usr/lib/python2.7/dist-packages/ansible/modules/database/influxdb/influxdb_write.py)
+
+        Write data points into InfluxDB.
+
+  * This module is maintained by The Ansible Community
+OPTIONS (= is mandatory):
+
+= data_points
+        Data points as dict to write into the database.
+
+
+= database_name
+        Name of the database.
+
+
+- hostname
+        The hostname or IP address on which InfluxDB server is listening.
+        Since Ansible 2.5, defaulted to localhost.
+        [Default: localhost]
+        type: str
+
+- password
+        Password that will be used to authenticate against InfluxDB server.
+        Alias `login_password' added in Ansible 2.5.
+        (Aliases: login_password)[Default: root]
+        type: str
+
+- port
+        The port on which InfluxDB server is listening
+        [Default: 8086]
+        type: int
+
+- proxies
+        HTTP(S) proxy to use for Requests to connect to InfluxDB server.
+        [Default: (null)]
+        type: dict
+        version_added: 2.5
+
+- retries
+        Number of retries client will try before aborting.
+        `0' indicates try until success.
+        [Default: 3]
+        type: int
+        version_added: 2.5
+
+- ssl
+        Use https instead of http to connect to InfluxDB server.
+        [Default: (null)]
+        type: bool
+        version_added: 2.5
+
+- timeout
+        Number of seconds Requests will wait for client to establish a connection.
+        [Default: (null)]
+        type: int
+        version_added: 2.5
+
+- udp_port
+        UDP port to connect to InfluxDB server.
+        [Default: 4444]
+        type: int
+        version_added: 2.5
+
+- use_udp
+        Use UDP to connect to InfluxDB server.
+        [Default: (null)]
+        type: bool
+        version_added: 2.5
+
+- username
+        Username that will be used to authenticate against InfluxDB server.
+        Alias `login_username' added in Ansible 2.5.
+        (Aliases: login_username)[Default: root]
+        type: str
+
+- validate_certs
+        If set to `no', the SSL certificates will not be validated.
+        This should only set to `no' used on personally controlled sites using self-signed certificates.
+        [Default: True]
+        type: bool
+        version_added: 2.5
+
+
+REQUIREMENTS:  python >= 2.6, influxdb >= 0.9
+
+AUTHOR: René Moser (@resmo)
+        METADATA:
+          status:
+          - preview
+          supported_by: community
+        
+
+EXAMPLES:
+
+- name: Write points into database
+  influxdb_write:
+      hostname: "{{influxdb_ip_address}}"
+      database_name: "{{influxdb_database_name}}"
+      data_points:
+        - measurement: connections
+          tags:
+            host: server01
+            region: us-west
+          time: "{{ ansible_date_time.iso8601 }}"
+          fields:
+            value: 2000
+        - measurement: connections
+          tags:
+            host: server02
+            region: us-east
+          time: "{{ ansible_date_time.iso8601 }}"
+          fields:
+            value: 3000
+
+
+RETURN VALUES:
+
+# only defaults
+

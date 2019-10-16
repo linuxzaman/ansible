@@ -1,0 +1,67 @@
+EXAMPLES:
+
+- name: Add UCS Organization
+  ucs_org:
+    hostname: "{{ ucs_hostname }}"
+    username: "{{ ucs_username }}"
+    password: "{{ ucs_password }}"
+    org_name: test
+    description: testing org
+    state: present
+    delegate_to: localhost
+
+- name: Update UCS Organization
+  ucs_org:
+    hostname: "{{ ucs_hostname }}"
+    username: "{{ ucs_username }}"
+    password: "{{ ucs_password }}"
+    org_name: test
+    description: Testing org
+    state: present
+    delegate_to: localhost
+
+- name: Add UCS Organization
+  ucs_org:
+    hostname: "{{ ucs_hostname }}"
+    username: "{{ ucs_username }}"
+    password: "{{ ucs_password }}"
+    org_name: level1
+    parent_org_path: root
+    description: level1 org
+    state: present
+    delegate_to: localhost
+
+- name: Add UCS Organization
+  ucs_org:
+    hostname: "{{ ucs_hostname }}"
+    username: "{{ ucs_username }}"
+    password: "{{ ucs_password }}"
+    org_name: level2
+    parent_org_path: root/level1
+    description: level2 org
+    state: present
+
+- name: Add UCS Organization
+  ucs_org:
+    hostname: "{{ ucs_hostname }}"
+    username: "{{ ucs_username }}"
+    password: "{{ ucs_password }}"
+    org_name: level3
+    parent_org_path: root/level1/level2
+    description: level3 org
+    state: present
+
+- name: Remove UCS Organization
+  ucs_org:
+    hostname: "{{ ucs_hostname }}"
+    username: "{{ ucs_username }}"
+    password: "{{ ucs_password }}"
+    org_name: level2
+    parent_org_path: root/level1/
+    state: absent
+
+
+RETURN VALUES:
+
+#
+

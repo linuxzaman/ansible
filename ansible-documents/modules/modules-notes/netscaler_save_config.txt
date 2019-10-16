@@ -1,0 +1,94 @@
+> NETSCALER_SAVE_CONFIG    (/usr/lib/python2.7/dist-packages/ansible/modules/network/netscaler/netscaler_save_config.py)
+
+        This module uncoditionally saves the configuration on the target netscaler node. This module does not support check mode. This
+        module is intended to run either on the ansible  control node or a bastion (jumpserver) with access to the actual netscaler
+        instance.
+
+  * This module is maintained by The Ansible Community
+OPTIONS (= is mandatory):
+
+= nitro_pass
+        The password with which to authenticate to the netscaler node.
+
+
+- nitro_protocol
+        Which protocol to use when accessing the nitro API objects.
+        (Choices: http, https)[Default: http]
+
+- nitro_timeout
+        Time in seconds until a timeout error is thrown when establishing a new session with Netscaler.
+        [Default: 310]
+
+= nitro_user
+        The username with which to authenticate to the netscaler node.
+
+
+= nsip
+        The ip address of the netscaler appliance where the nitro API calls will be made.
+        The port can be specified with the colon (:). E.g. `192.168.1.1:555'.
+
+
+- validate_certs
+        If `no', SSL certificates will not be validated. This should only be used on personally controlled sites using self-signed
+        certificates.
+        [Default: yes]
+        type: bool
+
+
+REQUIREMENTS:  nitro python sdk
+
+AUTHOR: George Nikolopoulos (@giorgos-nikolopoulos)
+        METADATA:
+          status:
+          - preview
+          supported_by: community
+        
+
+EXAMPLES:
+
+---
+- name: Save netscaler configuration
+  delegate_to: localhost
+  netscaler_save_config:
+    nsip: 172.18.0.2
+    nitro_user: nsroot
+    nitro_pass: nsroot
+
+- name: Setup server without saving  configuration
+  delegate_to: localhost
+  notify: Save configuration
+  netscaler_server:
+    nsip: 172.18.0.2
+    nitro_user: nsroot
+    nitro_pass: nsroot
+
+    save_config: no
+
+    name: server-1
+    ipaddress: 192.168.1.1
+
+# Under playbook's handlers
+
+- name: Save configuration
+  delegate_to: localhost
+  netscaler_save_config:
+    nsip: 172.18.0.2
+    nitro_user: nsroot
+    nitro_pass: nsroot
+
+
+RETURN VALUES:
+
+loglines:
+    description: list of logged messages by the module
+    returned: always
+    type: list
+    sample: ['message 1', 'message 2']
+
+msg:
+    description: Message detailing the failure reason
+    returned: failure
+    type: str
+    sample: "Action does not exist"
+
+

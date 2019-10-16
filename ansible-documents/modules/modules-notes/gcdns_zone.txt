@@ -1,0 +1,93 @@
+> GCDNS_ZONE    (/usr/lib/python2.7/dist-packages/ansible/modules/cloud/google/_gcdns_zone.py)
+
+        Creates or removes managed zones in Google Cloud DNS.
+
+DEPRECATED: 
+
+	Reason: Updated modules released with increased functionality
+	Will be removed in: Ansible 2.12
+	Alternatives: Use M(gcp_dns_managed_zone) instead.
+
+
+  * This module is maintained by The Ansible Community
+OPTIONS (= is mandatory):
+
+- credentials_file
+        The path to the JSON file associated with the service account email.
+        [Default: (null)]
+
+- description
+        An arbitrary text string to use for the zone description.
+        [Default: ]
+
+- pem_file
+        The path to the PEM file associated with the service account email.
+        This option is deprecated and may be removed in a future release. Use `credentials_file' instead.
+        [Default: (null)]
+
+- project_id
+        The Google Cloud Platform project ID to use.
+        [Default: (null)]
+
+- service_account_email
+        The e-mail address for a service account with access to Google Cloud DNS.
+        [Default: (null)]
+
+- state
+        Whether the given zone should or should not be present.
+        (Choices: present, absent)[Default: present]
+
+= zone
+        The DNS domain name of the zone.
+        This is NOT the Google Cloud DNS zone ID (e.g., example-com). If you attempt to specify a zone ID, this module will attempt to
+        create a TLD and will fail.
+        (Aliases: name)
+
+
+NOTES:
+      * See also [gcdns_record].
+      * Zones that are newly created must still be set up with a domain registrar before they can be used.
+
+
+REQUIREMENTS:  apache-libcloud >= 0.19.0
+
+AUTHOR: William Albert (@walbert947)
+        METADATA:
+          status:
+          - deprecated
+          supported_by: community
+        
+
+EXAMPLES:
+
+# Basic zone creation example.
+- name: Create a basic zone with the minimum number of parameters.
+  gcdns_zone: zone=example.com
+
+# Zone removal example.
+- name: Remove a zone.
+  gcdns_zone: zone=example.com state=absent
+
+# Zone creation with description
+- name: Creating a zone with a description
+  gcdns_zone: zone=example.com description="This is an awesome zone"
+
+
+RETURN VALUES:
+
+description:
+    description: The zone's description
+    returned: success
+    type: str
+    sample: This is an awesome zone
+state:
+    description: Whether the zone is present or absent
+    returned: success
+    type: str
+    sample: present
+zone:
+    description: The zone's DNS name
+    returned: success
+    type: str
+    sample: example.com.
+

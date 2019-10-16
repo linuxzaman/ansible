@@ -1,0 +1,159 @@
+> UCS_STORAGE_PROFILE    (/usr/lib/python2.7/dist-packages/ansible/modules/remote_management/ucs/ucs_storage_profile.py)
+
+        Configures storage profiles on Cisco UCS Manager. Examples can be used with the L(UCS Platform
+        Emulator,https://communities.cisco.com/ucspe).
+
+  * This module is maintained by an Ansible Partner
+OPTIONS (= is mandatory):
+
+- description
+        The user-defined description of the storage profile.
+        Enter up to 256 characters.
+        You can use any characters or spaces except the following:
+        ` (accent mark),  (backslash), ^ (carat), " (double quote), = (equal sign), > (greater than), < (less than), or ' (single quote).
+        (Aliases: descr)[Default: (null)]
+
+= hostname
+        IP address or hostname of Cisco UCS Manager.
+
+        type: str
+
+- local_luns
+        List of Local LUNs used by the storage profile.
+        [Default: (null)]
+        suboptions:
+          auto_deploy:
+            choices:
+            - auto-deploy
+            - no-auto-deploy
+            default: auto-deploy
+            description:
+            - Whether the local LUN should be automatically deployed or not.
+          disk_policy_name:
+            description:
+            - The disk group configuration policy to be applied to this local LUN.
+          expand_to_avail:
+            default: 'no'
+            description:
+            - Specifies that this LUN can be expanded to use the entire available disk group.
+            - For each service profile, only one LUN can use this option.
+            - Expand To Available option is not supported for already deployed LUN.
+            type: bool
+          fractional_size:
+            default: '0'
+            description:
+            - Fractional size of this LUN in MB.
+          name:
+            description:
+            - The name of the local LUN.
+            required: true
+          size:
+            default: '1'
+            description:
+            - Size of this LUN in GB.
+            - The size can range from 1 to 10240 GB.
+          state:
+            choices:
+            - absent
+            - present
+            default: present
+            description:
+            - If `present', will verify local LUN is present on profile. If `absent', will
+              verify local LUN is absent on profile.
+        
+
+= name
+        The name of the storage profile.
+        This name can be between 1 and 16 alphanumeric characters.
+        You cannot use spaces or any special characters other than - (hyphen), "_" (underscore), : (colon), and . (period).
+        You cannot change this name after profile is created.
+
+
+- org_dn
+        The distinguished name (dn) of the organization where the resource is assigned.
+        [Default: org-root]
+
+= password
+        Password for Cisco UCS Manager authentication.
+
+        type: str
+
+- port
+        Port number to be used during connection (by default uses 443 for https and 80 for http connection).
+        [Default: (null)]
+        type: int
+
+- proxy
+        If use_proxy is no, specfies proxy to be used for connection. e.g. 'http://proxy.xy.z:8080'
+        [Default: (null)]
+        type: str
+
+- state
+        If `present', will verify that the storage profile is present and will create if needed.
+        If `absent', will verify that the storage profile is absent and will delete if needed.
+        (Choices: absent, present)[Default: present]
+
+- use_proxy
+        If `no', will not use the proxy as defined by system environment variable.
+        [Default: True]
+        type: bool
+
+- use_ssl
+        If `no', an HTTP connection will be used instead of the default HTTPS connection.
+        [Default: True]
+        type: bool
+
+- username
+        Username for Cisco UCS Manager authentication.
+        [Default: admin]
+        type: str
+
+
+REQUIREMENTS:  ucsmsdk
+
+AUTHOR: Sindhu Sudhir (@sisudhir), David Soper (@dsoper2), CiscoUcs (@CiscoUcs)
+        METADATA:
+          status:
+          - preview
+          supported_by: certified
+        
+
+EXAMPLES:
+
+- name: Configure Storage Profile
+  ucs_storage_profile:
+    hostname: 172.16.143.150
+    username: admin
+    password: password
+    name: DEE-StgProf
+    local_luns:
+    - name: Boot-LUN
+      size: '60'
+      disk_policy_name: DEE-DG
+    - name: Data-LUN
+      size: '200'
+      disk_policy_name: DEE-DG
+
+- name: Remove Storage Profile
+  ucs_storage_profile:
+    hostname: 172.16.143.150
+    username: admin
+    password: password
+    name: DEE-StgProf
+    state: absent
+
+- name: Remove Local LUN from Storage Profile
+  ucs_storage_profile:
+    hostname: 172.16.143.150
+    username: admin
+    password: password
+    name: DEE-StgProf
+    local_luns:
+    - name: Data-LUN
+      state: absent
+
+
+RETURN VALUES:
+
+#
+

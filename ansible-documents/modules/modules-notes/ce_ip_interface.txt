@@ -1,0 +1,127 @@
+> CE_IP_INTERFACE    (/usr/lib/python2.7/dist-packages/ansible/modules/network/cloudengine/ce_ip_interface.py)
+
+        Manages Layer 3 attributes for IPv4 and IPv6 interfaces on HUAWEI CloudEngine switches.
+
+  * This module is maintained by The Ansible Community
+OPTIONS (= is mandatory):
+
+- addr
+        IPv4 or IPv6 Address.
+        [Default: (null)]
+
+= interface
+        Full name of interface, i.e. 40GE1/0/22, vlanif10.
+
+
+- ipv4_type
+        Specifies an address type. The value is an enumerated type. main, primary IP address. sub, secondary IP address.
+        (Choices: main, sub)[Default: main]
+
+- mask
+        Subnet mask for IPv4 or IPv6 Address in decimal format.
+        [Default: (null)]
+
+- state
+        Specify desired state of the resource.
+        (Choices: present, absent)[Default: present]
+
+- version
+        IP address version.
+        (Choices: v4, v6)[Default: v4]
+
+
+NOTES:
+      * Interface must already be a L3 port when using this module.
+      * Logical interfaces (loopback, vlanif) must be created first.
+      * `mask' must be inserted in decimal format (i.e. 24) for both IPv6 and IPv4.
+      * A single interface can have multiple IPv6 configured.
+
+
+AUTHOR: QijunPan (@QijunPan)
+        METADATA:
+          status:
+          - preview
+          supported_by: community
+        
+
+EXAMPLES:
+
+- name: ip_interface module test
+  hosts: cloudengine
+  connection: local
+  gather_facts: no
+  vars:
+    cli:
+      host: "{{ inventory_hostname }}"
+      port: "{{ ansible_ssh_port }}"
+      username: "{{ username }}"
+      password: "{{ password }}"
+      transport: cli
+
+  tasks:
+  - name: Ensure ipv4 address is configured on 10GE1/0/22
+    ce_ip_interface:
+      interface: 10GE1/0/22
+      version: v4
+      state: present
+      addr: 20.20.20.20
+      mask: 24
+      provider: '{{ cli }}'
+
+  - name: Ensure ipv4 secondary address is configured on 10GE1/0/22
+    ce_ip_interface:
+      interface: 10GE1/0/22
+      version: v4
+      state: present
+      addr: 30.30.30.30
+      mask: 24
+      ipv4_type: sub
+      provider: '{{ cli }}'
+
+  - name: Ensure ipv6 is enabled on 10GE1/0/22
+    ce_ip_interface:
+      interface: 10GE1/0/22
+      version: v6
+      state: present
+      provider: '{{ cli }}'
+
+  - name: Ensure ipv6 address is configured on 10GE1/0/22
+    ce_ip_interface:
+      interface: 10GE1/0/22
+      version: v6
+      state: present
+      addr: 2001::db8:800:200c:cccb
+      mask: 64
+      provider: '{{ cli }}'
+
+
+RETURN VALUES:
+
+proposed:
+    description: k/v pairs of parameters passed into module
+    returned: always
+    type: dict
+    sample: {"addr": "20.20.20.20", "interface": "10GE1/0/22", "mask": "24"}
+existing:
+    description: k/v pairs of existing IP attributes on the interface
+    returned: always
+    type: dict
+    sample: {"ipv4": [{"ifIpAddr": "11.11.11.11", "subnetMask": "255.255.0.0", "addrType": "main"}],
+            "interface": "10GE1/0/22"}
+end_state:
+    description: k/v pairs of IP attributes after module execution
+    returned: always
+    type: dict
+    sample: {"ipv4": [{"ifIpAddr": "20.20.20.20", "subnetMask": "255.255.255.0", "addrType": "main"}],
+            "interface": "10GE1/0/22"}
+updates:
+    description: commands sent to the device
+    returned: always
+    type: list
+    sample: ["interface 10GE1/0/22", "ip address 20.20.20.20 24"]
+changed:
+    description: check to see if a change was made on the device
+    returned: always
+    type: bool
+    sample: true
+

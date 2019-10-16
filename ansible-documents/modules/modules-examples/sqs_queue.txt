@@ -1,0 +1,66 @@
+EXAMPLES:
+
+# Create SQS queue with redrive policy
+- sqs_queue:
+    name: my-queue
+    region: ap-southeast-2
+    default_visibility_timeout: 120
+    message_retention_period: 86400
+    maximum_message_size: 1024
+    delivery_delay: 30
+    receive_message_wait_time: 20
+    policy: "{{ json_dict }}"
+    redrive_policy:
+      maxReceiveCount: 5
+      deadLetterTargetArn: arn:aws:sqs:eu-west-1:123456789012:my-dead-queue
+
+# Delete SQS queue
+- sqs_queue:
+    name: my-queue
+    region: ap-southeast-2
+    state: absent
+
+
+RETURN VALUES:
+
+default_visibility_timeout:
+    description: The default visibility timeout in seconds.
+    type: int
+    returned: always
+    sample: 30
+delivery_delay:
+    description: The delivery delay in seconds.
+    type: int
+    returned: always
+    sample: 0
+maximum_message_size:
+    description: The maximum message size in bytes.
+    type: int
+    returned: always
+    sample: 262144
+message_retention_period:
+    description: The message retention period in seconds.
+    type: int
+    returned: always
+    sample: 345600
+name:
+    description: Name of the SQS Queue
+    type: str
+    returned: always
+    sample: "queuename-987d2de0"
+queue_arn:
+    description: The queue's Amazon resource name (ARN).
+    type: str
+    returned: on successful creation or update of the queue
+    sample: 'arn:aws:sqs:us-east-1:199999999999:queuename-987d2de0'
+receive_message_wait_time:
+    description: The receive message wait time in seconds.
+    type: int
+    returned: always
+    sample: 0
+region:
+    description: Region that the queue was created within
+    type: str
+    returned: always
+    sample: 'us-east-1'
+

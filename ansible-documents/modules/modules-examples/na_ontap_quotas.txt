@@ -1,0 +1,48 @@
+EXAMPLES:
+
+- name: Add/Set quota
+      na_ontap_quotas:
+        state: present
+        vserver: ansible
+        volume: ansible
+        quota_target: /vol/ansible
+        type: user
+        policy: ansible
+        file_limit: 2
+        disk_limit: 3
+        set_quota_status: True
+        hostname: "{{ netapp_hostname }}"
+        username: "{{ netapp_username }}"
+        password: "{{ netapp_password }}"
+    - name: modify quota
+      na_ontap_quotas:
+        state: present
+        vserver: ansible
+        volume: ansible
+        quota_target: /vol/ansible
+        type: user
+        policy: ansible
+        file_limit: 2
+        disk_limit: 3
+        threshold: 3
+        set_quota_status: False
+        hostname: "{{ netapp_hostname }}"
+        username: "{{ netapp_username }}"
+        password: "{{ netapp_password }}"
+    - name: Delete quota
+      na_ontap_quotas:
+        state: absent
+        vserver: ansible
+        volume: ansible
+        quota_target: /vol/ansible
+        type: user
+        policy: ansible
+        hostname: "{{ netapp_hostname }}"
+        username: "{{ netapp_username }}"
+        password: "{{ netapp_password }}"
+
+
+RETURN VALUES:
+
+
+

@@ -1,0 +1,127 @@
+> RAX_CDB_USER    (/usr/lib/python2.7/dist-packages/ansible/modules/cloud/rackspace/rax_cdb_user.py)
+
+        create / delete a database in the Cloud Databases.
+
+  * This module is maintained by The Ansible Community
+OPTIONS (= is mandatory):
+
+- api_key
+        Rackspace API key, overrides `credentials'.
+        (Aliases: password)[Default: (null)]
+        type: str
+
+- auth_endpoint
+        The URI of the authentication service.
+        [Default: https://identity.api.rackspacecloud.com/v2.0/]
+        version_added: 1.5
+
+- cdb_id
+        The databases server UUID
+        [Default: (null)]
+
+- credentials
+        File to find the Rackspace credentials in. Ignored if `api_key' and `username' are provided.
+        (Aliases: creds_file)[Default: (null)]
+        type: path
+
+- databases
+        Name of the databases that the user can access
+        [Default: []]
+
+- db_password
+        Database user password
+        [Default: (null)]
+
+- db_username
+        Name of the database user
+        [Default: (null)]
+
+- env
+        Environment as configured in `~/.pyrax.cfg', see https://github.com/rackspace/pyrax/blob/master/docs/getting_started.md#pyrax-
+        configuration.
+        [Default: (null)]
+        type: str
+        version_added: 1.5
+
+- host
+        Specifies the host from which a user is allowed to connect to the database. Possible values are a string containing an IPv4
+        address or "%" to allow connecting from any host
+        [Default: %]
+
+- identity_type
+        Authentication mechanism to use, such as rackspace or keystone.
+        [Default: rackspace]
+        version_added: 1.5
+
+- region
+        Region to create an instance in.
+        [Default: DFW]
+        type: str
+
+- state
+        Indicate desired state of the resource
+        (Choices: present, absent)[Default: present]
+
+- tenant_id
+        The tenant ID used for authentication.
+        [Default: (null)]
+        version_added: 1.5
+
+- tenant_name
+        The tenant name used for authentication.
+        [Default: (null)]
+        version_added: 1.5
+
+- username
+        Rackspace username, overrides `credentials'.
+        [Default: (null)]
+        type: str
+
+- validate_certs
+        Whether or not to require SSL validation of API endpoints.
+        (Aliases: verify_ssl)[Default: (null)]
+        type: bool
+        version_added: 1.5
+
+
+NOTES:
+      * The following environment variables can be used, `RAX_USERNAME', `RAX_API_KEY', `RAX_CREDS_FILE', `RAX_CREDENTIALS',
+        `RAX_REGION'.
+      * `RAX_CREDENTIALS' and `RAX_CREDS_FILE' points to a credentials file appropriate for pyrax. See
+        https://github.com/rackspace/pyrax/blob/master/docs/getting_started.md#authenticating
+      * `RAX_USERNAME' and `RAX_API_KEY' obviate the use of a credentials file
+      * `RAX_REGION' defines a Rackspace Public Cloud region (DFW, ORD, LON, ...)
+      * The following environment variables can be used, `RAX_USERNAME', `RAX_API_KEY', `RAX_CREDS_FILE', `RAX_CREDENTIALS',
+        `RAX_REGION'.
+      * `RAX_CREDENTIALS' and `RAX_CREDS_FILE' points to a credentials file appropriate for pyrax. See
+        https://github.com/rackspace/pyrax/blob/master/docs/getting_started.md#authenticating
+      * `RAX_USERNAME' and `RAX_API_KEY' obviate the use of a credentials file
+      * `RAX_REGION' defines a Rackspace Public Cloud region (DFW, ORD, LON, ...)
+
+
+REQUIREMENTS:  pyrax, python >= 2.6
+
+AUTHOR: Simon JAILLET (@jails)
+        METADATA:
+          status:
+          - preview
+          supported_by: community
+        
+
+EXAMPLES:
+
+- name: Build a user in Cloud Databases
+  tasks:
+    - name: User build request
+      local_action:
+        module: rax_cdb_user
+        credentials: ~/.raxpub
+        region: IAD
+        cdb_id: 323e7ce0-9cb0-11e3-a5e2-0800200c9a66
+        db_username: user1
+        db_password: user1
+        databases: ['db1']
+        state: present
+      register: rax_db_user
+
+

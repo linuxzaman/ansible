@@ -1,0 +1,49 @@
+EXAMPLES:
+
+- name: Configure Disk Group Policy
+  ucs_disk_group_policy:
+    hostname: 172.16.143.150
+    username: admin
+    password: password
+    name: DEE-DG
+    raid_level: mirror
+    configuration_mode: manual
+    manual_disks:
+    - slot_num: '1'
+      role: normal
+    - slot_num: '2'
+      role: normal
+
+- name: Remove Disk Group Policy
+  ucs_disk_group_policy:
+    name: DEE-DG
+    hostname: 172.16.143.150
+    username: admin
+    password: password
+    state: absent
+
+- name: Remove Disk from Policy
+  ucs_disk_group_policy:
+    hostname: 172.16.143.150
+    username: admin
+    password: password
+    name: DEE-DG
+    description: Testing Ansible
+    raid_level: stripe
+    configuration_mode: manual
+    manual_disks:
+    - slot_num: '1'
+      role: normal
+    - slot_num: '2'
+      role: normal
+      state: absent
+    virtual_drive:
+      access_policy: platform-default
+      io_policy: direct
+      strip_size: 64KB
+
+
+RETURN VALUES:
+
+#
+

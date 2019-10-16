@@ -1,0 +1,126 @@
+EXAMPLES:
+
+- name: Get Azure Cache for Redis by name
+      azure_rm_rediscache_facts:
+        resource_group: myResourceGroup
+        name: myRedis
+
+    - name: Get Azure Cache for Redis with access keys by name
+      azure_rm_rediscache_facts:
+        resource_group: myResourceGroup
+        name: myRedis
+        return_access_keys: true
+
+    - name: Get Azure Cache for Redis in specific resource group
+      azure_rm_rediscache_facts:
+        resource_group: myResourceGroup
+
+
+RETURN VALUES:
+
+rediscaches:
+    description: List of Azure Cache for Redis instances.
+    returned: always
+    type: complex
+    contains:
+        resource_group:
+            description:
+                - Name of a resource group where the Azure Cache for Redis belongs to.
+            returned: always
+            type: str
+            sample: myResourceGroup
+        name:
+            description:
+                - Name of the Azure Cache for Redis.
+            returned: always
+            type: str
+            sample: myRedis
+        id:
+            description:
+                - Id of the Azure Cache for Redis.
+            returned: always
+            type: str
+            sample: /subscriptions/xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx/resourceGroups/myResourceGroup/providers/Microsoft.Cache/Redis/myRedis
+        provisioning_state:
+            description:
+                - Provisioning state of the redis cahe
+            returned: always
+            type: str
+            sample: Creating
+        location:
+            description:
+                - Location of the Azure Cache for Redis.
+            type: str
+            sample: WestUS
+        enable_non_ssl_port:
+            description:
+                - Specifies whether the non-ssl Redis server port (6379) is enabled.
+            type: bool
+            sample: false
+        sku:
+            description:
+                - Dict of sku information.
+            type: dict
+            contains:
+                name:
+                    description: Name of the sku.
+                    returned: always
+                    type: str
+                    sample: standard
+                size:
+                    description: Size of the Azure Cache for Redis.
+                    returned: always
+                    type: str
+                    sample: C1
+        static_ip:
+            description:
+                - Static IP address.
+            type: str
+            sample: 10.75.0.11
+        subnet:
+            description:
+                - The full resource ID of a subnet in a virtual network to deploy the Azure Cache for Redis in.
+            type: str
+            sample:
+                - "/subscriptions/xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx/resourceGroups/myResourceGroup/Microsoft.Network/VirtualNetworks/myVirtualNetwo
+                   rk/subnets/mySubnet"
+        configuration:
+            description:
+                - Dict of redis configuration.
+            type: dict
+            sample: maxmeory_reserved
+        host_name:
+            description:
+                - Redis host name.
+            type: str
+            sample: testRedis.redis.cache.windows.net
+        shard_count:
+            description:
+                - The number of shards on a Premium Cluster Cache.
+            type: int
+            sample: 1
+        tenant_settings:
+            description:
+                - Dict of tenant settings.
+            type: dict
+        tags:
+            description:
+                - List of tags.
+            type: list
+            sample:
+                - foo
+        access_keys:
+            description:
+                - Azure Cache for Redis access keys.
+            type: dict
+            returned: when C(return_access_keys) is true.
+            contains:
+                primary:
+                    description: The current primary key that clients can use to authenticate the redis cahce.
+                    type: str
+                    sample: X2xXXxx7xxxxxx5xxxx0xxxxx75xxxxxxxxXXXxxxxx=
+                secondary:
+                    description: The current secondary key that clients can use to authenticate the redis cahce.
+                    type: str
+                    sample: X2xXXxx7xxxxxx5xxxx0xxxxx75xxxxxxxxXXXxxxxx=
+

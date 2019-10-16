@@ -1,0 +1,61 @@
+> OPKG    (/usr/lib/python2.7/dist-packages/ansible/modules/packaging/os/opkg.py)
+
+        Manages OpenWrt packages
+
+  * This module is maintained by The Ansible Community
+OPTIONS (= is mandatory):
+
+- force
+        opkg --force parameter used
+        (Choices: , depends, maintainer, reinstall, overwrite, downgrade, space, postinstall, remove, checksum, removal-of-dependent-
+        packages)[Default: absent]
+        version_added: 2.0
+
+= name
+        name of package to install/remove
+
+
+- state
+        state of the package
+        (Choices: present, absent)[Default: present]
+
+- update_cache
+        update the package db first
+        [Default: no]
+        type: bool
+
+
+REQUIREMENTS:  opkg, python
+
+AUTHOR: Patrick Pelletier (@skinp)
+        METADATA:
+          status:
+          - preview
+          supported_by: community
+        
+
+EXAMPLES:
+
+- opkg:
+    name: foo
+    state: present
+
+- opkg:
+    name: foo
+    state: present
+    update_cache: yes
+
+- opkg:
+    name: foo
+    state: absent
+
+- opkg:
+    name: foo,bar
+    state: absent
+
+- opkg:
+    name: foo
+    state: present
+    force: overwrite
+
+

@@ -1,0 +1,73 @@
+EXAMPLES:
+
+- name: Create TCP Monitor
+  bigip_monitor_tcp:
+    state: present
+    name: my_tcp_monitor
+    send: tcp string to send
+    receive: tcp string to receive
+    provider:
+      server: lb.mydomain.com
+      user: admin
+      password: secret
+  delegate_to: localhost
+
+- name: Remove TCP Monitor
+  bigip_monitor_tcp:
+    state: absent
+    name: my_tcp_monitor
+    provider:
+      server: lb.mydomain.com
+      user: admin
+      password: secret
+  delegate_to: localhost
+
+
+RETURN VALUES:
+
+parent:
+  description: New parent template of the monitor.
+  returned: changed
+  type: str
+  sample: tcp
+send:
+  description: The new send string for this monitor.
+  returned: changed
+  type: str
+  sample: tcp string to send
+description:
+  description: The description of the monitor.
+  returned: changed
+  type: str
+  sample: Important Monitor
+receive:
+  description: The new receive string for this monitor.
+  returned: changed
+  type: str
+  sample: tcp string to receive
+ip:
+  description: The new IP of IP/port definition.
+  returned: changed
+  type: str
+  sample: 10.12.13.14
+port:
+  description: The new port of IP/port definition.
+  returned: changed
+  type: str
+  sample: admin@root.local
+interval:
+  description: The new interval in which to run the monitor check.
+  returned: changed
+  type: int
+  sample: 2
+timeout:
+  description: The new timeout in which the remote system must respond to the monitor.
+  returned: changed
+  type: int
+  sample: 10
+time_until_up:
+  description: The new time in which to mark a system as up after first successful response.
+  returned: changed
+  type: int
+  sample: 2
+

@@ -1,0 +1,38 @@
+EXAMPLES:
+
+# Playbook example
+# Add share and set permissions
+---
+- name: Add secret share
+  win_share:
+    name: internal
+    description: top secret share
+    path: C:\shares\internal
+    list: no
+    full: Administrators,CEO
+    read: HR-Global
+    deny: HR-External
+
+- name: Add public company share
+  win_share:
+    name: company
+    description: top secret share
+    path: C:\shares\company
+    list: yes
+    full: Administrators,CEO
+    read: Global
+
+- name: Remove previously added share
+  win_share:
+    name: internal
+    state: absent
+
+
+RETURN VALUES:
+
+actions:
+    description: A list of action cmdlets that were run by the module.
+    returned: success
+    type: list
+    sample: ['New-SmbShare -Name share -Path C:\temp']
+

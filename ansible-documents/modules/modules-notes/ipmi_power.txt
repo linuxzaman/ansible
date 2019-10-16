@@ -1,0 +1,61 @@
+> IPMI_POWER    (/usr/lib/python2.7/dist-packages/ansible/modules/remote_management/ipmi/ipmi_power.py)
+
+        Use this module for power management
+
+  * This module is maintained by The Ansible Community
+OPTIONS (= is mandatory):
+
+= name
+        Hostname or ip address of the BMC.
+
+
+= password
+        Password to connect to the BMC.
+
+
+- port
+        Remote RMCP port.
+        [Default: 623]
+
+= state
+        Whether to ensure that the machine in desired state.
+        (Choices: on -- Request system turn on, off -- Request system turn off without waiting for OS to shutdown, shutdown -- Have
+        system request OS proper shutdown, reset -- Request system reset without waiting for OS, boot -- If system is off, then 'on',
+        else 'reset')
+
+- timeout
+        Maximum number of seconds before interrupt request.
+        [Default: 300]
+
+= user
+        Username to use to connect to the BMC.
+
+
+
+REQUIREMENTS:  python >= 2.6, pyghmi
+
+AUTHOR: Bulat Gaifullin (@bgaifullin) <gaifullinbf@gmail.com>
+        METADATA:
+          status:
+          - preview
+          supported_by: community
+        
+
+EXAMPLES:
+
+# Ensure machine is powered on.
+- ipmi_power:
+    name: test.testdomain.com
+    user: admin
+    password: password
+    state: on
+
+
+RETURN VALUES:
+
+powerstate:
+    description: The current power state of the machine.
+    returned: success
+    type: str
+    sample: on
+

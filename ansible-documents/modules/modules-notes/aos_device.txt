@@ -1,0 +1,62 @@
+> AOS_DEVICE    (/usr/lib/python2.7/dist-packages/ansible/modules/network/aos/_aos_device.py)
+
+        Apstra AOS Device module let you manage your devices in AOS easily. You can approve devices and define in which state the device
+        should be. Currently only the state `normal' is supported but the goal is to extend this module with additional state. This
+        module is idempotent and support the `check' mode. It's using the AOS REST API.
+
+DEPRECATED: 
+
+	Reason: This module does not support AOS 2.1 or later
+	Will be removed in: Ansible 2.9
+	Alternatives: See new modules at U(https://www.ansible.com/ansible-apstra).
+
+
+  * This module is maintained by The Ansible Community
+OPTIONS (= is mandatory):
+
+- approve
+        The approve argument instruct the module to convert a device in quarantine mode into approved mode.
+        [Default: no]
+        type: bool
+
+- id
+        The AOS internal id for a device; i.e. uniquely identifies the device in the AOS system. Only one of `name' or `id' can be set.
+        [Default: (null)]
+
+- location
+        When approving a device using the `approve' argument, it's possible define the location of the device.
+        [Default: (null)]
+
+- name
+        The device serial-number; i.e. uniquely identifies the device in the AOS system. Only one of `name' or `id' can be set.
+        [Default: (null)]
+
+= session
+        An existing AOS session as obtained by [aos_login] module.
+
+
+- state
+        Define in which state the device should be. Currently only `normal' is supported but the goal is to add `maint' and `decomm'.
+        (Choices: normal)[Default: normal]
+
+
+REQUIREMENTS:  aos-pyez >= 0.6.0
+
+AUTHOR: Damien Garros (@dgarros)
+        METADATA:
+          status:
+          - deprecated
+          supported_by: community
+        
+
+EXAMPLES:
+
+- name: Approve a new device
+  aos_device:
+    session: "{{ aos_session }}"
+    name: D2060B2F105429GDABCD123
+    state: 'normal'
+    approve: true
+    location: "rack-45, ru-18"
+
+

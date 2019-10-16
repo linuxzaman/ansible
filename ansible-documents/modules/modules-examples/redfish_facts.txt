@@ -1,0 +1,102 @@
+EXAMPLES:
+
+- name: Get CPU inventory
+    redfish_facts:
+      category: Systems
+      command: GetCpuInventory
+      baseuri: "{{ baseuri }}"
+      username: "{{ username }}"
+      password: "{{ password }}"
+  - debug:
+      msg: "{{ redfish_facts.cpu.entries | to_nice_json }}"
+
+  - name: Get CPU model
+    redfish_facts:
+      category: Systems
+      command: GetCpuInventory
+      baseuri: "{{ baseuri }}"
+      username: "{{ username }}"
+      password: "{{ password }}"
+  - debug:
+      msg: "{{ redfish_facts.cpu.entries.0.Model }}"
+
+  - name: Get memory inventory
+    redfish_facts:
+      category: Systems
+      command: GetMemoryInventory
+      baseuri: "{{ baseuri }}"
+      username: "{{ username }}"
+      password: "{{ password }}"
+
+  - name: Get fan inventory with a timeout of 20 seconds
+    redfish_facts:
+      category: Chassis
+      command: GetFanInventory
+      baseuri: "{{ baseuri }}"
+      username: "{{ username }}"
+      password: "{{ password }}"
+      timeout: 20
+
+  - name: Get default inventory information
+    redfish_facts:
+      baseuri: "{{ baseuri }}"
+      username: "{{ username }}"
+      password: "{{ password }}"
+  - debug:
+      msg: "{{ redfish_facts | to_nice_json }}"
+
+  - name: Get several inventories
+    redfish_facts:
+      category: Systems
+      command: GetNicInventory,GetBiosAttributes
+      baseuri: "{{ baseuri }}"
+      username: "{{ username }}"
+      password: "{{ password }}"
+
+  - name: Get default system inventory and user information
+    redfish_facts:
+      category: Systems,Accounts
+      baseuri: "{{ baseuri }}"
+      username: "{{ username }}"
+      password: "{{ password }}"
+
+  - name: Get default system, user and firmware information
+    redfish_facts:
+      category: ["Systems", "Accounts", "Update"]
+      baseuri: "{{ baseuri }}"
+      username: "{{ username }}"
+      password: "{{ password }}"
+
+  - name: Get Manager NIC inventory information
+    redfish_facts:
+      category: Manager
+      command: GetManagerNicInventory
+      baseuri: "{{ baseuri }}"
+      username: "{{ username }}"
+      password: "{{ password }}"
+
+  - name: Get all information available in the Manager category
+    redfish_facts:
+      category: Manager
+      command: all
+      baseuri: "{{ baseuri }}"
+      username: "{{ username }}"
+      password: "{{ password }}"
+
+  - name: Get all information available in all categories
+    redfish_facts:
+      category: all
+      command: all
+      baseuri: "{{ baseuri }}"
+      username: "{{ username }}"
+      password: "{{ password }}"
+
+
+RETURN VALUES:
+
+result:
+    description: different results depending on task
+    returned: always
+    type: dict
+    sample: List of CPUs on system
+

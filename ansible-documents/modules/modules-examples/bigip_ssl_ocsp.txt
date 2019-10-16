@@ -1,0 +1,91 @@
+EXAMPLES:
+
+- name: Create a OCSP validator
+  bigip_ssl_ocsp:
+    name: foo
+    proxy_server_pool: validators-pool
+    provider:
+      password: secret
+      server: lb.mydomain.com
+      user: admin
+  delegate_to: localhost
+
+
+RETURN VALUES:
+
+cache_error_timeout:
+  description: The new Response Caching Error Timeout value.
+  returned: changed
+  type: int
+  sample: 3600
+cache_timeout:
+  description: The new Response Caching Timeout value.
+  returned: changed
+  type: str
+  sample: indefinite
+clock_skew:
+  description: The new Response Validation Clock Skew value.
+  returned: changed
+  type: int
+  sample: 300
+connections_limit:
+  description: The new Concurrent Connections Limit value.
+  returned: changed
+  type: int
+  sample: 50
+dns_resolver:
+  description: The new DNS Resolver value.
+  returned: changed
+  type: str
+  sample: /Common/resolver1
+route_domain:
+  description: The new Route Domain value.
+  returned: changed
+  type: str
+  sample: /Common/0
+hash_algorithm:
+  description: The new Request Signing Hash Algorithm value.
+  returned: changed
+  type: str
+  sample: sha256
+certificate:
+  description: The new Request Signing Certificate value.
+  returned: changed
+  type: str
+  sample: /Common/cert1
+key:
+  description: The new Request Signing Key value.
+  returned: changed
+  type: str
+  sample: /Common/key1
+proxy_server_pool:
+  description: The new Proxy Server Pool value.
+  returned: changed
+  type: str
+  sample: /Common/pool1
+responder_url:
+  description: The new Connection Responder URL value.
+  returned: changed
+  type: str
+  sample: "http://responder.site.com"
+status_age:
+  description: The new Response Validation Status Age value.
+  returned: changed
+  type: int
+  sample: 0
+strict_responder_checking:
+  description: The new Response Validation Strict Responder Certificate Checking value.
+  returned: changed
+  type: bool
+  sample: yes
+connection_timeout:
+  description: The new Connection Timeout value.
+  returned: changed
+  type: int
+  sample: 8
+trusted_responders:
+  description: The new Response Validation Trusted Responders value.
+  returned: changed
+  type: int
+  sample: /Common/default
+

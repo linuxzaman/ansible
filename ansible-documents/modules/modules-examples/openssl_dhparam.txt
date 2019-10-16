@@ -1,0 +1,35 @@
+EXAMPLES:
+
+- name: Generate Diffie-Hellman parameters with the default size (4096 bits)
+  openssl_dhparam:
+    path: /etc/ssl/dhparams.pem
+
+- name: Generate DH Parameters with a different size (2048 bits)
+  openssl_dhparam:
+    path: /etc/ssl/dhparams.pem
+    size: 2048
+
+- name: Force regenerate an DH parameters if they already exist
+  openssl_dhparam:
+    path: /etc/ssl/dhparams.pem
+    force: yes
+
+
+RETURN VALUES:
+
+size:
+    description: Size (in bits) of the Diffie-Hellman parameters.
+    returned: changed or success
+    type: int
+    sample: 4096
+filename:
+    description: Path to the generated Diffie-Hellman parameters.
+    returned: changed or success
+    type: str
+    sample: /etc/ssl/dhparams.pem
+backup_file:
+    description: Name of backup file created.
+    returned: changed and if I(backup) is C(yes)
+    type: str
+    sample: /path/to/dhparams.pem.2019-03-09@11:22~
+

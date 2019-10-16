@@ -1,0 +1,123 @@
+EXAMPLES:
+
+# Note: These examples do not set authentication details, see the AWS Guide for details.
+
+# Search for the AMI tagged "project:website"
+- ec2_ami_find:
+    owner: self
+    ami_tags:
+      project: website
+    no_result_action: fail
+  register: ami_find
+
+# Search for the latest Ubuntu 14.04 AMI
+- ec2_ami_find:
+    name: "ubuntu/images/ebs/ubuntu-trusty-14.04-amd64-server-*"
+    owner: 099720109477
+    sort: name
+    sort_order: descending
+    sort_end: 1
+  register: ami_find
+
+# Launch an EC2 instance
+- ec2:
+    image: "{{ ami_find.results[0].ami_id }}"
+    instance_type: m3.medium
+    key_name: mykey
+    wait: yes
+
+
+RETURN VALUES:
+
+ami_id:
+    description: id of found amazon image
+    returned: when AMI found
+    type: str
+    sample: "ami-e9095e8c"
+architecture:
+    description: architecture of image
+    returned: when AMI found
+    type: str
+    sample: "x86_64"
+block_device_mapping:
+    description: block device mapping associated with image
+    returned: when AMI found
+    type: dict
+    sample: "{
+        '/dev/xvda': {
+            'delete_on_termination': true,
+            'encrypted': false,
+            'size': 8,
+            'snapshot_id': 'snap-ca0330b8',
+            'volume_type': 'gp2'
+    }"
+creationDate:
+    description: creation date of image
+    returned: when AMI found
+    type: str
+    sample: "2015-10-15T22:43:44.000Z"
+description:
+    description: description of image
+    returned: when AMI found
+    type: str
+    sample: "test-server01"
+hypervisor:
+    description: type of hypervisor
+    returned: when AMI found
+    type: str
+    sample: "xen"
+is_public:
+    description: whether image is public
+    returned: when AMI found
+    type: bool
+    sample: false
+location:
+    description: location of image
+    returned: when AMI found
+    type: str
+    sample: "435210894375/test-server01-20151015-234343"
+name:
+    description: ami name of image
+    returned: when AMI found
+    type: str
+    sample: "test-server01-20151015-234343"
+owner_id:
+    description: owner of image
+    returned: when AMI found
+    type: str
+    sample: "435210894375"
+platform:
+    description: platform of image
+    returned: when AMI found
+    type: str
+    sample: null
+root_device_name:
+    description: root device name of image
+    returned: when AMI found
+    type: str
+    sample: "/dev/xvda"
+root_device_type:
+    description: root device type of image
+    returned: when AMI found
+    type: str
+    sample: "ebs"
+state:
+    description: state of image
+    returned: when AMI found
+    type: str
+    sample: "available"
+tags:
+    description: tags assigned to image
+    returned: when AMI found
+    type: dict
+    sample: "{
+        'Environment': 'devel',
+        'Name': 'test-server01',
+        'Role': 'web'
+    }"
+virtualization_type:
+    description: image virtualization type
+    returned: when AMI found
+    type: str
+    sample: "hvm"
+

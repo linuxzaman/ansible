@@ -1,0 +1,118 @@
+EXAMPLES:
+
+- name: Ensure the group Cow exists using sAMAccountName
+  win_domain_group:
+    name: Cow
+    scope: global
+    path: OU=groups,DC=ansible,DC=local
+
+- name: Ensure the group Cow does't exist using the Distinguished Name
+  win_domain_group:
+    name: CN=Cow,OU=groups,DC=ansible,DC=local
+    state: absent
+
+- name: Delete group ignoring the protection flag
+  win_domain_group:
+    name: Cow
+    state: absent
+    ignore_protection: yes
+
+- name: Create group with delete protection enabled and custom attributes
+  win_domain_group:
+    name: Ansible Users
+    scope: domainlocal
+    category: security
+    attributes:
+      mail: helpdesk@ansible.com
+      wWWHomePage: www.ansible.com
+    ignore_protection: yes
+
+- name: Change the OU of a group using the SID and ignore the protection flag
+  win_domain_group:
+    name: S-1-5-21-2171456218-3732823212-122182344-1189
+    scope: global
+    organizational_unit: OU=groups,DC=ansible,DC=local
+    ignore_protection: yes
+
+- name: Add managed_by user
+  win_domain_group:
+    name: Group Name Here
+    managed_by: Domain Admins
+
+- name: Add group and specify the AD domain services to use for the create
+  win_domain_group:
+    name: Test Group
+    domain_username: user@CORP.ANSIBLE.COM
+    domain_password: Password01!
+    domain_server: corp-DC12.corp.ansible.com
+    scope: domainlocal
+
+
+RETURN VALUES:
+
+attributes:
+  description: Custom attributes that were set by the module. This does not
+    show all the custom attributes rather just the ones that were set by the
+    module.
+  returned: group exists and attributes are set on the module invocation
+  type: dict
+  sample:
+    mail: 'helpdesk@ansible.com'
+    wWWHomePage: 'www.ansible.com'
+canonical_name:
+  description: The canonical name of the group.
+  returned: group exists
+  type: str
+  sample: ansible.local/groups/Cow
+category:
+  description: The Group type value of the group, i.e. Security or Distribution.
+  returned: group exists
+  type: str
+  sample: Security
+description:
+  description: The Description of the group.
+  returned: group exists
+  type: str
+  sample: Group Description
+display_name:
+  description: The Display name of the group.
+  returned: group exists
+  type: str
+  sample: Users who connect through RDP
+distinguished_name:
+  description: The full Distinguished Name of the group.
+  returned: group exists
+  type: str
+  sample: CN=Cow,OU=groups,DC=ansible,DC=local
+group_scope:
+  description: The Group scope value of the group.
+  returned: group exists
+  type: str
+  sample: Universal
+guid:
+  description: The guid of the group.
+  returned: group exists
+  type: str
+  sample: 512a9adb-3fc0-4a26-9df0-e6ea1740cf45
+managed_by:
+  description: The full Distinguished Name of the AD object that is set on the
+    managedBy attribute.
+  returned: group exists
+  type: str
+  sample: CN=Domain Admins,CN=Users,DC=ansible,DC=local
+name:
+  description: The name of the group.
+  returned: group exists
+  type: str
+  sample: Cow
+protected_from_accidental_deletion:
+  description: Whether the group is protected from accidental deletion.
+  returned: group exists
+  type: bool
+  sample: true
+sid:
+  description: The Security ID of the group.
+  returned: group exists
+  type: str
+  sample: S-1-5-21-2171456218-3732823212-122182344-1189
+

@@ -1,0 +1,81 @@
+> OPENVSWITCH_BRIDGE    (/usr/lib/python2.7/dist-packages/ansible/modules/network/ovs/openvswitch_bridge.py)
+
+        Manage Open vSwitch bridges
+
+  * This module is maintained by The Ansible Network Team
+OPTIONS (= is mandatory):
+
+= bridge
+        Name of bridge or fake bridge to manage
+
+
+- external_ids
+        A dictionary of external-ids. Omitting this parameter is a No-op. To  clear all external-ids pass an empty value.
+        [Default: (null)]
+        version_added: 2.0
+        
+
+- fail_mode
+        Set bridge fail-mode. The default value (None) is a No-op.
+        (Choices: secure, standalone)[Default: (null)]
+        version_added: 2.0
+        
+
+- parent
+        Bridge parent of the fake bridge to manage
+        [Default: (null)]
+        version_added: 2.3
+
+- set
+        Run set command after bridge configuration. This parameter is non-idempotent, play will always return `changed' state if present
+        [Default: (null)]
+        version_added: 2.3
+        
+
+- state
+        Whether the bridge should exist
+        (Choices: present, absent)[Default: present]
+
+- timeout
+        How long to wait for ovs-vswitchd to respond
+        [Default: 5]
+
+- vlan
+        The VLAN id of the fake bridge to manage (must be between 0 and 4095). This parameter is required if `parent' parameter is set.
+        [Default: (null)]
+        version_added: 2.3
+
+
+REQUIREMENTS:  ovs-vsctl
+
+AUTHOR: David Stygstra (@stygstra)
+        METADATA:
+          status:
+          - preview
+          supported_by: network
+        
+
+EXAMPLES:
+
+# Create a bridge named br-int
+- openvswitch_bridge:
+    bridge: br-int
+    state: present
+
+# Create a fake bridge named br-int within br-parent on the VLAN 405
+- openvswitch_bridge:
+    bridge: br-int
+    parent: br-parent
+    vlan: 405
+    state: present
+
+# Create an integration bridge
+- openvswitch_bridge:
+    bridge: br-int
+    state: present
+    fail_mode: secure
+  args:
+    external_ids:
+      bridge-id: br-int
+
+

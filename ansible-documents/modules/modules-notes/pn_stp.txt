@@ -1,0 +1,109 @@
+> PN_STP    (/usr/lib/python2.7/dist-packages/ansible/modules/network/netvisor/pn_stp.py)
+
+        This module can be used to modify Spanning Tree Protocol parameters.
+
+  * This module is maintained by The Ansible Community
+OPTIONS (= is mandatory):
+
+- pn_bpdus_bridge_ports
+        BPDU packets to bridge specific port.
+        [Default: (null)]
+        type: bool
+
+- pn_bridge_id
+        STP bridge id.
+        [Default: (null)]
+        type: str
+
+- pn_bridge_priority
+        STP bridge priority.
+        [Default: 32768]
+        type: str
+
+- pn_cliswitch
+        Target switch to run the CLI on.
+        [Default: (null)]
+        type: str
+
+- pn_enable
+        enable or disable STP
+        [Default: (null)]
+        type: bool
+
+- pn_forwarding_delay
+        STP forwarding delay between 4 and 30 secs.
+        [Default: 15]
+        type: str
+
+- pn_hello_time
+        STP hello time between 1 and 10 secs.
+        [Default: 2]
+        type: str
+
+- pn_max_age
+        maximum age time between 6 and 40 secs.
+        [Default: 20]
+        type: str
+
+- pn_mst_config_name
+        Name for MST Configuration Instance.
+        [Default: (null)]
+        type: str
+
+- pn_mst_max_hops
+        maximum hop count for mstp bpdu.
+        [Default: 20]
+        type: str
+
+- pn_root_guard_wait_time
+        root guard wait time between 0 and 300 secs. 0 to disable wait.
+        [Default: 20]
+        type: str
+
+- pn_stp_mode
+        STP mode.
+        (Choices: rstp, mstp)[Default: (null)]
+        type: str
+
+= state
+        State the action to perform. Use `update' to stp.
+        (Choices: update)
+        type: str
+
+
+AUTHOR: Pluribus Networks (@rajaspachipulusu17)
+        METADATA:
+          status:
+          - preview
+          supported_by: community
+        
+
+EXAMPLES:
+
+- name: Modify stp
+  pn_stp:
+    pn_cliswitch: "sw01"
+    state: "update"
+    pn_hello_time: "3"
+    pn_stp_mode: "rstp"
+
+
+RETURN VALUES:
+
+command:
+  description: the CLI command run on the target node.
+  returned: always
+  type: str
+stdout:
+  description: set of responses from the stp command.
+  returned: always
+  type: list
+stderr:
+  description: set of error responses from the stp command.
+  returned: on error
+  type: list
+changed:
+  description: indicates whether the CLI caused changes on the target.
+  returned: always
+  type: bool
+

@@ -1,0 +1,45 @@
+EXAMPLES:
+
+---
+- name: Replace the entries of Deny log on locally
+  win_user_right:
+    name: SeDenyInteractiveLogonRight
+    users:
+    - Guest
+    - Users
+    action: set
+
+- name: Add account to Log on as a service
+  win_user_right:
+    name: SeServiceLogonRight
+    users:
+    - .\Administrator
+    - '{{ansible_hostname}}\local-user'
+    action: add
+
+- name: Remove accounts who can create Symbolic links
+  win_user_right:
+    name: SeCreateSymbolicLinkPrivilege
+    users:
+    - SYSTEM
+    - Administrators
+    - DOMAIN\User
+    - group@DOMAIN.COM
+    action: remove
+
+
+RETURN VALUES:
+
+added:
+  description: A list of accounts that were added to the right, this is empty
+    if no accounts were added.
+  returned: success
+  type: list
+  sample: ["NT AUTHORITY\\SYSTEM", "DOMAIN\\User"]
+removed:
+  description: A list of accounts that were removed from the right, this is
+    empty if no accounts were removed.
+  returned: success
+  type: list
+  sample: ["SERVERNAME\\Administrator", "BUILTIN\\Administrators"]
+

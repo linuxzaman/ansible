@@ -1,0 +1,51 @@
+EXAMPLES:
+
+- name: Create directory inside a vm
+  vmware_guest_file_operation:
+    hostname: "{{ vcenter_hostname }}"
+    username: "{{ vcenter_username }}"
+    password: "{{ vcenter_password }}"
+    datacenter: "{{ datacenter_name }}"
+    validate_certs: no
+    vm_id: "{{ guest_name }}"
+    vm_username: "{{ guest_username }}"
+    vm_password: "{{ guest_userpassword }}"
+    directory:
+      path: "/test"
+      operation: create
+      recurse: no
+  delegate_to: localhost
+
+- name: copy file to vm
+  vmware_guest_file_operation:
+    hostname: "{{ vcenter_hostname }}"
+    username: "{{ vcenter_username }}"
+    password: "{{ vcenter_password }}"
+    datacenter: "{{ datacenter_name }}"
+    vm_id: "{{ guest_name }}"
+    vm_username: "{{ guest_username }}"
+    vm_password: "{{ guest_userpassword }}"
+    copy:
+        src: "files/test.zip"
+        dest: "/root/test.zip"
+        overwrite: False
+  delegate_to: localhost
+
+- name: fetch file from vm
+  vmware_guest_file_operation:
+    hostname: "{{ vcenter_hostname }}"
+    username: "{{ vcenter_username }}"
+    password: "{{ vcenter_password }}"
+    datacenter: "{{ datacenter_name }}"
+    vm_id: "{{ guest_name }}"
+    vm_username: "{{ guest_username }}"
+    vm_password: "{{ guest_userpassword }}"
+    fetch:
+        src: "/root/test.zip"
+        dest: "files/test.zip"
+  delegate_to: localhost
+
+
+RETURN VALUES:
+
+

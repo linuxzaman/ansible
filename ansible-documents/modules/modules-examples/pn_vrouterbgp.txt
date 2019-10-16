@@ -1,0 +1,34 @@
+EXAMPLES:
+
+- name: add vrouter-bgp
+  pn_vrouterbgp:
+    state: 'present'
+    pn_vrouter_name: 'ansible-vrouter'
+    pn_neighbor: 104.104.104.1
+    pn_remote_as: 1800
+
+- name: remove vrouter-bgp
+  pn_vrouterbgp:
+    state: 'absent'
+    pn_name: 'ansible-vrouter'
+
+
+RETURN VALUES:
+
+command:
+  description: The CLI command run on the target node(s).
+  returned: always
+  type: str
+stdout:
+  description: The set of responses from the vrouterbpg command.
+  returned: always
+  type: list
+stderr:
+  description: The set of error responses from the vrouterbgp command.
+  returned: on error
+  type: list
+changed:
+  description: Indicates whether the CLI caused changes on the target.
+  returned: always
+  type: bool
+

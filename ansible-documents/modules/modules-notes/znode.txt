@@ -1,0 +1,90 @@
+> ZNODE    (/usr/lib/python2.7/dist-packages/ansible/modules/clustering/znode.py)
+
+        Create, delete, retrieve, and update znodes using ZooKeeper.
+
+  * This module is maintained by The Ansible Community
+OPTIONS (= is mandatory):
+
+= hosts
+        A list of ZooKeeper servers (format '[server]:[port]').
+
+
+= name
+        The path of the znode.
+
+
+- op
+        An operation to perform. Mutually exclusive with state.
+        [Default: (null)]
+
+- recursive
+        Recursively delete node and all its children.
+        [Default: no]
+        type: bool
+        version_added: 2.1
+
+- state
+        The state to enforce. Mutually exclusive with op.
+        [Default: (null)]
+
+- timeout
+        The amount of time to wait for a node to appear.
+        [Default: 300]
+
+- value
+        The value assigned to the znode.
+        [Default: (null)]
+
+
+REQUIREMENTS:  kazoo >= 2.1, python >= 2.6
+
+AUTHOR: Trey Perry (@treyperry)
+        METADATA:
+          status:
+          - preview
+          supported_by: community
+        
+
+EXAMPLES:
+
+# Creating or updating a znode with a given value
+- znode:
+    hosts: 'localhost:2181'
+    name: /mypath
+    value: myvalue
+    state: present
+
+# Getting the value and stat structure for a znode
+- znode:
+    hosts: 'localhost:2181'
+    name: /mypath
+    op: get
+
+# Listing a particular znode's children
+- znode:
+    hosts: 'localhost:2181'
+    name: /zookeeper
+    op: list
+
+# Waiting 20 seconds for a znode to appear at path /mypath
+- znode:
+    hosts: 'localhost:2181'
+    name: /mypath
+    op: wait
+    timeout: 20
+
+# Deleting a znode at path /mypath
+- znode:
+    hosts: 'localhost:2181'
+    name: /mypath
+    state: absent
+
+# Creating or updating a znode with a given value on a remote Zookeeper
+- znode:
+    hosts: 'my-zookeeper-node:2181'
+    name: /mypath
+    value: myvalue
+    state: present
+  delegate_to: 127.0.0.1
+
+

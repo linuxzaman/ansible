@@ -1,0 +1,124 @@
+> ASA_OG    (/usr/lib/python2.7/dist-packages/ansible/modules/network/asa/asa_og.py)
+
+        This module allows you to create and update object-group network/service on Cisco ASA device.
+
+  * This module is maintained by The Ansible Community
+OPTIONS (= is mandatory):
+
+- description
+        The description for the object-group.
+        [Default: (null)]
+
+- group_object
+        The group-object for network object-group.
+        [Default: (null)]
+        type: list
+
+= group_type
+        The object group type.
+        (Choices: network-object, service-object, port-object)
+
+- host_ip
+        The host IP address for object-group network.
+        [Default: (null)]
+        type: list
+
+- ip_mask
+        The IP address and mask for network object-group.
+        [Default: (null)]
+        type: list
+
+= name
+        Name of the object group.
+
+
+- port_eq
+        The single port for port-object.
+        [Default: (null)]
+
+- port_range
+        The port range for port-object.
+        [Default: (null)]
+
+- protocol
+        The protocol for object-group service with port-object.
+        (Choices: udp, tcp, tcp-udp)[Default: (null)]
+
+- service_cfg
+        The service-object configuration protocol, direction, range or port.
+        [Default: (null)]
+
+- state
+        Manage the state of the resource.
+        (Choices: present, absent, replace)[Default: present]
+
+
+AUTHOR: Federico Olivieri (@Federico87)
+        METADATA:
+          status:
+          - preview
+          supported_by: community
+        
+
+EXAMPLES:
+
+---
+- name: configure network object-group
+  asa_og:
+    name: ansible_test_0
+    group_type: network-object
+    state: present
+    description: ansible_test object-group description
+    host_ip:
+      - 8.8.8.8
+      - 8.8.4.4
+    ip_mask:
+      - 10.0.0.0 255.255.255.0
+      - 192.168.0.0 255.255.0.0
+    group_object:
+      - awx_lon
+      - awx_ams
+
+- name: configure port-object object-group
+  asa_og:
+    name: ansible_test_1
+    group_type: port-object
+    state: replace
+    description: ansible_test object-group description
+    protocol: tcp-udp
+    port_eq:
+      - 1025
+      - kerberos
+    port_range:
+      - 1025 5201
+      - 0 1024
+
+- name: configure service-object object-group
+  asa_og:
+    name: ansible_test_2
+    group_type: service-object
+    state: absent
+    description: ansible_test object-group description
+    service_cfg:
+      - tcp destination eq 8080
+      - tcp destination eq www
+
+
+RETURN VALUES:
+
+commands:
+  description: command sent to the device
+  returned: always
+  type: list
+  sample: [
+    "object-group network ansible_test_0",
+    "description ansible_test object-group description",
+    "network-object host 8.8.8.8",
+    "network-object host 8.8.4.4",
+    "network-object 10.0.0.0 255.255.255.0",
+    "network-object 192.168.0.0 255.255.0.0",
+    "network-object 192.168.0.0 255.255.0.0",
+    "group-object awx_lon",
+    "group-object awx_ams",
+    ]
+

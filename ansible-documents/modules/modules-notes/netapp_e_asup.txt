@@ -1,0 +1,143 @@
+> NETAPP_E_ASUP    (/usr/lib/python2.7/dist-packages/ansible/modules/storage/netapp/netapp_e_asup.py)
+
+        Allow the auto-support settings to be configured for an individual E-Series storage-system
+
+  * This module is maintained by The Ansible Community
+OPTIONS (= is mandatory):
+
+- active
+        Enable active/proactive monitoring for ASUP. When a problem is detected by our monitoring systems, it's possible that the bundle
+        did not contain all of the required information at the time of the event. Enabling this option allows NetApp support personnel to
+        manually request transmission or re-transmission of support data in order ot resolve the problem.
+        Only applicable if `state=enabled'.
+        [Default: True]
+        type: bool
+
+= api_password
+        The password to authenticate with the SANtricity Web Services Proxy or Embedded Web Services API.
+
+
+= api_url
+        The url to the SANtricity Web Services Proxy or Embedded Web Services API. Example https://prod-1.wahoo.acme.com/devmgr/v2
+
+
+= api_username
+        The username to authenticate with the SANtricity Web Services Proxy or Embedded Web Services API.
+
+
+- days
+        A list of days of the week that ASUP bundles will be sent. A larger, weekly bundle will be sent on one of the provided days.
+        (Aliases: days_of_week, schedule_days)(Choices: monday, tuesday, wednesday, thursday, friday, saturday, sunday)[Default: (null)]
+
+- end
+        An end hour may be specified in a range from 1 to 24 hours.
+        ASUP bundles will be sent daily between the provided start and end time (UTC).
+        `start' must be less than `end'.
+        (Aliases: end_time)[Default: 24]
+
+- log_path
+        A local path to a file to be used for debug logging
+        [Default: (null)]
+
+- ssid
+        The ID of the array to manage. This value must be unique for each array.
+        [Default: 1]
+
+- start
+        A start hour may be specified in a range from 0 to 23 hours.
+        ASUP bundles will be sent daily between the provided start and end time (UTC).
+        `start' must be less than `end'.
+        (Aliases: start_time)[Default: 0]
+
+- state
+        Enable/disable the E-Series auto-support configuration.
+        When this option is enabled, configuration, logs, and other support-related information will be relayed to NetApp to help better
+        support your system. No personally identifiable information, passwords, etc, will be collected.
+        (Aliases: asup, auto_support, autosupport)(Choices: enabled, disabled)[Default: enabled]
+
+- validate_certs
+        Should https certificates be validated?
+        [Default: True]
+        type: bool
+
+- verbose
+        Provide the full ASUP configuration in the return.
+        [Default: False]
+        type: bool
+
+
+NOTES:
+      * Check mode is supported.
+      * Enabling ASUP will allow our support teams to monitor the logs of the storage-system in order to proactively respond to
+        issues with the system. It is recommended that all ASUP-related options be enabled, but they may be disabled if desired.
+      * This API is currently only supported with the Embedded Web Services API v2.0 and higher.
+      * The E-Series Ansible modules require either an instance of the Web Services Proxy (WSP), to be available to manage the
+        storage-system, or an E-Series storage-system that supports the Embedded Web Services API.
+      * Embedded Web Services is currently available on the E2800, E5700, EF570, and newer hardware models.
+      * [netapp_e_storage_system] may be utilized for configuring the systems managed by a WSP instance.
+
+
+AUTHOR: Michael Price (@lmprice)
+        METADATA:
+          status:
+          - preview
+          supported_by: community
+        
+
+EXAMPLES:
+
+- name: Enable ASUP and allow pro-active retrieval of bundles
+      netapp_e_asup:
+        state: enabled
+        active: yes
+        api_url: "10.1.1.1:8443"
+        api_username: "admin"
+        api_password: "myPass"
+
+    - name: Set the ASUP schedule to only send bundles from 12 AM CST to 3 AM CST.
+      netapp_e_asup:
+        start: 17
+        end: 20
+        api_url: "10.1.1.1:8443"
+        api_username: "admin"
+        api_password: "myPass"
+
+
+RETURN VALUES:
+
+msg:
+    description: Success message
+    returned: on success
+    type: str
+    sample: The settings have been updated.
+asup:
+    description:
+        - True if ASUP is enabled.
+    returned: on success
+    sample: True
+    type: bool
+active:
+    description:
+        - True if the active option has been enabled.
+    returned: on success
+    sample: True
+    type: bool
+cfg:
+    description:
+        - Provide the full ASUP configuration.
+    returned: on success when I(verbose=true).
+    type: complex
+    contains:
+        asupEnabled:
+            description:
+                    - True if ASUP has been enabled.
+            type: bool
+        onDemandEnabled:
+            description:
+                    - True if ASUP active monitoring has been enabled.
+            type: bool
+        daysOfWeek:
+            description:
+                - The days of the week that ASUP bundles will be sent.
+            type: list
+

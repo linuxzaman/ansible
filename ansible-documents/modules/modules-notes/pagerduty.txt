@@ -1,0 +1,125 @@
+> PAGERDUTY    (/usr/lib/python2.7/dist-packages/ansible/modules/monitoring/pagerduty.py)
+
+        This module will let you create PagerDuty maintenance windows
+
+  * This module is maintained by The Ansible Community
+OPTIONS (= is mandatory):
+
+- desc
+        Short description of maintenance window.
+        [Default: Created by Ansible]
+
+- hours
+        Length of maintenance window in hours.
+        [Default: 1]
+
+- minutes
+        Maintenance window in minutes (this is added to the hours).
+        [Default: 0]
+        version_added: 1.8
+
+- name
+        PagerDuty unique subdomain. Obsolete. It is not used with PagerDuty REST v2 API.
+        [Default: (null)]
+
+- requester_id
+        ID of user making the request. Only needed when creating a maintenance_window.
+        [Default: (null)]
+        version_added: 1.8
+
+- service
+        A comma separated list of PagerDuty service IDs.
+        (Aliases: services)[Default: (null)]
+
+= state
+        Create a maintenance window or get a list of ongoing windows.
+        (Choices: running, started, ongoing, absent)
+
+= token
+        A pagerduty token, generated on the pagerduty site. It is used for authorization.
+
+        version_added: 1.8
+
+- user
+        PagerDuty user ID. Obsolete. Please, use `token' for authorization.
+        [Default: (null)]
+
+- validate_certs
+        If `no', SSL certificates will not be validated. This should only be used on personally controlled sites using self-signed
+        certificates.
+        [Default: yes]
+        type: bool
+        version_added: 1.5.1
+
+- window_id
+        ID of maintenance window. Only needed when absent a maintenance_window.
+        [Default: (null)]
+        version_added: 2.7
+
+
+REQUIREMENTS:  PagerDuty API access
+
+AUTHOR: Andrew Newdigate (@suprememoocow), Dylan Silva (@thaumos), Justin Johns (!UNKNOWN), Bruce Pennypacker (@bpennypacker)
+        METADATA:
+          status:
+          - preview
+          supported_by: community
+        
+
+EXAMPLES:
+
+# List ongoing maintenance windows using a token
+- pagerduty:
+    name: companyabc
+    token: xxxxxxxxxxxxxx
+    state: ongoing
+
+# Create a 1 hour maintenance window for service FOO123
+- pagerduty:
+    name: companyabc
+    user: example@example.com
+    token: yourtoken
+    state: running
+    service: FOO123
+
+# Create a 5 minute maintenance window for service FOO123
+- pagerduty:
+    name: companyabc
+    token: xxxxxxxxxxxxxx
+    hours: 0
+    minutes: 5
+    state: running
+    service: FOO123
+
+
+# Create a 4 hour maintenance window for service FOO123 with the description "deployment".
+- pagerduty:
+    name: companyabc
+    user: example@example.com
+    state: running
+    service: FOO123
+    hours: 4
+    desc: deployment
+  register: pd_window
+
+# Delete the previous maintenance window
+- pagerduty:
+    name: companyabc
+    user: example@example.com
+    state: absent
+    window_id: '{{ pd_window.result.maintenance_window.id }}'
+
+# Delete a maintenance window from a separate playbook than its creation, and if it is the only existing maintenance window.
+- pagerduty:
+    requester_id: XXXXXXX
+    token: yourtoken
+    state: ongoing
+  register: pd_window
+
+- pagerduty:
+    requester_id: XXXXXXX
+    token: yourtoken
+    state: absent
+    window_id: "{{ pd_window.result.maintenance_windows[0].id }}"
+
+

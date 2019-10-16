@@ -1,0 +1,59 @@
+EXAMPLES:
+
+- name: Just get the list from default pip
+  pip_package_info:
+
+- name: get the facts for default pip, pip2 and pip3.6
+  pip_package_info:
+    clients: ['pip', 'pip2', 'pip3.6']
+
+- name: get from specific paths (virtualenvs?)
+  pip_package_info:
+    clients: '/home/me/projec42/python/pip3.5'
+
+
+RETURN VALUES:
+
+packages:
+  description: a dictionary of installed package data
+  returned: always
+  type: dict
+  contains:
+    python:
+      description: A dictionary with each pip client which then contains a list of dicts with python package information
+      returned: always
+      type: dict
+      sample:
+        "packages": {
+            "pip": {
+                "Babel": [
+                    {
+                        "name": "Babel",
+                        "source": "pip",
+                        "version": "2.6.0"
+                    }
+                ],
+                "Flask": [
+                    {
+                        "name": "Flask",
+                        "source": "pip",
+                        "version": "1.0.2"
+                    }
+                ],
+                "Flask-SQLAlchemy": [
+                    {
+                        "name": "Flask-SQLAlchemy",
+                        "source": "pip",
+                        "version": "2.3.2"
+                    }
+                ],
+                "Jinja2": [
+                    {
+                        "name": "Jinja2",
+                        "source": "pip",
+                        "version": "2.10"
+                    }
+                ],
+            },
+        }
+

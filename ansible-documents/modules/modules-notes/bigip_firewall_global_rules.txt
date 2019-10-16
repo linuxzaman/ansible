@@ -1,0 +1,184 @@
+> BIGIP_FIREWALL_GLOBAL_RULES    (/usr/lib/python2.7/dist-packages/ansible/modules/network/f5/bigip_firewall_global_rules.py)
+
+        Configures the global network firewall rules. These firewall rules are applied to all packets except those going through the
+        management interface. They are applied first, before any firewall rules for the packet's virtual server, route domain, and/or
+        self IP.
+
+  * This module is maintained by an Ansible Partner
+OPTIONS (= is mandatory):
+
+- description
+        Description for the global list of firewall rules.
+        [Default: (null)]
+        type: str
+
+- enforced_policy
+        Specifies an enforced firewall policy.
+        `enforced_policy' rules are enforced globally.
+        [Default: (null)]
+        type: str
+
+= password
+        The password for the user account used to connect to the BIG-IP.
+        You may omit this option by setting the environment variable `F5_PASSWORD'.
+        (Aliases: pass, pwd)
+        type: str
+
+- provider
+        A dict object containing connection details.
+        [Default: (null)]
+        suboptions:
+          password:
+            aliases:
+            - pass
+            - pwd
+            description:
+            - The password for the user account used to connect to the BIG-IP.
+            - You may omit this option by setting the environment variable `F5_PASSWORD'.
+            required: true
+            type: str
+          server:
+            description:
+            - The BIG-IP host.
+            - You may omit this option by setting the environment variable `F5_SERVER'.
+            required: true
+            type: str
+          server_port:
+            default: 443
+            description:
+            - The BIG-IP server port.
+            - You may omit this option by setting the environment variable `F5_SERVER_PORT'.
+            type: int
+          ssh_keyfile:
+            description:
+            - Specifies the SSH keyfile to use to authenticate the connection to the remote
+              device.  This argument is only used for `cli' transports.
+            - You may omit this option by setting the environment variable `ANSIBLE_NET_SSH_KEYFILE'.
+            type: path
+          timeout:
+            default: 10
+            description:
+            - Specifies the timeout in seconds for communicating with the network device for
+              either connecting or sending commands.  If the timeout is exceeded before the
+              operation is completed, the module will error.
+            type: int
+          transport:
+            choices:
+            - cli
+            - rest
+            default: rest
+            description:
+            - Configures the transport connection to use when connecting to the remote device.
+            type: str
+          user:
+            description:
+            - The username to connect to the BIG-IP with. This user must have administrative
+              privileges on the device.
+            - You may omit this option by setting the environment variable `F5_USER'.
+            required: true
+            type: str
+          validate_certs:
+            default: true
+            description:
+            - If `no', SSL certificates are not validated. Use this only on personally controlled
+              sites using self-signed certificates.
+            - You may omit this option by setting the environment variable `F5_VALIDATE_CERTS'.
+            type: bool
+        
+        type: dict
+        version_added: 2.5
+
+= server
+        The BIG-IP host.
+        You may omit this option by setting the environment variable `F5_SERVER'.
+
+        type: str
+
+- server_port
+        The BIG-IP server port.
+        You may omit this option by setting the environment variable `F5_SERVER_PORT'.
+        [Default: 443]
+        type: int
+        version_added: 2.2
+
+- service_policy
+        Specifies a service policy that would apply to traffic globally.
+        The service policy is applied to all flows, provided if there are no other context specific service policy configuration that
+        overrides the global service policy. For example, when a service policy is configured both at a global level, as well as on a
+        firewall rule, and a flow matches the rule, the more specific service policy configuration in the rule will override the service
+        policy setting at the global level.
+        The service policy associated here can be created using the `bigip_service_policy' module.
+        [Default: (null)]
+        type: str
+
+- staged_policy
+        Specifies a staged firewall policy.
+        `staged_policy' rules are not enforced while all the visibility aspects namely statistics, reporting and logging function as if
+        the staged-policy rules were enforced globally.
+        [Default: (null)]
+        type: str
+
+= user
+        The username to connect to the BIG-IP with. This user must have administrative privileges on the device.
+        You may omit this option by setting the environment variable `F5_USER'.
+
+        type: str
+
+- validate_certs
+        If `no', SSL certificates are not validated. Use this only on personally controlled sites using self-signed certificates.
+        You may omit this option by setting the environment variable `F5_VALIDATE_CERTS'.
+        [Default: True]
+        type: bool
+        version_added: 2.0
+
+
+NOTES:
+      * For more information on using Ansible to manage F5 Networks devices see https://www.ansible.com/integrations/networks/f5.
+      * Requires BIG-IP software version >= 12.
+      * The F5 modules only manipulate the running configuration of the F5 product. To ensure that BIG-IP specific configuration
+        persists to disk, be sure to include at least one task that uses the [bigip_config] module to save the running
+        configuration. Refer to the module's documentation for the correct usage of the module to save your running configuration.
+
+
+AUTHOR: Tim Rupp (@caphrim007)
+        METADATA:
+          status:
+          - preview
+          supported_by: certified
+        
+
+EXAMPLES:
+
+- name: Change enforced policy in AFM global rules
+  bigip_firewall_global_rules:
+    enforced_policy: enforcing1
+    provider:
+      password: secret
+      server: lb.mydomain.com
+      user: admin
+  delegate_to: localhost
+
+
+RETURN VALUES:
+
+enforced_policy:
+  description: The new global Enforced Policy.
+  returned: changed
+  type: str
+  sample: /Common/enforced1
+service_policy:
+  description: The new global Service Policy.
+  returned: changed
+  type: str
+  sample: /Common/service1
+staged_policy:
+  description: The new global Staged Policy.
+  returned: changed
+  type: str
+  sample: /Common/staged1
+description:
+  description: The new description.
+  returned: changed
+  type: str
+  sample: My description
+

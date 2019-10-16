@@ -1,0 +1,70 @@
+> NSO_SHOW    (/usr/lib/python2.7/dist-packages/ansible/modules/network/nso/nso_show.py)
+
+        This module provides support for displaying data from Cisco NSO.
+
+  * This module is maintained by an Ansible Partner
+OPTIONS (= is mandatory):
+
+- operational
+        Controls whether or not operational data is included in the result.
+        [Default: False]
+        type: bool
+
+= password
+        NSO password
+
+        type: str
+
+= path
+        Path to NSO data.
+
+
+- timeout
+        JSON-RPC request timeout in seconds
+        [Default: 300]
+        type: int
+        version_added: 2.6
+
+= url
+        NSO JSON-RPC URL, http://localhost:8080/jsonrpc
+
+        type: str
+
+= username
+        NSO username
+
+        type: str
+
+- validate_certs
+        When set to true, validates the SSL certificate of NSO when using SSL
+        [Default: False]
+        type: bool
+
+
+REQUIREMENTS:  Cisco NSO version 3.4.12 or higher, 4.1.9 or higher, 4.2.6 or higher, 4.3.7 or higher, 4.4.5 or higher, 4.5 or higher.
+
+AUTHOR: Claes Nästén (@cnasten)
+        METADATA:
+          status:
+          - preview
+          supported_by: certified
+        
+
+EXAMPLES:
+
+- name: Show devices including operational data
+  nso_show:
+    url: http://localhost:8080/jsonrpc
+    username: username
+    password: password
+    path: /ncs:devices/device
+    operational: true
+
+
+RETURN VALUES:
+
+output:
+  description: Configuration
+  returned: success
+  type: dict
+

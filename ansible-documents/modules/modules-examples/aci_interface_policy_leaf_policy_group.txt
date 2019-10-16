@@ -1,0 +1,176 @@
+EXAMPLES:
+
+- name: Create a Port Channel (PC) Interface Policy Group
+  aci_interface_policy_leaf_policy_group:
+    host: apic
+    username: admin
+    password: SomeSecretPassword
+    lag_type: link
+    policy_group: policygroupname
+    description: policygroupname description
+    link_level_policy: whateverlinklevelpolicy
+    fibre_channel_interface_policy: whateverfcpolicy
+    state: present
+  delegate_to: localhost
+
+- name: Create a Virtual Port Channel (VPC) Interface Policy Group (no description)
+  aci_interface_policy_leaf_policy_group:
+    host: apic
+    username: admin
+    password: SomeSecretPassword
+    lag_type: node
+    policy_group: policygroupname
+    link_level_policy: whateverlinklevelpolicy
+    fibre_channel_interface_policy: whateverfcpolicy
+    state: present
+  delegate_to: localhost
+
+- name: Create a Leaf Access Port Policy Group (no description)
+  aci_interface_policy_leaf_policy_group:
+    host: apic
+    username: admin
+    password: SomeSecretPassword
+    lag_type: leaf
+    policy_group: policygroupname
+    link_level_policy: whateverlinklevelpolicy
+    fibre_channel_interface_policy: whateverfcpolicy
+    state: present
+  delegate_to: localhost
+
+- name: Query all Leaf Access Port Policy Groups of type link
+  aci_interface_policy_leaf_policy_group:
+    host: apic
+    username: admin
+    password: SomeSecretPassword
+    lag_type: link
+    state: query
+  delegate_to: localhost
+  register: query_result
+
+- name: Query a specific Lead Access Port Policy Group
+  aci_interface_policy_leaf_policy_group:
+    host: apic
+    username: admin
+    password: SomeSecretPassword
+    lag_type: leaf
+    policy_group: policygroupname
+    state: query
+  delegate_to: localhost
+  register: query_result
+
+- name: Delete an Interface policy Leaf Policy Group
+  aci_interface_policy_leaf_policy_group:
+    host: apic
+    username: admin
+    password: SomeSecretPassword
+    lag_type: type_name
+    policy_group: policygroupname
+    state: absent
+  delegate_to: localhost
+
+
+RETURN VALUES:
+
+current:
+  description: The existing configuration from the APIC after the module has finished
+  returned: success
+  type: list
+  sample:
+    [
+        {
+            "fvTenant": {
+                "attributes": {
+                    "descr": "Production environment",
+                    "dn": "uni/tn-production",
+                    "name": "production",
+                    "nameAlias": "",
+                    "ownerKey": "",
+                    "ownerTag": ""
+                }
+            }
+        }
+    ]
+error:
+  description: The error information as returned from the APIC
+  returned: failure
+  type: dict
+  sample:
+    {
+        "code": "122",
+        "text": "unknown managed object class foo"
+    }
+raw:
+  description: The raw output returned by the APIC REST API (xml or json)
+  returned: parse error
+  type: str
+  sample: '<?xml version="1.0" encoding="UTF-8"?><imdata totalCount="1"><error code="122" text="unknown managed object class foo"/></imdata>'
+sent:
+  description: The actual/minimal configuration pushed to the APIC
+  returned: info
+  type: list
+  sample:
+    {
+        "fvTenant": {
+            "attributes": {
+                "descr": "Production environment"
+            }
+        }
+    }
+previous:
+  description: The original configuration from the APIC before the module has started
+  returned: info
+  type: list
+  sample:
+    [
+        {
+            "fvTenant": {
+                "attributes": {
+                    "descr": "Production",
+                    "dn": "uni/tn-production",
+                    "name": "production",
+                    "nameAlias": "",
+                    "ownerKey": "",
+                    "ownerTag": ""
+                }
+            }
+        }
+    ]
+proposed:
+  description: The assembled configuration from the user-provided parameters
+  returned: info
+  type: dict
+  sample:
+    {
+        "fvTenant": {
+            "attributes": {
+                "descr": "Production environment",
+                "name": "production"
+            }
+        }
+    }
+filter_string:
+  description: The filter string used for the request
+  returned: failure or debug
+  type: str
+  sample: ?rsp-prop-include=config-only
+method:
+  description: The HTTP method used for the request to the APIC
+  returned: failure or debug
+  type: str
+  sample: POST
+response:
+  description: The HTTP response from the APIC
+  returned: failure or debug
+  type: str
+  sample: OK (30 bytes)
+status:
+  description: The HTTP status from the APIC
+  returned: failure or debug
+  type: int
+  sample: 200
+url:
+  description: The HTTP url used for the request to the APIC
+  returned: failure or debug
+  type: str
+  sample: https://10.11.12.13/api/mo/uni/tn-production.json
+

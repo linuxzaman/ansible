@@ -1,0 +1,118 @@
+> OPENSSL_PRIVATEKEY_INFO    (/usr/lib/python2.7/dist-packages/ansible/modules/crypto/openssl_privatekey_info.py)
+
+        This module allows one to query information on OpenSSL private keys. In case the key consistency checks fail, the module will
+        fail as this indicates a faked private key. In this case, all return variables are still returned. Note that key consistency
+        checks are not available all key types; if none is available, `none' is returned for `key_is_consistent'. It uses the pyOpenSSL
+        or cryptography python library to interact with OpenSSL. If both the cryptography and PyOpenSSL libraries are available (and meet
+        the minimum version requirements) cryptography will be preferred as a backend over PyOpenSSL (unless the backend is forced with
+        `select_crypto_backend')
+
+  * This module is maintained by The Ansible Community
+OPTIONS (= is mandatory):
+
+- passphrase
+        The passphrase for the private key.
+        [Default: (null)]
+        type: str
+
+= path
+        Remote absolute path where the private key file is loaded from.
+
+        type: path
+
+- return_private_key_data
+        Whether to return private key data.
+        Only set this to `yes' when you want private information about this key to leave the remote machine.
+        WARNING: you have to make sure that private key data isn't accidentally logged!
+        [Default: False]
+        type: bool
+
+- select_crypto_backend
+        Determines which crypto backend to use.
+        The default choice is `auto', which tries to use `cryptography' if available, and falls back to `pyopenssl'.
+        If set to `pyopenssl', will try to use the L(pyOpenSSL,https://pypi.org/project/pyOpenSSL/) library.
+        If set to `cryptography', will try to use the L(cryptography,https://cryptography.io/) library.
+        (Choices: auto, cryptography, pyopenssl)[Default: auto]
+        type: str
+
+
+SEE ALSO:
+      * Module openssl_privatekey
+           The official documentation on the openssl_privatekey module.
+           https://docs.ansible.com/ansible/latest/modules/openssl_privatekey_module.html
+
+
+REQUIREMENTS:  PyOpenSSL >= 0.15 or cryptography >= 1.2.3
+
+AUTHOR: Felix Fontein (@felixfontein), Yanis Guenane (@Spredzy)
+        METADATA:
+          status:
+          - preview
+          supported_by: community
+        
+
+EXAMPLES:
+
+- name: Generate an OpenSSL private key with the default values (4096 bits, RSA)
+  openssl_privatekey:
+    path: /etc/ssl/private/ansible.com.pem
+
+- name: Get information on generated key
+  openssl_privatekey_info:
+    path: /etc/ssl/private/ansible.com.pem
+  register: result
+
+- name: Dump information
+  debug:
+    var: result
+
+
+RETURN VALUES:
+
+can_load_key:
+    description: Whether the module was able to load the private key from disk
+    returned: always
+    type: bool
+can_parse_key:
+    description: Whether the module was able to parse the private key
+    returned: always
+    type: bool
+key_is_consistent:
+    description:
+        - Whether the key is consistent. Can also return C(none) next to C(yes) and
+          C(no), to indicate that consistency couldn't be checked.
+        - In case the check returns C(no), the module will fail.
+    returned: always
+    type: bool
+public_key:
+    description: Private key's public key in PEM format
+    returned: success
+    type: str
+    sample: "-----BEGIN PUBLIC KEY-----\nMIICIjANBgkqhkiG9w0BAQEFAAOCAg8A..."
+public_key_fingerprints:
+    description:
+        - Fingerprints of private key's public key.
+        - For every hash algorithm available, the fingerprint is computed.
+    returned: success
+    type: dict
+    sample: "{'sha256': 'd4:b3:aa:6d:c8:04:ce:4e:ba:f6:29:4d:92:a3:94:b0:c2:ff:bd:bf:33:63:11:43:34:0f:51:b0:95:09:2f:63',
+              'sha512': 'f7:07:4a:f0:b0:f0:e6:8b:95:5f:f9:e6:61:0a:32:68:f1..."
+type:
+    description:
+        - The key's type.
+        - One of C(RSA), C(DSA), C(ECC), C(Ed25519), C(X25519), C(Ed448), or C(X448).
+        - Will start with C(unknown) if the key type cannot be determined.
+    returned: success
+    type: str
+    sample: RSA
+public_data:
+    description:
+        - Public key data. Depends on key type.
+    returned: success
+    type: dict
+private_data:
+    description:
+        - Private key data. Depends on key type.
+    returned: success and when I(return_private_key_data) is set to C(yes)
+    type: dict
+

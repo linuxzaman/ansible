@@ -1,0 +1,417 @@
+> ACME_CERTIFICATE    (/usr/lib/python2.7/dist-packages/ansible/modules/crypto/acme/acme_certificate.py)
+
+        Create and renew SSL/TLS certificates with a CA supporting the L(ACME protocol,https://tools.ietf.org/html/rfc8555), such as
+        L(Let's Encrypt,https://letsencrypt.org/). The current implementation supports the `http-01', `dns-01' and `tls-alpn-01'
+        challenges. To use this module, it has to be executed twice. Either as two different tasks in the same run or during two runs.
+        Note that the output of the first run needs to be recorded and passed to the second run as the module argument `data'. Between
+        these two tasks you have to fulfill the required steps for the chosen challenge by whatever means necessary. For `http-01' that
+        means creating the necessary challenge file on the destination webserver. For `dns-01' the necessary dns record has to be
+        created. For `tls-alpn-01' the necessary certificate has to be created and served. It is `not' the responsibility of this module
+        to perform these steps. For details on how to fulfill these challenges, you might have to read through L(the main ACME
+        specification,https://tools.ietf.org/html/rfc8555#section-8) and the L(TLS-ALPN-01 specification,https://tools.ietf.org/html
+        /draft-ietf-acme-tls-alpn-05#section-3). Also, consider the examples provided for this module. The module includes experimental
+        support for IP identifiers according to the L(current ACME IP draft,https://tools.ietf.org/html/draft-ietf-acme-ip-05).
+
+  * This module is maintained by The Ansible Community
+OPTIONS (= is mandatory):
+
+- account_email
+        The email address associated with this account.
+        It will be used for certificate expiration warnings.
+        Note that when `modify_account' is not set to `no' and you also used the [acme_account] module to specify more than one contact
+        for your account, this module will update your account and restrict it to the (at most one) contact email address specified here.
+        [Default: (null)]
+        type: str
+
+- account_key_content
+        Content of the ACME account RSA or Elliptic Curve key.
+        Mutually exclusive with `account_key_src'.
+        Required if `account_key_src' is not used.
+        `Warning': the content will be written into a temporary file, which will be deleted by Ansible when the module completes. Since
+        this is an important private key — it can be used to change the account key, or to revoke your certificates without knowing their
+        private keys —, this might not be acceptable.
+        In case `cryptography' is used, the content is not written into a temporary file. It can still happen that it is written to disk
+        by Ansible in the process of moving the module with its argument to the node where it is executed.
+        [Default: (null)]
+        type: str
+        version_added: 2.5
+
+- account_key_src
+        Path to a file containing the ACME account RSA or Elliptic Curve key.
+        RSA keys can be created with `openssl genrsa ...'. Elliptic curve keys can be created with `openssl ecparam -genkey ...'. Any
+        other tool creating private keys in PEM format can be used as well.
+        Mutually exclusive with `account_key_content'.
+        Required if `account_key_content' is not used.
+        (Aliases: account_key)[Default: (null)]
+        type: path
+
+- account_uri
+        If specified, assumes that the account URI is as given. If the account key does not match this account, or an account with this
+        URI does not exist, the module fails.
+        [Default: (null)]
+        type: str
+        version_added: 2.7
+
+- acme_directory
+        The ACME directory to use. This is the entry point URL to access CA server API.
+        For safety reasons the default is set to the Let's Encrypt staging server (for the ACME v1 protocol). This will create
+        technically correct, but untrusted certificates.
+        For Let's Encrypt, all staging endpoints can be found here: https://letsencrypt.org/docs/staging-environment/
+        For Let's Encrypt, the production directory URL for ACME v1 is https://acme-v01.api.letsencrypt.org/directory, and the production
+        directory URL for ACME v2 is https://acme-v02.api.letsencrypt.org/directory.
+        `Warning': So far, the module has only been tested against Let's Encrypt (staging and production) and against the L(Pebble
+        testing server,https://github.com/letsencrypt/Pebble).
+        [Default: https://acme-staging.api.letsencrypt.org/directory]
+        type: str
+
+- acme_version
+        The ACME version of the endpoint.
+        Must be 1 for the classic Let's Encrypt ACME endpoint, or 2 for the new standardized ACME v2 endpoint.
+        (Choices: 1, 2)[Default: 1]
+        type: int
+        version_added: 2.5
+
+- agreement
+        URI to a terms of service document you agree to when using the ACME v1 service at `acme_directory'.
+        Default is latest gathered from `acme_directory' URL.
+        This option will only be used when `acme_version' is 1.
+        [Default: (null)]
+        type: str
+
+- chain_dest
+        If specified, the intermediate certificate will be written to this file.
+        (Aliases: chain)[Default: (null)]
+        type: path
+        version_added: 2.5
+        
+
+- challenge
+        The challenge to be performed.
+        (Choices: http-01, dns-01, tls-alpn-01)[Default: http-01]
+        type: str
+
+= csr
+        File containing the CSR for the new certificate.
+        Can be created with `openssl req ...'.
+        The CSR may contain multiple Subject Alternate Names, but each one will lead to an individual challenge that must be fulfilled
+        for the CSR to be signed.
+        `Note': the private key used to create the CSR `must not' be the account key. This is a bad idea from a security point of view,
+        and the CA should not accept the CSR. The ACME server should return an error in this case.
+        (Aliases: src)
+        type: path
+
+- data
+        The data to validate ongoing challenges. This must be specified for the second run of the module only.
+        The value that must be used here will be provided by a previous use of this module. See the examples for more details.
+        Note that for ACME v2, only the `order_uri' entry of `data' will be used. For ACME v1, `data' must be non-empty to indicate the
+        second stage is active; all needed data will be taken from the CSR.
+        `Note': the `data' option was marked as `no_log' up to Ansible 2.5. From Ansible 2.6 on, it is no longer marked this way as it
+        causes error messages to be come unusable, and `data' does not contain any information which can be used without having access to
+        the account key or which are not public anyway.
+        [Default: (null)]
+        type: dict
+
+- deactivate_authzs
+        Deactivate authentication objects (authz) after issuing a certificate, or when issuing the certificate failed.
+        Authentication objects are bound to an account key and remain valid for a certain amount of time, and can be used to issue
+        certificates without having to re-authenticate the domain. This can be a security concern.
+        [Default: False]
+        type: bool
+        version_added: 2.6
+        
+
+- dest
+        The destination file for the certificate.
+        Required if `fullchain_dest' is not specified.
+        (Aliases: cert)[Default: (null)]
+        type: path
+
+- force
+        Enforces the execution of the challenge and validation, even if an existing certificate is still valid for more than
+        `remaining_days'.
+        This is especially helpful when having an updated CSR e.g. with additional domains for which a new certificate is desired.
+        [Default: False]
+        type: bool
+        version_added: 2.6
+        
+
+- fullchain_dest
+        The destination file for the full chain (i.e. certificate followed by chain of intermediate certificates).
+        Required if `dest' is not specified.
+        (Aliases: fullchain)[Default: (null)]
+        type: path
+        version_added: 2.5
+        
+
+- modify_account
+        Boolean indicating whether the module should create the account if necessary, and update its contact data.
+        Set to `no' if you want to use the [acme_account] module to manage your account instead, and to avoid accidental creation of a
+        new account using an old key if you changed the account key with [acme_account].
+        If set to `no', `terms_agreed' and `account_email' are ignored.
+        [Default: True]
+        type: bool
+        version_added: 2.6
+
+- remaining_days
+        The number of days the certificate must have left being valid. If `cert_days < remaining_days', then it will be renewed. If the
+        certificate is not renewed, module return values will not include `challenge_data'.
+        To make sure that the certificate is renewed in any case, you can use the `force' option.
+        [Default: 10]
+        type: int
+
+- select_crypto_backend
+        Determines which crypto backend to use.
+        The default choice is `auto', which tries to use `cryptography' if available, and falls back to `openssl'.
+        If set to `openssl', will try to use the `openssl' binary.
+        If set to `cryptography', will try to use the L(cryptography,https://cryptography.io/) library.
+        (Choices: auto, cryptography, openssl)[Default: auto]
+        type: str
+        version_added: 2.7
+
+- terms_agreed
+        Boolean indicating whether you agree to the terms of service document.
+        ACME servers can require this to be true.
+        This option will only be used when `acme_version' is not 1.
+        [Default: False]
+        type: bool
+        version_added: 2.5
+
+- validate_certs
+        Whether calls to the ACME directory will validate TLS certificates.
+        `Warning': Should `only ever' be set to `no' for testing purposes, for example when testing against a local Pebble server.
+        [Default: True]
+        type: bool
+        version_added: 2.5
+
+
+NOTES:
+      * At least one of `dest' and `fullchain_dest' must be specified.
+      * This module includes basic account management functionality. If you want to have more control over your ACME account, use
+        the [acme_account] module and disable account management for this module using the `modify_account' option.
+      * This module was called `letsencrypt' before Ansible 2.6. The usage did not change.
+      * If a new enough version of the `cryptography' library is available (see Requirements for details), it will be used instead
+        of the `openssl' binary. This can be explicitly disabled or enabled with the `select_crypto_backend' option. Note that
+        using the `openssl' binary will be slower and less secure, as private key contents always have to be stored on disk (see
+        `account_key_content').
+      * Although the defaults are chosen so that the module can be used with the L(Let's Encrypt,https://letsencrypt.org/) CA, the
+        module can in principle be used with any CA providing an ACME endpoint.
+
+
+SEE ALSO:
+      * The Let's Encrypt documentation
+           Documentation for the Let's Encrypt Certification Authority. Provides useful information for example on rate limits.
+           https://letsencrypt.org/docs/
+      * Automatic Certificate Management Environment (ACME)
+           The specification of the ACME protocol (RFC 8555).
+           https://tools.ietf.org/html/rfc8555
+      * ACME TLS ALPN Challenge Extension
+           The current draft specification of the `tls-alpn-01' challenge.
+           https://tools.ietf.org/html/draft-ietf-acme-tls-alpn-05
+      * Module acme_challenge_cert_helper
+        Helps preparing `tls-alpn-01' challenges.
+           https://docs.ansible.com/ansible/latest/modules/acme_challenge_cert_helper_module.html
+      * Module openssl_privatekey
+        Can be used to create private keys (both for certificates and accounts).
+           https://docs.ansible.com/ansible/latest/modules/openssl_privatekey_module.html
+      * Module openssl_csr
+        Can be used to create a Certificate Signing Request (CSR).
+           https://docs.ansible.com/ansible/latest/modules/openssl_csr_module.html
+      * Module certificate_complete_chain
+        Allows to find the root certificate for the returned fullchain.
+           https://docs.ansible.com/ansible/latest/modules/certificate_complete_chain_module.html
+      * Module acme_certificate_revoke
+        Allows to revoke certificates.
+           https://docs.ansible.com/ansible/latest/modules/acme_certificate_revoke_module.html
+      * Module acme_account
+        Allows to create, modify or delete an ACME account.
+           https://docs.ansible.com/ansible/latest/modules/acme_account_module.html
+      * Module acme_inspect
+        Allows to debug problems.
+           https://docs.ansible.com/ansible/latest/modules/acme_inspect_module.html
+
+
+REQUIREMENTS:  python >= 2.6, either openssl or L(cryptography,https://cryptography.io/) >= 1.5
+
+AUTHOR: Michael Gruener (@mgruener)
+        METADATA:
+          status:
+          - preview
+          supported_by: community
+        
+
+EXAMPLES:
+
+### Example with HTTP challenge ###
+
+- name: Create a challenge for sample.com using a account key from a variable.
+  acme_certificate:
+    account_key_content: "{{ account_private_key }}"
+    csr: /etc/pki/cert/csr/sample.com.csr
+    dest: /etc/httpd/ssl/sample.com.crt
+  register: sample_com_challenge
+
+# Alternative first step:
+- name: Create a challenge for sample.com using a account key from hashi vault.
+  acme_certificate:
+    account_key_content: "{{ lookup('hashi_vault', 'secret=secret/account_private_key:value') }}"
+    csr: /etc/pki/cert/csr/sample.com.csr
+    fullchain_dest: /etc/httpd/ssl/sample.com-fullchain.crt
+  register: sample_com_challenge
+
+# Alternative first step:
+- name: Create a challenge for sample.com using a account key file.
+  acme_certificate:
+    account_key_src: /etc/pki/cert/private/account.key
+    csr: /etc/pki/cert/csr/sample.com.csr
+    dest: /etc/httpd/ssl/sample.com.crt
+    fullchain_dest: /etc/httpd/ssl/sample.com-fullchain.crt
+  register: sample_com_challenge
+
+# perform the necessary steps to fulfill the challenge
+# for example:
+#
+# - copy:
+#     dest: /var/www/html/{{ sample_com_challenge['challenge_data']['sample.com']['http-01']['resource'] }}
+#     content: "{{ sample_com_challenge['challenge_data']['sample.com']['http-01']['resource_value'] }}"
+#     when: sample_com_challenge is changed
+
+- name: Let the challenge be validated and retrieve the cert and intermediate certificate
+  acme_certificate:
+    account_key_src: /etc/pki/cert/private/account.key
+    csr: /etc/pki/cert/csr/sample.com.csr
+    dest: /etc/httpd/ssl/sample.com.crt
+    fullchain_dest: /etc/httpd/ssl/sample.com-fullchain.crt
+    chain_dest: /etc/httpd/ssl/sample.com-intermediate.crt
+    data: "{{ sample_com_challenge }}"
+
+### Example with DNS challenge against production ACME server ###
+
+- name: Create a challenge for sample.com using a account key file.
+  acme_certificate:
+    account_key_src: /etc/pki/cert/private/account.key
+    account_email: myself@sample.com
+    src: /etc/pki/cert/csr/sample.com.csr
+    cert: /etc/httpd/ssl/sample.com.crt
+    challenge: dns-01
+    acme_directory: https://acme-v01.api.letsencrypt.org/directory
+    # Renew if the certificate is at least 30 days old
+    remaining_days: 60
+  register: sample_com_challenge
+
+# perform the necessary steps to fulfill the challenge
+# for example:
+#
+# - route53:
+#     zone: sample.com
+#     record: "{{ sample_com_challenge.challenge_data['sample.com']['dns-01'].record }}"
+#     type: TXT
+#     ttl: 60
+#     state: present
+#     wait: yes
+#     # Note: route53 requires TXT entries to be enclosed in quotes
+#     value: "{{ sample_com_challenge.challenge_data['sample.com']['dns-01'].resource_value | regex_replace('^(.*)$', '\"\\1\"') }}"
+#   when: sample_com_challenge is changed
+#
+# Alternative way:
+#
+# - route53:
+#     zone: sample.com
+#     record: "{{ item.key }}"
+#     type: TXT
+#     ttl: 60
+#     state: present
+#     wait: yes
+#     # Note: item.value is a list of TXT entries, and route53
+#     # requires every entry to be enclosed in quotes
+#     value: "{{ item.value | map('regex_replace', '^(.*)$', '\"\\1\"' ) | list }}"
+#   loop: "{{ sample_com_challenge.challenge_data_dns | dictsort }}"
+#   when: sample_com_challenge is changed
+
+- name: Let the challenge be validated and retrieve the cert and intermediate certificate
+  acme_certificate:
+    account_key_src: /etc/pki/cert/private/account.key
+    account_email: myself@sample.com
+    src: /etc/pki/cert/csr/sample.com.csr
+    cert: /etc/httpd/ssl/sample.com.crt
+    fullchain: /etc/httpd/ssl/sample.com-fullchain.crt
+    chain: /etc/httpd/ssl/sample.com-intermediate.crt
+    challenge: dns-01
+    acme_directory: https://acme-v01.api.letsencrypt.org/directory
+    remaining_days: 60
+    data: "{{ sample_com_challenge }}"
+  when: sample_com_challenge is changed
+
+
+RETURN VALUES:
+
+cert_days:
+  description: The number of days the certificate remains valid.
+  returned: success
+  type: int
+challenge_data:
+  description: Per identifier / challenge type challenge data.
+  returned: changed
+  type: complex
+  contains:
+    resource:
+      description: The challenge resource that must be created for validation.
+      returned: changed
+      type: str
+      sample: .well-known/acme-challenge/evaGxfADs6pSRb2LAv9IZf17Dt3juxGJ-PCt92wr-oA
+    resource_original:
+      description:
+        - The original challenge resource including type identifier for C(tls-alpn-01)
+          challenges.
+      returned: changed and challenge is C(tls-alpn-01)
+      type: str
+      sample: DNS:example.com
+      version_added: "2.8"
+    resource_value:
+      description:
+        - The value the resource has to produce for the validation.
+        - For C(http-01) and C(dns-01) challenges, the value can be used as-is.
+        - "For C(tls-alpn-01) challenges, note that this return value contains a
+           Base64 encoded version of the correct binary blob which has to be put
+           into the acmeValidation x509 extension; see
+           U(https://tools.ietf.org/html/draft-ietf-acme-tls-alpn-05#section-3)
+           for details. To do this, you might need the C(b64decode) Jinja filter
+           to extract the binary blob from this return value."
+      returned: changed
+      type: str
+      sample: IlirfxKKXA...17Dt3juxGJ-PCt92wr-oA
+    record:
+      description: The full DNS record's name for the challenge.
+      returned: changed and challenge is C(dns-01)
+      type: str
+      sample: _acme-challenge.example.com
+      version_added: "2.5"
+challenge_data_dns:
+  description: List of TXT values per DNS record, in case challenge is C(dns-01).
+  returned: changed
+  type: dict
+  version_added: "2.5"
+authorizations:
+  description: ACME authorization data.
+  returned: changed
+  type: complex
+  contains:
+      authorization:
+        description: ACME authorization object. See U(https://tools.ietf.org/html/rfc8555#section-7.1.4)
+        returned: success
+        type: dict
+order_uri:
+  description: ACME order URI.
+  returned: changed
+  type: str
+  version_added: "2.5"
+finalization_uri:
+  description: ACME finalization URI.
+  returned: changed
+  type: str
+  version_added: "2.5"
+account_uri:
+  description: ACME account URI.
+  returned: changed
+  type: str
+  version_added: "2.5"
+

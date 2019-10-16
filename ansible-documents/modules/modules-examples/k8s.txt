@@ -1,0 +1,117 @@
+EXAMPLES:
+
+- name: Create a k8s namespace
+  k8s:
+    name: testing
+    api_version: v1
+    kind: Namespace
+    state: present
+
+- name: Create a Service object from an inline definition
+  k8s:
+    state: present
+    definition:
+      apiVersion: v1
+      kind: Service
+      metadata:
+        name: web
+        namespace: testing
+        labels:
+          app: galaxy
+          service: web
+      spec:
+        selector:
+          app: galaxy
+          service: web
+        ports:
+        - protocol: TCP
+          targetPort: 8000
+          name: port-8000-tcp
+          port: 8000
+
+- name: Create a Service object by reading the definition from a file
+  k8s:
+    state: present
+    src: /testing/service.yml
+
+- name: Remove an existing Service object
+  k8s:
+    state: absent
+    api_version: v1
+    kind: Service
+    namespace: testing
+    name: web
+
+# Passing the object definition from a file
+
+- name: Create a Deployment by reading the definition from a local file
+  k8s:
+    state: present
+    src: /testing/deployment.yml
+
+- name: >-
+    Read definition file from the Ansible controller file system.
+    If the definition file has been encrypted with Ansible Vault it will automatically be decrypted.
+  k8s:
+    state: present
+    definition: "{{ lookup('file', '/testing/deployment.yml') }}"
+
+- name: Read definition file from the Ansible controller file system after Jinja templating
+  k8s:
+    state: present
+    definition: "{{ lookup('template', '/testing/deployment.yml') }}"
+
+- name: fail on validation errors
+  k8s:
+    state: present
+    definition: "{{ lookup('template', '/testing/deployment.yml') }}"
+    validate:
+      fail_on_error: yes
+
+- name: warn on validation errors, check for unexpected properties
+  k8s:
+    state: present
+    definition: "{{ lookup('template', '/testing/deployment.yml') }}"
+    validate:
+      fail_on_error: no
+      strict: yes
+
+
+RETURN VALUES:
+
+result:
+  description:
+  - The created, patched, or otherwise present object. Will be empty in the case of a deletion.
+  returned: success
+  type: complex
+  contains:
+     api_version:
+       description: The versioned schema of this representation of an object.
+       returned: success
+       type: str
+     kind:
+       description: Represents the REST resource this object represents.
+       returned: success
+       type: str
+     metadata:
+       description: Standard object metadata. Includes name, namespace, annotations, labels, etc.
+       returned: success
+       type: complex
+     spec:
+       description: Specific attributes of the object. Will vary based on the I(api_version) and I(kind).
+       returned: success
+       type: complex
+     status:
+       description: Current status details for the object.
+       returned: success
+       type: complex
+     items:
+       description: Returned only when multiple yaml documents are passed to src or resource_definition
+       returned: when resource_definition or src contains list of objects
+       type: list
+     duration:
+       description: elapsed time of task in seconds
+       returned: when C(wait) is true
+       type: int
+       sample: 48
+

@@ -1,0 +1,30 @@
+EXAMPLES:
+
+- name: Save the ESXi configuration locally by authenticating directly against the ESXi host
+  vmware_cfg_backup:
+    hostname: '{{ esxi_hostname }}'
+    username: '{{ esxi_username }}'
+    password: '{{ esxi_password }}'
+    state: saved
+    dest: /tmp/
+  delegate_to: localhost
+
+- name: Save the ESXi configuration locally by authenticating against the vCenter and selecting the ESXi host
+  vmware_cfg_backup:
+    hostname: '{{ vcenter_hostname }}'
+    esxi_hostname: '{{ esxi_hostname }}'
+    username: '{{ esxi_username }}'
+    password: '{{ esxi_password }}'
+    state: saved
+    dest: /tmp/
+  delegate_to: localhost
+
+
+RETURN VALUES:
+
+dest_file:
+    description: The full path of where the file holding the ESXi configurations was stored
+    returned: changed
+    type: str
+    sample: /tmp/configBundle-esxi.host.domain.tgz
+

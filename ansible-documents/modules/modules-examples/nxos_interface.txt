@@ -1,0 +1,80 @@
+EXAMPLES:
+
+- name: Ensure an interface is a Layer 3 port and that it has the proper description
+  nxos_interface:
+    name: Ethernet1/1
+    description: 'Configured by Ansible'
+    mode: layer3
+
+- name: Admin down an interface
+  nxos_interface:
+    name: Ethernet2/1
+    admin_state: down
+
+- name: Remove all loopback interfaces
+  nxos_interface:
+    name: loopback
+    state: absent
+
+- name: Remove all logical interfaces
+  nxos_interface:
+    interface_type: "{{ item }} "
+    state: absent
+  loop:
+    - loopback
+    - portchannel
+    - svi
+    - nve
+
+- name: Admin up all loopback interfaces
+  nxos_interface:
+    name: loopback 0-1023
+    admin_state: up
+
+- name: Admin down all loopback interfaces
+  nxos_interface:
+    name: looback 0-1023
+    admin_state: down
+
+- name: Check neighbors intent arguments
+  nxos_interface:
+    name: Ethernet2/3
+    neighbors:
+    - port: Ethernet2/3
+      host: abc.mycompany.com
+
+- name: Add interface using aggregate
+  nxos_interface:
+    aggregate:
+    - { name: Ethernet0/1, mtu: 256, description: test-interface-1 }
+    - { name: Ethernet0/2, mtu: 516, description: test-interface-2 }
+    duplex: full
+    speed: 100
+    state: present
+
+- name: Delete interface using aggregate
+  nxos_interface:
+    aggregate:
+    - name: Loopback9
+    - name: Loopback10
+    state: absent
+
+- name: Check intent arguments
+  nxos_interface:
+    name: Ethernet0/2
+    state: up
+    tx_rate: ge(0)
+    rx_rate: le(0)
+
+
+RETURN VALUES:
+
+commands:
+    description: command list sent to the device
+    returned: always
+    type: list
+    sample:
+      - interface Ethernet2/3
+      - mtu 1500
+      - speed 10
+

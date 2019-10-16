@@ -1,0 +1,164 @@
+> EXECUTE_LAMBDA    (/usr/lib/python2.7/dist-packages/ansible/modules/cloud/amazon/execute_lambda.py)
+
+        This module executes AWS Lambda functions, allowing synchronous and asynchronous invocation.
+
+  * This module is maintained by The Ansible Community
+OPTIONS (= is mandatory):
+
+- aws_access_key
+        AWS access key. If not set then the value of the AWS_ACCESS_KEY_ID, AWS_ACCESS_KEY or EC2_ACCESS_KEY environment variable is
+        used.
+        (Aliases: ec2_access_key, access_key)[Default: (null)]
+        type: str
+
+- aws_secret_key
+        AWS secret key. If not set then the value of the AWS_SECRET_ACCESS_KEY, AWS_SECRET_KEY, or EC2_SECRET_KEY environment variable is
+        used.
+        (Aliases: ec2_secret_key, secret_key)[Default: (null)]
+        type: str
+
+- debug_botocore_endpoint_logs
+        Use a botocore.endpoint logger to parse the unique (rather than total) "resource:action" API calls made during a task, outputing
+        the set to the resource_actions key in the task results. Use the aws_resource_action callback to output to total list made during
+        a playbook. The ANSIBLE_DEBUG_BOTOCORE_LOGS environment variable may also be used.
+        [Default: no]
+        type: bool
+        version_added: 2.8
+
+- dry_run
+        Do not *actually* invoke the function. A `DryRun' call will check that the caller has permissions to call the function,
+        especially for checking cross-account permissions.
+        [Default: no]
+        type: bool
+
+- ec2_url
+        Url to use to connect to EC2 or your Eucalyptus cloud (by default the module will use EC2 endpoints). Ignored for modules where
+        region is required. Must be specified for all other modules if region is not used. If not set then the value of the EC2_URL
+        environment variable, if any, is used.
+        [Default: (null)]
+        type: str
+
+- function_arn
+        The name of the function to be invoked
+        [Default: (null)]
+
+- name
+        The name of the function to be invoked. This can only be used for invocations within the calling account. To invoke a function in
+        another account, use `function_arn' to specify the full ARN.
+        [Default: (null)]
+
+- payload
+        A dictionary in any form to be provided as input to the Lambda function.
+        [Default: {}]
+
+- profile
+        Uses a boto profile. Only works with boto >= 2.24.0.
+        [Default: (null)]
+        type: str
+        version_added: 1.6
+
+- region
+        The AWS region to use. If not specified then the value of the AWS_REGION or EC2_REGION environment variable, if any, is used. See
+        http://docs.aws.amazon.com/general/latest/gr/rande.html#ec2_region
+        (Aliases: aws_region, ec2_region)[Default: (null)]
+        type: str
+
+- security_token
+        AWS STS security token. If not set then the value of the AWS_SECURITY_TOKEN or EC2_SECURITY_TOKEN environment variable is used.
+        (Aliases: access_token)[Default: (null)]
+        type: str
+        version_added: 1.6
+
+- tail_log
+        If `tail_log=yes', the result of the task will include the last 4 KB of the CloudWatch log for the function execution. Log
+        tailing only works if you use synchronous invocation `wait=yes'. This is usually used for development or testing Lambdas.
+        [Default: no]
+        type: bool
+
+- validate_certs
+        When set to "no", SSL certificates will not be validated for boto versions >= 2.6.0.
+        [Default: True]
+        type: bool
+        version_added: 1.5
+
+- version_qualifier
+        Which version/alias of the function to run. This defaults to the `LATEST' revision, but can be set to any existing version or
+        alias. See https://docs.aws.amazon.com/lambda/latest/dg/versioning-aliases.html for details.
+        [Default: LATEST]
+
+- wait
+        Whether to wait for the function results or not. If `wait' is `no', the task will not return any results. To wait for the Lambda
+        function to complete, set `wait=yes' and the result will be available in the `output' key.
+        [Default: yes]
+        type: bool
+
+
+NOTES:
+      * Async invocation will always return an empty `output' key.
+      * Synchronous invocation may result in a function timeout, resulting in an empty `output' key.
+      * If parameters are not set within the module, the following environment variables can be used in decreasing order of
+        precedence `AWS_URL' or `EC2_URL', `AWS_ACCESS_KEY_ID' or `AWS_ACCESS_KEY' or `EC2_ACCESS_KEY', `AWS_SECRET_ACCESS_KEY' or
+        `AWS_SECRET_KEY' or `EC2_SECRET_KEY', `AWS_SECURITY_TOKEN' or `EC2_SECURITY_TOKEN', `AWS_REGION' or `EC2_REGION'
+      * Ansible uses the boto configuration file (typically ~/.boto) if no credentials are provided. See
+        https://boto.readthedocs.io/en/latest/boto_config_tut.html
+      * `AWS_REGION' or `EC2_REGION' can be typically be used to specify the AWS region, when required, but this can also be
+        configured in the boto config file
+
+
+REQUIREMENTS:  boto, boto3, python >= 2.6
+
+AUTHOR: Ryan Scott Brown (@ryansb) <ryansb@redhat.com>
+        METADATA:
+          status:
+          - preview
+          supported_by: community
+        
+
+EXAMPLES:
+
+- execute_lambda:
+    name: test-function
+    # the payload is automatically serialized and sent to the function
+    payload:
+      foo: bar
+      value: 8
+  register: response
+
+# Test that you have sufficient permissions to execute a Lambda function in
+# another account
+- execute_lambda:
+    function_arn: arn:aws:lambda:us-east-1:123456789012:function/some-function
+    dry_run: true
+
+- execute_lambda:
+    name: test-function
+    payload:
+      foo: bar
+      value: 8
+    wait: true
+    tail_log: true
+  register: response
+  # the response will have a `logs` key that will contain a log (up to 4KB) of the function execution in Lambda.
+
+- execute_lambda:
+    name: test-function
+    version_qualifier: PRODUCTION
+
+
+RETURN VALUES:
+
+output:
+    description: Function output if wait=true and the function returns a value
+    returned: success
+    type: dict
+    sample: "{ 'output': 'something' }"
+logs:
+    description: The last 4KB of the function logs. Only provided if I(tail_log) is true
+    type: str
+    returned: if I(tail_log) == true
+status:
+    description: C(StatusCode) of API call exit (200 for synchronous invokes, 202 for async)
+    type: int
+    sample: 200
+    returned: always
+

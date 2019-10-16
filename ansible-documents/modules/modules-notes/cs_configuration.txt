@@ -1,0 +1,194 @@
+> CS_CONFIGURATION    (/usr/lib/python2.7/dist-packages/ansible/modules/cloud/cloudstack/cs_configuration.py)
+
+        Manages global, zone, account, storage and cluster configurations.
+
+  * This module is maintained by The Ansible Community
+OPTIONS (= is mandatory):
+
+- account
+        Ensure the value for corresponding account.
+        [Default: (null)]
+        type: str
+
+- api_http_method
+        HTTP method used to query the API endpoint.
+        If not given, the `CLOUDSTACK_METHOD' env variable is considered.
+        As the last option, the value is taken from the ini config file, also see the notes.
+        Fallback value is `get' if not specified.
+        (Choices: get, post)[Default: (null)]
+        type: str
+
+- api_key
+        API key of the CloudStack API.
+        If not given, the `CLOUDSTACK_KEY' env variable is considered.
+        As the last option, the value is taken from the ini config file, also see the notes.
+        [Default: (null)]
+        type: str
+
+- api_region
+        Name of the ini section in the `cloustack.ini' file.
+        If not given, the `CLOUDSTACK_REGION' env variable is considered.
+        [Default: cloudstack]
+        type: str
+
+- api_secret
+        Secret key of the CloudStack API.
+        If not set, the `CLOUDSTACK_SECRET' env variable is considered.
+        As the last option, the value is taken from the ini config file, also see the notes.
+        [Default: (null)]
+        type: str
+
+- api_timeout
+        HTTP timeout in seconds.
+        If not given, the `CLOUDSTACK_TIMEOUT' env variable is considered.
+        As the last option, the value is taken from the ini config file, also see the notes.
+        Fallback value is 10 seconds if not specified.
+        [Default: (null)]
+        type: int
+
+- api_url
+        URL of the CloudStack API e.g. https://cloud.example.com/client/api.
+        If not given, the `CLOUDSTACK_ENDPOINT' env variable is considered.
+        As the last option, the value is taken from the ini config file, also see the notes.
+        [Default: (null)]
+        type: str
+
+- cluster
+        Ensure the value for corresponding cluster.
+        [Default: (null)]
+        type: str
+
+- domain
+        Domain the account is related to.
+        Only considered if `account' is used.
+        [Default: ROOT]
+        type: str
+
+= name
+        Name of the configuration.
+
+        type: str
+
+- storage
+        Ensure the value for corresponding storage pool.
+        [Default: (null)]
+        type: str
+
+= value
+        Value of the configuration.
+
+        type: str
+
+- zone
+        Ensure the value for corresponding zone.
+        [Default: (null)]
+        type: str
+
+
+NOTES:
+      * Ansible uses the `cs' library's configuration method if credentials are not provided by the arguments `api_url', `api_key',
+        `api_secret'. Configuration is read from several locations, in the following order. The `CLOUDSTACK_ENDPOINT',
+        `CLOUDSTACK_KEY', `CLOUDSTACK_SECRET' and `CLOUDSTACK_METHOD'. `CLOUDSTACK_TIMEOUT' environment variables. A
+        `CLOUDSTACK_CONFIG' environment variable pointing to an `.ini' file. A `cloudstack.ini' file in the current working
+        directory. A `.cloudstack.ini' file in the users home directory. Optionally multiple credentials and endpoints can be
+        specified using ini sections in `cloudstack.ini'. Use the argument `api_region' to select the section name, default section
+        is `cloudstack'. See https://github.com/exoscale/cs for more information.
+      * A detailed guide about cloudstack modules can be found in the L(CloudStack Cloud
+        Guide,../scenario_guides/guide_cloudstack.html).
+      * This module supports check mode.
+
+
+REQUIREMENTS:  python >= 2.6, cs >= 0.6.10
+
+AUTHOR: René Moser (@resmo)
+        METADATA:
+          status:
+          - stableinterface
+          supported_by: community
+        
+
+EXAMPLES:
+
+- name: Ensure global configuration
+  cs_configuration:
+    name: router.reboot.when.outofband.migrated
+    value: false
+  delegate_to: localhost
+
+- name: Ensure zone configuration
+  cs_configuration:
+    name: router.reboot.when.outofband.migrated
+    zone: ch-gva-01
+    value: true
+  delegate_to: localhost
+
+- name: Ensure storage configuration
+  cs_configuration:
+    name: storage.overprovisioning.factor
+    storage: storage01
+    value: 2.0
+  delegate_to: localhost
+
+- name: Ensure account configuration
+  cs_configuration:
+    name: allow.public.user.templates
+    value: false
+    account: acme inc
+    domain: customers
+  delegate_to: localhost
+
+
+RETURN VALUES:
+
+---
+category:
+  description: Category of the configuration.
+  returned: success
+  type: str
+  sample: Advanced
+scope:
+  description: Scope (zone/cluster/storagepool/account) of the parameter that needs to be updated.
+  returned: success
+  type: str
+  sample: storagepool
+description:
+  description: Description of the configuration.
+  returned: success
+  type: str
+  sample: Setup the host to do multipath
+name:
+  description: Name of the configuration.
+  returned: success
+  type: str
+  sample: zone.vlan.capacity.notificationthreshold
+value:
+  description: Value of the configuration.
+  returned: success
+  type: str
+  sample: "0.75"
+account:
+  description: Account of the configuration.
+  returned: success
+  type: str
+  sample: admin
+Domain:
+  description: Domain of account of the configuration.
+  returned: success
+  type: str
+  sample: ROOT
+zone:
+  description: Zone of the configuration.
+  returned: success
+  type: str
+  sample: ch-gva-01
+cluster:
+  description: Cluster of the configuration.
+  returned: success
+  type: str
+  sample: cluster01
+storage:
+  description: Storage of the configuration.
+  returned: success
+  type: str
+  sample: storage01
+

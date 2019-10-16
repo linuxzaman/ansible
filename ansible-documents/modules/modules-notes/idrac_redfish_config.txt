@@ -1,0 +1,89 @@
+> IDRAC_REDFISH_CONFIG    (/usr/lib/python2.7/dist-packages/ansible/modules/remote_management/redfish/idrac_redfish_config.py)
+
+        For use with Dell iDRAC operations that require Redfish OEM extensions Builds Redfish URIs locally and sends them to remote iDRAC
+        controllers to set or update a configuration attribute.
+
+  * This module is maintained by The Ansible Community
+OPTIONS (= is mandatory):
+
+= baseuri
+        Base URI of iDRAC
+
+
+= category
+        Category to execute on iDRAC
+
+        type: str
+
+= command
+        List of commands to execute on iDRAC
+
+
+- manager_attribute_name
+        name of iDRAC attribute to update
+        [Default: null]
+
+- manager_attribute_value
+        value of iDRAC attribute to update
+        [Default: null]
+
+= password
+        Password for authentication with iDRAC
+
+
+- timeout
+        Timeout in seconds for URL requests to iDRAC controller
+        [Default: 10]
+        type: int
+
+= username
+        User for authentication with iDRAC
+
+
+
+AUTHOR: Jose Delarosa (@jose-delarosa)
+        METADATA:
+          status:
+          - preview
+          supported_by: community
+        
+
+EXAMPLES:
+
+- name: Enable NTP in iDRAC
+    idrac_redfish_config:
+      category: Manager
+      command: SetManagerAttributes
+      manager_attribute_name: NTPConfigGroup.1.NTPEnable
+      manager_attribute_value: Enabled
+      baseuri: "{{ baseuri }}"
+      username: "{{ username}}"
+      password: "{{ password }}"
+  - name: Set NTP server 1 to {{ ntpserver1 }} in iDRAC
+    idrac_redfish_config:
+      category: Manager
+      command: SetManagerAttributes
+      manager_attribute_name: NTPConfigGroup.1.NTP1
+      manager_attribute_value: "{{ ntpserver1 }}"
+      baseuri: "{{ baseuri }}"
+      username: "{{ username}}"
+      password: "{{ password }}"
+  - name: Set Timezone to {{ timezone }} in iDRAC
+    idrac_redfish_config:
+      category: Manager
+      command: SetManagerAttributes
+      manager_attribute_name: Time.1.Timezone
+      manager_attribute_value: "{{ timezone }}"
+      baseuri: "{{ baseuri }}"
+      username: "{{ username}}"
+      password: "{{ password }}"
+
+
+RETURN VALUES:
+
+msg:
+    description: Message with action result or error description
+    returned: always
+    type: str
+    sample: "Action was successful"
+

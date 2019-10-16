@@ -1,0 +1,276 @@
+> EC2_VOL    (/usr/lib/python2.7/dist-packages/ansible/modules/cloud/amazon/ec2_vol.py)
+
+        creates an EBS volume and optionally attaches it to an instance. If both an instance ID and a device name is given and the
+        instance has a device at the device name, then no volume is created and no attachment is made. This module has a dependency on
+        python-boto.
+
+  * This module is maintained by The Ansible Core Team
+OPTIONS (= is mandatory):
+
+- aws_access_key
+        AWS access key. If not set then the value of the AWS_ACCESS_KEY_ID, AWS_ACCESS_KEY or EC2_ACCESS_KEY environment variable is
+        used.
+        (Aliases: ec2_access_key, access_key)[Default: (null)]
+        type: str
+
+- aws_secret_key
+        AWS secret key. If not set then the value of the AWS_SECRET_ACCESS_KEY, AWS_SECRET_KEY, or EC2_SECRET_KEY environment variable is
+        used.
+        (Aliases: ec2_secret_key, secret_key)[Default: (null)]
+        type: str
+
+- debug_botocore_endpoint_logs
+        Use a botocore.endpoint logger to parse the unique (rather than total) "resource:action" API calls made during a task, outputing
+        the set to the resource_actions key in the task results. Use the aws_resource_action callback to output to total list made during
+        a playbook. The ANSIBLE_DEBUG_BOTOCORE_LOGS environment variable may also be used.
+        [Default: no]
+        type: bool
+        version_added: 2.8
+
+- delete_on_termination
+        When set to "yes", the volume will be deleted upon instance termination.
+        [Default: no]
+        type: bool
+        version_added: 2.1
+
+- device_name
+        device id to override device mapping. Assumes /dev/sdf for Linux/UNIX and /dev/xvdf for Windows.
+        [Default: (null)]
+
+- ec2_url
+        Url to use to connect to EC2 or your Eucalyptus cloud (by default the module will use EC2 endpoints). Ignored for modules where
+        region is required. Must be specified for all other modules if region is not used. If not set then the value of the EC2_URL
+        environment variable, if any, is used.
+        [Default: (null)]
+        type: str
+
+- encrypted
+        Enable encryption at rest for this volume.
+        [Default: no]
+        type: bool
+        version_added: 1.8
+
+- id
+        volume id if you wish to attach an existing volume (requires instance) or remove an existing volume
+        [Default: (null)]
+        version_added: 1.6
+
+- instance
+        instance ID if you wish to attach the volume. Since 1.9 you can set to None to detach.
+        [Default: (null)]
+
+- iops
+        the provisioned IOPs you want to associate with this volume (integer).
+        [Default: 100]
+        version_added: 1.3
+
+- kms_key_id
+        Specify the id of the KMS key to use.
+        [Default: (null)]
+        version_added: 2.3
+
+- name
+        volume Name tag if you wish to attach an existing volume (requires instance)
+        [Default: (null)]
+        version_added: 1.6
+
+- profile
+        Uses a boto profile. Only works with boto >= 2.24.0.
+        [Default: (null)]
+        type: str
+        version_added: 1.6
+
+- region
+        The AWS region to use. If not specified then the value of the AWS_REGION or EC2_REGION environment variable, if any, is used. See
+        http://docs.aws.amazon.com/general/latest/gr/rande.html#ec2_region
+        (Aliases: aws_region, ec2_region)[Default: (null)]
+        type: str
+
+- security_token
+        AWS STS security token. If not set then the value of the AWS_SECURITY_TOKEN or EC2_SECURITY_TOKEN environment variable is used.
+        (Aliases: access_token)[Default: (null)]
+        type: str
+        version_added: 1.6
+
+- snapshot
+        snapshot ID on which to base the volume
+        [Default: (null)]
+        version_added: 1.5
+
+- state
+        whether to ensure the volume is present or absent, or to list existing volumes (The `list' option was added in version 1.8).
+        (Choices: absent, present, list)[Default: present]
+        version_added: 1.6
+
+- tags
+        tag:value pairs to add to the volume after creation
+        [Default: {}]
+        version_added: 2.3
+
+- validate_certs
+        When set to "no", SSL certificates will not be validated for boto versions >= 2.6.0.
+        [Default: yes]
+        type: bool
+        version_added: 1.5
+
+- volume_size
+        size of volume (in GiB) to create.
+        [Default: (null)]
+
+- volume_type
+        Type of EBS volume; standard (magnetic), gp2 (SSD), io1 (Provisioned IOPS), st1 (Throughput Optimized HDD), sc1 (Cold HDD).
+        "Standard" is the old EBS default and continues to remain the Ansible default for backwards compatibility.
+        [Default: standard]
+        version_added: 1.9
+
+- zone
+        zone in which to create the volume, if unset uses the zone the instance is in (if set)
+        (Aliases: aws_zone, ec2_zone)[Default: (null)]
+
+
+NOTES:
+      * If parameters are not set within the module, the following environment variables can be used in decreasing order of
+        precedence `AWS_URL' or `EC2_URL', `AWS_ACCESS_KEY_ID' or `AWS_ACCESS_KEY' or `EC2_ACCESS_KEY', `AWS_SECRET_ACCESS_KEY' or
+        `AWS_SECRET_KEY' or `EC2_SECRET_KEY', `AWS_SECURITY_TOKEN' or `EC2_SECURITY_TOKEN', `AWS_REGION' or `EC2_REGION'
+      * Ansible uses the boto configuration file (typically ~/.boto) if no credentials are provided. See
+        https://boto.readthedocs.io/en/latest/boto_config_tut.html
+      * `AWS_REGION' or `EC2_REGION' can be typically be used to specify the AWS region, when required, but this can also be
+        configured in the boto config file
+
+
+REQUIREMENTS:  python >= 2.6, boto
+
+AUTHOR: Lester Wade (@lwade)
+        METADATA:
+          status:
+          - stableinterface
+          supported_by: core
+        
+
+EXAMPLES:
+
+# Simple attachment action
+- ec2_vol:
+    instance: XXXXXX
+    volume_size: 5
+    device_name: sdd
+
+# Example using custom iops params
+- ec2_vol:
+    instance: XXXXXX
+    volume_size: 5
+    iops: 100
+    device_name: sdd
+
+# Example using snapshot id
+- ec2_vol:
+    instance: XXXXXX
+    snapshot: "{{ snapshot }}"
+
+# Playbook example combined with instance launch
+- ec2:
+    keypair: "{{ keypair }}"
+    image: "{{ image }}"
+    wait: yes
+    count: 3
+  register: ec2
+- ec2_vol:
+    instance: "{{ item.id }}"
+    volume_size: 5
+  loop: "{{ ec2.instances }}"
+  register: ec2_vol
+
+# Example: Launch an instance and then add a volume if not already attached
+#   * Volume will be created with the given name if not already created.
+#   * Nothing will happen if the volume is already attached.
+#   * Requires Ansible 2.0
+
+- ec2:
+    keypair: "{{ keypair }}"
+    image: "{{ image }}"
+    zone: YYYYYY
+    id: my_instance
+    wait: yes
+    count: 1
+  register: ec2
+
+- ec2_vol:
+    instance: "{{ item.id }}"
+    name: my_existing_volume_Name_tag
+    device_name: /dev/xvdf
+  loop: "{{ ec2.instances }}"
+  register: ec2_vol
+
+# Remove a volume
+- ec2_vol:
+    id: vol-XXXXXXXX
+    state: absent
+
+# Detach a volume (since 1.9)
+- ec2_vol:
+    id: vol-XXXXXXXX
+    instance: None
+
+# List volumes for an instance
+- ec2_vol:
+    instance: i-XXXXXX
+    state: list
+
+# Create new volume using SSD storage
+- ec2_vol:
+    instance: XXXXXX
+    volume_size: 50
+    volume_type: gp2
+    device_name: /dev/xvdf
+
+# Attach an existing volume to instance. The volume will be deleted upon instance termination.
+- ec2_vol:
+    instance: XXXXXX
+    id: XXXXXX
+    device_name: /dev/sdf
+    delete_on_termination: yes
+
+
+RETURN VALUES:
+
+device:
+    description: device name of attached volume
+    returned: when success
+    type: str
+    sample: "/def/sdf"
+volume_id:
+    description: the id of volume
+    returned: when success
+    type: str
+    sample: "vol-35b333d9"
+volume_type:
+    description: the volume type
+    returned: when success
+    type: str
+    sample: "standard"
+volume:
+    description: a dictionary containing detailed attributes of the volume
+    returned: when success
+    type: str
+    sample: {
+        "attachment_set": {
+            "attach_time": "2015-10-23T00:22:29.000Z",
+            "deleteOnTermination": "false",
+            "device": "/dev/sdf",
+            "instance_id": "i-8356263c",
+            "status": "attached"
+        },
+        "create_time": "2015-10-21T14:36:08.870Z",
+        "encrypted": false,
+        "id": "vol-35b333d9",
+        "iops": null,
+        "size": 1,
+        "snapshot_id": "",
+        "status": "in-use",
+        "tags": {
+            "env": "dev"
+        },
+        "type": "standard",
+        "zone": "us-east-1b"
+    }
+

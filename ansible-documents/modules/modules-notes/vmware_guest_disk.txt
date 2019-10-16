@@ -1,0 +1,201 @@
+> VMWARE_GUEST_DISK    (/usr/lib/python2.7/dist-packages/ansible/modules/cloud/vmware/vmware_guest_disk.py)
+
+        This module can be used to add, remove and update disks belonging to given virtual machine. All parameters and VMware object
+        names are case sensitive. This module is destructive in nature, please read documentation carefully before proceeding. Be careful
+        while removing disk specified as this may lead to data loss.
+
+  * This module is maintained by The Ansible Community
+OPTIONS (= is mandatory):
+
+= datacenter
+        The datacenter name to which virtual machine belongs to.
+
+
+- disk
+        A list of disks to add.
+        The virtual disk related information is provided using this list.
+        All values and parameters are case sensitive.
+        Valid attributes are:
+         - `size[_tb,_gb,_mb,_kb]' (integer): Disk storage size in specified unit.
+           If `size' specified then unit must be specified. There is no space allowed in between size number and unit.
+           Only first occurance in disk element will be considered, even if there are multiple size* parameters available.
+         - `type' (string): Valid values are:
+             - `thin' thin disk
+             - `eagerzeroedthick' eagerzeroedthick disk
+             - `thick' thick disk
+             Default: `thick' thick disk, no eagerzero.
+         - `datastore' (string): Name of datastore or datastore cluster to be used for the disk.
+         - `autoselect_datastore' (bool): Select the less used datastore. Specify only if `datastore' is not specified.
+         - `scsi_controller' (integer): SCSI controller number. Valid value range from 0 to 3.
+           Only 4 SCSI controllers are allowed per VM.
+           Care should be taken while specifying `scsi_controller' is 0 and `unit_number' as 0 as this disk may contain OS.
+         - `unit_number' (integer): Disk Unit Number. Valid value range from 0 to 15. Only 15 disks are allowed per SCSI Controller.
+         - `scsi_type' (string): Type of SCSI controller. This value is required only for the first occurance of SCSI Controller.
+           This value is ignored, if SCSI Controller is already present or `state' is `absent'.
+           Valid values are `buslogic', `lsilogic', `lsilogicsas' and `paravirtual'.
+           `paravirtual' is default value for this parameter.
+         - `state' (string): State of disk. This is either "absent" or "present".
+           If `state' is set to `absent', disk will be removed permanently from virtual machine configuration and from VMware storage.
+           If `state' is set to `present', disk will be added if not present at given SCSI Controller and Unit Number.
+           If `state' is set to `present' and disk exists with different size, disk size is increased.
+           Reducing disk size is not allowed.
+        [Default: []]
+
+- folder
+        Destination folder, absolute or relative path to find an existing guest.
+        This is a required parameter, only if multiple VMs are found with same name.
+        The folder should include the datacenter. ESX's datacenter is ha-datacenter
+        Examples:
+           folder: /ha-datacenter/vm
+           folder: ha-datacenter/vm
+           folder: /datacenter1/vm
+           folder: datacenter1/vm
+           folder: /datacenter1/vm/folder1
+           folder: datacenter1/vm/folder1
+           folder: /folder1/datacenter1/vm
+           folder: folder1/datacenter1/vm
+           folder: /folder1/datacenter1/vm/folder2
+        [Default: (null)]
+
+- hostname
+        The hostname or IP address of the vSphere vCenter or ESXi server.
+        If the value is not specified in the task, the value of environment variable `VMWARE_HOST' will be used instead.
+        Environment variable support added in Ansible 2.6.
+        [Default: (null)]
+        type: str
+
+- name
+        Name of the virtual machine.
+        This is a required parameter, if parameter `uuid' is not supplied.
+        [Default: (null)]
+
+- password
+        The password of the vSphere vCenter or ESXi server.
+        If the value is not specified in the task, the value of environment variable `VMWARE_PASSWORD' will be used instead.
+        Environment variable support added in Ansible 2.6.
+        (Aliases: pass, pwd)[Default: (null)]
+        type: str
+
+- port
+        The port number of the vSphere vCenter or ESXi server.
+        If the value is not specified in the task, the value of environment variable `VMWARE_PORT' will be used instead.
+        Environment variable support added in Ansible 2.6.
+        [Default: 443]
+        type: int
+        version_added: 2.5
+
+- use_instance_uuid
+        Whether to use the VMWare instance UUID rather than the BIOS UUID.
+        [Default: False]
+        type: bool
+        version_added: 2.8
+
+- username
+        The username of the vSphere vCenter or ESXi server.
+        If the value is not specified in the task, the value of environment variable `VMWARE_USER' will be used instead.
+        Environment variable support added in Ansible 2.6.
+        (Aliases: admin, user)[Default: (null)]
+        type: str
+
+- uuid
+        UUID of the instance to gather facts if known, this is VMware's unique identifier.
+        This is a required parameter, if parameter `name' is not supplied.
+        [Default: (null)]
+
+- validate_certs
+        Allows connection when SSL certificates are not valid. Set to `false' when certificates are not trusted.
+        If the value is not specified in the task, the value of environment variable `VMWARE_VALIDATE_CERTS' will be used instead.
+        Environment variable support added in Ansible 2.6.
+        If set to `yes', please make sure Python >= 2.7.9 is installed on the given machine.
+        [Default: True]
+        type: bool
+
+
+NOTES:
+      * Tested on vSphere 6.0 and 6.5
+
+
+REQUIREMENTS:  python >= 2.6, PyVmomi
+
+AUTHOR: Abhijeet Kasurde (@akasurde) <akasurde@redhat.com>
+        METADATA:
+          status:
+          - preview
+          supported_by: community
+        
+
+EXAMPLES:
+
+- name: Add disks to virtual machine using UUID
+  vmware_guest_disk:
+    hostname: "{{ vcenter_hostname }}"
+    username: "{{ vcenter_username }}"
+    password: "{{ vcenter_password }}"
+    datacenter: "{{ datacenter_name }}"
+    validate_certs: no
+    uuid: 421e4592-c069-924d-ce20-7e7533fab926
+    disk:
+      - size_mb: 10
+        type: thin
+        datastore: datacluster0
+        state: present
+        scsi_controller: 1
+        unit_number: 1
+        scsi_type: 'paravirtual'
+      - size_gb: 10
+        type: eagerzeroedthick
+        state: present
+        autoselect_datastore: True
+        scsi_controller: 2
+        scsi_type: 'buslogic'
+        unit_number: 12
+      - size: 10Gb
+        type: eagerzeroedthick
+        state: present
+        autoselect_datastore: True
+        scsi_controller: 2
+        scsi_type: 'buslogic'
+        unit_number: 1
+  delegate_to: localhost
+  register: disk_facts
+
+- name: Remove disks from virtual machine using name
+  vmware_guest_disk:
+    hostname: "{{ vcenter_hostname }}"
+    username: "{{ vcenter_username }}"
+    password: "{{ vcenter_password }}"
+    datacenter: "{{ datacenter_name }}"
+    validate_certs: no
+    name: VM_225
+    disk:
+      - state: absent
+        scsi_controller: 1
+        unit_number: 1
+  delegate_to: localhost
+  register: disk_facts
+
+
+RETURN VALUES:
+
+disk_status:
+    description: metadata about the virtual machine's disks after managing them
+    returned: always
+    type: dict
+    sample: {
+        "0": {
+            "backing_datastore": "datastore2",
+            "backing_disk_mode": "persistent",
+            "backing_eagerlyscrub": false,
+            "backing_filename": "[datastore2] VM_225/VM_225.vmdk",
+            "backing_thinprovisioned": false,
+            "backing_writethrough": false,
+            "capacity_in_bytes": 10485760,
+            "capacity_in_kb": 10240,
+            "controller_key": 1000,
+            "key": 2000,
+            "label": "Hard disk 1",
+            "summary": "10,240 KB",
+            "unit_number": 0
+        },
+    }
+

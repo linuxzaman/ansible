@@ -1,0 +1,162 @@
+> EC2_VPC_VGW    (/usr/lib/python2.7/dist-packages/ansible/modules/cloud/amazon/ec2_vpc_vgw.py)
+
+        Creates AWS VPN Virtual Gateways Deletes AWS VPN Virtual Gateways Attaches Virtual Gateways to VPCs Detaches Virtual Gateways
+        from VPCs
+
+  * This module is maintained by The Ansible Community
+OPTIONS (= is mandatory):
+
+- asn
+        the BGP ASN of the amazon side
+        [Default: (null)]
+        version_added: 2.6
+
+- aws_access_key
+        AWS access key. If not set then the value of the AWS_ACCESS_KEY_ID, AWS_ACCESS_KEY or EC2_ACCESS_KEY environment variable is
+        used.
+        (Aliases: ec2_access_key, access_key)[Default: (null)]
+        type: str
+
+- aws_secret_key
+        AWS secret key. If not set then the value of the AWS_SECRET_ACCESS_KEY, AWS_SECRET_KEY, or EC2_SECRET_KEY environment variable is
+        used.
+        (Aliases: ec2_secret_key, secret_key)[Default: (null)]
+        type: str
+
+- debug_botocore_endpoint_logs
+        Use a botocore.endpoint logger to parse the unique (rather than total) "resource:action" API calls made during a task, outputing
+        the set to the resource_actions key in the task results. Use the aws_resource_action callback to output to total list made during
+        a playbook. The ANSIBLE_DEBUG_BOTOCORE_LOGS environment variable may also be used.
+        [Default: no]
+        type: bool
+        version_added: 2.8
+
+- ec2_url
+        Url to use to connect to EC2 or your Eucalyptus cloud (by default the module will use EC2 endpoints). Ignored for modules where
+        region is required. Must be specified for all other modules if region is not used. If not set then the value of the EC2_URL
+        environment variable, if any, is used.
+        [Default: (null)]
+        type: str
+
+- name
+        name of the vgw to be created or deleted
+        [Default: (null)]
+
+- profile
+        Uses a boto profile. Only works with boto >= 2.24.0.
+        [Default: (null)]
+        type: str
+        version_added: 1.6
+
+- region
+        The AWS region to use. If not specified then the value of the AWS_REGION or EC2_REGION environment variable, if any, is used. See
+        http://docs.aws.amazon.com/general/latest/gr/rande.html#ec2_region
+        (Aliases: aws_region, ec2_region)[Default: (null)]
+        type: str
+
+- security_token
+        AWS STS security token. If not set then the value of the AWS_SECURITY_TOKEN or EC2_SECURITY_TOKEN environment variable is used.
+        (Aliases: access_token)[Default: (null)]
+        type: str
+        version_added: 1.6
+
+- state
+        present to ensure resource is created.
+        absent to remove resource
+        (Choices: present, absent)[Default: present]
+
+- tags
+        dictionary of resource tags
+        (Aliases: resource_tags)[Default: (null)]
+
+- type
+        type of the virtual gateway to be created
+        (Choices: ipsec.1)[Default: (null)]
+
+- validate_certs
+        When set to "no", SSL certificates will not be validated for boto versions >= 2.6.0.
+        [Default: True]
+        type: bool
+        version_added: 1.5
+
+- vpc_id
+        the vpc-id of a vpc to attach or detach
+        [Default: (null)]
+
+- vpn_gateway_id
+        vpn gateway id of an existing virtual gateway
+        [Default: (null)]
+
+- wait_timeout
+        number of seconds to wait for status during vpc attach and detach
+        [Default: 320]
+
+
+NOTES:
+      * If parameters are not set within the module, the following environment variables can be used in decreasing order of
+        precedence `AWS_URL' or `EC2_URL', `AWS_ACCESS_KEY_ID' or `AWS_ACCESS_KEY' or `EC2_ACCESS_KEY', `AWS_SECRET_ACCESS_KEY' or
+        `AWS_SECRET_KEY' or `EC2_SECRET_KEY', `AWS_SECURITY_TOKEN' or `EC2_SECURITY_TOKEN', `AWS_REGION' or `EC2_REGION'
+      * Ansible uses the boto configuration file (typically ~/.boto) if no credentials are provided. See
+        https://boto.readthedocs.io/en/latest/boto_config_tut.html
+      * `AWS_REGION' or `EC2_REGION' can be typically be used to specify the AWS region, when required, but this can also be
+        configured in the boto config file
+
+
+REQUIREMENTS:  boto, boto3, python >= 2.6
+
+AUTHOR: Nick Aslanidis (@naslanidis)
+        METADATA:
+          status:
+          - stableinterface
+          supported_by: community
+        
+
+EXAMPLES:
+
+- name: Create a new vgw attached to a specific VPC
+  ec2_vpc_vgw:
+    state: present
+    region: ap-southeast-2
+    profile: personal
+    vpc_id: vpc-12345678
+    name: personal-testing
+    type: ipsec.1
+  register: created_vgw
+
+- name: Create a new unattached vgw
+  ec2_vpc_vgw:
+    state: present
+    region: ap-southeast-2
+    profile: personal
+    name: personal-testing
+    type: ipsec.1
+    tags:
+      environment: production
+      owner: ABC
+  register: created_vgw
+
+- name: Remove a new vgw using the name
+  ec2_vpc_vgw:
+    state: absent
+    region: ap-southeast-2
+    profile: personal
+    name: personal-testing
+    type: ipsec.1
+  register: deleted_vgw
+
+- name: Remove a new vgw using the vpn_gateway_id
+  ec2_vpc_vgw:
+    state: absent
+    region: ap-southeast-2
+    profile: personal
+    vpn_gateway_id: vgw-3a9aa123
+  register: deleted_vgw
+
+
+RETURN VALUES:
+
+result:
+  description: The result of the create, or delete action.
+  returned: success
+  type: dict
+

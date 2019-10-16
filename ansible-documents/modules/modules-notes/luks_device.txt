@@ -1,0 +1,133 @@
+> LUKS_DEVICE    (/usr/lib/python2.7/dist-packages/ansible/modules/crypto/luks_device.py)
+
+        Module manages L(LUKS,https://en.wikipedia.org/wiki/Linux_Unified_Key_Setup) on given device. Supports creating, destroying,
+        opening and closing of LUKS container and adding or removing new keys.
+
+  * This module is maintained by The Ansible Community
+OPTIONS (= is mandatory):
+
+- device
+        Device to work with (e.g. `/dev/sda1'). Needed in most cases. Can be omitted only when `state=closed' together with `name' is
+        provided.
+        [Default: (null)]
+        type: str
+
+- force_remove_last_key
+        If set to `yes', allows removing the last key from a container.
+        BEWARE that when the last key has been removed from a container, the container can no longer be opened!
+        [Default: False]
+        type: bool
+
+- keyfile
+        Used to unlock the container and needed for most of the operations. Parameter value is the path to the keyfile with the
+        passphrase.
+        BEWARE that working with keyfiles in plaintext is dangerous. Make sure that they are protected.
+        [Default: (null)]
+        type: path
+
+- name
+        Sets container name when `state=opened'. Can be used instead of `device' when closing the existing container (i.e. when
+        `state=closed').
+        [Default: (null)]
+        type: str
+
+- new_keyfile
+        Adds additional key to given container on `device'. Needs `keyfile' option for authorization. LUKS container supports up to 8
+        keys. Parameter value is the path to the keyfile with the passphrase.
+        NOTE that adding additional keys is `not idempotent'. A new keyslot will be used even if another keyslot already exists for this
+        keyfile.
+        BEWARE that working with keyfiles in plaintext is dangerous. Make sure that they are protected.
+        [Default: (null)]
+        type: path
+
+- remove_keyfile
+        Removes given key from the container on `device'. Does not remove the keyfile from filesystem. Parameter value is the path to the
+        keyfile with the passphrase.
+        NOTE that removing keys is `not idempotent'. Trying to remove a key which no longer exists results in an error.
+        NOTE that to remove the last key from a LUKS container, the `force_remove_last_key' option must be set to `yes'.
+        BEWARE that working with keyfiles in plaintext is dangerous. Make sure that they are protected.
+        [Default: (null)]
+        type: path
+
+- state
+        Desired state of the LUKS container. Based on its value creates, destroys, opens or closes the LUKS container on a given device.
+        `present' will create LUKS container unless already present. Requires `device' and `keyfile' options to be provided.
+        `absent' will remove existing LUKS container if it exists. Requires `device' or `name' to be specified.
+        `opened' will unlock the LUKS container. If it does not exist it will be created first. Requires `device' and `keyfile' to be
+        specified. Use the `name' option to set the name of the opened container. Otherwise the name will be generated automatically and
+        returned as a part of the result.
+        `closed' will lock the LUKS container. However if the container does not exist it will be created. Requires `device' and
+        `keyfile' options to be provided. If container does already exist `device' or `name' will suffice.
+        (Choices: present, absent, opened, closed)[Default: present]
+        type: str
+
+
+REQUIREMENTS:  cryptsetup, wipefs, lsblk
+
+AUTHOR: Jan Pokorny (@japokorn)
+        METADATA:
+          status:
+          - preview
+          supported_by: community
+        
+
+EXAMPLES:
+
+- name: create LUKS container (remains unchanged if it already exists)
+  luks_device:
+    device: "/dev/loop0"
+    state: "present"
+    keyfile: "/vault/keyfile"
+
+- name: (create and) open the LUKS container; name it "mycrypt"
+  luks_device:
+    device: "/dev/loop0"
+    state: "opened"
+    name: "mycrypt"
+    keyfile: "/vault/keyfile"
+
+- name: close the existing LUKS container "mycrypt"
+  luks_device:
+    state: "closed"
+    name: "mycrypt"
+
+- name: make sure LUKS container exists and is closed
+  luks_device:
+    device: "/dev/loop0"
+    state: "closed"
+    keyfile: "/vault/keyfile"
+
+- name: create container if it does not exist and add new key to it
+  luks_device:
+    device: "/dev/loop0"
+    state: "present"
+    keyfile: "/vault/keyfile"
+    new_keyfile: "/vault/keyfile2"
+
+- name: add new key to the LUKS container (container has to exist)
+  luks_device:
+    device: "/dev/loop0"
+    keyfile: "/vault/keyfile"
+    new_keyfile: "/vault/keyfile2"
+
+- name: remove existing key from the LUKS container
+  luks_device:
+    device: "/dev/loop0"
+    remove_keyfile: "/vault/keyfile2"
+
+- name: completely remove the LUKS container and its contents
+  luks_device:
+    device: "/dev/loop0"
+    state: "absent"
+
+
+RETURN VALUES:
+
+name:
+    description:
+        When I(state=opened) returns (generated or given) name
+        of LUKS container. Returns None if no name is supplied.
+    returned: success
+    type: str
+    sample: "luks-c1da9a58-2fde-4256-9d9f-6ab008b4dd1b"
+

@@ -1,0 +1,282 @@
+> GCE    (/usr/lib/python2.7/dist-packages/ansible/modules/cloud/google/_gce.py)
+
+        Creates or terminates Google Compute Engine (GCE) instances.  See https://cloud.google.com/compute for an overview. Full
+        install/configuration instructions for the gce* modules can be found in the comments of ansible/test/gce_tests.py.
+
+DEPRECATED: 
+
+	Reason: Updated modules released with increased functionality
+	Will be removed in: Ansible 2.12
+	Alternatives: Use M(gcp_compute_instance) instead.
+
+
+  * This module is maintained by The Ansible Community
+OPTIONS (= is mandatory):
+
+- credentials_file
+        path to the JSON file associated with the service account email
+        [Default: (null)]
+        version_added: 2.1.0
+
+- disk_auto_delete
+        if set boot disk will be removed after instance destruction
+        [Default: yes]
+        type: bool
+        version_added: 1.9
+
+- disk_size
+        The size of the boot disk created for this instance (in GB)
+        [Default: 10]
+        version_added: 2.3
+
+- disks
+        a list of persistent disks to attach to the instance; a string value gives the name of the disk; alternatively, a dictionary
+        value can define 'name' and 'mode' ('READ_ONLY' or 'READ_WRITE'). The first entry will be the boot disk (which must be
+        READ_WRITE).
+        [Default: (null)]
+        version_added: 1.7
+
+- external_ip
+        type of external ip, ephemeral by default; alternatively, a fixed gce ip or ip name can be given. Specify 'none' if no external
+        ip is desired.
+        [Default: ephemeral]
+        version_added: 1.9
+
+- external_projects
+        A list of other projects (accessible with the provisioning credentials) to be searched for the image.
+        [Default: (null)]
+        version_added: 2.4
+
+- image
+        image string to use for the instance (default will follow latest stable debian image)
+        [Default: debian-8]
+
+- image_family
+        image family from which to select the image.  The most recent non-deprecated image in the family will be used.
+        [Default: (null)]
+        version_added: 2.4
+
+- instance_names
+        a comma-separated list of instance names to create or destroy
+        [Default: (null)]
+
+- ip_forward
+        set to `yes' if the instance can forward ip packets (useful for gateways)
+        [Default: no]
+        type: bool
+        version_added: 1.9
+
+- machine_type
+        machine type to use for the instance, use 'n1-standard-1' by default
+        [Default: n1-standard-1]
+
+- metadata
+        a hash/dictionary of custom data for the instance; '{"key":"value", ...}'
+        [Default: (null)]
+
+- name
+        either a name of a single instance or when used with 'num_instances', the base name of a cluster of nodes
+        (Aliases: base_name)[Default: (null)]
+
+- network
+        name of the network, 'default' will be used if not specified
+        [Default: default]
+
+- num_instances
+        can be used with 'name', specifies the number of nodes to provision using 'name' as a base name
+        [Default: (null)]
+        version_added: 2.3
+
+- pem_file
+        path to the pem file associated with the service account email This option is deprecated. Use 'credentials_file'.
+        [Default: (null)]
+        version_added: 1.5.1
+
+- persistent_boot_disk
+        if set, create the instance with a persistent boot disk
+        [Default: no]
+        type: bool
+
+- preemptible
+        if set to `yes', instances will be preemptible and time-limited. (requires libcloud >= 0.20.0)
+        [Default: no]
+        type: bool
+        version_added: 2.1
+
+- project_id
+        your GCE project ID
+        [Default: (null)]
+        version_added: 1.5.1
+
+- service_account_email
+        service account email
+        [Default: (null)]
+        version_added: 1.5.1
+
+- service_account_permissions
+        service account permissions (see https://cloud.google.com/sdk/gcloud/reference/compute/instances/create, --scopes section for
+        detailed information)
+        (Choices: bigquery, cloud-platform, compute-ro, compute-rw, useraccounts-ro, useraccounts-rw, datastore, logging-write,
+        monitoring, sql-admin, storage-full, storage-ro, storage-rw, taskqueue, userinfo-email)[Default: (null)]
+        version_added: 2.0
+
+- state
+        desired state of the resource
+        (Choices: active, present, absent, deleted, started, stopped, terminated)[Default: present]
+
+- subnetwork
+        name of the subnetwork in which the instance should be created
+        [Default: (null)]
+        version_added: 2.2
+
+- tags
+        a comma-separated list of tags to associate with the instance
+        [Default: (null)]
+
+= zone
+        the GCE zone to use. The list of available zones is at https://cloud.google.com/compute/docs/regions-zones/regions-
+        zones#available.
+        [Default: us-central1-a]
+
+
+NOTES:
+      * Either `instance_names' or `name' is required.
+      * JSON credentials strongly preferred.
+
+
+REQUIREMENTS:  python >= 2.6, apache-libcloud >= 0.13.3, >= 0.17.0 if using JSON credentials, >= 0.20.0 if using preemptible option
+
+AUTHOR: Eric Johnson (@erjohnso) <erjohnso@google.com>, Tom Melendez (@supertom) <supertom@google.com>
+        METADATA:
+          status:
+          - deprecated
+          supported_by: community
+        
+
+EXAMPLES:
+
+# Basic provisioning example.  Create a single Debian 8 instance in the
+# us-central1-a Zone of the n1-standard-1 machine type.
+# Create multiple instances by specifying multiple names, separated by
+# commas in the instance_names field
+# (e.g. my-test-instance1,my-test-instance2)
+  - gce:
+      instance_names: my-test-instance1
+      zone: us-central1-a
+      machine_type: n1-standard-1
+      image: debian-8
+      state: present
+      service_account_email: "your-sa@your-project-name.iam.gserviceaccount.com"
+      credentials_file: "/path/to/your-key.json"
+      project_id: "your-project-name"
+      disk_size: 32
+
+# Create a single instance of an image from the "my-base-image" image family
+# in the us-central1-a Zone of the n1-standard-1 machine type.
+# This image family is in the "my-other-project" GCP project.
+  - gce:
+      instance_names: my-test-instance1
+      zone: us-central1-a
+      machine_type: n1-standard-1
+      image_family: my-base-image
+      external_projects:
+        - my-other-project
+      state: present
+      service_account_email: "your-sa@your-project-name.iam.gserviceaccount.com"
+      credentials_file: "/path/to/your-key.json"
+      project_id: "your-project-name"
+      disk_size: 32
+
+# Create a single Debian 8 instance in the us-central1-a Zone
+# Use existing disks, custom network/subnetwork, set service account permissions
+# add tags and metadata.
+  - gce:
+      instance_names: my-test-instance
+      zone: us-central1-a
+      machine_type: n1-standard-1
+      state: present
+      metadata: '{"db":"postgres", "group":"qa", "id":500}'
+      tags:
+        - http-server
+        - my-other-tag
+      disks:
+        - name: disk-2
+          mode: READ_WRITE
+        - name: disk-3
+          mode: READ_ONLY
+      disk_auto_delete: false
+      network: foobar-network
+      subnetwork: foobar-subnetwork-1
+      preemptible: true
+      ip_forward: true
+      service_account_permissions:
+        - storage-full
+        - taskqueue
+        - bigquery
+        - https://www.googleapis.com/auth/ndev.clouddns.readwrite
+      service_account_email: "your-sa@your-project-name.iam.gserviceaccount.com"
+      credentials_file: "/path/to/your-key.json"
+      project_id: "your-project-name"
+
+---
+# Example Playbook
+- name: Compute Engine Instance Examples
+  hosts: localhost
+  vars:
+    service_account_email: "your-sa@your-project-name.iam.gserviceaccount.com"
+    credentials_file: "/path/to/your-key.json"
+    project_id: "your-project-name"
+  tasks:
+    - name: create multiple instances
+      # Basic provisioning example.  Create multiple Debian 8 instances in the
+      # us-central1-a Zone of n1-standard-1 machine type.
+      gce:
+        instance_names: test1,test2,test3
+        zone: us-central1-a
+        machine_type: n1-standard-1
+        image: debian-8
+        state: present
+        service_account_email: "{{ service_account_email }}"
+        credentials_file: "{{ credentials_file }}"
+        project_id: "{{ project_id }}"
+        metadata : '{ "startup-script" : "apt-get update" }'
+      register: gce
+
+    - name: Save host data
+      add_host:
+        hostname: "{{ item.public_ip }}"
+        groupname: gce_instances_ips
+      with_items: "{{ gce.instance_data }}"
+
+    - name: Wait for SSH for instances
+      wait_for:
+        delay: 1
+        host: "{{ item.public_ip }}"
+        port: 22
+        state: started
+        timeout: 30
+      with_items: "{{ gce.instance_data }}"
+
+    - name: Configure Hosts
+      hosts: gce_instances_ips
+      become: yes
+      become_method: sudo
+      roles:
+        - my-role-one
+        - my-role-two
+      tags:
+        - config
+
+    - name: delete test-instances
+      # Basic termination of instance.
+      gce:
+        service_account_email: "{{ service_account_email }}"
+        credentials_file: "{{ credentials_file }}"
+        project_id: "{{ project_id }}"
+        instance_names: "{{ gce.instance_names }}"
+        zone: us-central1-a
+        state: absent
+      tags:
+        - delete
+
+

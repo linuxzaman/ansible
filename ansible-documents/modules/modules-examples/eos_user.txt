@@ -1,0 +1,43 @@
+EXAMPLES:
+
+- name: create a new user
+  eos_user:
+    name: ansible
+    sshkey: "{{ lookup('file', '~/.ssh/id_rsa.pub') }}"
+    state: present
+
+- name: remove all users except admin
+  eos_user:
+    purge: yes
+
+- name: set multiple users to privilege level 15
+  eos_user:
+    aggregate:
+      - name: netop
+      - name: netend
+    privilege: 15
+    state: present
+
+- name: Change Password for User netop
+  eos_user:
+    username: netop
+    configured_password: "{{ new_password }}"
+    update_password: always
+    state: present
+
+
+RETURN VALUES:
+
+commands:
+  description: The list of configuration mode commands to send to the device
+  returned: always
+  type: list
+  sample:
+    - name ansible secret password
+    - name admin secret admin
+session_name:
+  description: The EOS config session name used to load the configuration
+  returned: when changed is True
+  type: str
+  sample: ansible_1479315771
+

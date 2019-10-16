@@ -1,0 +1,45 @@
+EXAMPLES:
+
+- name: Create SnapMirror
+      na_ontap_snapmirror:
+        state: present
+        source_volume: test_src
+        destination_volume: test_dest
+        source_vserver: ansible_src
+        destination_vserver: ansible_dest
+        schedule: hourly
+        policy: MirrorAllSnapshots
+        hostname: "{{ netapp_hostname }}"
+        username: "{{ netapp_username }}"
+        password: "{{ netapp_password }}"
+
+    - name: Delete SnapMirror
+      na_ontap_snapmirror:
+        state: absent
+        destination_path: <path>
+        source_hostname: "{{ source_hostname }}"
+        hostname: "{{ netapp_hostname }}"
+        username: "{{ netapp_username }}"
+        password: "{{ netapp_password }}"
+
+    - name: Set schedule to NULL
+      na_ontap_snapmirror:
+        state: present
+        destination_path: <path>
+        schedule: ""
+        hostname: "{{ netapp_hostname }}"
+        username: "{{ netapp_username }}"
+        password: "{{ netapp_password }}"
+
+    - name: Release SnapMirror
+      na_ontap_snapmirror:
+        state: release
+        destination_path: <path>
+        hostname: "{{ netapp_hostname }}"
+        username: "{{ netapp_username }}"
+        password: "{{ netapp_password }}"
+
+
+RETURN VALUES:
+
+

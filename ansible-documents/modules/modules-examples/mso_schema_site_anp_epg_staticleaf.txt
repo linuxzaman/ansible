@@ -1,0 +1,63 @@
+EXAMPLES:
+
+- name: Add a new static leaf to a site EPG
+  mso_schema_template_anp_epg_staticleaf:
+    host: mso_host
+    username: admin
+    password: SomeSecretPassword
+    schema: Schema1
+    site: Site1
+    template: Template1
+    anp: ANP1
+    epg: EPG1
+    leaf: Leaf1
+    vlan: 123
+    state: present
+  delegate_to: localhost
+
+- name: Remove a static leaf from a site EPG
+  mso_schema_template_anp_epg_staticleaf:
+    host: mso_host
+    username: admin
+    password: SomeSecretPassword
+    schema: Schema1
+    site: Site1
+    template: Template1
+    anp: ANP1
+    epg: EPG1
+    leaf: Leaf1
+    state: absent
+  delegate_to: localhost
+
+- name: Query a specific site EPG static leaf
+  mso_schema_template_anp_epg_staticleaf:
+    host: mso_host
+    username: admin
+    password: SomeSecretPassword
+    schema: Schema1
+    site: Site1
+    template: Template1
+    anp: ANP1
+    epg: EPG1
+    leaf: Leaf1
+    state: query
+  delegate_to: localhost
+  register: query_result
+
+- name: Query all site EPG static leafs
+  mso_schema_template_anp_epg_staticleaf:
+    host: mso_host
+    username: admin
+    password: SomeSecretPassword
+    schema: Schema1
+    site: Site1
+    template: Template1
+    anp: ANP1
+    state: query
+  delegate_to: localhost
+  register: query_result
+
+
+RETURN VALUES:
+
+

@@ -1,0 +1,76 @@
+> RUNIT    (/usr/lib/python2.7/dist-packages/ansible/modules/system/runit.py)
+
+        Controls runit services on remote hosts using the sv utility.
+
+  * This module is maintained by The Ansible Community
+OPTIONS (= is mandatory):
+
+- enabled
+        Whether the service is enabled or not, if disabled it also implies stopped.
+        [Default: (null)]
+        type: bool
+
+= name
+        Name of the service to manage.
+
+        type: str
+
+- service_dir
+        directory runsv watches for services
+        [Default: /var/service]
+        type: str
+
+- service_src
+        directory where services are defined, the source of symlinks to service_dir.
+        [Default: /etc/sv]
+        type: str
+
+- state
+        `started'/`stopped' are idempotent actions that will not run commands unless necessary.  `restarted' will always bounce the
+        service (sv restart) and `killed' will always bounce the service (sv force-stop). `reloaded' will send a HUP (sv reload). `once'
+        will run a normally downed sv once (sv once), not really an idempotent operation.
+        (Choices: killed, once, reloaded, restarted, started, stopped)[Default: (null)]
+        type: str
+
+
+AUTHOR: James Sumners (@jsumners)
+        METADATA:
+          status:
+          - stableinterface
+          supported_by: community
+        
+
+EXAMPLES:
+
+- name: Start sv dnscache, if not running
+  runit:
+    name: dnscache
+    state: started
+
+- name: Stop sv dnscache, if running
+  runit:
+    name: dnscache
+    state: stopped
+
+- name: Kill sv dnscache, in all cases
+  runit:
+    name: dnscache
+    state: killed
+
+- name: Restart sv dnscache, in all cases
+  runit:
+    name: dnscache
+    state: restarted
+
+- name: Reload sv dnscache, in all cases
+  runit:
+    name: dnscache
+    state: reloaded
+
+- name: Use alternative sv directory location
+  runit:
+    name: dnscache
+    state: reloaded
+    service_dir: /run/service
+
+

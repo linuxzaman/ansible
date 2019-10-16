@@ -1,0 +1,120 @@
+> HOMEBREW_CASK    (/usr/lib/python2.7/dist-packages/ansible/modules/packaging/os/homebrew_cask.py)
+
+        Manages Homebrew casks.
+
+  * This module is maintained by The Ansible Community
+OPTIONS (= is mandatory):
+
+- accept_external_apps
+        allow external apps
+        [Default: no]
+        type: bool
+        version_added: 2.5.0
+
+- greedy
+        upgrade casks that auto update; passes --greedy to brew cask outdated when checking if an installed cask has a newer version
+        available
+        [Default: no]
+        type: bool
+        version_added: 2.7.0
+
+- install_options
+        options flags to install a package
+        (Aliases: options)[Default: (null)]
+        version_added: 2.2
+
+= name
+        name of cask to install/remove
+        (Aliases: pkg, package, cask)
+
+- path
+        ':' separated list of paths to search for 'brew' executable.
+        [Default: /usr/local/bin]
+
+- state
+        state of the cask
+        (Choices: present, absent, upgraded)[Default: present]
+
+- sudo_password
+        The sudo password to be passed to SUDO_ASKPASS.
+        [Default: (null)]
+        version_added: 2.8
+        
+
+- update_homebrew
+        update homebrew itself first. Note that `brew cask update' is a synonym for `brew update'.
+        (Aliases: update-brew)[Default: no]
+        type: bool
+        version_added: 2.2
+
+- upgrade
+        upgrade all casks (mutually exclusive with `upgrade_all`)
+        [Default: no]
+        type: bool
+        version_added: 2.5.0
+
+- upgrade_all
+        upgrade all casks (mutually exclusive with `upgrade`)
+        [Default: no]
+        type: bool
+        version_added: 2.5.0
+
+
+REQUIREMENTS:  python >= 2.6
+
+AUTHOR: Indrajit Raychaudhuri (@indrajitr), Daniel Jaouen (@danieljaouen), Enric Lluelles (@enriclluelles)
+        METADATA:
+          status:
+          - preview
+          supported_by: community
+        
+
+EXAMPLES:
+
+- homebrew_cask:
+    name: alfred
+    state: present
+
+- homebrew_cask:
+    name: alfred
+    state: absent
+
+- homebrew_cask:
+    name: alfred
+    state: present
+    install_options: 'appdir=/Applications'
+
+- homebrew_cask:
+    name: alfred
+    state: present
+    install_options: 'debug,appdir=/Applications'
+
+- homebrew_cask:
+    name: alfred
+    state: present
+    allow_external_apps: True
+
+- homebrew_cask:
+    name: alfred
+    state: absent
+    install_options: force
+
+- homebrew_cask:
+    upgrade_all: true
+
+- homebrew_cask:
+    name: alfred
+    state: upgraded
+    install_options: force
+
+- homebrew_cask:
+    name: 1password
+    state: upgraded
+    greedy: True
+
+- homebrew_cask:
+    name: wireshark
+    state: present
+    sudo_password: "{{ ansible_become_pass }}"
+
+

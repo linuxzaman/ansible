@@ -1,0 +1,80 @@
+> CATAPULT    (/usr/lib/python2.7/dist-packages/ansible/modules/notification/catapult.py)
+
+        Allows notifications to be sent using sms / mms via the catapult bandwidth api.
+
+  * This module is maintained by The Ansible Community
+OPTIONS (= is mandatory):
+
+= api_secret
+        Api Secret from Api account page.
+
+
+= api_token
+        Api Token from Api account page.
+
+
+= dest
+        The phone number or numbers the message should be sent to (must be in E.164 format, like `+19195551212').
+
+
+- media
+        For MMS messages, a media url to the location of the media to be sent with the message.
+        [Default: (null)]
+
+= msg
+        The contents of the text message (must be 2048 characters or less).
+
+
+= src
+        One of your catapult telephone numbers the message should come from (must be in E.164 format, like `+19195551212').
+
+
+= user_id
+        User Id from Api account page.
+
+
+
+NOTES:
+      * Will return changed even if the media url is wrong.
+      * Will return changed if the destination number is invalid.
+
+
+AUTHOR: Jonathan Mainguy (@Jmainguy)
+        METADATA:
+          status:
+          - preview
+          supported_by: community
+        
+
+EXAMPLES:
+
+- name: Send a mms to multiple users
+  catapult:
+    src: "+15035555555"
+    dest:
+      - "+12525089000"
+      - "+12018994225"
+    media: "http://example.com/foobar.jpg"
+    msg: "Task is complete"
+    user_id: "{{ user_id }}"
+    api_token: "{{ api_token }}"
+    api_secret: "{{ api_secret }}"
+
+- name: Send a sms to a single user
+  catapult:
+    src: "+15035555555"
+    dest: "+12018994225"
+    msg: "Consider yourself notified"
+    user_id: "{{ user_id }}"
+    api_token: "{{ api_token }}"
+    api_secret: "{{ api_secret }}"
+
+
+RETURN VALUES:
+
+changed:
+    description: Whether the api accepted the message.
+    returned: always
+    type: bool
+    sample: True
+

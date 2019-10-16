@@ -1,0 +1,147 @@
+> AWS_BATCH_JOB_QUEUE    (/usr/lib/python2.7/dist-packages/ansible/modules/cloud/amazon/aws_batch_job_queue.py)
+
+        This module allows the management of AWS Batch Job Queues. It is idempotent and supports "Check" mode.  Use module
+        [aws_batch_compute_environment] to manage the compute environment, [aws_batch_job_queue] to manage job queues,
+        [aws_batch_job_definition] to manage job definitions.
+
+  * This module is maintained by The Ansible Community
+OPTIONS (= is mandatory):
+
+- aws_access_key
+        AWS access key. If not set then the value of the AWS_ACCESS_KEY_ID, AWS_ACCESS_KEY or EC2_ACCESS_KEY environment variable is
+        used.
+        (Aliases: ec2_access_key, access_key)[Default: (null)]
+        type: str
+
+- aws_secret_key
+        AWS secret key. If not set then the value of the AWS_SECRET_ACCESS_KEY, AWS_SECRET_KEY, or EC2_SECRET_KEY environment variable is
+        used.
+        (Aliases: ec2_secret_key, secret_key)[Default: (null)]
+        type: str
+
+= compute_environment_order
+        The set of compute environments mapped to a job queue and their order relative to each other. The job scheduler uses this
+        parameter to determine which compute environment should execute a given job. Compute environments must be in the VALID state
+        before you can associate them with a job queue. You can associate up to 3 compute environments with a job queue.
+
+
+- debug_botocore_endpoint_logs
+        Use a botocore.endpoint logger to parse the unique (rather than total) "resource:action" API calls made during a task, outputing
+        the set to the resource_actions key in the task results. Use the aws_resource_action callback to output to total list made during
+        a playbook. The ANSIBLE_DEBUG_BOTOCORE_LOGS environment variable may also be used.
+        [Default: no]
+        type: bool
+        version_added: 2.8
+
+- ec2_url
+        Url to use to connect to EC2 or your Eucalyptus cloud (by default the module will use EC2 endpoints). Ignored for modules where
+        region is required. Must be specified for all other modules if region is not used. If not set then the value of the EC2_URL
+        environment variable, if any, is used.
+        [Default: (null)]
+        type: str
+
+= job_queue_name
+        The name for the job queue
+
+
+- job_queue_state
+        The state of the job queue. If the job queue state is ENABLED , it is able to accept jobs.
+        (Choices: ENABLED, DISABLED)[Default: ENABLED]
+
+= priority
+        The priority of the job queue. Job queues with a higher priority (or a lower integer value for the priority parameter) are
+        evaluated first when associated with same compute environment. Priority is determined in ascending order, for example, a job
+        queue with a priority value of 1 is given scheduling preference over a job queue with a priority value of 10.
+
+
+- profile
+        Uses a boto profile. Only works with boto >= 2.24.0.
+        [Default: (null)]
+        type: str
+        version_added: 1.6
+
+- region
+        The AWS region to use. If not specified then the value of the AWS_REGION or EC2_REGION environment variable, if any, is used. See
+        http://docs.aws.amazon.com/general/latest/gr/rande.html#ec2_region
+        (Aliases: aws_region, ec2_region)[Default: (null)]
+        type: str
+
+- security_token
+        AWS STS security token. If not set then the value of the AWS_SECURITY_TOKEN or EC2_SECURITY_TOKEN environment variable is used.
+        (Aliases: access_token)[Default: (null)]
+        type: str
+        version_added: 1.6
+
+= state
+        Describes the desired state.
+        (Choices: present, absent)[Default: present]
+
+- validate_certs
+        When set to "no", SSL certificates will not be validated for boto versions >= 2.6.0.
+        [Default: True]
+        type: bool
+        version_added: 1.5
+
+
+NOTES:
+      * If parameters are not set within the module, the following environment variables can be used in decreasing order of
+        precedence `AWS_URL' or `EC2_URL', `AWS_ACCESS_KEY_ID' or `AWS_ACCESS_KEY' or `EC2_ACCESS_KEY', `AWS_SECRET_ACCESS_KEY' or
+        `AWS_SECRET_KEY' or `EC2_SECRET_KEY', `AWS_SECURITY_TOKEN' or `EC2_SECURITY_TOKEN', `AWS_REGION' or `EC2_REGION'
+      * Ansible uses the boto configuration file (typically ~/.boto) if no credentials are provided. See
+        https://boto.readthedocs.io/en/latest/boto_config_tut.html
+      * `AWS_REGION' or `EC2_REGION' can be typically be used to specify the AWS region, when required, but this can also be
+        configured in the boto config file
+
+
+REQUIREMENTS:  boto, boto3, python >= 2.6
+
+AUTHOR: Jon Meran (@jonmer85)
+        METADATA:
+          status:
+          - preview
+          supported_by: community
+        
+
+EXAMPLES:
+
+---
+- hosts: localhost
+  gather_facts: no
+  vars:
+    state: present
+  tasks:
+  - name: My Batch Job Queue
+    batch_job_queue:
+      job_queue_name: jobQueueName
+      state: present
+      region: us-east-1
+      job_queue_state: ENABLED
+      priority: 1
+      compute_environment_order:
+        - order: 1
+          compute_environment: my_compute_env1
+        - order: 2
+          compute_environment: my_compute_env2
+
+  - name: show results
+    debug: var=batch_job_queue_action
+
+
+RETURN VALUES:
+
+---
+output:
+  description: "returns what action was taken, whether something was changed, invocation and response"
+  returned: always
+  sample:
+    batch_job_queue_action: updated
+    changed: false
+    response:
+      job_queue_arn: "arn:aws:batch:...."
+      job_queue_name: <name>
+      priority: 1
+      state: DISABLED
+      status: UPDATING
+      status_reason: "JobQueue Healthy"
+  type: dict
+

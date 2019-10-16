@@ -1,0 +1,62 @@
+EXAMPLES:
+
+# Create a zone named "example.net"
+- os_zone:
+    cloud: mycloud
+    state: present
+    name: example.net.
+    zone_type: primary
+    email: test@example.net
+    description: Test zone
+    ttl: 3600
+
+# Update the TTL on existing "example.net." zone
+- os_zone:
+    cloud: mycloud
+    state: present
+    name: example.net.
+    ttl: 7200
+
+# Delete zone named "example.net."
+- os_zone:
+    cloud: mycloud
+    state: absent
+    name: example.net.
+
+
+RETURN VALUES:
+
+zone:
+    description: Dictionary describing the zone.
+    returned: On success when I(state) is 'present'.
+    type: complex
+    contains:
+        id:
+            description: Unique zone ID
+            type: str
+            sample: "c1c530a3-3619-46f3-b0f6-236927b2618c"
+        name:
+            description: Zone name
+            type: str
+            sample: "example.net."
+        type:
+            description: Zone type
+            type: str
+            sample: "PRIMARY"
+        email:
+            description: Zone owner email
+            type: str
+            sample: "test@example.net"
+        description:
+            description: Zone description
+            type: str
+            sample: "Test description"
+        ttl:
+            description: Zone TTL value
+            type: int
+            sample: 3600
+        masters:
+            description: Zone master nameservers
+            type: list
+            sample: []
+

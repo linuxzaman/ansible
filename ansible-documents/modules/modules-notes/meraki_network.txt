@@ -1,0 +1,188 @@
+> MERAKI_NETWORK    (/usr/lib/python2.7/dist-packages/ansible/modules/network/meraki/meraki_network.py)
+
+        Allows for creation, management, and visibility into networks within Meraki.
+
+  * This module is maintained by The Ansible Community
+OPTIONS (= is mandatory):
+
+- auth_key
+        Authentication key provided by the dashboard. Required if environmental variable MERAKI_KEY is not set.
+        [Default: (null)]
+        type: str
+
+- disable_my_meraki
+        - Disables the local device status pages (U[my.meraki.com](my.meraki.com), U[ap.meraki.com](ap.meraki.com),
+        U[switch.meraki.com](switch.meraki.com), U[wired.meraki.com](wired.meraki.com))
+        [Default: (null)]
+        type: bool
+        version_added: 2.7
+
+- host
+        Hostname for Meraki dashboard.
+        Only useful for internal Meraki developers.
+        [Default: api.meraki.com]
+        type: str
+
+- net_id
+        ID number of a network.
+        [Default: (null)]
+
+- net_name
+        Name of a network.
+        (Aliases: name, network)[Default: (null)]
+
+- org_id
+        ID of organization associated to a network.
+        [Default: (null)]
+        type: int
+
+- org_name
+        Name of organization associated to a network.
+        (Aliases: organization)[Default: (null)]
+        type: str
+
+- output_level
+        Set amount of debug output during module execution.
+        (Choices: debug, normal)[Default: normal]
+        type: str
+
+- state
+        Create or modify an organization.
+        (Choices: absent, present, query)[Default: present]
+
+- tags
+        List of tags to assign to network.
+        `tags' name conflicts with the tags parameter in Ansible. Indentation problems may cause unexpected behaviors.
+        Ansible 2.8 converts this to a list from a comma separated list.
+        [Default: (null)]
+        type: list
+
+- timeout
+        Time to timeout for HTTP requests.
+        [Default: 30]
+        type: int
+
+- timezone
+        Timezone associated to network.
+        See https://en.wikipedia.org/wiki/List_of_tz_database_time_zones for a list of valid timezones.
+        [Default: (null)]
+
+- type
+        Type of network device network manages.
+        Required when creating a network.
+        As of Ansible 2.8, `combined' type is no longer accepted.
+        As of Ansible 2.8, changes to this parameter are no longer idempotent.
+        (Aliases: net_type)(Choices: appliance, switch, wireless)[Default: (null)]
+        type: list
+
+- use_https
+        If `no', it will use HTTP. Otherwise it will use HTTPS.
+        Only useful for internal Meraki developers.
+        [Default: True]
+        type: bool
+
+- use_proxy
+        If `no', it will not use a proxy, even if one is defined in an environment variable on the target hosts.
+        [Default: (null)]
+        type: bool
+
+- validate_certs
+        Whether to validate HTTP certificates.
+        [Default: True]
+        type: bool
+
+
+NOTES:
+      * More information about the Meraki API can be found at https://dashboard.meraki.com/api_docs.
+      * Some of the options are likely only used for developers within Meraki.
+
+
+AUTHOR: Kevin Breit (@kbreit)
+        METADATA:
+          status:
+          - preview
+          supported_by: community
+        
+
+EXAMPLES:
+
+- name: List all networks associated to the YourOrg organization
+  meraki_network:
+    auth_key: abc12345
+    state: query
+    org_name: YourOrg
+  delegate_to: localhost
+- name: Query network named MyNet in the YourOrg organization
+  meraki_network:
+    auth_key: abc12345
+    state: query
+    org_name: YourOrg
+    net_name: MyNet
+  delegate_to: localhost
+- name: Create network named MyNet in the YourOrg organization
+  meraki_network:
+    auth_key: abc12345
+    state: present
+    org_name: YourOrg
+    net_name: MyNet
+    type: switch
+    timezone: America/Chicago
+    tags: production, chicago
+  delegate_to: localhost
+- name: Create combined network named MyNet in the YourOrg organization
+  meraki_network:
+    auth_key: abc12345
+    state: present
+    org_name: YourOrg
+    net_name: MyNet
+    type:
+      - switch
+      - appliance
+    timezone: America/Chicago
+    tags: production, chicago
+  delegate_to: localhost
+
+
+RETURN VALUES:
+
+data:
+    description: Information about the created or manipulated object.
+    returned: info
+    type: complex
+    contains:
+      id:
+        description: Identification string of network.
+        returned: success
+        type: str
+        sample: N_12345
+      name:
+        description: Written name of network.
+        returned: success
+        type: str
+        sample: YourNet
+      organizationId:
+        description: Organization ID which owns the network.
+        returned: success
+        type: str
+        sample: 0987654321
+      tags:
+        description: Space delimited tags assigned to network.
+        returned: success
+        type: str
+        sample: " production wireless "
+      timeZone:
+        description: Timezone where network resides.
+        returned: success
+        type: str
+        sample: America/Chicago
+      type:
+        description: Functional type of network.
+        returned: success
+        type: str
+        sample: switch
+      disableMyMerakiCom:
+        description: States whether U(my.meraki.com) and other device portals should be disabled.
+        returned: success
+        type: bool
+        sample: true
+

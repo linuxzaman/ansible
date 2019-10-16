@@ -1,0 +1,207 @@
+> GCE_INSTANCE_TEMPLATE    (/usr/lib/python2.7/dist-packages/ansible/modules/cloud/google/gce_instance_template.py)
+
+        Creates or destroy Google instance templates of Compute Engine of Google Cloud Platform.
+
+  * This module is maintained by The Ansible Community
+OPTIONS (= is mandatory):
+
+- automatic_restart
+        Defines whether the instance should be automatically restarted when it is terminated by Compute Engine.
+        [Default: (null)]
+        type: bool
+
+- can_ip_forward
+        Set to `yes' to allow instance to send/receive non-matching src/dst packets.
+        [Default: no]
+        type: bool
+
+- credentials_file
+        path to the JSON file associated with the service account email
+        [Default: (null)]
+
+- description
+        description of instance template
+        [Default: (null)]
+
+- disk_auto_delete
+        Indicate that the boot disk should be deleted when the Node is deleted.
+        [Default: True]
+        type: bool
+
+- disk_type
+        Specify a `pd-standard' disk or `pd-ssd' for an SSD disk.
+        [Default: pd-standard]
+
+- disks
+        a list of persistent disks to attach to the instance; a string value gives the name of the disk; alternatively, a dictionary
+        value can define 'name' and 'mode' ('READ_ONLY' or 'READ_WRITE'). The first entry will be the boot disk (which must be
+        READ_WRITE).
+        [Default: (null)]
+
+- disks_gce_struct
+        Support passing in the GCE-specific formatted formatted disks[] structure. Case sensitive. see
+        https://cloud.google.com/compute/docs/reference/latest/instanceTemplates#resource for detailed information
+        [Default: (null)]
+        version_added: 2.4
+
+- external_ip
+        The external IP address to use. If `ephemeral', a new non-static address will be used.  If `None', then no external address will
+        be used.  To use an existing static IP address specify address name.
+        [Default: ephemeral]
+
+- image
+        The image to use to create the instance. Cannot specify both both `image' and `source'.
+        [Default: (null)]
+
+- image_family
+        The image family to use to create the instance. If `image' has been used `image_family' is ignored. Cannot specify both `image'
+        and `source'.
+        [Default: (null)]
+
+- metadata
+        a hash/dictionary of custom data for the instance; '{"key":"value", ...}'
+        [Default: (null)]
+
+- name
+        The name of the GCE instance template.
+        [Default: (null)]
+
+- network
+        The network to associate with the instance.
+        [Default: default]
+
+- nic_gce_struct
+        Support passing in the GCE-specific formatted networkInterfaces[] structure.
+        [Default: (null)]
+
+- pem_file
+        path to the pem file associated with the service account email This option is deprecated. Use 'credentials_file'.
+        [Default: (null)]
+
+- preemptible
+        Defines whether the instance is preemptible.
+        [Default: (null)]
+        type: bool
+
+- project_id
+        your GCE project ID
+        [Default: (null)]
+
+- service_account_email
+        service account email
+        [Default: (null)]
+
+- service_account_permissions
+        service account permissions (see https://cloud.google.com/sdk/gcloud/reference/compute/instances/create, --scopes section for
+        detailed information)
+        (Choices: bigquery, cloud-platform, compute-ro, compute-rw, useraccounts-ro, useraccounts-rw, datastore, logging-write,
+        monitoring, sql-admin, storage-full, storage-ro, storage-rw, taskqueue, userinfo-email)[Default: (null)]
+
+- size
+        The desired machine type for the instance template.
+        [Default: f1-micro]
+
+- source
+        A source disk to attach to the instance. Cannot specify both `image' and `source'.
+        [Default: (null)]
+
+- state
+        The desired state for the instance template.
+        (Choices: present, absent)[Default: present]
+
+- subnetwork
+        The Subnetwork resource name for this instance.
+        [Default: (null)]
+
+- subnetwork_region
+        Region that subnetwork resides in. (Required for subnetwork to successfully complete)
+        [Default: (null)]
+        version_added: 2.4
+
+- tags
+        a comma-separated list of tags to associate with the instance
+        [Default: (null)]
+
+
+NOTES:
+      * JSON credentials strongly preferred.
+
+
+REQUIREMENTS:  python >= 2.6, apache-libcloud >= 0.13.3, >= 0.17.0 if using JSON credentials, >= 0.20.0 if using preemptible option
+
+AUTHOR: Gwenael Pellen (@GwenaelPellenArkeup) <gwenael.pellen@arkeup.com>
+        METADATA:
+          status:
+          - preview
+          supported_by: community
+        
+
+EXAMPLES:
+
+# Usage
+- name: create instance template named foo
+  gce_instance_template:
+    name: foo
+    size: n1-standard-1
+    image_family: ubuntu-1604-lts
+    state: present
+    project_id: "your-project-name"
+    credentials_file: "/path/to/your-key.json"
+    service_account_email: "your-sa@your-project-name.iam.gserviceaccount.com"
+
+# Example Playbook
+- name: Compute Engine Instance Template Examples
+  hosts: localhost
+  vars:
+    service_account_email: "your-sa@your-project-name.iam.gserviceaccount.com"
+    credentials_file: "/path/to/your-key.json"
+    project_id: "your-project-name"
+  tasks:
+    - name: create instance template
+      gce_instance_template:
+        name: my-test-instance-template
+        size: n1-standard-1
+        image_family: ubuntu-1604-lts
+        state: present
+        project_id: "{{ project_id }}"
+        credentials_file: "{{ credentials_file }}"
+        service_account_email: "{{ service_account_email }}"
+    - name: delete instance template
+      gce_instance_template:
+        name: my-test-instance-template
+        size: n1-standard-1
+        image_family: ubuntu-1604-lts
+        state: absent
+        project_id: "{{ project_id }}"
+        credentials_file: "{{ credentials_file }}"
+        service_account_email: "{{ service_account_email }}"
+
+# Example playbook using disks_gce_struct
+- name: Compute Engine Instance Template Examples
+  hosts: localhost
+  vars:
+    service_account_email: "your-sa@your-project-name.iam.gserviceaccount.com"
+    credentials_file: "/path/to/your-key.json"
+    project_id: "your-project-name"
+  tasks:
+    - name: create instance template
+      gce_instance_template:
+        name: foo
+        size: n1-standard-1
+        state: present
+        project_id: "{{ project_id }}"
+        credentials_file: "{{ credentials_file }}"
+        service_account_email: "{{ service_account_email }}"
+        disks_gce_struct:
+          - device_name: /dev/sda
+            boot: true
+            autoDelete: true
+            initializeParams:
+              diskSizeGb: 30
+              diskType: pd-ssd
+              sourceImage: projects/debian-cloud/global/images/family/debian-8
+
+
+RETURN VALUES:
+
+

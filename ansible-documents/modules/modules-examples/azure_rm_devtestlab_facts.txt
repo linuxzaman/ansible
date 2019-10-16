@@ -1,0 +1,101 @@
+EXAMPLES:
+
+- name: List instances of DevTest Lab by resource group
+    azure_rm_devtestlab_facts:
+      resource_group: testrg
+
+  - name: List instances of DevTest Lab in subscription
+    azure_rm_devtestlab_facts:
+
+  - name: Get instance of DevTest Lab
+    azure_rm_devtestlab_facts:
+      resource_group: testrg
+      name: testlab
+
+
+RETURN VALUES:
+
+labs:
+    description: A list of dictionaries containing facts for Lab.
+    returned: always
+    type: complex
+    contains:
+        id:
+            description:
+                - The identifier of the resource.
+            returned: always
+            type: str
+            sample: /subscriptions/xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx/resourcegroups/myResourceGroup/providers/microsoft.devtestlab/labs/myLab
+        resource_group:
+            description:
+                - The name of the resource.
+            returned: always
+            type: str
+            sample: testrg
+        name:
+            description:
+                - The name of the resource.
+            returned: always
+            type: str
+            sample: testlab
+        location:
+            description:
+                - The location of the resource.
+            returned: always
+            type: str
+            sample: eastus
+        storage_type:
+            description:
+                - Lab storage type.
+            returned: always
+            type: str
+            sample: standard
+        premium_data_disks:
+            description:
+                - Are premium data disks allowed.
+            returned: always
+            type: bool
+            sample: false
+        provisioning_state:
+            description:
+                - Lab provisioning state.
+            returned: always
+            type: str
+            sample: Succeeded
+        artifacts_storage_account:
+            description:
+                - Artifacts storage account ID.
+            returned: always
+            type: str
+            sample: /subscriptions/xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx/resourceGroups/myResourceGroup/providers/Microsoft.Storage/storageAccounts/myLab6346
+        default_premium_storage_account:
+            description:
+                - Default premium storage account ID.
+            returned: always
+            type: str
+            sample: /subscriptions/xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx/resourceGroups/myResourceGroup/providers/Microsoft.Storage/storageAccounts/myLab6346
+        default_storage_account:
+            description:
+                - Default storage account ID.
+            returned: always
+            type: str
+            sample: /subscriptions/xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx/resourceGroups/myResourceGroup/providers/Microsoft.Storage/storageAccounts/myLab6346
+        premium_data_disk_storage_account:
+            description:
+                - Default storage account ID.
+            returned: always
+            type: str
+            sample: /subscriptions/xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx/resourceGroups/myResourceGroup/providers/Microsoft.Storage/storageAccounts/myLab6346
+        vault_name:
+            description:
+                - Key vault ID.
+            returned: always
+            type: str
+            sample: /subscriptions/xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx/resourceGroups/myResourceGroup/providers/Microsoft.KeyVault/vaults/myLab6788
+        tags:
+            description:
+                - The tags of the resource.
+            returned: always
+            type: complex
+            sample: "{ 'MyTag': 'MyValue' }"
+

@@ -1,0 +1,35 @@
+EXAMPLES:
+
+- name: Apply our filter to Tomcat web.xml
+  win_xml:
+   path: C:\apache-tomcat\webapps\myapp\WEB-INF\web.xml
+   fragment: '<filter><filter-name>MyFilter</filter-name><filter-class>com.example.MyFilter</filter-class></filter>'
+   xpath: '/*'
+
+- name: Apply sslEnabledProtocols to Tomcat's server.xml
+  win_xml:
+   path: C:\Tomcat\conf\server.xml
+   xpath: '//Server/Service[@name="Catalina"]/Connector[@port="9443"]'
+   attribute: 'sslEnabledProtocols'
+   fragment: 'TLSv1,TLSv1.1,TLSv1.2'
+   type: attribute
+
+
+RETURN VALUES:
+
+backup_file:
+    description: Name of the backup file that was created.
+    returned: if backup=yes
+    type: str
+    sample: C:\Path\To\File.txt.11540.20150212-220915.bak
+msg:
+    description: What was done.
+    returned: always
+    type: str
+    sample: "xml added"
+err:
+    description: XML comparison exceptions.
+    returned: always, for type element and -vvv or more
+    type: list
+    sample: attribute mismatch for actual=string
+

@@ -1,0 +1,102 @@
+> HCLOUD_SERVER_TYPE_FACTS    (/usr/lib/python2.7/dist-packages/ansible/modules/cloud/hcloud/hcloud_server_type_facts.py)
+
+        Gather facts about your Hetzner Cloud server types.
+
+  * This module is maintained by The Ansible Community
+OPTIONS (= is mandatory):
+
+= api_token
+        This is the API Token for the Hetzner Cloud.
+
+        type: str
+
+- endpoint
+        This is the API Endpoint for the Hetzner Cloud.
+        [Default: https://api.hetzner.cloud/v1]
+        type: str
+
+- id
+        The ID of the server type you want to get.
+        [Default: (null)]
+        type: int
+
+- name
+        The name of the server type you want to get.
+        [Default: (null)]
+        type: str
+
+
+SEE ALSO:
+      * Documentation for Hetzner Cloud API
+           Complete reference for the Hetzner Cloud API.
+           https://docs.hetzner.cloud/
+
+
+REQUIREMENTS:  hcloud-python >= 1.0.0
+
+AUTHOR: Lukas Kaemmerling (@lkaemmerling)
+        METADATA:
+          status:
+          - preview
+          supported_by: community
+        
+
+EXAMPLES:
+
+- name: Gather hcloud server type facts
+  local_action:
+    module: hcloud_server_type_facts
+
+- name: Print the gathered facts
+  debug:
+    var: ansible_facts.hcloud_server_type_facts
+
+
+RETURN VALUES:
+
+hcloud_server_type_facts:
+    description: The server type facts as list
+    returned: always
+    type: complex
+    contains:
+        id:
+            description: Numeric identifier of the server type
+            returned: always
+            type: int
+            sample: 1937415
+        name:
+            description: Name of the server type
+            returned: always
+            type: str
+            sample: fsn1
+        description:
+            description: Detail description of the server type
+            returned: always
+            type: str
+            sample: Falkenstein DC Park 1
+        cores:
+            description: Number of cpu cores a server of this type will have
+            returned: always
+            type: int
+            sample: 1
+        memory:
+            description: Memory a server of this type will have in GB
+            returned: always
+            type: int
+            sample: 1
+        disk:
+            description: Disk size a server of this type will have in GB
+            returned: always
+            type: int
+            sample: 25
+        storage_type:
+            description: Type of server boot drive
+            returned: always
+            type: str
+            sample: local
+        cpu_type:
+            description: Type of cpu
+            returned: always
+            type: str
+            sample: shared
+

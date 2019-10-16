@@ -1,0 +1,184 @@
+> JUNOS_LOGGING    (/usr/lib/python2.7/dist-packages/ansible/modules/network/junos/junos_logging.py)
+
+        This module provides declarative management of logging on Juniper JUNOS devices.
+
+  * This module is maintained by The Ansible Network Team
+OPTIONS (= is mandatory):
+
+- active
+        Specifies whether or not the configuration is active or deactivated
+        [Default: True]
+        type: bool
+
+- aggregate
+        List of logging definitions.
+        [Default: (null)]
+
+- dest
+        Destination of the logs.
+        (Choices: console, host, file, user)[Default: (null)]
+
+- facility
+        Set logging facility.
+        [Default: (null)]
+
+- files
+        Number of files to be archived, this is applicable if value of `dest' is `file'. The acceptable value is in range from 1 to 1000.
+        [Default: (null)]
+
+- level
+        Set logging severity levels.
+        [Default: (null)]
+
+- name
+        If value of `dest' is `file' it indicates file-name, for `user' it indicates username and for `host' indicates the host name to
+        be notified.
+        [Default: (null)]
+
+- provider
+        *Deprecated*
+        Starting with Ansible 2.5 we recommend using `connection: network_cli' or `connection: netconf'.
+        For more information please see the L(Junos OS Platform Options guide, ../network/user_guide/platform_junos.html).
+        HORIZONTALLINE
+        A dict object containing connection details.
+        [Default: (null)]
+        suboptions:
+          host:
+            description:
+            - Specifies the DNS host name or address for connecting to the remote device over
+              the specified transport.  The value of host is used as the destination address
+              for the transport.
+            required: true
+            type: str
+          password:
+            description:
+            - Specifies the password to use to authenticate the connection to the remote device.   This
+              value is used to authenticate the SSH session. If the value is not specified
+              in the task, the value of environment variable `ANSIBLE_NET_PASSWORD' will
+              be used instead.
+            type: str
+          port:
+            default: 22
+            description:
+            - Specifies the port to use when building the connection to the remote device.  The
+              port value will default to the well known SSH port of 22 (for `transport=cli')
+              or port 830 (for `transport=netconf') device.
+            type: int
+          ssh_keyfile:
+            description:
+            - Specifies the SSH key to use to authenticate the connection to the remote device.   This
+              value is the path to the key used to authenticate the SSH session. If the value
+              is not specified in the task, the value of environment variable `ANSIBLE_NET_SSH_KEYFILE'
+              will be used instead.
+            type: path
+          timeout:
+            default: 10
+            description:
+            - Specifies the timeout in seconds for communicating with the network device for
+              either connecting or sending commands.  If the timeout is exceeded before the
+              operation is completed, the module will error.
+            type: int
+          username:
+            description:
+            - Configures the username to use to authenticate the connection to the remote
+              device.  This value is used to authenticate the SSH session. If the value is
+              not specified in the task, the value of environment variable `ANSIBLE_NET_USERNAME'
+              will be used instead.
+            type: str
+        
+        type: dict
+
+- rotate_frequency
+        Rotate log frequency in minutes, this is applicable if value of `dest' is `file'. The acceptable value is in range of 1 to 59.
+        This controls the frequency after which log file is rotated.
+        [Default: (null)]
+
+- size
+        Size of the file in archive, this is applicable if value of `dest' is `file'. The acceptable value is in range from 65536 to
+        1073741824 bytes.
+        [Default: (null)]
+
+- state
+        State of the logging configuration.
+        (Choices: present, absent)[Default: present]
+
+
+NOTES:
+      * This module requires the netconf system service be enabled on the remote device being managed.
+      * Tested against vSRX JUNOS version 15.1X49-D15.4, vqfx-10000 JUNOS Version 15.1X53-D60.4.
+      * Recommended connection is `netconf'. See L(the Junos OS Platform Options,../network/user_guide/platform_junos.html).
+      * This module also works with `local' connections for legacy playbooks.
+      * For information on using CLI and netconf see the :ref:`Junos OS Platform Options guide <junos_platform_options>`
+      * For more information on using Ansible to manage network devices see the :ref:`Ansible Network Guide <network_guide>`
+      * For more information on using Ansible to manage Juniper network devices see https://www.ansible.com/ansible-juniper.
+
+
+REQUIREMENTS:  ncclient (>=v0.5.2)
+
+AUTHOR: Ganesh Nalawade (@ganeshrn)
+        METADATA:
+          status:
+          - preview
+          supported_by: network
+        
+
+EXAMPLES:
+
+- name: configure console logging
+  junos_logging:
+    dest: console
+    facility: any
+    level: critical
+
+- name: remove console logging configuration
+  junos_logging:
+    dest: console
+    state: absent
+
+- name: configure file logging
+  junos_logging:
+    dest: file
+    name: test
+    facility: pfe
+    level: error
+
+- name: configure logging parameter
+  junos_logging:
+    files: 30
+    size: 65536
+    rotate_frequency: 10
+
+- name: Configure file logging using aggregate
+  junos_logging:
+    dest: file
+    aggregate:
+    - name: test-1
+      facility: pfe
+      level: critical
+    - name: test-2
+      facility: kernel
+      level: emergency
+    active: True
+
+- name: Delete file logging using aggregate
+  junos_logging:
+    aggregate:
+    - { dest: file, name: test-1,  facility: pfe, level: critical }
+    - { dest: file, name: test-2,  facility: kernel, level: emergency }
+    state: absent
+
+
+RETURN VALUES:
+
+diff.prepared:
+  description: Configuration difference before and after applying change.
+  returned: when configuration is changed and diff option is enabled.
+  type: str
+  sample: >
+          [edit system syslog]
+          +    [edit system syslog]
+               file interactive-commands { ... }
+          +    file test {
+          +        pfe critical;
+          +    }
+

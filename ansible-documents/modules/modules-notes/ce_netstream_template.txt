@@ -1,0 +1,118 @@
+> CE_NETSTREAM_TEMPLATE    (/usr/lib/python2.7/dist-packages/ansible/modules/network/cloudengine/ce_netstream_template.py)
+
+        Manages NetStream template configuration on HUAWEI CloudEngine switches.
+
+  * This module is maintained by The Ansible Community
+OPTIONS (= is mandatory):
+
+- collect_counter
+        Configure the number of packets and bytes that are included in the flexible flow statistics sent to NSC.
+        (Choices: bytes, packets)[Default: (null)]
+
+- collect_interface
+        Configure the input or output interface that are included in the flexible flow statistics sent to NSC.
+        (Choices: input, output)[Default: (null)]
+
+- description
+        Configure the description of netstream record. The value is a string of 1 to 80 case-insensitive characters.
+        [Default: (null)]
+
+- match
+        Configure flexible flow statistics template keywords.
+        (Choices: destination-address, destination-port, tos, protocol, source-address, source-port)[Default: (null)]
+
+- record_name
+        Configure the name of netstream record. The value is a string of 1 to 32 case-insensitive characters.
+        [Default: (null)]
+
+- state
+        Specify desired state of the resource.
+        (Choices: present, absent)[Default: present]
+
+= type
+        Configure the type of netstream record.
+        (Choices: ip, vxlan)
+
+
+AUTHOR: wangdezhuang (@QijunPan)
+        METADATA:
+          status:
+          - preview
+          supported_by: community
+        
+
+EXAMPLES:
+
+- name: netstream template module test
+  hosts: cloudengine
+  connection: local
+  gather_facts: no
+  vars:
+    cli:
+      host: "{{ inventory_hostname }}"
+      port: "{{ ansible_ssh_port }}"
+      username: "{{ username }}"
+      password: "{{ password }}"
+      transport: cli
+
+  tasks:
+
+  - name: Config ipv4 netstream record
+    ce_netstream_template:
+      state: present
+      type: ip
+      record_name: test
+      provider: "{{ cli }}"
+  - name: Undo ipv4 netstream record
+    ce_netstream_template:
+      state: absent
+      type: ip
+      record_name: test
+      provider: "{{ cli }}"
+  - name: Config ipv4 netstream record collect_counter
+    ce_netstream_template:
+      state: present
+      type: ip
+      record_name: test
+      collect_counter: bytes
+      provider: "{{ cli }}"
+  - name: Undo ipv4 netstream record collect_counter
+    ce_netstream_template:
+      state: absent
+      type: ip
+      record_name: test
+      collect_counter: bytes
+      provider: "{{ cli }}"
+
+
+RETURN VALUES:
+
+changed:
+    description: check to see if a change was made on the device
+    returned: always
+    type: bool
+    sample: true
+proposed:
+    description: k/v pairs of parameters passed into module
+    returned: always
+    type: dict
+    sample: {"record_name": "test",
+             "type": "ip",
+             "state": "present"}
+existing:
+    description: k/v pairs of existing aaa server
+    returned: always
+    type: dict
+    sample: {}
+end_state:
+    description: k/v pairs of aaa params after module execution
+    returned: always
+    type: dict
+    sample: {"record_name": "test",
+             "type": "ip"}
+updates:
+    description: command sent to the device
+    returned: always
+    type: list
+    sample: ["netstream record test ip"]
+

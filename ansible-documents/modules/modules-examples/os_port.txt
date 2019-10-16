@@ -1,0 +1,121 @@
+EXAMPLES:
+
+# Create a port
+- os_port:
+    state: present
+    auth:
+      auth_url: https://identity.example.com
+      username: admin
+      password: admin
+      project_name: admin
+    name: port1
+    network: foo
+
+# Create a port with a static IP
+- os_port:
+    state: present
+    auth:
+      auth_url: https://identity.example.com
+      username: admin
+      password: admin
+      project_name: admin
+    name: port1
+    network: foo
+    fixed_ips:
+      - ip_address: 10.1.0.21
+
+# Create a port with No security groups
+- os_port:
+    state: present
+    auth:
+      auth_url: https://identity.example.com
+      username: admin
+      password: admin
+      project_name: admin
+    name: port1
+    network: foo
+    no_security_groups: True
+
+# Update the existing 'port1' port with multiple security groups (version 1)
+- os_port:
+    state: present
+    auth:
+      auth_url: https://identity.example.com
+      username: admin
+      password: admin
+      project_name: admin
+    name: port1
+    security_groups: 1496e8c7-4918-482a-9172-f4f00fc4a3a5,057d4bdf-6d4d-472...
+
+# Update the existing 'port1' port with multiple security groups (version 2)
+- os_port:
+    state: present
+    auth:
+      auth_url: https://identity.example.com
+      username: admin
+      password: admin
+      project_name: admin
+    name: port1
+    security_groups:
+      - 1496e8c7-4918-482a-9172-f4f00fc4a3a5
+      - 057d4bdf-6d4d-472...
+
+# Create port of type 'direct'
+- os_port:
+    state: present
+    auth:
+      auth_url: https://identity.example.com
+      username: admin
+      password: admin
+      project_name: admin
+    name: port1
+    vnic_type: direct
+
+
+RETURN VALUES:
+
+id:
+    description: Unique UUID.
+    returned: success
+    type: str
+name:
+    description: Name given to the port.
+    returned: success
+    type: str
+network_id:
+    description: Network ID this port belongs in.
+    returned: success
+    type: str
+security_groups:
+    description: Security group(s) associated with this port.
+    returned: success
+    type: list
+status:
+    description: Port's status.
+    returned: success
+    type: str
+fixed_ips:
+    description: Fixed ip(s) associated with this port.
+    returned: success
+    type: list
+tenant_id:
+    description: Tenant id associated with this port.
+    returned: success
+    type: str
+allowed_address_pairs:
+    description: Allowed address pairs with this port.
+    returned: success
+    type: list
+admin_state_up:
+    description: Admin state up flag for this port.
+    returned: success
+    type: bool
+vnic_type:
+    description: Type of the created port
+    returned: success
+    type: str
+port_security_enabled:
+    description: Port security state on the network.
+    returned: success
+    type: bool
+

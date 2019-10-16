@@ -1,0 +1,48 @@
+EXAMPLES:
+
+- name: Register an unmanaged device
+  bigiq_regkey_license_assignment:
+    pool: my-regkey-pool
+    key: XXXX-XXXX-XXXX-XXXX-XXXX
+    device: 1.1.1.1
+    managed: no
+    device_username: admin
+    device_password: secret
+    state: present
+    provider:
+      user: admin
+      password: secret
+      server: lb.mydomain.com
+  delegate_to: localhost
+
+- name: Register a managed device, by name
+  bigiq_regkey_license_assignment:
+    pool: my-regkey-pool
+    key: XXXX-XXXX-XXXX-XXXX-XXXX
+    device: bigi1.foo.com
+    managed: yes
+    state: present
+    provider:
+      user: admin
+      password: secret
+      server: lb.mydomain.com
+  delegate_to: localhost
+
+- name: Register a managed device, by UUID
+  bigiq_regkey_license_assignment:
+    pool: my-regkey-pool
+    key: XXXX-XXXX-XXXX-XXXX-XXXX
+    device: 7141a063-7cf8-423f-9829-9d40599fa3e0
+    managed: yes
+    state: present
+    provider:
+      user: admin
+      password: secret
+      server: lb.mydomain.com
+  delegate_to: localhost
+
+
+RETURN VALUES:
+
+# only common fields returned
+

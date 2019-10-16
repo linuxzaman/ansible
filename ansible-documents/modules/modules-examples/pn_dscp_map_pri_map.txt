@@ -1,0 +1,38 @@
+EXAMPLES:
+
+- name: dscp map pri map modify
+  pn_dscp_map_pri_map:
+    pn_cliswitch: 'sw01'
+    state: 'update'
+    pn_name: 'foo'
+    pn_pri: '0'
+    pn_dsmap: '40'
+
+- name: dscp map pri map modify
+  pn_dscp_map_pri_map:
+    pn_cliswitch: 'sw01'
+    state: 'update'
+    pn_name: 'foo'
+    pn_pri: '1'
+    pn_dsmap: '8,10,12,14'
+
+
+RETURN VALUES:
+
+command:
+  description: the CLI command run on the target node.
+  returned: always
+  type: str
+stdout:
+  description: set of responses from the dscp-map-pri-map command.
+  returned: always
+  type: list
+stderr:
+  description: set of error responses from the dscp-map-pri-map command.
+  returned: on error
+  type: list
+changed:
+  description: indicates whether the CLI caused changes on the target.
+  returned: always
+  type: bool
+

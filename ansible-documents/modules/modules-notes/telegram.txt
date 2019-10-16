@@ -1,0 +1,60 @@
+> TELEGRAM    (/usr/lib/python2.7/dist-packages/ansible/modules/notification/telegram.py)
+
+        Send notifications via telegram bot, to a verified group or user
+
+  * This module is maintained by The Ansible Community
+OPTIONS (= is mandatory):
+
+= chat_id
+        Telegram group or user chat_id
+
+
+= msg
+        What message you wish to send.
+
+
+- msg_format
+        Message format. Formatting options `markdown` and `html` described in Telegram API docs (https://core.telegram.org/bots/api
+        #formatting-options). If option `plain` set, message will not be formatted.
+        (Choices: plain, markdown, html)[Default: plain]
+        version_added: 2.4
+
+= token
+        Token identifying your telegram bot.
+
+
+
+NOTES:
+      * You will require a telegram account and create telegram bot to use this module.
+
+
+AUTHOR: Artem Feofanov (@tyouxa)
+        METADATA:
+          status:
+          - preview
+          supported_by: community
+        
+
+EXAMPLES:
+
+- name: send a message to chat in playbook
+  telegram:
+    token: '9999999:XXXXXXXXXXXXXXXXXXXXXXX'
+    chat_id: 000000
+    msg: Ansible task finished
+
+
+RETURN VALUES:
+
+
+msg:
+  description: The message you attempted to send
+  returned: success
+  type: str
+  sample: "Ansible task finished"
+telegram_error:
+  description: Error message gotten from Telegram API
+  returned: failure
+  type: str
+  sample: "Bad Request: message text is empty"
+

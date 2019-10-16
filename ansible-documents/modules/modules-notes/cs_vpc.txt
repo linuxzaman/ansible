@@ -1,0 +1,259 @@
+> CS_VPC    (/usr/lib/python2.7/dist-packages/ansible/modules/cloud/cloudstack/cs_vpc.py)
+
+        Create, update and delete VPCs.
+
+  * This module is maintained by The Ansible Community
+OPTIONS (= is mandatory):
+
+- account
+        Account the VPC is related to.
+        [Default: (null)]
+        type: str
+
+- api_http_method
+        HTTP method used to query the API endpoint.
+        If not given, the `CLOUDSTACK_METHOD' env variable is considered.
+        As the last option, the value is taken from the ini config file, also see the notes.
+        Fallback value is `get' if not specified.
+        (Choices: get, post)[Default: (null)]
+        type: str
+
+- api_key
+        API key of the CloudStack API.
+        If not given, the `CLOUDSTACK_KEY' env variable is considered.
+        As the last option, the value is taken from the ini config file, also see the notes.
+        [Default: (null)]
+        type: str
+
+- api_region
+        Name of the ini section in the `cloustack.ini' file.
+        If not given, the `CLOUDSTACK_REGION' env variable is considered.
+        [Default: cloudstack]
+        type: str
+
+- api_secret
+        Secret key of the CloudStack API.
+        If not set, the `CLOUDSTACK_SECRET' env variable is considered.
+        As the last option, the value is taken from the ini config file, also see the notes.
+        [Default: (null)]
+        type: str
+
+- api_timeout
+        HTTP timeout in seconds.
+        If not given, the `CLOUDSTACK_TIMEOUT' env variable is considered.
+        As the last option, the value is taken from the ini config file, also see the notes.
+        Fallback value is 10 seconds if not specified.
+        [Default: (null)]
+        type: int
+
+- api_url
+        URL of the CloudStack API e.g. https://cloud.example.com/client/api.
+        If not given, the `CLOUDSTACK_ENDPOINT' env variable is considered.
+        As the last option, the value is taken from the ini config file, also see the notes.
+        [Default: (null)]
+        type: str
+
+- cidr
+        CIDR of the VPC, e.g. 10.1.0.0/16
+        All VPC guest networks' CIDRs must be within this CIDR.
+        Required on `state=present'.
+        [Default: (null)]
+        type: str
+
+- clean_up
+        Whether to redeploy a VPC router or not when `state=restarted'
+        [Default: (null)]
+        type: bool
+        version_added: 2.5
+
+- display_text
+        Display text of the VPC.
+        If not set, `name' will be used for creating.
+        [Default: (null)]
+        type: str
+
+- domain
+        Domain the VPC is related to.
+        [Default: (null)]
+        type: str
+
+= name
+        Name of the VPC.
+
+        type: str
+
+- network_domain
+        Network domain for the VPC.
+        All networks inside the VPC will belong to this domain.
+        Only considered while creating the VPC, can not be changed.
+        [Default: (null)]
+        type: str
+
+- poll_async
+        Poll async jobs until job has finished.
+        [Default: True]
+        type: bool
+
+- project
+        Name of the project the VPC is related to.
+        [Default: (null)]
+        type: str
+
+- state
+        State of the VPC.
+        The state `present' creates a started VPC.
+        The state `stopped' is only considered while creating the VPC, added in version 2.6.
+        (Choices: present, absent, stopped, restarted)[Default: present]
+        type: str
+
+- tags
+        List of tags. Tags are a list of dictionaries having keys `key' and `value'.
+        For deleting all tags, set an empty list e.g. `tags: []'.
+        (Aliases: tag)[Default: (null)]
+        type: list
+
+- vpc_offering
+        Name of the VPC offering.
+        If not set, default VPC offering is used.
+        [Default: (null)]
+        type: str
+
+- zone
+        Name of the zone.
+        If not set, default zone is used.
+        [Default: (null)]
+        type: str
+
+
+NOTES:
+      * Ansible uses the `cs' library's configuration method if credentials are not provided by the arguments `api_url', `api_key',
+        `api_secret'. Configuration is read from several locations, in the following order. The `CLOUDSTACK_ENDPOINT',
+        `CLOUDSTACK_KEY', `CLOUDSTACK_SECRET' and `CLOUDSTACK_METHOD'. `CLOUDSTACK_TIMEOUT' environment variables. A
+        `CLOUDSTACK_CONFIG' environment variable pointing to an `.ini' file. A `cloudstack.ini' file in the current working
+        directory. A `.cloudstack.ini' file in the users home directory. Optionally multiple credentials and endpoints can be
+        specified using ini sections in `cloudstack.ini'. Use the argument `api_region' to select the section name, default section
+        is `cloudstack'. See https://github.com/exoscale/cs for more information.
+      * A detailed guide about cloudstack modules can be found in the L(CloudStack Cloud
+        Guide,../scenario_guides/guide_cloudstack.html).
+      * This module supports check mode.
+
+
+REQUIREMENTS:  python >= 2.6, cs >= 0.6.10
+
+AUTHOR: René Moser (@resmo)
+        METADATA:
+          status:
+          - stableinterface
+          supported_by: community
+        
+
+EXAMPLES:
+
+- name: Ensure a VPC is present but not started after creating
+  cs_vpc:
+    name: my_vpc
+    display_text: My example VPC
+    cidr: 10.10.0.0/16
+    state: stopped
+  delegate_to: localhost
+
+- name: Ensure a VPC is present and started after creating
+  cs_vpc:
+    name: my_vpc
+    display_text: My example VPC
+    cidr: 10.10.0.0/16
+  delegate_to: localhost
+
+- name: Ensure a VPC is absent
+  cs_vpc:
+    name: my_vpc
+    state: absent
+  delegate_to: localhost
+
+- name: Ensure a VPC is restarted with clean up
+  cs_vpc:
+    name: my_vpc
+    clean_up: yes
+    state: restarted
+  delegate_to: localhost
+
+
+RETURN VALUES:
+
+---
+id:
+  description: "UUID of the VPC."
+  returned: success
+  type: str
+  sample: 04589590-ac63-4ffc-93f5-b698b8ac38b6
+name:
+  description: "Name of the VPC."
+  returned: success
+  type: str
+  sample: my_vpc
+display_text:
+  description: "Display text of the VPC."
+  returned: success
+  type: str
+  sample: My example VPC
+cidr:
+  description: "CIDR of the VPC."
+  returned: success
+  type: str
+  sample: 10.10.0.0/16
+network_domain:
+  description: "Network domain of the VPC."
+  returned: success
+  type: str
+  sample: example.com
+region_level_vpc:
+  description: "Whether the VPC is region level or not."
+  returned: success
+  type: bool
+  sample: true
+restart_required:
+  description: "Whether the VPC router needs a restart or not."
+  returned: success
+  type: bool
+  sample: true
+distributed_vpc_router:
+  description: "Whether the VPC uses distributed router or not."
+  returned: success
+  type: bool
+  sample: true
+redundant_vpc_router:
+  description: "Whether the VPC has redundant routers or not."
+  returned: success
+  type: bool
+  sample: true
+domain:
+  description: "Domain the VPC is related to."
+  returned: success
+  type: str
+  sample: example domain
+account:
+  description: "Account the VPC is related to."
+  returned: success
+  type: str
+  sample: example account
+project:
+  description: "Name of project the VPC is related to."
+  returned: success
+  type: str
+  sample: Production
+zone:
+  description: "Name of zone the VPC is in."
+  returned: success
+  type: str
+  sample: ch-gva-2
+state:
+  description: "State of the VPC."
+  returned: success
+  type: str
+  sample: Enabled
+tags:
+  description: "List of resource tags associated with the VPC."
+  returned: success
+  type: list
+  sample: '[ { "key": "foo", "value": "bar" } ]'
+

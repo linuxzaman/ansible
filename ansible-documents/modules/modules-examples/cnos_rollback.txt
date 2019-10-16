@@ -1,0 +1,59 @@
+EXAMPLES:
+
+Tasks : The following are examples of using the module cnos_rollback.
+ These are written in the main.yml file of the tasks directory.
+---
+
+- name: Test Rollback of config - Running config
+  cnos_rolback:
+      deviceType: "{{ hostvars[inventory_hostname]['deviceType'] }}"
+      outputfile: "./results/test_rollback_{{ inventory_hostname }}_output.txt"
+      configType: running-config
+      protocol: "sftp"
+      serverip: "10.241.106.118"
+      rcpath: "/root/cnos/G8272-running-config.txt"
+      serverusername: "root"
+      serverpassword: "root123"
+
+- name: Test Rollback of config - Startup config
+  cnos_rolback:
+      deviceType: "{{ hostvars[inventory_hostname]['deviceType'] }}"
+      outputfile: "./results/test_rollback_{{ inventory_hostname }}_output.txt"
+      configType: startup-config
+      protocol: "sftp"
+      serverip: "10.241.106.118"
+      rcpath: "/root/cnos/G8272-startup-config.txt"
+      serverusername: "root"
+      serverpassword: "root123"
+
+- name: Test Rollback of config - Running config - TFTP
+  cnos_rolback:
+      deviceType: "{{ hostvars[inventory_hostname]['deviceType'] }}"
+      outputfile: "./results/test_rollback_{{ inventory_hostname }}_output.txt"
+      configType: running-config
+      protocol: "tftp"
+      serverip: "10.241.106.118"
+      rcpath: "/anil/G8272-running-config.txt"
+      serverusername: "root"
+      serverpassword: "root123"
+
+- name: Test Rollback of config - Startup config - TFTP
+  cnos_rolback:
+      deviceType: "{{ hostvars[inventory_hostname]['deviceType'] }}"
+      outputfile: "./results/test_rollback_{{ inventory_hostname }}_output.txt"
+      configType: startup-config
+      protocol: "tftp"
+      serverip: "10.241.106.118"
+      rcpath: "/anil/G8272-startup-config.txt"
+      serverusername: "root"
+      serverpassword: "root123"
+
+
+RETURN VALUES:
+
+msg:
+  description: Success or failure message
+  returned: always
+  type: str
+  sample: "Config file tranferred to Device"
+

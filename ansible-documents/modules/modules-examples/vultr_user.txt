@@ -1,0 +1,86 @@
+EXAMPLES:
+
+- name: Ensure a user exists
+  local_action:
+    module: vultr_user
+    name: john
+    email: john.doe@example.com
+    password: s3cr3t
+    acls:
+      - upgrade
+      - dns
+      - manage_users
+      - subscriptions
+      - upgrade
+
+- name: Remove a user
+  local_action:
+    module: vultr_user
+    name: john
+    state: absent
+
+
+RETURN VALUES:
+
+---
+vultr_api:
+  description: Response from Vultr API with a few additions/modification
+  returned: success
+  type: complex
+  contains:
+    api_account:
+      description: Account used in the ini file to select the key
+      returned: success
+      type: str
+      sample: default
+    api_timeout:
+      description: Timeout used for the API requests
+      returned: success
+      type: int
+      sample: 60
+    api_retries:
+      description: Amount of max retries for the API requests
+      returned: success
+      type: int
+      sample: 5
+    api_endpoint:
+      description: Endpoint used for the API requests
+      returned: success
+      type: str
+      sample: "https://api.vultr.com"
+vultr_user:
+  description: Response from Vultr API
+  returned: success
+  type: complex
+  contains:
+    id:
+      description: ID of the user.
+      returned: success
+      type: str
+      sample: 5904bc6ed9234
+    api_key:
+      description: API key of the user.
+      returned: only after resource was created
+      type: str
+      sample: 567E6K567E6K567E6K567E6K567E6K
+    name:
+      description: Name of the user.
+      returned: success
+      type: str
+      sample: john
+    email:
+      description: Email of the user.
+      returned: success
+      type: str
+      sample: "john@exmaple.com"
+    api_enabled:
+      description: Whether the API is enabled or not.
+      returned: success
+      type: bool
+      sample: true
+    acls:
+      description: List of ACLs of the user.
+      returned: success
+      type: list
+      sample: [manage_users, support, upgrade]
+

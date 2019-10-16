@@ -1,0 +1,157 @@
+> HCLOUD_VOLUME    (/usr/lib/python2.7/dist-packages/ansible/modules/cloud/hcloud/hcloud_volume.py)
+
+        Create, update and attach/detach block volumes on the Hetzner Cloud.
+
+  * This module is maintained by The Ansible Community
+OPTIONS (= is mandatory):
+
+= api_token
+        This is the API Token for the Hetzner Cloud.
+
+        type: str
+
+- automount
+        Automatically mount the Volume.
+        [Default: (null)]
+        type: bool
+
+- endpoint
+        This is the API Endpoint for the Hetzner Cloud.
+        [Default: https://api.hetzner.cloud/v1]
+        type: str
+
+- format
+        Automatically Format the volume on creation
+        Can only be used in case the Volume does not exists.
+        (Choices: xfs, ext4)[Default: (null)]
+        type: str
+
+- id
+        The ID of the Hetzner Cloud Block Volume to manage.
+        Only required if no volume `name' is given
+        [Default: (null)]
+        type: int
+
+- labels
+        User-defined key-value pairs.
+        [Default: (null)]
+        type: dict
+
+- location
+        Location of the Hetzner Cloud Volume.
+        Required if no `server' is given and Volume does not exists.
+        [Default: (null)]
+        type: str
+
+- name
+        The Name of the Hetzner Cloud Block Volume to manage.
+        Only required if no volume `id' is given or a volume does not exists.
+        [Default: (null)]
+        type: str
+
+- server
+        Server Name the Volume should be assigned to.
+        Required if no `location' is given and Volume does not exists.
+        [Default: (null)]
+        type: str
+
+- size
+        The size of the Block Volume.
+        Required if volume does not yet exists.
+        [Default: (null)]
+        type: int
+
+- state
+        State of the volume.
+        (Choices: absent, present)[Default: present]
+        type: str
+
+
+SEE ALSO:
+      * Documentation for Hetzner Cloud API
+           Complete reference for the Hetzner Cloud API.
+           https://docs.hetzner.cloud/
+
+
+REQUIREMENTS:  hcloud-python >= 1.0.0
+
+AUTHOR: Christopher Schmitt (@cschmitt-hcloud)
+        METADATA:
+          status:
+          - preview
+          supported_by: community
+        
+
+EXAMPLES:
+
+- name: Create a volume
+  hcloud_volume:
+    name: my-volume
+    location: fsn1
+    size: 100
+    state: present
+- name: Create a volume and format it with ext4
+  hcloud_volume:
+    name: my-volume
+    location: fsn
+    format: ext4
+    size: 100
+    state: present
+- name: Mount a existing volume and automount
+  hcloud_volume:
+    name: my-volume
+    server: my-server
+    automount: yes
+    state: present
+- name: Mount a existing volume and automount
+  hcloud_volume:
+    name: my-volume
+    server: my-server
+    automount: yes
+    state: present
+- name: Ensure the volume is absent (remove if needed)
+  hcloud_volume:
+    name: my-volume
+    state: absent
+
+
+RETURN VALUES:
+
+hcloud_volume:
+    description: The block volume
+    returned: Always
+    type: complex
+    contains:
+        id:
+            description: ID of the volume
+            type: int
+            returned: Always
+            sample: 12345
+        name:
+            description: Name of the volume
+            type: string
+            returned: Always
+            sample: my-volume
+        size:
+            description: Size in MB of the volume
+            type: int
+            returned: Always
+            sample: 1337
+        location:
+            description: Location name where the volume is located at
+            type: string
+            returned: Always
+            sample: "fsn1"
+        labels:
+            description: User-defined labels (key-value pairs)
+            type: dict
+            returned: Always
+            sample:
+                key: value
+                mylabel: 123
+        server:
+            description: Server name where the volume is attached to
+            type: string
+            returned: Always
+            sample: "my-server"
+

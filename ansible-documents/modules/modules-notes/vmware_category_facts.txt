@@ -1,0 +1,105 @@
+> VMWARE_CATEGORY_FACTS    (/usr/lib/python2.7/dist-packages/ansible/modules/cloud/vmware/vmware_category_facts.py)
+
+        This module can be used to gather facts about VMware tag categories. Tag feature is introduced in vSphere 6 version, so this
+        module is not supported in earlier versions of vSphere. All variables and VMware object names are case sensitive.
+
+  * This module is maintained by The Ansible Community
+OPTIONS (= is mandatory):
+
+- hostname
+        The hostname or IP address of the vSphere vCenter server.
+        If the value is not specified in the task, the value of environment variable `VMWARE_HOST' will be used instead.
+        [Default: (null)]
+        type: str
+
+- password
+        The password of the vSphere vCenter server.
+        If the value is not specified in the task, the value of environment variable `VMWARE_PASSWORD' will be used instead.
+        (Aliases: pass, pwd)[Default: (null)]
+        type: str
+
+- protocol
+        The connection to protocol.
+        (Choices: http, https)[Default: https]
+        type: str
+
+- username
+        The username of the vSphere vCenter server.
+        If the value is not specified in the task, the value of environment variable `VMWARE_USER' will be used instead.
+        (Aliases: admin, user)[Default: (null)]
+        type: str
+
+- validate_certs
+        Allows connection when SSL certificates are not valid.
+        Set to `no' when certificates are not trusted.
+        If the value is not specified in the task, the value of environment variable `VMWARE_VALIDATE_CERTS' will be used instead.
+        [Default: True]
+        type: bool
+
+
+NOTES:
+      * Tested on vSphere 6.5
+
+
+REQUIREMENTS:  python >= 2.6, PyVmomi, vSphere Automation SDK, vCloud Suite SDK
+
+AUTHOR: Abhijeet Kasurde (@Akasurde)
+        METADATA:
+          status:
+          - preview
+          supported_by: community
+        
+
+EXAMPLES:
+
+- name: Gather facts about tag categories
+  vmware_category_facts:
+    hostname: "{{ vcenter_hostname }}"
+    username: "{{ vcenter_username }}"
+    password: "{{ vcenter_password }}"
+  delegate_to: localhost
+  register: all_tag_category_facts
+
+- name: Gather category id from given tag category
+  vmware_category_facts:
+    hostname: "{{ vcenter_hostname }}"
+    username: "{{ vcenter_username }}"
+    password: "{{ vcenter_password }}"
+  delegate_to: localhost
+  register: tag_category_results
+
+- set_fact:
+    category_id: "{{ item.category_id }}"
+  loop: "{{ tag_category_results.tag_category_facts|json_query(query) }}"
+  vars:
+    query: "[?category_name==`Category0001`]"
+- debug: var=category_id
+
+
+RETURN VALUES:
+
+tag_category_facts:
+  description: metadata of tag categories
+  returned: always
+  type: list
+  sample: [
+    {
+       "category_associable_types": [],
+       "category_cardinality": "MULTIPLE",
+       "category_description": "awesome description",
+       "category_id": "urn:vmomi:InventoryServiceCategory:e785088d-6981-4b1c-9fb8-1100c3e1f742:GLOBAL",
+       "category_name": "Category0001",
+       "category_used_by": []
+    },
+    {
+       "category_associable_types": [
+            "VirtualMachine"
+       ],
+       "category_cardinality": "SINGLE",
+       "category_description": "another awesome description",
+       "category_id": "urn:vmomi:InventoryServiceCategory:ae5b7c6c-e622-4671-9b96-76e93adb70f2:GLOBAL",
+       "category_name": "template_tag",
+       "category_used_by": []
+    }
+  ]
+

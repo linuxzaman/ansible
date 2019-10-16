@@ -1,0 +1,110 @@
+> PN_STP_PORT    (/usr/lib/python2.7/dist-packages/ansible/modules/network/netvisor/pn_stp_port.py)
+
+        This module can be used modify Spanning Tree Protocol (STP) parameters on ports.
+
+  * This module is maintained by The Ansible Community
+OPTIONS (= is mandatory):
+
+- pn_block
+        Specify if a STP port blocks BPDUs.
+        [Default: (null)]
+        type: bool
+
+- pn_bpdu_guard
+        STP port BPDU guard.
+        [Default: (null)]
+        type: bool
+
+- pn_cliswitch
+        Target switch to run the CLI on.
+        [Default: (null)]
+        type: str
+
+- pn_cost
+        STP port cost from 1 to 200000000.
+        [Default: 2000]
+        type: str
+
+- pn_edge
+        STP port is an edge port.
+        [Default: (null)]
+        type: bool
+
+- pn_filter
+        STP port filters BPDUs.
+        [Default: (null)]
+        type: bool
+
+- pn_port
+        STP port.
+        [Default: (null)]
+        type: str
+
+- pn_priority
+        STP port priority from 0 to 240.
+        [Default: 128]
+        type: str
+
+- pn_root_guard
+        STP port Root guard.
+        [Default: (null)]
+        type: bool
+
+= state
+        State the action to perform. Use `update' to update stp-port.
+        (Choices: update)
+        type: str
+
+
+AUTHOR: Pluribus Networks (@rajaspachipulusu17)
+        METADATA:
+          status:
+          - preview
+          supported_by: community
+        
+
+EXAMPLES:
+
+- name: Modify stp port
+  pn_stp_port:
+    pn_cliswitch: "sw01"
+    state: "update"
+    pn_port: "1"
+    pn_filter: True
+    pn_priority: '144'
+
+- name: Modify stp port
+  pn_stp_port:
+    pn_cliswitch: "sw01"
+    state: "update"
+    pn_port: "1"
+    pn_cost: "200"
+
+- name: Modify stp port
+  pn_stp_port:
+    pn_cliswitch: "sw01"
+    state: "update"
+    pn_port: "1"
+    pn_edge: True
+    pn_cost: "200"
+
+
+RETURN VALUES:
+
+command:
+  description: the CLI command run on the target node.
+  returned: always
+  type: str
+stdout:
+  description: set of responses from the stp-port command.
+  returned: always
+  type: list
+stderr:
+  description: set of error responses from the stp-port command.
+  returned: on error
+  type: list
+changed:
+  description: indicates whether the CLI caused changes on the target.
+  returned: always
+  type: bool
+

@@ -1,0 +1,54 @@
+EXAMPLES:
+
+- name: Query configuration templates
+  meraki_config_template:
+    auth_key: abc12345
+    org_name: YourOrg
+    state: query
+  delegate_to: localhost
+
+- name: Bind a template from a network
+  meraki_config_template:
+    auth_key: abc123
+    state: present
+    org_name: YourOrg
+    net_name: YourNet
+    config_template: DevConfigTemplate
+  delegate_to: localhost
+
+- name: Unbind a template from a network
+  meraki_config_template:
+    auth_key: abc123
+    state: absent
+    org_name: YourOrg
+    net_name: YourNet
+    config_template: DevConfigTemplate
+  delegate_to: localhost
+
+- name: Delete a configuration template
+  meraki_config_template:
+    auth_key: abc123
+    state: absent
+    org_name: YourOrg
+    config_template: DevConfigTemplate
+  delegate_to: localhost
+
+
+RETURN VALUES:
+
+data:
+    description: Information about queried object.
+    returned: success
+    type: complex
+    contains:
+        id:
+          description: Unique identification number of organization
+          returned: success
+          type: int
+          sample: L_2930418
+        name:
+          description: Name of configuration template
+          returned: success
+          type: str
+          sample: YourTemplate
+

@@ -1,0 +1,80 @@
+> PANOS_IMPORT    (/usr/lib/python2.7/dist-packages/ansible/modules/network/panos/_panos_import.py)
+
+        Import file on PAN-OS device
+
+DEPRECATED: 
+
+	Reason: Consolidating code base.
+	Will be removed in: Ansible 2.12
+	Alternatives: Use U(https://galaxy.ansible.com/PaloAltoNetworks/paloaltonetworks) instead.
+
+
+  * This module is maintained by The Ansible Community
+OPTIONS (= is mandatory):
+
+- category
+        Category of file uploaded. The default is software.
+        See API > Import section of the API reference for category options.
+        [Default: software]
+
+- file
+        Location of the file to import into device.
+        [Default: (null)]
+
+= ip_address
+        IP address (or hostname) of PAN-OS device.
+
+        type: str
+
+= password
+        Password for authentication.
+
+        type: str
+
+- url
+        URL of the file that will be imported to device.
+        [Default: (null)]
+
+- username
+        Username for authentication.
+        [Default: admin]
+        type: str
+
+- validate_certs
+        If `no', SSL certificates will not be validated. Disabling certificate validation is not recommended.
+        [Default: True]
+        type: bool
+        version_added: 2.6
+
+
+NOTES:
+      * API reference documentation can be read from the `/api/' directory of your appliance
+      * Certificate validation is enabled by default as of Ansible 2.6. This may break existing playbooks but should be disabled
+        with caution.
+
+
+REQUIREMENTS:  pan-python, requests, requests_toolbelt
+
+AUTHOR: Luigi Mori (@jtschichold), Ivan Bojer (@ivanbojer)
+        METADATA:
+          status:
+          - deprecated
+          supported_by: community
+        
+
+EXAMPLES:
+
+# import software image PanOS_vm-6.1.1 on 192.168.1.1
+- name: import software image into PAN-OS
+  panos_import:
+    ip_address: 192.168.1.1
+    username: admin
+    password: admin
+    file: /tmp/PanOS_vm-6.1.1
+    category: software
+
+
+RETURN VALUES:
+
+# Default return values
+

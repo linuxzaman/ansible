@@ -1,0 +1,216 @@
+> IPA_HOST    (/usr/lib/python2.7/dist-packages/ansible/modules/identity/ipa/ipa_host.py)
+
+        Add, modify and delete an IPA host using IPA API
+
+  * This module is maintained by The Ansible Community
+OPTIONS (= is mandatory):
+
+- description
+        A description of this host.
+        [Default: (null)]
+
+- force
+        Force host name even if not in DNS.
+        [Default: (null)]
+        type: bool
+
+= fqdn
+        Full qualified domain name.
+        Can not be changed as it is the unique identifier.
+        (Aliases: name)
+
+- ip_address
+        Add the host to DNS with this IP address.
+        [Default: (null)]
+
+- ipa_host
+        IP or hostname of IPA server.
+        If the value is not specified in the task, the value of environment variable `IPA_HOST' will be used instead.
+        If both the environment variable `IPA_HOST' and the value are not specified in the task, then DNS will be used to try to discover
+        the FreeIPA server.
+        The relevant entry needed in FreeIPA is the 'ipa-ca' entry.
+        If neither the DNS entry, nor the environment `IPA_HOST', nor the value are available in the task, then the default value will be
+        used.
+        Environment variable fallback mechanism is added in Ansible 2.5.
+        [Default: ipa.example.com]
+        type: str
+
+= ipa_pass
+        Password of administrative user.
+        If the value is not specified in the task, the value of environment variable `IPA_PASS' will be used instead.
+        Note that if the 'urllib_gssapi' library is available, it is possible to use GSSAPI to authenticate to FreeIPA.
+        If the environment variable `KRB5CCNAME' is available, the module will use this kerberos credentials cache to authenticate to the
+        FreeIPA server.
+        If the environment variable `KRB5_CLIENT_KTNAME' is available, and `KRB5CCNAME' is not; the module will use this kerberos keytab
+        to authenticate.
+        If GSSAPI is not available, the usage of 'ipa_pass' is required.
+        Environment variable fallback mechanism is added in Ansible 2.5.
+
+        type: str
+
+- ipa_port
+        Port of FreeIPA / IPA server.
+        If the value is not specified in the task, the value of environment variable `IPA_PORT' will be used instead.
+        If both the environment variable `IPA_PORT' and the value are not specified in the task, then default value is set.
+        Environment variable fallback mechanism is added in Ansible 2.5.
+        [Default: 443]
+        type: int
+
+- ipa_prot
+        Protocol used by IPA server.
+        If the value is not specified in the task, the value of environment variable `IPA_PROT' will be used instead.
+        If both the environment variable `IPA_PROT' and the value are not specified in the task, then default value is set.
+        Environment variable fallback mechanism is added in Ansible 2.5.
+        (Choices: http, https)[Default: https]
+        type: str
+
+- ipa_timeout
+        Specifies idle timeout (in seconds) for the connection.
+        For bulk operations, you may want to increase this in order to avoid timeout from IPA server.
+        If the value is not specified in the task, the value of environment variable `IPA_TIMEOUT' will be used instead.
+        If both the environment variable `IPA_TIMEOUT' and the value are not specified in the task, then default value is set.
+        [Default: 10]
+        type: int
+        version_added: 2.7
+
+- ipa_user
+        Administrative account used on IPA server.
+        If the value is not specified in the task, the value of environment variable `IPA_USER' will be used instead.
+        If both the environment variable `IPA_USER' and the value are not specified in the task, then default value is set.
+        Environment variable fallback mechanism is added in Ansible 2.5.
+        [Default: admin]
+        type: str
+
+- mac_address
+        List of Hardware MAC address(es) off this host.
+        If option is omitted MAC addresses will not be checked or changed.
+        If an empty list is passed all assigned MAC addresses will be removed.
+        MAC addresses that are already assigned but not passed will be removed.
+        (Aliases: macaddress)[Default: (null)]
+
+- ns_hardware_platform
+        Host hardware platform (e.g. "Lenovo T61")
+        (Aliases: nshardwareplatform)[Default: (null)]
+
+- ns_host_location
+        Host location (e.g. "Lab 2")
+        (Aliases: nshostlocation)[Default: (null)]
+
+- ns_os_version
+        Host operating system and version (e.g. "Fedora 9")
+        (Aliases: nsosversion)[Default: (null)]
+
+- random_password
+        Generate a random password to be used in bulk enrollment
+        [Default: False]
+        type: bool
+        version_added: 2.5
+
+- state
+        State to ensure
+        (Choices: present, absent, enabled, disabled)[Default: present]
+
+- update_dns
+        If set `"True"' with state as `"absent"', then removes DNS records of the host managed by FreeIPA DNS.
+        This option has no effect for states other than "absent".
+        [Default: False]
+        type: bool
+        version_added: 2.5
+
+- user_certificate
+        List of Base-64 encoded server certificates.
+        If option is omitted certificates will not be checked or changed.
+        If an empty list is passed all assigned certificates will be removed.
+        Certificates already assigned but not passed will be removed.
+        (Aliases: usercertificate)[Default: (null)]
+
+- validate_certs
+        This only applies if `ipa_prot' is `https'.
+        If set to `no', the SSL certificates will not be validated.
+        This should only set to `no' used on personally controlled sites using self-signed certificates.
+        [Default: True]
+        type: bool
+
+
+AUTHOR: Thomas Krahn (@Nosmoht)
+        METADATA:
+          status:
+          - preview
+          supported_by: community
+        
+
+EXAMPLES:
+
+# Ensure host is present
+- ipa_host:
+    name: host01.example.com
+    description: Example host
+    ip_address: 192.168.0.123
+    ns_host_location: Lab
+    ns_os_version: CentOS 7
+    ns_hardware_platform: Lenovo T61
+    mac_address:
+    - "08:00:27:E3:B1:2D"
+    - "52:54:00:BD:97:1E"
+    state: present
+    ipa_host: ipa.example.com
+    ipa_user: admin
+    ipa_pass: topsecret
+
+# Generate a random password for bulk enrolment
+- ipa_host:
+    name: host01.example.com
+    description: Example host
+    ip_address: 192.168.0.123
+    state: present
+    ipa_host: ipa.example.com
+    ipa_user: admin
+    ipa_pass: topsecret
+    validate_certs: False
+    random_password: True
+
+# Ensure host is disabled
+- ipa_host:
+    name: host01.example.com
+    state: disabled
+    ipa_host: ipa.example.com
+    ipa_user: admin
+    ipa_pass: topsecret
+
+# Ensure that all user certificates are removed
+- ipa_host:
+    name: host01.example.com
+    user_certificate: []
+    ipa_host: ipa.example.com
+    ipa_user: admin
+    ipa_pass: topsecret
+
+# Ensure host is absent
+- ipa_host:
+    name: host01.example.com
+    state: absent
+    ipa_host: ipa.example.com
+    ipa_user: admin
+    ipa_pass: topsecret
+
+# Ensure host and its DNS record is absent
+- ipa_host:
+    name: host01.example.com
+    state: absent
+    ipa_host: ipa.example.com
+    ipa_user: admin
+    ipa_pass: topsecret
+    update_dns: True
+
+
+RETURN VALUES:
+
+host:
+  description: Host as returned by IPA API.
+  returned: always
+  type: dict
+host_diff:
+  description: List of options that differ and would be changed
+  returned: if check mode and a difference is found
+  type: list
+

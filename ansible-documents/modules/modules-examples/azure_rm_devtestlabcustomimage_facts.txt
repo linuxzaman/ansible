@@ -1,0 +1,67 @@
+EXAMPLES:
+
+- name: Get instance of Custom Image
+    azure_rm_devtestlabcustomimage_facts:
+      resource_group: myResourceGroup
+      lab_name: myLab
+      name: myImage
+
+  - name: List instances of Custom Image in the lab
+    azure_rm_devtestlabcustomimage_facts:
+      resource_group: myResourceGroup
+      lab_name: myLab
+      name: myImage
+
+
+RETURN VALUES:
+
+custom_images:
+    description: A list of dictionaries containing facts for Custom Image.
+    returned: always
+    type: complex
+    contains:
+        id:
+            description:
+                - The identifier of the artifact source.
+            returned: always
+            type: str
+            sample: "/subscriptions/xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxxx/resourceGroups/myResourceGroup/providers/Microsoft.DevTestLab/labs/myLab/cu
+                     stomimages/myImage"
+        resource_group:
+            description:
+                - Name of the resource group.
+            returned: always
+            type: str
+            sample: myResourceGroup
+        lab_name:
+            description:
+                - Name of the lab.
+            returned: always
+            type: str
+            sample: myLab
+        name:
+            description:
+                - The name of the image.
+            returned: always
+            type: str
+            sample: myImage
+        managed_shapshot_id:
+            description:
+                - Managed snapshot id.
+            returned: always
+            type: str
+            sample: "/subscriptions/xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxxx/resourcegroups/myResourceGroup/providers/microsoft.compute/snapshots/myImage"
+        source_vm_id:
+            description:
+                - Source VM id.
+            returned: always
+            type: str
+            sample: "/subscriptions/xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxxx//resourcegroups/myResourceGroup/providers/microsoft.devtestlab/labs/myLab/v
+                     irtualmachines/myLabVm"
+        tags:
+            description:
+                - The tags of the resource.
+            returned: always
+            type: complex
+            sample: "{ 'MyTag': 'MyValue' }"
+

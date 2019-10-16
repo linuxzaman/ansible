@@ -1,0 +1,142 @@
+> VYOS_LOGGING    (/usr/lib/python2.7/dist-packages/ansible/modules/network/vyos/vyos_logging.py)
+
+        This module provides declarative management of logging on Vyatta Vyos devices.
+
+  * This module is maintained by The Ansible Network Team
+OPTIONS (= is mandatory):
+
+- aggregate
+        List of logging definitions.
+        [Default: (null)]
+
+- dest
+        Destination of the logs.
+        (Choices: console, file, global, host, user)[Default: (null)]
+
+- facility
+        Set logging facility.
+        [Default: (null)]
+
+- level
+        Set logging severity levels.
+        [Default: (null)]
+
+- name
+        If value of `dest' is `file' it indicates file-name, for `user' it indicates username and for `host' indicates the host name to
+        be notified.
+        [Default: (null)]
+
+- provider
+        *Deprecated*
+        Starting with Ansible 2.5 we recommend using `connection: network_cli'.
+        For more information please see the L(Network Guide, ../network/getting_started/network_differences.html#multiple-communication-
+        protocols).
+        HORIZONTALLINE
+        A dict object containing connection details.
+        [Default: (null)]
+        suboptions:
+          host:
+            description:
+            - Specifies the DNS host name or address for connecting to the remote device over
+              the specified transport.  The value of host is used as the destination address
+              for the transport.
+            required: true
+            type: str
+          password:
+            description:
+            - Specifies the password to use to authenticate the connection to the remote device.   This
+              value is used to authenticate the SSH session. If the value is not specified
+              in the task, the value of environment variable `ANSIBLE_NET_PASSWORD' will
+              be used instead.
+            type: str
+          port:
+            default: 22
+            description:
+            - Specifies the port to use when building the connection to the remote device.
+            type: int
+          ssh_keyfile:
+            description:
+            - Specifies the SSH key to use to authenticate the connection to the remote device.   This
+              value is the path to the key used to authenticate the SSH session. If the value
+              is not specified in the task, the value of environment variable `ANSIBLE_NET_SSH_KEYFILE'
+              will be used instead.
+            type: path
+          timeout:
+            default: 10
+            description:
+            - Specifies the timeout in seconds for communicating with the network device for
+              either connecting or sending commands.  If the timeout is exceeded before the
+              operation is completed, the module will error.
+            type: int
+          username:
+            description:
+            - Configures the username to use to authenticate the connection to the remote
+              device.  This value is used to authenticate the SSH session. If the value is
+              not specified in the task, the value of environment variable `ANSIBLE_NET_USERNAME'
+              will be used instead.
+            type: str
+        
+        type: dict
+
+- state
+        State of the logging configuration.
+        (Choices: present, absent)[Default: present]
+
+
+NOTES:
+      * Tested against VYOS 1.1.7
+      * For more information on using Ansible to manage network devices see the :ref:`Ansible Network Guide <network_guide>`
+
+
+AUTHOR: Trishna Guha (@trishnaguha)
+        METADATA:
+          status:
+          - preview
+          supported_by: network
+        
+
+EXAMPLES:
+
+- name: configure console logging
+  vyos_logging:
+    dest: console
+    facility: all
+    level: crit
+
+- name: remove console logging configuration
+  vyos_logging:
+    dest: console
+    state: absent
+
+- name: configure file logging
+  vyos_logging:
+    dest: file
+    name: test
+    facility: local3
+    level: err
+
+- name: Add logging aggregate
+  vyos_logging:
+    aggregate:
+      - { dest: file, name: test1, facility: all, level: info }
+      - { dest: file, name: test2, facility: news, level: debug }
+    state: present
+
+- name: Remove logging aggregate
+  vyos_logging:
+    aggregate:
+      - { dest: console, facility: all, level: info }
+      - { dest: console, facility: daemon, level: warning }
+      - { dest: file, name: test2, facility: news, level: debug }
+    state: absent
+
+
+RETURN VALUES:
+
+commands:
+  description: The list of configuration mode commands to send to the device
+  returned: always
+  type: list
+  sample:
+    - set system syslog global facility all level notice
+

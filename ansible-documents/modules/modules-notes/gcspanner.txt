@@ -1,0 +1,117 @@
+> GCSPANNER    (/usr/lib/python2.7/dist-packages/ansible/modules/cloud/google/_gcspanner.py)
+
+        Create and Delete Instances/Databases on Spanner. See https://cloud.google.com/spanner/docs for an overview.
+
+DEPRECATED: 
+
+	Reason: Updated modules released with increased functionality
+	Will be removed in: Ansible 2.12
+	Alternatives: Use M(gcp_spanner_database) and/or M(gcp_spanner_instance) instead.
+
+
+  * This module is maintained by The Ansible Community
+OPTIONS (= is mandatory):
+
+= configuration
+        Configuration the instance should use.
+        Examples are us-central1, asia-east1 and europe-west1.
+
+
+- database_name
+        Name of database contained on the instance.
+        [Default: (null)]
+
+- force_instance_delete
+        To delete an instance, this argument must exist and be true (along with state being equal to absent).
+        [Default: no]
+        type: bool
+
+- instance_display_name
+        Name of Instance to display.
+        If not specified, instance_id will be used instead.
+        [Default: (null)]
+
+= instance_id
+        GCP spanner instance name.
+
+
+- node_count
+        Number of nodes in the instance.
+        [Default: 1]
+
+- state
+        State of the instance or database. Applies to the most granular resource.
+        If a `database_name' is specified we remove it.
+        If only `instance_id' is specified, that is what is removed.
+        (Choices: absent, present)[Default: present]
+
+
+NOTES:
+      * Changing the configuration on an existing instance is not supported.
+
+
+REQUIREMENTS:  python >= 2.6, google-auth >= 0.5.0, google-cloud-spanner >= 0.23.0
+
+AUTHOR: Tom Melendez (@supertom) <tom@supertom.com>
+        METADATA:
+          status:
+          - deprecated
+          supported_by: community
+        
+
+EXAMPLES:
+
+- name: Create instance
+  gcspanner:
+    instance_id: '{{ instance_id }}'
+    configuration: '{{ configuration }}'
+    state: present
+    node_count: 1
+
+- name: Create database
+  gcspanner:
+    instance_id: '{{ instance_id }}'
+    configuration: '{{ configuration }}'
+    database_name: '{{ database_name }}'
+    state: present
+
+- name: Delete instance (and all databases)
+- gcspanner:
+    instance_id: '{{ instance_id }}'
+    configuration: '{{ configuration }}'
+    state: absent
+    force_instance_delete: yes
+
+
+RETURN VALUES:
+
+state:
+    description: The state of the instance or database. Value will be either 'absent' or 'present'.
+    returned: Always
+    type: str
+    sample: "present"
+
+database_name:
+    description: Name of database.
+    returned: When database name is specified
+    type: str
+    sample: "mydatabase"
+
+instance_id:
+    description: Name of instance.
+    returned: Always
+    type: str
+    sample: "myinstance"
+
+previous_values:
+   description: List of dictionaries containing previous values prior to update.
+   returned: When an instance update has occurred and a field has been modified.
+   type: dict
+   sample: "'previous_values': { 'instance': { 'instance_display_name': 'my-instance', 'node_count': 1 } }"
+
+updated:
+   description: Boolean field to denote an update has occurred.
+   returned: When an update has occurred.
+   type: bool
+   sample: True
+

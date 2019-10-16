@@ -1,0 +1,153 @@
+> PN_VROUTERIF    (/usr/lib/python2.7/dist-packages/ansible/modules/network/netvisor/_pn_vrouterif.py)
+
+        Execute vrouter-interface-add, vrouter-interface-remove, vrouter-interface-modify command. You configure interfaces to vRouter
+        services on a fabric, cluster, standalone switch or virtual network(VNET).
+
+DEPRECATED: 
+
+	Reason: Doesn't support latest Pluribus Networks netvisor
+	Will be removed in: Ansible 2.12
+	Alternatives: Latest modules will be pushed in Ansible future versions.
+
+
+  * This module is maintained by The Ansible Community
+OPTIONS (= is mandatory):
+
+- pn_alias
+        Specify an alias for the interface.
+        [Default: (null)]
+
+- pn_assignment
+        Specify the DHCP method for IP address assignment.
+        (Choices: none, dhcp, dhcpv6, autov6)[Default: (null)]
+
+- pn_clipassword
+        Provide login password if user is not root.
+        [Default: (null)]
+
+- pn_cliswitch
+        Target switch to run the cli on.
+        [Default: local]
+
+- pn_cliusername
+        Provide login username if user is not root.
+        [Default: (null)]
+
+- pn_exclusive
+        Specify if the interface is exclusive to the configuration. Exclusive means that other configurations cannot use the interface.
+        Exclusive is specified when you configure the interface as span interface and allows higher throughput through the interface.
+        [Default: (null)]
+        type: bool
+
+- pn_interface
+        Specify if the interface is management, data or span interface.
+        (Choices: mgmt, data, span)[Default: (null)]
+
+- pn_interface_ip
+        Specify the IP address of the interface in x.x.x.x/n format.
+        [Default: (null)]
+
+- pn_l3port
+        Specify a Layer 3 port for the interface.
+        [Default: (null)]
+
+- pn_nic_enable
+        Specify if the NIC is enabled or not
+        [Default: (null)]
+        type: bool
+
+- pn_nic_str
+        Specify the type of NIC. Used for vrouter-interface remove/modify.
+        [Default: (null)]
+
+- pn_secondary_macs
+        Specify a secondary MAC address for the interface.
+        [Default: (null)]
+
+- pn_vlan
+        Specify the VLAN identifier. This is a value between 1 and 4092.
+        [Default: (null)]
+
+= pn_vrouter_name
+        Specify the name of the vRouter interface.
+
+
+- pn_vrrp_adv_int
+        Specify a VRRP advertisement interval in milliseconds. The range is from 30 to 40950 with a default value of 1000.
+        [Default: (null)]
+
+- pn_vrrp_id
+        Specify the ID for the VRRP interface. The IDs on both vRouters must be the same IS number.
+        [Default: (null)]
+
+- pn_vrrp_priority
+        Specify the priority for the VRRP interface. This is a value between 1 (lowest) and 255 (highest).
+        [Default: (null)]
+
+- pn_vxlan
+        Specify the VXLAN identifier. This is a value between 1 and 16777215.
+        [Default: (null)]
+
+= state
+        State the action to perform. Use 'present' to add vrouter interface, 'absent' to remove vrouter interface and 'update' to modify
+        vrouter interface.
+        (Choices: present, absent, update)
+
+
+AUTHOR: Pluribus Networks (@amitsi)
+        METADATA:
+          status:
+          - deprecated
+          supported_by: community
+        
+
+EXAMPLES:
+
+- name: Add vrouter-interface
+  pn_vrouterif:
+    pn_cliusername: admin
+    pn_clipassword: admin
+    state: 'present'
+    pn_vrouter_name: 'ansible-vrouter'
+    pn_interface_ip: 101.101.101.2/24
+    pn_vlan: 101
+
+- name: Add VRRP..
+  pn_vrouterif:
+    pn_cliusername: admin
+    pn_clipassword: admin
+    state: 'present'
+    pn_vrouter_name: 'ansible-vrouter'
+    pn_interface_ip: 101.101.101.2/24
+    pn_vrrp_ip: 101.101.101.1/24
+    pn_vrrp_priority: 100
+    pn_vlan: 101
+
+- name: Remove vrouter-interface
+  pn_vrouterif:
+    pn_cliusername: admin
+    pn_clipassword: admin
+    state: 'absent'
+    pn_vrouter_name: 'ansible-vrouter'
+    pn_interface_ip: 101.101.101.2/24
+
+
+RETURN VALUES:
+
+command:
+  description: The CLI command run on the target node(s).
+  returned: always
+  type: str
+stdout:
+  description: The set of responses from the vrouterif command.
+  returned: on success
+  type: list
+stderr:
+  description: The set of error responses from the vrouterif command.
+  returned: on error
+  type: str
+changed:
+  description: Indicates whether the CLI caused changes on the target.
+  returned: always
+  type: bool
+

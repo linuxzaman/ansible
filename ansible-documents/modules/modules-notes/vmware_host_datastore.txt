@@ -1,0 +1,175 @@
+> VMWARE_HOST_DATASTORE    (/usr/lib/python2.7/dist-packages/ansible/modules/cloud/vmware/vmware_host_datastore.py)
+
+        This module can be used to mount/umount datastore on ESXi host. This module only supports NFS (NFS v3 or NFS v4.1) and VMFS
+        datastores. For VMFS datastore, available device must already be connected on ESXi host. All parameters and VMware object names
+        are case sensitive.
+
+  * This module is maintained by The Ansible Community
+OPTIONS (= is mandatory):
+
+- datacenter_name
+        Name of the datacenter to add the datastore.
+        The datacenter isn't used by the API to create a datastore.
+        Will be removed in 2.11.
+        [Default: (null)]
+
+= datastore_name
+        Name of the datastore to add/remove.
+
+
+= datastore_type
+        Type of the datastore to configure (nfs/nfs41/vmfs).
+        (Choices: nfs, nfs41, vmfs)
+
+= esxi_hostname
+        ESXi hostname to manage the datastore.
+
+
+- hostname
+        The hostname or IP address of the vSphere vCenter or ESXi server.
+        If the value is not specified in the task, the value of environment variable `VMWARE_HOST' will be used instead.
+        Environment variable support added in Ansible 2.6.
+        [Default: (null)]
+        type: str
+
+- nfs_path
+        Resource path on NFS host.
+        Required if datastore type is set to `nfs'/`nfs41' and state is set to `present', else unused.
+        [Default: (null)]
+
+- nfs_ro
+        ReadOnly or ReadWrite mount.
+        Unused if datastore type is not set to `nfs'/`nfs41' and state is not set to `present'.
+        [Default: False]
+        type: bool
+
+- nfs_server
+        NFS host serving nfs datastore.
+        Required if datastore type is set to `nfs'/`nfs41' and state is set to `present', else unused.
+        Two or more servers can be defined if datastore type is set to `nfs41'
+        [Default: (null)]
+
+- password
+        The password of the vSphere vCenter or ESXi server.
+        If the value is not specified in the task, the value of environment variable `VMWARE_PASSWORD' will be used instead.
+        Environment variable support added in Ansible 2.6.
+        (Aliases: pass, pwd)[Default: (null)]
+        type: str
+
+- port
+        The port number of the vSphere vCenter or ESXi server.
+        If the value is not specified in the task, the value of environment variable `VMWARE_PORT' will be used instead.
+        Environment variable support added in Ansible 2.6.
+        [Default: 443]
+        type: int
+        version_added: 2.5
+
+- state
+        present: Mount datastore on host if datastore is absent else do nothing.
+        absent: Umount datastore if datastore is present else do nothing.
+        (Choices: present, absent)[Default: present]
+
+- username
+        The username of the vSphere vCenter or ESXi server.
+        If the value is not specified in the task, the value of environment variable `VMWARE_USER' will be used instead.
+        Environment variable support added in Ansible 2.6.
+        (Aliases: admin, user)[Default: (null)]
+        type: str
+
+- validate_certs
+        Allows connection when SSL certificates are not valid. Set to `false' when certificates are not trusted.
+        If the value is not specified in the task, the value of environment variable `VMWARE_VALIDATE_CERTS' will be used instead.
+        Environment variable support added in Ansible 2.6.
+        If set to `yes', please make sure Python >= 2.7.9 is installed on the given machine.
+        [Default: True]
+        type: bool
+
+- vmfs_device_name
+        Name of the device to be used as VMFS datastore.
+        Required for VMFS datastore type and state is set to `present', else unused.
+        [Default: (null)]
+
+- vmfs_version
+        VMFS version to use for datastore creation.
+        Unused if datastore type is not set to `vmfs' and state is not set to `present'.
+        [Default: (null)]
+
+
+NOTES:
+      * Tested on vSphere 6.0 and 6.5
+      * NFS v4.1 tested on vSphere 6.5
+      * Kerberos authentication with NFS v4.1 isn't implemented
+
+
+REQUIREMENTS:  python >= 2.6, PyVmomi
+
+AUTHOR: Ludovic Rivallain (@lrivallain) <ludovic.rivallain@gmail.com>, Christian Kotte (@ckotte) <christian.kotte@gmx.de>
+        METADATA:
+          status:
+          - preview
+          supported_by: community
+        
+
+EXAMPLES:
+
+- name: Mount VMFS datastores to ESXi
+  vmware_host_datastore:
+      hostname: '{{ vcenter_hostname }}'
+      username: '{{ vcenter_username }}'
+      password: '{{ vcenter_password }}'
+      datastore_name: '{{ item.name }}'
+      datastore_type: '{{ item.type }}'
+      vmfs_device_name: 'naa.XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX'
+      vmfs_version: 6
+      esxi_hostname: '{{ inventory_hostname }}'
+      state: present
+  delegate_to: localhost
+
+- name: Mount NFS datastores to ESXi
+  vmware_host_datastore:
+      hostname: '{{ vcenter_hostname }}'
+      username: '{{ vcenter_username }}'
+      password: '{{ vcenter_password }}'
+      datastore_name: '{{ item.name }}'
+      datastore_type: '{{ item.type }}'
+      nfs_server: '{{ item.server }}'
+      nfs_path: '{{ item.path }}'
+      nfs_ro: no
+      esxi_hostname: '{{ inventory_hostname }}'
+      state: present
+  delegate_to: localhost
+  loop:
+      - { 'name': 'NasDS_vol01', 'server': 'nas01', 'path': '/mnt/vol01', 'type': 'nfs'}
+      - { 'name': 'NasDS_vol02', 'server': 'nas01', 'path': '/mnt/vol02', 'type': 'nfs'}
+
+- name: Mount NFS v4.1 datastores to ESXi
+  vmware_host_datastore:
+      hostname: '{{ vcenter_hostname }}'
+      username: '{{ vcenter_username }}'
+      password: '{{ vcenter_password }}'
+      datastore_name: '{{ item.name }}'
+      datastore_type: '{{ item.type }}'
+      nfs_server: '{{ item.server }}'
+      nfs_path: '{{ item.path }}'
+      nfs_ro: no
+      esxi_hostname: '{{ inventory_hostname }}'
+      state: present
+  delegate_to: localhost
+  loop:
+      - { 'name': 'NasDS_vol03', 'server': 'nas01,nas02', 'path': '/mnt/vol01', 'type': 'nfs41'}
+      - { 'name': 'NasDS_vol04', 'server': 'nas01,nas02', 'path': '/mnt/vol02', 'type': 'nfs41'}
+
+- name: Remove/Umount Datastores from ESXi
+  vmware_host_datastore:
+      hostname: '{{ vcenter_hostname }}'
+      username: '{{ vcenter_username }}'
+      password: '{{ vcenter_password }}'
+      datastore_name: NasDS_vol01
+      esxi_hostname: '{{ inventory_hostname }}'
+      state: absent
+  delegate_to: localhost
+
+
+RETURN VALUES:
+
+

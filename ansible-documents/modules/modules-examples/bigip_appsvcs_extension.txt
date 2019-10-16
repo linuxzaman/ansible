@@ -1,0 +1,44 @@
+EXAMPLES:
+
+- name: Deploy an app service configuration
+  bigip_appsvcs_extension:
+    content: "{{ lookup('file', '/path/to/appsvcs.json') }}"
+    state: present
+    provider:
+      password: secret
+      server: lb.mydomain.com
+      user: admin
+  delegate_to: localhost
+
+- name: Remove all app service configurations
+  bigip_appsvcs_extension:
+    tenants: all
+    state: absent
+    provider:
+      password: secret
+      server: lb.mydomain.com
+      user: admin
+  delegate_to: localhost
+
+- name: Remove tenants T1 and T2 from app service configurations
+  bigip_appsvcs_extension:
+    tenants:
+      - T1
+      - T2
+    state: absent
+    provider:
+      password: secret
+      server: lb.mydomain.com
+      user: admin
+  delegate_to: localhost
+
+
+RETURN VALUES:
+
+action:
+  description:
+    - The action performed.
+  returned: changed
+  type: str
+  sample: deploy
+

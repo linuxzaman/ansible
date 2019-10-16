@@ -1,0 +1,111 @@
+EXAMPLES:
+
+- name: Gather the rpm package facts
+  package_facts:
+    manager: auto
+
+- name: Print the rpm package facts
+  debug:
+    var: ansible_facts.packages
+
+
+RETURN VALUES:
+
+ansible_facts:
+  description: facts to add to ansible_facts
+  returned: always
+  type: complex
+  contains:
+    packages:
+      description: list of dicts with package information
+      returned: when operating system level package manager is specified or auto detected manager
+      type: dict
+      sample_rpm:
+        {
+          "packages": {
+            "kernel": [
+              {
+                "arch": "x86_64",
+                "epoch": null,
+                "name": "kernel",
+                "release": "514.26.2.el7",
+                "source": "rpm",
+                "version": "3.10.0"
+              },
+              {
+                "arch": "x86_64",
+                "epoch": null,
+                "name": "kernel",
+                "release": "514.16.1.el7",
+                "source": "rpm",
+                "version": "3.10.0"
+              },
+              {
+                "arch": "x86_64",
+                "epoch": null,
+                "name": "kernel",
+                "release": "514.10.2.el7",
+                "source": "rpm",
+                "version": "3.10.0"
+              },
+              {
+                "arch": "x86_64",
+                "epoch": null,
+                "name": "kernel",
+                "release": "514.21.1.el7",
+                "source": "rpm",
+                "version": "3.10.0"
+              },
+              {
+                "arch": "x86_64",
+                "epoch": null,
+                "name": "kernel",
+                "release": "693.2.2.el7",
+                "source": "rpm",
+                "version": "3.10.0"
+              }
+            ],
+            "kernel-tools": [
+              {
+                "arch": "x86_64",
+                "epoch": null,
+                "name": "kernel-tools",
+                "release": "693.2.2.el7",
+                "source": "rpm",
+                "version": "3.10.0"
+              }
+            ],
+            "kernel-tools-libs": [
+              {
+                "arch": "x86_64",
+                "epoch": null,
+                "name": "kernel-tools-libs",
+                "release": "693.2.2.el7",
+                "source": "rpm",
+                "version": "3.10.0"
+              }
+            ],
+          }
+        }
+      sample_deb:
+        {
+          "packages": {
+            "libbz2-1.0": [
+              {
+                "version": "1.0.6-5",
+                "source": "apt",
+                "arch": "amd64",
+                "name": "libbz2-1.0"
+              }
+            ],
+            "patch": [
+              {
+                "version": "2.7.1-4ubuntu1",
+                "source": "apt",
+                "arch": "amd64",
+                "name": "patch"
+              }
+            ],
+          }
+        }
+

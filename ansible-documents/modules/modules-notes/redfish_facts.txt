@@ -1,0 +1,145 @@
+> REDFISH_FACTS    (/usr/lib/python2.7/dist-packages/ansible/modules/remote_management/redfish/redfish_facts.py)
+
+        Builds Redfish URIs locally and sends them to remote OOB controllers to get information back. Information retrieved is placed in
+        a location specified by the user.
+
+  * This module is maintained by The Ansible Community
+OPTIONS (= is mandatory):
+
+= baseuri
+        Base URI of OOB controller
+
+
+- category
+        List of categories to execute on OOB controller
+        [Default: [u'Systems']]
+
+- command
+        List of commands to execute on OOB controller
+        [Default: (null)]
+
+= password
+        Password for authentication with OOB controller
+
+
+- timeout
+        Timeout in seconds for URL requests to OOB controller
+        [Default: 10]
+        type: int
+        version_added: 2.8
+
+= username
+        User for authentication with OOB controller
+
+        version_added: 2.8
+
+
+AUTHOR: Jose Delarosa (@jose-delarosa)
+        METADATA:
+          status:
+          - preview
+          supported_by: community
+        
+
+EXAMPLES:
+
+- name: Get CPU inventory
+    redfish_facts:
+      category: Systems
+      command: GetCpuInventory
+      baseuri: "{{ baseuri }}"
+      username: "{{ username }}"
+      password: "{{ password }}"
+  - debug:
+      msg: "{{ redfish_facts.cpu.entries | to_nice_json }}"
+
+  - name: Get CPU model
+    redfish_facts:
+      category: Systems
+      command: GetCpuInventory
+      baseuri: "{{ baseuri }}"
+      username: "{{ username }}"
+      password: "{{ password }}"
+  - debug:
+      msg: "{{ redfish_facts.cpu.entries.0.Model }}"
+
+  - name: Get memory inventory
+    redfish_facts:
+      category: Systems
+      command: GetMemoryInventory
+      baseuri: "{{ baseuri }}"
+      username: "{{ username }}"
+      password: "{{ password }}"
+
+  - name: Get fan inventory with a timeout of 20 seconds
+    redfish_facts:
+      category: Chassis
+      command: GetFanInventory
+      baseuri: "{{ baseuri }}"
+      username: "{{ username }}"
+      password: "{{ password }}"
+      timeout: 20
+
+  - name: Get default inventory information
+    redfish_facts:
+      baseuri: "{{ baseuri }}"
+      username: "{{ username }}"
+      password: "{{ password }}"
+  - debug:
+      msg: "{{ redfish_facts | to_nice_json }}"
+
+  - name: Get several inventories
+    redfish_facts:
+      category: Systems
+      command: GetNicInventory,GetBiosAttributes
+      baseuri: "{{ baseuri }}"
+      username: "{{ username }}"
+      password: "{{ password }}"
+
+  - name: Get default system inventory and user information
+    redfish_facts:
+      category: Systems,Accounts
+      baseuri: "{{ baseuri }}"
+      username: "{{ username }}"
+      password: "{{ password }}"
+
+  - name: Get default system, user and firmware information
+    redfish_facts:
+      category: ["Systems", "Accounts", "Update"]
+      baseuri: "{{ baseuri }}"
+      username: "{{ username }}"
+      password: "{{ password }}"
+
+  - name: Get Manager NIC inventory information
+    redfish_facts:
+      category: Manager
+      command: GetManagerNicInventory
+      baseuri: "{{ baseuri }}"
+      username: "{{ username }}"
+      password: "{{ password }}"
+
+  - name: Get all information available in the Manager category
+    redfish_facts:
+      category: Manager
+      command: all
+      baseuri: "{{ baseuri }}"
+      username: "{{ username }}"
+      password: "{{ password }}"
+
+  - name: Get all information available in all categories
+    redfish_facts:
+      category: all
+      command: all
+      baseuri: "{{ baseuri }}"
+      username: "{{ username }}"
+      password: "{{ password }}"
+
+
+RETURN VALUES:
+
+result:
+    description: different results depending on task
+    returned: always
+    type: dict
+    sample: List of CPUs on system
+

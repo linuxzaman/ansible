@@ -1,0 +1,227 @@
+> MERAKI_MX_L3_FIREWALL    (/usr/lib/python2.7/dist-packages/ansible/modules/network/meraki/meraki_mx_l3_firewall.py)
+
+        Allows for creation, management, and visibility into layer 3 firewalls implemented on Meraki MX firewalls.
+
+  * This module is maintained by The Ansible Community
+OPTIONS (= is mandatory):
+
+- auth_key
+        Authentication key provided by the dashboard. Required if environmental variable `MERAKI_KEY' is not set.
+        [Default: (null)]
+        type: str
+
+- host
+        Hostname for Meraki dashboard.
+        Only useful for internal Meraki developers.
+        [Default: api.meraki.com]
+        type: str
+
+- net_id
+        ID of network which MX firewall is in.
+        [Default: (null)]
+
+- net_name
+        Name of network which MX firewall is in.
+        [Default: (null)]
+
+- org_id
+        ID of organization.
+        [Default: (null)]
+        type: int
+
+- org_name
+        Name of organization.
+        If `clone' is specified, `org_name' is the name of the new organization.
+        (Aliases: organization)[Default: (null)]
+        type: str
+
+- output_level
+        Set amount of debug output during module execution.
+        (Choices: debug, normal)[Default: normal]
+        type: str
+
+- rules
+        List of firewall rules.
+        [Default: (null)]
+        suboptions:
+          comment:
+            description:
+            - Optional comment to describe the firewall rule.
+          dest_cidr:
+            description:
+            - Comma separated list of CIDR notation destination networks.
+          dest_port:
+            description:
+            - Comma separated list of destination port numbers to match against.
+          policy:
+            choices:
+            - allow
+            - deny
+            description:
+            - Policy to apply if rule is hit.
+          protocol:
+            choices:
+            - any
+            - icmp
+            - tcp
+            - udp
+            description:
+            - Protocol to match against.
+          src_cidr:
+            description:
+            - Comma separated list of CIDR notation source networks.
+          src_port:
+            description:
+            - Comma separated list of source port numbers to match against.
+          syslog_enabled:
+            description:
+            - Whether to log hints against the firewall rule.
+            - Only applicable if a syslog server is specified against the network.
+        
+
+- state
+        Create or modify an organization.
+        (Choices: present, query)[Default: present]
+
+- syslog_default_rule
+        Whether to log hits against the default firewall rule.
+        Only applicable if a syslog server is specified against the network.
+        This is not shown in response from Meraki. Instead, refer to the `syslog_enabled' value in the default rule.
+        [Default: False]
+        type: bool
+
+- timeout
+        Time to timeout for HTTP requests.
+        [Default: 30]
+        type: int
+
+- use_https
+        If `no', it will use HTTP. Otherwise it will use HTTPS.
+        Only useful for internal Meraki developers.
+        [Default: True]
+        type: bool
+
+- use_proxy
+        If `no', it will not use a proxy, even if one is defined in an environment variable on the target hosts.
+        [Default: (null)]
+        type: bool
+
+- validate_certs
+        Whether to validate HTTP certificates.
+        [Default: True]
+        type: bool
+
+
+NOTES:
+      * Module assumes a complete list of firewall rules are passed as a parameter.
+      * If there is interest in this module allowing manipulation of a single firewall rule, please submit an issue against this
+        module.
+      * More information about the Meraki API can be found at https://dashboard.meraki.com/api_docs.
+      * Some of the options are likely only used for developers within Meraki.
+
+
+AUTHOR: Kevin Breit (@kbreit)
+        METADATA:
+          status:
+          - preview
+          supported_by: community
+        
+
+EXAMPLES:
+
+- name: Query firewall rules
+  meraki_mx_l3_firewall:
+    auth_key: abc123
+    org_name: YourOrg
+    net_name: YourNet
+    state: query
+  delegate_to: localhost
+
+- name: Set two firewall rules
+  meraki_mx_l3_firewall:
+    auth_key: abc123
+    org_name: YourOrg
+    net_name: YourNet
+    state: present
+    rules:
+      - comment: Block traffic to server
+        src_cidr: 192.0.1.0/24
+        src_port: any
+        dest_cidr: 192.0.2.2/32
+        dest_port: any
+        protocol: any
+        policy: deny
+      - comment: Allow traffic to group of servers
+        src_cidr: 192.0.1.0/24
+        src_port: any
+        dest_cidr: 192.0.2.0/24
+        dest_port: any
+        protocol: any
+        policy: permit
+  delegate_to: localhost
+
+- name: Set one firewall rule and enable logging of the default rule
+  meraki_mx_l3_firewall:
+    auth_key: abc123
+    org_name: YourOrg
+    net_name: YourNet
+    state: present
+    rules:
+      - comment: Block traffic to server
+        src_cidr: 192.0.1.0/24
+        src_port: any
+        dest_cidr: 192.0.2.2/32
+        dest_port: any
+        protocol: any
+        policy: deny
+    syslog_default_rule: yes
+  delegate_to: localhost
+
+
+RETURN VALUES:
+
+data:
+    description: Firewall rules associated to network.
+    returned: success
+    type: complex
+    contains:
+        comment:
+            description: Comment to describe the firewall rule.
+            returned: always
+            type: str
+            sample: Block traffic to server
+        src_cidr:
+            description: Comma separated list of CIDR notation source networks.
+            returned: always
+            type: str
+            sample: 192.0.1.1/32,192.0.1.2/32
+        src_port:
+            description: Comma separated list of source ports.
+            returned: always
+            type: str
+            sample: 80,443
+        dest_cidr:
+            description: Comma separated list of CIDR notation destination networks.
+            returned: always
+            type: str
+            sample: 192.0.1.1/32,192.0.1.2/32
+        dest_port:
+            description: Comma separated list of destination ports.
+            returned: always
+            type: str
+            sample: 80,443
+        protocol:
+            description: Network protocol for which to match against.
+            returned: always
+            type: str
+            sample: tcp
+        policy:
+            description: Action to take when rule is matched.
+            returned: always
+            type: str
+        syslog_enabled:
+            description: Whether to log to syslog when rule is matched.
+            returned: always
+            type: bool
+            sample: true
+

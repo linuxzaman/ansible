@@ -1,0 +1,116 @@
+> NPM    (/usr/lib/python2.7/dist-packages/ansible/modules/packaging/language/npm.py)
+
+        Manage node.js packages with Node Package Manager (npm)
+
+  * This module is maintained by The Ansible Community
+OPTIONS (= is mandatory):
+
+- ci
+        Install packages based on package-lock file, same as running npm ci
+        [Default: False]
+        type: bool
+        version_added: 2.8
+
+- executable
+        The executable location for npm.
+        This is useful if you are using a version manager, such as nvm
+        [Default: (null)]
+
+- global
+        Install the node.js library globally
+        [Default: False]
+        type: bool
+
+- ignore_scripts
+        Use the `--ignore-scripts' flag when installing.
+        [Default: False]
+        type: bool
+        version_added: 1.8
+
+- name
+        The name of a node.js library to install
+        [Default: (null)]
+
+- path
+        The base path where to install the node.js libraries
+        [Default: (null)]
+
+- production
+        Install dependencies in production mode, excluding devDependencies
+        [Default: False]
+        type: bool
+
+- registry
+        The registry to install modules from.
+        [Default: (null)]
+        version_added: 1.6
+
+- state
+        The state of the node.js library
+        (Choices: present, absent, latest)[Default: present]
+
+- unsafe_perm
+        Use the `--unsafe-perm' flag when installing.
+        [Default: False]
+        type: bool
+        version_added: 2.8
+
+- version
+        The version to be installed
+        [Default: (null)]
+
+
+REQUIREMENTS:  npm installed in bin path (recommended /usr/local/bin)
+
+AUTHOR: Chris Hoffman (@chrishoffman)
+        METADATA:
+          status:
+          - preview
+          supported_by: community
+        
+
+EXAMPLES:
+
+- name: Install "coffee-script" node.js package.
+  npm:
+    name: coffee-script
+    path: /app/location
+
+- name: Install "coffee-script" node.js package on version 1.6.1.
+  npm:
+    name: coffee-script
+    version: '1.6.1'
+    path: /app/location
+
+- name: Install "coffee-script" node.js package globally.
+  npm:
+    name: coffee-script
+    global: yes
+
+- name: Remove the globally package "coffee-script".
+  npm:
+    name: coffee-script
+    global: yes
+    state: absent
+
+- name: Install "coffee-script" node.js package from custom registry.
+  npm:
+    name: coffee-script
+    registry: 'http://registry.mysite.com'
+
+- name: Install packages based on package.json.
+  npm:
+    path: /app/location
+
+- name: Update packages based on package.json to their latest version.
+  npm:
+    path: /app/location
+    state: latest
+
+- name: Install packages based on package.json using the npm installed with nvm v0.10.1.
+  npm:
+    path: /app/location
+    executable: /opt/nvm/v0.10.1/bin/npm
+    state: present
+
+

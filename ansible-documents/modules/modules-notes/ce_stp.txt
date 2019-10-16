@@ -1,0 +1,144 @@
+> CE_STP    (/usr/lib/python2.7/dist-packages/ansible/modules/network/cloudengine/ce_stp.py)
+
+        Manages STP configurations on HUAWEI CloudEngine switches.
+
+  * This module is maintained by The Ansible Community
+OPTIONS (= is mandatory):
+
+- bpdu_filter
+        Specify a port as a BPDU filter port.
+        (Choices: enable, disable)[Default: (null)]
+
+- bpdu_protection
+        Configure BPDU protection on an edge port. This function prevents network flapping caused by attack packets.
+        (Choices: enable, disable)[Default: (null)]
+
+- cost
+        Set the path cost of the current port. The default instance is 0.
+        [Default: (null)]
+
+- edged_port
+        Set the current port as an edge port.
+        (Choices: enable, disable)[Default: (null)]
+
+- interface
+        Interface name. If the value is `all', will apply configuration to all interfaces. if the value is a special name, only support
+        input the full name.
+        [Default: (null)]
+
+- loop_protection
+        Enable loop protection on the current port.
+        (Choices: enable, disable)[Default: (null)]
+
+- root_protection
+        Enable root protection on the current port.
+        (Choices: enable, disable)[Default: (null)]
+
+- state
+        Specify desired state of the resource.
+        (Choices: present, absent)[Default: present]
+
+- stp_converge
+        STP convergence mode. Fast means set STP aging mode to Fast. Normal means set STP aging mode to Normal.
+        (Choices: fast, normal)[Default: (null)]
+
+- stp_enable
+        Enable or disable STP on a switch.
+        (Choices: enable, disable)[Default: (null)]
+
+- stp_mode
+        Set an operation mode for the current MSTP process. The mode can be STP, RSTP, or MSTP.
+        (Choices: stp, rstp, mstp)[Default: (null)]
+
+- tc_protection
+        Configure the TC BPDU protection function for an MSTP process.
+        (Choices: enable, disable)[Default: (null)]
+
+- tc_protection_interval
+        Set the time the MSTP device takes to handle the maximum number of TC BPDUs and immediately refresh forwarding entries. The value
+        is an integer ranging from 1 to 600, in seconds.
+        [Default: (null)]
+
+- tc_protection_threshold
+        Set the maximum number of TC BPDUs that the MSTP can handle. The value is an integer ranging from 1 to 255. The default value is
+        1 on the switch.
+        [Default: (null)]
+
+
+AUTHOR: wangdezhuang (@QijunPan)
+        METADATA:
+          status:
+          - preview
+          supported_by: community
+        
+
+EXAMPLES:
+
+- name: CloudEngine stp test
+  hosts: cloudengine
+  connection: local
+  gather_facts: no
+  vars:
+    cli:
+      host: "{{ inventory_hostname }}"
+      port: "{{ ansible_ssh_port }}"
+      username: "{{ username }}"
+      password: "{{ password }}"
+      transport: cli
+
+  tasks:
+
+  - name: "Config stp mode"
+    ce_stp:
+      state: present
+      stp_mode: stp
+      provider: "{{ cli }}"
+
+  - name: "Undo stp mode"
+    ce_stp:
+      state: absent
+      stp_mode: stp
+      provider: "{{ cli }}"
+
+  - name: "Enable bpdu protection"
+    ce_stp:
+      state: present
+      bpdu_protection: enable
+      provider: "{{ cli }}"
+
+  - name: "Disable bpdu protection"
+    ce_stp:
+      state: present
+      bpdu_protection: disable
+      provider: "{{ cli }}"
+
+
+RETURN VALUES:
+
+changed:
+    description: check to see if a change was made on the device
+    returned: always
+    type: bool
+    sample: true
+proposed:
+    description: k/v pairs of parameters passed into module
+    returned: always
+    type: dict
+    sample: {"bpdu_protection": "enable",
+             "state": "present"}
+existing:
+    description: k/v pairs of existing aaa server
+    returned: always
+    type: dict
+    sample: {"bpdu_protection": "disable"}
+end_state:
+    description: k/v pairs of aaa params after module execution
+    returned: always
+    type: dict
+    sample: {"bpdu_protection": "enable"}
+updates:
+    description: command sent to the device
+    returned: always
+    type: list
+    sample: ["stp bpdu-protection"]
+

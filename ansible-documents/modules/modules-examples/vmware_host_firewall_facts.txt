@@ -1,0 +1,54 @@
+EXAMPLES:
+
+- name: Gather firewall facts about all ESXi Host in given Cluster
+  vmware_host_firewall_facts:
+    hostname: '{{ vcenter_hostname }}'
+    username: '{{ vcenter_username }}'
+    password: '{{ vcenter_password }}'
+    cluster_name: cluster_name
+  delegate_to: localhost
+
+- name: Gather firewall facts about ESXi Host
+  vmware_host_firewall_facts:
+    hostname: '{{ vcenter_hostname }}'
+    username: '{{ vcenter_username }}'
+    password: '{{ vcenter_password }}'
+    esxi_hostname: '{{ esxi_hostname }}'
+  delegate_to: localhost
+
+
+RETURN VALUES:
+
+hosts_firewall_facts:
+    description: metadata about host's firewall configuration
+    returned: on success
+    type: dict
+    sample: {
+            "esxi_hostname_0001": [
+                {
+                    "allowed_hosts": {
+                        "all_ip": true,
+                        "ip_address": [
+                            "10.10.10.1",
+                        ],
+                        "ip_network": [
+                            "11.111.112.0/22",
+                            "192.168.10.1/24"
+                        ],
+                    },
+                    "enabled": true,
+                    "key": "CIMHttpServer",
+                    "rule": [
+                        {
+                            "direction": "inbound",
+                            "end_port": null,
+                            "port": 5988,
+                            "port_type": "dst",
+                            "protocol": "tcp"
+                        }
+                    ],
+                    "service": "sfcbd-watchdog"
+                },
+            ]
+        }
+

@@ -1,0 +1,20 @@
+EXAMPLES:
+
+# Examples don't contain auth parameter for simplicity,
+# look at ovirt_auth module to see how to reuse authentication:
+
+# Gather facts about all groups which names start with C(admin):
+- ovirt_group_facts:
+    pattern: name=admin*
+- debug:
+    var: ovirt_groups
+
+
+RETURN VALUES:
+
+ovirt_groups:
+    description: "List of dictionaries describing the groups. Group attributes are mapped to dictionary keys,
+                  all groups attributes can be found at following url: http://ovirt.github.io/ovirt-engine-api-model/master/#types/group."
+    returned: On success.
+    type: list
+

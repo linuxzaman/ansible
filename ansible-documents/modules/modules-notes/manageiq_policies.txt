@@ -1,0 +1,152 @@
+> MANAGEIQ_POLICIES    (/usr/lib/python2.7/dist-packages/ansible/modules/remote_management/manageiq/manageiq_policies.py)
+
+        The manageiq_policies module supports adding and deleting policy_profiles in ManageIQ.
+
+  * This module is maintained by The Ansible Community
+OPTIONS (= is mandatory):
+
+= manageiq_connection
+        ManageIQ connection configuration information.
+
+        suboptions:
+          ca_cert:
+            aliases:
+            - ca_bundle_path
+            description:
+            - The path to a CA bundle file or directory with certificates. defaults to None.
+            type: path
+          password:
+            description:
+            - ManageIQ password. `MIQ_PASSWORD' env var if set. otherwise, required if no
+              token is passed in.
+            type: str
+          token:
+            description:
+            - ManageIQ token. `MIQ_TOKEN' env var if set. otherwise, required if no username
+              or password is passed in.
+            type: str
+          url:
+            description:
+            - ManageIQ environment url. `MIQ_URL' env var if set. otherwise, it is required
+              to pass it.
+            required: true
+            type: str
+          username:
+            description:
+            - ManageIQ username. `MIQ_USERNAME' env var if set. otherwise, required if no
+              token is passed in.
+            type: str
+          validate_certs:
+            aliases:
+            - verify_ssl
+            default: true
+            description:
+            - Whether SSL certificates should be verified for HTTPS requests. defaults to
+              True.
+            type: bool
+        
+        type: dict
+
+- policy_profiles
+        list of dictionaries, each includes the policy_profile 'name' key.
+        required if state is present or absent.
+        [Default: (null)]
+
+= resource_name
+        the name of the resource to which the profile should be [un]assigned
+
+
+= resource_type
+        the type of the resource to which the profile should be [un]assigned
+        (Choices: provider, host, vm, blueprint, category, cluster, data store, group, resource pool, service, service template,
+        template, tenant, user)
+
+- state
+        absent - policy_profiles should not exist,
+        present - policy_profiles should exist,
+        list - list current policy_profiles and policies.
+        (Choices: absent, present, list)[Default: present]
+
+
+REQUIREMENTS:  manageiq-client https://github.com/ManageIQ/manageiq-api-client-python/
+
+AUTHOR: Daniel Korn (@dkorn)
+        METADATA:
+          status:
+          - preview
+          supported_by: community
+        
+
+EXAMPLES:
+
+- name: Assign new policy_profile for a provider in ManageIQ
+  manageiq_policies:
+    resource_name: 'EngLab'
+    resource_type: 'provider'
+    policy_profiles:
+      - name: openscap profile
+    manageiq_connection:
+      url: 'http://127.0.0.1:3000'
+      username: 'admin'
+      password: 'smartvm'
+      validate_certs: False
+
+- name: Unassign a policy_profile for a provider in ManageIQ
+  manageiq_policies:
+    state: absent
+    resource_name: 'EngLab'
+    resource_type: 'provider'
+    policy_profiles:
+      - name: openscap profile
+    manageiq_connection:
+      url: 'http://127.0.0.1:3000'
+      username: 'admin'
+      password: 'smartvm'
+      validate_certs: False
+
+- name: List current policy_profile and policies for a provider in ManageIQ
+  manageiq_policies:
+    state: list
+    resource_name: 'EngLab'
+    resource_type: 'provider'
+    manageiq_connection:
+      url: 'http://127.0.0.1:3000'
+      username: 'admin'
+      password: 'smartvm'
+      validate_certs: False
+
+
+RETURN VALUES:
+
+manageiq_policies:
+    description:
+      - List current policy_profile and policies for a provider in ManageIQ
+    returned: always
+    type: dict
+    sample: '{
+        "changed": false,
+        "profiles": [
+            {
+                "policies": [
+                    {
+                        "active": true,
+                        "description": "OpenSCAP",
+                        "name": "openscap policy"
+                    },
+                    {
+                        "active": true,
+                        "description": "Analyse incoming container images",
+                        "name": "analyse incoming container images"
+                    },
+                    {
+                        "active": true,
+                        "description": "Schedule compliance after smart state analysis",
+                        "name": "schedule compliance after smart state analysis"
+                    }
+                ],
+                "profile_description": "OpenSCAP profile",
+                "profile_name": "openscap profile"
+            }
+        ]
+    }'
+

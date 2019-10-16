@@ -1,0 +1,165 @@
+> MONGODB_USER    (/usr/lib/python2.7/dist-packages/ansible/modules/database/mongodb/mongodb_user.py)
+
+        Adds or removes a user from a MongoDB database.
+
+  * This module is maintained by The Ansible Community
+OPTIONS (= is mandatory):
+
+= database
+        The name of the database to add/remove the user from
+
+
+- login_database
+        The database where login credentials are stored
+        [Default: (null)]
+        version_added: 2.0
+
+- login_host
+        The host running the database
+        [Default: localhost]
+
+- login_password
+        The password used to authenticate with
+        [Default: (null)]
+
+- login_port
+        The port to connect to
+        [Default: 27017]
+
+- login_user
+        The username used to authenticate with
+        [Default: (null)]
+
+= name
+        The name of the user to add or remove
+        (Aliases: user)
+
+- password
+        The password to use for the user
+        [Default: (null)]
+
+- replica_set
+        Replica set to connect to (automatically connects to primary for writes)
+        [Default: (null)]
+        version_added: 1.6
+
+- roles
+        The database user roles valid values could either be one or more of the following strings: 'read', 'readWrite', 'dbAdmin',
+        'userAdmin', 'clusterAdmin', 'readAnyDatabase', 'readWriteAnyDatabase', 'userAdminAnyDatabase', 'dbAdminAnyDatabase'
+        Or the following dictionary '{ db: DATABASE_NAME, role: ROLE_NAME }'.
+        This param requires pymongo 2.5+. If it is a string, mongodb 2.4+ is also required. If it is a dictionary, mongo 2.6+  is
+        required.
+        [Default: (null)]
+        version_added: 1.3
+
+- ssl
+        Whether to use an SSL connection when connecting to the database
+        [Default: (null)]
+        type: bool
+        version_added: 1.8
+
+- ssl_cert_reqs
+        Specifies whether a certificate is required from the other side of the connection, and whether it will be validated if provided.
+        (Choices: CERT_REQUIRED, CERT_OPTIONAL, CERT_NONE)[Default: CERT_REQUIRED]
+        version_added: 2.2
+
+- state
+        The database user state
+        (Choices: present, absent)[Default: present]
+
+- update_password
+        `always' will update passwords if they differ.  `on_create' will only set the password for newly created users.
+        (Choices: always, on_create)[Default: always]
+        version_added: 2.1
+
+
+NOTES:
+      * Requires the pymongo Python package on the remote host, version 2.4.2+. This can be installed using pip or the OS package
+        manager. @see http://api.mongodb.org/python/current/installation.html
+
+
+REQUIREMENTS:  pymongo
+
+AUTHOR: Elliott Foster (@elliotttf), Julien Thebault (@Lujeni)
+        METADATA:
+          status:
+          - preview
+          supported_by: community
+        
+
+EXAMPLES:
+
+# Create 'burgers' database user with name 'bob' and password '12345'.
+- mongodb_user:
+    database: burgers
+    name: bob
+    password: 12345
+    state: present
+
+# Create a database user via SSL (MongoDB must be compiled with the SSL option and configured properly)
+- mongodb_user:
+    database: burgers
+    name: bob
+    password: 12345
+    state: present
+    ssl: True
+
+# Delete 'burgers' database user with name 'bob'.
+- mongodb_user:
+    database: burgers
+    name: bob
+    state: absent
+
+# Define more users with various specific roles (if not defined, no roles is assigned, and the user will be added via pre mongo 2.2 style)
+- mongodb_user:
+    database: burgers
+    name: ben
+    password: 12345
+    roles: read
+    state: present
+- mongodb_user:
+    database: burgers
+    name: jim
+    password: 12345
+    roles: readWrite,dbAdmin,userAdmin
+    state: present
+- mongodb_user:
+    database: burgers
+    name: joe
+    password: 12345
+    roles: readWriteAnyDatabase
+    state: present
+
+# add a user to database in a replica set, the primary server is automatically discovered and written to
+- mongodb_user:
+    database: burgers
+    name: bob
+    replica_set: belcher
+    password: 12345
+    roles: readWriteAnyDatabase
+    state: present
+
+# add a user 'oplog_reader' with read only access to the 'local' database on the replica_set 'belcher'. This is useful for oplog access (MONGO_OPLOG_URL).
+# please notice the credentials must be added to the 'admin' database because the 'local' database is not syncronized and can't receive user credentials
+# To login with such user, the connection string should be MONGO_OPLOG_URL="mongodb://oplog_reader:oplog_reader_password@server1,server2/local?authSource=admin"
+# This syntax requires mongodb 2.6+ and pymongo 2.5+
+- mongodb_user:
+    login_user: root
+    login_password: root_password
+    database: admin
+    user: oplog_reader
+    password: oplog_reader_password
+    state: present
+    replica_set: belcher
+    roles:
+      - db: local
+        role: read
+
+
+RETURN VALUES:
+
+user:
+    description: The name of the user to add or remove.
+    returned: success
+    type: str
+

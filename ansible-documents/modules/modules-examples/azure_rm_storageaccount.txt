@@ -1,0 +1,69 @@
+EXAMPLES:
+
+- name: remove account, if it exists
+      azure_rm_storageaccount:
+        resource_group: myResourceGroup
+        name: clh0002
+        state: absent
+
+    - name: create an account
+      azure_rm_storageaccount:
+        resource_group: myResourceGroup
+        name: clh0002
+        type: Standard_RAGRS
+        tags:
+          testing: testing
+          delete: on-exit
+
+    - name: create an account with blob CORS
+      azure_rm_storageaccount:
+        resource_group: myResourceGroup
+        name: clh002
+        type: Standard_RAGRS
+        blob_cors:
+            - allowed_origins:
+                - http://www.example.com/
+              allowed_methods:
+                - GET
+                - POST
+              allowed_headers:
+                - x-ms-meta-data*
+                - x-ms-meta-target*
+                - x-ms-meta-abc
+              exposed_headers:
+                - x-ms-meta-*
+              max_age_in_seconds: 200
+
+
+RETURN VALUES:
+
+state:
+    description: Current state of the storage account.
+    returned: always
+    type: dict
+    sample: {
+        "account_type": "Standard_RAGRS",
+        "custom_domain": null,
+        "id": "/subscriptions/xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx/resourceGroups/myResourceGroup/providers/Microsoft.Storage/storageAccounts/clh0003",
+        "location": "eastus2",
+        "name": "clh0003",
+        "primary_endpoints": {
+            "blob": "https://clh0003.blob.core.windows.net/",
+            "queue": "https://clh0003.queue.core.windows.net/",
+            "table": "https://clh0003.table.core.windows.net/"
+        },
+        "primary_location": "eastus2",
+        "provisioning_state": "Succeeded",
+        "resource_group": "Testing",
+        "secondary_endpoints": {
+            "blob": "https://clh0003-secondary.blob.core.windows.net/",
+            "queue": "https://clh0003-secondary.queue.core.windows.net/",
+            "table": "https://clh0003-secondary.table.core.windows.net/"
+        },
+        "secondary_location": "centralus",
+        "status_of_primary": "Available",
+        "status_of_secondary": "Available",
+        "tags": null,
+        "type": "Microsoft.Storage/storageAccounts"
+    }
+

@@ -1,0 +1,62 @@
+EXAMPLES:
+
+- name: Grant users joe and simon access to databases sales and logistics from ipv6 localhost ::1/128 using peer authentication.
+  postgresql_pg_hba:
+    dest: /var/lib/postgres/data/pg_hba.conf
+    contype: host
+    users: joe,simon
+    source: ::1
+    databases: sales,logistics
+    method: peer
+    create: true
+
+- name: Grant user replication from network 192.168.0.100/24 access for replication with client cert authentication.
+  postgresql_pg_hba:
+    dest: /var/lib/postgres/data/pg_hba.conf
+    contype: host
+    users: replication
+    source: 192.168.0.100/24
+    databases: replication
+    method: cert
+
+- name: Revoke access from local user mary on database mydb.
+  postgresql_pg_hba:
+    dest: /var/lib/postgres/data/pg_hba.conf
+    contype: local
+    users: mary
+    databases: mydb
+    state: absent
+
+
+RETURN VALUES:
+
+msgs:
+    description: List of textual messages what was done
+    returned: always
+    type: list
+    sample:
+       "msgs": [
+          "Removing",
+          "Changed",
+          "Writing"
+        ]
+backup_file:
+    description: File that the original pg_hba file was backed up to
+    returned: changed
+    type: str
+    sample: /tmp/pg_hba_jxobj_p
+pg_hba:
+    description: List of the pg_hba rules as they are configured in the specified hba file
+    returned: always
+    type: list
+    sample:
+      "pg_hba": [
+         {
+            "db": "all",
+            "method": "md5",
+            "src": "samehost",
+            "type": "host",
+            "usr": "all"
+         }
+      ]
+

@@ -1,0 +1,147 @@
+EXAMPLES:
+
+- name: Download foo.conf
+  get_url:
+    url: http://example.com/path/file.conf
+    dest: /etc/foo.conf
+    mode: '0440'
+
+- name: Download file and force basic auth
+  get_url:
+    url: http://example.com/path/file.conf
+    dest: /etc/foo.conf
+    force_basic_auth: yes
+
+- name: Download file with custom HTTP headers
+  get_url:
+    url: http://example.com/path/file.conf
+    dest: /etc/foo.conf
+    headers:
+      key1: one
+      key2: two
+
+- name: Download file with check (sha256)
+  get_url:
+    url: http://example.com/path/file.conf
+    dest: /etc/foo.conf
+    checksum: sha256:b5bb9d8014a0f9b1d61e21e796d78dccdf1352f23cd32812f4850b878ae4944c
+
+- name: Download file with check (md5)
+  get_url:
+    url: http://example.com/path/file.conf
+    dest: /etc/foo.conf
+    checksum: md5:66dffb5228a211e61d6d7ef4a86f5758
+
+- name: Download file with checksum url (sha256)
+  get_url:
+    url: http://example.com/path/file.conf
+    dest: /etc/foo.conf
+    checksum: sha256:http://example.com/path/sha256sum.txt
+
+- name: Download file from a file path
+  get_url:
+    url: file:///tmp/afile.txt
+    dest: /tmp/afilecopy.txt
+
+- name: < Fetch file that requires authentication.
+        username/password only availabe since 2.8, in older versions you ned to use url_username/url_password
+  get_url:
+    url: http://example.com/path/file.conf
+    dest: /etc/foo.conf
+    username: bar
+    password: '{{ mysecret }}'
+
+
+RETURN VALUES:
+
+backup_file:
+    description: name of backup file created after download
+    returned: changed and if backup=yes
+    type: str
+    sample: /path/to/file.txt.2015-02-12@22:09~
+checksum_dest:
+    description: sha1 checksum of the file after copy
+    returned: success
+    type: str
+    sample: 6e642bb8dd5c2e027bf21dd923337cbb4214f827
+checksum_src:
+    description: sha1 checksum of the file
+    returned: success
+    type: str
+    sample: 6e642bb8dd5c2e027bf21dd923337cbb4214f827
+dest:
+    description: destination file/path
+    returned: success
+    type: str
+    sample: /path/to/file.txt
+elapsed:
+    description: The number of seconds that elapsed while performing the download
+    returned: always
+    type: int
+    sample: 23
+gid:
+    description: group id of the file
+    returned: success
+    type: int
+    sample: 100
+group:
+    description: group of the file
+    returned: success
+    type: str
+    sample: "httpd"
+md5sum:
+    description: md5 checksum of the file after download
+    returned: when supported
+    type: str
+    sample: "2a5aeecc61dc98c4d780b14b330e3282"
+mode:
+    description: permissions of the target
+    returned: success
+    type: str
+    sample: "0644"
+msg:
+    description: the HTTP message from the request
+    returned: always
+    type: str
+    sample: OK (unknown bytes)
+owner:
+    description: owner of the file
+    returned: success
+    type: str
+    sample: httpd
+secontext:
+    description: the SELinux security context of the file
+    returned: success
+    type: str
+    sample: unconfined_u:object_r:user_tmp_t:s0
+size:
+    description: size of the target
+    returned: success
+    type: int
+    sample: 1220
+src:
+    description: source file used after download
+    returned: always
+    type: str
+    sample: /tmp/tmpAdFLdV
+state:
+    description: state of the target
+    returned: success
+    type: str
+    sample: file
+status_code:
+    description: the HTTP status code from the request
+    returned: always
+    type: int
+    sample: 200
+uid:
+    description: owner id of the file, after execution
+    returned: success
+    type: int
+    sample: 100
+url:
+    description: the actual URL used for the request
+    returned: always
+    type: str
+    sample: https://www.ansible.com/
+

@@ -1,0 +1,35 @@
+EXAMPLES:
+
+- name: " a repository facts"
+  gcp_sourcerepo_repository_facts:
+    project: test_project
+    auth_kind: serviceaccount
+    service_account_file: "/tmp/auth.pem"
+    state: facts
+
+
+RETURN VALUES:
+
+items:
+  description: List of items
+  returned: always
+  type: complex
+  contains:
+    name:
+      description:
+      - Resource name of the repository, of the form projects/{{project}}/repos/{{repo}}.
+      - The repo name may contain slashes. eg, projects/myproject/repos/name/with/slash
+        .
+      returned: success
+      type: str
+    url:
+      description:
+      - URL to clone the repository from Google Cloud Source Repositories.
+      returned: success
+      type: str
+    size:
+      description:
+      - The disk usage of the repo, in bytes.
+      returned: success
+      type: int
+

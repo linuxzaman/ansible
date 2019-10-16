@@ -1,0 +1,76 @@
+> PN_ACCESS_LIST    (/usr/lib/python2.7/dist-packages/ansible/modules/network/netvisor/pn_access_list.py)
+
+        This module can be used to create and delete an access list.
+
+  * This module is maintained by The Ansible Community
+OPTIONS (= is mandatory):
+
+- pn_cliswitch
+        Target switch to run the CLI on.
+        [Default: (null)]
+        type: str
+
+- pn_name
+        Access List Name.
+        [Default: (null)]
+        type: str
+
+- pn_scope
+        scope. Available valid values - local or fabric.
+        (Choices: local, fabric)[Default: (null)]
+
+= state
+        State the action to perform. Use 'present' to create access-list and 'absent' to delete access-list.
+        (Choices: present, absent)
+
+
+AUTHOR: Pluribus Networks (@amitsi)
+        METADATA:
+          status:
+          - preview
+          supported_by: community
+        
+
+EXAMPLES:
+
+- name: access list functionality
+  pn_access_list:
+    pn_cliswitch: "sw01"
+    pn_name: "foo"
+    pn_scope: "local"
+    state: "present"
+
+- name: access list functionality
+  pn_access_list:
+    pn_cliswitch: "sw01"
+    pn_name: "foo"
+    pn_scope: "local"
+    state: "absent"
+
+- name: access list functionality
+  pn_access_list:
+    pn_cliswitch: "sw01"
+    pn_name: "foo"
+    pn_scope: "fabric"
+    state: "present"
+
+
+RETURN VALUES:
+
+command:
+  description: the CLI command run on the target node.
+  returned: always
+  type: str
+stdout:
+  description: set of responses from the access-list command.
+  returned: always
+  type: list
+stderr:
+  description: set of error responses from the access-list command.
+  returned: on error
+  type: list
+changed:
+  description: indicates whether the CLI caused changes on the target.
+  returned: always
+  type: bool
+

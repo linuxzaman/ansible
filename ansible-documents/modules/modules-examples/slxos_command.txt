@@ -1,0 +1,52 @@
+EXAMPLES:
+
+tasks:
+  - name: run show version on remote devices
+    slxos_command:
+      commands: show version
+
+  - name: run show version and check to see if output contains SLX
+    slxos_command:
+      commands: show version
+      wait_for: result[0] contains SLX
+
+  - name: run multiple commands on remote nodes
+    slxos_command:
+      commands:
+        - show version
+        - show interfaces
+
+  - name: run multiple commands and evaluate the output
+    slxos_command:
+      commands:
+        - show version
+        - show interface status
+      wait_for:
+        - result[0] contains SLX
+        - result[1] contains Eth
+  - name: run command that requires answering a prompt
+    slxos_command:
+      commands:
+        - command: 'clear sessions'
+          prompt: 'This operation will logout all the user sessions. Do you want to continue (yes/no)?:'
+          answer: y
+
+
+RETURN VALUES:
+
+stdout:
+  description: The set of responses from the commands
+  returned: always apart from low level errors (such as action plugin)
+  type: list
+  sample: ['...', '...']
+stdout_lines:
+  description: The value of stdout split into a list
+  returned: always apart from low level errors (such as action plugin)
+  type: list
+  sample: [['...', '...'], ['...'], ['...']]
+failed_conditions:
+  description: The list of conditionals that have failed
+  returned: failed
+  type: list
+  sample: ['...', '...']
+

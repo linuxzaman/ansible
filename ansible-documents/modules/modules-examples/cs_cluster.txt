@@ -1,0 +1,91 @@
+EXAMPLES:
+
+- name: Ensure a cluster is present
+  cs_cluster:
+    name: kvm-cluster-01
+    zone: ch-zrh-ix-01
+    hypervisor: KVM
+    cluster_type: CloudManaged
+  delegate_to: localhost
+
+- name: Ensure a cluster is disabled
+  cs_cluster:
+    name: kvm-cluster-01
+    zone: ch-zrh-ix-01
+    state: disabled
+  delegate_to: localhost
+
+- name: Ensure a cluster is enabled
+  cs_cluster:
+    name: kvm-cluster-01
+    zone: ch-zrh-ix-01
+    state: enabled
+  delegate_to: localhost
+
+- name: Ensure a cluster is absent
+  cs_cluster:
+    name: kvm-cluster-01
+    zone: ch-zrh-ix-01
+    state: absent
+  delegate_to: localhost
+
+
+RETURN VALUES:
+
+---
+id:
+  description: UUID of the cluster.
+  returned: success
+  type: str
+  sample: 04589590-ac63-4ffc-93f5-b698b8ac38b6
+name:
+  description: Name of the cluster.
+  returned: success
+  type: str
+  sample: cluster01
+allocation_state:
+  description: State of the cluster.
+  returned: success
+  type: str
+  sample: Enabled
+cluster_type:
+  description: Type of the cluster.
+  returned: success
+  type: str
+  sample: ExternalManaged
+cpu_overcommit_ratio:
+  description: The CPU overcommit ratio of the cluster.
+  returned: success
+  type: str
+  sample: 1.0
+memory_overcommit_ratio:
+  description: The memory overcommit ratio of the cluster.
+  returned: success
+  type: str
+  sample: 1.0
+managed_state:
+  description: Whether this cluster is managed by CloudStack.
+  returned: success
+  type: str
+  sample: Managed
+ovm3_vip:
+  description: Ovm3 VIP to use for pooling and/or clustering
+  returned: success
+  type: str
+  sample: 10.10.10.101
+hypervisor:
+  description: Hypervisor of the cluster
+  returned: success
+  type: str
+  sample: VMware
+zone:
+  description: Name of zone the cluster is in.
+  returned: success
+  type: str
+  sample: ch-gva-2
+pod:
+  description: Name of pod the cluster is in.
+  returned: success
+  type: str
+  sample: pod01
+

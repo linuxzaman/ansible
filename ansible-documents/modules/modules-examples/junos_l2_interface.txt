@@ -1,0 +1,61 @@
+EXAMPLES:
+
+- name: Configure interface in access mode
+  junos_l2_interface:
+    name: ge-0/0/1
+    description: interface-access
+    mode: access
+    access_vlan: red
+    active: True
+    state: present
+
+- name: Configure interface in trunk mode
+  junos_l2_interface:
+    name: ge-0/0/1
+    description: interface-trunk
+    mode: trunk
+    trunk_vlans:
+    - blue
+    - green
+    native_vlan: 100
+    active: True
+    state: present
+
+- name: Configure interface in access and trunk mode using aggregate
+  junos_l2_interface:
+    aggregate:
+    - name: ge-0/0/1
+      description: test-interface-access
+      mode: access
+      access_vlan: red
+    - name: ge-0/0/2
+      description: test-interface-trunk
+      mode: trunk
+      trunk_vlans:
+      - blue
+      - green
+      native_vlan: 100
+    active: True
+    state: present
+
+
+RETURN VALUES:
+
+diff:
+  description: Configuration difference before and after applying change.
+  returned: when configuration is changed and diff option is enabled.
+  type: str
+  sample: >
+        [edit interfaces]
+        +   ge-0/0/1 {
+        +       description "l2 interface configured by Ansible";
+        +       unit 0 {
+        +           family ethernet-switching {
+        +               interface-mode access;
+        +               vlan {
+        +                   members red;
+        +               }
+        +           }
+        +       }
+        +   }
+

@@ -1,0 +1,42 @@
+EXAMPLES:
+
+- name: Create snmp community
+  pn_snmp_community:
+    pn_cliswitch: "sw01"
+    state: "present"
+    pn_community_string: "foo"
+    pn_community_type: "read-write"
+
+- name: Delete snmp community
+  pn_snmp_community:
+    pn_cliswitch: "sw01"
+    state: "absent"
+    pn_community_string: "foo"
+
+- name: Modify snmp community
+  pn_snmp_community:
+    pn_cliswitch: "sw01"
+    state: "update"
+    pn_community_string: "foo"
+    pn_community_type: "read-only"
+
+
+RETURN VALUES:
+
+command:
+  description: the CLI command run on the target node.
+  returned: always
+  type: str
+stdout:
+  description: set of responses from the snmp-community command.
+  returned: always
+  type: list
+stderr:
+  description: set of error responses from the snmp-community command.
+  returned: on error
+  type: list
+changed:
+  description: indicates whether the CLI caused changes on the target.
+  returned: always
+  type: bool
+

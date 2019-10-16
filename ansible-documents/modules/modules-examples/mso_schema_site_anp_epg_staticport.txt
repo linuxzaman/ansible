@@ -1,0 +1,73 @@
+EXAMPLES:
+
+- name: Add a new static port to a site EPG
+  mso_schema_template_anp_epg_staticport:
+    host: mso_host
+    username: admin
+    password: SomeSecretPassword
+    schema: Schema1
+    site: Site1
+    template: Template1
+    anp: ANP1
+    epg: EPG1
+    type: port
+    pod: pod-1
+    leaf: 101
+    path: eth1/1
+    vlan: 126
+    deployment_immediacy: immediate
+    state: present
+  delegate_to: localhost
+
+- name: Remove a static port from a site EPG
+  mso_schema_template_anp_epg_staticport:
+    host: mso_host
+    username: admin
+    password: SomeSecretPassword
+    schema: Schema1
+    site: Site1
+    template: Template1
+    anp: ANP1
+    epg: EPG1
+    type: port
+    pod: pod-1
+    leaf: 101
+    path: eth1/1
+    state: absent
+  delegate_to: localhost
+
+- name: Query a specific site EPG static port
+  mso_schema_template_anp_epg_staticport:
+    host: mso_host
+    username: admin
+    password: SomeSecretPassword
+    schema: Schema1
+    site: Site1
+    template: Template1
+    anp: ANP1
+    epg: EPG1
+    type: port
+    pod: pod-1
+    leaf: 101
+    path: eth1/1
+    state: query
+  delegate_to: localhost
+  register: query_result
+
+- name: Query all site EPG static ports
+  mso_schema_template_anp_epg_staticport:
+    host: mso_host
+    username: admin
+    password: SomeSecretPassword
+    schema: Schema1
+    site: Site1
+    template: Template1
+    anp: ANP1
+    state: query
+  delegate_to: localhost
+  register: query_result
+
+
+RETURN VALUES:
+
+

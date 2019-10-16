@@ -1,0 +1,173 @@
+> OPENSSH_KEYPAIR    (/usr/lib/python2.7/dist-packages/ansible/modules/crypto/openssh_keypair.py)
+
+        This module allows one to (re)generate OpenSSH private and public keys. It uses ssh-keygen to generate keys. One can generate
+        `rsa', `dsa', `rsa1', `ed25519' or `ecdsa' private keys.
+
+  * This module is maintained by The Ansible Community
+OPTIONS (= is mandatory):
+
+- attributes
+        The attributes the resulting file or directory should have.
+        To get supported flags look at the man page for `chattr' on the target system.
+        This string should contain the attributes in the same order as the one displayed by `lsattr'.
+        The `=' operator is assumed as default, otherwise `+' or `-' operators need to be included in the string.
+        (Aliases: attr)[Default: (null)]
+        type: str
+        version_added: 2.3
+
+- comment
+        Provides a new comment to the public key. When checking if the key is in the correct state this will be ignored.
+        [Default: (null)]
+        type: str
+
+- force
+        Should the key be regenerated even if it already exists
+        [Default: False]
+        type: bool
+
+- group
+        Name of the group that should own the file/directory, as would be fed to `chown'.
+        [Default: (null)]
+        type: str
+
+- mode
+        The permissions the resulting file or directory should have.
+        For those used to `/usr/bin/chmod' remember that modes are actually octal numbers. You must either add a leading zero so that
+        Ansible's YAML parser knows it is an octal number (like `0644' or `01777') or quote it (like `'644'' or `'1777'') so Ansible
+        receives a string and can do its own conversion from string into number.
+        Giving Ansible a number without following one of these rules will end up with a decimal number which will have unexpected
+        results.
+        As of Ansible 1.8, the mode may be specified as a symbolic mode (for example, `u+rwx' or `u=rw,g=r,o=r').
+        As of Ansible 2.6, the mode may also be the special string `preserve'.
+        When set to `preserve' the file will be given the same permissions as the source file.
+        [Default: (null)]
+        type: str
+
+- owner
+        Name of the user that should own the file/directory, as would be fed to `chown'.
+        [Default: (null)]
+        type: str
+
+= path
+        Name of the files containing the public and private key. The file containing the public key will have the extension `.pub'.
+
+        type: path
+
+- selevel
+        The level part of the SELinux file context.
+        This is the MLS/MCS attribute, sometimes known as the `range'.
+        When set to `_default', it will use the `level' portion of the policy if available.
+        [Default: s0]
+        type: str
+
+- serole
+        The role part of the SELinux file context.
+        When set to `_default', it will use the `role' portion of the policy if available.
+        [Default: (null)]
+        type: str
+
+- setype
+        The type part of the SELinux file context.
+        When set to `_default', it will use the `type' portion of the policy if available.
+        [Default: (null)]
+        type: str
+
+- seuser
+        The user part of the SELinux file context.
+        By default it uses the `system' policy, where applicable.
+        When set to `_default', it will use the `user' portion of the policy if available.
+        [Default: (null)]
+        type: str
+
+- size
+        Specifies the number of bits in the private key to create. For RSA keys, the minimum size is 1024 bits and the default is 4096
+        bits. Generally, 2048 bits is considered sufficient.  DSA keys must be exactly 1024 bits as specified by FIPS 186-2. For ECDSA
+        keys, size determines the key length by selecting from one of three elliptic curve sizes: 256, 384 or 521 bits. Attempting to use
+        bit lengths other than these three values for ECDSA keys will cause this module to fail. Ed25519 keys have a fixed length and the
+        size will be ignored.
+        [Default: (null)]
+        type: int
+
+- state
+        Whether the private and public keys should exist or not, taking action if the state is different from what is stated.
+        (Choices: present, absent)[Default: present]
+        type: str
+
+- type
+        The algorithm used to generate the SSH private key. `rsa1' is for protocol version 1. `rsa1' is deprecated and may not be
+        supported by every version of ssh-keygen.
+        (Choices: rsa, dsa, rsa1, ecdsa, ed25519)[Default: rsa]
+        type: str
+
+- unsafe_writes
+        Influence when to use atomic operation to prevent data corruption or inconsistent reads from the target file.
+        By default this module uses atomic operations to prevent data corruption or inconsistent reads from the target files, but
+        sometimes systems are configured or just broken in ways that prevent this. One example is docker mounted files, which cannot be
+        updated atomically from inside the container and can only be written in an unsafe manner.
+        This option allows Ansible to fall back to unsafe methods of updating files when atomic operations fail (however, it doesn't
+        force Ansible to perform unsafe writes).
+        IMPORTANT! Unsafe writes are subject to race conditions and can lead to data corruption.
+        [Default: False]
+        type: bool
+        version_added: 2.2
+
+
+REQUIREMENTS:  ssh-keygen
+
+AUTHOR: David Kainz (@lolcube)
+        METADATA:
+          status:
+          - preview
+          supported_by: community
+        
+
+EXAMPLES:
+
+# Generate an OpenSSH keypair with the default values (4096 bits, rsa)
+- openssh_keypair:
+    path: /tmp/id_ssh_rsa
+
+# Generate an OpenSSH rsa keypair with a different size (2048 bits)
+- openssh_keypair:
+    path: /tmp/id_ssh_rsa
+    size: 2048
+
+# Force regenerate an OpenSSH keypair if it already exists
+- openssh_keypair:
+    path: /tmp/id_ssh_rsa
+    force: True
+
+# Generate an OpenSSH keypair with a different algorithm (dsa)
+- openssh_keypair:
+    path: /tmp/id_ssh_dsa
+    type: dsa
+
+
+RETURN VALUES:
+
+size:
+    description: Size (in bits) of the SSH private key
+    returned: changed or success
+    type: int
+    sample: 4096
+type:
+    description: Algorithm used to generate the SSH private key
+    returned: changed or success
+    type: str
+    sample: rsa
+filename:
+    description: Path to the generated SSH private key file
+    returned: changed or success
+    type: str
+    sample: /tmp/id_ssh_rsa
+fingerprint:
+    description: The fingerprint of the key.
+    returned: changed or success
+    type: str
+    sample: SHA256:r4YCZxihVjedH2OlfjVGI6Y5xAYtdCwk8VxKyzVyYfM
+public_key:
+    description: The public key of the generated SSH private key
+    returned: changed or success
+    type: str
+    sample: ssh-rsa AAAAB3Nza(...omitted...)veL4E3Xcw== test_key
+

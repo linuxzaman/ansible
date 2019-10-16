@@ -1,0 +1,70 @@
+EXAMPLES:
+
+---
+- name: "Create DRS VM group"
+  delegate_to: localhost
+  vmware_drs_group:
+    hostname: "{{ vcenter_hostname }}"
+    password: "{{ vcenter_password }}"
+    username: "{{ vcenter_username }}"
+    cluster_name: DC0_C0
+    datacenter_name: DC0
+    group_name: TEST_VM_01
+    vms:
+      - DC0_C0_RP0_VM0
+      - DC0_C0_RP0_VM1
+    state: present
+
+- name: "Create DRS Host group"
+  delegate_to: localhost
+  vmware_drs_group:
+    hostname: "{{ vcenter_hostname }}"
+    password: "{{ vcenter_password }}"
+    username: "{{ vcenter_username }}"
+    cluster_name: DC0_C0
+    datacenter_name: DC0
+    group_name: TEST_HOST_01
+    hosts:
+      - DC0_C0_H0
+      - DC0_C0_H1
+      - DC0_C0_H2
+    state: absent
+
+- name: "Delete DRS Host group"
+  delegate_to: localhost
+  vmware_drs_group:
+    hostname: "{{ vcenter_hostname }}"
+    password: "{{ vcenter_password }}"
+    username: "{{ vcenter_username }}"
+    cluster_name: DC0_C0
+    datacenter_name: DC0
+    group_name: TEST_HOST_01
+    state: absent
+
+
+RETURN VALUES:
+
+drs_group_facts:
+    description: Metadata about DRS group created
+    returned: always
+    type: dict
+    sample:
+        "drs_group_facts": {
+        "changed": true,
+        "failed": false,
+        "msg": "Created host group TEST_HOST_01 successfully",
+        "result": {
+            "DC0_C0": [
+                {
+                    "group_name": "TEST_HOST_01",
+                    "hosts": [
+                        "DC0_C0_H0",
+                        "DC0_C0_H1",
+                        "DC0_C0_H2"
+                    ],
+                    "type": "host"
+                }
+            ]
+        }
+    }
+

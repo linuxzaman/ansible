@@ -1,0 +1,147 @@
+> SLACK    (/usr/lib/python2.7/dist-packages/ansible/modules/notification/slack.py)
+
+        The `slack' module sends notifications to http://slack.com via the Incoming WebHook integration
+
+  * This module is maintained by The Ansible Community
+OPTIONS (= is mandatory):
+
+- attachments
+        Define a list of attachments. This list mirrors the Slack JSON API.
+        For more information, see also in the (https://api.slack.com/docs/attachments).
+        [Default: (null)]
+
+- channel
+        Channel to send the message to. If absent, the message goes to the channel selected for the `token'.
+        [Default: (null)]
+
+- color
+        Allow text to use default colors - use the default of 'normal' to not send a custom color bar at the start of the message.
+        Allowed values for color can be one of 'normal', 'good', 'warning', 'danger', any valid 3 digit or 6 digit hex color value.
+        Specifying value in hex is supported from version 2.8.
+        [Default: normal]
+        version_added: 2.0
+
+- domain
+        Slack (sub)domain for your environment without protocol. (i.e. `example.slack.com') In 1.8 and beyond, this is deprecated and may
+        be ignored.  See token documentation for information.
+        [Default: (null)]
+
+- icon_emoji
+        Emoji for the message sender. See Slack documentation for options. (if `icon_emoji' is set, `icon_url' will not be used)
+        [Default: (null)]
+
+- icon_url
+        Url for the message sender's icon (default `https://www.ansible.com/favicon.ico')
+        [Default: (null)]
+
+- link_names
+        Automatically create links for channels and usernames in `msg'.
+        (Choices: 1, 0)[Default: 1]
+
+- msg
+        Message to send. Note that the module does not handle escaping characters. Plain-text angle brackets and ampersands should be
+        converted to HTML entities (e.g. & to &amp;) before sending. See Slack's documentation (https://api.slack.com/docs/message-
+        formatting) for more.
+        [Default: (null)]
+
+- parse
+        Setting for the message parser at Slack
+        (Choices: full, none)[Default: (null)]
+
+- thread_id
+        Optional. Timestamp of message to thread this message to as a float. https://api.slack.com/docs/message-threading
+        [Default: (null)]
+        version_added: 2.8
+        
+
+= token
+        Slack integration token.  This authenticates you to the slack service. Prior to 1.8, a token looked like
+        `3Ffe373sfhRE6y42Fg3rvf4GlK'.  In 1.8 and above, ansible adapts to the new slack API where tokens look like
+        `G922VJP24/D921DW937/3Ffe373sfhRE6y42Fg3rvf4GlK'.  If tokens are in the new format then slack will ignore any value of domain.
+        If the token is in the old format the domain is required.  Ansible has no control of when slack will get rid of the old API.
+        When slack does that the old format will stop working.  ** Please keep in mind the tokens are not the API tokens but are the
+        webhook tokens.  In slack these are found in the webhook URL which are obtained under the apps and integrations. The incoming
+        webhooks can be added in that area.  In some cases this may be locked by your Slack admin and you must request access.  It is
+        there that the incoming webhooks can be added.  The key is on the end of the URL given to you in that section.
+
+
+- username
+        This is the sender of the message.
+        [Default: Ansible]
+
+- validate_certs
+        If `no', SSL certificates will not be validated. This should only be used on personally controlled sites using self-signed
+        certificates.
+        [Default: yes]
+        type: bool
+
+
+AUTHOR: Ramon de la Fuente (@ramondelafuente)
+        METADATA:
+          status:
+          - stableinterface
+          supported_by: community
+        
+
+EXAMPLES:
+
+- name: Send notification message via Slack
+  slack:
+    token: thetoken/generatedby/slack
+    msg: '{{ inventory_hostname }} completed'
+  delegate_to: localhost
+
+- name: Send notification message via Slack all options
+  slack:
+    token: thetoken/generatedby/slack
+    msg: '{{ inventory_hostname }} completed'
+    channel: '#ansible'
+    thread_id: 1539917263.000100
+    username: 'Ansible on {{ inventory_hostname }}'
+    icon_url: http://www.example.com/some-image-file.png
+    link_names: 0
+    parse: 'none'
+  delegate_to: localhost
+
+- name: insert a color bar in front of the message for visibility purposes and use the default webhook icon and name configured in Slack
+  slack:
+    token: thetoken/generatedby/slack
+    msg: '{{ inventory_hostname }} is alive!'
+    color: good
+    username: ''
+    icon_url: ''
+
+- name: insert a color bar in front of the message with valid hex color value
+  slack:
+    token: thetoken/generatedby/slack
+    msg: 'This message uses color in hex value'
+    color: '#00aacc'
+    username: ''
+    icon_url: ''
+
+- name: Use the attachments API
+  slack:
+    token: thetoken/generatedby/slack
+    attachments:
+      - text: Display my system load on host A and B
+        color: '#ff00dd'
+        title: System load
+        fields:
+          - title: System A
+            value: "load average: 0,74, 0,66, 0,63"
+            short: True
+          - title: System B
+            value: 'load average: 5,16, 4,64, 2,43'
+            short: True
+
+- name: Send a message with a link using Slack markup
+  slack:
+    token: thetoken/generatedby/slack
+    msg: We sent this message using <https://www.ansible.com|Ansible>!
+
+- name: Send a message with angle brackets and ampersands
+  slack:
+    token: thetoken/generatedby/slack
+    msg: This message has &lt;brackets&gt; &amp; ampersands in plain text.
+
+

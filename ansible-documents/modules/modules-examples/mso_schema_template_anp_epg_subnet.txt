@@ -1,0 +1,58 @@
+EXAMPLES:
+
+- name: Add a new subnet to an EPG
+  mso_schema_template_anp_epg_subnet:
+    host: mso_host
+    username: admin
+    password: SomeSecretPassword
+    schema: Schema 1
+    template: Template 1
+    anp: ANP 1
+    epg: EPG 1
+    subnet: 10.0.0.0/24
+    state: present
+  delegate_to: localhost
+
+- name: Remove a subnet from an EPG
+  mso_schema_template_anp_epg_subnet:
+    host: mso_host
+    username: admin
+    password: SomeSecretPassword
+    schema: Schema 1
+    template: Template 1
+    anp: ANP 1
+    epg: EPG 1
+    subnet: 10.0.0.0/24
+    state: absent
+  delegate_to: localhost
+
+- name: Query a specific EPG subnet
+  mso_schema_template_anp_epg_subnet:
+    host: mso_host
+    username: admin
+    password: SomeSecretPassword
+    schema: Schema 1
+    template: Template 1
+    anp: ANP 1
+    epg: EPG 1
+    subnet: 10.0.0.0/24
+    state: query
+  delegate_to: localhost
+  register: query_result
+
+- name: Query all EPGs subnets
+  mso_schema_template_anp_epg_subnet:
+    host: mso_host
+    username: admin
+    password: SomeSecretPassword
+    schema: Schema 1
+    template: Template 1
+    anp: ANP 1
+    state: query
+  delegate_to: localhost
+  register: query_result
+
+
+RETURN VALUES:
+
+

@@ -1,0 +1,84 @@
+EXAMPLES:
+
+# Note - You must set the CLC_V2_API_USERNAME And CLC_V2_API_PASSWD Environment variables before running these examples
+
+---
+- name: Create Alert Policy Example
+  hosts: localhost
+  gather_facts: False
+  connection: local
+  tasks:
+    - name: Create an Alert Policy for disk above 80% for 5 minutes
+      clc_alert_policy:
+        alias: wfad
+        name: 'alert for disk > 80%'
+        alert_recipients:
+            - test1@centurylink.com
+            - test2@centurylink.com
+        metric: 'disk'
+        duration: '00:05:00'
+        threshold: 80
+        state: present
+      register: policy
+
+    - name: debug
+      debug: var=policy
+
+---
+- name: Delete Alert Policy Example
+  hosts: localhost
+  gather_facts: False
+  connection: local
+  tasks:
+    - name: Delete an Alert Policy
+      clc_alert_policy:
+        alias: wfad
+        name: 'alert for disk > 80%'
+        state: absent
+      register: policy
+
+    - name: debug
+      debug: var=policy
+
+
+RETURN VALUES:
+
+policy:
+    description: The alert policy information
+    returned: success
+    type: dict
+    sample:
+        {
+            "actions": [
+                {
+                "action": "email",
+                "settings": {
+                    "recipients": [
+                        "user1@domain.com",
+                        "user1@domain.com"
+                    ]
+                }
+                }
+            ],
+            "id": "ba54ac54a60d4a4f1ed6d48c1ce240a7",
+            "links": [
+                {
+                "href": "/v2/alertPolicies/alias/ba54ac54a60d4a4fb1d6d48c1ce240a7",
+                "rel": "self",
+                "verbs": [
+                    "GET",
+                    "DELETE",
+                    "PUT"
+                ]
+                }
+            ],
+            "name": "test_alert",
+            "triggers": [
+                {
+                "duration": "00:05:00",
+                "metric": "disk",
+                "threshold": 80.0
+                }
+            ]
+        }
+

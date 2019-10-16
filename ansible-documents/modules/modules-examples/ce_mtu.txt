@@ -1,0 +1,78 @@
+EXAMPLES:
+
+- name: Mtu test
+  hosts: cloudengine
+  connection: local
+  gather_facts: no
+  vars:
+    cli:
+      host: "{{ inventory_hostname }}"
+      port: "{{ ansible_ssh_port }}"
+      username: "{{ username }}"
+      password: "{{ password }}"
+      transport: cli
+
+  tasks:
+
+  - name: "Config jumboframe on 40GE1/0/22"
+    ce_mtu:
+      interface: 40GE1/0/22
+      jumbo_max: 9000
+      jumbo_min: 8000
+      provider: "{{ cli }}"
+
+  - name: "Config mtu on 40GE1/0/22 (routed interface)"
+    ce_mtu:
+      interface: 40GE1/0/22
+      mtu: 1600
+      provider: "{{ cli }}"
+
+  - name: "Config mtu on 40GE1/0/23 (switched interface)"
+    ce_mtu:
+      interface: 40GE1/0/22
+      mtu: 9216
+      provider: "{{ cli }}"
+
+  - name: "Config mtu and jumboframe on 40GE1/0/22 (routed interface)"
+    ce_mtu:
+      interface: 40GE1/0/22
+      mtu: 1601
+      jumbo_max: 9001
+      jumbo_min: 8001
+      provider: "{{ cli }}"
+
+  - name: "Unconfigure mtu and jumboframe on a given interface"
+    ce_mtu:
+      state: absent
+      interface: 40GE1/0/22
+      provider: "{{ cli }}"
+
+
+RETURN VALUES:
+
+proposed:
+    description: k/v pairs of parameters passed into module
+    returned: always
+    type: dict
+    sample: {"mtu": "1700", "jumbo_max": "9000", jumbo_min: "8000"}
+existing:
+    description: k/v pairs of existing mtu/sysmtu on the interface/system
+    returned: always
+    type: dict
+    sample: {"mtu": "1600", "jumbo_max": "9216", "jumbo_min": "1518"}
+end_state:
+    description: k/v pairs of mtu/sysmtu values after module execution
+    returned: always
+    type: dict
+    sample: {"mtu": "1700", "jumbo_max": "9000", jumbo_min: "8000"}
+updates:
+    description: command sent to the device
+    returned: always
+    type: list
+    sample: ["interface 40GE1/0/23", "mtu 1700", "jumboframe enable 9000 8000"]
+changed:
+    description: check to see if a change was made on the device
+    returned: always
+    type: bool
+    sample: true
+

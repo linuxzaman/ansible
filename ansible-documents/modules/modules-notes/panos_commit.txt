@@ -1,0 +1,108 @@
+> PANOS_COMMIT    (/usr/lib/python2.7/dist-packages/ansible/modules/network/panos/_panos_commit.py)
+
+        PanOS module that will commit firewall's candidate configuration on the device. The new configuration will become active
+        immediately.
+
+DEPRECATED: 
+
+	Reason: Consolidating code base.
+	Will be removed in: Ansible 2.12
+	Alternatives: Use U(https://galaxy.ansible.com/PaloAltoNetworks/paloaltonetworks) instead.
+
+
+  * This module is maintained by The Ansible Community
+OPTIONS (= is mandatory):
+
+- commit_changes_by
+        Commit changes made by specified admin
+        [Default: (null)]
+        type: list
+        version_added: 2.8
+
+- commit_vsys
+        Commit changes for specified VSYS
+        [Default: (null)]
+        type: list
+        version_added: 2.8
+
+- description
+        Commit description/comment
+        [Default: (null)]
+        type: str
+        version_added: 2.8
+
+- interval
+        interval for checking commit job
+        [Default: 0.5]
+
+= ip_address
+        IP address (or hostname) of PAN-OS device.
+
+
+= password
+        Password for authentication. If the value is not specified in the task, the value of environment variable `ANSIBLE_NET_PASSWORD'
+        will be used instead.
+
+
+- sync
+        if commit should be synchronous
+        [Default: yes]
+        type: bool
+
+- timeout
+        timeout for commit job
+        [Default: (null)]
+
+- username
+        Username for authentication. If the value is not specified in the task, the value of environment variable `ANSIBLE_NET_USERNAME'
+        will be used instead if defined. `admin' will be used if nothing above is defined.
+        [Default: admin]
+
+
+REQUIREMENTS:  pan-python
+
+AUTHOR: Luigi Mori (@jtschichold), Ivan Bojer (@ivanbojer), Tomi Raittinen (@traittinen)
+        METADATA:
+          status:
+          - deprecated
+          supported_by: community
+        
+
+EXAMPLES:
+
+# Commit candidate config on 192.168.1.1 in sync mode
+- panos_commit:
+    ip_address: "192.168.1.1"
+    username: "admin"
+    password: "admin"
+
+
+RETURN VALUES:
+
+panos_commit:
+    description: Information about commit job.
+    returned: always
+    type: complex
+    version_added: 2.8
+    contains:
+        job_id:
+            description: Palo Alto job ID for the commit operation. Only returned if commit job is launched on device.
+            returned: always
+            type: str
+            sample: "139"
+        status_code:
+            description: Palo Alto API status code. Null if commit is successful.
+            returned: always
+            type: str
+            sample: 19
+        status_detail:
+            description: Palo Alto API detailed status message.
+            returned: always
+            type: str
+            sample: Configuration committed successfully
+        status_text:
+            description: Palo Alto API status text.
+            returned: always
+            type: str
+            sample: success
+

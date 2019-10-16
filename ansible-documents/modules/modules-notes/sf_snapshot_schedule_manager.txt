@@ -1,0 +1,136 @@
+> SF_SNAPSHOT_SCHEDULE_MANAGER    (/usr/lib/python2.7/dist-packages/ansible/modules/storage/netapp/_sf_snapshot_schedule_manager.py)
+
+        Create, destroy, or update accounts on SolidFire
+
+DEPRECATED: 
+
+	Reason: This Module has been replaced
+	Will be removed in: Ansible 2.11
+	Alternatives: please use M(na_elementsw_snapshot_schedule)
+
+
+  * This module is maintained by The Ansible Community
+OPTIONS (= is mandatory):
+
+= hostname
+        The hostname or IP address of the SolidFire cluster.
+
+
+= name
+        Name for the snapshot schedule.
+
+
+= password
+        Password for the specified user.
+        (Aliases: pass)
+
+- paused
+        Pause / Resume a schedule.
+        [Default: (null)]
+
+- recurring
+        Should the schedule recur?
+        [Default: (null)]
+
+- retention
+        Retention period for the snapshot.
+        Format is 'HH:mm:ss'.
+        [Default: (null)]
+
+- schedule_id
+        The schedule ID for the schedule that you want to update or delete.
+        [Default: (null)]
+
+- snapshot_name
+        Name for the created snapshots.
+        [Default: (null)]
+
+- starting_date
+        Starting date for the schedule.
+        Required when `state=present'.
+        Please use two '-' in the above format, or you may see an error- TypeError, is not JSON serializable description.
+        Format: `2016--12--01T00:00:00Z'
+        [Default: (null)]
+
+= state
+        Whether the specified schedule should exist or not.
+        (Choices: present, absent)
+
+- time_interval_days
+        Time interval in days.
+        [Default: 1]
+
+- time_interval_hours
+        Time interval in hours.
+        [Default: 0]
+
+- time_interval_minutes
+        Time interval in minutes.
+        [Default: 0]
+
+= username
+        Please ensure that the user has the adequate permissions. For more information, please read the official documentation
+        https://mysupport.netapp.com/documentation/docweb/index.html?productID=62636&language=en-US.
+        (Aliases: user)
+
+- volumes
+        Volume IDs that you want to set the snapshot schedule for.
+        At least 1 volume ID is required for creating a new schedule.
+        required when `state=present'
+        [Default: (null)]
+
+
+NOTES:
+      * The modules prefixed with na\\_elementsw are built to support the SolidFire storage platform.
+
+
+REQUIREMENTS:  The modules were developed with SolidFire 10.1, solidfire-sdk-python (1.1.0.92) or greater. Install using 'pip install
+        solidfire-sdk-python'
+
+AUTHOR: Sumit Kumar (@timuster) <sumit4@netapp.com>
+        METADATA:
+          status:
+          - deprecated
+          supported_by: community
+        
+
+EXAMPLES:
+
+- name: Create Snapshot schedule
+     sf_snapshot_schedule_manager:
+       hostname: "{{ solidfire_hostname }}"
+       username: "{{ solidfire_username }}"
+       password: "{{ solidfire_password }}"
+       state: present
+       name: Schedule_A
+       time_interval_days: 1
+       starting_date: 2016--12--01T00:00:00Z
+       volumes: 7
+
+   - name: Update Snapshot schedule
+     sf_snapshot_schedule_manager:
+       hostname: "{{ solidfire_hostname }}"
+       username: "{{ solidfire_username }}"
+       password: "{{ solidfire_password }}"
+       state: present
+       schedule_id: 6
+       recurring: True
+       snapshot_name: AnsibleSnapshots
+
+   - name: Delete Snapshot schedule
+     sf_snapshot_schedule_manager:
+       hostname: "{{ solidfire_hostname }}"
+       username: "{{ solidfire_username }}"
+       password: "{{ solidfire_password }}"
+       state: absent
+       schedule_id: 6
+
+
+RETURN VALUES:
+
+
+schedule_id:
+    description: Schedule ID of the newly created schedule
+    returned: success
+    type: str
+

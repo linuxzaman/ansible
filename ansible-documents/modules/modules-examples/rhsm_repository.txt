@@ -1,0 +1,31 @@
+EXAMPLES:
+
+- name: Enable a RHSM repository
+  rhsm_repository:
+    name: rhel-7-server-rpms
+
+- name: Disable all RHSM repositories
+  rhsm_repository:
+    name: '*'
+    state: disabled
+
+- name: Enable all repositories starting with rhel-6-server
+  rhsm_repository:
+    name: rhel-6-server*
+    state: enabled
+
+- name: Disable all repositories except rhel-7-server-rpms
+  rhsm_repository:
+    name: rhel-7-server-rpms
+    purge: True
+
+
+RETURN VALUES:
+
+repositories:
+  description:
+    - The list of RHSM repositories with their states.
+    - When this module is used to change the repository states, this list contains the updated states after the changes.
+  returned: success
+  type: list
+

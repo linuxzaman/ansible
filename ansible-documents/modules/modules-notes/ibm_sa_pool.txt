@@ -1,0 +1,83 @@
+> IBM_SA_POOL    (/usr/lib/python2.7/dist-packages/ansible/modules/storage/ibm/ibm_sa_pool.py)
+
+        This module creates or deletes pools to be used on IBM Spectrum Accelerate Family storage systems
+
+  * This module is maintained by The Ansible Community
+OPTIONS (= is mandatory):
+
+- domain
+        Adds the pool to the specified domain.
+        [Default: (null)]
+
+= endpoints
+        The hostname or management IP of Spectrum Accelerate storage system.
+
+        type: str
+
+= password
+        Password for username on the spectrum accelerate storage system.
+
+        type: str
+
+- perf_class
+        Assigns a perf_class to the pool.
+        [Default: (null)]
+
+= pool
+        Pool name.
+
+
+- size
+        Pool size in GB
+        [Default: (null)]
+
+- snapshot_size
+        Pool snapshot size in GB
+        [Default: (null)]
+
+= state
+        Pool state.
+        (Choices: present, absent)[Default: present]
+
+= username
+        Management user on the spectrum accelerate storage system.
+
+        type: str
+
+
+NOTES:
+      * This module requires pyxcli python library. Use 'pip install pyxcli' in order to get pyxcli.
+
+
+REQUIREMENTS:  python >= 2.7, pyxcli
+
+AUTHOR: Tzur Eliyahu (@tzure)
+        METADATA:
+          status:
+          - preview
+          supported_by: community
+        
+
+EXAMPLES:
+
+- name: Create new pool.
+  ibm_sa_pool:
+    name: pool_name
+    size: 300
+    state: present
+    username: admin
+    password: secret
+    endpoints: hostdev-system
+
+- name: Delete pool.
+  ibm_sa_pool:
+    name: pool_name
+    state: absent
+    username: admin
+    password: secret
+    endpoints: hostdev-system
+
+
+RETURN VALUES:
+
+

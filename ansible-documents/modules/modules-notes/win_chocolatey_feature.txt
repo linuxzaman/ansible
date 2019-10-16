@@ -1,0 +1,58 @@
+> WIN_CHOCOLATEY_FEATURE    (/usr/lib/python2.7/dist-packages/ansible/modules/windows/win_chocolatey_feature.py)
+
+        Used to enable or disable features in Chocolatey.
+
+  * This module is maintained by The Ansible Community
+OPTIONS (= is mandatory):
+
+= name
+        The name of the feature to manage.
+        Run `choco.exe feature list' to get a list of features that can be managed.
+
+        type: str
+
+- state
+        When `disabled' then the feature will be disabled.
+        When `enabled' then the feature will be enabled.
+        (Choices: disabled, enabled)[Default: enabled]
+        type: str
+
+
+SEE ALSO:
+      * Module win_chocolatey
+           The official documentation on the win_chocolatey module.
+           https://docs.ansible.com/ansible/latest/modules/win_chocolatey_module.html
+      * Module win_chocolatey_config
+           The official documentation on the win_chocolatey_config module.
+           https://docs.ansible.com/ansible/latest/modules/win_chocolatey_config_module.html
+      * Module win_chocolatey_facts
+           The official documentation on the win_chocolatey_facts module.
+           https://docs.ansible.com/ansible/latest/modules/win_chocolatey_facts_module.html
+      * Module win_chocolatey_source
+           The official documentation on the win_chocolatey_source module.
+           https://docs.ansible.com/ansible/latest/modules/win_chocolatey_source_module.html
+
+
+AUTHOR: Jordan Borean (@jborean93)
+        METADATA:
+          status:
+          - preview
+          supported_by: community
+        
+
+EXAMPLES:
+
+- name: Disable file checksum matching
+  win_chocolatey_feature:
+    name: checksumFiles
+    state: disabled
+
+- name: Stop Chocolatey on the first package failure
+  win_chocolatey_feature:
+    name: stopOnFirstPackageFailure
+    state: enabled
+
+
+RETURN VALUES:
+
+

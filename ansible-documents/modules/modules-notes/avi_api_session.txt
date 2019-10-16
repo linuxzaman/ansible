@@ -1,0 +1,141 @@
+> AVI_API_SESSION    (/usr/lib/python2.7/dist-packages/ansible/modules/network/avi/avi_api_session.py)
+
+        This module can be used for calling any resources defined in Avi REST API. https://avinetworks.com/ This module is useful for
+        invoking HTTP Patch methods and accessing resources that do not have an REST object associated with them.
+
+  * This module is maintained by The Ansible Community
+OPTIONS (= is mandatory):
+
+- api_context
+        Avi API context that includes current session ID and CSRF Token.
+        This allows user to perform single login and re-use the session.
+        [Default: (null)]
+        type: dict
+        version_added: 2.5
+
+- api_version
+        Avi API version of to use for Avi API and objects.
+        [Default: 16.4.4]
+        type: str
+
+- avi_credentials
+        Avi Credentials dictionary which can be used in lieu of enumerating Avi Controller login details.
+        [Default: (null)]
+        type: dict
+        version_added: 2.5
+
+- controller
+        IP address or hostname of the controller. The default value is the environment variable `AVI_CONTROLLER'.
+        [Default: ]
+        type: str
+
+- data
+        HTTP body in YAML or JSON format.
+        [Default: (null)]
+
+= http_method
+        Allowed HTTP methods for RESTful services and are supported by Avi Controller.
+        (Choices: get, put, post, patch, delete)
+
+- params
+        Query parameters passed to the HTTP API.
+        [Default: (null)]
+
+- password
+        Password of Avi user in Avi controller. The default value is the environment variable `AVI_PASSWORD'.
+        [Default: ]
+        type: str
+
+- path
+        Path for Avi API resource. For example, `path: virtualservice' will translate to `api/virtualserivce'.
+        [Default: (null)]
+
+- tenant
+        Name of tenant used for all Avi API calls and context of object.
+        [Default: admin]
+        type: str
+
+- tenant_uuid
+        UUID of tenant used for all Avi API calls and context of object.
+        [Default: ]
+        type: str
+
+- timeout
+        Timeout (in seconds) for Avi API calls.
+        [Default: 60]
+
+- username
+        Username used for accessing Avi controller. The default value is the environment variable `AVI_USERNAME'.
+        [Default: ]
+        type: str
+
+
+NOTES:
+      * For more information on using Ansible to manage Avi Network devices see https://www.ansible.com/ansible-avi-networks.
+
+
+REQUIREMENTS:  avisdk
+
+AUTHOR: Gaurav Rastogi (@grastogi23) <grastogi@avinetworks.com>
+        METADATA:
+          status:
+          - preview
+          supported_by: community
+        
+
+EXAMPLES:
+
+- name: Get Pool Information using avi_api_session
+    avi_api_session:
+      controller: "{{ controller }}"
+      username: "{{ username }}"
+      password: "{{ password }}"
+      http_method: get
+      path: pool
+      params:
+        name: "{{ pool_name }}"
+      api_version: 16.4
+    register: pool_results
+
+  - name: Patch Pool with list of servers
+    avi_api_session:
+      controller: "{{ controller }}"
+      username: "{{ username }}"
+      password: "{{ password }}"
+      http_method: patch
+      path: "{{ pool_path }}"
+      api_version: 16.4
+      data:
+        add:
+          servers:
+            - ip:
+                addr: 10.10.10.10
+                type: V4
+            - ip:
+                addr: 20.20.20.20
+                type: V4
+    register: updated_pool
+
+  - name: Fetch Pool metrics bandwidth and connections rate
+    avi_api_session:
+      controller: "{{ controller }}"
+      username: "{{ username }}"
+      password: "{{ password }}"
+      http_method: get
+      path: analytics/metrics/pool
+      api_version: 16.4
+      params:
+        name: "{{ pool_name }}"
+        metric_id: l4_server.avg_bandwidth,l4_server.avg_complete_conns
+        step: 300
+        limit: 10
+    register: pool_metrics
+
+
+RETURN VALUES:
+
+obj:
+    description: Avi REST resource
+    returned: success, changed
+    type: dict
+

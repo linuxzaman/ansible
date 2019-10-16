@@ -1,0 +1,85 @@
+EXAMPLES:
+
+# Create a listener, wait for the loadbalancer to be active.
+- os_listener:
+    cloud: mycloud
+    endpoint_type: admin
+    state: present
+    name: test-listener
+    loadbalancer: test-loadbalancer
+    protocol: HTTP
+    protocol_port: 8080
+
+# Create a listener, do not wait for the loadbalancer to be active.
+- os_listener:
+    cloud: mycloud
+    endpoint_type: admin
+    state: present
+    name: test-listener
+    loadbalancer: test-loadbalancer
+    protocol: HTTP
+    protocol_port: 8080
+    wait: no
+
+# Delete a listener
+- os_listener:
+    cloud: mycloud
+    endpoint_type: admin
+    state: absent
+    name: test-listener
+    loadbalancer: test-loadbalancer
+
+
+RETURN VALUES:
+
+id:
+    description: The listener UUID.
+    returned: On success when I(state) is 'present'
+    type: str
+    sample: "39007a7e-ee4f-4d13-8283-b4da2e037c69"
+listener:
+    description: Dictionary describing the listener.
+    returned: On success when I(state) is 'present'
+    type: complex
+    contains:
+        id:
+            description: Unique UUID.
+            type: str
+            sample: "39007a7e-ee4f-4d13-8283-b4da2e037c69"
+        name:
+            description: Name given to the listener.
+            type: str
+            sample: "test"
+        description:
+            description: The listener description.
+            type: str
+            sample: "description"
+        load_balancer_id:
+            description: The load balancer UUID this listener belongs to.
+            type: str
+            sample: "b32eef7e-d2a6-4ea4-a301-60a873f89b3b"
+        loadbalancers:
+            description: A list of load balancer IDs..
+            type: list
+            sample: [{"id": "b32eef7e-d2a6-4ea4-a301-60a873f89b3b"}]
+        provisioning_status:
+            description: The provisioning status of the listener.
+            type: str
+            sample: "ACTIVE"
+        operating_status:
+            description: The operating status of the listener.
+            type: str
+            sample: "ONLINE"
+        is_admin_state_up:
+            description: The administrative state of the listener.
+            type: bool
+            sample: true
+        protocol:
+            description: The protocol for the listener.
+            type: str
+            sample: "HTTP"
+        protocol_port:
+            description: The protocol port number for the listener.
+            type: int
+            sample: 80
+

@@ -1,0 +1,129 @@
+> NA_ONTAP_PORTSET    (/usr/lib/python2.7/dist-packages/ansible/modules/storage/netapp/na_ontap_portset.py)
+
+        Create/Delete ONTAP portset, modify ports in a portset.
+
+  * This module is maintained by The Ansible Community
+OPTIONS (= is mandatory):
+
+- force
+        If 'false' or not specified, the request will fail if there are any igroups bound to this portset.
+        If 'true', forcibly destroy the portset, even if there are existing igroup bindings.
+        [Default: False]
+        type: bool
+
+= hostname
+        The hostname or IP address of the ONTAP instance.
+
+        type: str
+
+- http_port
+        Override the default port (80 or 443) with this port
+        [Default: (null)]
+        type: int
+
+- https
+        Enable and disable https
+        [Default: False]
+        type: bool
+
+= name
+        Name of the port set to create.
+
+
+- ontapi
+        The ontap api version to use
+        [Default: (null)]
+        type: int
+
+= password
+        Password for the specified user.
+        (Aliases: pass)
+        type: str
+
+- ports
+        Specify the ports associated with this portset. Should be comma separated.
+        It represents the expected state of a list of ports at any time, and replaces the current value of ports.
+        Adds a port if it is specified in expected state but not in current state.
+        Deletes a port if it is in current state but not in expected state.
+        [Default: (null)]
+
+- state
+        If you want to create a portset.
+        [Default: present]
+
+- type
+        Required for create.
+        Protocols accepted for this portset.
+        (Choices: fcp, iscsi, mixed)[Default: (null)]
+
+= username
+        This can be a Cluster-scoped or SVM-scoped account, depending on whether a Cluster-level or SVM-level API is required. For more
+        information, please read the documentation https://mysupport.netapp.com/NOW/download/software/nmsdk/9.4/.
+        (Aliases: user)
+        type: str
+
+- validate_certs
+        If set to `no', the SSL certificates will not be validated.
+        This should only set to `False' used on personally controlled sites using self-signed certificates.
+        [Default: True]
+        type: bool
+
+= vserver
+        Name of the SVM.
+
+
+
+NOTES:
+      * The modules prefixed with na\\_ontap are built to support the ONTAP storage platform.
+
+
+REQUIREMENTS:  A physical or virtual clustered Data ONTAP system. The modules support Data ONTAP 9.1 and onward, Ansible 2.6, Python2
+        netapp-lib (2017.10.30) or later. Install using 'pip install netapp-lib', Python3 netapp-lib (2018.11.13) or
+        later. Install using 'pip install netapp-lib', To enable http on the cluster you must run the following commands
+        'set -privilege advanced;' 'system services web modify -http-enabled true;'
+
+AUTHOR: NetApp Ansible Team (@carchi8py) <ng-ansibleteam@netapp.com>
+        METADATA:
+          status:
+          - preview
+          supported_by: community
+        
+
+EXAMPLES:
+
+- name: Create Portset
+      na_ontap_portset:
+        state: present
+        vserver: vserver_name
+        name: portset_name
+        ports: a1
+        type: "{{ protocol type }}"
+        username: "{{ netapp username }}"
+        password: "{{ netapp password }}"
+        hostname: "{{ netapp hostname }}"
+
+    - name: Modify ports in portset
+      na_ontap_portset:
+        state: present
+        vserver: vserver_name
+        name: portset_name
+        ports: a1,a2
+        username: "{{ netapp username }}"
+        password: "{{ netapp password }}"
+        hostname: "{{ netapp hostname }}"
+
+    - name: Delete Portset
+      na_ontap_portset:
+        state: absent
+        vserver: vserver_name
+        name: portset_name
+        force: True
+        type: "{{ protocol type }}"
+        username: "{{ netapp username }}"
+        password: "{{ netapp password }}"
+        hostname: "{{ netapp hostname }}"
+
+
+RETURN VALUES:
+
+

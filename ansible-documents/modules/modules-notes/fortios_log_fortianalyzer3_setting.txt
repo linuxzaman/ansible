@@ -1,0 +1,240 @@
+> FORTIOS_LOG_FORTIANALYZER3_SETTING    (/usr/lib/python2.7/dist-packages/ansible/modules/network/fortios/fortios_log_fortianalyzer3_setting.py)
+
+        This module is able to configure a FortiGate or FortiOS by allowing the user to set and modify log_fortianalyzer3 feature and
+        setting category. Examples include all parameters and values need to be adjusted to datasources before usage. Tested with FOS
+        v6.0.2
+
+  * This module is maintained by The Ansible Community
+OPTIONS (= is mandatory):
+
+= host
+        FortiOS or FortiGate ip address.
+
+
+- https
+        Indicates if the requests towards FortiGate must use HTTPS protocol
+        [Default: True]
+        type: bool
+
+- log_fortianalyzer3_setting
+        Global FortiAnalyzer settings.
+        [Default: None]
+        suboptions:
+          __change_ip:
+            description:
+            - Hidden attribute.
+          certificate:
+            description:
+            - Certificate used to communicate with FortiAnalyzer. Source certificate.local.name.
+          conn-timeout:
+            description:
+            - FortiAnalyzer connection time-out in seconds (for status and log buffer).
+          enc-algorithm:
+            choices:
+            - high-medium
+            - high
+            - low
+            - disable
+            description:
+            - Enable/disable sending FortiAnalyzer log data with SSL encryption.
+          faz-type:
+            description:
+            - Hidden setting index of FortiAnalyzer.
+          hmac-algorithm:
+            choices:
+            - sha256
+            - sha1
+            description:
+            - FortiAnalyzer IPsec tunnel HMAC algorithm.
+          ips-archive:
+            choices:
+            - enable
+            - disable
+            description:
+            - Enable/disable IPS packet archive logging.
+          mgmt-name:
+            description:
+            - Hidden management name of FortiAnalyzer.
+          monitor-failure-retry-period:
+            description:
+            - Time between FortiAnalyzer connection retries in seconds (for status and log
+              buffer).
+          monitor-keepalive-period:
+            description:
+            - Time between OFTP keepalives in seconds (for status and log buffer).
+          reliable:
+            choices:
+            - enable
+            - disable
+            description:
+            - Enable/disable reliable logging to FortiAnalyzer.
+          server:
+            description:
+            - The remote FortiAnalyzer.
+          source-ip:
+            description:
+            - Source IPv4 or IPv6 address used to communicate with FortiAnalyzer.
+          ssl-min-proto-version:
+            choices:
+            - default
+            - SSLv3
+            - TLSv1
+            - TLSv1-1
+            - TLSv1-2
+            description:
+            - Minimum supported protocol version for SSL/TLS connections (default is to follow
+              system global setting).
+          status:
+            choices:
+            - enable
+            - disable
+            description:
+            - Enable/disable logging to FortiAnalyzer.
+          upload-day:
+            description:
+            - Day of week (month) to upload logs.
+          upload-interval:
+            choices:
+            - daily
+            - weekly
+            - monthly
+            description:
+            - Frequency to upload log files to FortiAnalyzer.
+          upload-option:
+            choices:
+            - store-and-upload
+            - realtime
+            - 1-minute
+            - 5-minute
+            description:
+            - Enable/disable logging to hard disk and then uploading to FortiAnalyzer.
+          upload-time:
+            description:
+            - Time to upload logs (hh:mm).
+        
+
+- password
+        FortiOS or FortiGate password.
+        [Default: ]
+
+= username
+        FortiOS or FortiGate username.
+
+
+- vdom
+        Virtual domain, among those defined previously. A vdom is a virtual instance of the FortiGate that can be configured and used as
+        a different unit.
+        [Default: root]
+
+
+NOTES:
+      * Requires fortiosapi library developed by Fortinet
+      * Run as a local_action in your playbook
+
+
+REQUIREMENTS:  fortiosapi>=0.9.8
+
+AUTHOR: Miguel Angel Munoz (@mamunozgonzalez), Nicolas Thomas (@thomnico)
+        METADATA:
+          status:
+          - preview
+          supported_by: community
+        
+
+EXAMPLES:
+
+- hosts: localhost
+  vars:
+   host: "192.168.122.40"
+   username: "admin"
+   password: ""
+   vdom: "root"
+  tasks:
+  - name: Global FortiAnalyzer settings.
+    fortios_log_fortianalyzer3_setting:
+      host:  "{{ host }}"
+      username: "{{ username }}"
+      password: "{{ password }}"
+      vdom:  "{{ vdom }}"
+      https: "False"
+      log_fortianalyzer3_setting:
+        __change_ip: "3"
+        certificate: "<your_own_value> (source certificate.local.name)"
+        conn-timeout: "5"
+        enc-algorithm: "high-medium"
+        faz-type: "7"
+        hmac-algorithm: "sha256"
+        ips-archive: "enable"
+        mgmt-name: "<your_own_value>"
+        monitor-failure-retry-period: "11"
+        monitor-keepalive-period: "12"
+        reliable: "enable"
+        server: "192.168.100.40"
+        source-ip: "84.230.14.43"
+        ssl-min-proto-version: "default"
+        status: "enable"
+        upload-day: "<your_own_value>"
+        upload-interval: "daily"
+        upload-option: "store-and-upload"
+        upload-time: "<your_own_value>"
+
+
+RETURN VALUES:
+
+build:
+  description: Build number of the fortigate image
+  returned: always
+  type: str
+  sample: '1547'
+http_method:
+  description: Last method used to provision the content into FortiGate
+  returned: always
+  type: str
+  sample: 'PUT'
+http_status:
+  description: Last result given by FortiGate on last operation applied
+  returned: always
+  type: str
+  sample: "200"
+mkey:
+  description: Master key (id) used in the last call to FortiGate
+  returned: success
+  type: str
+  sample: "id"
+name:
+  description: Name of the table used to fulfill the request
+  returned: always
+  type: str
+  sample: "urlfilter"
+path:
+  description: Path of the table used to fulfill the request
+  returned: always
+  type: str
+  sample: "webfilter"
+revision:
+  description: Internal revision number
+  returned: always
+  type: str
+  sample: "17.0.2.10658"
+serial:
+  description: Serial number of the unit
+  returned: always
+  type: str
+  sample: "FGVMEVYYQT3AB5352"
+status:
+  description: Indication of the operation's result
+  returned: always
+  type: str
+  sample: "success"
+vdom:
+  description: Virtual domain used
+  returned: always
+  type: str
+  sample: "root"
+version:
+  description: Version of the FortiGate
+  returned: always
+  type: str
+  sample: "v5.6.3"
+
+

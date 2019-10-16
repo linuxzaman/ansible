@@ -1,0 +1,123 @@
+> INFLUXDB_QUERY    (/usr/lib/python2.7/dist-packages/ansible/modules/database/influxdb/influxdb_query.py)
+
+        Query data points from InfluxDB.
+
+  * This module is maintained by The Ansible Community
+OPTIONS (= is mandatory):
+
+= database_name
+        Name of the database.
+
+
+- hostname
+        The hostname or IP address on which InfluxDB server is listening.
+        Since Ansible 2.5, defaulted to localhost.
+        [Default: localhost]
+        type: str
+
+- password
+        Password that will be used to authenticate against InfluxDB server.
+        Alias `login_password' added in Ansible 2.5.
+        (Aliases: login_password)[Default: root]
+        type: str
+
+- port
+        The port on which InfluxDB server is listening
+        [Default: 8086]
+        type: int
+
+- proxies
+        HTTP(S) proxy to use for Requests to connect to InfluxDB server.
+        [Default: (null)]
+        type: dict
+        version_added: 2.5
+
+= query
+        Query to be executed.
+
+
+- retries
+        Number of retries client will try before aborting.
+        `0' indicates try until success.
+        [Default: 3]
+        type: int
+        version_added: 2.5
+
+- ssl
+        Use https instead of http to connect to InfluxDB server.
+        [Default: (null)]
+        type: bool
+        version_added: 2.5
+
+- timeout
+        Number of seconds Requests will wait for client to establish a connection.
+        [Default: (null)]
+        type: int
+        version_added: 2.5
+
+- udp_port
+        UDP port to connect to InfluxDB server.
+        [Default: 4444]
+        type: int
+        version_added: 2.5
+
+- use_udp
+        Use UDP to connect to InfluxDB server.
+        [Default: (null)]
+        type: bool
+        version_added: 2.5
+
+- username
+        Username that will be used to authenticate against InfluxDB server.
+        Alias `login_username' added in Ansible 2.5.
+        (Aliases: login_username)[Default: root]
+        type: str
+
+- validate_certs
+        If set to `no', the SSL certificates will not be validated.
+        This should only set to `no' used on personally controlled sites using self-signed certificates.
+        [Default: True]
+        type: bool
+        version_added: 2.5
+
+
+REQUIREMENTS:  python >= 2.6, influxdb >= 0.9
+
+AUTHOR: René Moser (@resmo)
+        METADATA:
+          status:
+          - preview
+          supported_by: community
+        
+
+EXAMPLES:
+
+- name: Query connections
+  influxdb_query:
+    hostname: "{{ influxdb_ip_address }}"
+    database_name: "{{ influxdb_database_name }}"
+    query: "select mean(value) from connections"
+  register: connection
+
+- name: Query connections with tags filters
+  influxdb_query:
+    hostname: "{{ influxdb_ip_address }}"
+    database_name: "{{ influxdb_database_name }}"
+    query: "select mean(value) from connections where region='zue01' and host='server01'"
+  register: connection
+
+- name: Print results from the query
+  debug:
+    var: connection.query_results
+
+
+RETURN VALUES:
+
+query_results:
+  description: Result from the query
+  returned: success
+  type: list
+  sample:
+    - mean: 1245.5333333333333
+      time: "1970-01-01T00:00:00Z"
+

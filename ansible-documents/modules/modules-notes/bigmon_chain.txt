@@ -1,0 +1,49 @@
+> BIGMON_CHAIN    (/usr/lib/python2.7/dist-packages/ansible/modules/network/bigswitch/bigmon_chain.py)
+
+        Create and remove a bigmon inline service chain.
+
+  * This module is maintained by The Ansible Community
+OPTIONS (= is mandatory):
+
+- access_token
+        Bigmon access token. If this isn't set, the environment variable `BIGSWITCH_ACCESS_TOKEN' is used.
+        [Default: (null)]
+
+= controller
+        The controller IP address.
+
+
+= name
+        The name of the chain.
+
+
+- state
+        Whether the service chain should be present or absent.
+        (Choices: present, absent)[Default: present]
+
+- validate_certs
+        If `false', SSL certificates will not be validated. This should only be used on personally controlled devices using self-signed
+        certificates.
+        [Default: True]
+        type: bool
+
+
+AUTHOR: Ted (@tedelhourani)
+        METADATA:
+          status:
+          - preview
+          supported_by: community
+        
+
+EXAMPLES:
+
+- name: bigmon inline service chain
+  bigmon_chain:
+    name: MyChain
+    controller: '{{ inventory_hostname }}'
+    state: present
+    validate_certs: false
+
+
+RETURN VALUES:
+ # 

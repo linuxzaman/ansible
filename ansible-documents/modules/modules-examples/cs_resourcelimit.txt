@@ -1,0 +1,47 @@
+EXAMPLES:
+
+- name: Update a resource limit for instances of a domain
+  cs_resourcelimit:
+    type: instance
+    limit: 10
+    domain: customers
+  delegate_to: localhost
+
+- name: Update a resource limit for instances of an account
+  cs_resourcelimit:
+    type: instance
+    limit: 12
+    account: moserre
+    domain: customers
+  delegate_to: localhost
+
+
+RETURN VALUES:
+
+---
+recource_type:
+  description: Type of the resource
+  returned: success
+  type: str
+  sample: instance
+limit:
+  description: Maximum number of the resource.
+  returned: success
+  type: int
+  sample: -1
+domain:
+  description: Domain the resource is related to.
+  returned: success
+  type: str
+  sample: example domain
+account:
+  description: Account the resource is related to.
+  returned: success
+  type: str
+  sample: example account
+project:
+  description: Project the resource is related to.
+  returned: success
+  type: str
+  sample: example project
+

@@ -1,0 +1,33 @@
+EXAMPLES:
+
+- name: Add a registration key license to a pool
+  bigiq_regkey_license:
+    regkey_pool: foo-pool
+    license_key: XXXXX-XXXXX-XXXXX-XXXXX-XXXXX
+    accept_eula: yes
+    provider:
+      password: secret
+      server: lb.mydomain.com
+      user: admin
+  delegate_to: localhost
+
+- name: Remove a registration key license from a pool
+  bigiq_regkey_license:
+    regkey_pool: foo-pool
+    license_key: XXXXX-XXXXX-XXXXX-XXXXX-XXXXX
+    state: absent
+    provider:
+      password: secret
+      server: lb.mydomain.com
+      user: admin
+  delegate_to: localhost
+
+
+RETURN VALUES:
+
+description:
+  description: The new description of the license key.
+  returned: changed
+  type: str
+  sample: My license for BIG-IP 1
+

@@ -1,0 +1,123 @@
+> FMGR_PROVISIONING    (/usr/lib/python2.7/dist-packages/ansible/modules/network/fortimanager/fmgr_provisioning.py)
+
+        Add model devices on the FortiManager using jsonrpc API and have them pre-configured, so when central management is configured,
+        the configuration is pushed down to the registering devices
+
+  * This module is maintained by The Ansible Community
+OPTIONS (= is mandatory):
+
+= adom
+        The administrative domain (admon) the configuration belongs to
+
+
+- description
+        Description of the device to be provisioned.
+        [Default: (null)]
+
+- group
+        The name of the device group the provisioned device can belong to.
+        [Default: (null)]
+
+= host
+        The FortiManager's Address.
+
+
+- minor_release
+        The minor release number such as 6.X.1, as X being the minor release.
+        [Default: (null)]
+
+= name
+        The name of the device to be provisioned.
+
+
+= os_type
+        The Fortinet OS type to be pushed to the device, such as 'FOS' for FortiOS.
+
+
+= os_version
+        The Fortinet OS version to be used for the device, such as 5.0 or 6.0.
+
+
+- password
+        The password associated with the username account.
+        [Default: (null)]
+
+- patch_release
+        The patch release number such as 6.0.X, as X being the patch release.
+        [Default: (null)]
+
+= platform
+        The platform of the device, such as model number or VM.
+
+
+= policy_package
+        The name of the policy package to be assigned to the device.
+
+
+= serial
+        The serial number of the device that will be provisioned.
+
+
+= username
+        The username to log into the FortiManager
+
+
+- vdom
+        The virtual domain (vdom) the configuration belongs to
+        [Default: (null)]
+
+
+AUTHOR: Andrew Welsh (@Ghilli3)
+        METADATA:
+          status:
+          - preview
+          supported_by: community
+        
+
+EXAMPLES:
+
+- name: Create FGT1 Model Device
+  fmgr_provisioning:
+    host: "{{ inventory_hostname }}"
+    username: "{{ username }}"
+    password: "{{ password }}"
+    adom: "root"
+    vdom: "root"
+    policy_package: "default"
+    name: "FGT1"
+    group: "Ansible"
+    serial: "FGVM000000117994"
+    platform: "FortiGate-VM64"
+    description: "Provisioned by Ansible"
+    os_version: '6.0'
+    minor_release: 0
+    patch_release: 0
+    os_type: 'fos'
+
+
+- name: Create FGT2 Model Device
+  fmgr_provisioning:
+    host: "{{ inventory_hostname }}"
+    username: "{{ username }}"
+    password: "{{ password }}"
+    adom: "root"
+    vdom: "root"
+    policy_package: "test_pp"
+    name: "FGT2"
+    group: "Ansible"
+    serial: "FGVM000000117992"
+    platform: "FortiGate-VM64"
+    description: "Provisioned by Ansible"
+    os_version: '5.0'
+    minor_release: 6
+    patch_release: 0
+    os_type: 'fos'
+
+
+RETURN VALUES:
+
+api_result:
+  description: full API response, includes status code and message
+  returned: always
+  type: str
+

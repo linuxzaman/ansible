@@ -1,0 +1,24 @@
+EXAMPLES:
+
+# Tries for 10 times to set the admin password of 192.168.1.1 to "badpassword"
+# via SSH, authenticating using key /tmp/ssh.key
+- name: set admin password
+  panos_admpwd:
+    ip_address: "192.168.1.1"
+    username: "admin"
+    key_filename: "/tmp/ssh.key"
+    newpassword: "badpassword"
+  register: result
+  until: result is not failed
+  retries: 10
+  delay: 30
+
+
+RETURN VALUES:
+
+status:
+    description: success status
+    returned: success
+    type: str
+    sample: "Last login: Fri Sep 16 11:09:20 2016 from 10.35.34.56.....Configuration committed successfully"
+

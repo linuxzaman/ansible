@@ -1,0 +1,52 @@
+EXAMPLES:
+
+- name: Create an empty file on a datastore
+  vsphere_file:
+    host: '{{ vhost }}'
+    username: '{{ vuser }}'
+    password: '{{ vpass }}'
+    datacenter: DC1 Someplace
+    datastore: datastore1
+    path: some/remote/file
+    state: touch
+  delegate_to: localhost
+
+- name: Create a directory on a datastore
+  vsphere_copy:
+    host: '{{ vhost }}'
+    username: '{{ vuser }}'
+    password: '{{ vpass }}'
+    src: /other/local/file
+    datacenter: DC2 Someplace
+    datastore: datastore2
+    path: other/remote/file
+    state: directory
+  delegate_to: localhost
+
+- name: Query a file on a datastore
+  vsphere_file:
+    host: '{{ vhost }}'
+    username: '{{ vuser }}'
+    password: '{{ vpass }}'
+    datacenter: DC1 Someplace
+    datastore: datastore1
+    path: some/remote/file
+    state: touch
+  delegate_to: localhost
+  ignore_errors: yes
+
+- name: Delete a file on a datastore
+  vsphere_copy:
+    host: '{{ vhost }}'
+    username: '{{ vuser }}'
+    password: '{{ vpass }}'
+    datacenter: DC2 Someplace
+    datastore: datastore2
+    path: other/remote/file
+    state: absent
+  delegate_to: localhost
+
+
+RETURN VALUES:
+
+

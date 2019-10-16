@@ -1,0 +1,81 @@
+EXAMPLES:
+
+- name: interface module test
+  hosts: cloudengine
+  connection: local
+  gather_facts: no
+  vars:
+    cli:
+      host: "{{ inventory_hostname }}"
+      port: "{{ ansible_ssh_port }}"
+      username: "{{ username }}"
+      password: "{{ password }}"
+      transport: cli
+
+  tasks:
+  - name: Ensure an interface is a Layer 3 port and that it has the proper description
+    ce_interface:
+      interface: 10GE1/0/22
+      description: 'Configured by Ansible'
+      mode: layer3
+      provider: '{{ cli }}'
+
+  - name: Admin down an interface
+    ce_interface:
+      interface: 10GE1/0/22
+      admin_state: down
+      provider: '{{ cli }}'
+
+  - name: Remove all tunnel interfaces
+    ce_interface:
+      interface_type: tunnel
+      state: absent
+      provider: '{{ cli }}'
+
+  - name: Remove all logical interfaces
+    ce_interface:
+      interface_type: '{{ item }}'
+      state: absent
+      provider: '{{ cli }}'
+    with_items:
+      - loopback
+      - eth-trunk
+      - nve
+
+  - name: Admin up all 10GE interfaces
+    ce_interface:
+      interface_type: 10GE
+      admin_state: up
+      provider: '{{ cli }}'
+
+
+RETURN VALUES:
+
+proposed:
+    description: k/v pairs of parameters passed into module
+    returned: always
+    type: dict
+    sample: {"interface": "10GE1/0/10", "admin_state": "down"}
+existing:
+    description: k/v pairs of existing switchport
+    returned: always
+    type: dict
+    sample:  {"admin_state": "up", "description": "None",
+              "interface": "10GE1/0/10", "mode": "layer2"}
+end_state:
+    description: k/v pairs of switchport after module execution
+    returned: always
+    type: dict
+    sample:  {"admin_state": "down", "description": "None",
+              "interface": "10GE1/0/10", "mode": "layer2"}
+updates:
+    description: command list sent to the device
+    returned: always
+    type: list
+    sample: ["interface 10GE1/0/10", "shutdown"]
+changed:
+    description: check to see if a change was made on the device
+    returned: always
+    type: bool
+    sample: true
+

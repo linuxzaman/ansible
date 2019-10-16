@@ -1,0 +1,111 @@
+> WIN_FORMAT    (/usr/lib/python2.7/dist-packages/ansible/modules/windows/win_format.py)
+
+        The [win_format] module formats an existing volume or a new volume on an existing partition on Windows
+
+  * This module is maintained by The Ansible Community
+OPTIONS (= is mandatory):
+
+- allocation_unit_size
+        Specifies the cluster size to use when formatting the volume.
+        If no cluster size is specified when you format a partition, defaults are selected based on the size of the partition.
+        [Default: (null)]
+        type: int
+
+- compress
+        Enable compression on the resulting NTFS volume.
+        NTFS compression is not supported where `allocation_unit_size' is more than 4096.
+        [Default: (null)]
+        type: bool
+
+- drive_letter
+        Used to specify the drive letter of the volume to be formatted.
+        [Default: (null)]
+        type: str
+
+- file_system
+        Used to specify the file system to be used when formatting the target volume.
+        (Choices: ntfs, refs, exfat, fat32, fat)[Default: (null)]
+        type: str
+
+- force
+        Specify if formatting should be forced for volumes that are not created from new partitions or if the source and target file
+        system are different.
+        [Default: (null)]
+        type: bool
+
+- full
+        A full format writes to every sector of the disk, takes much longer to perform than the default (quick) format, and is not
+        recommended on storage that is thinly provisioned.
+        Specify `true' for full format.
+        [Default: (null)]
+        type: bool
+
+- integrity_streams
+        Enable integrity streams on the resulting ReFS volume.
+        [Default: (null)]
+        type: bool
+
+- label
+        Used to specify the label of the volume to be formatted.
+        [Default: (null)]
+        type: str
+
+- large_frs
+        Specifies that large File Record System (FRS) should be used.
+        [Default: (null)]
+        type: bool
+
+- new_label
+        Used to specify the new file system label of the formatted volume.
+        [Default: (null)]
+        type: str
+
+- path
+        Used to specify the path to the volume to be formatted.
+        [Default: (null)]
+        type: str
+
+
+NOTES:
+      * One of three parameters (`drive_letter', `path' and `label') are mandatory to identify the target volume but more than one
+        cannot be specified at the same time.
+      * This module is idempotent if `force' is not specified and file system labels remain preserved.
+      * For more information, see https://docs.microsoft.com/en-us/previous-versions/windows/desktop/stormgmt/format-msft-volume
+
+
+SEE ALSO:
+      * Module win_disk_facts
+           The official documentation on the win_disk_facts module.
+           https://docs.ansible.com/ansible/latest/modules/win_disk_facts_module.html
+      * Module win_partition
+           The official documentation on the win_partition module.
+           https://docs.ansible.com/ansible/latest/modules/win_partition_module.html
+
+
+AUTHOR: Varun Chopra (@chopraaa) <v@chopraaa.com>
+        METADATA:
+          status:
+          - preview
+          supported_by: community
+        
+
+EXAMPLES:
+
+- name: Create a partition with drive letter D and size 5 GiB
+  win_partition:
+    drive_letter: D
+    partition_size: 5 GiB
+    disk_number: 1
+
+- name: Full format the newly created partition as NTFS and label it
+  win_format:
+    drive_letter: D
+    file_system: NTFS
+    new_label: Formatted
+    full: True
+
+
+RETURN VALUES:
+
+#
+

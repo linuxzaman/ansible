@@ -1,0 +1,27 @@
+EXAMPLES:
+
+- name: Create a new alias
+  bigip_cli_alias:
+    name: sync_device_to_bside
+    scope: shared
+    command: save /sys config partitions all; run /cm config-sync to-group device-group-1
+    provider:
+      password: secret
+      server: lb.mydomain.com
+      user: admin
+  delegate_to: localhost
+
+
+RETURN VALUES:
+
+command:
+  description: The new command that is aliased.
+  returned: changed
+  type: str
+  sample: run /util bash
+description:
+  description: The new description of the alias.
+  returned: changed
+  type: str
+  sample: Run the bash shell
+

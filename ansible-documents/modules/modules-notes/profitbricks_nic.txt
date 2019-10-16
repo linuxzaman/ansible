@@ -1,0 +1,73 @@
+> PROFITBRICKS_NIC    (/usr/lib/python2.7/dist-packages/ansible/modules/cloud/profitbricks/profitbricks_nic.py)
+
+        This module allows you to create or restore a volume snapshot. This module has a dependency on profitbricks >= 1.0.0
+
+  * This module is maintained by The Ansible Community
+OPTIONS (= is mandatory):
+
+= datacenter
+        The datacenter in which to operate.
+
+
+= lan
+        The LAN to place the NIC on. You can pass a LAN that doesn't exist and it will be created. Required on create.
+
+
+= name
+        The name or ID of the NIC. This is only required on deletes, but not on create.
+
+
+= server
+        The server name or ID.
+
+
+- state
+        Indicate desired state of the resource
+        (Choices: present, absent)[Default: present]
+
+- subscription_password
+        THe ProfitBricks password. Overrides the PB_PASSWORD environment variable.
+        [Default: (null)]
+
+- subscription_user
+        The ProfitBricks username. Overrides the PB_SUBSCRIPTION_ID environment variable.
+        [Default: (null)]
+
+- wait
+        wait for the operation to complete before returning
+        [Default: yes]
+        type: bool
+
+- wait_timeout
+        how long before wait gives up, in seconds
+        [Default: 600]
+
+
+REQUIREMENTS:  profitbricks
+
+AUTHOR: Matt Baldwin (@baldwinSPC) <baldwin@stackpointcloud.com>
+        METADATA:
+          status:
+          - preview
+          supported_by: community
+        
+
+EXAMPLES:
+
+# Create a NIC
+- profitbricks_nic:
+    datacenter: Tardis One
+    server: node002
+    lan: 2
+    wait_timeout: 500
+    state: present
+
+# Remove a NIC
+- profitbricks_nic:
+    datacenter: Tardis One
+    server: node002
+    name: 7341c2454f
+    wait_timeout: 500
+    state: absent
+
+

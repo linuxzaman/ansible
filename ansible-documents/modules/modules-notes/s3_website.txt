@@ -1,0 +1,181 @@
+> S3_WEBSITE    (/usr/lib/python2.7/dist-packages/ansible/modules/cloud/amazon/s3_website.py)
+
+        Configure an s3 bucket as a website
+
+  * This module is maintained by The Ansible Community
+OPTIONS (= is mandatory):
+
+- aws_access_key
+        AWS access key. If not set then the value of the AWS_ACCESS_KEY_ID, AWS_ACCESS_KEY or EC2_ACCESS_KEY environment variable is
+        used.
+        (Aliases: ec2_access_key, access_key)[Default: (null)]
+        type: str
+
+- aws_secret_key
+        AWS secret key. If not set then the value of the AWS_SECRET_ACCESS_KEY, AWS_SECRET_KEY, or EC2_SECRET_KEY environment variable is
+        used.
+        (Aliases: ec2_secret_key, secret_key)[Default: (null)]
+        type: str
+
+- debug_botocore_endpoint_logs
+        Use a botocore.endpoint logger to parse the unique (rather than total) "resource:action" API calls made during a task, outputing
+        the set to the resource_actions key in the task results. Use the aws_resource_action callback to output to total list made during
+        a playbook. The ANSIBLE_DEBUG_BOTOCORE_LOGS environment variable may also be used.
+        [Default: no]
+        type: bool
+        version_added: 2.8
+
+- ec2_url
+        Url to use to connect to EC2 or your Eucalyptus cloud (by default the module will use EC2 endpoints). Ignored for modules where
+        region is required. Must be specified for all other modules if region is not used. If not set then the value of the EC2_URL
+        environment variable, if any, is used.
+        [Default: (null)]
+        type: str
+
+- error_key
+        The object key name to use when a 4XX class error occurs. To remove an error key, set to None.
+        [Default: (null)]
+
+= name
+        Name of the s3 bucket
+
+
+- profile
+        Uses a boto profile. Only works with boto >= 2.24.0.
+        [Default: (null)]
+        type: str
+        version_added: 1.6
+
+- redirect_all_requests
+        Describes the redirect behavior for every request to this s3 bucket website endpoint
+        [Default: (null)]
+
+- region
+        AWS region to create the bucket in. If not set then the value of the AWS_REGION and EC2_REGION environment variables are checked,
+        followed by the aws_region and ec2_region settings in the Boto config file.  If none of those are set the region defaults to the
+        S3 Location: US Standard.
+        (Aliases: aws_region, ec2_region)[Default: (null)]
+        type: str
+
+- security_token
+        AWS STS security token. If not set then the value of the AWS_SECURITY_TOKEN or EC2_SECURITY_TOKEN environment variable is used.
+        (Aliases: access_token)[Default: (null)]
+        type: str
+        version_added: 1.6
+
+- state
+        Add or remove s3 website configuration
+        (Choices: present, absent)[Default: present]
+
+- suffix
+        Suffix that is appended to a request that is for a directory on the website endpoint (e.g. if the suffix is index.html and you
+        make a request to samplebucket/images/ the data that is returned will be for the object with the key name images/index.html). The
+        suffix must not include a slash character.
+        [Default: index.html]
+
+- validate_certs
+        When set to "no", SSL certificates will not be validated for boto versions >= 2.6.0.
+        [Default: True]
+        type: bool
+        version_added: 1.5
+
+
+NOTES:
+      * If parameters are not set within the module, the following environment variables can be used in decreasing order of
+        precedence `AWS_URL' or `EC2_URL', `AWS_ACCESS_KEY_ID' or `AWS_ACCESS_KEY' or `EC2_ACCESS_KEY', `AWS_SECRET_ACCESS_KEY' or
+        `AWS_SECRET_KEY' or `EC2_SECRET_KEY', `AWS_SECURITY_TOKEN' or `EC2_SECURITY_TOKEN', `AWS_REGION' or `EC2_REGION'
+      * Ansible uses the boto configuration file (typically ~/.boto) if no credentials are provided. See
+        https://boto.readthedocs.io/en/latest/boto_config_tut.html
+      * `AWS_REGION' or `EC2_REGION' can be typically be used to specify the AWS region, when required, but this can also be
+        configured in the boto config file
+
+
+REQUIREMENTS:  boto, boto3, python >= 2.6
+
+AUTHOR: Rob White (@wimnat)
+        METADATA:
+          status:
+          - preview
+          supported_by: community
+        
+
+EXAMPLES:
+
+# Note: These examples do not set authentication details, see the AWS Guide for details.
+
+# Configure an s3 bucket to redirect all requests to example.com
+- s3_website:
+    name: mybucket.com
+    redirect_all_requests: example.com
+    state: present
+
+# Remove website configuration from an s3 bucket
+- s3_website:
+    name: mybucket.com
+    state: absent
+
+# Configure an s3 bucket as a website with index and error pages
+- s3_website:
+    name: mybucket.com
+    suffix: home.htm
+    error_key: errors/404.htm
+    state: present
+
+
+RETURN VALUES:
+
+index_document:
+    description: index document
+    type: complex
+    returned: always
+    contains:
+        suffix:
+            description: suffix that is appended to a request that is for a directory on the website endpoint
+            returned: success
+            type: str
+            sample: index.html
+error_document:
+    description: error document
+    type: complex
+    returned: always
+    contains:
+        key:
+            description:  object key name to use when a 4XX class error occurs
+            returned: when error_document parameter set
+            type: str
+            sample: error.html
+redirect_all_requests_to:
+    description: where to redirect requests
+    type: complex
+    returned: always
+    contains:
+        host_name:
+            description: name of the host where requests will be redirected.
+            returned: when redirect all requests parameter set
+            type: str
+            sample: ansible.com
+routing_rules:
+    description: routing rules
+    type: complex
+    returned: always
+    contains:
+        routing_rule:
+            host_name:
+                description: name of the host where requests will be redirected.
+                returned: when host name set as part of redirect rule
+                type: str
+                sample: ansible.com
+        condition:
+            key_prefix_equals:
+            description: object key name prefix when the redirect is applied. For example, to redirect requests for ExamplePage.html, the key prefix will be
+                     ExamplePage.html
+            returned: when routing rule present
+            type: str
+            sample: docs/
+        redirect:
+            replace_key_prefix_with:
+                description: object key prefix to use in the redirect request
+                returned: when routing rule present
+                type: str
+                sample: documents/
+

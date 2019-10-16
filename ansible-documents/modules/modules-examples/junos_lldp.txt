@@ -1,0 +1,39 @@
+EXAMPLES:
+
+- name: Enable LLDP service
+  junos_lldp:
+    state: enabled
+
+- name: Disable LLDP service
+  junos_lldp:
+    state: disabled
+
+- name: Set LLDP parameters
+  junos_lldp:
+    interval: 10
+    hold_multiplier: 5
+    transmit_delay: 30
+    state: present
+
+- name: Delete LLDP parameters
+  junos_lldp:
+    interval: 10
+    hold_multiplier: 5
+    transmit_delay: 30
+    state: absent
+
+
+RETURN VALUES:
+
+diff.prepared:
+  description: Configuration difference before and after applying change.
+  returned: when configuration is changed and diff option is enabled.
+  type: str
+  sample: >
+        [edit]
+        +  protocols {
+        +      lldp {
+        +          disable;
+        +      }
+        +  }
+

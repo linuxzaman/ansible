@@ -1,0 +1,67 @@
+EXAMPLES:
+
+- name: Enable virtual server
+  bigip_gtm_virtual_server:
+    server_name: server1
+    name: my-virtual-server
+    state: enabled
+    provider:
+      user: admin
+      password: secret
+      server: lb.mydomain.com
+  delegate_to: localhost
+
+
+RETURN VALUES:
+
+server_name:
+  description: The server name associated with the virtual server.
+  returned: changed
+  type: str
+  sample: /Common/my-gtm-server
+address:
+  description: The new address of the resource.
+  returned: changed
+  type: str
+  sample: 1.2.3.4
+port:
+  description: The new port of the resource.
+  returned: changed
+  type: int
+  sample: 500
+translation_address:
+  description: The new translation address of the resource.
+  returned: changed
+  type: int
+  sample: 500
+translation_port:
+  description: The new translation port of the resource.
+  returned: changed
+  type: int
+  sample: 500
+availability_requirements:
+  description: The new availability requirement configurations for the resource.
+  returned: changed
+  type: dict
+  sample: {'type': 'all'}
+monitors:
+  description: The new list of monitors for the resource.
+  returned: changed
+  type: list
+  sample: ['/Common/monitor1', '/Common/monitor2']
+virtual_server_dependencies:
+  description: The new list of virtual server dependencies for the resource
+  returned: changed
+  type: list
+  sample: ['/Common/vs1', '/Common/vs2']
+link:
+  description: The new link value for the resource.
+  returned: changed
+  type: str
+  sample: /Common/my-link
+limits:
+  description: The new limit configurations for the resource.
+  returned: changed
+  type: dict
+  sample: { 'bits_enabled': true, 'bits_limit': 100 }
+

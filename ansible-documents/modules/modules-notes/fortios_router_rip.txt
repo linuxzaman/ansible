@@ -1,0 +1,393 @@
+> FORTIOS_ROUTER_RIP    (/usr/lib/python2.7/dist-packages/ansible/modules/network/fortios/fortios_router_rip.py)
+
+        This module is able to configure a FortiGate or FortiOS by allowing the user to set and modify router feature and rip category.
+        Examples include all parameters and values need to be adjusted to datasources before usage. Tested with FOS v6.0.2
+
+  * This module is maintained by The Ansible Community
+OPTIONS (= is mandatory):
+
+= host
+        FortiOS or FortiGate ip address.
+
+
+- https
+        Indicates if the requests towards FortiGate must use HTTPS protocol
+        [Default: True]
+        type: bool
+
+- password
+        FortiOS or FortiGate password.
+        [Default: ]
+
+- router_rip
+        Configure RIP.
+        [Default: None]
+        suboptions:
+          default-information-originate:
+            choices:
+            - enable
+            - disable
+            description:
+            - Enable/disable generation of default route.
+          default-metric:
+            description:
+            - Default metric.
+          distance:
+            description:
+            - distance
+            suboptions:
+              access-list:
+                description:
+                - Access list for route destination. Source router.access-list.name.
+              distance:
+                description:
+                - Distance (1 - 255).
+              id:
+                description:
+                - Distance ID.
+                required: true
+              prefix:
+                description:
+                - Distance prefix.
+          distribute-list:
+            description:
+            - Distribute list.
+            suboptions:
+              direction:
+                choices:
+                - in
+                - out
+                description:
+                - Distribute list direction.
+              id:
+                description:
+                - Distribute list ID.
+                required: true
+              interface:
+                description:
+                - Distribute list interface name. Source system.interface.name.
+              listname:
+                description:
+                - Distribute access/prefix list name. Source router.access-list.name router.prefix-list.name.
+              status:
+                choices:
+                - enable
+                - disable
+                description:
+                - status
+          garbage-timer:
+            description:
+            - Garbage timer in seconds.
+          interface:
+            description:
+            - RIP interface configuration.
+            suboptions:
+              auth-keychain:
+                description:
+                - Authentication key-chain name. Source router.key-chain.name.
+              auth-mode:
+                choices:
+                - none
+                - text
+                - md5
+                description:
+                - Authentication mode.
+              auth-string:
+                description:
+                - Authentication string/password.
+              flags:
+                description:
+                - flags
+              name:
+                description:
+                - Interface name. Source system.interface.name.
+                required: true
+              receive-version:
+                choices:
+                - 1
+                - 2
+                description:
+                - Receive version.
+              send-version:
+                choices:
+                - 1
+                - 2
+                description:
+                - Send version.
+              send-version2-broadcast:
+                choices:
+                - disable
+                - enable
+                description:
+                - Enable/disable broadcast version 1 compatible packets.
+              split-horizon:
+                choices:
+                - poisoned
+                - regular
+                description:
+                - Enable/disable split horizon.
+              split-horizon-status:
+                choices:
+                - enable
+                - disable
+                description:
+                - Enable/disable split horizon.
+          max-out-metric:
+            description:
+            - Maximum metric allowed to output(0 means 'not set').
+          neighbor:
+            description:
+            - neighbor
+            suboptions:
+              id:
+                description:
+                - Neighbor entry ID.
+                required: true
+              ip:
+                description:
+                - IP address.
+          network:
+            description:
+            - network
+            suboptions:
+              id:
+                description:
+                - Network entry ID.
+                required: true
+              prefix:
+                description:
+                - Network prefix.
+          offset-list:
+            description:
+            - Offset list.
+            suboptions:
+              access-list:
+                description:
+                - Access list name. Source router.access-list.name.
+              direction:
+                choices:
+                - in
+                - out
+                description:
+                - Offset list direction.
+              id:
+                description:
+                - Offset-list ID.
+                required: true
+              interface:
+                description:
+                - Interface name. Source system.interface.name.
+              offset:
+                description:
+                - offset
+              status:
+                choices:
+                - enable
+                - disable
+                description:
+                - status
+          passive-interface:
+            description:
+            - Passive interface configuration.
+            suboptions:
+              name:
+                description:
+                - Passive interface name. Source system.interface.name.
+                required: true
+          recv-buffer-size:
+            description:
+            - Receiving buffer size.
+          redistribute:
+            description:
+            - Redistribute configuration.
+            suboptions:
+              metric:
+                description:
+                - Redistribute metric setting.
+              name:
+                description:
+                - Redistribute name.
+                required: true
+              routemap:
+                description:
+                - Route map name. Source router.route-map.name.
+              status:
+                choices:
+                - enable
+                - disable
+                description:
+                - status
+          timeout-timer:
+            description:
+            - Timeout timer in seconds.
+          update-timer:
+            description:
+            - Update timer in seconds.
+          version:
+            choices:
+            - 1
+            - 2
+            description:
+            - RIP version.
+        
+
+= username
+        FortiOS or FortiGate username.
+
+
+- vdom
+        Virtual domain, among those defined previously. A vdom is a virtual instance of the FortiGate that can be configured and used as
+        a different unit.
+        [Default: root]
+
+
+NOTES:
+      * Requires fortiosapi library developed by Fortinet
+      * Run as a local_action in your playbook
+
+
+REQUIREMENTS:  fortiosapi>=0.9.8
+
+AUTHOR: Miguel Angel Munoz (@mamunozgonzalez), Nicolas Thomas (@thomnico)
+        METADATA:
+          status:
+          - preview
+          supported_by: community
+        
+
+EXAMPLES:
+
+- hosts: localhost
+  vars:
+   host: "192.168.122.40"
+   username: "admin"
+   password: ""
+   vdom: "root"
+  tasks:
+  - name: Configure RIP.
+    fortios_router_rip:
+      host:  "{{ host }}"
+      username: "{{ username }}"
+      password: "{{ password }}"
+      vdom:  "{{ vdom }}"
+      https: "False"
+      router_rip:
+        default-information-originate: "enable"
+        default-metric: "4"
+        distance:
+         -
+            access-list: "<your_own_value> (source router.access-list.name)"
+            distance: "7"
+            id:  "8"
+            prefix: "<your_own_value>"
+        distribute-list:
+         -
+            direction: "in"
+            id:  "12"
+            interface: "<your_own_value> (source system.interface.name)"
+            listname: "<your_own_value> (source router.access-list.name router.prefix-list.name)"
+            status: "enable"
+        garbage-timer: "16"
+        interface:
+         -
+            auth-keychain: "<your_own_value> (source router.key-chain.name)"
+            auth-mode: "none"
+            auth-string: "<your_own_value>"
+            flags: "21"
+            name: "default_name_22 (source system.interface.name)"
+            receive-version: "1"
+            send-version: "1"
+            send-version2-broadcast: "disable"
+            split-horizon: "poisoned"
+            split-horizon-status: "enable"
+        max-out-metric: "28"
+        neighbor:
+         -
+            id:  "30"
+            ip: "<your_own_value>"
+        network:
+         -
+            id:  "33"
+            prefix: "<your_own_value>"
+        offset-list:
+         -
+            access-list: "<your_own_value> (source router.access-list.name)"
+            direction: "in"
+            id:  "38"
+            interface: "<your_own_value> (source system.interface.name)"
+            offset: "40"
+            status: "enable"
+        passive-interface:
+         -
+            name: "default_name_43 (source system.interface.name)"
+        recv-buffer-size: "44"
+        redistribute:
+         -
+            metric: "46"
+            name: "default_name_47"
+            routemap: "<your_own_value> (source router.route-map.name)"
+            status: "enable"
+        timeout-timer: "50"
+        update-timer: "51"
+        version: "1"
+
+
+RETURN VALUES:
+
+build:
+  description: Build number of the fortigate image
+  returned: always
+  type: str
+  sample: '1547'
+http_method:
+  description: Last method used to provision the content into FortiGate
+  returned: always
+  type: str
+  sample: 'PUT'
+http_status:
+  description: Last result given by FortiGate on last operation applied
+  returned: always
+  type: str
+  sample: "200"
+mkey:
+  description: Master key (id) used in the last call to FortiGate
+  returned: success
+  type: str
+  sample: "id"
+name:
+  description: Name of the table used to fulfill the request
+  returned: always
+  type: str
+  sample: "urlfilter"
+path:
+  description: Path of the table used to fulfill the request
+  returned: always
+  type: str
+  sample: "webfilter"
+revision:
+  description: Internal revision number
+  returned: always
+  type: str
+  sample: "17.0.2.10658"
+serial:
+  description: Serial number of the unit
+  returned: always
+  type: str
+  sample: "FGVMEVYYQT3AB5352"
+status:
+  description: Indication of the operation's result
+  returned: always
+  type: str
+  sample: "success"
+vdom:
+  description: Virtual domain used
+  returned: always
+  type: str
+  sample: "root"
+version:
+  description: Version of the FortiGate
+  returned: always
+  type: str
+  sample: "v5.6.3"
+
+

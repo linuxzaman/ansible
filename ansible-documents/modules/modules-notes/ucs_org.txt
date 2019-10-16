@@ -1,0 +1,154 @@
+> UCS_ORG    (/usr/lib/python2.7/dist-packages/ansible/modules/remote_management/ucs/ucs_org.py)
+
+        Manages UCS Organizations for UCS Manager. Examples can be used with the UCS Platform Emulator https://cs.co/ucspe.
+
+  * This module is maintained by The Ansible Community
+OPTIONS (= is mandatory):
+
+- delegate_to
+        Where the module will be run
+        [Default: localhost]
+        type: str
+
+- description
+        A user-defined description of the organization.
+        Enter up to 256 characters.
+        You can use any characters or spaces except the following:
+        ` (accent mark),  (backslash), ^ (carat), " (double quote), = (equal sign), > (greater than), < (less than), or ' (single quote).
+        (Aliases: descr)[Default: (null)]
+        type: str
+
+= hostname
+        IP address or hostname of Cisco UCS Manager.
+
+        type: str
+
+- org_name
+        The name of the orgranization.
+        Enter up to 16 characters.
+        You can use any characters or spaces except the following:
+        ` (accent mark),  (backslash), ^ (carat), " (double quote), = (equal sign), > (greater than), < (less than), or ' (single quote).
+        (Aliases: name)[Default: (null)]
+        type: str
+
+- parent_org_path
+        A forward slash / separated hierarchical path from the root organization to the parent of the organization to be added or
+        updated.
+        UCS Manager supports a hierarchical structure of organizations up to five levels deep not including the root organization.
+        For example the parent_org_path for an organization named level5 could be root/level1/level2/level3/level4/level5
+        [Default: root]
+        type: str
+
+= password
+        Password for Cisco UCS Manager authentication.
+
+        type: str
+
+- port
+        Port number to be used during connection (by default uses 443 for https and 80 for http connection).
+        [Default: (null)]
+        type: int
+
+- proxy
+        If use_proxy is no, specfies proxy to be used for connection. e.g. 'http://proxy.xy.z:8080'
+        [Default: (null)]
+        type: str
+
+- state
+        If `absent', will remove organization.
+        If `present', will create or update organization.
+        (Choices: absent, present)[Default: present]
+        type: str
+
+- use_proxy
+        If `no', will not use the proxy as defined by system environment variable.
+        [Default: True]
+        type: bool
+
+- use_ssl
+        If `no', an HTTP connection will be used instead of the default HTTPS connection.
+        [Default: True]
+        type: bool
+
+- username
+        Username for Cisco UCS Manager authentication.
+        [Default: admin]
+        type: str
+
+
+REQUIREMENTS:  ucsmsdk
+
+AUTHOR: John McDonough (@movinalot), CiscoUcs (@CiscoUcs)
+        METADATA:
+          status:
+          - preview
+          supported_by: community
+        
+
+EXAMPLES:
+
+- name: Add UCS Organization
+  ucs_org:
+    hostname: "{{ ucs_hostname }}"
+    username: "{{ ucs_username }}"
+    password: "{{ ucs_password }}"
+    org_name: test
+    description: testing org
+    state: present
+    delegate_to: localhost
+
+- name: Update UCS Organization
+  ucs_org:
+    hostname: "{{ ucs_hostname }}"
+    username: "{{ ucs_username }}"
+    password: "{{ ucs_password }}"
+    org_name: test
+    description: Testing org
+    state: present
+    delegate_to: localhost
+
+- name: Add UCS Organization
+  ucs_org:
+    hostname: "{{ ucs_hostname }}"
+    username: "{{ ucs_username }}"
+    password: "{{ ucs_password }}"
+    org_name: level1
+    parent_org_path: root
+    description: level1 org
+    state: present
+    delegate_to: localhost
+
+- name: Add UCS Organization
+  ucs_org:
+    hostname: "{{ ucs_hostname }}"
+    username: "{{ ucs_username }}"
+    password: "{{ ucs_password }}"
+    org_name: level2
+    parent_org_path: root/level1
+    description: level2 org
+    state: present
+
+- name: Add UCS Organization
+  ucs_org:
+    hostname: "{{ ucs_hostname }}"
+    username: "{{ ucs_username }}"
+    password: "{{ ucs_password }}"
+    org_name: level3
+    parent_org_path: root/level1/level2
+    description: level3 org
+    state: present
+
+- name: Remove UCS Organization
+  ucs_org:
+    hostname: "{{ ucs_hostname }}"
+    username: "{{ ucs_username }}"
+    password: "{{ ucs_password }}"
+    org_name: level2
+    parent_org_path: root/level1/
+    state: absent
+
+
+RETURN VALUES:
+
+#
+

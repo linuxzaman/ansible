@@ -1,0 +1,59 @@
+EXAMPLES:
+
+- name: Get instance of MariaDB Database
+    azure_rm_mariadbdatabase_facts:
+      resource_group: myResourceGroup
+      server_name: server_name
+      name: database_name
+
+  - name: List instances of MariaDB Database
+    azure_rm_mariadbdatabase_facts:
+      resource_group: myResourceGroup
+      server_name: server_name
+
+
+RETURN VALUES:
+
+databases:
+    description: A list of dictionaries containing facts for MariaDB Databases.
+    returned: always
+    type: complex
+    contains:
+        id:
+            description:
+                - Resource ID
+            returned: always
+            type: str
+            sample: "/subscriptions/xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx/resourceGroups/myResourceGroup/providers/Microsoft.DBforMariaDB/servers/testser
+                    ver/databases/db1"
+        resource_group:
+            description:
+                - Resource group name.
+            returned: always
+            type: str
+            sample: testrg
+        server_name:
+            description:
+                - Server name.
+            returned: always
+            type: str
+            sample: testserver
+        name:
+            description:
+                - Resource name.
+            returned: always
+            type: str
+            sample: db1
+        charset:
+            description:
+                - The charset of the database.
+            returned: always
+            type: str
+            sample: UTF8
+        collation:
+            description:
+                - The collation of the database.
+            returned: always
+            type: str
+            sample: English_United States.1252
+

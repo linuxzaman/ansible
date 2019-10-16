@@ -1,0 +1,139 @@
+> JUNOS_RPC    (/usr/lib/python2.7/dist-packages/ansible/modules/network/junos/junos_rpc.py)
+
+        Sends a request to the remote device running JUNOS to execute the specified RPC using the NetConf transport.  The reply is then
+        returned to the playbook in the `xml' key.  If an alternate output format is requested, the reply is transformed to the requested
+        output.
+
+  * This module is maintained by The Ansible Network Team
+OPTIONS (= is mandatory):
+
+- args
+        The `args' argument provides a set of arguments for the RPC call and are encoded in the request message.  This argument accepts a
+        set of key=value arguments.
+        [Default: (null)]
+
+- attrs
+        The `attrs' arguments defines a list of attributes and their values to set for the RPC call. This accepts a dictionary of key-
+        values.
+        [Default: (null)]
+        version_added: 2.5
+
+- output
+        The `output' argument specifies the desired output of the return data.  This argument accepts one of `xml', `text', or `json'.
+        For `json', the JUNOS device must be running a version of software that supports native JSON output.
+        [Default: xml]
+
+- provider
+        *Deprecated*
+        Starting with Ansible 2.5 we recommend using `connection: network_cli' or `connection: netconf'.
+        For more information please see the L(Junos OS Platform Options guide, ../network/user_guide/platform_junos.html).
+        HORIZONTALLINE
+        A dict object containing connection details.
+        [Default: (null)]
+        suboptions:
+          host:
+            description:
+            - Specifies the DNS host name or address for connecting to the remote device over
+              the specified transport.  The value of host is used as the destination address
+              for the transport.
+            required: true
+            type: str
+          password:
+            description:
+            - Specifies the password to use to authenticate the connection to the remote device.   This
+              value is used to authenticate the SSH session. If the value is not specified
+              in the task, the value of environment variable `ANSIBLE_NET_PASSWORD' will
+              be used instead.
+            type: str
+          port:
+            default: 22
+            description:
+            - Specifies the port to use when building the connection to the remote device.  The
+              port value will default to the well known SSH port of 22 (for `transport=cli')
+              or port 830 (for `transport=netconf') device.
+            type: int
+          ssh_keyfile:
+            description:
+            - Specifies the SSH key to use to authenticate the connection to the remote device.   This
+              value is the path to the key used to authenticate the SSH session. If the value
+              is not specified in the task, the value of environment variable `ANSIBLE_NET_SSH_KEYFILE'
+              will be used instead.
+            type: path
+          timeout:
+            default: 10
+            description:
+            - Specifies the timeout in seconds for communicating with the network device for
+              either connecting or sending commands.  If the timeout is exceeded before the
+              operation is completed, the module will error.
+            type: int
+          username:
+            description:
+            - Configures the username to use to authenticate the connection to the remote
+              device.  This value is used to authenticate the SSH session. If the value is
+              not specified in the task, the value of environment variable `ANSIBLE_NET_USERNAME'
+              will be used instead.
+            type: str
+        
+        type: dict
+
+= rpc
+        The `rpc' argument specifies the RPC call to send to the remote devices to be executed.  The RPC Reply message is parsed and the
+        contents are returned to the playbook.
+
+
+
+NOTES:
+      * This module requires the netconf system service be enabled on the remote device being managed.
+      * Tested against vSRX JUNOS version 15.1X49-D15.4, vqfx-10000 JUNOS Version 15.1X53-D60.4.
+      * Recommended connection is `netconf'. See L(the Junos OS Platform Options,../network/user_guide/platform_junos.html).
+      * This module also works with `local' connections for legacy playbooks.
+      * For information on using CLI and netconf see the :ref:`Junos OS Platform Options guide <junos_platform_options>`
+      * For more information on using Ansible to manage network devices see the :ref:`Ansible Network Guide <network_guide>`
+      * For more information on using Ansible to manage Juniper network devices see https://www.ansible.com/ansible-juniper.
+
+
+REQUIREMENTS:  ncclient (>=v0.5.2)
+
+AUTHOR: Peter Sprygada (@privateip)
+        METADATA:
+          status:
+          - preview
+          supported_by: network
+        
+
+EXAMPLES:
+
+- name: collect interface information using rpc
+  junos_rpc:
+    rpc: get-interface-information
+    args:
+      interface-name: em0
+      media: True
+
+- name: get system information
+  junos_rpc:
+    rpc: get-system-information
+
+- name: load configuration
+  junos_rpc:
+    rpc: load-configuration
+    attrs:
+      action: override
+      url: /tmp/config.conf
+
+
+RETURN VALUES:
+
+xml:
+  description: The xml return string from the rpc request.
+  returned: always
+  type: str
+output:
+  description: The rpc rely converted to the output format.
+  returned: always
+  type: str
+output_lines:
+  description: The text output split into lines for readability.
+  returned: always
+  type: list
+

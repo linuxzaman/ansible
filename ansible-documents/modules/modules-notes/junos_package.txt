@@ -1,0 +1,149 @@
+> JUNOS_PACKAGE    (/usr/lib/python2.7/dist-packages/ansible/modules/network/junos/junos_package.py)
+
+        This module can install new and updated packages on remote devices running Junos.  The module will compare the specified package
+        with the one running on the remote device and install the specified version if there is a mismatch
+
+  * This module is maintained by The Ansible Network Team
+OPTIONS (= is mandatory):
+
+- force
+        The `force' argument instructs the module to bypass the package version check and install the packaged identified in `src' on the
+        remote device.
+        [Default: no]
+        type: bool
+
+- force_host
+        The `force_host' argument controls the way software package or bundle is added on remote JUNOS host and is applicable for JUNOS
+        QFX5100 device. If the value is set to `True' it will ignore any warnings while adding the host software package or bundle.
+        [Default: False]
+        type: bool
+        version_added: 2.8
+        
+
+- issu
+        The `issu' argument is a boolean flag when set to `True' allows unified in-service software upgrade (ISSU) feature which enables
+        you to upgrade between two different Junos OS releases with no disruption on the control plane and with minimal disruption of
+        traffic.
+        [Default: False]
+        type: bool
+        version_added: 2.8
+        
+
+- no_copy
+        The `no_copy' argument is responsible for instructing the remote device on where to install the package from.  When enabled, the
+        package is transferred to the remote device prior to installing.
+        [Default: no]
+        type: bool
+
+- provider
+        *Deprecated*
+        Starting with Ansible 2.5 we recommend using `connection: network_cli' or `connection: netconf'.
+        For more information please see the L(Junos OS Platform Options guide, ../network/user_guide/platform_junos.html).
+        HORIZONTALLINE
+        A dict object containing connection details.
+        [Default: (null)]
+        suboptions:
+          host:
+            description:
+            - Specifies the DNS host name or address for connecting to the remote device over
+              the specified transport.  The value of host is used as the destination address
+              for the transport.
+            required: true
+            type: str
+          password:
+            description:
+            - Specifies the password to use to authenticate the connection to the remote device.   This
+              value is used to authenticate the SSH session. If the value is not specified
+              in the task, the value of environment variable `ANSIBLE_NET_PASSWORD' will
+              be used instead.
+            type: str
+          port:
+            default: 22
+            description:
+            - Specifies the port to use when building the connection to the remote device.  The
+              port value will default to the well known SSH port of 22 (for `transport=cli')
+              or port 830 (for `transport=netconf') device.
+            type: int
+          ssh_keyfile:
+            description:
+            - Specifies the SSH key to use to authenticate the connection to the remote device.   This
+              value is the path to the key used to authenticate the SSH session. If the value
+              is not specified in the task, the value of environment variable `ANSIBLE_NET_SSH_KEYFILE'
+              will be used instead.
+            type: path
+          timeout:
+            default: 10
+            description:
+            - Specifies the timeout in seconds for communicating with the network device for
+              either connecting or sending commands.  If the timeout is exceeded before the
+              operation is completed, the module will error.
+            type: int
+          username:
+            description:
+            - Configures the username to use to authenticate the connection to the remote
+              device.  This value is used to authenticate the SSH session. If the value is
+              not specified in the task, the value of environment variable `ANSIBLE_NET_USERNAME'
+              will be used instead.
+            type: str
+        
+        type: dict
+
+- reboot
+        In order for a package to take effect, the remote device must be restarted.  When enabled, this argument will instruct the module
+        to reboot the device once the updated package has been installed. If disabled or the remote package does not need to be changed,
+        the device will not be started.
+        [Default: yes]
+        type: bool
+
+= src
+        The `src' argument specifies the path to the source package to be installed on the remote device in the advent of a version
+        mismatch. The `src' argument can be either a localized path or a full path to the package file to install.
+        (Aliases: package)
+
+- validate
+        The `validate' argument is responsible for instructing the remote device to skip checking the current device configuration
+        compatibility with the package being installed. When set to false validation is not performed.
+        [Default: yes]
+        type: bool
+        version_added: 2.5
+        
+
+- version
+        The `version' argument can be used to explicitly specify the version of the package that should be installed on the remote
+        device.  If the `version' argument is not specified, then the version is extracts from the `src' filename.
+        [Default: (null)]
+
+
+NOTES:
+      * This module requires the netconf system service be enabled on the remote device being managed.
+      * Tested against vSRX JUNOS version 15.1X49-D15.4, vqfx-10000 JUNOS Version 15.1X53-D60.4.
+      * Works with `local' connections only.
+      * For information on using CLI and netconf see the :ref:`Junos OS Platform Options guide <junos_platform_options>`
+      * For more information on using Ansible to manage network devices see the :ref:`Ansible Network Guide <network_guide>`
+      * For more information on using Ansible to manage Juniper network devices see https://www.ansible.com/ansible-juniper.
+
+
+REQUIREMENTS:  junos-eznc, ncclient (>=v0.5.2)
+
+AUTHOR: Peter Sprygada (@privateip)
+        METADATA:
+          status:
+          - preview
+          supported_by: network
+        
+
+EXAMPLES:
+
+# the required set of connection arguments have been purposely left off
+# the examples for brevity
+
+- name: install local package on remote device
+  junos_package:
+    src: junos-vsrx-12.1X46-D10.2-domestic.tgz
+
+- name: install local package on remote device without rebooting
+  junos_package:
+    src: junos-vsrx-12.1X46-D10.2-domestic.tgz
+    reboot: no
+
+

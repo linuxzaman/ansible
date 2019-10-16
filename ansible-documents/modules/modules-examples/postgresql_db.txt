@@ -1,0 +1,41 @@
+EXAMPLES:
+
+- name: Create a new database with name "acme"
+  postgresql_db:
+    name: acme
+
+# Note: If a template different from "template0" is specified, encoding and locale settings must match those of the template.
+- name: Create a new database with name "acme" and specific encoding and locale # settings.
+  postgresql_db:
+    name: acme
+    encoding: UTF-8
+    lc_collate: de_DE.UTF-8
+    lc_ctype: de_DE.UTF-8
+    template: template0
+
+# Note: Default limit for the number of concurrent connections to a specific database is "-1", which means "unlimited"
+- name: Create a new database with name "acme" which has a limit of 100 concurrent connections
+  postgresql_db:
+    name: acme
+    conn_limit: "100"
+
+- name: Dump an existing database to a file
+  postgresql_db:
+    name: acme
+    state: dump
+    target: /tmp/acme.sql
+
+- name: Dump an existing database to a file (with compression)
+  postgresql_db:
+    name: acme
+    state: dump
+    target: /tmp/acme.sql.gz
+
+- name: Dump a single schema for an existing database
+  postgresql_db:
+    name: acme
+    state: dump
+    target: /tmp/acme.sql
+    target_opts: "-n public"
+
+

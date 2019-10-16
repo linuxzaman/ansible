@@ -1,0 +1,249 @@
+> GCP_COMPUTE_VPN_TUNNEL    (/usr/lib/python2.7/dist-packages/ansible/modules/cloud/google/gcp_compute_vpn_tunnel.py)
+
+        VPN tunnel resource.
+
+  * This module is maintained by The Ansible Community
+OPTIONS (= is mandatory):
+
+= auth_kind
+        The type of credential used.
+        (Choices: application, machineaccount, serviceaccount)
+        type: str
+
+- description
+        An optional description of this resource.
+        [Default: (null)]
+
+- ike_version
+        IKE protocol version to use when establishing the VPN tunnel with peer VPN gateway.
+        Acceptable IKE versions are 1 or 2. Default version is 2.
+        [Default: 2]
+
+- local_traffic_selector
+        Local traffic selector to use when establishing the VPN tunnel with peer VPN gateway. The value should be a CIDR formatted
+        string, for example `192.168.0.0/16`. The ranges should be disjoint.
+        Only IPv4 is supported.
+        [Default: (null)]
+
+= name
+        Name of the resource. The name must be 1-63 characters long, and comply with RFC1035. Specifically, the name must be 1-63
+        characters long and match the regular expression `[a-z]([-a-z0-9]*[a-z0-9])?` which means the first character must be a lowercase
+        letter, and all following characters must be a dash, lowercase letter, or digit, except the last character, which cannot be a
+        dash.
+
+
+= peer_ip
+        IP address of the peer VPN gateway. Only IPv4 is supported.
+
+
+- project
+        The Google Cloud Platform project to use.
+        [Default: (null)]
+        type: str
+
+= region
+        The region where the tunnel is located.
+
+
+- remote_traffic_selector
+        Remote traffic selector to use when establishing the VPN tunnel with peer VPN gateway. The value should be a CIDR formatted
+        string, for example `192.168.0.0/16`. The ranges should be disjoint.
+        Only IPv4 is supported.
+        [Default: (null)]
+
+- router
+        URL of router resource to be used for dynamic routing.
+        This field represents a link to a Router resource in GCP. It can be specified in two ways. First, you can place a dictionary with
+        key 'selfLink' and value of your resource's selfLink Alternatively, you can add `register: name-of-resource` to a
+        gcp_compute_router task and then set this router field to "{{ name-of-resource }}"
+        [Default: (null)]
+
+- scopes
+        Array of scopes to be used.
+        [Default: (null)]
+        type: list
+
+- service_account_contents
+        A string representing the contents of a Service Account JSON file.
+        This should not be passed in as a dictionary, but a string that has the exact contents of a service account json file (valid
+        JSON)
+        [Default: (null)]
+        type: str
+
+- service_account_email
+        An optional service account email address if machineaccount is selected and the user does not wish to use the default email.
+        [Default: (null)]
+        type: str
+
+- service_account_file
+        The path of a Service Account JSON file if serviceaccount is selected as type.
+        [Default: (null)]
+        type: path
+
+= shared_secret
+        Shared secret used to set the secure session between the Cloud VPN gateway and the peer VPN gateway.
+
+
+- state
+        Whether the given object should exist in GCP
+        (Choices: present, absent)[Default: present]
+
+= target_vpn_gateway
+        URL of the Target VPN gateway with which this VPN tunnel is associated.
+        This field represents a link to a TargetVpnGateway resource in GCP. It can be specified in two ways. First, you can place a
+        dictionary with key 'selfLink' and value of your resource's selfLink Alternatively, you can add `register: name-of-resource` to a
+        gcp_compute_target_vpn_gateway task and then set this target_vpn_gateway field to "{{ name-of-resource }}"
+
+
+
+NOTES:
+      * API Reference: https://cloud.google.com/compute/docs/reference/rest/v1/vpnTunnels
+      * Cloud VPN Overview: https://cloud.google.com/vpn/docs/concepts/overview
+      * Networks and Tunnel Routing: https://cloud.google.com/vpn/docs/concepts/choosing-networks-routing
+      * For authentication, you can set service_account_file using the `GCP_SERVICE_ACCOUNT_FILE' env variable.
+      * For authentication, you can set service_account_email using the `GCP_SERVICE_ACCOUNT_EMAIL' env variable.
+      * For authentication, you can set service_account_contents using the `GCP_SERVICE_ACCOUNT_CONTENTS' env variable.
+      * For authentication, you can set auth_kind using the `GCP_AUTH_KIND' env variable.
+      * For authentication, you can set scopes using the `GCP_SCOPES' env variable.
+      * Environment variables values will only be used if the playbook values are not set.
+      * The `service_account_email' and `service_account_file' options are mutually exclusive.
+
+
+REQUIREMENTS:  python >= 2.6, requests >= 2.18.4, google-auth >= 1.3.0
+
+AUTHOR: Google Inc. (@googlecloudplatform)
+        METADATA:
+          status:
+          - preview
+          supported_by: community
+        
+
+EXAMPLES:
+
+- name: create a network
+  gcp_compute_network:
+    name: network-vpn-tunnel
+    project: "{{ gcp_project }}"
+    auth_kind: "{{ gcp_cred_kind }}"
+    service_account_file: "{{ gcp_cred_file }}"
+    state: present
+  register: network
+
+- name: create a router
+  gcp_compute_router:
+    name: router-vpn-tunnel
+    network: "{{ network }}"
+    bgp:
+      asn: 64514
+      advertise_mode: CUSTOM
+      advertised_groups:
+      - ALL_SUBNETS
+      advertised_ip_ranges:
+      - range: 1.2.3.4
+      - range: 6.7.0.0/16
+    region: us-central1
+    project: "{{ gcp_project }}"
+    auth_kind: "{{ gcp_cred_kind }}"
+    service_account_file: "{{ gcp_cred_file }}"
+    state: present
+  register: router
+
+- name: create a target vpn gateway
+  gcp_compute_target_vpn_gateway:
+    name: gateway-vpn-tunnel
+    region: us-west1
+    network: "{{ network }}"
+    project: "{{ gcp_project }}"
+    auth_kind: "{{ gcp_cred_kind }}"
+    service_account_file: "{{ gcp_cred_file }}"
+    state: present
+  register: gateway
+
+- name: create a vpn tunnel
+  gcp_compute_vpn_tunnel:
+    name: test_object
+    region: us-west1
+    target_vpn_gateway: "{{ gateway }}"
+    router: "{{ router }}"
+    shared_secret: super secret
+    project: test_project
+    auth_kind: serviceaccount
+    service_account_file: "/tmp/auth.pem"
+    state: present
+
+
+RETURN VALUES:
+
+creationTimestamp:
+  description:
+  - Creation timestamp in RFC3339 text format.
+  returned: success
+  type: str
+name:
+  description:
+  - Name of the resource. The name must be 1-63 characters long, and comply with RFC1035.
+    Specifically, the name must be 1-63 characters long and match the regular expression
+    `[a-z]([-a-z0-9]*[a-z0-9])?` which means the first character must be a lowercase
+    letter, and all following characters must be a dash, lowercase letter, or digit,
+    except the last character, which cannot be a dash.
+  returned: success
+  type: str
+description:
+  description:
+  - An optional description of this resource.
+  returned: success
+  type: str
+targetVpnGateway:
+  description:
+  - URL of the Target VPN gateway with which this VPN tunnel is associated.
+  returned: success
+  type: dict
+router:
+  description:
+  - URL of router resource to be used for dynamic routing.
+  returned: success
+  type: dict
+peerIp:
+  description:
+  - IP address of the peer VPN gateway. Only IPv4 is supported.
+  returned: success
+  type: str
+sharedSecret:
+  description:
+  - Shared secret used to set the secure session between the Cloud VPN gateway and
+    the peer VPN gateway.
+  returned: success
+  type: str
+sharedSecretHash:
+  description:
+  - Hash of the shared secret.
+  returned: success
+  type: str
+ikeVersion:
+  description:
+  - IKE protocol version to use when establishing the VPN tunnel with peer VPN gateway.
+  - Acceptable IKE versions are 1 or 2. Default version is 2.
+  returned: success
+  type: int
+localTrafficSelector:
+  description:
+  - Local traffic selector to use when establishing the VPN tunnel with peer VPN gateway.
+    The value should be a CIDR formatted string, for example `192.168.0.0/16`. The
+    ranges should be disjoint.
+  - Only IPv4 is supported.
+  returned: success
+  type: list
+remoteTrafficSelector:
+  description:
+  - Remote traffic selector to use when establishing the VPN tunnel with peer VPN
+    gateway. The value should be a CIDR formatted string, for example `192.168.0.0/16`.
+    The ranges should be disjoint.
+  - Only IPv4 is supported.
+  returned: success
+  type: list
+region:
+  description:
+  - The region where the tunnel is located.
+  returned: success
+  type: str
+

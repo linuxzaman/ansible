@@ -1,0 +1,63 @@
+> SERVICE_FACTS    (/usr/lib/python2.7/dist-packages/ansible/modules/system/service_facts.py)
+
+        Return service state information as fact data for various service management utilities
+
+  * This module is maintained by The Ansible Community
+NOTES:
+      * When accessing the `ansible_facts.services' facts collected by this module, it is recommended to not use "dot notation"
+        because services can have a `-' character in their name which would result in invalid "dot notation", such as
+        `ansible_facts.services.zuul-gateway'. It is instead recommended to using the string value of the service name as the key
+        in order to obtain the fact data value like `ansible_facts.services['zuul-gateway']'
+
+
+REQUIREMENTS:  Any of the following supported init systems: systemd, sysv, upstart
+
+AUTHOR: Adam Miller (@maxamillion)
+        METADATA:
+          status:
+          - preview
+          supported_by: community
+        
+
+EXAMPLES:
+
+- name: populate service facts
+  service_facts:
+
+- debug:
+    var: ansible_facts.services
+
+
+RETURN VALUES:
+
+ansible_facts:
+  description: Facts to add to ansible_facts about the services on the system
+  returned: always
+  type: complex
+  contains:
+    services:
+      description: States of the services with service name as key.
+      returned: always
+      type: complex
+      contains:
+        source:
+          description: Init system of the service. One of C(systemd), C(sysv), C(upstart).
+          returned: always
+          type: str
+          sample: sysv
+        state:
+          description: State of the service. Either C(running), C(stopped), or C(unknown).
+          returned: always
+          type: str
+          sample: running
+        status:
+          description: State of the service. Either C(enabled), C(disabled), or C(unknown).
+          returned: systemd systems or RedHat/SUSE flavored sysvinit/upstart
+          type: string
+          sample: enabled
+        name:
+          description: Name of the service.
+          returned: always
+          type: str
+          sample: arp-ethers.service
+

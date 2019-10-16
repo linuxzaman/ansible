@@ -1,0 +1,212 @@
+> ELB_APPLICATION_LB_FACTS    (/usr/lib/python2.7/dist-packages/ansible/modules/cloud/amazon/elb_application_lb_facts.py)
+
+        Gather facts about application ELBs in AWS
+
+  * This module is maintained by The Ansible Community
+OPTIONS (= is mandatory):
+
+- aws_access_key
+        AWS access key. If not set then the value of the AWS_ACCESS_KEY_ID, AWS_ACCESS_KEY or EC2_ACCESS_KEY environment variable is
+        used.
+        (Aliases: ec2_access_key, access_key)[Default: (null)]
+        type: str
+
+- aws_secret_key
+        AWS secret key. If not set then the value of the AWS_SECRET_ACCESS_KEY, AWS_SECRET_KEY, or EC2_SECRET_KEY environment variable is
+        used.
+        (Aliases: ec2_secret_key, secret_key)[Default: (null)]
+        type: str
+
+- debug_botocore_endpoint_logs
+        Use a botocore.endpoint logger to parse the unique (rather than total) "resource:action" API calls made during a task, outputing
+        the set to the resource_actions key in the task results. Use the aws_resource_action callback to output to total list made during
+        a playbook. The ANSIBLE_DEBUG_BOTOCORE_LOGS environment variable may also be used.
+        [Default: no]
+        type: bool
+        version_added: 2.8
+
+- ec2_url
+        Url to use to connect to EC2 or your Eucalyptus cloud (by default the module will use EC2 endpoints). Ignored for modules where
+        region is required. Must be specified for all other modules if region is not used. If not set then the value of the EC2_URL
+        environment variable, if any, is used.
+        [Default: (null)]
+        type: str
+
+- load_balancer_arns
+        The Amazon Resource Names (ARN) of the load balancers. You can specify up to 20 load balancers in a single call.
+        [Default: (null)]
+
+- names
+        The names of the load balancers.
+        [Default: (null)]
+
+- profile
+        Uses a boto profile. Only works with boto >= 2.24.0.
+        [Default: (null)]
+        type: str
+        version_added: 1.6
+
+- region
+        The AWS region to use. If not specified then the value of the AWS_REGION or EC2_REGION environment variable, if any, is used. See
+        http://docs.aws.amazon.com/general/latest/gr/rande.html#ec2_region
+        (Aliases: aws_region, ec2_region)[Default: (null)]
+        type: str
+
+- security_token
+        AWS STS security token. If not set then the value of the AWS_SECURITY_TOKEN or EC2_SECURITY_TOKEN environment variable is used.
+        (Aliases: access_token)[Default: (null)]
+        type: str
+        version_added: 1.6
+
+- validate_certs
+        When set to "no", SSL certificates will not be validated for boto versions >= 2.6.0.
+        [Default: True]
+        type: bool
+        version_added: 1.5
+
+
+NOTES:
+      * If parameters are not set within the module, the following environment variables can be used in decreasing order of
+        precedence `AWS_URL' or `EC2_URL', `AWS_ACCESS_KEY_ID' or `AWS_ACCESS_KEY' or `EC2_ACCESS_KEY', `AWS_SECRET_ACCESS_KEY' or
+        `AWS_SECRET_KEY' or `EC2_SECRET_KEY', `AWS_SECURITY_TOKEN' or `EC2_SECURITY_TOKEN', `AWS_REGION' or `EC2_REGION'
+      * Ansible uses the boto configuration file (typically ~/.boto) if no credentials are provided. See
+        https://boto.readthedocs.io/en/latest/boto_config_tut.html
+      * `AWS_REGION' or `EC2_REGION' can be typically be used to specify the AWS region, when required, but this can also be
+        configured in the boto config file
+
+
+REQUIREMENTS:  boto, boto3, python >= 2.6
+
+AUTHOR: Rob White (@wimnat)
+        METADATA:
+          status:
+          - preview
+          supported_by: community
+        
+
+EXAMPLES:
+
+# Note: These examples do not set authentication details, see the AWS Guide for details.
+
+# Gather facts about all target groups
+- elb_application_lb_facts:
+
+# Gather facts about the target group attached to a particular ELB
+- elb_application_lb_facts:
+    load_balancer_arns:
+      - "arn:aws:elasticloadbalancing:ap-southeast-2:001122334455:loadbalancer/app/my-elb/aabbccddeeff"
+
+# Gather facts about a target groups named 'tg1' and 'tg2'
+- elb_application_lb_facts:
+    names:
+      - elb1
+      - elb2
+
+# Gather facts about specific ALB
+- elb_application_lb_facts:
+    names: "alb-name"
+    region: "aws-region"
+  register: alb_facts
+- debug: var=alb_facts
+
+
+RETURN VALUES:
+
+load_balancers:
+    description: a list of load balancers
+    returned: always
+    type: complex
+    contains:
+        access_logs_s3_bucket:
+            description: The name of the S3 bucket for the access logs.
+            returned: when status is present
+            type: str
+            sample: mys3bucket
+        access_logs_s3_enabled:
+            description: Indicates whether access logs stored in Amazon S3 are enabled.
+            returned: when status is present
+            type: str
+            sample: true
+        access_logs_s3_prefix:
+            description: The prefix for the location in the S3 bucket.
+            returned: when status is present
+            type: str
+            sample: /my/logs
+        availability_zones:
+            description: The Availability Zones for the load balancer.
+            returned: when status is present
+            type: list
+            sample: "[{'subnet_id': 'subnet-aabbccddff', 'zone_name': 'ap-southeast-2a'}]"
+        canonical_hosted_zone_id:
+            description: The ID of the Amazon Route 53 hosted zone associated with the load balancer.
+            returned: when status is present
+            type: str
+            sample: ABCDEF12345678
+        created_time:
+            description: The date and time the load balancer was created.
+            returned: when status is present
+            type: str
+            sample: "2015-02-12T02:14:02+00:00"
+        deletion_protection_enabled:
+            description: Indicates whether deletion protection is enabled.
+            returned: when status is present
+            type: str
+            sample: true
+        dns_name:
+            description: The public DNS name of the load balancer.
+            returned: when status is present
+            type: str
+            sample: internal-my-elb-123456789.ap-southeast-2.elb.amazonaws.com
+        idle_timeout_timeout_seconds:
+            description: The idle timeout value, in seconds.
+            returned: when status is present
+            type: str
+            sample: 60
+        ip_address_type:
+            description:  The type of IP addresses used by the subnets for the load balancer.
+            returned: when status is present
+            type: str
+            sample: ipv4
+        load_balancer_arn:
+            description: The Amazon Resource Name (ARN) of the load balancer.
+            returned: when status is present
+            type: str
+            sample: arn:aws:elasticloadbalancing:ap-southeast-2:0123456789:loadbalancer/app/my-elb/001122334455
+        load_balancer_name:
+            description: The name of the load balancer.
+            returned: when status is present
+            type: str
+            sample: my-elb
+        scheme:
+            description: Internet-facing or internal load balancer.
+            returned: when status is present
+            type: str
+            sample: internal
+        security_groups:
+            description: The IDs of the security groups for the load balancer.
+            returned: when status is present
+            type: list
+            sample: ['sg-0011223344']
+        state:
+            description: The state of the load balancer.
+            returned: when status is present
+            type: dict
+            sample: "{'code': 'active'}"
+        tags:
+            description: The tags attached to the load balancer.
+            returned: when status is present
+            type: dict
+            sample: "{
+                'Tag': 'Example'
+            }"
+        type:
+            description: The type of load balancer.
+            returned: when status is present
+            type: str
+            sample: application
+        vpc_id:
+            description: The ID of the VPC for the load balancer.
+            returned: when status is present
+            type: str
+            sample: vpc-0011223344
+

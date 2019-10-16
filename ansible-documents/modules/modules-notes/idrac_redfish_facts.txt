@@ -1,0 +1,61 @@
+> IDRAC_REDFISH_FACTS    (/usr/lib/python2.7/dist-packages/ansible/modules/remote_management/redfish/idrac_redfish_facts.py)
+
+        Builds Redfish URIs locally and sends them to remote iDRAC controllers to get information back. For use with Dell iDRAC
+        operations that require Redfish OEM extensions
+
+  * This module is maintained by The Ansible Community
+OPTIONS (= is mandatory):
+
+= baseuri
+        Base URI of iDRAC controller
+
+
+= category
+        Category to execute on iDRAC controller
+
+
+= command
+        List of commands to execute on iDRAC controller
+
+
+= password
+        Password for authentication with iDRAC controller
+
+
+- timeout
+        Timeout in seconds for URL requests to OOB controller
+        [Default: 10]
+        type: int
+
+= username
+        User for authentication with iDRAC controller
+
+
+
+AUTHOR: Jose Delarosa (@jose-delarosa)
+        METADATA:
+          status:
+          - preview
+          supported_by: community
+        
+
+EXAMPLES:
+
+- name: Get Manager attributes with a default of 20 seconds
+    idrac_redfish_command:
+      category: Manager
+      command: GetManagerAttributes
+      baseuri: "{{ baseuri }}"
+      username: "{{ username }}"
+      password: "{{ password }}"
+      timeout: 20
+
+
+RETURN VALUES:
+
+msg:
+    description: different results depending on task
+    returned: always
+    type: dict
+    sample: List of Manager attributes
+

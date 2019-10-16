@@ -1,0 +1,115 @@
+EXAMPLES:
+
+- name: Run a cmd.exe command
+  psexec:
+    hostname: server
+    connection_username: username
+    connection_password: password
+    executable: cmd.exe
+    arguments: /c echo Hello World
+
+- name: Run a PowerShell command
+  psexec:
+    hostname: server.domain.local
+    connection_username: username@DOMAIN.LOCAL
+    connection_password: password
+    executable: powershell.exe
+    arguments: Write-Host Hello World
+
+- name: Send data through stdin
+  psexec:
+    hostname: 192.168.1.2
+    connection_username: username
+    connection_password: password
+    executable: powershell.exe
+    arguments: '-'
+    stdin: |
+      Write-Host Hello World
+      Write-Error Error Message
+      exit 0
+
+- name: Run the process as a different user
+  psexec:
+    hostname: server
+    connection_user: username
+    connection_password: password
+    executable: whoami.exe
+    arguments: /all
+    process_username: anotheruser
+    process_password: anotherpassword
+
+- name: Run the process asynchronously
+  psexec:
+    hostname: server
+    connection_username: username
+    connection_password: password
+    executable: cmd.exe
+    arguments: /c rmdir C:\temp
+    asynchronous: yes
+
+- name: Use Kerberos authentication for the connection (requires smbprotocol[kerberos])
+  psexec:
+    hostname: host.domain.local
+    connection_username: user@DOMAIN.LOCAL
+    executable: C:\some\path\to\executable.exe
+    arguments: /s
+
+- name: Disable encryption to work with WIndows 7/Server 2008 (R2)
+  psexec:
+    hostanme: windows-pc
+    connection_username: Administrator
+    connection_password: Password01
+    encrypt: no
+    integrity_level: elevated
+    process_username: Administrator
+    process_password: Password01
+    executable: powershell.exe
+    arguments: (New-Object -ComObject Microsoft.Update.Session).CreateUpdateInstaller().IsBusy
+
+- name: Download and run ConfigureRemotingForAnsible.ps1 to setup WinRM
+  psexec:
+    hostname: '{{ ansible_host }}'
+    connection_username: '{{ ansible_user }}'
+    connection_password: '{{ ansible_password }}'
+    encrypt: yes
+    executable: powershell.exe
+    arguments: '-'
+    stdin: |
+      $ErrorActionPreference = "Stop"
+      $sec_protocols = [Net.ServicePointManager]::SecurityProtocol -bor [Net.SecurityProtocolType]::SystemDefault
+      $sec_protocols = $sec_protocols -bor [Net.SecurityProtocolType]::Tls12
+      [Net.ServicePointManager]::SecurityProtocol = $sec_protocols
+      $url = "https://github.com/ansible/ansible/raw/devel/examples/scripts/ConfigureRemotingForAnsible.ps1"
+      Invoke-Expression ((New-Object Net.WebClient).DownloadString($url))
+      exit
+  delegate_to: localhost
+
+
+RETURN VALUES:
+
+msg:
+  description: Any exception details when trying to run the process
+  returned: module failed
+  type: str
+  sample: 'Received exception from remote PAExec service: Failed to start "invalid.exe". The system cannot find the file specified. [Err=0x2, 2]'
+stdout:
+  description: The stdout from the remote process
+  returned: success and interactive or asynchronous is 'no'
+  type: str
+  sample: Hello World
+stderr:
+  description: The stderr from the remote process
+  returned: success and interactive or asynchronous is 'no'
+  type: str
+  sample: Error [10] running process
+pid:
+  description: The process ID of the asynchronous process that was created
+  returned: success and asynchronous is 'yes'
+  type: int
+  sample: 719
+rc:
+  description: The return code of the remote process
+  returned: success and asynchronous is 'no'
+  type: int
+  sample: 0
+

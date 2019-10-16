@@ -1,0 +1,64 @@
+EXAMPLES:
+
+- name: Create iSCSI Igroup
+      na_ontap_igroup:
+        state: present
+        name: ansibleIgroup3
+        initiator_group_type: iscsi
+        ostype: linux
+        initiators: iqn.1994-05.com.redhat:scspa0395855001.rtp.openenglab.netapp.com,abc.com:redhat.com
+        vserver: ansibleVServer
+        hostname: "{{ netapp_hostname }}"
+        username: "{{ netapp_username }}"
+        password: "{{ netapp_password }}"
+
+    - name: Create FC Igroup
+      na_ontap_igroup:
+        state: present
+        name: ansibleIgroup4
+        initiator_group_type: fcp
+        ostype: linux
+        initiators: 20:00:00:50:56:9f:19:82
+        vserver: ansibleVServer
+        hostname: "{{ netapp_hostname }}"
+        username: "{{ netapp_username }}"
+        password: "{{ netapp_password }}"
+
+    - name: rename Igroup
+      na_ontap_igroup:
+        state: present
+        from_name: ansibleIgroup3
+        name: testexamplenewname
+        initiator_group_type: iscsi
+        ostype: linux
+        initiators: iqn.1994-05.com.redhat:scspa0395855001.rtp.openenglab.netapp.com
+        vserver: ansibleVServer
+        hostname: "{{ netapp_hostname }}"
+        username: "{{ netapp_username }}"
+        password: "{{ netapp_password }}"
+
+    - name: Modify Igroup Initiators (replaces exisiting initiators)
+      na_ontap_igroup:
+        state: present
+        name: ansibleIgroup3
+        initiator_group_type: iscsi
+        ostype: linux
+        initiator: iqn.1994-05.com.redhat:scspa0395855001.rtp.openenglab.netapp.com
+        vserver: ansibleVServer
+        hostname: "{{ netapp_hostname }}"
+        username: "{{ netapp_username }}"
+        password: "{{ netapp_password }}"
+
+    - name: Delete Igroup
+      na_ontap_igroup:
+        state: absent
+        name: ansibleIgroup3
+        vserver: ansibleVServer
+        hostname: "{{ netapp_hostname }}"
+        username: "{{ netapp_username }}"
+        password: "{{ netapp_password }}"
+
+
+RETURN VALUES:
+
+

@@ -1,0 +1,181 @@
+> ELB_CLASSIC_LB_FACTS    (/usr/lib/python2.7/dist-packages/ansible/modules/cloud/amazon/elb_classic_lb_facts.py)
+
+        Gather facts about EC2 Elastic Load Balancers in AWS
+
+  * This module is maintained by The Ansible Community
+OPTIONS (= is mandatory):
+
+- aws_access_key
+        AWS access key. If not set then the value of the AWS_ACCESS_KEY_ID, AWS_ACCESS_KEY or EC2_ACCESS_KEY environment variable is
+        used.
+        (Aliases: ec2_access_key, access_key)[Default: (null)]
+        type: str
+
+- aws_secret_key
+        AWS secret key. If not set then the value of the AWS_SECRET_ACCESS_KEY, AWS_SECRET_KEY, or EC2_SECRET_KEY environment variable is
+        used.
+        (Aliases: ec2_secret_key, secret_key)[Default: (null)]
+        type: str
+
+- debug_botocore_endpoint_logs
+        Use a botocore.endpoint logger to parse the unique (rather than total) "resource:action" API calls made during a task, outputing
+        the set to the resource_actions key in the task results. Use the aws_resource_action callback to output to total list made during
+        a playbook. The ANSIBLE_DEBUG_BOTOCORE_LOGS environment variable may also be used.
+        [Default: no]
+        type: bool
+        version_added: 2.8
+
+- ec2_url
+        Url to use to connect to EC2 or your Eucalyptus cloud (by default the module will use EC2 endpoints). Ignored for modules where
+        region is required. Must be specified for all other modules if region is not used. If not set then the value of the EC2_URL
+        environment variable, if any, is used.
+        [Default: (null)]
+        type: str
+
+- names
+        List of ELB names to gather facts about. Pass this option to gather facts about a set of ELBs, otherwise, all ELBs are returned.
+        (Aliases: elb_ids, ec2_elbs)[Default: (null)]
+
+- profile
+        Uses a boto profile. Only works with boto >= 2.24.0.
+        [Default: (null)]
+        type: str
+        version_added: 1.6
+
+- region
+        The AWS region to use. If not specified then the value of the AWS_REGION or EC2_REGION environment variable, if any, is used. See
+        http://docs.aws.amazon.com/general/latest/gr/rande.html#ec2_region
+        (Aliases: aws_region, ec2_region)[Default: (null)]
+        type: str
+
+- security_token
+        AWS STS security token. If not set then the value of the AWS_SECURITY_TOKEN or EC2_SECURITY_TOKEN environment variable is used.
+        (Aliases: access_token)[Default: (null)]
+        type: str
+        version_added: 1.6
+
+- validate_certs
+        When set to "no", SSL certificates will not be validated for boto versions >= 2.6.0.
+        [Default: True]
+        type: bool
+        version_added: 1.5
+
+
+NOTES:
+      * If parameters are not set within the module, the following environment variables can be used in decreasing order of
+        precedence `AWS_URL' or `EC2_URL', `AWS_ACCESS_KEY_ID' or `AWS_ACCESS_KEY' or `EC2_ACCESS_KEY', `AWS_SECRET_ACCESS_KEY' or
+        `AWS_SECRET_KEY' or `EC2_SECRET_KEY', `AWS_SECURITY_TOKEN' or `EC2_SECURITY_TOKEN', `AWS_REGION' or `EC2_REGION'
+      * Ansible uses the boto configuration file (typically ~/.boto) if no credentials are provided. See
+        https://boto.readthedocs.io/en/latest/boto_config_tut.html
+      * `AWS_REGION' or `EC2_REGION' can be typically be used to specify the AWS region, when required, but this can also be
+        configured in the boto config file
+
+
+REQUIREMENTS:  boto, boto3, botocore, python >= 2.6
+
+AUTHOR: Michael Schultz (@mjschultz), Fernando Jose Pando (@nand0p)
+        METADATA:
+          status:
+          - preview
+          supported_by: community
+        
+
+EXAMPLES:
+
+# Note: These examples do not set authentication details, see the AWS Guide for details.
+# Output format tries to match ec2_elb_lb module input parameters
+
+# Gather facts about all ELBs
+- elb_classic_lb_facts:
+  register: elb_facts
+
+- debug:
+    msg: "{{ item.dns_name }}"
+  loop: "{{ elb_facts.elbs }}"
+
+# Gather facts about a particular ELB
+- elb_classic_lb_facts:
+    names: frontend-prod-elb
+  register: elb_facts
+
+- debug:
+    msg: "{{ elb_facts.elbs.0.dns_name }}"
+
+# Gather facts about a set of ELBs
+- elb_classic_lb_facts:
+    names:
+    - frontend-prod-elb
+    - backend-prod-elb
+  register: elb_facts
+
+- debug:
+    msg: "{{ item.dns_name }}"
+  loop: "{{ elb_facts.elbs }}"
+
+
+RETURN VALUES:
+
+elbs:
+  description: a list of load balancers
+  returned: always
+  type: list
+  sample:
+    elbs:
+      - attributes:
+          access_log:
+            enabled: false
+          connection_draining:
+            enabled: true
+            timeout: 300
+          connection_settings:
+            idle_timeout: 60
+          cross_zone_load_balancing:
+            enabled: true
+        availability_zones:
+          - "us-east-1a"
+          - "us-east-1b"
+          - "us-east-1c"
+          - "us-east-1d"
+          - "us-east-1e"
+        backend_server_description: []
+        canonical_hosted_zone_name: test-lb-XXXXXXXXXXXX.us-east-1.elb.amazonaws.com
+        canonical_hosted_zone_name_id: XXXXXXXXXXXXXX
+        created_time: 2017-08-23T18:25:03.280000+00:00
+        dns_name: test-lb-XXXXXXXXXXXX.us-east-1.elb.amazonaws.com
+        health_check:
+          healthy_threshold: 10
+          interval: 30
+          target: HTTP:80/index.html
+          timeout: 5
+          unhealthy_threshold: 2
+        instances: []
+        instances_inservice: []
+        instances_inservice_count: 0
+        instances_outofservice: []
+        instances_outofservice_count: 0
+        instances_unknownservice: []
+        instances_unknownservice_count: 0
+        listener_descriptions:
+          - listener:
+              instance_port: 80
+              instance_protocol: HTTP
+              load_balancer_port: 80
+              protocol: HTTP
+            policy_names: []
+        load_balancer_name: test-lb
+        policies:
+          app_cookie_stickiness_policies: []
+          lb_cookie_stickiness_policies: []
+          other_policies: []
+        scheme: internet-facing
+        security_groups:
+          - sg-29d13055
+        source_security_group:
+          group_name: default
+          owner_alias: XXXXXXXXXXXX
+        subnets:
+          - subnet-XXXXXXXX
+          - subnet-XXXXXXXX
+        tags: {}
+        vpc_id: vpc-c248fda4
+

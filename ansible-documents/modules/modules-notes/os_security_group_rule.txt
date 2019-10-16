@@ -1,0 +1,242 @@
+> OS_SECURITY_GROUP_RULE    (/usr/lib/python2.7/dist-packages/ansible/modules/cloud/openstack/os_security_group_rule.py)
+
+        Add or Remove rule from an existing security group
+
+  * This module is maintained by The Ansible Community
+OPTIONS (= is mandatory):
+
+- api_timeout
+        How long should the socket layer wait before timing out for API calls. If this is omitted, nothing will be passed to the requests
+        library.
+        [Default: (null)]
+        type: int
+
+- auth
+        Dictionary containing auth information as needed by the cloud's auth plugin strategy. For the default `password' plugin, this
+        would contain `auth_url', `username', `password', `project_name' and any information about domains (for example,
+        `os_user_domain_name' or `os_project_domain_name') if the cloud supports them. For other plugins, this param will need to contain
+        whatever parameters that auth plugin requires. This parameter is not needed if a named cloud is provided or OpenStack OS_*
+        environment variables are present.
+        [Default: (null)]
+        type: dict
+
+- auth_type
+        Name of the auth plugin to use. If the cloud uses something other than password authentication, the name of the plugin should be
+        indicated here and the contents of the `auth' parameter should be updated accordingly.
+        [Default: (null)]
+        type: str
+
+- availability_zone
+        Ignored. Present for backwards compatibility
+        [Default: (null)]
+
+- ca_cert
+        A path to a CA Cert bundle that can be used as part of verifying SSL API requests.
+        (Aliases: cacert)[Default: (null)]
+        type: str
+
+- client_cert
+        A path to a client certificate to use as part of the SSL transaction.
+        (Aliases: cert)[Default: (null)]
+        type: str
+
+- client_key
+        A path to a client key to use as part of the SSL transaction.
+        (Aliases: key)[Default: (null)]
+        type: str
+
+- cloud
+        Named cloud or cloud config to operate against. If `cloud' is a string, it references a named cloud config as defined in an
+        OpenStack clouds.yaml file. Provides default values for `auth' and `auth_type'. This parameter is not needed if `auth' is
+        provided or if OpenStack OS_* environment variables are present. If `cloud' is a dict, it contains a complete cloud configuration
+        like would be in a section of clouds.yaml.
+        [Default: (null)]
+        type: raw
+
+- direction
+        The direction in which the security group rule is applied. Not all providers support egress.
+        (Choices: egress, ingress)[Default: ingress]
+
+- ethertype
+        Must be IPv4 or IPv6, and addresses represented in CIDR must match the ingress or egress rules. Not all providers support IPv6.
+        (Choices: IPv4, IPv6)[Default: IPv4]
+
+- interface
+        Endpoint URL type to fetch from the service catalog.
+        (Aliases: endpoint_type)(Choices: admin, internal, public)[Default: public]
+        type: str
+        version_added: 2.3
+
+- port_range_max
+        Ending port
+        [Default: (null)]
+
+- port_range_min
+        Starting port
+        [Default: (null)]
+
+- project
+        Unique name or ID of the project.
+        [Default: (null)]
+        version_added: 2.7
+
+- protocol
+        IP protocols TCP UDP ICMP 112 (VRRP)
+        (Choices: tcp, udp, icmp, 112, None)[Default: (null)]
+
+- region_name
+        Name of the region.
+        [Default: (null)]
+        type: str
+
+- remote_group
+        Name or ID of the Security group to link (exclusive with remote_ip_prefix)
+        [Default: (null)]
+
+- remote_ip_prefix
+        Source IP address(es) in CIDR notation (exclusive with remote_group)
+        [Default: (null)]
+
+= security_group
+        Name or ID of the security group
+
+
+- state
+        Should the resource be present or absent.
+        (Choices: present, absent)[Default: present]
+
+- timeout
+        How long should ansible wait for the requested resource.
+        [Default: 180]
+        type: int
+
+- validate_certs
+        Whether or not SSL API requests should be verified.
+        Before Ansible 2.3 this defaulted to `yes'.
+        (Aliases: verify)[Default: False]
+        type: bool
+
+- wait
+        Should ansible wait until the requested resource is complete.
+        [Default: True]
+        type: bool
+
+
+NOTES:
+      * The standard OpenStack environment variables, such as `OS_USERNAME' may be used instead of providing explicit values.
+      * Auth information is driven by openstacksdk, which means that values can come from a yaml config file in
+        /etc/ansible/openstack.yaml, /etc/openstack/clouds.yaml or ~/.config/openstack/clouds.yaml, then from standard environment
+        variables, then finally by explicit parameters in plays. More information can be found at
+        https://docs.openstack.org/openstacksdk/
+
+
+REQUIREMENTS:  openstacksdk, python >= 2.7
+
+AUTHOR: Benno Joy (@bennojoy)
+        METADATA:
+          status:
+          - preview
+          supported_by: community
+        
+
+EXAMPLES:
+
+# Create a security group rule
+- os_security_group_rule:
+    cloud: mordred
+    security_group: foo
+    protocol: tcp
+    port_range_min: 80
+    port_range_max: 80
+    remote_ip_prefix: 0.0.0.0/0
+
+# Create a security group rule for ping
+- os_security_group_rule:
+    cloud: mordred
+    security_group: foo
+    protocol: icmp
+    remote_ip_prefix: 0.0.0.0/0
+
+# Another way to create the ping rule
+- os_security_group_rule:
+    cloud: mordred
+    security_group: foo
+    protocol: icmp
+    port_range_min: -1
+    port_range_max: -1
+    remote_ip_prefix: 0.0.0.0/0
+
+# Create a TCP rule covering all ports
+- os_security_group_rule:
+    cloud: mordred
+    security_group: foo
+    protocol: tcp
+    port_range_min: 1
+    port_range_max: 65535
+    remote_ip_prefix: 0.0.0.0/0
+
+# Another way to create the TCP rule above (defaults to all ports)
+- os_security_group_rule:
+    cloud: mordred
+    security_group: foo
+    protocol: tcp
+    remote_ip_prefix: 0.0.0.0/0
+
+# Create a rule for VRRP with numbered protocol 112
+- os_security_group_rule:
+    security_group: loadbalancer_sg
+    protocol: 112
+    remote_group: loadbalancer-node_sg
+
+# Create a security group rule for a given project
+- os_security_group_rule:
+    cloud: mordred
+    security_group: foo
+    protocol: icmp
+    remote_ip_prefix: 0.0.0.0/0
+    project: myproj
+
+
+RETURN VALUES:
+
+id:
+  description: Unique rule UUID.
+  type: str
+  returned: state == present
+direction:
+  description: The direction in which the security group rule is applied.
+  type: str
+  sample: 'egress'
+  returned: state == present
+ethertype:
+  description: One of IPv4 or IPv6.
+  type: str
+  sample: 'IPv4'
+  returned: state == present
+port_range_min:
+  description: The minimum port number in the range that is matched by
+               the security group rule.
+  type: int
+  sample: 8000
+  returned: state == present
+port_range_max:
+  description: The maximum port number in the range that is matched by
+               the security group rule.
+  type: int
+  sample: 8000
+  returned: state == present
+protocol:
+  description: The protocol that is matched by the security group rule.
+  type: str
+  sample: 'tcp'
+  returned: state == present
+remote_ip_prefix:
+  description: The remote IP prefix to be associated with this security group rule.
+  type: str
+  sample: '0.0.0.0/0'
+  returned: state == present
+security_group_id:
+  description: The security group ID to associate with this security group rule.
+  type: str
+  returned: state == present
+

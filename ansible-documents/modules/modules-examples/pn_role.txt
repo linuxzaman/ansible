@@ -1,0 +1,45 @@
+EXAMPLES:
+
+- name: Role create
+  pn_role:
+    pn_cliswitch: 'sw01'
+    state: 'present'
+    pn_name: 'foo'
+    pn_scope: 'local'
+    pn_access: 'read-only'
+
+- name: Role delete
+  pn_role:
+    pn_cliswitch: 'sw01'
+    state: 'absent'
+    pn_name: 'foo'
+
+- name: Role modify
+  pn_role:
+    pn_cliswitch: 'sw01'
+    state: 'update'
+    pn_name: 'foo'
+    pn_access: 'read-write'
+    pn_sudo: true
+    pn_shell: true
+
+
+RETURN VALUES:
+
+command:
+  description: the CLI command run on the target node.
+  returned: always
+  type: str
+stdout:
+  description: set of responses from the role command.
+  returned: always
+  type: list
+stderr:
+  description: set of error responses from the role command.
+  returned: on error
+  type: list
+changed:
+  description: indicates whether the CLI caused changes on the target.
+  returned: always
+  type: bool
+

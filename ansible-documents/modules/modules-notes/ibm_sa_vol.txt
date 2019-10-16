@@ -1,0 +1,76 @@
+> IBM_SA_VOL    (/usr/lib/python2.7/dist-packages/ansible/modules/storage/ibm/ibm_sa_vol.py)
+
+        This module creates or deletes volumes to be used on IBM Spectrum Accelerate Family storage systems.
+
+  * This module is maintained by The Ansible Community
+OPTIONS (= is mandatory):
+
+= endpoints
+        The hostname or management IP of Spectrum Accelerate storage system.
+
+        type: str
+
+= password
+        Password for username on the spectrum accelerate storage system.
+
+        type: str
+
+- pool
+        Volume pool.
+        [Default: (null)]
+
+- size
+        Volume size.
+        [Default: (null)]
+
+= state
+        Volume state.
+        (Choices: present, absent)[Default: present]
+
+= username
+        Management user on the spectrum accelerate storage system.
+
+        type: str
+
+= vol
+        Volume name.
+
+
+
+NOTES:
+      * This module requires pyxcli python library. Use 'pip install pyxcli' in order to get pyxcli.
+
+
+REQUIREMENTS:  python >= 2.7, pyxcli
+
+AUTHOR: Tzur Eliyahu (@tzure)
+        METADATA:
+          status:
+          - preview
+          supported_by: community
+        
+
+EXAMPLES:
+
+- name: Create a new volume.
+  ibm_sa_vol:
+    vol: volume_name
+    pool: pool_name
+    size: 17
+    state: present
+    username: admin
+    password: secret
+    endpoints: hostdev-system
+
+- name: Delete an existing volume.
+  ibm_sa_vol:
+    vol: volume_name
+    state: absent
+    username: admin
+    password: secret
+    endpoints: hostdev-system
+
+
+RETURN VALUES:
+
+

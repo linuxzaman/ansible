@@ -1,0 +1,53 @@
+> ONYX_PFC_INTERFACE    (/usr/lib/python2.7/dist-packages/ansible/modules/network/onyx/onyx_pfc_interface.py)
+
+        This module provides declarative management of priority flow control (PFC) on interfaces of Mellanox ONYX network devices.
+
+  * This module is maintained by The Ansible Community
+OPTIONS (= is mandatory):
+
+- aggregate
+        List of interfaces PFC should be configured on.
+        [Default: (null)]
+
+- name
+        Name of the interface PFC should be configured on.
+        [Default: (null)]
+
+- purge
+        Purge interfaces not defined in the aggregate parameter.
+        [Default: False]
+        type: bool
+
+- state
+        State of the PFC configuration.
+        (Choices: enabled, disabled)[Default: enabled]
+
+
+NOTES:
+      * Tested on ONYX 3.6.4000
+
+
+AUTHOR: Samer Deeb (@samerd)
+        METADATA:
+          status:
+          - preview
+          supported_by: community
+        
+
+EXAMPLES:
+
+- name: configure PFC
+  onyx_pfc_interface:
+    name: Eth1/1
+    state: enabled
+
+
+RETURN VALUES:
+
+commands:
+  description: The list of configuration mode commands to send to the device.
+  returned: always
+  type: list
+  sample:
+    - interface ethernet 1/17 dcb priority-flow-control mode on
+

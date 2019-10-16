@@ -1,0 +1,44 @@
+EXAMPLES:
+
+- name: Provide information about vCenter
+  vmware_about_facts:
+    hostname: '{{ vcenter_hostname }}'
+    username: '{{ vcenter_username }}'
+    password: '{{ vcenter_password }}'
+  delegate_to: localhost
+  register: vcenter_about_info
+
+- name: Provide information about a standalone ESXi server
+  vmware_about_facts:
+    hostname: '{{ esxi_hostname }}'
+    username: '{{ esxi_username }}'
+    password: '{{ esxi_password }}'
+  delegate_to: localhost
+  register: esxi_about_info
+
+
+RETURN VALUES:
+
+about_facts:
+    description:
+    - dict about VMware server
+    returned: success
+    type: str
+    sample:
+        {
+            "api_type": "VirtualCenter",
+            "api_version": "6.5",
+            "build": "5973321",
+            "instance_uuid": "dbed6e0c-bd88-4ef6-b594-21283e1c677f",
+            "license_product_name": "VMware VirtualCenter Server",
+            "license_product_version": "6.0",
+            "locale_build": "000",
+            "locale_version": "INTL",
+            "os_type": "darwin-amd64",
+            "product_full_name": "VMware vCenter Server 6.5.0 build-5973321",
+            "product_line_id": "vpx",
+            "product_name": "VMware vCenter Server (govmomi simulator)",
+            "vendor": "VMware, Inc.",
+            "version": "6.5.0"
+        }
+

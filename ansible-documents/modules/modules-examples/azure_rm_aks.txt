@@ -1,0 +1,61 @@
+EXAMPLES:
+
+- name: Create a managed Azure Container Services (AKS) instance
+      azure_rm_aks:
+        name: acctestaks1
+        location: eastus
+        resource_group: myResourceGroup
+        dns_prefix: akstest
+        linux_profile:
+          admin_username: azureuser
+          ssh_key: ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAA...
+        service_principal:
+          client_id: "cf72ca99-f6b9-4004-b0e0-bee10c521948"
+          client_secret: "mySPNp@ssw0rd!"
+        agent_pool_profiles:
+          - name: default
+            count: 5
+            vm_size: Standard_D2_v2
+        tags:
+          Environment: Production
+
+    - name: Remove a managed Azure Container Services (AKS) instance
+      azure_rm_aks:
+        name: acctestaks3
+        resource_group: myResourceGroup
+        state: absent
+
+
+RETURN VALUES:
+
+state:
+    description: Current state of the Azure Container Service (AKS)
+    returned: always
+    type: dict
+    example:
+        agent_pool_profiles:
+         - count: 1
+           dns_prefix: Null
+           name: default
+           os_disk_size_gb: Null
+           os_type: Linux
+           ports: Null
+           storage_profile: ManagedDisks
+           vm_size: Standard_DS1_v2
+           vnet_subnet_id: Null
+        changed: false
+        dns_prefix: aks9860bdcd89
+        id: "/subscriptions/xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx/resourcegroups/yuwzhoaks/providers/Microsoft.ContainerService/managedClusters/aks9860bdc"
+        kube_config: "......"
+        kubernetes_version: 1.11.4
+        linux_profile:
+           admin_username: azureuser
+           ssh_key: ssh-rsa AAAAB3NzaC1yc2EAAAADA.....
+        location: eastus
+        name: aks9860bdc
+        provisioning_state: Succeeded
+        service_principal_profile:
+           client_id: xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx
+        tags: {}
+        type: Microsoft.ContainerService/ManagedClusters
+

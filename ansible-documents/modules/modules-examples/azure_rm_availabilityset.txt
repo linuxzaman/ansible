@@ -1,0 +1,36 @@
+EXAMPLES:
+
+- name: Create an availability set with default options
+      azure_rm_availabilityset:
+        name: myavailabilityset
+        location: eastus
+        resource_group: myResourceGroup
+
+    - name: Create an availability set with advanced options
+      azure_rm_availabilityset:
+        name: myavailabilityset
+        location: eastus
+        resource_group: myResourceGroup
+        platform_update_domain_count: 5
+        platform_fault_domain_count: 3
+        sku: Aligned
+
+    - name: Delete an availability set
+      azure_rm_availabilityset:
+        name: myavailabilityset
+        location: eastus
+        resource_group: myResourceGroup
+        state: absent
+
+
+RETURN VALUES:
+
+state:
+    description: Current state of the availability set
+    returned: always
+    type: dict
+changed:
+    description: Whether or not the resource has changed
+    returned: always
+    type: bool
+

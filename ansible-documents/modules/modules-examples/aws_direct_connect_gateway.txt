@@ -1,0 +1,37 @@
+EXAMPLES:
+
+- name: Create a new direct connect gateway attached to virtual private gateway
+  dxgw:
+    state: present
+    name: my-dx-gateway
+    amazon_asn: 7224
+    virtual_gateway_id: vpg-12345
+  register: created_dxgw
+
+- name: Create a new unattached dxgw
+  dxgw:
+    state: present
+    name: my-dx-gateway
+    amazon_asn: 7224
+  register: created_dxgw
+
+
+RETURN VALUES:
+
+result:
+  description:
+    - The attributes of the Direct Connect Gateway
+  type: complex
+  returned: I(state=present)
+  contains:
+    amazon_side_asn:
+      description: ASN on the amazon side.
+    direct_connect_gateway_id:
+      description: The ID of the direct connect gateway.
+    direct_connect_gateway_name:
+      description: The name of the direct connect gateway.
+    direct_connect_gateway_state:
+      description: The state of the direct connect gateway.
+    owner_account:
+      description: The AWS account ID of the owner of the direct connect gateway.
+

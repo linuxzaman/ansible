@@ -1,0 +1,68 @@
+EXAMPLES:
+
+- name: Configure vCenter general settings
+  vmware_vcenter_settings:
+    hostname: '{{ vcenter_hostname }}'
+    username: '{{ vcenter_username }}'
+    password: '{{ vcenter_password }}'
+    database:
+      max_connections: 50
+      task_cleanup: true
+      task_retention: 30
+      event_cleanup: true
+      event_retention: 30
+    runtime_settings:
+      unique_id: 1
+      managed_address: "{{ ansible_default_ipv4.address }}"
+      vcenter_server_name: "{{ inventory_hostname }}"
+    user_directory:
+      timeout: 60
+      query_limit: true
+      query_limit_size: 5000
+      validation: true
+      validation_period: 1440
+    mail:
+      server: mail.example.com
+      sender: vcenter@{{ inventory_hostname }}
+    snmp_receivers:
+      snmp_receiver_1_url: localhost
+      snmp_receiver_1_enabled: true
+      snmp_receiver_1_port: 162
+      snmp_receiver_1_community: public
+    timeout_settings:
+      normal_operations: 30
+      long_operations: 120
+    logging_options: info
+    validate_certs: no
+  delegate_to: localhost
+
+
+RETURN VALUES:
+
+results:
+    description: metadata about vCenter settings
+    returned: always
+    type: dict
+    sample: {
+        "changed": false,
+        "db_event_cleanup": true,
+        "db_event_retention": 30,
+        "db_max_connections": 50,
+        "db_task_cleanup": true,
+        "db_task_retention": 30,
+        "directory_query_limit": true,
+        "directory_query_limit_size": 5000,
+        "directory_timeout": 60,
+        "directory_validation": true,
+        "directory_validation_period": 1440,
+        "logging_options": "info",
+        "mail_sender": "vcenter@vcenter01.example.com",
+        "mail_server": "mail.example.com",
+        "msg": "vCenter settings already configured properly",
+        "runtime_managed_address": "192.168.1.10",
+        "runtime_server_name": "vcenter01.example.com",
+        "runtime_unique_id": 1,
+        "timeout_long_operations": 120,
+        "timeout_normal_operations": 30
+    }
+

@@ -1,0 +1,65 @@
+EXAMPLES:
+
+- name: Create partition "foo" using the default route domain
+  bigip_partition:
+    name: foo
+    provider:
+      password: secret
+      server: lb.mydomain.com
+      user: admin
+  delegate_to: localhost
+
+- name: Create partition "bar" using a custom route domain
+  bigip_partition:
+    name: bar
+    route_domain: 3
+    provider:
+      password: secret
+      server: lb.mydomain.com
+      user: admin
+  delegate_to: localhost
+
+- name: Change route domain of partition "foo"
+  bigip_partition:
+    name: foo
+    route_domain: 8
+    provider:
+      password: secret
+      server: lb.mydomain.com
+      user: admin
+  delegate_to: localhost
+
+- name: Set a description for partition "foo"
+  bigip_partition:
+    name: foo
+    description: Tenant CompanyA
+    provider:
+      password: secret
+      server: lb.mydomain.com
+      user: admin
+  delegate_to: localhost
+
+- name: Delete the "foo" partition
+  bigip_partition:
+    name: foo
+    state: absent
+    provider:
+      password: secret
+      server: lb.mydomain.com
+      user: admin
+  delegate_to: localhost
+
+
+RETURN VALUES:
+
+route_domain:
+  description: Name of the route domain associated with the partition.
+  returned: changed and success
+  type: int
+  sample: 0
+description:
+  description: The description of the partition.
+  returned: changed and success
+  type: str
+  sample: Example partition
+

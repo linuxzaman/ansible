@@ -1,0 +1,201 @@
+> BIGIP_GTM_DATACENTER    (/usr/lib/python2.7/dist-packages/ansible/modules/network/f5/bigip_gtm_datacenter.py)
+
+        Manage BIG-IP data center configuration. A data center defines the location where the physical network components reside, such as
+        the server and link objects that share the same subnet on the network. This module is able to manipulate the data center
+        definitions in a BIG-IP.
+
+  * This module is maintained by an Ansible Partner
+OPTIONS (= is mandatory):
+
+- contact
+        The name of the contact for the data center.
+        [Default: (null)]
+        type: str
+
+- description
+        The description of the data center.
+        [Default: (null)]
+        type: str
+
+- location
+        The location of the data center.
+        [Default: (null)]
+        type: str
+
+= name
+        The name of the data center.
+
+        type: str
+
+- partition
+        Device partition to manage resources on.
+        [Default: Common]
+        type: str
+        version_added: 2.5
+        
+
+= password
+        The password for the user account used to connect to the BIG-IP.
+        You may omit this option by setting the environment variable `F5_PASSWORD'.
+        (Aliases: pass, pwd)
+        type: str
+
+- provider
+        A dict object containing connection details.
+        [Default: (null)]
+        suboptions:
+          password:
+            aliases:
+            - pass
+            - pwd
+            description:
+            - The password for the user account used to connect to the BIG-IP.
+            - You may omit this option by setting the environment variable `F5_PASSWORD'.
+            required: true
+            type: str
+          server:
+            description:
+            - The BIG-IP host.
+            - You may omit this option by setting the environment variable `F5_SERVER'.
+            required: true
+            type: str
+          server_port:
+            default: 443
+            description:
+            - The BIG-IP server port.
+            - You may omit this option by setting the environment variable `F5_SERVER_PORT'.
+            type: int
+          ssh_keyfile:
+            description:
+            - Specifies the SSH keyfile to use to authenticate the connection to the remote
+              device.  This argument is only used for `cli' transports.
+            - You may omit this option by setting the environment variable `ANSIBLE_NET_SSH_KEYFILE'.
+            type: path
+          timeout:
+            default: 10
+            description:
+            - Specifies the timeout in seconds for communicating with the network device for
+              either connecting or sending commands.  If the timeout is exceeded before the
+              operation is completed, the module will error.
+            type: int
+          transport:
+            choices:
+            - cli
+            - rest
+            default: rest
+            description:
+            - Configures the transport connection to use when connecting to the remote device.
+            type: str
+          user:
+            description:
+            - The username to connect to the BIG-IP with. This user must have administrative
+              privileges on the device.
+            - You may omit this option by setting the environment variable `F5_USER'.
+            required: true
+            type: str
+          validate_certs:
+            default: true
+            description:
+            - If `no', SSL certificates are not validated. Use this only on personally controlled
+              sites using self-signed certificates.
+            - You may omit this option by setting the environment variable `F5_VALIDATE_CERTS'.
+            type: bool
+        
+        type: dict
+        version_added: 2.5
+
+= server
+        The BIG-IP host.
+        You may omit this option by setting the environment variable `F5_SERVER'.
+
+        type: str
+
+- server_port
+        The BIG-IP server port.
+        You may omit this option by setting the environment variable `F5_SERVER_PORT'.
+        [Default: 443]
+        type: int
+        version_added: 2.2
+
+- state
+        The virtual address state. If `absent', an attempt to delete the virtual address will be made. This will only succeed if this
+        virtual address is not in use by a virtual server. `present' creates the virtual address and enables it. If `enabled', enable the
+        virtual address if it exists. If `disabled', create the virtual address if needed, and set state to `disabled'.
+        (Choices: present, absent, enabled, disabled)[Default: present]
+        type: str
+
+= user
+        The username to connect to the BIG-IP with. This user must have administrative privileges on the device.
+        You may omit this option by setting the environment variable `F5_USER'.
+
+        type: str
+
+- validate_certs
+        If `no', SSL certificates are not validated. Use this only on personally controlled sites using self-signed certificates.
+        You may omit this option by setting the environment variable `F5_VALIDATE_CERTS'.
+        [Default: True]
+        type: bool
+        version_added: 2.0
+
+
+NOTES:
+      * For more information on using Ansible to manage F5 Networks devices see https://www.ansible.com/integrations/networks/f5.
+      * Requires BIG-IP software version >= 12.
+      * The F5 modules only manipulate the running configuration of the F5 product. To ensure that BIG-IP specific configuration
+        persists to disk, be sure to include at least one task that uses the [bigip_config] module to save the running
+        configuration. Refer to the module's documentation for the correct usage of the module to save your running configuration.
+
+
+AUTHOR: Tim Rupp (@caphrim007), Wojciech Wypior (@wojtek0806)
+        METADATA:
+          status:
+          - stableinterface
+          supported_by: certified
+        
+
+EXAMPLES:
+
+- name: Create data center "New York"
+  bigip_gtm_datacenter:
+    name: New York
+    location: 222 West 23rd
+    provider:
+      user: admin
+      password: secret
+      server: lb.mydomain.com
+  delegate_to: localhost
+
+
+RETURN VALUES:
+
+contact:
+  description: The contact that was set on the datacenter.
+  returned: changed
+  type: str
+  sample: admin@root.local
+description:
+  description: The description that was set for the datacenter.
+  returned: changed
+  type: str
+  sample: Datacenter in NYC
+enabled:
+  description: Whether the datacenter is enabled or not
+  returned: changed
+  type: bool
+  sample: true
+disabled:
+  description: Whether the datacenter is disabled or not.
+  returned: changed
+  type: bool
+  sample: true
+state:
+  description: State of the datacenter.
+  returned: changed
+  type: str
+  sample: disabled
+location:
+  description: The location that is set for the datacenter.
+  returned: changed
+  type: str
+  sample: 222 West 23rd
+

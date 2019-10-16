@@ -1,0 +1,148 @@
+> INFLUXDB_RETENTION_POLICY    (/usr/lib/python2.7/dist-packages/ansible/modules/database/influxdb/influxdb_retention_policy.py)
+
+        Manage InfluxDB retention policies
+
+  * This module is maintained by The Ansible Community
+OPTIONS (= is mandatory):
+
+= database_name
+        Name of the database.
+
+
+= default
+        Sets the retention policy as default retention policy
+
+
+= duration
+        Determines how long InfluxDB should keep the data
+
+
+- hostname
+        The hostname or IP address on which InfluxDB server is listening.
+        Since Ansible 2.5, defaulted to localhost.
+        [Default: localhost]
+        type: str
+
+- password
+        Password that will be used to authenticate against InfluxDB server.
+        Alias `login_password' added in Ansible 2.5.
+        (Aliases: login_password)[Default: root]
+        type: str
+
+= policy_name
+        Name of the retention policy
+
+
+- port
+        The port on which InfluxDB server is listening
+        [Default: 8086]
+        type: int
+
+- proxies
+        HTTP(S) proxy to use for Requests to connect to InfluxDB server.
+        [Default: (null)]
+        type: dict
+        version_added: 2.5
+
+= replication
+        Determines how many independent copies of each point are stored in the cluster
+
+
+- retries
+        Number of retries client will try before aborting.
+        `0' indicates try until success.
+        [Default: 3]
+        type: int
+        version_added: 2.5
+
+- ssl
+        Use https instead of http to connect to InfluxDB server.
+        [Default: (null)]
+        type: bool
+        version_added: 2.5
+
+- timeout
+        Number of seconds Requests will wait for client to establish a connection.
+        [Default: (null)]
+        type: int
+        version_added: 2.5
+
+- udp_port
+        UDP port to connect to InfluxDB server.
+        [Default: 4444]
+        type: int
+        version_added: 2.5
+
+- use_udp
+        Use UDP to connect to InfluxDB server.
+        [Default: (null)]
+        type: bool
+        version_added: 2.5
+
+- username
+        Username that will be used to authenticate against InfluxDB server.
+        Alias `login_username' added in Ansible 2.5.
+        (Aliases: login_username)[Default: root]
+        type: str
+
+- validate_certs
+        If set to `no', the SSL certificates will not be validated.
+        This should only set to `no' used on personally controlled sites using self-signed certificates.
+        [Default: True]
+        type: bool
+        version_added: 2.5
+
+
+REQUIREMENTS:  python >= 2.6, influxdb >= 0.9, requests
+
+AUTHOR: Kamil Szczygiel (@kamsz)
+        METADATA:
+          status:
+          - preview
+          supported_by: community
+        
+
+EXAMPLES:
+
+# Example influxdb_retention_policy command from Ansible Playbooks
+- name: create 1 hour retention policy
+  influxdb_retention_policy:
+      hostname: "{{influxdb_ip_address}}"
+      database_name: "{{influxdb_database_name}}"
+      policy_name: test
+      duration: 1h
+      replication: 1
+      ssl: yes
+      validate_certs: yes
+
+- name: create 1 day retention policy
+  influxdb_retention_policy:
+      hostname: "{{influxdb_ip_address}}"
+      database_name: "{{influxdb_database_name}}"
+      policy_name: test
+      duration: 1d
+      replication: 1
+
+- name: create 1 week retention policy
+  influxdb_retention_policy:
+      hostname: "{{influxdb_ip_address}}"
+      database_name: "{{influxdb_database_name}}"
+      policy_name: test
+      duration: 1w
+      replication: 1
+
+- name: create infinite retention policy
+  influxdb_retention_policy:
+      hostname: "{{influxdb_ip_address}}"
+      database_name: "{{influxdb_database_name}}"
+      policy_name: test
+      duration: INF
+      replication: 1
+      ssl: no
+      validate_certs: no
+
+
+RETURN VALUES:
+
+# only defaults
+

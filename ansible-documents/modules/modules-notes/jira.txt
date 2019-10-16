@@ -1,0 +1,205 @@
+> JIRA    (/usr/lib/python2.7/dist-packages/ansible/modules/web_infrastructure/jira.py)
+
+        Create and modify issues in a JIRA instance.
+
+  * This module is maintained by The Ansible Community
+OPTIONS (= is mandatory):
+
+- assignee
+        Sets the assignee on create or transition operations. Note not all transitions will allow this.
+        [Default: (null)]
+
+- comment
+        The comment text to add.
+        [Default: (null)]
+
+- description
+        The issue description, where appropriate.
+        [Default: (null)]
+
+- fields
+        This is a free-form data structure that can contain arbitrary data. This is passed directly to the JIRA REST API (possibly after
+        merging with other required data, as when passed to create). See examples for more information, and the JIRA REST API for the
+        structure required for various fields.
+        [Default: (null)]
+
+- inwardissue
+        Set issue from which link will be created.
+        [Default: (null)]
+        version_added: 2.3
+        
+
+- issue
+        An existing issue key to operate on.
+        [Default: (null)]
+
+- issuetype
+        The issue type, for issue creation.
+        [Default: (null)]
+
+- linktype
+        Set type of link, when action 'link' selected.
+        [Default: (null)]
+        version_added: 2.3
+        
+
+= operation
+        The operation to perform.
+        (Aliases: command)(Choices: create, comment, edit, fetch, transition, link)
+
+- outwardissue
+        Set issue to which link will be created.
+        [Default: (null)]
+        version_added: 2.3
+        
+
+= password
+        The password to log-in with.
+
+
+- project
+        The project for this operation. Required for issue creation.
+        [Default: (null)]
+
+- status
+        The desired status; only relevant for the transition operation.
+        [Default: (null)]
+
+- summary
+        The issue summary, where appropriate.
+        [Default: (null)]
+
+- timeout
+        Set timeout, in seconds, on requests to JIRA API.
+        [Default: 10]
+        version_added: 2.3
+        
+
+= uri
+        Base URI for the JIRA instance.
+
+
+= username
+        The username to log-in with.
+
+
+- validate_certs
+        Require valid SSL certificates (set to `false` if you'd like to use self-signed certificates)
+        [Default: True]
+        type: bool
+        version_added: 2.5
+        
+
+
+NOTES:
+      * Currently this only works with basic-auth.
+
+
+AUTHOR: Steve Smith (@tarka)
+        METADATA:
+          status:
+          - preview
+          supported_by: community
+        
+
+EXAMPLES:
+
+# Create a new issue and add a comment to it:
+- name: Create an issue
+  jira:
+    uri: '{{ server }}'
+    username: '{{ user }}'
+    password: '{{ pass }}'
+    project: ANS
+    operation: create
+    summary: Example Issue
+    description: Created using Ansible
+    issuetype: Task
+  register: issue
+
+- name: Comment on issue
+  jira:
+    uri: '{{ server }}'
+    username: '{{ user }}'
+    password: '{{ pass }}'
+    issue: '{{ issue.meta.key }}'
+    operation: comment
+    comment: A comment added by Ansible
+
+# Assign an existing issue using edit
+- name: Assign an issue using free-form fields
+  jira:
+    uri: '{{ server }}'
+    username: '{{ user }}'
+    password: '{{ pass }}'
+    issue: '{{ issue.meta.key}}'
+    operation: edit
+    assignee: ssmith
+
+# Create an issue with an existing assignee
+- name: Create an assigned issue
+  jira:
+    uri: '{{ server }}'
+    username: '{{ user }}'
+    password: '{{ pass }}'
+    project: ANS
+    operation: create
+    summary: Assigned issue
+    description: Created and assigned using Ansible
+    issuetype: Task
+    assignee: ssmith
+
+# Edit an issue
+- name: Set the labels on an issue using free-form fields
+  jira:
+    uri: '{{ server }}'
+    username: '{{ user }}'
+    password: '{{ pass }}'
+    issue: '{{ issue.meta.key }}'
+    operation: edit
+  args:
+    fields:
+        labels:
+          - autocreated
+          - ansible
+
+# Retrieve metadata for an issue and use it to create an account
+- name: Get an issue
+  jira:
+    uri: '{{ server }}'
+    username: '{{ user }}'
+    password: '{{ pass }}'
+    project: ANS
+    operation: fetch
+    issue: ANS-63
+  register: issue
+
+- name: Create a unix account for the reporter
+  become: true
+  user:
+    name: '{{ issue.meta.fields.creator.name }}'
+    comment: '{{ issue.meta.fields.creator.displayName }}'
+
+# You can get list of valid linktypes at /rest/api/2/issueLinkType
+# url of your jira installation.
+- name: Create link from HSP-1 to MKY-1
+  jira:
+    uri: '{{ server }}'
+    username: '{{ user }}'
+    password: '{{ pass }}'
+    operation: link
+    linktype: Relates
+    inwardissue: HSP-1
+    outwardissue: MKY-1
+
+# Transition an issue by target status
+- name: Close the issue
+  jira:
+    uri: '{{ server }}'
+    username: '{{ user }}'
+    password: '{{ pass }}'
+    issue: '{{ issue.meta.key }}'
+    operation: transition
+    status: Done
+
+

@@ -1,0 +1,36 @@
+EXAMPLES:
+
+- name: create a VLAG
+  pn_vlag:
+    state: 'present'
+    pn_name: spine-to-leaf
+    pn_port: 'spine01-to-leaf'
+    pn_peer_port: 'spine02-to-leaf'
+    pn_peer_switch: spine02
+    pn_mode: 'active-active'
+
+- name: delete VLAGs
+  pn_vlag:
+    state: 'absent'
+    pn_name: spine-to-leaf
+
+
+RETURN VALUES:
+
+command:
+  description: The CLI command run on the target node(s).
+  returned: always
+  type: str
+stdout:
+  description: The set of responses from the vlag command.
+  returned: always
+  type: list
+stderr:
+  description: The set of error responses from the vlag command.
+  returned: on error
+  type: list
+changed:
+  description: Indicates whether the CLI caused changes on the target.
+  returned: always
+  type: bool
+

@@ -1,0 +1,21 @@
+EXAMPLES:
+
+# Examples don't contain auth parameter for simplicity,
+# look at ovirt_auth module to see how to reuse authentication:
+
+# Gather facts about all VMs which relate to a storage domain and
+# are unregistered:
+- ovirt_vms_facts:
+    unregistered=True
+- debug:
+    var: ovirt_storage_vms
+
+
+RETURN VALUES:
+
+ovirt_storage_vms:
+    description: "List of dictionaries describing the VMs. VM attributes are mapped to dictionary keys,
+                  all VMs attributes can be found at following url: http://ovirt.github.io/ovirt-engine-api-model/master/#types/vm."
+    returned: On success.
+    type: list
+

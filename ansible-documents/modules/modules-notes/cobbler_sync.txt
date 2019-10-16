@@ -1,0 +1,65 @@
+> COBBLER_SYNC    (/usr/lib/python2.7/dist-packages/ansible/modules/remote_management/cobbler/cobbler_sync.py)
+
+        Sync Cobbler to commit changes.
+
+  * This module is maintained by The Ansible Community
+OPTIONS (= is mandatory):
+
+- host
+        The name or IP address of the Cobbler system.
+        [Default: 127.0.0.1]
+
+= password
+        The password to log in to Cobbler.
+
+
+- port
+        Port number to be used for REST connection.
+        The default value depends on parameter `use_ssl'.
+        [Default: (null)]
+
+- use_ssl
+        If `no', an HTTP connection will be used instead of the default HTTPS connection.
+        [Default: yes]
+        type: bool
+
+- username
+        The username to log in to Cobbler.
+        [Default: cobbler]
+
+- validate_certs
+        If `no', SSL certificates will not be validated.
+        This should only set to `no' when used on personally controlled sites using self-signed certificates.
+        [Default: yes]
+        type: bool
+
+
+NOTES:
+      * Concurrently syncing Cobbler is bound to fail with weird errors.
+      * On python 2.7.8 and older (i.e. on RHEL7) you may need to tweak the python behaviour to disable certificate validation.
+        More information at L(Certificate verification in Python standard library HTTP
+        clients,https://access.redhat.com/articles/2039753).
+
+
+AUTHOR: Dag Wieers (@dagwieers)
+        METADATA:
+          status:
+          - preview
+          supported_by: community
+        
+
+EXAMPLES:
+
+- name: Commit Cobbler changes
+  cobbler_sync:
+    host: cobbler01
+    username: cobbler
+    password: MySuperSecureP4sswOrd
+  run_once: yes
+  delegate_to: localhost
+
+
+RETURN VALUES:
+
+# Default return values
+

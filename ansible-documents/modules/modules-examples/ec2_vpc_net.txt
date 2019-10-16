@@ -1,0 +1,82 @@
+EXAMPLES:
+
+# Note: These examples do not set authentication details, see the AWS Guide for details.
+
+- name: create a VPC with dedicated tenancy and a couple of tags
+  ec2_vpc_net:
+    name: Module_dev2
+    cidr_block: 10.10.0.0/16
+    region: us-east-1
+    tags:
+      module: ec2_vpc_net
+      this: works
+    tenancy: dedicated
+
+
+RETURN VALUES:
+
+vpc:
+  description: info about the VPC that was created or deleted
+  returned: always
+  type: complex
+  contains:
+    cidr_block:
+      description: The CIDR of the VPC
+      returned: always
+      type: str
+      sample: 10.0.0.0/16
+    cidr_block_association_set:
+      description: IPv4 CIDR blocks associated with the VPC
+      returned: success
+      type: list
+      sample:
+        "cidr_block_association_set": [
+            {
+                "association_id": "vpc-cidr-assoc-97aeeefd",
+                "cidr_block": "20.0.0.0/24",
+                "cidr_block_state": {
+                    "state": "associated"
+                }
+            }
+        ]
+    classic_link_enabled:
+      description: indicates whether ClassicLink is enabled
+      returned: always
+      type: NoneType
+      sample: null
+    dhcp_options_id:
+      description: the id of the DHCP options assocaited with this VPC
+      returned: always
+      type: str
+      sample: dopt-0fb8bd6b
+    id:
+      description: VPC resource id
+      returned: always
+      type: str
+      sample: vpc-c2e00da5
+    instance_tenancy:
+      description: indicates whether VPC uses default or dedicated tenancy
+      returned: always
+      type: str
+      sample: default
+    is_default:
+      description: indicates whether this is the default VPC
+      returned: always
+      type: bool
+      sample: false
+    state:
+      description: state of the VPC
+      returned: always
+      type: str
+      sample: available
+    tags:
+      description: tags attached to the VPC, includes name
+      returned: always
+      type: complex
+      contains:
+        Name:
+          description: name tag for the VPC
+          returned: always
+          type: str
+          sample: pk_vpc4
+

@@ -1,0 +1,44 @@
+EXAMPLES:
+
+- name: Save the running configuration of the BIG-IP
+  bigip_config:
+    save: yes
+    provider:
+      server: lb.mydomain.com
+      password: secret
+      user: admin
+  delegate_to: localhost
+
+- name: Reset the BIG-IP configuration, for example, to RMA the device
+  bigip_config:
+    reset: yes
+    save: yes
+    provider:
+      server: lb.mydomain.com
+      password: secret
+      user: admin
+  delegate_to: localhost
+
+- name: Load an SCF configuration
+  bigip_config:
+    merge_content: "{{ lookup('file', '/path/to/config.scf') }}"
+    provider:
+      server: lb.mydomain.com
+      password: secret
+      user: admin
+  delegate_to: localhost
+
+
+RETURN VALUES:
+
+stdout:
+  description: The set of responses from the options
+  returned: always
+  type: list
+  sample: ['...', '...']
+stdout_lines:
+  description: The value of stdout split into a list
+  returned: always
+  type: list
+  sample: [['...', '...'], ['...'], ['...']]
+

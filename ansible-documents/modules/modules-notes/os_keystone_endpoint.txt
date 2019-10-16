@@ -1,0 +1,170 @@
+> OS_KEYSTONE_ENDPOINT    (/usr/lib/python2.7/dist-packages/ansible/modules/cloud/openstack/os_keystone_endpoint.py)
+
+        Create, update, or delete OpenStack Identity service endpoints. If a service with the same combination of `service', `interface'
+        and `region' exist, the `url' and `state' (`present' or `absent') will be updated.
+
+  * This module is maintained by The Ansible Community
+OPTIONS (= is mandatory):
+
+- api_timeout
+        How long should the socket layer wait before timing out for API calls. If this is omitted, nothing will be passed to the requests
+        library.
+        [Default: (null)]
+        type: int
+
+- auth
+        Dictionary containing auth information as needed by the cloud's auth plugin strategy. For the default `password' plugin, this
+        would contain `auth_url', `username', `password', `project_name' and any information about domains (for example,
+        `os_user_domain_name' or `os_project_domain_name') if the cloud supports them. For other plugins, this param will need to contain
+        whatever parameters that auth plugin requires. This parameter is not needed if a named cloud is provided or OpenStack OS_*
+        environment variables are present.
+        [Default: (null)]
+        type: dict
+
+- auth_type
+        Name of the auth plugin to use. If the cloud uses something other than password authentication, the name of the plugin should be
+        indicated here and the contents of the `auth' parameter should be updated accordingly.
+        [Default: (null)]
+        type: str
+
+- ca_cert
+        A path to a CA Cert bundle that can be used as part of verifying SSL API requests.
+        (Aliases: cacert)[Default: (null)]
+        type: str
+
+- client_cert
+        A path to a client certificate to use as part of the SSL transaction.
+        (Aliases: cert)[Default: (null)]
+        type: str
+
+- client_key
+        A path to a client key to use as part of the SSL transaction.
+        (Aliases: key)[Default: (null)]
+        type: str
+
+- cloud
+        Named cloud or cloud config to operate against. If `cloud' is a string, it references a named cloud config as defined in an
+        OpenStack clouds.yaml file. Provides default values for `auth' and `auth_type'. This parameter is not needed if `auth' is
+        provided or if OpenStack OS_* environment variables are present. If `cloud' is a dict, it contains a complete cloud configuration
+        like would be in a section of clouds.yaml.
+        [Default: (null)]
+        type: raw
+
+- enabled
+        Is the service enabled.
+        [Default: True]
+        type: bool
+
+= interface
+        Interface of the service.
+        (Aliases: endpoint_type)(Choices: admin, public, internal)[Default: public]
+        type: str
+        version_added: 2.3
+
+- region
+        Region that the service belongs to. Note that `region_name' is used for authentication.
+        [Default: (null)]
+
+- region_name
+        Name of the region.
+        [Default: (null)]
+        type: str
+
+= service
+        Name or id of the service.
+
+
+- state
+        Should the resource be `present' or `absent'.
+        (Choices: present, absent)[Default: present]
+
+- timeout
+        How long should ansible wait for the requested resource.
+        [Default: 180]
+        type: int
+
+= url
+        URL of the service.
+
+
+- validate_certs
+        Whether or not SSL API requests should be verified.
+        Before Ansible 2.3 this defaulted to `yes'.
+        (Aliases: verify)[Default: False]
+        type: bool
+
+- wait
+        Should ansible wait until the requested resource is complete.
+        [Default: True]
+        type: bool
+
+
+NOTES:
+      * The standard OpenStack environment variables, such as `OS_USERNAME' may be used instead of providing explicit values.
+      * Auth information is driven by openstacksdk, which means that values can come from a yaml config file in
+        /etc/ansible/openstack.yaml, /etc/openstack/clouds.yaml or ~/.config/openstack/clouds.yaml, then from standard environment
+        variables, then finally by explicit parameters in plays. More information can be found at
+        https://docs.openstack.org/openstacksdk/
+
+
+REQUIREMENTS:  openstacksdk, openstacksdk >= 0.13.0, python >= 2.7
+
+AUTHOR: Mohammed Naser (@mnaser), Alberto Murillo (@albertomurillo)
+        METADATA:
+          status:
+          - preview
+          supported_by: community
+        
+
+EXAMPLES:
+
+- name: Create a service for glance
+  os_keystone_endpoint:
+     cloud: mycloud
+     service: glance
+     endpoint_interface: public
+     url: http://controller:9292
+     region: RegionOne
+     state: present
+
+- name: Delete a service for nova
+  os_keystone_endpoint:
+     cloud: mycloud
+     service: nova
+     endpoint_interface: public
+     region: RegionOne
+     state: absent
+
+
+RETURN VALUES:
+
+endpoint:
+    description: Dictionary describing the endpoint.
+    returned: On success when I(state) is C(present)
+    type: complex
+    contains:
+        id:
+            description: Endpoint ID.
+            type: str
+            sample: 3292f020780b4d5baf27ff7e1d224c44
+        region:
+            description: Region Name.
+            type: str
+            sample: RegionOne
+        service_id:
+            description: Service ID.
+            type: str
+            sample: b91f1318f735494a825a55388ee118f3
+        interface:
+            description: Endpoint Interface.
+            type: str
+            sample: public
+        url:
+            description: Service URL.
+            type: str
+            sample: http://controller:9292
+        enabled:
+            description: Service status.
+            type: bool
+            sample: True
+

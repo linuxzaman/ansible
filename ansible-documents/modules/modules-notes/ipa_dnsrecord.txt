@@ -1,0 +1,199 @@
+> IPA_DNSRECORD    (/usr/lib/python2.7/dist-packages/ansible/modules/identity/ipa/ipa_dnsrecord.py)
+
+        Add, modify and delete an IPA DNS Record using IPA API.
+
+  * This module is maintained by The Ansible Community
+OPTIONS (= is mandatory):
+
+- ipa_host
+        IP or hostname of IPA server.
+        If the value is not specified in the task, the value of environment variable `IPA_HOST' will be used instead.
+        If both the environment variable `IPA_HOST' and the value are not specified in the task, then DNS will be used to try to discover
+        the FreeIPA server.
+        The relevant entry needed in FreeIPA is the 'ipa-ca' entry.
+        If neither the DNS entry, nor the environment `IPA_HOST', nor the value are available in the task, then the default value will be
+        used.
+        Environment variable fallback mechanism is added in Ansible 2.5.
+        [Default: ipa.example.com]
+        type: str
+
+= ipa_pass
+        Password of administrative user.
+        If the value is not specified in the task, the value of environment variable `IPA_PASS' will be used instead.
+        Note that if the 'urllib_gssapi' library is available, it is possible to use GSSAPI to authenticate to FreeIPA.
+        If the environment variable `KRB5CCNAME' is available, the module will use this kerberos credentials cache to authenticate to the
+        FreeIPA server.
+        If the environment variable `KRB5_CLIENT_KTNAME' is available, and `KRB5CCNAME' is not; the module will use this kerberos keytab
+        to authenticate.
+        If GSSAPI is not available, the usage of 'ipa_pass' is required.
+        Environment variable fallback mechanism is added in Ansible 2.5.
+
+        type: str
+
+- ipa_port
+        Port of FreeIPA / IPA server.
+        If the value is not specified in the task, the value of environment variable `IPA_PORT' will be used instead.
+        If both the environment variable `IPA_PORT' and the value are not specified in the task, then default value is set.
+        Environment variable fallback mechanism is added in Ansible 2.5.
+        [Default: 443]
+        type: int
+
+- ipa_prot
+        Protocol used by IPA server.
+        If the value is not specified in the task, the value of environment variable `IPA_PROT' will be used instead.
+        If both the environment variable `IPA_PROT' and the value are not specified in the task, then default value is set.
+        Environment variable fallback mechanism is added in Ansible 2.5.
+        (Choices: http, https)[Default: https]
+        type: str
+
+- ipa_timeout
+        Specifies idle timeout (in seconds) for the connection.
+        For bulk operations, you may want to increase this in order to avoid timeout from IPA server.
+        If the value is not specified in the task, the value of environment variable `IPA_TIMEOUT' will be used instead.
+        If both the environment variable `IPA_TIMEOUT' and the value are not specified in the task, then default value is set.
+        [Default: 10]
+        type: int
+        version_added: 2.7
+
+- ipa_user
+        Administrative account used on IPA server.
+        If the value is not specified in the task, the value of environment variable `IPA_USER' will be used instead.
+        If both the environment variable `IPA_USER' and the value are not specified in the task, then default value is set.
+        Environment variable fallback mechanism is added in Ansible 2.5.
+        [Default: admin]
+        type: str
+
+= record_name
+        The DNS record name to manage.
+        (Aliases: name)
+
+- record_ttl
+        Set the TTL for the record.
+        Applies only when adding a new or changing the value of record_value.
+        [Default: (null)]
+        version_added: 2.7
+
+- record_type
+        The type of DNS record name.
+        Currently, 'A', 'AAAA', 'A6', 'CNAME', 'DNAME', 'PTR', 'TXT', 'SRV' and 'MX' are supported.
+        'A6', 'CNAME', 'DNAME' and 'TXT' are added in version 2.5.
+        'SRV' and 'MX' are added in version 2.8.
+        (Choices: A, AAAA, A6, CNAME, DNAME, PTR, TXT, SRV, MX)[Default: A]
+
+= record_value
+        Manage DNS record name with this value.
+        In the case of 'A' or 'AAAA' record types, this will be the IP address.
+        In the case of 'A6' record type, this will be the A6 Record data.
+        In the case of 'CNAME' record type, this will be the hostname.
+        In the case of 'DNAME' record type, this will be the DNAME target.
+        In the case of 'PTR' record type, this will be the hostname.
+        In the case of 'TXT' record type, this will be a text.
+        In the case of 'SRV' record type, this will be a service record.
+        In the case of 'MX' record type, this will be a mail exchanger record.
+
+
+- state
+        State to ensure
+        (Choices: present, absent)[Default: present]
+
+- validate_certs
+        This only applies if `ipa_prot' is `https'.
+        If set to `no', the SSL certificates will not be validated.
+        This should only set to `no' used on personally controlled sites using self-signed certificates.
+        [Default: True]
+        type: bool
+
+= zone_name
+        The DNS zone name to which DNS record needs to be managed.
+
+
+
+AUTHOR: Abhijeet Kasurde (@Akasurde)
+        METADATA:
+          status:
+          - preview
+          supported_by: community
+        
+
+EXAMPLES:
+
+# Ensure dns record is present
+- ipa_dnsrecord:
+    ipa_host: spider.example.com
+    ipa_pass: Passw0rd!
+    state: present
+    zone_name: example.com
+    record_name: vm-001
+    record_type: 'AAAA'
+    record_value: '::1'
+
+# Ensure that dns record exists with a TTL
+- ipa_dnsrecord:
+    name: host02
+    zone_name: example.com
+    record_type: 'AAAA'
+    record_value: '::1'
+    record_ttl: 300
+    ipa_host: ipa.example.com
+    ipa_pass: topsecret
+    state: present
+
+# Ensure a PTR record is present
+- ipa_dnsrecord:
+    ipa_host: spider.example.com
+    ipa_pass: Passw0rd!
+    state: present
+    zone_name: 2.168.192.in-addr.arpa
+    record_name: 5
+    record_type: 'PTR'
+    record_value: 'internal.ipa.example.com'
+
+# Ensure a TXT record is present
+- ipa_dnsrecord:
+    ipa_host: spider.example.com
+    ipa_pass: Passw0rd!
+    state: present
+    zone_name: example.com
+    record_name: _kerberos
+    record_type: 'TXT'
+    record_value: 'EXAMPLE.COM'
+
+# Ensure an SRV record is present
+- ipa_dnsrecord:
+    ipa_host: spider.example.com
+    ipa_pass: Passw0rd!
+    state: present
+    zone_name: example.com
+    record_name: _kerberos._udp.example.com
+    record_type: 'SRV'
+    record_value: '10 50 88 ipa.example.com'
+
+# Ensure an MX record is present
+- ipa_dnsrecord:
+    ipa_host: spider.example.com
+    ipa_pass: Passw0rd!
+    state: present
+    zone_name: example.com
+    record_name: '@'
+    record_type: 'MX'
+    record_value: '1 mailserver.example.com'
+
+# Ensure that dns record is removed
+- ipa_dnsrecord:
+    name: host01
+    zone_name: example.com
+    record_type: 'AAAA'
+    record_value: '::1'
+    ipa_host: ipa.example.com
+    ipa_user: admin
+    ipa_pass: topsecret
+    state: absent
+
+
+RETURN VALUES:
+
+dnsrecord:
+  description: DNS record as returned by IPA API.
+  returned: always
+  type: dict
+

@@ -1,0 +1,120 @@
+> AIX_LVOL    (/usr/lib/python2.7/dist-packages/ansible/modules/system/aix_lvol.py)
+
+        This module creates, removes or resizes AIX logical volumes. Inspired by lvol module.
+
+  * This module is maintained by The Ansible Community
+OPTIONS (= is mandatory):
+
+- copies
+        The number of copies of the logical volume.
+        Maximum copies are 3.
+        [Default: 1]
+        type: int
+
+= lv
+        The name of the logical volume.
+
+        type: str
+
+- lv_type
+        The type of the logical volume.
+        [Default: jfs2]
+        type: str
+
+- opts
+        Free-form options to be passed to the mklv command.
+        [Default: (null)]
+        type: str
+
+- policy
+        Sets the interphysical volume allocation policy.
+        `maximum' allocates logical partitions across the maximum number of physical volumes.
+        `minimum' allocates logical partitions across the minimum number of physical volumes.
+        (Choices: maximum, minimum)[Default: maximum]
+        type: str
+
+- pvs
+        A list of physical volumes e.g. `hdisk1,hdisk2'.
+        [Default: (null)]
+        type: list
+
+- size
+        The size of the logical volume with one of the [MGT] units.
+        [Default: (null)]
+        type: str
+
+- state
+        Control if the logical volume exists. If `present' and the volume does not already exist then the `size' option is required.
+        (Choices: absent, present)[Default: present]
+        type: str
+
+= vg
+        The volume group this logical volume is part of.
+
+        type: str
+
+
+AUTHOR: Alain Dejoux (@adejoux)
+        METADATA:
+          status:
+          - preview
+          supported_by: community
+        
+
+EXAMPLES:
+
+- name: Create a logical volume of 512M
+  aix_lvol:
+    vg: testvg
+    lv: testlv
+    size: 512M
+
+- name: Create a logical volume of 512M with disks hdisk1 and hdisk2
+  aix_lvol:
+    vg: testvg
+    lv: test2lv
+    size: 512M
+    pvs: [ hdisk1, hdisk2 ]
+
+- name: Create a logical volume of 512M mirrored
+  aix_lvol:
+    vg: testvg
+    lv: test3lv
+    size: 512M
+    copies: 2
+
+- name: Create a logical volume of 1G with a minimum placement policy
+  aix_lvol:
+    vg: rootvg
+    lv: test4lv
+    size: 1G
+    policy: minimum
+
+- name: Create a logical volume with special options like mirror pool
+  aix_lvol:
+    vg: testvg
+    lv: testlv
+    size: 512M
+    opts: -p copy1=poolA -p copy2=poolB
+
+- name: Extend the logical volume to 1200M
+  aix_lvol:
+    vg: testvg
+    lv: test4lv
+    size: 1200M
+
+- name: Remove the logical volume
+  aix_lvol:
+    vg: testvg
+    lv: testlv
+    state: absent
+
+
+RETURN VALUES:
+
+msg:
+  type: str
+  description: A friendly message describing the task result.
+  returned: always
+  sample: Logical volume testlv created.
+

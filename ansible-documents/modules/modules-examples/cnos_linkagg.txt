@@ -1,0 +1,47 @@
+EXAMPLES:
+
+- name: create link aggregation group
+  cnos_linkagg:
+    group: 10
+    state: present
+
+- name: delete link aggregation group
+  cnos_linkagg:
+    group: 10
+    state: absent
+
+- name: set link aggregation group to members
+  cnos_linkagg:
+    group: 200
+    mode: active
+    members:
+      - Ethernet1/33
+      - Ethernet1/44
+
+- name: remove link aggregation group from GigabitEthernet0/0
+  cnos_linkagg:
+    group: 200
+    mode: active
+    members:
+      - Ethernet1/33
+
+- name: Create aggregate of linkagg definitions
+  cnos_linkagg:
+    aggregate:
+      - { group: 3, mode: on, members: [Ethernet1/33] }
+      - { group: 100, mode: passive, members: [Ethernet1/44] }
+
+
+RETURN VALUES:
+
+commands:
+  description: The list of configuration mode commands to send to the device
+  returned: always, except for the platforms that use Netconf transport to
+    manage the device.
+  type: list
+  sample:
+    - interface port-channel 30
+    - interface Ethernet1/33
+    - channel-group 30 mode on
+    - no interface port-channel 30
+

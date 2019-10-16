@@ -1,0 +1,20 @@
+EXAMPLES:
+
+# Examples don't contain auth parameter for simplicity,
+# look at ovirt_auth module to see how to reuse authentication:
+
+# Gather facts about all data centers which names start with C(production):
+- ovirt_datacenter_facts:
+    pattern: name=production*
+- debug:
+    var: ovirt_datacenters
+
+
+RETURN VALUES:
+
+ovirt_datacenters:
+    description: "List of dictionaries describing the datacenters. Datacenter attributes are mapped to dictionary keys,
+                  all datacenters attributes can be found at following url: http://ovirt.github.io/ovirt-engine-api-model/master/#types/data_center."
+    returned: On success.
+    type: list
+

@@ -1,0 +1,243 @@
+> VMWARE_CLUSTER    (/usr/lib/python2.7/dist-packages/ansible/modules/cloud/vmware/vmware_cluster.py)
+
+        This module can be used to add, remove and update VMware vSphere clusters and its configurations. Module can manage HA, DRS and
+        VSAN related configurations. All values and VMware object names are case sensitive.
+
+  * This module is maintained by The Ansible Community
+OPTIONS (= is mandatory):
+
+= cluster_name
+        The name of the cluster to be managed.
+
+
+= datacenter
+        The name of the datacenter.
+        (Aliases: datacenter_name)
+
+- drs_default_vm_behavior
+        Specifies the cluster-wide default DRS behavior for virtual machines.
+        If set to `partiallyAutomated', then vCenter generate recommendations for virtual machine migration and for the placement with a
+        host. vCenter automatically implement placement at power on.
+        If set to `manual', then vCenter generate recommendations for virtual machine migration and for the placement with a host.
+        vCenter should not implement the recommendations automatically.
+        If set to `fullyAutomated', then vCenter should automate both the migration of virtual machines and their placement with a host
+        at power on.
+        (Choices: fullyAutomated, manual, partiallyAutomated)[Default: fullyAutomated]
+        version_added: 2.8
+        
+
+- drs_enable_vm_behavior_overrides
+        Determines whether DRS Behavior overrides for individual virtual machines are enabled.
+        If set to `True', overrides `drs_default_vm_behavior'.
+        [Default: True]
+        type: bool
+        version_added: 2.8
+        
+
+- drs_vmotion_rate
+        Threshold for generated ClusterRecommendations.
+        (Choices: 1, 2, 3, 4, 5)[Default: 3]
+        version_added: 2.8
+        
+
+- enable_drs
+        If set to `yes', will enable DRS when the cluster is created.
+        [Default: no]
+        type: bool
+
+- enable_ha
+        If set to `yes' will enable HA when the cluster is created.
+        [Default: no]
+        type: bool
+
+- enable_vsan
+        If set to `yes' will enable vSAN when the cluster is created.
+        [Default: no]
+        type: bool
+
+- ha_admission_control_enabled
+        Determines if strict admission control is enabled.
+        It is recommended to set this parameter to `True', please refer documentation for more details.
+        [Default: True]
+        type: bool
+        version_added: 2.8
+        
+
+- ha_failover_level
+        Number of host failures that should be tolerated, still guaranteeing sufficient resources to restart virtual machines on
+        available hosts.
+        Accepts integer values only.
+        [Default: 2]
+        version_added: 2.8
+        
+
+- ha_host_monitoring
+        Indicates whether HA restarts virtual machines after a host fails.
+        If set to `enabled', HA restarts virtual machines after a host fails.
+        If set to `disabled', HA does not restart virtual machines after a host fails.
+        If `enable_ha' is set to `no', then this value is ignored.
+        (Choices: enabled, disabled)[Default: enabled]
+        version_added: 2.8
+        
+
+- ha_restart_priority
+        Determines the preference that HA gives to a virtual machine if sufficient capacity is not available to power on all failed
+        virtual machines.
+        This setting is only valid if `ha_vm_monitoring' is set to, either `vmAndAppMonitoring' or `vmMonitoringOnly'.
+        If set to `disabled', then HA is disabled for this virtual machine.
+        If set to `high', then virtual machine with this priority have a higher chance of powering on after a failure, when there is
+        insufficient capacity on hosts to meet all virtual machine needs.
+        If set to `medium', then virtual machine with this priority have an intermediate chance of powering on after a failure, when
+        there is insufficient capacity on hosts to meet all virtual machine needs.
+        If set to `low', then virtual machine with this priority have a lower chance of powering on after a failure, when there is
+        insufficient capacity on hosts to meet all virtual machine needs.
+        (Choices: disabled, high, low, medium)[Default: medium]
+        version_added: 2.8
+        
+
+- ha_vm_failure_interval
+        The number of seconds after which virtual machine is declared as failed if no heartbeat has been received.
+        This setting is only valid if `ha_vm_monitoring' is set to, either `vmAndAppMonitoring' or `vmMonitoringOnly'.
+        Unit is seconds.
+        [Default: 30]
+        version_added: 2.8
+        
+
+- ha_vm_max_failure_window
+        The number of seconds for the window during which up to `ha_vm_max_failures' resets can occur before automated responses stop.
+        This setting is only valid if `ha_vm_monitoring' is set to, either `vmAndAppMonitoring' or `vmMonitoringOnly'.
+        Unit is seconds.
+        Default specifies no failure window.
+        [Default: -1]
+        version_added: 2.8
+        
+
+- ha_vm_max_failures
+        Maximum number of failures and automated resets allowed during the time that `ha_vm_max_failure_window' specifies.
+        This setting is only valid if `ha_vm_monitoring' is set to, either `vmAndAppMonitoring' or `vmMonitoringOnly'.
+        [Default: 3]
+        version_added: 2.8
+        
+
+- ha_vm_min_up_time
+        The number of seconds for the virtual machine's heartbeats to stabilize after the virtual machine has been powered on.
+        This setting is only valid if `ha_vm_monitoring' is set to, either `vmAndAppMonitoring' or `vmMonitoringOnly'.
+        Unit is seconds.
+        [Default: 120]
+        version_added: 2.8
+        
+
+- ha_vm_monitoring
+        Indicates the state of virtual machine health monitoring service.
+        If set to `vmAndAppMonitoring', HA response to both virtual machine and application heartbeat failure.
+        If set to `vmMonitoringDisabled', virtual machine health monitoring is disabled.
+        If set to `vmMonitoringOnly', HA response to virtual machine heartbeat failure.
+        If `enable_ha' is set to `no', then this value is ignored.
+        (Choices: vmAndAppMonitoring, vmMonitoringOnly, vmMonitoringDisabled)[Default: vmMonitoringDisabled]
+        version_added: 2.8
+        
+
+- hostname
+        The hostname or IP address of the vSphere vCenter or ESXi server.
+        If the value is not specified in the task, the value of environment variable `VMWARE_HOST' will be used instead.
+        Environment variable support added in Ansible 2.6.
+        [Default: (null)]
+        type: str
+
+- password
+        The password of the vSphere vCenter or ESXi server.
+        If the value is not specified in the task, the value of environment variable `VMWARE_PASSWORD' will be used instead.
+        Environment variable support added in Ansible 2.6.
+        (Aliases: pass, pwd)[Default: (null)]
+        type: str
+
+- port
+        The port number of the vSphere vCenter or ESXi server.
+        If the value is not specified in the task, the value of environment variable `VMWARE_PORT' will be used instead.
+        Environment variable support added in Ansible 2.6.
+        [Default: 443]
+        type: int
+        version_added: 2.5
+
+- state
+        Create `present' or remove `absent' a VMware vSphere cluster.
+        (Choices: absent, present)[Default: present]
+
+- username
+        The username of the vSphere vCenter or ESXi server.
+        If the value is not specified in the task, the value of environment variable `VMWARE_USER' will be used instead.
+        Environment variable support added in Ansible 2.6.
+        (Aliases: admin, user)[Default: (null)]
+        type: str
+
+- validate_certs
+        Allows connection when SSL certificates are not valid. Set to `false' when certificates are not trusted.
+        If the value is not specified in the task, the value of environment variable `VMWARE_VALIDATE_CERTS' will be used instead.
+        Environment variable support added in Ansible 2.6.
+        If set to `yes', please make sure Python >= 2.7.9 is installed on the given machine.
+        [Default: True]
+        type: bool
+
+- vsan_auto_claim_storage
+        Determines whether the VSAN service is configured to automatically claim local storage on VSAN-enabled hosts in the cluster.
+        [Default: False]
+        type: bool
+        version_added: 2.8
+        
+
+
+REQUIREMENTS:  Tested on ESXi 5.5 and 6.5., PyVmomi installed.
+
+AUTHOR: Joseph Callen (@jcpowermac), Abhijeet Kasurde (@Akasurde)
+        METADATA:
+          status:
+          - preview
+          supported_by: community
+        
+
+EXAMPLES:
+
+- name: Create Cluster
+  vmware_cluster:
+    hostname: '{{ vcenter_hostname }}'
+    username: '{{ vcenter_username }}'
+    password: '{{ vcenter_password }}'
+    datacenter_name: datacenter
+    cluster_name: cluster
+    enable_ha: yes
+    enable_drs: yes
+    enable_vsan: yes
+  delegate_to: localhost
+
+- name: Create Cluster with additional changes
+  vmware_cluster:
+    hostname: "{{ vcenter_server }}"
+    username: "{{ vcenter_user }}"
+    password: "{{ vcenter_pass }}"
+    validate_certs: no
+    datacenter_name: DC0
+    cluster_name: "{{ cluster_name }}"
+    enable_ha: True
+    ha_vm_monitoring: vmMonitoringOnly
+    enable_drs: True
+    drs_default_vm_behavior: partiallyAutomated
+    enable_vsan: True
+  register: cl_result
+  delegate_to: localhost
+
+- name: Delete Cluster
+  vmware_cluster:
+    hostname: "{{ vcenter_server }}"
+    username: "{{ vcenter_user }}"
+    password: "{{ vcenter_pass }}"
+    datacenter_name: datacenter
+    cluster_name: cluster
+    enable_ha: yes
+    enable_drs: yes
+    enable_vsan: yes
+    state: absent
+
+
+RETURN VALUES:
+#
+

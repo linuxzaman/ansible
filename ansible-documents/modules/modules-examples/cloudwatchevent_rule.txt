@@ -1,0 +1,43 @@
+EXAMPLES:
+
+- cloudwatchevent_rule:
+    name: MyCronTask
+    schedule_expression: "cron(0 20 * * ? *)"
+    description: Run my scheduled task
+    targets:
+      - id: MyTargetId
+        arn: arn:aws:lambda:us-east-1:123456789012:function:MyFunction
+
+- cloudwatchevent_rule:
+    name: MyDisabledCronTask
+    schedule_expression: "rate(5 minutes)"
+    description: Run my disabled scheduled task
+    state: disabled
+    targets:
+      - id: MyOtherTargetId
+        arn: arn:aws:lambda:us-east-1:123456789012:function:MyFunction
+        input: '{"foo": "bar"}'
+
+- cloudwatchevent_rule:
+    name: MyCronTask
+    state: absent
+
+
+RETURN VALUES:
+
+rule:
+    description: CloudWatch Event rule data
+    returned: success
+    type: dict
+    sample:
+      arn: 'arn:aws:events:us-east-1:123456789012:rule/MyCronTask'
+      description: 'Run my scheduled task'
+      name: 'MyCronTask'
+      schedule_expression: 'cron(0 20 * * ? *)'
+      state: 'ENABLED'
+targets:
+    description: CloudWatch Event target(s) assigned to the rule
+    returned: success
+    type: list
+    sample: "[{ 'arn': 'arn:aws:lambda:us-east-1:123456789012:function:MyFunction', 'id': 'MyTargetId' }]"
+

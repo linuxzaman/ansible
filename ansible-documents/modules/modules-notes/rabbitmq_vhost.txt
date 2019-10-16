@@ -1,0 +1,41 @@
+> RABBITMQ_VHOST    (/usr/lib/python2.7/dist-packages/ansible/modules/messaging/rabbitmq/rabbitmq_vhost.py)
+
+        Manage the state of a virtual host in RabbitMQ
+
+  * This module is maintained by The Ansible Community
+OPTIONS (= is mandatory):
+
+= name
+        The name of the vhost to manage
+        (Aliases: vhost)
+
+- node
+        erlang node name of the rabbit we wish to configure
+        [Default: rabbit]
+        version_added: 1.2
+
+- state
+        The state of vhost
+        (Choices: present, absent)[Default: present]
+
+- tracing
+        Enable/disable tracing for a vhost
+        (Aliases: trace)[Default: no]
+        type: bool
+
+
+AUTHOR: Chris Hoffman (@chrishoffman)
+        METADATA:
+          status:
+          - preview
+          supported_by: community
+        
+
+EXAMPLES:
+
+# Ensure that the vhost /test exists.
+- rabbitmq_vhost:
+    name: /test
+    state: present
+
+

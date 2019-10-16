@@ -1,0 +1,35 @@
+> KERNEL_BLACKLIST    (/usr/lib/python2.7/dist-packages/ansible/modules/system/kernel_blacklist.py)
+
+        Add or remove kernel modules from blacklist.
+
+  * This module is maintained by The Ansible Community
+OPTIONS (= is mandatory):
+
+- blacklist_file
+        If specified, use this blacklist file instead of `/etc/modprobe.d/blacklist-ansible.conf'.
+        [Default: (null)]
+
+= name
+        Name of kernel module to black- or whitelist.
+
+
+- state
+        Whether the module should be present in the blacklist or absent.
+        (Choices: absent, present)[Default: present]
+
+
+AUTHOR: Matthias Vogelgesang (@matze)
+        METADATA:
+          status:
+          - preview
+          supported_by: community
+        
+
+EXAMPLES:
+
+- name: Blacklist the nouveau driver module
+  kernel_blacklist:
+    name: nouveau
+    state: present
+
+

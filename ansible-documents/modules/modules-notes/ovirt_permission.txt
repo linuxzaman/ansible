@@ -1,0 +1,201 @@
+> OVIRT_PERMISSION    (/usr/lib/python2.7/dist-packages/ansible/modules/cloud/ovirt/ovirt_permission.py)
+
+        Module to manage permissions of users/groups in oVirt/RHV.
+
+  * This module is maintained by The Ansible Community
+OPTIONS (= is mandatory):
+
+= auth
+        Dictionary with values needed to create HTTP/HTTPS connection to oVirt:
+
+        suboptions:
+          ca_file:
+            description:
+            - A PEM file containing the trusted CA certificates.
+            - The certificate presented by the server will be verified using these CA certificates.
+            - If `ca_file' parameter is not set, system wide CA certificate store is used.
+            - Default value is set by `OVIRT_CAFILE' environment variable.
+            type: str
+          headers:
+            description:
+            - Dictionary of HTTP headers to be added to each API call.
+            type: dict
+          hostname:
+            description:
+            - A string containing the hostname of the server, usually something like ``server.example.com'`.
+            - Default value is set by `OVIRT_HOSTNAME' environment variable.
+            - Either `url' or `hostname' is required.
+            type: str
+          insecure:
+            description:
+            - A boolean flag that indicates if the server TLS certificate and host name should
+              be checked.
+            type: bool
+          kerberos:
+            description:
+            - A boolean flag indicating if Kerberos authentication should be used instead
+              of the default basic authentication.
+            type: bool
+          password:
+            description:
+            - The password of the user.
+            - Default value is set by `OVIRT_PASSWORD' environment variable.
+            required: true
+            type: str
+          token:
+            description:
+            - Token to be used instead of login with username/password.
+            - Default value is set by `OVIRT_TOKEN' environment variable.
+            type: str
+          url:
+            description:
+            - A string containing the API URL of the server, usually something like ``https://server.example.com/ovirt-engine/api'`.
+            - Default value is set by `OVIRT_URL' environment variable.
+            - Either `url' or `hostname' is required.
+            type: str
+          username:
+            description:
+            - The name of the user, something like `admin@internal'.
+            - Default value is set by `OVIRT_USERNAME' environment variable.
+            required: true
+            type: str
+        
+        type: dict
+
+= authz_name
+        Authorization provider of the user/group.
+        (Aliases: domain)
+
+- fetch_nested
+        If `True' the module will fetch additional data from the API.
+        It will fetch IDs of the VMs disks, snapshots, etc. User can configure to fetch other attributes of the nested entities by
+        specifying `nested_attributes'.
+        [Default: (null)]
+        type: bool
+        version_added: 2.3
+
+- group_name
+        Name of the group to manage.
+        Note that if group does not exist in the system this module will fail, you should ensure the group exists by using [ovirt_groups]
+        module.
+        [Default: (null)]
+
+- namespace
+        Namespace of the authorization provider, where user/group resides.
+        [Default: (null)]
+
+- nested_attributes
+        Specifies list of the attributes which should be fetched from the API.
+        This parameter apply only when `fetch_nested' is `true'.
+        [Default: (null)]
+        type: list
+        version_added: 2.3
+
+- object_id
+        ID of the object where the permissions should be managed.
+        [Default: (null)]
+
+- object_name
+        Name of the object where the permissions should be managed.
+        [Default: (null)]
+
+- object_type
+        The object where the permissions should be managed.
+        (Choices: cluster, cpu_profile, data_center, disk, disk_profile, host, network, storage_domain, system, template, vm, vm_pool,
+        vnic_profile)[Default: vm]
+
+- poll_interval
+        Number of the seconds the module waits until another poll request on entity status is sent.
+        [Default: 3]
+        type: int
+
+- quota_name
+        Name of the quota to assign permission. Works only with `object_type' `data_center'.
+        [Default: (null)]
+        version_added: 2.7
+
+- role
+        Name of the role to be assigned to user/group on specific object.
+        [Default: UserRole]
+
+- state
+        Should the permission be present/absent.
+        (Choices: absent, present)[Default: present]
+
+- timeout
+        The amount of time in seconds the module should wait for the instance to get into desired state.
+        [Default: 180]
+        type: int
+
+- user_name
+        Username of the user to manage. In most LDAPs it's `uid' of the user, but in Active Directory you must specify `UPN' of the user.
+        Note that if user does not exist in the system this module will fail, you should ensure the user exists by using [ovirt_users]
+        module.
+        [Default: (null)]
+
+- wait
+        `yes' if the module should wait for the entity to get into desired state.
+        [Default: True]
+        type: bool
+
+
+NOTES:
+      * In order to use this module you have to install oVirt Python SDK. To ensure it's installed with correct version you can
+        create the following task: `pip: name=ovirt-engine-sdk-python version=4.3.0'
+
+
+REQUIREMENTS:  python >= 2.7, ovirt-engine-sdk-python >= 4.3.0
+
+AUTHOR: Ondra Machacek (@machacekondra)
+        METADATA:
+          status:
+          - preview
+          supported_by: community
+        
+
+EXAMPLES:
+
+# Examples don't contain auth parameter for simplicity,
+# look at ovirt_auth module to see how to reuse authentication:
+
+- name: Add user user1 from authorization provider example.com-authz
+  ovirt_permission:
+    user_name: user1
+    authz_name: example.com-authz
+    object_type: vm
+    object_name: myvm
+    role: UserVmManager
+
+- name: Remove permission from user
+  ovirt_permission:
+    state: absent
+    user_name: user1
+    authz_name: example.com-authz
+    object_type: cluster
+    object_name: mycluster
+    role: ClusterAdmin
+
+- name: Assign QuotaConsumer role to user
+  ovirt_permissions:
+    state: present
+    user_name: user1
+    authz_name: example.com-authz
+    object_type: data_center
+    object_name: mydatacenter
+    quota_name: myquota
+    role: QuotaConsumer
+
+
+RETURN VALUES:
+
+id:
+    description: ID of the permission which is managed
+    returned: On success if permission is found.
+    type: str
+    sample: 7de90f31-222c-436c-a1ca-7e655bd5b60c
+permission:
+    description: "Dictionary of all the permission attributes. Permission attributes can be found on your oVirt/RHV instance
+                  at following url: http://ovirt.github.io/ovirt-engine-api-model/master/#types/permission."
+    returned: On success if permission is found.
+    type: dict
+

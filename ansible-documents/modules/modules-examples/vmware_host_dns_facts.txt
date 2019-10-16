@@ -1,0 +1,40 @@
+EXAMPLES:
+
+- name: Gather DNS facts about all ESXi Hosts in given Cluster
+  vmware_host_dns_facts:
+    hostname: '{{ vcenter_hostname }}'
+    username: '{{ vcenter_username }}'
+    password: '{{ vcenter_password }}'
+    cluster_name: cluster_name
+  delegate_to: localhost
+
+- name: Gather DNS facts about ESXi Host
+  vmware_host_dns_facts:
+    hostname: '{{ vcenter_hostname }}'
+    username: '{{ vcenter_username }}'
+    password: '{{ vcenter_password }}'
+    esxi_hostname: '{{ esxi_hostname }}'
+  delegate_to: localhost
+
+
+RETURN VALUES:
+
+hosts_dns_facts:
+    description: metadata about DNS config from given cluster / host system
+    returned: always
+    type: dict
+    sample: {
+                "DC0_C0_H0": {
+                    "dhcp": true,
+                    "domain_name": "localdomain",
+                    "host_name": "localhost",
+                    "ip_address": [
+                        "8.8.8.8"
+                    ],
+                    "search_doamin": [
+                        "localdomain"
+                    ],
+                    "virtual_nic_device": "vmk0"
+                }
+            }
+

@@ -1,0 +1,97 @@
+> MEMSET_ZONE    (/usr/lib/python2.7/dist-packages/ansible/modules/cloud/memset/memset_zone.py)
+
+        Manage DNS zones in a Memset account.
+
+  * This module is maintained by The Ansible Community
+OPTIONS (= is mandatory):
+
+= api_key
+        The API key obtained from the Memset control panel.
+
+
+- force
+        Forces deletion of a zone and all zone domains/zone records it contains.
+        [Default: False]
+        type: bool
+
+= name
+        The zone nickname; usually the same as the main domain. Ensure this value has at most 250 characters.
+        (Aliases: nickname)
+
+= state
+        Indicates desired state of resource.
+        (Choices: absent, present)
+
+- ttl
+        The default TTL for all records created in the zone. This must be a valid int from
+        https://www.memset.com/apidocs/methods_dns.html#dns.zone_create.
+        (Choices: 0, 300, 600, 900, 1800, 3600, 7200, 10800, 21600, 43200, 86400)[Default: (null)]
+
+
+NOTES:
+      * Zones can be thought of as a logical group of domains, all of which share the same DNS records (i.e. they point to the same
+        IP). An API key generated via the Memset customer control panel is needed with the following minimum scope -
+        `dns.zone_create', `dns.zone_delete', `dns.zone_list'.
+
+
+AUTHOR: Simon Weald (@glitchcrab)
+        METADATA:
+          status:
+          - preview
+          supported_by: community
+        
+
+EXAMPLES:
+
+# Create the zone 'test'
+- name: create zone
+  memset_zone:
+    name: test
+    state: present
+    api_key: 5eb86c9196ab03919abcf03857163741
+    ttl: 300
+  delegate_to: localhost
+
+# Force zone deletion
+- name: force delete zone
+  memset_zone:
+    name: test
+    state: absent
+    api_key: 5eb86c9196ab03919abcf03857163741
+    force: true
+  delegate_to: localhost
+
+
+RETURN VALUES:
+
+memset_api:
+  description: Zone info from the Memset API
+  returned: when state == present
+  type: complex
+  contains:
+    domains:
+      description: List of domains in this zone
+      returned: always
+      type: list
+      sample: []
+    id:
+      description: Zone id
+      returned: always
+      type: str
+      sample: "b0bb1ce851aeea6feeb2dc32fe83bf9c"
+    nickname:
+      description: Zone name
+      returned: always
+      type: str
+      sample: "example.com"
+    records:
+      description: List of DNS records for domains in this zone
+      returned: always
+      type: list
+      sample: []
+    ttl:
+      description: Default TTL for domains in this zone
+      returned: always
+      type: int
+      sample: 300
+

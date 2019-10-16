@@ -1,0 +1,73 @@
+EXAMPLES:
+
+---
+
+- name: sflow module test
+  hosts: ce128
+  connection: local
+  gather_facts: no
+  vars:
+    cli:
+      host: "{{ inventory_hostname }}"
+      port: "{{ ansible_ssh_port }}"
+      username: "{{ username }}"
+      password: "{{ password }}"
+      transport: cli
+
+  tasks:
+  - name: Configuring sFlow Agent
+    ce_sflow:
+      agent_ip: 6.6.6.6
+      provider: '{{ cli }}'
+
+  - name: Configuring sFlow Collector
+    ce_sflow:
+      collector_id: 1
+      collector_ip: 7.7.7.7
+      collector_ip_vpn: vpn1
+      collector_description: Collector1
+      provider: '{{ cli }}'
+
+  - name: Configure flow sampling.
+    ce_sflow:
+      sflow_interface: 10GE2/0/2
+      sample_collector: 1
+      sample_direction: inbound
+      provider: '{{ cli }}'
+
+  - name: Configure counter sampling.
+    ce_sflow:
+      sflow_interface: 10GE2/0/2
+      counter_collector: 1
+      counter_interval: 1000
+      provider: '{{ cli }}'
+
+
+RETURN VALUES:
+
+proposed:
+    description: k/v pairs of parameters passed into module
+    returned: verbose mode
+    type: dict
+    sample: {"agent_ip": "6.6.6.6", "state": "present"}
+existing:
+    description: k/v pairs of existing configuration
+    returned: verbose mode
+    type: dict
+    sample: {"agent": {}}
+end_state:
+    description: k/v pairs of configuration after module execution
+    returned: verbose mode
+    type: dict
+    sample: {"agent": {"family": "ipv4", "ipv4Addr": "1.2.3.4", "ipv6Addr": null}}
+updates:
+    description: commands sent to the device
+    returned: always
+    type: list
+    sample: ["sflow agent ip 6.6.6.6"]
+changed:
+    description: check to see if a change was made on the device
+    returned: always
+    type: bool
+    sample: true
+

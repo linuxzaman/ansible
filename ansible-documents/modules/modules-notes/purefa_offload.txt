@@ -1,0 +1,118 @@
+> PUREFA_OFFLOAD    (/usr/lib/python2.7/dist-packages/ansible/modules/storage/purestorage/purefa_offload.py)
+
+        Create, modify and delete NFS or S3 offload targets. Only supported on Purity v5.2.0 or higher. You must have a correctly
+        configured offload network for offload to work.
+
+  * This module is maintained by The Ansible Community
+OPTIONS (= is mandatory):
+
+- access_key
+        Access Key ID of the S3 target
+        [Default: (null)]
+        type: str
+
+- address
+        The IP or FQDN address of the NFS server
+        [Default: (null)]
+        type: str
+
+= api_token
+        FlashArray API token for admin privileged user.
+
+        type: str
+
+- bucket
+        Name of the bucket for the S3 target
+        [Default: (null)]
+        type: str
+
+= fa_url
+        FlashArray management IPv4 address or Hostname.
+
+        type: str
+
+- initialize
+        Define whether to initialize the S3 bucket
+        [Default: True]
+        type: bool
+
+= name
+        The name of the offload target
+
+        type: str
+
+- options
+        Additonal mount options for the NFS share
+        Supported mount options include `port', `rsize', `wsize', `nfsvers', and `tcp' or `udp'
+        [Default: ]
+        type: str
+
+- protocol
+        Define which protocol the offload engine uses
+        (Choices: nfs, s3)[Default: nfs]
+        type: str
+
+- secret
+        Secret Access Key for the S3 target
+        [Default: (null)]
+        type: str
+
+- share
+        NFS export on the NFS server
+        [Default: (null)]
+        type: str
+
+- state
+        Define state of offload
+        (Choices: absent, present)[Default: present]
+        type: str
+
+
+NOTES:
+      * This module requires the `purestorage' Python library
+      * You must set `PUREFA_URL' and `PUREFA_API' environment variables if `fa_url' and `api_token' arguments are not passed to
+        the module directly
+
+
+REQUIREMENTS:  python >= 2.7, purestorage
+
+AUTHOR: Pure Storage Ansible Team (@sdodsley) <pure-ansible-team@purestorage.com>
+        METADATA:
+          status:
+          - preview
+          supported_by: community
+        
+
+EXAMPLES:
+
+- name: Create NFS offload target
+  purefa_offload:
+    name: nfs-offload
+    protocol: nfs
+    address: 10.21.200.4
+    share: "/offload_target"
+    fa_url: 10.10.10.2
+    api_token: e31060a7-21fc-e277-6240-25983c6c4592
+
+- name: Create S3 offload target
+  purefa_offload:
+    name: s3-offload
+    protocol: s3
+    access_key: "3794fb12c6204e19195f"
+    bucket: offload-bucket
+    secret: "wJalrXUtnFEMI/K7MDENG/bPxRfiCYEXAMPLEKEY"
+    fa_url: 10.10.10.2
+    api_token: e31060a7-21fc-e277-6240-25983c6c4592
+
+- name: Delete offload target
+  purefa_offload:
+    name: nfs-offload
+    protocol: nfs
+    state: absent
+    fa_url: 10.10.10.2
+    api_token: e31060a7-21fc-e277-6240-25983c6c4592
+
+
+RETURN VALUES:
+
+

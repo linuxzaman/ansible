@@ -1,0 +1,286 @@
+> TOWER_NOTIFICATION    (/usr/lib/python2.7/dist-packages/ansible/modules/web_infrastructure/ansible_tower/tower_notification.py)
+
+        Create, update, or destroy Ansible Tower notifications. See https://www.ansible.com/tower for an overview.
+
+  * This module is maintained by The Ansible Community
+OPTIONS (= is mandatory):
+
+- account_sid
+        The Twillio accound SID. Required if `notification_type=twillio'.
+        [Default: (null)]
+
+- account_token
+        The Twillio account token. Required if `notification_type=twillio'.
+        [Default: (null)]
+
+- api_url
+        The HipChat API URL. Required if `notification_type=hipchat'.
+        [Default: (null)]
+
+- channels
+        The destination Slack channels. Required if `notification_type=slack'.
+        [Default: (null)]
+        type: list
+
+- client_name
+        The PagerDuty client identifier. Required if `notification_type=pagerduty'.
+        [Default: (null)]
+
+- color
+        The notification color. Required if `notification_type=hipchat'.
+        (Choices: yellow, green, red, purple, gray, random)[Default: (null)]
+
+- description
+        The description of the notification.
+        [Default: (null)]
+
+- from_number
+        The source phone number. Required if `notification_type=twillio'.
+        [Default: (null)]
+
+- headers
+        The HTTP headers as JSON string. Required if `notification_type=webhook'.
+        [Default: (null)]
+
+- host
+        The mail server host. Required if `notification_type=email'.
+        [Default: (null)]
+
+- message_from
+        The label to be shown with the notification. Required if `notification_type=hipchat'.
+        [Default: (null)]
+
+= name
+        The name of the notification.
+
+
+- nickname
+        The IRC nickname. Required if `notification_type=irc'.
+        [Default: (null)]
+
+- notification_configuration
+        The notification configuration file. Note providing this field would disable all notification-configuration-related fields.
+        [Default: (null)]
+
+= notification_type
+        The type of notification to be sent.
+        (Choices: email, slack, twilio, pagerduty, hipchat, webhook, irc)
+
+- notify
+        The notify channel trigger. Required if `notification_type=hipchat'.
+        [Default: (null)]
+        type: bool
+
+- organization
+        The organization the notification belongs to.
+        [Default: (null)]
+
+- password
+        The mail server password. Required if `notification_type=email' or if `notification_type=irc'.
+        [Default: (null)]
+
+- port
+        The mail server port. Required if `notification_type=email' or if `notification_type=irc'.
+        [Default: (null)]
+
+- recipients
+        The recipients email addresses. Required if `notification_type=email'.
+        [Default: (null)]
+
+- rooms
+        HipChat rooms to send the notification to. Required if `notification_type=hipchat'.
+        [Default: (null)]
+        type: list
+
+- sender
+        The sender email address. Required if `notification_type=email'.
+        [Default: (null)]
+
+- server
+        The IRC server address. Required if `notification_type=irc'.
+        [Default: (null)]
+
+- service_key
+        The PagerDuty service/integration API key. Required if `notification_type=pagerduty'.
+        [Default: (null)]
+
+- state
+        Desired state of the resource.
+        (Choices: present, absent)[Default: present]
+
+- subdomain
+        The PagerDuty subdomain. Required if `notification_type=pagerduty'.
+        [Default: (null)]
+
+- targets
+        The destination channels or users. Required if `notification_type=irc'.
+        [Default: (null)]
+        type: list
+
+- to_numbers
+        The destination phone numbers. Required if `notification_type=twillio'.
+        [Default: (null)]
+
+- token
+        The access token. Required if `notification_type=slack', if `notification_type=pagerduty' or if `notification_type=hipchat'.
+        [Default: (null)]
+
+- tower_config_file
+        Path to the Tower config file.
+        [Default: (null)]
+        type: path
+
+- tower_host
+        URL to your Tower instance.
+        [Default: (null)]
+        type: str
+
+- tower_password
+        Password for your Tower instance.
+        [Default: (null)]
+        type: str
+
+- tower_username
+        Username for your Tower instance.
+        [Default: (null)]
+        type: str
+
+- url
+        The target URL. Required if `notification_type=webhook'.
+        [Default: (null)]
+
+- use_ssl
+        The SSL trigger. Required if `notification_type=email' or if `notification_type=irc'.
+        [Default: (null)]
+        type: bool
+
+- use_tls
+        The TLS trigger. Required if `notification_type=email'.
+        [Default: (null)]
+        type: bool
+
+- username
+        The mail server username. Required if `notification_type=email'.
+        [Default: (null)]
+
+- validate_certs
+        Whether to allow insecure connections to Tower.
+        If `no', SSL certificates will not be validated.
+        This should only be used on personally controlled sites using self-signed certificates.
+        (Aliases: tower_verify_ssl)[Default: (null)]
+        type: bool
+
+
+NOTES:
+      * If no `config_file' is provided we will attempt to use the tower-cli library defaults to find your Tower host information.
+      * `config_file' should contain Tower configuration in the following format host=hostname username=username password=password
+
+
+REQUIREMENTS:  ansible-tower-cli >= 3.0.2
+
+AUTHOR: Samuel Carpentier (@samcarpentier)
+        METADATA:
+          status:
+          - preview
+          supported_by: community
+        
+
+EXAMPLES:
+
+- name: Add Slack notification
+  tower_notification:
+    name: slack notification
+    notification_type: slack
+    channels:
+      - general
+    token: cefda9e2be1f21d11cdd9452f5b7f97fda977f42
+    state: present
+    tower_config_file: "~/tower_cli.cfg"
+
+- name: Add webhook notification
+  tower_notification:
+    name: webhook notification
+    notification_type: webhook
+    url: http://www.example.com/hook
+    headers:
+      X-Custom-Header: value123
+    state: present
+    tower_config_file: "~/tower_cli.cfg"
+
+- name: Add email notification
+  tower_notification:
+    name: email notification
+    notification_type: email
+    username: user
+    password: s3cr3t
+    sender: tower@example.com
+    recipients:
+      - user1@example.com
+    host: smtp.example.com
+    port: 25
+    use_tls: no
+    use_ssl: no
+    state: present
+    tower_config_file: "~/tower_cli.cfg"
+
+- name: Add twilio notification
+  tower_notification:
+    name: twilio notification
+    notification_type: twilio
+    account_token: a_token
+    account_sid: a_sid
+    from_number: '+15551112222'
+    to_numbers:
+      - '+15553334444'
+    state: present
+    tower_config_file: "~/tower_cli.cfg"
+
+- name: Add PagerDuty notification
+  tower_notification:
+    name: pagerduty notification
+    notification_type: pagerduty
+    token: a_token
+    subdomain: sub
+    client_name: client
+    service_key: a_key
+    state: present
+    tower_config_file: "~/tower_cli.cfg"
+
+- name: Add HipChat notification
+  tower_notification:
+    name: hipchat notification
+    notification_type: hipchat
+    token: a_token
+    message_from: user1
+    api_url: https://hipchat.example.com
+    color: red
+    rooms:
+      - room-A
+    notify: yes
+    state: present
+    tower_config_file: "~/tower_cli.cfg"
+
+- name: Add IRC notification
+  tower_notification:
+    name: irc notification
+    notification_type: irc
+    nickname: tower
+    password: s3cr3t
+    targets:
+      - user1
+    port: 8080
+    server: irc.example.com
+    use_ssl: no
+    state: present
+    tower_config_file: "~/tower_cli.cfg"
+
+- name: Delete notification
+  tower_notification:
+    name: old notification
+    notification_type: email
+    state: absent
+    tower_config_file: "~/tower_cli.cfg"
+
+
+RETURN VALUES:
+ # 

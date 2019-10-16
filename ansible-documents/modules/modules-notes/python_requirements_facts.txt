@@ -1,0 +1,80 @@
+> PYTHON_REQUIREMENTS_FACTS    (/usr/lib/python2.7/dist-packages/ansible/modules/system/python_requirements_facts.py)
+
+        Get info about available Python requirements on the target host, including listing required libraries and gathering versions.
+
+  * This module is maintained by The Ansible Community
+OPTIONS (= is mandatory):
+
+- dependencies
+        A list of version-likes or module names to check for installation. Supported operators: <, >, <=, >=, or ==. The bare module name
+        like `ansible', the module with a specific version like `boto3==1.6.1', or a partial version like `requests>2' are all valid
+        specifications.
+        [Default: (null)]
+
+
+AUTHOR: Will Thames (@willthames), Ryan Scott Brown (@ryan_sb)
+        METADATA:
+          status:
+          - preview
+          supported_by: community
+        
+
+EXAMPLES:
+
+- name: show python lib/site paths
+  python_requirements_facts:
+- name: check for modern boto3 and botocore versions
+  python_requirements_facts:
+    dependencies:
+    - boto3>1.6
+    - botocore<2
+
+
+RETURN VALUES:
+
+python:
+  description: path to python version used
+  returned: always
+  type: str
+  sample: /usr/local/opt/python@2/bin/python2.7
+python_version:
+  description: version of python
+  returned: always
+  type: str
+  sample: "2.7.15 (default, May  1 2018, 16:44:08)
+[GCC 4.2.1 Compatible Apple LLVM 9.1.0 (clang-902.0.39.1)]"
+python_system_path:
+  description: List of paths python is looking for modules in
+  returned: always
+  type: list
+  sample:
+  - /usr/local/opt/python@2/site-packages/
+  - /usr/lib/python/site-packages/
+  - /usr/lib/python/site-packages/
+valid:
+  description: A dictionary of dependencies that matched their desired versions. If no version was specified, then I(desired) will be null
+  returned: always
+  type: dict
+  sample:
+    boto3:
+      desired: null
+      installed: 1.7.60
+    botocore:
+      desired: botocore<2
+      installed: 1.10.60
+mismatched:
+  description: A dictionary of dependencies that did not satisfy the desired version
+  returned: always
+  type: dict
+  sample:
+    botocore:
+      desired: botocore>2
+      installed: 1.10.60
+not_found:
+  description: A list of packages that could not be imported at all, and are not installed
+  returned: always
+  type: dict
+  sample:
+  - boto4
+  - riquests
+

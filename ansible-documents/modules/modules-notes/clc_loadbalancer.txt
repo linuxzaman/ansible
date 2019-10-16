@@ -1,0 +1,189 @@
+> CLC_LOADBALANCER    (/usr/lib/python2.7/dist-packages/ansible/modules/cloud/centurylink/clc_loadbalancer.py)
+
+        An Ansible module to Create, Delete shared loadbalancers in CenturyLink Cloud.
+
+  * This module is maintained by The Ansible Community
+OPTIONS (= is mandatory):
+
+= alias
+        The alias of your CLC Account
+
+
+- description
+        A description for the loadbalancer
+        [Default: (null)]
+
+= location
+        The location of the datacenter where the load balancer resides in
+
+
+- method
+        -The balancing method for the load balancer pool
+        (Choices: leastConnection, roundRobin)[Default: (null)]
+
+= name
+        The name of the loadbalancer
+
+
+- nodes
+        A list of nodes that needs to be added to the load balancer pool
+        [Default: []]
+
+- persistence
+        The persistence method for the load balancer
+        (Choices: standard, sticky)[Default: (null)]
+
+- port
+        Port to configure on the public-facing side of the load balancer pool
+        (Choices: 80, 443)[Default: (null)]
+
+- state
+        Whether to create or delete the load balancer pool
+        (Choices: present, absent, port_absent, nodes_present, nodes_absent)[Default: present]
+
+- status
+        The status of the loadbalancer
+        (Choices: enabled, disabled)[Default: enabled]
+
+
+NOTES:
+      * To use this module, it is required to set the below environment variables which enables access to the Centurylink Cloud -
+        CLC_V2_API_USERNAME, the account login id for the centurylink cloud - CLC_V2_API_PASSWORD, the account password for the
+        centurylink cloud
+      * Alternatively, the module accepts the API token and account alias. The API token can be generated using the CLC account
+        login and password via the HTTP api call @ https://api.ctl.io/v2/authentication/login - CLC_V2_API_TOKEN, the API token
+        generated from https://api.ctl.io/v2/authentication/login - CLC_ACCT_ALIAS, the account alias associated with the
+        centurylink cloud
+      * Users can set CLC_V2_API_URL to specify an endpoint for pointing to a different CLC environment.
+
+
+REQUIREMENTS:  python = 2.7, requests >= 2.5.0, clc-sdk
+
+AUTHOR: CLC Runner (@clc-runner)
+        METADATA:
+          status:
+          - preview
+          supported_by: community
+        
+
+EXAMPLES:
+
+# Note - You must set the CLC_V2_API_USERNAME And CLC_V2_API_PASSWD Environment variables before running these examples
+- name: Create Loadbalancer
+  hosts: localhost
+  connection: local
+  tasks:
+    - name: Actually Create things
+      clc_loadbalancer:
+        name: test
+        description: test
+        alias: TEST
+        location: WA1
+        port: 443
+        nodes:
+          - ipAddress: 10.11.22.123
+            privatePort: 80
+        state: present
+
+- name: Add node to an existing loadbalancer pool
+  hosts: localhost
+  connection: local
+  tasks:
+    - name: Actually Create things
+      clc_loadbalancer:
+        name: test
+        description: test
+        alias: TEST
+        location: WA1
+        port: 443
+        nodes:
+          - ipAddress: 10.11.22.234
+            privatePort: 80
+        state: nodes_present
+
+- name: Remove node from an existing loadbalancer pool
+  hosts: localhost
+  connection: local
+  tasks:
+    - name: Actually Create things
+      clc_loadbalancer:
+        name: test
+        description: test
+        alias: TEST
+        location: WA1
+        port: 443
+        nodes:
+          - ipAddress: 10.11.22.234
+            privatePort: 80
+        state: nodes_absent
+
+- name: Delete LoadbalancerPool
+  hosts: localhost
+  connection: local
+  tasks:
+    - name: Actually Delete things
+      clc_loadbalancer:
+        name: test
+        description: test
+        alias: TEST
+        location: WA1
+        port: 443
+        nodes:
+          - ipAddress: 10.11.22.123
+            privatePort: 80
+        state: port_absent
+
+- name: Delete Loadbalancer
+  hosts: localhost
+  connection: local
+  tasks:
+    - name: Actually Delete things
+      clc_loadbalancer:
+        name: test
+        description: test
+        alias: TEST
+        location: WA1
+        port: 443
+        nodes:
+          - ipAddress: 10.11.22.123
+            privatePort: 80
+        state: absent
+
+
+RETURN VALUES:
+
+loadbalancer:
+    description: The load balancer result object from CLC
+    returned: success
+    type: dict
+    sample:
+        {
+           "description":"test-lb",
+           "id":"ab5b18cb81e94ab9925b61d1ca043fb5",
+           "ipAddress":"66.150.174.197",
+           "links":[
+              {
+                 "href":"/v2/sharedLoadBalancers/wfad/wa1/ab5b18cb81e94ab9925b61d1ca043fb5",
+                 "rel":"self",
+                 "verbs":[
+                    "GET",
+                    "PUT",
+                    "DELETE"
+                 ]
+              },
+              {
+                 "href":"/v2/sharedLoadBalancers/wfad/wa1/ab5b18cb81e94ab9925b61d1ca043fb5/pools",
+                 "rel":"pools",
+                 "verbs":[
+                    "GET",
+                    "POST"
+                 ]
+              }
+           ],
+           "name":"test-lb",
+           "pools":[
+
+           ],
+           "status":"enabled"
+        }
+

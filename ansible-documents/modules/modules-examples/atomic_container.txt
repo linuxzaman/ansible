@@ -1,0 +1,29 @@
+EXAMPLES:
+
+# Install the etcd system container
+- atomic_container:
+    name: etcd
+    image: rhel/etcd
+    backend: ostree
+    state: latest
+    mode: system
+    values:
+        - ETCD_NAME=etcd.server
+
+# Uninstall the etcd system container
+- atomic_container:
+    name: etcd
+    image: rhel/etcd
+    backend: ostree
+    state: absent
+    mode: system
+
+
+RETURN VALUES:
+
+msg:
+    description: The command standard output
+    returned: always
+    type: str
+    sample: [u'Using default tag: latest ...']
+

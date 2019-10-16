@@ -1,0 +1,59 @@
+EXAMPLES:
+
+- name: Test the PsExec connection to the local system (target node) with your user
+  win_psexec:
+    command: whoami.exe
+
+- name: Run regedit.exe locally (on target node) as SYSTEM and interactively
+  win_psexec:
+    command: regedit.exe
+    interactive: yes
+    system: yes
+
+- name: Run the setup.exe installer on multiple servers using the Domain Administrator
+  win_psexec:
+    command: E:\setup.exe /i /IACCEPTEULA
+    hostnames:
+    - remote_server1
+    - remote_server2
+    username: DOMAIN\Administrator
+    password: some_password
+    priority: high
+
+- name: Run PsExec from custom location C:\Program Files\sysinternals\
+  win_psexec:
+    command: netsh advfirewall set allprofiles state off
+    executable: C:\Program Files\sysinternals\psexec.exe
+    hostnames: [ remote_server ]
+    password: some_password
+    priority: low
+
+
+RETURN VALUES:
+
+cmd:
+    description: The complete command line used by the module, including PsExec call and additional options.
+    returned: always
+    type: str
+    sample: psexec.exe -nobanner \\remote_server -u "DOMAIN\Administrator" -p "some_password" -accepteula E:\setup.exe
+pid:
+    description: The PID of the async process created by PsExec.
+    returned: when C(wait=False)
+    type: int
+    sample: 1532
+rc:
+    description: The return code for the command.
+    returned: always
+    type: int
+    sample: 0
+stdout:
+    description: The standard output from the command.
+    returned: always
+    type: str
+    sample: Success.
+stderr:
+    description: The error output from the command.
+    returned: always
+    type: str
+    sample: Error 15 running E:\setup.exe
+

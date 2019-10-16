@@ -1,0 +1,102 @@
+> ELASTICSEARCH_PLUGIN    (/usr/lib/python2.7/dist-packages/ansible/modules/database/misc/elasticsearch_plugin.py)
+
+        Manages Elasticsearch plugins.
+
+  * This module is maintained by The Ansible Community
+OPTIONS (= is mandatory):
+
+- force
+        Force batch mode when installing plugins. This is only necessary if a plugin requires additional permissions and console
+        detection fails.
+        [Default: False]
+        type: bool
+        version_added: 2.7
+
+= name
+        Name of the plugin to install.
+
+
+- plugin_bin
+        Location of the plugin binary. If this file is not found, the default plugin binaries will be used.
+        The default changed in Ansible 2.4 to None.
+        [Default: (null)]
+
+- plugin_dir
+        Your configured plugin directory specified in Elasticsearch
+        [Default: /usr/share/elasticsearch/plugins/]
+
+- proxy_host
+        Proxy host to use during plugin installation
+        [Default: (null)]
+        version_added: 2.1
+
+- proxy_port
+        Proxy port to use during plugin installation
+        [Default: (null)]
+        version_added: 2.1
+
+- src
+        Optionally set the source location to retrieve the plugin from. This can be a file:// URL to install from a local file, or a
+        remote URL. If this is not set, the plugin location is just based on the name.
+        The name parameter must match the descriptor in the plugin ZIP specified.
+        Is only used if the state would change, which is solely checked based on the name parameter. If, for example, the plugin is
+        already installed, changing this has no effect.
+        For ES 1.x use url.
+        [Default: (null)]
+        version_added: 2.7
+
+- state
+        Desired state of a plugin.
+        (Choices: present, absent)[Default: present]
+
+- timeout
+        Timeout setting: 30s, 1m, 1h...
+        Only valid for Elasticsearch < 5.0. This option is ignored for Elasticsearch > 5.0.
+        [Default: 1m]
+
+- url
+        Set exact URL to download the plugin from (Only works for ES 1.x).
+        For ES 2.x and higher, use src.
+        [Default: (null)]
+
+- version
+        Version of the plugin to be installed. If plugin exists with previous version, it will NOT be updated
+        [Default: (null)]
+
+
+AUTHOR: Mathew Davies (@ThePixelDeveloper), Sam Doran (@samdoran)
+        METADATA:
+          status:
+          - preview
+          supported_by: community
+        
+
+EXAMPLES:
+
+# Install Elasticsearch Head plugin in Elasticsearch 2.x
+- elasticsearch_plugin:
+    name: mobz/elasticsearch-head
+    state: present
+
+# Install a specific version of Elasticsearch Head in Elasticsearch 2.x
+- elasticsearch_plugin:
+    name: mobz/elasticsearch-head
+    version: 2.0.0
+
+# Uninstall Elasticsearch head plugin in Elasticsearch 2.x
+- elasticsearch_plugin:
+    name: mobz/elasticsearch-head
+    state: absent
+
+# Install a specific plugin in Elasticsearch >= 5.0
+- elasticsearch_plugin:
+    name: analysis-icu
+    state: present
+
+# Install the ingest-geoip plugin with a forced installation
+- elasticsearch_plugin:
+    name: ingest-geoip
+    state: present
+    force: yes
+
+

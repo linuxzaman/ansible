@@ -1,0 +1,235 @@
+> NXOS_SNAPSHOT    (/usr/lib/python2.7/dist-packages/ansible/modules/network/nxos/nxos_snapshot.py)
+
+        Create snapshots of the running states of selected features, add new show commands for snapshot creation, delete and compare
+        existing snapshots.
+
+  * This module is maintained by The Ansible Network Team
+OPTIONS (= is mandatory):
+
+= action
+        Define what snapshot action the module would perform.
+        (Choices: add, compare, create, delete, delete_all)
+
+- compare_option
+        Snapshot options to be used when `action=compare'.
+        (Choices: summary, ipv4routes, ipv6routes)[Default: (null)]
+
+- comparison_results_file
+        Name of the file where snapshots comparison will be stored when `action=compare'.
+        [Default: (null)]
+
+- description
+        Snapshot description to be used when `action=create'.
+        [Default: (null)]
+
+- element_key1
+        Specify the tags used to distinguish among row entries, to be used when `action=add'.
+        [Default: (null)]
+
+- element_key2
+        Specify the tags used to distinguish among row entries, to be used when `action=add'.
+        [Default: (null)]
+
+- path
+        Specify the path of the file where new created snapshot or snapshots comparison will be stored, to be used when `action=create'
+        and `save_snapshot_locally=true' or `action=compare'.
+        [Default: ./]
+
+- provider
+        *Deprecated*
+        Starting with Ansible 2.5 we recommend using `connection: network_cli'.
+        This option is only required if you are using NX-API.
+        For more information please see the L(NXOS Platform Options guide, ../network/user_guide/platform_nxos.html).
+        HORIZONTALLINE
+        A dict object containing connection details.
+        [Default: (null)]
+        suboptions:
+          auth_pass:
+            description:
+            - Specifies the password to use if required to enter privileged mode on the remote
+              device.  If `authorize' is false, then this argument does nothing. If the value
+              is not specified in the task, the value of environment variable `ANSIBLE_NET_AUTH_PASS'
+              will be used instead.
+            type: str
+            version_added: 2.5.3
+          authorize:
+            default: false
+            description:
+            - Instructs the module to enter privileged mode on the remote device before sending
+              any commands.  If not specified, the device will attempt to execute all commands
+              in non-privileged mode. If the value is not specified in the task, the value
+              of environment variable `ANSIBLE_NET_AUTHORIZE' will be used instead.
+            type: bool
+            version_added: 2.5.3
+          host:
+            description:
+            - Specifies the DNS host name or address for connecting to the remote device over
+              the specified transport.  The value of host is used as the destination address
+              for the transport.
+            required: true
+            type: str
+          password:
+            description:
+            - Specifies the password to use to authenticate the connection to the remote device.  This
+              is a common argument used for either `cli' or `nxapi' transports. If the value
+              is not specified in the task, the value of environment variable `ANSIBLE_NET_PASSWORD'
+              will be used instead.
+            type: str
+          port:
+            default: 0 (use common port)
+            description:
+            - Specifies the port to use when building the connection to the remote device.  This
+              value applies to either `cli' or `nxapi'.  The port value will default to
+              the appropriate transport common port if none is provided in the task.  (cli=22,
+              http=80, https=443).
+            type: int
+          ssh_keyfile:
+            description:
+            - Specifies the SSH key to use to authenticate the connection to the remote device.  This
+              argument is only used for the `cli' transport. If the value is not specified
+              in the task, the value of environment variable `ANSIBLE_NET_SSH_KEYFILE' will
+              be used instead.
+            type: str
+          timeout:
+            default: 10
+            description:
+            - Specifies the timeout in seconds for communicating with the network device for
+              either connecting or sending commands.  If the timeout is exceeded before the
+              operation is completed, the module will error. NX-API can be slow to return
+              on long-running commands (sh mac, sh bgp, etc).
+            type: int
+            version_added: '2.3'
+          transport:
+            choices:
+            - cli
+            - nxapi
+            default: cli
+            description:
+            - Configures the transport connection to use when connecting to the remote device.  The
+              transport argument supports connectivity to the device over cli (ssh) or nxapi.
+            required: true
+            type: str
+          use_proxy:
+            default: true
+            description:
+            - If `no', the environment variables `http_proxy' and `https_proxy' will be
+              ignored.
+            type: bool
+            version_added: '2.5'
+          use_ssl:
+            default: false
+            description:
+            - Configures the `transport' to use SSL if set to `yes' only when the `transport=nxapi',
+              otherwise this value is ignored.
+            type: bool
+          username:
+            description:
+            - Configures the username to use to authenticate the connection to the remote
+              device.  This value is used to authenticate either the CLI login or the nxapi
+              authentication depending on which transport is used. If the value is not specified
+              in the task, the value of environment variable `ANSIBLE_NET_USERNAME' will
+              be used instead.
+            type: str
+          validate_certs:
+            default: true
+            description:
+            - If `no', SSL certificates will not be validated. This should only be used on
+              personally controlled sites using self-signed certificates.  If the transport
+              argument is not nxapi, this value is ignored.
+            type: bool
+        
+        type: dict
+
+- row_id
+        Specifies the tag of each row entry of the show command's XML output, to be used when `action=add'.
+        [Default: (null)]
+
+- save_snapshot_locally
+        Specify to locally store a new created snapshot, to be used when `action=create'.
+        [Default: no]
+        type: bool
+
+- section
+        Used to name the show command output, to be used when `action=add'.
+        [Default: (null)]
+
+- show_command
+        Specify a new show command, to be used when `action=add'.
+        [Default: (null)]
+
+- snapshot1
+        First snapshot to be used when `action=compare'.
+        [Default: (null)]
+
+- snapshot2
+        Second snapshot to be used when `action=compare'.
+        [Default: (null)]
+
+- snapshot_name
+        Snapshot name, to be used when `action=create' or `action=delete'.
+        [Default: (null)]
+
+
+NOTES:
+      * Tested against NXOSv 7.3.(0)D1(1) on VIRL
+      * `transport=cli' may cause timeout errors.
+      * The `element_key1' and `element_key2' parameter specify the tags used to distinguish among row entries. In most cases, only
+        the element_key1 parameter needs to specified to be able to distinguish among row entries.
+      * `action=compare' will always store a comparison report on a local file.
+      * For information on using CLI and NX-API see the :ref:`NXOS Platform Options guide <nxos_platform_options>`
+      * For more information on using Ansible to manage network devices see the :ref:`Ansible Network Guide <network_guide>`
+      * For more information on using Ansible to manage Cisco devices see the `Cisco integration page
+        <https://www.ansible.com/integrations/networks/cisco>`_.
+
+
+AUTHOR: Gabriele Gerbino (@GGabriele)
+        METADATA:
+          status:
+          - preview
+          supported_by: network
+        
+
+EXAMPLES:
+
+# Create a snapshot and store it locally
+- nxos_snapshot:
+    action: create
+    snapshot_name: test_snapshot
+    description: Done with Ansible
+    save_snapshot_locally: true
+    path: /home/user/snapshots/
+
+# Delete a snapshot
+- nxos_snapshot:
+    action: delete
+    snapshot_name: test_snapshot
+
+# Delete all existing snapshots
+- nxos_snapshot:
+    action: delete_all
+
+# Add a show command for snapshots creation
+- nxos_snapshot:
+    section: myshow
+    show_command: show ip interface brief
+    row_id: ROW_intf
+    element_key1: intf-name
+
+# Compare two snapshots
+- nxos_snapshot:
+    action: compare
+    snapshot1: pre_snapshot
+    snapshot2: post_snapshot
+    comparison_results_file: compare_snapshots.txt
+    compare_option: summary
+    path: '../snapshot_reports/'
+
+
+RETURN VALUES:
+
+commands:
+    description: commands sent to the device
+    returned: verbose mode
+    type: list
+    sample: ["snapshot create post_snapshot Post-snapshot"]
+

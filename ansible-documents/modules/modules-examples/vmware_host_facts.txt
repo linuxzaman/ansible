@@ -1,0 +1,80 @@
+EXAMPLES:
+
+- name: Gather vmware host facts
+  vmware_host_facts:
+    hostname: "{{ esxi_server }}"
+    username: "{{ esxi_username }}"
+    password: "{{ esxi_password }}"
+  register: host_facts
+  delegate_to: localhost
+
+- name: Gather vmware host facts from vCenter
+  vmware_host_facts:
+    hostname: "{{ vcenter_server }}"
+    username: "{{ vcenter_user }}"
+    password: "{{ vcenter_pass }}"
+    esxi_hostname: "{{ esxi_hostname }}"
+  register: host_facts
+  delegate_to: localhost
+
+- name: Get VSAN Cluster UUID from host facts
+  vmware_host_facts:
+    hostname: "{{ esxi_server }}"
+    username: "{{ esxi_username }}"
+    password: "{{ esxi_password }}"
+  register: host_facts
+- set_fact:
+    cluster_uuid: "{{ host_facts['ansible_facts']['vsan_cluster_uuid'] }}"
+
+
+RETURN VALUES:
+
+ansible_facts:
+  description: system info about the host machine
+  returned: always
+  type: dict
+  sample:
+    {
+        "ansible_all_ipv4_addresses": [
+            "10.76.33.200"
+        ],
+        "ansible_bios_date": "2011-01-01T00:00:00+00:00",
+        "ansible_bios_version": "0.5.1",
+        "ansible_datastore": [
+            {
+                "free": "11.63 GB",
+                "name": "datastore1",
+                "total": "12.50 GB"
+            }
+        ],
+        "ansible_distribution": "VMware ESXi",
+        "ansible_distribution_build": "4887370",
+        "ansible_distribution_version": "6.5.0",
+        "ansible_hostname": "10.76.33.100",
+        "ansible_interfaces": [
+            "vmk0"
+        ],
+        "ansible_memfree_mb": 2702,
+        "ansible_memtotal_mb": 4095,
+        "ansible_os_type": "vmnix-x86",
+        "ansible_processor": "Intel Xeon E312xx (Sandy Bridge)",
+        "ansible_processor_cores": 2,
+        "ansible_processor_count": 2,
+        "ansible_processor_vcpus": 2,
+        "ansible_product_name": "KVM",
+        "ansible_product_serial": "NA",
+        "ansible_system_vendor": "Red Hat",
+        "ansible_vmk0": {
+            "device": "vmk0",
+            "ipv4": {
+                "address": "10.76.33.100",
+                "netmask": "255.255.255.0"
+            },
+            "macaddress": "52:54:00:56:7d:59",
+            "mtu": 1500
+        },
+        "vsan_cluster_uuid": null,
+        "vsan_node_uuid": null,
+        "vsan_health": "unknown",
+    }
+

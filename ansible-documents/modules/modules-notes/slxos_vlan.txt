@@ -1,0 +1,77 @@
+> SLXOS_VLAN    (/usr/lib/python2.7/dist-packages/ansible/modules/network/slxos/slxos_vlan.py)
+
+        This module provides declarative management of VLANs on Extreme SLX-OS network devices.
+
+  * This module is maintained by The Ansible Community
+OPTIONS (= is mandatory):
+
+- aggregate
+        List of VLANs definitions.
+        [Default: (null)]
+
+- delay
+        Delay the play should wait to check for declarative intent params values.
+        [Default: 10]
+
+= interfaces
+        List of interfaces that should be associated to the VLAN.
+
+
+- name
+        Name of the VLAN.
+        [Default: (null)]
+
+- purge
+        Purge VLANs not defined in the `aggregate' parameter.
+        [Default: False]
+        type: bool
+
+- state
+        State of the VLAN configuration.
+        (Choices: present, absent)[Default: present]
+
+= vlan_id
+        ID of the VLAN. Range 1-4094.
+
+
+
+NOTES:
+      * Tested against SLX-OS 18r.1.00
+
+
+AUTHOR: Lindsay Hill (@lindsayhill)
+        METADATA:
+          status:
+          - preview
+          supported_by: community
+        
+
+EXAMPLES:
+
+- name: Create vlan
+  slxos_vlan:
+    vlan_id: 100
+    name: test-vlan
+    state: present
+- name: Add interfaces to VLAN
+  slxos_vlan:
+    vlan_id: 100
+    interfaces:
+      - Ethernet 0/1
+      - Ethernet 0/2
+- name: Delete vlan
+  slxos_vlan:
+    vlan_id: 100
+    state: absent
+
+
+RETURN VALUES:
+
+commands:
+  description: The list of configuration mode commands to send to the device
+  returned: always
+  type: list
+  sample:
+    - vlan 100
+    - name test-vlan
+

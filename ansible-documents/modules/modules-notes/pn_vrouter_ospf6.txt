@@ -1,0 +1,77 @@
+> PN_VROUTER_OSPF6    (/usr/lib/python2.7/dist-packages/ansible/modules/network/netvisor/pn_vrouter_ospf6.py)
+
+        This module can be used to add interface ip to OSPF6 protocol or remove interface ip from OSPF6 protocol on vRouter.
+
+  * This module is maintained by The Ansible Community
+OPTIONS (= is mandatory):
+
+- pn_cliswitch
+        Target switch to run the CLI on.
+        [Default: (null)]
+        type: str
+
+- pn_nic
+        OSPF6 control for this interface.
+        [Default: (null)]
+        type: str
+
+- pn_ospf6_area
+        area id for this interface in IPv4 address format.
+        [Default: (null)]
+        type: str
+
+- pn_vrouter_name
+        name of service config.
+        [Default: (null)]
+        type: str
+
+= state
+        State the action to perform. Use `present' to add vrouter-ospf6 and `absent' to remove interface from vrouter-ospf6.
+        (Choices: present, absent)
+        type: str
+
+
+AUTHOR: Pluribus Networks (@rajaspachipulusu17)
+        METADATA:
+          status:
+          - preview
+          supported_by: community
+        
+
+EXAMPLES:
+
+- name: Add vrouter interface nic to ospf6
+  pn_vrouter_ospf6:
+    pn_cliswitch: "sw01"
+    state: "present"
+    pn_vrouter_name: "foo-vrouter"
+    pn_nic: "eth0.4092"
+    pn_ospf6_area: "0.0.0.0"
+
+- name: Remove vrouter interface nic to ospf6
+  pn_vrouter_ospf6:
+    pn_cliswitch: "sw01"
+    state: "absent"
+    pn_vrouter_name: "foo-vrouter"
+    pn_nic: "eth0.4092"
+
+
+RETURN VALUES:
+
+command:
+  description: the CLI command run on the target node.
+  returned: always
+  type: str
+stdout:
+  description: set of responses from the vrouter-ospf6 command.
+  returned: always
+  type: list
+stderr:
+  description: set of error responses from the vrouter-ospf6 command.
+  returned: on error
+  type: list
+changed:
+  description: indicates whether the CLI caused changes on the target.
+  returned: always
+  type: bool
+

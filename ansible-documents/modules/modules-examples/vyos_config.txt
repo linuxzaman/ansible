@@ -1,0 +1,70 @@
+EXAMPLES:
+
+- name: configure the remote device
+  vyos_config:
+    lines:
+      - set system host-name {{ inventory_hostname }}
+      - set service lldp
+      - delete service dhcp-server
+
+- name: backup and load from file
+  vyos_config:
+    src: vyos.cfg
+    backup: yes
+
+- name: render a Jinja2 template onto the VyOS router
+  vyos_config:
+    src: vyos_template.j2
+
+- name: for idempotency, use full-form commands
+  vyos_config:
+    lines:
+      # - set int eth eth2 description 'OUTSIDE'
+      - set interface ethernet eth2 description 'OUTSIDE'
+
+- name: configurable backup path
+  vyos_config:
+    backup: yes
+    backup_options:
+      filename: backup.cfg
+      dir_path: /home/user
+
+
+RETURN VALUES:
+
+commands:
+  description: The list of configuration commands sent to the device
+  returned: always
+  type: list
+  sample: ['...', '...']
+filtered:
+  description: The list of configuration commands removed to avoid a load failure
+  returned: always
+  type: list
+  sample: ['...', '...']
+backup_path:
+  description: The full path to the backup file
+  returned: when backup is yes
+  type: str
+  sample: /playbooks/ansible/backup/vyos_config.2016-07-16@22:28:34
+filename:
+  description: The name of the backup file
+  returned: when backup is yes and filename is not specified in backup options
+  type: str
+  sample: vyos_config.2016-07-16@22:28:34
+shortname:
+  description: The full path to the backup file excluding the timestamp
+  returned: when backup is yes and filename is not specified in backup options
+  type: str
+  sample: /playbooks/ansible/backup/vyos_config
+date:
+  description: The date extracted from the backup file name
+  returned: when backup is yes
+  type: str
+  sample: "2016-07-16"
+time:
+  description: The time extracted from the backup file name
+  returned: when backup is yes
+  type: str
+  sample: "22:28:34"
+

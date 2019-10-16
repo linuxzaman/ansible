@@ -1,0 +1,47 @@
+EXAMPLES:
+
+- name: Enable Hyperthreading for an host system
+  vmware_host_hyperthreading:
+    hostname: '{{ vcenter_hostname }}'
+    username: '{{ vcenter_username }}'
+    password: '{{ vcenter_password }}'
+    esxi_hostname: '{{ esxi_hostname }}'
+    state: enabled
+    validate_certs: no
+  delegate_to: localhost
+
+- name: Disable Hyperthreading for an host system
+  vmware_host_hyperthreading:
+    hostname: '{{ vcenter_hostname }}'
+    username: '{{ vcenter_username }}'
+    password: '{{ vcenter_password }}'
+    esxi_hostname: '{{ esxi_hostname }}'
+    state: disabled
+    validate_certs: no
+  delegate_to: localhost
+
+- name: Disable Hyperthreading for all host systems from cluster
+  vmware_host_hyperthreading:
+    hostname: '{{ vcenter_hostname }}'
+    username: '{{ vcenter_username }}'
+    password: '{{ vcenter_password }}'
+    cluster_name: '{{ cluster_name }}'
+    state: disabled
+    validate_certs: no
+  delegate_to: localhost
+
+
+RETURN VALUES:
+
+results:
+    description: metadata about host system's Hyperthreading configuration
+    returned: always
+    type: dict
+    sample: {
+        "esxi01": {
+            "msg": "Hyperthreading is already enabled and active for host 'esxi01'",
+            "state_current": "active",
+            "state": "enabled",
+        },
+    }
+

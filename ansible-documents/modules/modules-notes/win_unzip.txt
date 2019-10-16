@@ -1,0 +1,110 @@
+> WIN_UNZIP    (/usr/lib/python2.7/dist-packages/ansible/modules/windows/win_unzip.py)
+
+        Unzips compressed files and archives. Supports .zip files natively. Supports other formats supported by the Powershell Community
+        Extensions (PSCX) module (basically everything 7zip supports). For non-Windows targets, use the [unarchive] module instead.
+
+  * This module is maintained by The Ansible Community
+OPTIONS (= is mandatory):
+
+- creates
+        If this file or directory exists the specified src will not be extracted.
+        [Default: (null)]
+        type: path
+
+- delete_archive
+        Remove the zip file, after unzipping.
+        (Aliases: rm)[Default: False]
+        type: bool
+
+= dest
+        Destination of zip file (provide absolute path of directory). If it does not exist, the directory will be created.
+
+        type: path
+
+- recurse
+        Recursively expand zipped files within the src file.
+        Setting to a value of `yes' requires the PSCX module to be installed.
+        [Default: False]
+        type: bool
+
+= src
+        File to be unzipped (provide absolute path).
+
+        type: path
+
+
+NOTES:
+      * This module is not really idempotent, it will extract the archive every time, and report a change.
+      * For extracting any compression types other than .zip, the PowerShellCommunityExtensions (PSCX) Module is required.  This
+        module (in conjunction with PSCX) has the ability to recursively unzip files within the src zip file provided and also
+        functionality for many other compression types. If the destination directory does not exist, it will be created before
+        unzipping the file.  Specifying rm parameter will force removal of the src file after extraction.
+
+
+SEE ALSO:
+      * Module unarchive
+           The official documentation on the unarchive module.
+           https://docs.ansible.com/ansible/latest/modules/unarchive_module.html
+
+
+REQUIREMENTS:  PSCX
+
+AUTHOR: Phil Schwartz (@schwartzmx)
+        METADATA:
+          status:
+          - preview
+          supported_by: community
+        
+
+EXAMPLES:
+
+# This unzips a library that was downloaded with win_get_url, and removes the file after extraction
+# $ ansible -i hosts -m win_unzip -a "src=C:\LibraryToUnzip.zip dest=C:\Lib remove=yes" all
+
+- name: Unzip a bz2 (BZip) file
+  win_unzip:
+    src: C:\Users\Phil\Logs.bz2
+    dest: C:\Users\Phil\OldLogs
+    creates: C:\Users\Phil\OldLogs
+
+- name: Unzip gz log
+  win_unzip:
+    src: C:\Logs\application-error-logs.gz
+    dest: C:\ExtractedLogs\application-error-logs
+
+# Unzip .zip file, recursively decompresses the contained .gz files and removes all unneeded compressed files after completion.
+- name: Unzip ApplicationLogs.zip and decompress all GZipped log files
+  hosts: all
+  gather_facts: no
+  tasks:
+    - name: Recursively decompress GZ files in ApplicationLogs.zip
+      win_unzip:
+        src: C:\Downloads\ApplicationLogs.zip
+        dest: C:\Application\Logs
+        recurse: yes
+        delete_archive: yes
+
+- name: Install PSCX
+  win_psmodule:
+    name: Pscx
+    state: present
+
+
+RETURN VALUES:
+
+dest:
+    description: The provided destination path
+    returned: always
+    type: str
+    sample: C:\ExtractedLogs\application-error-logs
+removed:
+    description: Whether the module did remove any files during task run
+    returned: always
+    type: bool
+    sample: true
+src:
+    description: The provided source path
+    returned: always
+    type: str
+    sample: C:\Logs\application-error-logs.gz
+

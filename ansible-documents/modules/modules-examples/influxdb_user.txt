@@ -1,0 +1,47 @@
+EXAMPLES:
+
+- name: Create a user on localhost using default login credentials
+  influxdb_user:
+    user_name: john
+    user_password: s3cr3t
+
+- name: Create a user on localhost using custom login credentials
+  influxdb_user:
+    user_name: john
+    user_password: s3cr3t
+    login_username: "{{ influxdb_username }}"
+    login_password: "{{ influxdb_password }}"
+
+- name: Create an admin user on a remote host using custom login credentials
+  influxdb_user:
+    user_name: john
+    user_password: s3cr3t
+    admin: yes
+    hostname: "{{ influxdb_hostname }}"
+    login_username: "{{ influxdb_username }}"
+    login_password: "{{ influxdb_password }}"
+
+- name: Create a user on localhost with privileges
+  influxdb_user:
+    user_name: john
+    user_password: s3cr3t
+    login_username: "{{ influxdb_username }}"
+    login_password: "{{ influxdb_password }}"
+    grants:
+      - database: 'collectd'
+        privilege: 'WRITE'
+      - database: 'graphite'
+        privilege: 'READ'
+
+- name: Destroy a user using custom login credentials
+  influxdb_user:
+    user_name: john
+    login_username: "{{ influxdb_username }}"
+    login_password: "{{ influxdb_password }}"
+    state: absent
+
+
+RETURN VALUES:
+
+#only defaults
+

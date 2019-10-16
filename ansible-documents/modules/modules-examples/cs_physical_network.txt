@@ -1,0 +1,120 @@
+EXAMPLES:
+
+- name: Ensure a network is present
+  cs_physical_network:
+    name: net01
+    zone: zone01
+    isolation_method: VLAN
+    broadcast_domain_range: ZONE
+  delegate_to: localhost
+
+- name: Set a tag on a network
+  cs_physical_network:
+    name: net01
+    tag: overlay
+  delegate_to: localhost
+
+- name: Remove tag on a network
+  cs_physical_network:
+    name: net01
+    tag: ""
+  delegate_to: localhost
+
+- name: Ensure a network is enabled with specific nsps enabled
+  cs_physical_network:
+    name: net01
+    zone: zone01
+    isolation_method: VLAN
+    vlan: 100-200,300-400
+    broadcast_domain_range: ZONE
+    state: enabled
+    nsps_enabled:
+      - virtualrouter
+      - internallbvm
+      - vpcvirtualrouter
+  delegate_to: localhost
+
+- name: Ensure a network is disabled
+  cs_physical_network:
+    name: net01
+    zone: zone01
+    state: disabled
+  delegate_to: localhost
+
+- name: Ensure a network is enabled
+  cs_physical_network:
+    name: net01
+    zone: zone01
+    state: enabled
+  delegate_to: localhost
+
+- name: Ensure a network is absent
+  cs_physical_network:
+    name: net01
+    zone: zone01
+    state: absent
+  delegate_to: localhost
+
+
+RETURN VALUES:
+
+---
+id:
+  description: UUID of the network.
+  returned: success
+  type: str
+  sample: 3f8f25cd-c498-443f-9058-438cfbcbff50
+name:
+  description: Name of the network.
+  returned: success
+  type: str
+  sample: net01
+state:
+  description: State of the network [Enabled/Disabled].
+  returned: success
+  type: str
+  sample: Enabled
+broadcast_domain_range:
+  description: broadcastdomainrange of the network [POD / ZONE].
+  returned: success
+  type: str
+  sample: ZONE
+isolation_method:
+  description: isolationmethod of the network [VLAN/GRE/L3].
+  returned: success
+  type: str
+  sample: VLAN
+network_speed:
+  description: networkspeed of the network [1G/10G].
+  returned: success
+  type: str
+  sample: 1G
+zone:
+  description: Name of zone the physical network is in.
+  returned: success
+  type: str
+  sample: ch-gva-2
+domain:
+  description: Name of domain the network is in.
+  returned: success
+  type: str
+  sample: domain1
+nsps:
+  description: list of enabled or disabled Network Service Providers
+  type: complex
+  returned: on enabling/disabling of Network Service Providers
+  contains:
+    enabled:
+      description: list of Network Service Providers that were enabled
+      returned: on Network Service Provider enabling
+      type: list
+      sample:
+       - virtualrouter
+    disabled:
+      description: list of Network Service Providers that were disabled
+      returned: on Network Service Provider disabling
+      type: list
+      sample:
+       - internallbvm
+
+

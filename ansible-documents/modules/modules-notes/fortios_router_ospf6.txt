@@ -1,0 +1,467 @@
+> FORTIOS_ROUTER_OSPF6    (/usr/lib/python2.7/dist-packages/ansible/modules/network/fortios/fortios_router_ospf6.py)
+
+        This module is able to configure a FortiGate or FortiOS by allowing the user to set and modify router feature and ospf6 category.
+        Examples include all parameters and values need to be adjusted to datasources before usage. Tested with FOS v6.0.2
+
+  * This module is maintained by The Ansible Community
+OPTIONS (= is mandatory):
+
+= host
+        FortiOS or FortiGate ip address.
+
+
+- https
+        Indicates if the requests towards FortiGate must use HTTPS protocol
+        [Default: True]
+        type: bool
+
+- password
+        FortiOS or FortiGate password.
+        [Default: ]
+
+- router_ospf6
+        Configure IPv6 OSPF.
+        [Default: None]
+        suboptions:
+          abr-type:
+            choices:
+            - cisco
+            - ibm
+            - standard
+            description:
+            - Area border router type.
+          area:
+            description:
+            - OSPF6 area configuration.
+            suboptions:
+              default-cost:
+                description:
+                - Summary default cost of stub or NSSA area.
+              id:
+                description:
+                - Area entry IP address.
+                required: true
+              nssa-default-information-originate:
+                choices:
+                - enable
+                - disable
+                description:
+                - Enable/disable originate type 7 default into NSSA area.
+              nssa-default-information-originate-metric:
+                description:
+                - OSPFv3 default metric.
+              nssa-default-information-originate-metric-type:
+                choices:
+                - 1
+                - 2
+                description:
+                - OSPFv3 metric type for default routes.
+              nssa-redistribution:
+                choices:
+                - enable
+                - disable
+                description:
+                - Enable/disable redistribute into NSSA area.
+              nssa-translator-role:
+                choices:
+                - candidate
+                - never
+                - always
+                description:
+                - NSSA translator role type.
+              range:
+                description:
+                - OSPF6 area range configuration.
+                suboptions:
+                  advertise:
+                    choices:
+                    - disable
+                    - enable
+                    description:
+                    - Enable/disable advertise status.
+                  id:
+                    description:
+                    - Range entry ID.
+                    required: true
+                  prefix6:
+                    description:
+                    - IPv6 prefix.
+              stub-type:
+                choices:
+                - no-summary
+                - summary
+                description:
+                - Stub summary setting.
+              type:
+                choices:
+                - regular
+                - nssa
+                - stub
+                description:
+                - Area type setting.
+              virtual-link:
+                description:
+                - OSPF6 virtual link configuration.
+                suboptions:
+                  dead-interval:
+                    description:
+                    - Dead interval.
+                  hello-interval:
+                    description:
+                    - Hello interval.
+                  name:
+                    description:
+                    - Virtual link entry name.
+                    required: true
+                  peer:
+                    description:
+                    - A.B.C.D, peer router ID.
+                  retransmit-interval:
+                    description:
+                    - Retransmit interval.
+                  transmit-delay:
+                    description:
+                    - Transmit delay.
+          auto-cost-ref-bandwidth:
+            description:
+            - Reference bandwidth in terms of megabits per second.
+          bfd:
+            choices:
+            - enable
+            - disable
+            description:
+            - Enable/disable Bidirectional Forwarding Detection (BFD).
+          default-information-metric:
+            description:
+            - Default information metric.
+          default-information-metric-type:
+            choices:
+            - 1
+            - 2
+            description:
+            - Default information metric type.
+          default-information-originate:
+            choices:
+            - enable
+            - always
+            - disable
+            description:
+            - Enable/disable generation of default route.
+          default-information-route-map:
+            description:
+            - Default information route map. Source router.route-map.name.
+          default-metric:
+            description:
+            - Default metric of redistribute routes.
+          log-neighbour-changes:
+            choices:
+            - enable
+            - disable
+            description:
+            - Enable logging of OSPFv3 neighbour's changes
+          ospf6-interface:
+            description:
+            - OSPF6 interface configuration.
+            suboptions:
+              area-id:
+                description:
+                - A.B.C.D, in IPv4 address format.
+              bfd:
+                choices:
+                - global
+                - enable
+                - disable
+                description:
+                - Enable/disable Bidirectional Forwarding Detection (BFD).
+              cost:
+                description:
+                - Cost of the interface, value range from 0 to 65535, 0 means auto-cost.
+              dead-interval:
+                description:
+                - Dead interval.
+              hello-interval:
+                description:
+                - Hello interval.
+              interface:
+                description:
+                - Configuration interface name. Source system.interface.name.
+              name:
+                description:
+                - Interface entry name.
+                required: true
+              neighbor:
+                description:
+                - OSPFv3 neighbors are used when OSPFv3 runs on non-broadcast media
+                suboptions:
+                  cost:
+                    description:
+                    - Cost of the interface, value range from 0 to 65535, 0 means auto-cost.
+                  ip6:
+                    description:
+                    - IPv6 link local address of the neighbor.
+                    required: true
+                  poll-interval:
+                    description:
+                    - Poll interval time in seconds.
+                  priority:
+                    description:
+                    - priority
+              network-type:
+                choices:
+                - broadcast
+                - point-to-point
+                - non-broadcast
+                - point-to-multipoint
+                - point-to-multipoint-non-broadcast
+                description:
+                - Network type.
+              priority:
+                description:
+                - priority
+              retransmit-interval:
+                description:
+                - Retransmit interval.
+              status:
+                choices:
+                - disable
+                - enable
+                description:
+                - Enable/disable OSPF6 routing on this interface.
+              transmit-delay:
+                description:
+                - Transmit delay.
+          passive-interface:
+            description:
+            - Passive interface configuration.
+            suboptions:
+              name:
+                description:
+                - Passive interface name. Source system.interface.name.
+                required: true
+          redistribute:
+            description:
+            - Redistribute configuration.
+            suboptions:
+              metric:
+                description:
+                - Redistribute metric setting.
+              metric-type:
+                choices:
+                - 1
+                - 2
+                description:
+                - Metric type.
+              name:
+                description:
+                - Redistribute name.
+                required: true
+              routemap:
+                description:
+                - Route map name. Source router.route-map.name.
+              status:
+                choices:
+                - enable
+                - disable
+                description:
+                - status
+          router-id:
+            description:
+            - A.B.C.D, in IPv4 address format.
+          spf-timers:
+            description:
+            - SPF calculation frequency.
+          summary-address:
+            description:
+            - IPv6 address summary configuration.
+            suboptions:
+              advertise:
+                choices:
+                - disable
+                - enable
+                description:
+                - Enable/disable advertise status.
+              id:
+                description:
+                - Summary address entry ID.
+                required: true
+              prefix6:
+                description:
+                - IPv6 prefix.
+              tag:
+                description:
+                - Tag value.
+        
+
+= username
+        FortiOS or FortiGate username.
+
+
+- vdom
+        Virtual domain, among those defined previously. A vdom is a virtual instance of the FortiGate that can be configured and used as
+        a different unit.
+        [Default: root]
+
+
+NOTES:
+      * Requires fortiosapi library developed by Fortinet
+      * Run as a local_action in your playbook
+
+
+REQUIREMENTS:  fortiosapi>=0.9.8
+
+AUTHOR: Miguel Angel Munoz (@mamunozgonzalez), Nicolas Thomas (@thomnico)
+        METADATA:
+          status:
+          - preview
+          supported_by: community
+        
+
+EXAMPLES:
+
+- hosts: localhost
+  vars:
+   host: "192.168.122.40"
+   username: "admin"
+   password: ""
+   vdom: "root"
+  tasks:
+  - name: Configure IPv6 OSPF.
+    fortios_router_ospf6:
+      host:  "{{ host }}"
+      username: "{{ username }}"
+      password: "{{ password }}"
+      vdom:  "{{ vdom }}"
+      https: "False"
+      router_ospf6:
+        abr-type: "cisco"
+        area:
+         -
+            default-cost: "5"
+            id:  "6"
+            nssa-default-information-originate: "enable"
+            nssa-default-information-originate-metric: "8"
+            nssa-default-information-originate-metric-type: "1"
+            nssa-redistribution: "enable"
+            nssa-translator-role: "candidate"
+            range:
+             -
+                advertise: "disable"
+                id:  "14"
+                prefix6: "<your_own_value>"
+            stub-type: "no-summary"
+            type: "regular"
+            virtual-link:
+             -
+                dead-interval: "19"
+                hello-interval: "20"
+                name: "default_name_21"
+                peer: "<your_own_value>"
+                retransmit-interval: "23"
+                transmit-delay: "24"
+        auto-cost-ref-bandwidth: "25"
+        bfd: "enable"
+        default-information-metric: "27"
+        default-information-metric-type: "1"
+        default-information-originate: "enable"
+        default-information-route-map: "<your_own_value> (source router.route-map.name)"
+        default-metric: "31"
+        log-neighbour-changes: "enable"
+        ospf6-interface:
+         -
+            area-id: "<your_own_value>"
+            bfd: "global"
+            cost: "36"
+            dead-interval: "37"
+            hello-interval: "38"
+            interface: "<your_own_value> (source system.interface.name)"
+            name: "default_name_40"
+            neighbor:
+             -
+                cost: "42"
+                ip6: "<your_own_value>"
+                poll-interval: "44"
+                priority: "45"
+            network-type: "broadcast"
+            priority: "47"
+            retransmit-interval: "48"
+            status: "disable"
+            transmit-delay: "50"
+        passive-interface:
+         -
+            name: "default_name_52 (source system.interface.name)"
+        redistribute:
+         -
+            metric: "54"
+            metric-type: "1"
+            name: "default_name_56"
+            routemap: "<your_own_value> (source router.route-map.name)"
+            status: "enable"
+        router-id: "<your_own_value>"
+        spf-timers: "<your_own_value>"
+        summary-address:
+         -
+            advertise: "disable"
+            id:  "63"
+            prefix6: "<your_own_value>"
+            tag: "65"
+
+
+RETURN VALUES:
+
+build:
+  description: Build number of the fortigate image
+  returned: always
+  type: str
+  sample: '1547'
+http_method:
+  description: Last method used to provision the content into FortiGate
+  returned: always
+  type: str
+  sample: 'PUT'
+http_status:
+  description: Last result given by FortiGate on last operation applied
+  returned: always
+  type: str
+  sample: "200"
+mkey:
+  description: Master key (id) used in the last call to FortiGate
+  returned: success
+  type: str
+  sample: "id"
+name:
+  description: Name of the table used to fulfill the request
+  returned: always
+  type: str
+  sample: "urlfilter"
+path:
+  description: Path of the table used to fulfill the request
+  returned: always
+  type: str
+  sample: "webfilter"
+revision:
+  description: Internal revision number
+  returned: always
+  type: str
+  sample: "17.0.2.10658"
+serial:
+  description: Serial number of the unit
+  returned: always
+  type: str
+  sample: "FGVMEVYYQT3AB5352"
+status:
+  description: Indication of the operation's result
+  returned: always
+  type: str
+  sample: "success"
+vdom:
+  description: Virtual domain used
+  returned: always
+  type: str
+  sample: "root"
+version:
+  description: Version of the FortiGate
+  returned: always
+  type: str
+  sample: "v5.6.3"
+
+

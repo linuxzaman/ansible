@@ -1,0 +1,195 @@
+> MERAKI_SNMP    (/usr/lib/python2.7/dist-packages/ansible/modules/network/meraki/meraki_snmp.py)
+
+        Allows for management of SNMP settings for Meraki.
+
+  * This module is maintained by The Ansible Community
+OPTIONS (= is mandatory):
+
+- auth_key
+        Authentication key provided by the dashboard. Required if environmental variable `MERAKI_KEY' is not set.
+        [Default: (null)]
+        type: str
+
+- host
+        Hostname for Meraki dashboard.
+        Only useful for internal Meraki developers.
+        [Default: api.meraki.com]
+        type: str
+
+- org_id
+        ID of organization.
+        [Default: (null)]
+        type: int
+
+- org_name
+        Name of organization.
+        (Aliases: organization)[Default: (null)]
+        type: str
+
+- output_level
+        Set amount of debug output during module execution.
+        (Choices: debug, normal)[Default: normal]
+        type: str
+
+- peer_ips
+        Semi-colon delimited IP addresses which can perform SNMP queries.
+        [Default: (null)]
+
+- state
+        Specifies whether SNMP information should be queried or modified.
+        (Choices: query, present)[Default: present]
+
+- timeout
+        Time to timeout for HTTP requests.
+        [Default: 30]
+        type: int
+
+- use_https
+        If `no', it will use HTTP. Otherwise it will use HTTPS.
+        Only useful for internal Meraki developers.
+        [Default: True]
+        type: bool
+
+- use_proxy
+        If `no', it will not use a proxy, even if one is defined in an environment variable on the target hosts.
+        [Default: (null)]
+        type: bool
+
+- v2c_enabled
+        Specifies whether SNMPv2c is enabled.
+        [Default: (null)]
+        type: bool
+
+- v3_auth_mode
+        Sets authentication mode for SNMPv3.
+        (Choices: MD5, SHA)[Default: (null)]
+
+- v3_auth_pass
+        Authentication password for SNMPv3.
+        Must be at least 8 characters long.
+        [Default: (null)]
+
+- v3_enabled
+        Specifies whether SNMPv3 is enabled.
+        [Default: (null)]
+        type: bool
+
+- v3_priv_mode
+        Specifies privacy mode for SNMPv3.
+        (Choices: DES, AES128)[Default: (null)]
+
+- v3_priv_pass
+        Privacy password for SNMPv3.
+        Must be at least 8 characters long.
+        [Default: (null)]
+
+- validate_certs
+        Whether to validate HTTP certificates.
+        [Default: True]
+        type: bool
+
+
+NOTES:
+      * More information about the Meraki API can be found at https://dashboard.meraki.com/api_docs.
+      * Some of the options are likely only used for developers within Meraki.
+
+
+AUTHOR: Kevin Breit (@kbreit)
+        METADATA:
+          status:
+          - preview
+          supported_by: community
+        
+
+EXAMPLES:
+
+- name: Query SNMP values
+  meraki_snmp:
+    auth_key: abc12345
+    org_name: YourOrg
+    state: query
+  delegate_to: localhost
+
+- name: Enable SNMPv2
+  meraki_snmp:
+    auth_key: abc12345
+    org_name: YourOrg
+    state: present
+    v2c_enabled: yes
+  delegate_to: localhost
+
+- name: Disable SNMPv2
+  meraki_snmp:
+    auth_key: abc12345
+    org_name: YourOrg
+    state: present
+    v2c_enabled: no
+  delegate_to: localhost
+
+- name: Enable SNMPv3
+  meraki_snmp:
+    auth_key: abc12345
+    org_name: YourOrg
+    state: present
+    v3_enabled: true
+    v3_auth_mode: SHA
+    v3_auth_pass: ansiblepass
+    v3_priv_mode: AES128
+    v3_priv_pass: ansiblepass
+    peer_ips: 192.0.1.1;192.0.1.2
+  delegate_to: localhost
+
+
+RETURN VALUES:
+
+data:
+    description: Information about SNMP settings.
+    type: complex
+    returned: always
+    contains:
+        hostname:
+            description: Hostname of SNMP server.
+            returned: success
+            type: str
+            sample: n1.meraki.com
+        peerIps:
+            description: Semi-colon delimited list of IPs which can poll SNMP information.
+            returned: success
+            type: str
+            sample: 192.0.1.1
+        port:
+            description: Port number of SNMP.
+            returned: success
+            type: str
+            sample: 16100
+        v2cEnabled:
+            description: Shows enabled state of SNMPv2c
+            returned: success
+            type: bool
+            sample: true
+        v3Enabled:
+            description: Shows enabled state of SNMPv3
+            returned: success
+            type: bool
+            sample: true
+        v3AuthMode:
+            description: The SNMP version 3 authentication mode either MD5 or SHA.
+            returned: success
+            type: str
+            sample: SHA
+        v3PrivMode:
+            description: The SNMP version 3 privacy mode DES or AES128.
+            returned: success
+            type: str
+            sample: AES128
+        v2CommunityString:
+            description: Automatically generated community string for SNMPv2c.
+            returned: When SNMPv2c is enabled.
+            type: str
+            sample: o/8zd-JaSb
+        v3User:
+            description: Automatically generated username for SNMPv3.
+            returned: When SNMPv3c is enabled.
+            type: str
+            sample: o/8zd-JaSb
+

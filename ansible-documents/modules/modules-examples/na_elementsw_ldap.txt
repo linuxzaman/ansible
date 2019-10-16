@@ -1,0 +1,25 @@
+EXAMPLES:
+
+- name: disable ldap authentication
+      na_elementsw_ldap:
+        state: absent
+        username: "{{ admin username }}"
+        password: "{{ admin password }}"
+        hostname: "{{ hostname }}"
+
+    - name: Enable ldap authentication
+      na_elementsw_ldap:
+        state: present
+        username: "{{ admin username }}"
+        password: "{{ admin password }}"
+        hostname: "{{ hostname }}"
+        authType: DirectBind
+        serverURIs: ldap://svmdurlabesx01spd_ldapclnt
+        groupSearchType: MemberDN
+        userDNTemplate:  uid=%USERNAME%,cn=users,cn=accounts,dc=corp,dc="{{ company name }}",dc=com
+
+
+RETURN VALUES:
+
+
+

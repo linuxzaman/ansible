@@ -1,0 +1,34 @@
+EXAMPLES:
+
+# Run installer from mounted ISO, then unmount
+- name: Ensure an ISO is mounted
+  win_disk_image:
+    image_path: C:\install.iso
+    state: present
+  register: disk_image_out
+
+- name: Run installer from mounted ISO
+  win_package:
+    path: '{{ disk_image_out.mount_paths[0] }}setup\setup.exe'
+    product_id: 35a4e767-0161-46b0-979f-e61f282fee21
+    state: present
+
+- name: Unmount ISO
+  win_disk_image:
+    image_path: C:\install.iso
+    state: absent
+
+
+RETURN VALUES:
+
+mount_path:
+    description: Filesystem path where the target image is mounted, this has been deprecated in favour of C(mount_paths).
+    returned: when C(state) is C(present)
+    type: str
+    sample: F:\
+mount_paths:
+    description: A list of filesystem paths mounted from the target image.
+    returned: when C(state) is C(present)
+    type: list
+    sample: [ 'E:\', 'F:\' ]
+

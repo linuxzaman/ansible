@@ -1,0 +1,245 @@
+> BIGIP_TIMER_POLICY    (/usr/lib/python2.7/dist-packages/ansible/modules/network/f5/bigip_timer_policy.py)
+
+        Manage timer policies on a BIG-IP.
+
+  * This module is maintained by an Ansible Partner
+OPTIONS (= is mandatory):
+
+- description
+        Specifies descriptive text that identifies the timer policy.
+        [Default: (null)]
+        type: str
+
+= name
+        Specifies the name of the timer policy.
+
+        type: str
+
+- partition
+        Device partition to manage resources on.
+        [Default: Common]
+        type: str
+
+= password
+        The password for the user account used to connect to the BIG-IP.
+        You may omit this option by setting the environment variable `F5_PASSWORD'.
+        (Aliases: pass, pwd)
+        type: str
+
+- provider
+        A dict object containing connection details.
+        [Default: (null)]
+        suboptions:
+          password:
+            aliases:
+            - pass
+            - pwd
+            description:
+            - The password for the user account used to connect to the BIG-IP.
+            - You may omit this option by setting the environment variable `F5_PASSWORD'.
+            required: true
+            type: str
+          server:
+            description:
+            - The BIG-IP host.
+            - You may omit this option by setting the environment variable `F5_SERVER'.
+            required: true
+            type: str
+          server_port:
+            default: 443
+            description:
+            - The BIG-IP server port.
+            - You may omit this option by setting the environment variable `F5_SERVER_PORT'.
+            type: int
+          ssh_keyfile:
+            description:
+            - Specifies the SSH keyfile to use to authenticate the connection to the remote
+              device.  This argument is only used for `cli' transports.
+            - You may omit this option by setting the environment variable `ANSIBLE_NET_SSH_KEYFILE'.
+            type: path
+          timeout:
+            default: 10
+            description:
+            - Specifies the timeout in seconds for communicating with the network device for
+              either connecting or sending commands.  If the timeout is exceeded before the
+              operation is completed, the module will error.
+            type: int
+          transport:
+            choices:
+            - cli
+            - rest
+            default: rest
+            description:
+            - Configures the transport connection to use when connecting to the remote device.
+            type: str
+          user:
+            description:
+            - The username to connect to the BIG-IP with. This user must have administrative
+              privileges on the device.
+            - You may omit this option by setting the environment variable `F5_USER'.
+            required: true
+            type: str
+          validate_certs:
+            default: true
+            description:
+            - If `no', SSL certificates are not validated. Use this only on personally controlled
+              sites using self-signed certificates.
+            - You may omit this option by setting the environment variable `F5_VALIDATE_CERTS'.
+            type: bool
+        
+        type: dict
+        version_added: 2.5
+
+- rules
+        Rules that you want assigned to the timer policy
+        [Default: (null)]
+        suboptions:
+          destination_ports:
+            description:
+            - The list of destination ports to match the rule on.
+            - Specify a port range by specifying start and end ports separated by a dash (-).
+            - This field is only available if you have selected the `sctp', `tcp', or `udp'
+              protocol.
+            type: list
+          idle_timeout:
+            description:
+            - Specifies an idle timeout, in seconds, for protocol and port pairs that match
+              the timer policy rule.
+            - When `infinite', specifies that the protocol and port pairs that match the
+              timer policy rule have no idle timeout.
+            - When specifying rules, if this parameter is not specified, the default of `unspecified'
+              will be used.
+            type: str
+          name:
+            description:
+            - The name of the rule.
+            required: true
+            type: str
+          protocol:
+            choices:
+            - all-other
+            - ah
+            - bna
+            - esp
+            - etherip
+            - gre
+            - icmp
+            - ipencap
+            - ipv6
+            - ipv6-auth
+            - ipv6-crypt
+            - ipv6-icmp
+            - isp-ip
+            - mux
+            - ospf
+            - sctp
+            - tcp
+            - udp
+            - udplite
+            description:
+            - Specifies the IP protocol entry for which the timer policy rule is being configured.
+              This could be a layer-4 protocol (such as `tcp', `udp' or `sctp'.
+            - Only flows matching the configured protocol will make use of this rule.
+            - When `all-other' is specified, if there are no specific ip-protocol rules that
+              match the flow, the flow matches all the other ip-protocol rules.
+            - When specifying rules, if this parameter is not specified, the default of `all-other'
+              will be used.
+            type: str
+        
+        type: list
+
+= server
+        The BIG-IP host.
+        You may omit this option by setting the environment variable `F5_SERVER'.
+
+        type: str
+
+- server_port
+        The BIG-IP server port.
+        You may omit this option by setting the environment variable `F5_SERVER_PORT'.
+        [Default: 443]
+        type: int
+        version_added: 2.2
+
+- state
+        When `present', ensures that the resource exists.
+        When `absent', ensures the resource is removed.
+        (Choices: present, absent)[Default: present]
+        type: str
+
+= user
+        The username to connect to the BIG-IP with. This user must have administrative privileges on the device.
+        You may omit this option by setting the environment variable `F5_USER'.
+
+        type: str
+
+- validate_certs
+        If `no', SSL certificates are not validated. Use this only on personally controlled sites using self-signed certificates.
+        You may omit this option by setting the environment variable `F5_VALIDATE_CERTS'.
+        [Default: True]
+        type: bool
+        version_added: 2.0
+
+
+NOTES:
+      * For more information on using Ansible to manage F5 Networks devices see https://www.ansible.com/integrations/networks/f5.
+      * Requires BIG-IP software version >= 12.
+      * The F5 modules only manipulate the running configuration of the F5 product. To ensure that BIG-IP specific configuration
+        persists to disk, be sure to include at least one task that uses the [bigip_config] module to save the running
+        configuration. Refer to the module's documentation for the correct usage of the module to save your running configuration.
+
+
+AUTHOR: Tim Rupp (@caphrim007)
+        METADATA:
+          status:
+          - preview
+          supported_by: certified
+        
+
+EXAMPLES:
+
+- name: Create a timer policy
+  bigip_timer_policy:
+    name: timer1
+    description: My timer policy
+    rules:
+      - name: rule1
+        protocol: tcp
+        idle_timeout: indefinite
+        destination_ports:
+          - 443
+          - 80
+      - name: rule2
+        protocol: 200
+      - name: rule3
+        protocol: sctp
+        idle_timeout: 200
+        destination_ports:
+          - 21
+    state: present
+    provider:
+      password: secret
+      server: lb.mydomain.com
+      user: admin
+  delegate_to: localhost
+
+- name: Remove a timer policy and all its associated rules
+  bigip_timer_policy:
+    name: timer1
+    description: My timer policy
+    state: absent
+    provider:
+      user: admin
+      password: secret
+      server: lb.mydomain.com
+  delegate_to: localhost
+
+
+RETURN VALUES:
+
+description:
+  description: The new description of the timer policy.
+  returned: changed
+  type: str
+  sample: true
+

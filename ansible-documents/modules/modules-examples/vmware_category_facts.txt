@@ -1,0 +1,53 @@
+EXAMPLES:
+
+- name: Gather facts about tag categories
+  vmware_category_facts:
+    hostname: "{{ vcenter_hostname }}"
+    username: "{{ vcenter_username }}"
+    password: "{{ vcenter_password }}"
+  delegate_to: localhost
+  register: all_tag_category_facts
+
+- name: Gather category id from given tag category
+  vmware_category_facts:
+    hostname: "{{ vcenter_hostname }}"
+    username: "{{ vcenter_username }}"
+    password: "{{ vcenter_password }}"
+  delegate_to: localhost
+  register: tag_category_results
+
+- set_fact:
+    category_id: "{{ item.category_id }}"
+  loop: "{{ tag_category_results.tag_category_facts|json_query(query) }}"
+  vars:
+    query: "[?category_name==`Category0001`]"
+- debug: var=category_id
+
+
+RETURN VALUES:
+
+tag_category_facts:
+  description: metadata of tag categories
+  returned: always
+  type: list
+  sample: [
+    {
+       "category_associable_types": [],
+       "category_cardinality": "MULTIPLE",
+       "category_description": "awesome description",
+       "category_id": "urn:vmomi:InventoryServiceCategory:e785088d-6981-4b1c-9fb8-1100c3e1f742:GLOBAL",
+       "category_name": "Category0001",
+       "category_used_by": []
+    },
+    {
+       "category_associable_types": [
+            "VirtualMachine"
+       ],
+       "category_cardinality": "SINGLE",
+       "category_description": "another awesome description",
+       "category_id": "urn:vmomi:InventoryServiceCategory:ae5b7c6c-e622-4671-9b96-76e93adb70f2:GLOBAL",
+       "category_name": "template_tag",
+       "category_used_by": []
+    }
+  ]
+

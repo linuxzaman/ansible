@@ -1,0 +1,93 @@
+> WIN_RDS_RAP    (/usr/lib/python2.7/dist-packages/ansible/modules/windows/win_rds_rap.py)
+
+        Creates, removes and configures a Remote Desktop resource authorization policy (RD RAP). A RD RAP allows you to specify the
+        network resources (computers) that users can connect to remotely through a Remote Desktop Gateway server.
+
+  * This module is maintained by The Ansible Community
+OPTIONS (= is mandatory):
+
+- allowed_ports
+        List of port numbers through which connections are allowed for this policy.
+        To allow connections through any port, specify 'any'.
+        [Default: (null)]
+        type: list
+
+- computer_group
+        The computer group name that is associated with this resource authorization policy (RAP).
+        This is required when `computer_group_type' is `rdg_group' or `ad_network_resource_group'.
+        [Default: (null)]
+        type: str
+
+- computer_group_type
+        The computer group type:
+        `rdg_group': RD Gateway-managed group
+        `ad_network_resource_group': Active Directory Domain Services network resource group
+        `allow_any': Allow users to connect to any network resource.
+        (Choices: rdg_group, ad_network_resource_group, allow_any)[Default: (null)]
+        type: str
+
+- description
+        Optionnal description of the resource authorization policy.
+        [Default: (null)]
+        type: str
+
+= name
+        Name of the resource authorization policy.
+
+
+- state
+        The state of resource authorization policy.
+        If `absent' will ensure the policy is removed.
+        If `present' will ensure the policy is configured and exists.
+        If `enabled' will ensure the policy is configured, exists and enabled.
+        If `disabled' will ensure the policy is configured, exists, but disabled.
+        (Choices: absent, disabled, enabled, present)[Default: present]
+        type: str
+
+- user_groups
+        List of user groups that are associated with this resource authorization policy (RAP). A user must belong to one of these groups
+        to access the RD Gateway server.
+        Required when a new RAP is created.
+        [Default: (null)]
+        type: list
+
+
+SEE ALSO:
+      * Module win_rds_cap
+           The official documentation on the win_rds_cap module.
+           https://docs.ansible.com/ansible/latest/modules/win_rds_cap_module.html
+      * Module win_rds_rap
+           The official documentation on the win_rds_rap module.
+           https://docs.ansible.com/ansible/latest/modules/win_rds_rap_module.html
+      * Module win_rds_settings
+           The official documentation on the win_rds_settings module.
+           https://docs.ansible.com/ansible/latest/modules/win_rds_settings_module.html
+
+
+REQUIREMENTS:  Windows Server 2008R2 (6.1) or higher., The Windows Feature "RDS-Gateway" must be enabled.
+
+AUTHOR: Kevin Subileau (@ksubileau)
+        METADATA:
+          status:
+          - preview
+          supported_by: community
+        
+
+EXAMPLES:
+
+- name: Create a new RDS RAP
+  win_rds_rap:
+    name: My RAP
+    description: Allow all users to connect to any resource through ports 3389 and 3390
+    user_groups:
+      - BUILTIN\users
+    computer_group_type: allow_any
+    allowed_ports:
+      - 3389
+      - 3390
+    state: enabled
+
+
+RETURN VALUES:
+
+

@@ -1,0 +1,85 @@
+EXAMPLES:
+
+- name: Create an LDAP authentication object
+  bigip_device_auth_ldap:
+    name: foo
+    provider:
+      password: secret
+      server: lb.mydomain.com
+      user: admin
+  delegate_to: localhost
+
+
+RETURN VALUES:
+
+servers:
+  description: LDAP servers used by the system to obtain authentication information.
+  returned: changed
+  type: list
+  sample: ['192.168.1.1', '192.168.1.2']
+port:
+  description: The port that the system uses for access to the remote LDAP server.
+  returned: changed
+  type: int
+  sample: 389
+remote_directory_tree:
+  description: File location (tree) of the user authentication database on the server.
+  returned: changed
+  type: str
+  sample: "CN=Users,DC=FOOBAR,DC=LOCAL"
+scope:
+  description: The level of the remote Active Directory or LDAP directory searched for user authentication.
+  returned: changed
+  type: str
+  sample: base
+bind_dn:
+  description: The distinguished name for the Active Directory or LDAP server user ID.
+  returned: changed
+  type: str
+  sample: "user@foobar.local"
+user_template:
+  description: The distinguished name of the user who is logging on.
+  returned: changed
+  type: str
+  sample: "uid=%s,ou=people,dc=foobar,dc=local"
+check_member_attr:
+  description: The user's member attribute in the remote LDAP or AD group.
+  returned: changed
+  type: bool
+  sample: yes
+ssl:
+  description: Specifies whether the system uses an SSL port to communicate with the LDAP server.
+  returned: changed
+  type: str
+  sample: start-tls
+ca_cert:
+  description: The name of an SSL certificate from a certificate authority.
+  returned: changed
+  type: str
+  sample: My-Trusted-CA-Bundle.crt
+client_key:
+  description: The name of an SSL client key.
+  returned: changed
+  type: str
+  sample: MyKey.key
+client_cert:
+  description: The name of an SSL client certificate.
+  returned: changed
+  type: str
+  sample: MyCert.crt
+validate_certs:
+  description: Indicates if the system checks an SSL peer.
+  returned: changed
+  type: bool
+  sample: yes
+login_ldap_attr:
+  description: The LDAP directory attribute containing the local user name associated with the selected directory entry.
+  returned: changed
+  type: str
+  sample: samaccountname
+fallback_to_local:
+  description: Specifies that the system uses the Local authentication method as fallback
+  returned: changed
+  type: bool
+  sample: yes
+

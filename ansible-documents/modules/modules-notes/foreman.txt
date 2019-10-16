@@ -1,0 +1,64 @@
+> FOREMAN    (/usr/lib/python2.7/dist-packages/ansible/modules/remote_management/foreman/_foreman.py)
+
+        Allows the management of Foreman resources inside your Foreman server.
+
+DEPRECATED: 
+
+	Reason: Replaced by re-designed individual modules living at https://github.com/theforeman/foreman-ansible-modules
+	Will be removed in: Ansible 2.12
+	Alternatives: https://github.com/theforeman/foreman-ansible-modules
+
+
+  * This module is maintained by The Ansible Community
+OPTIONS (= is mandatory):
+
+= entity
+        The Foreman resource that the action will be performed on (e.g. organization, host).
+
+
+= params
+        Parameters associated to the entity resource to set or edit in dictionary format (e.g. name, description).
+
+
+= password
+        Password for user accessing Foreman server.
+
+
+= server_url
+        URL of Foreman server.
+
+
+= username
+        Username on Foreman server.
+
+
+- verify_ssl
+        Whether to verify an SSL connection to Foreman server.
+        [Default: False]
+        type: bool
+
+
+REQUIREMENTS:  nailgun >= 0.28.0, python >= 2.6, datetime
+
+AUTHOR: Eric D Helms (@ehelms)
+        METADATA:
+          status:
+          - deprecated
+          supported_by: community
+        
+
+EXAMPLES:
+
+- name: Create CI Organization
+  foreman:
+    username: admin
+    password: admin
+    server_url: https://fakeserver.com
+    entity: organization
+    params:
+      name: My Cool New Organization
+  delegate_to: localhost
+
+
+RETURN VALUES:
+# 

@@ -1,0 +1,209 @@
+> FORTIOS_FIREWALL_IPPOOL    (/usr/lib/python2.7/dist-packages/ansible/modules/network/fortios/fortios_firewall_ippool.py)
+
+        This module is able to configure a FortiGate or FortiOS by allowing the user to configure firewall feature and ippool category.
+        Examples includes all options and need to be adjusted to datasources before usage. Tested with FOS v6.0.2
+
+  * This module is maintained by The Ansible Community
+OPTIONS (= is mandatory):
+
+- firewall_ippool
+        Configure IPv4 IP pools.
+        [Default: None]
+        suboptions:
+          arp-intf:
+            description:
+            - Select an interface from available options that will reply to ARP requests.
+              (If blank, any is selected). Source system.interface.name.
+          arp-reply:
+            choices:
+            - disable
+            - enable
+            description:
+            - Enable/disable replying to ARP requests when an IP Pool is added to a policy
+              (default = enable).
+          associated-interface:
+            description:
+            - Associated interface name. Source system.interface.name.
+          block-size:
+            description:
+            - Number of addresses in a block (64 to 4096, default = 128).
+          comments:
+            description:
+            - Comment.
+          endip:
+            description:
+            - 'Final IPv4 address (inclusive) in the range for the address pool (format xxx.xxx.xxx.xxx,
+              Default: 0.0.0.0).'
+          name:
+            description:
+            - IP pool name.
+            required: true
+          num-blocks-per-user:
+            description:
+            - Number of addresses blocks that can be used by a user (1 to 128, default = 8).
+          pba-timeout:
+            description:
+            - Port block allocation timeout (seconds).
+          permit-any-host:
+            choices:
+            - disable
+            - enable
+            description:
+            - Enable/disable full cone NAT.
+          source-endip:
+            description:
+            - 'Final IPv4 address (inclusive) in the range of the source addresses to be translated
+              (format xxx.xxx.xxx.xxx, Default: 0.0.0.0).'
+          source-startip:
+            description:
+            - ' First IPv4 address (inclusive) in the range of the source addresses to be
+              translated (format xxx.xxx.xxx.xxx, Default: 0.0.0.0).'
+          startip:
+            description:
+            - 'First IPv4 address (inclusive) in the range for the address pool (format xxx.xxx.xxx.xxx,
+              Default: 0.0.0.0).'
+          state:
+            choices:
+            - present
+            - absent
+            description:
+            - Indicates whether to create or remove the object
+          type:
+            choices:
+            - overload
+            - one-to-one
+            - fixed-port-range
+            - port-block-allocation
+            description:
+            - IP pool type (overload, one-to-one, fixed port range, or port block allocation).
+        
+
+= host
+        FortiOS or FortiGate ip address.
+
+
+- https
+        Indicates if the requests towards FortiGate must use HTTPS protocol
+        [Default: False]
+        type: bool
+
+- password
+        FortiOS or FortiGate password.
+        [Default: ]
+
+= username
+        FortiOS or FortiGate username.
+
+
+- vdom
+        Virtual domain, among those defined previously. A vdom is a virtual instance of the FortiGate that can be configured and used as
+        a different unit.
+        [Default: root]
+
+
+NOTES:
+      * Requires fortiosapi library developed by Fortinet
+      * Run as a local_action in your playbook
+
+
+REQUIREMENTS:  fortiosapi>=0.9.8
+
+AUTHOR: Miguel Angel Munoz (@mamunozgonzalez), Nicolas Thomas (@thomnico)
+        METADATA:
+          status:
+          - preview
+          supported_by: community
+        
+
+EXAMPLES:
+
+- hosts: localhost
+  vars:
+   host: "192.168.122.40"
+   username: "admin"
+   password: ""
+   vdom: "root"
+  tasks:
+  - name: Configure IPv4 IP pools.
+    fortios_firewall_ippool:
+      host:  "{{ host }}"
+      username: "{{ username }}"
+      password: "{{ password }}"
+      vdom:  "{{ vdom }}"
+      firewall_ippool:
+        state: "present"
+        arp-intf: "<your_own_value> (source system.interface.name)"
+        arp-reply: "disable"
+        associated-interface: "<your_own_value> (source system.interface.name)"
+        block-size: "6"
+        comments: "<your_own_value>"
+        endip: "<your_own_value>"
+        name: "default_name_9"
+        num-blocks-per-user: "10"
+        pba-timeout: "11"
+        permit-any-host: "disable"
+        source-endip: "<your_own_value>"
+        source-startip: "<your_own_value>"
+        startip: "<your_own_value>"
+        type: "overload"
+
+
+RETURN VALUES:
+
+build:
+  description: Build number of the fortigate image
+  returned: always
+  type: str
+  sample: '1547'
+http_method:
+  description: Last method used to provision the content into FortiGate
+  returned: always
+  type: str
+  sample: 'PUT'
+http_status:
+  description: Last result given by FortiGate on last operation applied
+  returned: always
+  type: str
+  sample: "200"
+mkey:
+  description: Master key (id) used in the last call to FortiGate
+  returned: success
+  type: str
+  sample: "key1"
+name:
+  description: Name of the table used to fulfill the request
+  returned: always
+  type: str
+  sample: "urlfilter"
+path:
+  description: Path of the table used to fulfill the request
+  returned: always
+  type: str
+  sample: "webfilter"
+revision:
+  description: Internal revision number
+  returned: always
+  type: str
+  sample: "17.0.2.10658"
+serial:
+  description: Serial number of the unit
+  returned: always
+  type: str
+  sample: "FGVMEVYYQT3AB5352"
+status:
+  description: Indication of the operation's result
+  returned: always
+  type: str
+  sample: "success"
+vdom:
+  description: Virtual domain used
+  returned: always
+  type: str
+  sample: "root"
+version:
+  description: Version of the FortiGate
+  returned: always
+  type: str
+  sample: "v5.6.3"
+
+

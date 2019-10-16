@@ -1,0 +1,49 @@
+> LOGENTRIES    (/usr/lib/python2.7/dist-packages/ansible/modules/monitoring/logentries.py)
+
+        Sends logs to LogEntries in realtime
+
+  * This module is maintained by The Ansible Community
+OPTIONS (= is mandatory):
+
+- logtype
+        type of the log
+        [Default: (null)]
+
+- name
+        name of the log
+        [Default: (null)]
+
+= path
+        path to a log file
+
+
+- state
+        following state of the log
+        (Choices: present, absent)[Default: present]
+
+
+NOTES:
+      * Requires the LogEntries agent which can be installed following the instructions at logentries.com
+
+
+AUTHOR: Ivan Vanderbyl (@ivanvanderbyl)
+        METADATA:
+          status:
+          - preview
+          supported_by: community
+        
+
+EXAMPLES:
+
+# Track nginx logs
+- logentries:
+    path: /var/log/nginx/access.log
+    state: present
+    name: nginx-access-log
+
+# Stop tracking nginx logs
+- logentries:
+    path: /var/log/nginx/error.log
+    state: absent
+
+

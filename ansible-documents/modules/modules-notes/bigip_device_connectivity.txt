@@ -1,0 +1,246 @@
+> BIGIP_DEVICE_CONNECTIVITY    (/usr/lib/python2.7/dist-packages/ansible/modules/network/f5/bigip_device_connectivity.py)
+
+        Manages device IP configuration settings for HA on a BIG-IP. Each BIG-IP device has synchronization and failover connectivity
+        information (IP addresses) that you define as part of HA pairing or clustering. This module allows you to configure that
+        information.
+
+  * This module is maintained by an Ansible Partner
+OPTIONS (= is mandatory):
+
+- cluster_mirroring
+        Specifies whether mirroring occurs within the same cluster or between different clusters on a multi-bladed system.
+        This parameter is only supported on platforms that have multiple blades, such as Viprion hardware. It is not supported on VE.
+        (Choices: between-clusters, within-cluster)[Default: (null)]
+        type: str
+        version_added: 2.7
+        
+
+- config_sync_ip
+        Local IP address that the system uses for ConfigSync operations.
+        [Default: (null)]
+        type: str
+
+- failover_multicast
+        When `yes', ensures that the Failover Multicast configuration is enabled and if no further multicast configuration is provided,
+        ensures that `multicast_interface', `multicast_address' and `multicast_port' are the defaults specified in each option's
+        description. When `no', ensures that Failover Multicast configuration is disabled.
+        [Default: (null)]
+        type: bool
+
+- mirror_primary_address
+        Specifies the primary IP address for the system to use to mirror connections.
+        [Default: (null)]
+        type: str
+
+- mirror_secondary_address
+        Specifies the secondary IP address for the system to use to mirror connections.
+        [Default: (null)]
+        type: str
+
+- multicast_address
+        IP address for the system to send multicast messages associated with failover. When `failover_multicast' is `yes' and this option
+        is not provided, a default of `224.0.0.245' will be used.
+        [Default: (null)]
+        type: str
+
+- multicast_interface
+        Interface over which the system sends multicast messages associated with failover. When `failover_multicast' is `yes' and this
+        option is not provided, a default of `eth0' will be used.
+        [Default: (null)]
+        type: str
+
+- multicast_port
+        Port for the system to send multicast messages associated with failover. When `failover_multicast' is `yes' and this option is
+        not provided, a default of `62960' will be used. This value must be between 0 and 65535.
+        [Default: (null)]
+        type: int
+
+= password
+        The password for the user account used to connect to the BIG-IP.
+        You may omit this option by setting the environment variable `F5_PASSWORD'.
+        (Aliases: pass, pwd)
+        type: str
+
+- provider
+        A dict object containing connection details.
+        [Default: (null)]
+        suboptions:
+          password:
+            aliases:
+            - pass
+            - pwd
+            description:
+            - The password for the user account used to connect to the BIG-IP.
+            - You may omit this option by setting the environment variable `F5_PASSWORD'.
+            required: true
+            type: str
+          server:
+            description:
+            - The BIG-IP host.
+            - You may omit this option by setting the environment variable `F5_SERVER'.
+            required: true
+            type: str
+          server_port:
+            default: 443
+            description:
+            - The BIG-IP server port.
+            - You may omit this option by setting the environment variable `F5_SERVER_PORT'.
+            type: int
+          ssh_keyfile:
+            description:
+            - Specifies the SSH keyfile to use to authenticate the connection to the remote
+              device.  This argument is only used for `cli' transports.
+            - You may omit this option by setting the environment variable `ANSIBLE_NET_SSH_KEYFILE'.
+            type: path
+          timeout:
+            default: 10
+            description:
+            - Specifies the timeout in seconds for communicating with the network device for
+              either connecting or sending commands.  If the timeout is exceeded before the
+              operation is completed, the module will error.
+            type: int
+          transport:
+            choices:
+            - cli
+            - rest
+            default: rest
+            description:
+            - Configures the transport connection to use when connecting to the remote device.
+            type: str
+          user:
+            description:
+            - The username to connect to the BIG-IP with. This user must have administrative
+              privileges on the device.
+            - You may omit this option by setting the environment variable `F5_USER'.
+            required: true
+            type: str
+          validate_certs:
+            default: true
+            description:
+            - If `no', SSL certificates are not validated. Use this only on personally controlled
+              sites using self-signed certificates.
+            - You may omit this option by setting the environment variable `F5_VALIDATE_CERTS'.
+            type: bool
+        
+        type: dict
+        version_added: 2.5
+
+= server
+        The BIG-IP host.
+        You may omit this option by setting the environment variable `F5_SERVER'.
+
+        type: str
+
+- server_port
+        The BIG-IP server port.
+        You may omit this option by setting the environment variable `F5_SERVER_PORT'.
+        [Default: 443]
+        type: int
+        version_added: 2.2
+
+- unicast_failover
+        Desired addresses to use for failover operations. Options `address' and `port' are supported with dictionary structure where
+        `address' is the local IP address that the system uses for failover operations. Port specifies the port that the system uses for
+        failover operations. If `port' is not specified, the default value `1026' will be used.  If you are specifying the (recommended)
+        management IP address, use 'management-ip' in the address field.
+        [Default: (null)]
+        type: list
+
+= user
+        The username to connect to the BIG-IP with. This user must have administrative privileges on the device.
+        You may omit this option by setting the environment variable `F5_USER'.
+
+        type: str
+
+- validate_certs
+        If `no', SSL certificates are not validated. Use this only on personally controlled sites using self-signed certificates.
+        You may omit this option by setting the environment variable `F5_VALIDATE_CERTS'.
+        [Default: True]
+        type: bool
+        version_added: 2.0
+
+
+NOTES:
+      * This module is primarily used as a component of configuring HA pairs of BIG-IP devices.
+      * Requires BIG-IP >= 12.0.0
+      * For more information on using Ansible to manage F5 Networks devices see https://www.ansible.com/integrations/networks/f5.
+      * Requires BIG-IP software version >= 12.
+      * The F5 modules only manipulate the running configuration of the F5 product. To ensure that BIG-IP specific configuration
+        persists to disk, be sure to include at least one task that uses the [bigip_config] module to save the running
+        configuration. Refer to the module's documentation for the correct usage of the module to save your running configuration.
+
+
+AUTHOR: Tim Rupp (@caphrim007), Wojciech Wypior (@wojtek0806)
+        METADATA:
+          status:
+          - stableinterface
+          supported_by: certified
+        
+
+EXAMPLES:
+
+- name: Configure device connectivity for standard HA pair
+  bigip_device_connectivity:
+    config_sync_ip: 10.1.30.1
+    mirror_primary_address: 10.1.30.1
+    unicast_failover:
+      - address: management-ip
+      - address: 10.1.30.1
+    provider:
+      server: lb.mydomain.com
+      user: admin
+      password: secret
+  delegate_to: localhost
+
+
+RETURN VALUES:
+
+changed:
+  description: Denotes if the F5 configuration was updated.
+  returned: always
+  type: bool
+config_sync_ip:
+  description: The new value of the C(config_sync_ip) setting.
+  returned: changed
+  type: str
+  sample: 10.1.1.1
+mirror_primary_address:
+  description: The new value of the C(mirror_primary_address) setting.
+  returned: changed
+  type: str
+  sample: 10.1.1.2
+mirror_secondary_address:
+  description: The new value of the C(mirror_secondary_address) setting.
+  returned: changed
+  type: str
+  sample: 10.1.1.3
+unicast_failover:
+  description: The new value of the C(unicast_failover) setting.
+  returned: changed
+  type: list
+  sample: [{'address': '10.1.1.2', 'port': 1026}]
+failover_multicast:
+  description: Whether a failover multicast attribute has been changed or not.
+  returned: changed
+  type: bool
+multicast_interface:
+  description: The new value of the C(multicast_interface) setting.
+  returned: changed
+  type: str
+  sample: eth0
+multicast_address:
+  description: The new value of the C(multicast_address) setting.
+  returned: changed
+  type: str
+  sample: 224.0.0.245
+multicast_port:
+  description: The new value of the C(multicast_port) setting.
+  returned: changed
+  type: int
+  sample: 1026
+cluster_mirroring:
+  description: The current cluster-mirroring setting.
+  returned: changed
+  type: str
+  sample: between-clusters
+

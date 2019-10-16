@@ -1,0 +1,150 @@
+> CNOS_LINKAGG    (/usr/lib/python2.7/dist-packages/ansible/modules/network/cnos/cnos_linkagg.py)
+
+        This module provides declarative management of link aggregation groups on Lenovo CNOS network devices.
+
+  * This module is maintained by The Ansible Network Team
+OPTIONS (= is mandatory):
+
+- aggregate
+        List of link aggregation definitions.
+        [Default: (null)]
+
+- group
+        Channel-group number for the port-channel Link aggregation group. Range 1-255.
+        [Default: (null)]
+
+- members
+        List of members of the link aggregation group.
+        [Default: (null)]
+
+- mode
+        Mode of the link aggregation group.
+        (Choices: active, on, passive)[Default: (null)]
+
+- provider
+        *Deprecated*
+        Starting with Ansible 2.5 we recommend using `connection: network_cli'.
+        For more information please see the L(CNOS Platform Options guide, ../network/user_guide/platform_cnos.html).
+        HORIZONTALLINE
+        A dict object containing connection details.
+        [Default: (null)]
+        suboptions:
+          auth_pass:
+            description:
+            - Specifies the password to use if required to enter privileged mode on the remote
+              device.  If `authorize' is false, then this argument does nothing. If the value
+              is not specified in the task, the value of environment variable `ANSIBLE_NET_AUTH_PASS'
+              will be used instead.
+          authorize:
+            default: 'no'
+            description:
+            - Instructs the module to enter privileged mode on the remote device before sending
+              any commands.  If not specified, the device will attempt to execute all commands
+              in non-privileged mode. If the value is not specified in the task, the value
+              of environment variable `ANSIBLE_NET_AUTHORIZE' will be used instead.
+            type: bool
+          host:
+            description:
+            - Specifies the DNS host name or address for connecting to the remote device over
+              the specified transport.  The value of host is used as the destination address
+              for the transport.
+            required: true
+          password:
+            description:
+            - Specifies the password to use to authenticate the connection to the remote device.   This
+              value is used to authenticate the SSH session. If the value is not specified
+              in the task, the value of environment variable `ANSIBLE_NET_PASSWORD' will
+              be used instead.
+          port:
+            default: 22
+            description:
+            - Specifies the port to use when building the connection to the remote device.
+          ssh_keyfile:
+            description:
+            - Specifies the SSH key to use to authenticate the connection to the remote device.   This
+              value is the path to the key used to authenticate the SSH session. If the value
+              is not specified in the task, the value of environment variable `ANSIBLE_NET_SSH_KEYFILE'
+              will be used instead.
+          timeout:
+            default: 10
+            description:
+            - Specifies the timeout in seconds for communicating with the network device for
+              either connecting or sending commands.  If the timeout is exceeded before the
+              operation is completed, the module will error.
+          username:
+            description:
+            - Configures the username to use to authenticate the connection to the remote
+              device.  This value is used to authenticate the SSH session. If the value is
+              not specified in the task, the value of environment variable `ANSIBLE_NET_USERNAME'
+              will be used instead.
+        
+        version_added: 2.8
+
+- purge
+        Purge links not defined in the `aggregate' parameter.
+        [Default: False]
+        type: bool
+
+- state
+        State of the link aggregation group.
+        (Choices: present, absent)[Default: present]
+
+
+NOTES:
+      * Tested against CNOS 10.8.1
+
+
+AUTHOR: Anil Kumar Muraleedharan (@auraleedhar)
+        METADATA:
+          status:
+          - preview
+          supported_by: network
+        
+
+EXAMPLES:
+
+- name: create link aggregation group
+  cnos_linkagg:
+    group: 10
+    state: present
+
+- name: delete link aggregation group
+  cnos_linkagg:
+    group: 10
+    state: absent
+
+- name: set link aggregation group to members
+  cnos_linkagg:
+    group: 200
+    mode: active
+    members:
+      - Ethernet1/33
+      - Ethernet1/44
+
+- name: remove link aggregation group from GigabitEthernet0/0
+  cnos_linkagg:
+    group: 200
+    mode: active
+    members:
+      - Ethernet1/33
+
+- name: Create aggregate of linkagg definitions
+  cnos_linkagg:
+    aggregate:
+      - { group: 3, mode: on, members: [Ethernet1/33] }
+      - { group: 100, mode: passive, members: [Ethernet1/44] }
+
+
+RETURN VALUES:
+
+commands:
+  description: The list of configuration mode commands to send to the device
+  returned: always, except for the platforms that use Netconf transport to
+    manage the device.
+  type: list
+  sample:
+    - interface port-channel 30
+    - interface Ethernet1/33
+    - channel-group 30 mode on
+    - no interface port-channel 30
+

@@ -1,0 +1,61 @@
+> WIN_OWNER    (/usr/lib/python2.7/dist-packages/ansible/modules/windows/win_owner.py)
+
+        Set owner of files or directories.
+
+  * This module is maintained by The Ansible Core Team
+OPTIONS (= is mandatory):
+
+= path
+        Path to be used for changing owner.
+
+        type: path
+
+- recurse
+        Indicates if the owner should be changed recursively.
+        [Default: False]
+        type: bool
+
+= user
+        Name to be used for changing owner.
+
+        type: str
+
+
+SEE ALSO:
+      * Module win_acl
+           The official documentation on the win_acl module.
+           https://docs.ansible.com/ansible/latest/modules/win_acl_module.html
+      * Module win_file
+           The official documentation on the win_file module.
+           https://docs.ansible.com/ansible/latest/modules/win_file_module.html
+      * Module win_stat
+           The official documentation on the win_stat module.
+           https://docs.ansible.com/ansible/latest/modules/win_stat_module.html
+
+
+AUTHOR: Hans-Joachim Kliemeck (@h0nIg)
+        METADATA:
+          status:
+          - preview
+          supported_by: core
+        
+
+EXAMPLES:
+
+- name: Change owner of path
+  win_owner:
+    path: C:\apache
+    user: apache
+    recurse: yes
+
+- name: Set the owner of root directory
+  win_owner:
+    path: C:\apache
+    user: SYSTEM
+    recurse: no
+
+
+RETURN VALUES:
+
+
+

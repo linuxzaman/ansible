@@ -1,0 +1,42 @@
+EXAMPLES:
+
+- name: Set the Power Management Policy of a host system to high-performance
+  vmware_host_powermgmt_policy:
+    hostname: '{{ vcenter_hostname }}'
+    username: '{{ vcenter_username }}'
+    password: '{{ vcenter_password }}'
+    esxi_hostname: '{{ esxi_host }}'
+    policy: high-performance
+    validate_certs: no
+  delegate_to: localhost
+
+- name: Set the Power Management Policy of all host systems from cluster to high-performance
+  vmware_host_powermgmt_policy:
+    hostname: '{{ vcenter_hostname }}'
+    username: '{{ vcenter_username }}'
+    password: '{{ vcenter_password }}'
+    cluster_name: '{{ cluster_name }}'
+    policy: high-performance
+    validate_certs: no
+  delegate_to: localhost
+
+
+RETURN VALUES:
+
+result:
+    description: metadata about host system's Power Management Policy
+    returned: always
+    type: dict
+    sample: {
+        "changed": true,
+        "result": {
+            "esxi01": {
+                "changed": true,
+                "current_state": "high-performance",
+                "desired_state": "high-performance",
+                "msg": "Power policy changed",
+                "previous_state": "balanced"
+            }
+        }
+    }
+

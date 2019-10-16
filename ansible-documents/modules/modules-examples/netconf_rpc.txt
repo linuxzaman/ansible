@@ -1,0 +1,83 @@
+EXAMPLES:
+
+- name: lock candidate
+  netconf_rpc:
+    rpc: lock
+    content:
+      target:
+        candidate:
+
+- name: unlock candidate
+  netconf_rpc:
+    rpc: unlock
+    xmlns: "urn:ietf:params:xml:ns:netconf:base:1.0"
+    content: "{'target': {'candidate': None}}"
+
+- name: discard changes
+  netconf_rpc:
+    rpc: discard-changes
+
+- name: get-schema
+  netconf_rpc:
+    rpc: get-schema
+    xmlns: urn:ietf:params:xml:ns:yang:ietf-netconf-monitoring
+    content:
+      identifier: ietf-netconf
+      version: "2011-06-01"
+
+- name: copy running to startup
+  netconf_rpc:
+    rpc: copy-config
+    content:
+      source:
+        running:
+      target:
+        startup:
+
+- name: get schema list with JSON output
+  netconf_rpc:
+    rpc: get
+    content: |
+      <filter>
+        <netconf-state xmlns="urn:ietf:params:xml:ns:yang:ietf-netconf-monitoring">
+          <schemas/>
+        </netconf-state>
+      </filter>
+    display: json
+
+- name: get schema using XML request
+  netconf_rpc:
+    rpc: "get-schema"
+    xmlns: "urn:ietf:params:xml:ns:yang:ietf-netconf-monitoring"
+    content: |
+      <identifier>ietf-netconf-monitoring</identifier>
+      <version>2010-10-04</version>
+    display: json
+
+
+RETURN VALUES:
+
+stdout:
+  description: The raw XML string containing configuration or state data
+               received from the underlying ncclient library.
+  returned: always apart from low-level errors (such as action plugin)
+  type: str
+  sample: '...'
+stdout_lines:
+  description: The value of stdout split into a list
+  returned: always apart from low-level errors (such as action plugin)
+  type: list
+  sample: ['...', '...']
+output:
+  description: Based on the value of display option will return either the set of
+               transformed XML to JSON format from the RPC response with type dict
+               or pretty XML string response (human-readable) or response with
+               namespace removed from XML string.
+  returned: when the display format is selected as JSON it is returned as dict type, if the
+            display format is xml or pretty pretty it is retured as a string apart from low-level
+            errors (such as action plugin).
+  type: complex
+  contains:
+    formatted_output:
+      - Contains formatted response received from remote host as per the value in display format.
+

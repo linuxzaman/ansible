@@ -1,0 +1,121 @@
+> CE_OSPF    (/usr/lib/python2.7/dist-packages/ansible/modules/network/cloudengine/ce_ospf.py)
+
+        Manages configuration of an OSPF instance on HUAWEI CloudEngine switches.
+
+  * This module is maintained by The Ansible Community
+OPTIONS (= is mandatory):
+
+- addr
+        Specifies the address of the network segment where the interface resides. The value is in dotted decimal notation.
+        [Default: (null)]
+
+- area
+        Specifies the area ID. The area with the area-id being 0 is a backbone area. Valid values are a string, formatted as an IP
+        address (i.e. "0.0.0.0") or as an integer between 1 and 4294967295.
+        [Default: (null)]
+
+- auth_key_id
+        Authentication key id when `auth_mode' is 'hmac-sha256', 'md5' or 'hmac-md5. Valid value is an integer is in the range from 1 to
+        255.
+        [Default: (null)]
+
+- auth_mode
+        Specifies the authentication type.
+        (Choices: none, hmac-sha256, md5, hmac-md5, simple)[Default: (null)]
+
+- auth_text_md5
+        Specifies a password for MD5, HMAC-MD5, or HMAC-SHA256 authentication. The value is a string of 1 to 255 case-sensitive
+        characters, spaces not supported.
+        [Default: (null)]
+
+- auth_text_simple
+        Specifies a password for simple authentication. The value is a string of 1 to 8 characters.
+        [Default: (null)]
+
+- mask
+        IP network wildcard bits in decimal format between 0 and 32.
+        [Default: (null)]
+
+- max_load_balance
+        The maximum number of paths for forward packets over multiple paths. Valid value is an integer in the range from 1 to 64.
+        [Default: (null)]
+
+- nexthop_addr
+        IPv4 address for configure next-hop address's weight. Valid values are a string, formatted as an IP address.
+        [Default: (null)]
+
+- nexthop_weight
+        Indicates the weight of the next hop. The smaller the value is, the higher the preference of the route is. It is an integer that
+        ranges from 1 to 254.
+        [Default: (null)]
+
+= process_id
+        Specifies a process ID. The value is an integer ranging from 1 to 4294967295.
+
+
+- state
+        Determines whether the config should be present or not on the device.
+        (Choices: present, absent)[Default: present]
+
+
+AUTHOR: QijunPan (@QijunPan)
+        METADATA:
+          status:
+          - preview
+          supported_by: community
+        
+
+EXAMPLES:
+
+- name: ospf module test
+  hosts: cloudengine
+  connection: local
+  gather_facts: no
+  vars:
+    cli:
+      host: "{{ inventory_hostname }}"
+      port: "{{ ansible_ssh_port }}"
+      username: "{{ username }}"
+      password: "{{ password }}"
+      transport: cli
+
+  tasks:
+
+  - name: Configure ospf
+    ce_ospf:
+      process_id: 1
+      area: 100
+      state: present
+      provider: "{{ cli }}"
+
+
+RETURN VALUES:
+
+proposed:
+    description: k/v pairs of parameters passed into module
+    returned: verbose mode
+    type: dict
+    sample: {"process_id": "1", "area": "100"}
+existing:
+    description: k/v pairs of existing configuration
+    returned: verbose mode
+    type: dict
+    sample: {"process_id": "1", "areas": [], "nexthops":[], "max_load_balance": "32"}
+end_state:
+    description: k/v pairs of configuration after module execution
+    returned: verbose mode
+    type: dict
+    sample: {"process_id": "1",
+             "areas": [{"areaId": "0.0.0.100", "areaType": "Normal"}],
+             "nexthops":[], "max_load_balance": "32"}
+updates:
+    description: commands sent to the device
+    returned: always
+    type: list
+    sample: ["ospf 1", "area 0.0.0.100"]
+changed:
+    description: check to see if a change was made on the device
+    returned: always
+    type: bool
+    sample: true
+

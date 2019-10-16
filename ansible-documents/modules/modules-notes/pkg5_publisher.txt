@@ -1,0 +1,58 @@
+> PKG5_PUBLISHER    (/usr/lib/python2.7/dist-packages/ansible/modules/packaging/os/pkg5_publisher.py)
+
+        IPS packages are the native packages in Solaris 11 and higher. This modules will configure which publishers a client will
+        download IPS packages from.
+
+  * This module is maintained by The Ansible Community
+OPTIONS (= is mandatory):
+
+- enabled
+        Is the repository enabled or disabled?
+        [Default: (null)]
+        type: bool
+
+- mirror
+        A path or URL to the repository mirror.
+        Multiple values may be provided.
+        [Default: (null)]
+
+= name
+        The publisher's name.
+        (Aliases: publisher)
+
+- origin
+        A path or URL to the repository.
+        Multiple values may be provided.
+        [Default: (null)]
+
+- state
+        Whether to ensure that a publisher is present or absent.
+        (Choices: present, absent)[Default: present]
+
+- sticky
+        Packages installed from a sticky repository can only receive updates from that repository.
+        [Default: (null)]
+        type: bool
+
+
+AUTHOR: Peter Oliver (@mavit)
+        METADATA:
+          status:
+          - preview
+          supported_by: community
+        
+
+EXAMPLES:
+
+# Fetch packages for the solaris publisher direct from Oracle:
+- pkg5_publisher:
+    name: solaris
+    sticky: true
+    origin: https://pkg.oracle.com/solaris/support/
+
+# Configure a publisher for locally-produced packages:
+- pkg5_publisher:
+    name: site
+    origin: 'https://pkg.example.com/site/'
+
+

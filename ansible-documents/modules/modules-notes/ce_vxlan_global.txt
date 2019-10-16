@@ -1,0 +1,104 @@
+> CE_VXLAN_GLOBAL    (/usr/lib/python2.7/dist-packages/ansible/modules/network/cloudengine/ce_vxlan_global.py)
+
+        Manages global attributes of VXLAN and bridge domain on HUAWEI CloudEngine devices.
+
+  * This module is maintained by The Ansible Community
+OPTIONS (= is mandatory):
+
+- bridge_domain_id
+        Specifies a bridge domain ID. The value is an integer ranging from 1 to 16777215.
+        [Default: (null)]
+
+- nvo3_acl_extend
+        Enabling or disabling the VXLAN ACL extension function.
+        (Choices: enable, disable)[Default: (null)]
+
+- nvo3_ecmp_hash
+        Load balancing of VXLAN packets through ECMP in optimized mode.
+        (Choices: enable, disable)[Default: (null)]
+
+- nvo3_eth_trunk_hash
+        Eth-Trunk from load balancing VXLAN packets in optimized mode.
+        (Choices: enable, disable)[Default: (null)]
+
+- nvo3_gw_enhanced
+        Configuring the Layer 3 VXLAN Gateway to Work in Non-loopback Mode.
+        (Choices: l2, l3)[Default: (null)]
+
+- nvo3_prevent_loops
+        Loop prevention of VXLAN traffic in non-enhanced mode. When the device works in non-enhanced mode, inter-card forwarding of VXLAN
+        traffic may result in loops.
+        (Choices: enable, disable)[Default: (null)]
+
+- nvo3_service_extend
+        Enabling or disabling the VXLAN service extension function.
+        (Choices: enable, disable)[Default: (null)]
+
+- state
+        Determines whether the config should be present or not on the device.
+        (Choices: present, absent)[Default: present]
+
+- tunnel_mode_vxlan
+        Set the tunnel mode to VXLAN when configuring the VXLAN feature.
+        (Choices: enable, disable)[Default: (null)]
+
+
+AUTHOR: QijunPan (@QijunPan)
+        METADATA:
+          status:
+          - preview
+          supported_by: community
+        
+
+EXAMPLES:
+
+- name: vxlan global module test
+  hosts: ce128
+  connection: local
+  gather_facts: no
+  vars:
+    cli:
+      host: "{{ inventory_hostname }}"
+      port: "{{ ansible_ssh_port }}"
+      username: "{{ username }}"
+      password: "{{ password }}"
+      transport: cli
+
+  tasks:
+
+  - name: Create bridge domain and set tunnel mode to VXLAN
+    ce_vxlan_global:
+      bridge_domain_id: 100
+      nvo3_acl_extend: enable
+      provider: "{{ cli }}"
+
+
+RETURN VALUES:
+
+proposed:
+    description: k/v pairs of parameters passed into module
+    returned: verbose mode
+    type: dict
+    sample: {"bridge_domain_id": "100", "nvo3_acl_extend": "enable", state="present"}
+existing:
+    description: k/v pairs of existing configuration
+    returned: verbose mode
+    type: dict
+    sample: {"bridge_domain": {"80", "90"}, "nvo3_acl_extend": "disable"}
+end_state:
+    description: k/v pairs of configuration after module execution
+    returned: verbose mode
+    type: dict
+    sample: {"bridge_domain_id": {"80", "90", "100"}, "nvo3_acl_extend": "enable"}
+updates:
+    description: commands sent to the device
+    returned: always
+    type: list
+    sample: ["bridge-domain 100",
+             "ip tunnel mode vxlan"]
+changed:
+    description: check to see if a change was made on the device
+    returned: always
+    type: bool
+    sample: true
+

@@ -1,0 +1,107 @@
+> OSX_DEFAULTS    (/usr/lib/python2.7/dist-packages/ansible/modules/system/osx_defaults.py)
+
+        osx_defaults allows users to read, write, and delete macOS user defaults from Ansible scripts. macOS applications and other
+        programs use the defaults system to record user preferences and other information that must be maintained when the applications
+        are not running (such as default font for new documents, or the position of an Info panel).
+
+  * This module is maintained by The Ansible Community
+OPTIONS (= is mandatory):
+
+- array_add
+        Add new elements to the array for a key which has an array as its value.
+        [Default: False]
+        type: bool
+
+- domain
+        The domain is a domain name of the form `com.companyname.appname'.
+        [Default: NSGlobalDomain]
+        type: str
+
+- host
+        The host on which the preference should apply.
+        The special value `currentHost' corresponds to the `-currentHost' switch of the defaults commandline tool.
+        [Default: (null)]
+        type: str
+        version_added: 2.1
+
+= key
+        The key of the user preference.
+
+        type: str
+
+- path
+        The path in which to search for `osx_defaults'.
+        [Default: /usr/bin:/usr/local/bin]
+        type: str
+
+- state
+        The state of the user defaults.
+        If set to `list' will query the given parameter specified by `key'. Returns 'null' is nothing found or mis-spelled.
+        `list' added in version 2.8.
+        (Choices: absent, list, present)[Default: present]
+        type: str
+
+- type
+        The type of value to write.
+        (Choices: array, bool, boolean, date, float, int, integer, string)[Default: string]
+        type: str
+
+- value
+        The value to write.
+        Only required when `state=present'.
+        [Default: (null)]
+        type: raw
+
+
+NOTES:
+      * Apple Mac caches defaults. You may need to logout and login to apply the changes.
+
+
+AUTHOR: Franck Nijhof (@frenck)
+        METADATA:
+          status:
+          - stableinterface
+          supported_by: community
+        
+
+EXAMPLES:
+
+- osx_defaults:
+    domain: com.apple.Safari
+    key: IncludeInternalDebugMenu
+    type: bool
+    value: true
+    state: present
+
+- osx_defaults:
+    domain: NSGlobalDomain
+    key: AppleMeasurementUnits
+    type: string
+    value: Centimeters
+    state: present
+
+- osx_defaults:
+    domain: com.apple.screensaver
+    host: currentHost
+    key: showClock
+    type: int
+    value: 1
+
+- osx_defaults:
+    key: AppleMeasurementUnits
+    type: string
+    value: Centimeters
+
+- osx_defaults:
+    key: AppleLanguages
+    type: array
+    value:
+      - en
+      - nl
+
+- osx_defaults:
+    domain: com.geekchimp.macable
+    key: ExampleKeyToRemove
+    state: absent
+
+

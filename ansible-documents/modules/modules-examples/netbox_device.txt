@@ -1,0 +1,63 @@
+EXAMPLES:
+
+- name: "Test Netbox modules"
+  connection: local
+  hosts: localhost
+  gather_facts: False
+
+  tasks:
+    - name: Create device within Netbox with only required information
+      netbox_device:
+        netbox_url: http://netbox.local
+        netbox_token: thisIsMyToken
+        data:
+          name: Test Device
+          device_type: C9410R
+          device_role: Core Switch
+          site: Main
+        state: present
+
+    - name: Delete device within netbox
+      netbox_device:
+        netbox_url: http://netbox.local
+        netbox_token: thisIsMyToken
+        data:
+          name: Test Device
+        state: absent
+
+    - name: Create device with tags
+      netbox_device:
+        netbox_url: http://netbox.local
+        netbox_token: thisIsMyToken
+        data:
+          name: Another Test Device
+          device_type: C9410R
+          device_role: Core Switch
+          site: Main
+          tags:
+            - Schnozzberry
+        state: present
+
+    - name: Update the rack and position of an existing device
+      netbox_device:
+        netbox_url: http://netbox.local
+        netbox_token: thisIsMyToken
+        data:
+          name: Test Device
+          rack: Test Rack
+          position: 10
+          face: Front
+        state: present
+
+
+RETURN VALUES:
+
+device:
+  description: Serialized object as created or already existent within Netbox
+  returned: success (when I(state=present))
+  type: dict
+msg:
+  description: Message indicating failure or info about what has been achieved
+  returned: always
+  type: str
+

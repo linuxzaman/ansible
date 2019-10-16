@@ -1,0 +1,165 @@
+> GCP_BACKEND_SERVICE    (/usr/lib/python2.7/dist-packages/ansible/modules/cloud/google/_gcp_backend_service.py)
+
+        Create or Destroy a Backend Service.  See https://cloud.google.com/compute/docs/load-balancing/http/backend-service for an
+        overview. Full install/configuration instructions for the Google Cloud modules can be found in the comments of
+        ansible/test/gce_tests.py.
+
+DEPRECATED: 
+
+	Reason: Updated modules released with increased functionality
+	Will be removed in: Ansible 2.12
+	Alternatives: Use M(gcp_compute_backend_service) instead.
+
+
+  * This module is maintained by The Ansible Community
+OPTIONS (= is mandatory):
+
+= backend_service_name
+        Name of the Backend Service.
+
+
+= backends
+        List of backends that make up the backend service. A backend is made up of an instance group and optionally several other
+        parameters.  See https://cloud.google.com/compute/docs/reference/latest/backendServices for details.
+
+
+- credentials_file
+        Path to the JSON file associated with the service account email.
+        [Default: (null)]
+
+- enable_cdn
+        If true, enable Cloud CDN for this Backend Service.
+        [Default: (null)]
+        type: bool
+
+= healthchecks
+        List of healthchecks. Only one healthcheck is supported.
+
+
+- port_name
+        Name of the port on the managed instance group (MIG) that backend services can forward data to. Required for external load
+        balancing.
+        [Default: (null)]
+
+- project_id
+        GCE project ID.
+        [Default: (null)]
+
+- protocol
+        The protocol this Backend Service uses to communicate with backends. Possible values are HTTP, HTTPS, TCP, and SSL. The default
+        is HTTP.
+        [Default: (null)]
+
+- service_account_email
+        Service account email
+        [Default: (null)]
+
+- state
+        Desired state of the resource
+        (Choices: absent, present)[Default: present]
+
+- timeout
+        How many seconds to wait for the backend before considering it a failed request. Default is 30 seconds. Valid range is 1-86400.
+        [Default: (null)]
+
+
+NOTES:
+      * Update is not currently supported.
+      * Only global backend services are currently supported. Regional backends not currently supported.
+      * Internal load balancing not currently supported.
+
+
+REQUIREMENTS:  python >= 2.6, apache-libcloud >= 1.3.0
+
+AUTHOR: Tom Melendez (@supertom) <tom@supertom.com>
+        METADATA:
+          status:
+          - deprecated
+          supported_by: community
+        
+
+EXAMPLES:
+
+- name: Create Minimum Backend Service
+  gcp_backend_service:
+    service_account_email: "{{ service_account_email }}"
+    credentials_file: "{{ credentials_file }}"
+    project_id: "{{ project_id }}"
+    backend_service_name: "{{ bes }}"
+    backends:
+    - instance_group: managed_instance_group_1
+    healthchecks:
+    - healthcheck_name_for_backend_service
+    port_name: myhttpport
+    state: present
+
+- name: Create BES with extended backend parameters
+  gcp_backend_service:
+    service_account_email: "{{ service_account_email }}"
+    credentials_file: "{{ credentials_file }}"
+    project_id: "{{ project_id }}"
+    backend_service_name: "{{ bes }}"
+    backends:
+    - instance_group: managed_instance_group_1
+      max_utilization: 0.6
+      max_rate: 10
+    - instance_group: managed_instance_group_2
+      max_utilization: 0.5
+      max_rate: 4
+    healthchecks:
+    - healthcheck_name_for_backend_service
+    port_name: myhttpport
+    state: present
+    timeout: 60
+
+
+RETURN VALUES:
+
+backend_service_created:
+    description: Indicator Backend Service was created.
+    returned: When a Backend Service is created.
+    type: bool
+    sample: "True"
+backend_service_deleted:
+    description: Indicator Backend Service was deleted.
+    returned: When a Backend Service is deleted.
+    type: bool
+    sample: "True"
+backend_service_name:
+    description: Name of the Backend Service.
+    returned: Always.
+    type: str
+    sample: "my-backend-service"
+backends:
+    description: List of backends (comprised of instance_group) that
+                 make up a Backend Service.
+    returned: When a Backend Service exists.
+    type: list
+    sample: "[ { 'instance_group': 'mig_one', 'zone': 'us-central1-b'} ]"
+enable_cdn:
+    description: If Cloud CDN is enabled. null if not set.
+    returned: When a backend service exists.
+    type: bool
+    sample: "True"
+healthchecks:
+    description: List of healthchecks applied to the Backend Service.
+    returned: When a Backend Service exists.
+    type: list
+    sample: "[ 'my-healthcheck' ]"
+protocol:
+    description: Protocol used to communicate with the Backends.
+    returned: When a Backend Service exists.
+    type: str
+    sample: "HTTP"
+port_name:
+    description: Name of Backend Port.
+    returned: When a Backend Service exists.
+    type: str
+    sample: "myhttpport"
+timeout:
+    description: In seconds, how long before a request sent to a backend is
+                 considered failed.
+    returned: If specified.
+    type: int
+    sample: "myhttpport"
+

@@ -1,0 +1,172 @@
+> NETAPP_E_HOST    (/usr/lib/python2.7/dist-packages/ansible/modules/storage/netapp/netapp_e_host.py)
+
+        Create, update, remove hosts on NetApp E-series storage arrays
+
+  * This module is maintained by The Ansible Community
+OPTIONS (= is mandatory):
+
+= api_password
+        The password to authenticate with the SANtricity Web Services Proxy or Embedded Web Services API.
+
+
+= api_url
+        The url to the SANtricity Web Services Proxy or Embedded Web Services API. Example https://prod-1.wahoo.acme.com/devmgr/v2
+
+
+= api_username
+        The username to authenticate with the SANtricity Web Services Proxy or Embedded Web Services API.
+
+
+- force_port
+        Allow ports that are already assigned to be re-assigned to your current host
+        [Default: (null)]
+        type: bool
+        version_added: 2.7
+        
+
+- group
+        The unique identifier of the host-group you want the host to be a member of; this is used for clustering.
+        (Aliases: cluster)[Default: (null)]
+
+- host_type_index
+        The index that maps to host type you wish to create. It is recommended to use the [netapp_e_facts] module to gather this
+        information. Alternatively you can use the WSP portal to retrieve the information.
+        Required when `state=present'
+        (Aliases: host_type)[Default: (null)]
+
+- log_path
+        A local path to a file to be used for debug logging
+        [Default: (null)]
+        version_added: 2.7
+        
+
+= name
+        If the host doesn't yet exist, the label/name to assign at creation time.
+        If the hosts already exists, this will be used to uniquely identify the host to make any required changes
+        (Aliases: label)
+
+- ports
+        A list of host ports you wish to associate with the host.
+        Host ports are uniquely identified by their WWN or IQN. Their assignments to a particular host are uniquely identified by a label
+        and these must be unique.
+        [Default: (null)]
+        suboptions:
+          label:
+            description:
+            - A unique label to assign to this port assignment.
+            required: true
+          port:
+            description:
+            - The WWN or IQN of the hostPort to assign to this port definition.
+            required: true
+          type:
+            choices:
+            - iscsi
+            - sas
+            - fc
+            - ib
+            - nvmeof
+            - ethernet
+            description:
+            - The interface type of the port to define.
+            - Acceptable choices depend on the capabilities of the target hardware/software
+              platform.
+            required: true
+        
+
+- ssid
+        The ID of the array to manage. This value must be unique for each array.
+        [Default: 1]
+
+- state
+        Set to absent to remove an existing host
+        Set to present to modify or create a new host definition
+        (Choices: absent, present)[Default: present]
+        version_added: 2.7
+        
+
+- validate_certs
+        Should https certificates be validated?
+        [Default: True]
+        type: bool
+
+
+NOTES:
+      * The E-Series Ansible modules require either an instance of the Web Services Proxy (WSP), to be available to manage the
+        storage-system, or an E-Series storage-system that supports the Embedded Web Services API.
+      * Embedded Web Services is currently available on the E2800, E5700, EF570, and newer hardware models.
+      * [netapp_e_storage_system] may be utilized for configuring the systems managed by a WSP instance.
+
+
+AUTHOR: Kevin Hulquest (@hulquest)
+        METADATA:
+          status:
+          - preview
+          supported_by: community
+        
+
+EXAMPLES:
+
+- name: Define or update an existing host named 'Host1'
+      netapp_e_host:
+        ssid: "1"
+        api_url: "10.113.1.101:8443"
+        api_username: "admin"
+        api_password: "myPassword"
+        name: "Host1"
+        state: present
+        host_type_index: 28
+        ports:
+          - type: 'iscsi'
+            label: 'PORT_1'
+            port: 'iqn.1996-04.de.suse:01:56f86f9bd1fe'
+          - type: 'fc'
+            label: 'FC_1'
+            port: '10:00:FF:7C:FF:FF:FF:01'
+          - type: 'fc'
+            label: 'FC_2'
+            port: '10:00:FF:7C:FF:FF:FF:00'
+
+    - name: Ensure a host named 'Host2' doesn't exist
+      netapp_e_host:
+        ssid: "1"
+        api_url: "10.113.1.101:8443"
+        api_username: "admin"
+        api_password: "myPassword"
+        name: "Host2"
+        state: absent
+
+
+RETURN VALUES:
+
+msg:
+    description:
+        - A user-readable description of the actions performed.
+    returned: on success
+    type: str
+    sample: The host has been created.
+id:
+    description:
+        - the unique identifier of the host on the E-Series storage-system
+    returned: on success when state=present
+    type: str
+    sample: 00000000600A098000AAC0C3003004700AD86A52
+    version_added: "2.6"
+
+ssid:
+    description:
+        - the unique identifer of the E-Series storage-system with the current api
+    returned: on success
+    type: str
+    sample: 1
+    version_added: "2.6"
+
+api_url:
+    description:
+        - the url of the API that this request was proccessed by
+    returned: on success
+    type: str
+    sample: https://webservices.example.com:8443
+    version_added: "2.6"
+
+

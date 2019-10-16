@@ -1,0 +1,54 @@
+EXAMPLES:
+
+- name: Test reachability to 10.10.10.10
+  junos_ping:
+    dest: 10.10.10.10
+
+- name: Test reachability to 10.20.20.20 using source and size set
+  junos_ping:
+    dest: 10.20.20.20
+    size: 1024
+    ttl: 128
+
+- name: Test unreachability to 10.30.30.30 using interval
+  junos_ping:
+    dest: 10.30.30.30
+    interval: 3
+    state: absent
+
+- name: Test reachability to 10.40.40.40 setting count and interface
+  junos_ping:
+    dest: 10.40.40.40
+    interface: fxp0
+    count: 20
+    size: 512
+
+
+RETURN VALUES:
+
+commands:
+  description: List of commands sent.
+  returned: always
+  type: list
+  sample: ["ping 10.8.38.44 count 10 source 10.8.38.38 ttl 128"]
+packet_loss:
+  description: Percentage of packets lost.
+  returned: always
+  type: str
+  sample: "0%"
+packets_rx:
+  description: Packets successfully received.
+  returned: always
+  type: int
+  sample: 20
+packets_tx:
+  description: Packets successfully transmitted.
+  returned: always
+  type: int
+  sample: 20
+rtt:
+  description: The round trip time (RTT) stats.
+  returned: when ping succeeds
+  type: dict
+  sample: {"avg": 2, "max": 8, "min": 1, "stddev": 24}
+

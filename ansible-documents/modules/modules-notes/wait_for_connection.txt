@@ -1,0 +1,112 @@
+> WAIT_FOR_CONNECTION    (/usr/lib/python2.7/dist-packages/ansible/modules/utilities/logic/wait_for_connection.py)
+
+        Waits for a total of `timeout' seconds. Retries the transport connection after a timeout of `connect_timeout'. Tests the
+        transport connection every `sleep' seconds. This module makes use of internal ansible transport (and configuration) and the
+        ping/win_ping module to guarantee correct end-to-end functioning. This module is also supported for Windows targets.
+
+  * This module is maintained by The Ansible Core Team
+  * note: This module has a corresponding action plugin.
+
+OPTIONS (= is mandatory):
+
+- connect_timeout
+        Maximum number of seconds to wait for a connection to happen before closing and retrying.
+        [Default: 5]
+        type: int
+
+- delay
+        Number of seconds to wait before starting to poll.
+        [Default: 0]
+        type: int
+
+- sleep
+        Number of seconds to sleep between checks.
+        [Default: 1]
+        type: int
+
+- timeout
+        Maximum number of seconds to wait for.
+        [Default: 600]
+        type: int
+
+
+NOTES:
+      * This module is also supported for Windows targets.
+
+
+SEE ALSO:
+      * Module wait_for
+           The official documentation on the wait_for module.
+           https://docs.ansible.com/ansible/latest/modules/wait_for_module.html
+      * Module win_wait_for
+           The official documentation on the win_wait_for module.
+           https://docs.ansible.com/ansible/latest/modules/win_wait_for_module.html
+      * Module win_wait_for_process
+           The official documentation on the win_wait_for_process module.
+           https://docs.ansible.com/ansible/latest/modules/win_wait_for_process_module.html
+
+
+AUTHOR: Dag Wieers (@dagwieers)
+        METADATA:
+          status:
+          - stableinterface
+          supported_by: core
+        
+
+EXAMPLES:
+
+- name: Wait 600 seconds for target connection to become reachable/usable
+  wait_for_connection:
+
+- name: Wait 300 seconds, but only start checking after 60 seconds
+  wait_for_connection:
+    delay: 60
+    timeout: 300
+
+# Wake desktops, wait for them to become ready and continue playbook
+- hosts: all
+  gather_facts: no
+  tasks:
+  - name: Send magic Wake-On-Lan packet to turn on individual systems
+    wakeonlan:
+      mac: '{{ mac }}'
+      broadcast: 192.168.0.255
+    delegate_to: localhost
+
+  - name: Wait for system to become reachable
+    wait_for_connection:
+
+  - name: Gather facts for first time
+    setup:
+
+# Build a new VM, wait for it to become ready and continue playbook
+- hosts: all
+  gather_facts: no
+  tasks:
+  - name: Clone new VM, if missing
+    vmware_guest:
+      hostname: '{{ vcenter_ipaddress }}'
+      name: '{{ inventory_hostname_short }}'
+      template: Windows 2012R2
+      customization:
+        hostname: '{{ vm_shortname }}'
+        runonce:
+        - powershell.exe -ExecutionPolicy Unrestricted -File C:\Windows\Temp\ConfigureRemotingForAnsible.ps1 -ForceNewSSLCert -EnableCredSSP
+    delegate_to: localhost
+
+  - name: Wait for system to become reachable over WinRM
+    wait_for_connection:
+      timeout: 900
+
+  - name: Gather facts for first time
+    setup:
+
+
+RETURN VALUES:
+
+elapsed:
+  description: The number of seconds that elapsed waiting for the connection to appear.
+  returned: always
+  type: float
+  sample: 23.1
+

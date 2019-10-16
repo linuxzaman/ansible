@@ -1,0 +1,45 @@
+EXAMPLES:
+
+- name: Create an HTTP compression profile
+  bigip_profile_http_compression:
+    name: profile1
+    description: Custom HTTP Compression Profile
+    buffer_size: 131072
+    gzip_level: 6
+    gzip_memory_level: 16k
+    gzip_window_size: 64k
+    provider:
+      password: secret
+      server: lb.mydomain.com
+      user: admin
+  delegate_to: localhost
+
+
+RETURN VALUES:
+
+description:
+  description: The new description of the resource.
+  returned: changed
+  type: str
+  sample: My custom profile
+buffer_size:
+  description: The new buffer size of the profile.
+  returned: changed
+  type: int
+  sample: 4096
+gzip_memory_level:
+  description: The new GZIP memory level, in KB, of the profile.
+  returned: changed
+  type: int
+  sample: 16
+gzip_level:
+  description: The new GZIP level of the profile. Smaller is less compression.
+  returned: changed
+  type: int
+  sample: 2
+gzip_window_size:
+  description: The new GZIP window size, in KB, of the profile.
+  returned: changed
+  type: int
+  sample: 64
+

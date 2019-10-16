@@ -1,0 +1,95 @@
+> MQTT    (/usr/lib/python2.7/dist-packages/ansible/modules/notification/mqtt.py)
+
+        Publish a message on an MQTT topic.
+
+  * This module is maintained by The Ansible Community
+OPTIONS (= is mandatory):
+
+- ca_cert
+        The path to the Certificate Authority certificate files that are to be treated as trusted by this client. If this is the only
+        option given then the client will operate in a similar manner to a web browser. That is to say it will require the broker to have
+        a certificate signed by the Certificate Authorities in ca_certs and will communicate using TLS v1, but will not attempt any form
+        of authentication. This provides basic network encryption but may not be sufficient depending on how the broker is configured.
+        (Aliases: ca_certs)[Default: (null)]
+        version_added: 2.3
+        
+
+- client_cert
+        The path pointing to the PEM encoded client certificate. If this is not None it will be used as client information for TLS based
+        authentication. Support for this feature is broker dependent.
+        (Aliases: certfile)[Default: (null)]
+        version_added: 2.3
+        
+
+- client_id
+        MQTT client identifier
+        [Default: hostname + pid]
+
+- client_key
+        The path pointing to the PEM encoded client private key. If this is not None it will be used as client information for TLS based
+        authentication. Support for this feature is broker dependent.
+        (Aliases: keyfile)[Default: (null)]
+        version_added: 2.3
+        
+
+- password
+        Password for `username' to authenticate against the broker.
+        [Default: (null)]
+
+= payload
+        Payload. The special string `"None"' may be used to send a NULL (i.e. empty) payload which is useful to simply notify with the
+        `topic' or to clear previously retained messages.
+
+
+- port
+        MQTT broker port number
+        [Default: 1883]
+
+- qos
+        QoS (Quality of Service)
+        (Choices: 0, 1, 2)[Default: 0]
+
+- retain
+        Setting this flag causes the broker to retain (i.e. keep) the message so that applications that subsequently subscribe to the
+        topic can received the last retained message immediately.
+        [Default: no]
+        type: bool
+
+- server
+        MQTT broker address/name
+        [Default: localhost]
+
+= topic
+        MQTT topic name
+
+
+- username
+        Username to authenticate against the broker.
+        [Default: (null)]
+
+
+NOTES:
+      * This module requires a connection to an MQTT broker such as Mosquitto http://mosquitto.org and the `Paho' `mqtt' Python
+        client (https://pypi.org/project/paho-mqtt/).
+
+
+REQUIREMENTS:  mosquitto
+
+AUTHOR: Jan-Piet Mens (@jpmens)
+        METADATA:
+          status:
+          - preview
+          supported_by: community
+        
+
+EXAMPLES:
+
+- mqtt:
+    topic: 'service/ansible/{{ ansible_hostname }}'
+    payload: 'Hello at {{ ansible_date_time.iso8601 }}'
+    qos: 0
+    retain: False
+    client_id: ans001
+  delegate_to: localhost
+
+

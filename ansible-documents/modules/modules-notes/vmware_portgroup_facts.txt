@@ -1,0 +1,137 @@
+> VMWARE_PORTGROUP_FACTS    (/usr/lib/python2.7/dist-packages/ansible/modules/cloud/vmware/vmware_portgroup_facts.py)
+
+        This module can be used to gather facts about an ESXi host's Port Group configuration when ESXi hostname or Cluster name is
+        given.
+
+  * This module is maintained by The Ansible Community
+OPTIONS (= is mandatory):
+
+- cluster_name
+        Name of the cluster.
+        Facts will be returned for all hostsystem belonging to this cluster name.
+        If `esxi_hostname' is not given, this parameter is required.
+        [Default: (null)]
+
+- esxi_hostname
+        ESXi hostname to gather facts from.
+        If `cluster_name' is not given, this parameter is required.
+        [Default: (null)]
+
+- hostname
+        The hostname or IP address of the vSphere vCenter or ESXi server.
+        If the value is not specified in the task, the value of environment variable `VMWARE_HOST' will be used instead.
+        Environment variable support added in Ansible 2.6.
+        [Default: (null)]
+        type: str
+
+- password
+        The password of the vSphere vCenter or ESXi server.
+        If the value is not specified in the task, the value of environment variable `VMWARE_PASSWORD' will be used instead.
+        Environment variable support added in Ansible 2.6.
+        (Aliases: pass, pwd)[Default: (null)]
+        type: str
+
+- policies
+        Gather facts about Security, Traffic Shaping, as well as Teaming and failover.
+        The property `ts' stands for Traffic Shaping and `lb' for Load Balancing.
+        [Default: False]
+        type: bool
+        version_added: 2.8
+        
+
+- port
+        The port number of the vSphere vCenter or ESXi server.
+        If the value is not specified in the task, the value of environment variable `VMWARE_PORT' will be used instead.
+        Environment variable support added in Ansible 2.6.
+        [Default: 443]
+        type: int
+        version_added: 2.5
+
+- username
+        The username of the vSphere vCenter or ESXi server.
+        If the value is not specified in the task, the value of environment variable `VMWARE_USER' will be used instead.
+        Environment variable support added in Ansible 2.6.
+        (Aliases: admin, user)[Default: (null)]
+        type: str
+
+- validate_certs
+        Allows connection when SSL certificates are not valid. Set to `false' when certificates are not trusted.
+        If the value is not specified in the task, the value of environment variable `VMWARE_VALIDATE_CERTS' will be used instead.
+        Environment variable support added in Ansible 2.6.
+        If set to `yes', please make sure Python >= 2.7.9 is installed on the given machine.
+        [Default: True]
+        type: bool
+
+
+NOTES:
+      * Tested on vSphere 6.5
+      * The `vswitch_name' property is deprecated starting from Ansible v2.12
+
+
+REQUIREMENTS:  python >= 2.6, PyVmomi
+
+AUTHOR: Abhijeet Kasurde (@Akasurde), Christian Kotte (@ckotte)
+        METADATA:
+          status:
+          - preview
+          supported_by: community
+        
+
+EXAMPLES:
+
+- name: Gather portgroup facts about all ESXi Host in given Cluster
+  vmware_portgroup_facts:
+    hostname: '{{ vcenter_hostname }}'
+    username: '{{ vcenter_username }}'
+    password: '{{ vcenter_password }}'
+    cluster_name: '{{ cluster_name }}'
+  delegate_to: localhost
+
+- name: Gather portgroup facts about ESXi Host system
+  vmware_portgroup_facts:
+    hostname: '{{ vcenter_hostname }}'
+    username: '{{ vcenter_username }}'
+    password: '{{ vcenter_password }}'
+    esxi_hostname: '{{ esxi_hostname }}'
+  delegate_to: localhost
+
+
+RETURN VALUES:
+
+hosts_portgroup_facts:
+    description: metadata about host's portgroup configuration
+    returned: on success
+    type: dict
+    sample: {
+        "esx01": [
+            {
+                "failback": true,
+                "failover_active": ["vmnic0", "vmnic1"],
+                "failover_standby": [],
+                "failure_detection": "link_status_only",
+                "lb": "loadbalance_srcid",
+                "notify": true,
+                "portgroup": "Management Network",
+                "security": [false, false, false],
+                "ts": "No override",
+                "vlan_id": 0,
+                "vswitch": "vSwitch0",
+                "vswitch_name": "vSwitch0"
+            },
+            {
+                "failback": true,
+                "failover_active": ["vmnic2"],
+                "failover_standby": ["vmnic3"],
+                "failure_detection": "No override",
+                "lb": "No override",
+                "notify": true,
+                "portgroup": "vMotion",
+                "security": [false, false, false],
+                "ts": "No override",
+                "vlan_id": 33,
+                "vswitch": "vSwitch1",
+                "vswitch_name": "vSwitch1"
+            }
+        ]
+    }
+

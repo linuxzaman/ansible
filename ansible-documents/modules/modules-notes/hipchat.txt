@@ -1,0 +1,70 @@
+> HIPCHAT    (/usr/lib/python2.7/dist-packages/ansible/modules/notification/hipchat.py)
+
+        Send a message to a Hipchat room, with options to control the formatting.
+
+  * This module is maintained by The Ansible Community
+OPTIONS (= is mandatory):
+
+- api
+        API url if using a self-hosted hipchat server. For Hipchat API version 2 use the default URI with `/v2' instead of `/v1'.
+        [Default: https://api.hipchat.com/v1]
+        version_added: 1.6.0
+
+- color
+        Background color for the message.
+        (Choices: yellow, red, green, purple, gray, random)[Default: yellow]
+
+- from
+        Name the message will appear to be sent from. Max length is 15 characters - above this it will be truncated.
+        [Default: Ansible]
+
+= msg
+        The message body.
+
+
+- msg_format
+        Message format.
+        (Choices: text, html)[Default: text]
+
+- notify
+        If true, a notification will be triggered for users in the room.
+        [Default: yes]
+        type: bool
+
+= room
+        ID or name of the room.
+
+
+= token
+        API token.
+
+
+- validate_certs
+        If `no', SSL certificates will not be validated. This should only be used on personally controlled sites using self-signed
+        certificates.
+        [Default: yes]
+        type: bool
+        version_added: 1.5.1
+
+
+AUTHOR: Shirou Wakayama (@shirou), Paul Bourdel (@pb8226)
+        METADATA:
+          status:
+          - stableinterface
+          supported_by: community
+        
+
+EXAMPLES:
+
+- hipchat:
+    room: notif
+    msg: Ansible task finished
+
+# Use Hipchat API version 2
+- hipchat:
+    api: https://api.hipchat.com/v2/
+    token: OAUTH2_TOKEN
+    room: notify
+    msg: Ansible task finished
+
+

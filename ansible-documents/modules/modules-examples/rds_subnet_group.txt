@@ -1,0 +1,45 @@
+EXAMPLES:
+
+# Add or change a subnet group
+- rds_subnet_group:
+    state: present
+    name: norwegian-blue
+    description: My Fancy Ex Parrot Subnet Group
+    subnets:
+      - subnet-aaaaaaaa
+      - subnet-bbbbbbbb
+
+# Remove a subnet group
+- rds_subnet_group:
+    state: absent
+    name: norwegian-blue
+
+
+RETURN VALUES:
+
+subnet_group:
+    description: Dictionary of DB subnet group values
+    returned: I(state=present)
+    type: complex
+    contains:
+        name:
+            description: The name of the DB subnet group
+            returned: I(state=present)
+            type: str
+        description:
+            description: The description of the DB subnet group
+            returned: I(state=present)
+            type: str
+        vpc_id:
+            description: The VpcId of the DB subnet group
+            returned: I(state=present)
+            type: str
+        subnet_ids:
+            description: Contains a list of Subnet IDs
+            returned: I(state=present)
+            type: array
+        status:
+            description: The status of the DB subnet group
+            returned: I(state=present)
+            type: str
+

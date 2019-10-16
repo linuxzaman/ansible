@@ -1,0 +1,136 @@
+> GRAFANA_DASHBOARD    (/usr/lib/python2.7/dist-packages/ansible/modules/monitoring/grafana_dashboard.py)
+
+        Create, update, delete, export Grafana dashboards via API.
+
+  * This module is maintained by The Ansible Community
+OPTIONS (= is mandatory):
+
+- client_cert
+        PEM formatted certificate chain file to be used for SSL client authentication.
+        This file can also include the key as well, and if the key is included, client_key is not required
+        [Default: (null)]
+        version_added: 2.7
+        
+
+- client_key
+        PEM formatted file that contains your private key to be used for SSL client
+        authentication. If client_cert contains both the certificate and key, this option is not required
+        [Default: (null)]
+        version_added: 2.7
+        
+
+- grafana_api_key
+        The Grafana API key.
+        If set, `grafana_user' and `grafana_password' will be ignored.
+        [Default: (null)]
+
+- message
+        Set a commit message for the version history.
+        Only used when `state' is `present'.
+        [Default: (null)]
+
+- org_id
+        The Grafana Organisation ID where the dashboard will be imported / exported.
+        Not used when `grafana_api_key' is set, because the grafana_api_key only belongs to one organisation..
+        [Default: 1]
+
+- overwrite
+        Override existing dashboard when state is present.
+        [Default: no]
+        type: bool
+
+- path
+        The path to the json file containing the Grafana dashboard to import or export.
+        [Default: (null)]
+
+- slug
+        Deprecated since Grafana 5. Use grafana dashboard uid instead.
+        slug of the dashboard. It's the friendly url name of the dashboard.
+        When `state' is `present', this parameter can override the slug in the meta section of the json file.
+        If you want to import a json dashboard exported directly from the interface (not from the api), you have to specify the slug
+        parameter because there is no meta section in the exported json.
+        [Default: (null)]
+
+= state
+        State of the dashboard.
+        (Choices: absent, export, present)[Default: present]
+
+- uid
+        uid of the dasboard to export when `state' is `export' or `absent'.
+        [Default: (null)]
+        version_added: 2.7
+        
+
+= url
+        The Grafana URL.
+        (Aliases: grafana_url)
+        version_added: 2.7
+        
+
+- url_password
+        The Grafana API password.
+        (Aliases: grafana_password)[Default: admin]
+        version_added: 2.7
+        
+
+- url_username
+        The Grafana API user.
+        (Aliases: grafana_user)[Default: admin]
+        version_added: 2.7
+        
+
+- use_proxy
+        Boolean of whether or not to use proxy.
+        [Default: yes]
+        type: bool
+        version_added: 2.7
+        
+
+- validate_certs
+        If `no', SSL certificates will not be validated.
+        This should only be used on personally controlled sites using self-signed certificates.
+        [Default: yes]
+        type: bool
+
+
+AUTHOR: Thierry Sallé (@seuf)
+        METADATA:
+          status:
+          - preview
+          supported_by: community
+        
+
+EXAMPLES:
+
+- hosts: localhost
+  connection: local
+  tasks:
+    - name: Import Grafana dashboard foo
+      grafana_dashboard:
+        grafana_url: http://grafana.company.com
+        grafana_api_key: "{{ grafana_api_key }}"
+        state: present
+        message: Updated by ansible
+        overwrite: yes
+        path: /path/to/dashboards/foo.json
+
+    - name: Export dashboard
+      grafana_dashboard:
+        grafana_url: http://grafana.company.com
+        grafana_user: "admin"
+        grafana_password: "{{ grafana_password }}"
+        org_id: 1
+        state: export
+        uid: "000000653"
+        path: "/path/to/dashboards/000000653.json"
+
+
+RETURN VALUES:
+
+---
+uid:
+  description: uid or slug of the created / deleted / exported dashboard.
+  returned: success
+  type: str
+  sample: 000000063
+

@@ -1,0 +1,117 @@
+EXAMPLES:
+
+- name: Create a data group of addresses
+  bigip_data_group:
+    name: foo
+    internal: yes
+    records:
+      - key: 0.0.0.0/32
+        value: External_NAT
+      - key: 10.10.10.10
+        value: No_NAT
+    type: address
+    provider:
+      password: secret
+      server: lb.mydomain.com
+      user: admin
+  delegate_to: localhost
+
+- name: Create a data group of strings
+  bigip_data_group:
+    name: foo
+    internal: yes
+    records:
+      - key: caddy
+        value: ""
+      - key: cafeteria
+        value: ""
+      - key: cactus
+        value: ""
+    type: str
+    provider:
+      password: secret
+      server: lb.mydomain.com
+      user: admin
+  delegate_to: localhost
+
+- name: Create a data group of IP addresses from a file
+  bigip_data_group:
+    name: foo
+    records_src: /path/to/dg-file
+    type: address
+    provider:
+      password: secret
+      server: lb.mydomain.com
+      user: admin
+  delegate_to: localhost
+
+- name: Update an existing internal data group of strings
+  bigip_data_group:
+    name: foo
+    internal: yes
+    records:
+      - key: caddy
+        value: ""
+      - key: cafeteria
+        value: ""
+      - key: cactus
+        value: ""
+    provider:
+      password: secret
+      server: lb.mydomain.com
+      user: admin
+  delegate_to: localhost
+
+- name: Show the data format expected for records_content - address 1
+  copy:
+    dest: /path/to/addresses.txt
+    content: |
+      network 10.0.0.0 prefixlen 8 := "Network1",
+      network 172.16.0.0 prefixlen 12 := "Network2",
+      network 192.168.0.0 prefixlen 16 := "Network3",
+      network 2402:9400:1000:0:: prefixlen 64 := "Network4",
+      host 192.168.20.1 := "Host1",
+      host 172.16.1.1 := "Host2",
+      host 172.16.1.1/32 := "Host3",
+      host 2001:0db8:85a3:0000:0000:8a2e:0370:7334 := "Host4",
+      host 2001:0db8:85a3:0000:0000:8a2e:0370:7334/128 := "Host5"
+
+- name: Show the data format expected for records_content - address 2
+  copy:
+    dest: /path/to/addresses.txt
+    content: |
+      10.0.0.0/8 := "Network1",
+      172.16.0.0/12 := "Network2",
+      192.168.0.0/16 := "Network3",
+      2402:9400:1000:0::/64 := "Network4",
+      192.168.20.1 := "Host1",
+      172.16.1.1 := "Host2",
+      172.16.1.1/32 := "Host3",
+      2001:0db8:85a3:0000:0000:8a2e:0370:7334 := "Host4",
+      2001:0db8:85a3:0000:0000:8a2e:0370:7334/128 := "Host5"
+
+- name: Show the data format expected for records_content - string
+  copy:
+    dest: /path/to/strings.txt
+    content: |
+      a := alpha,
+      b := bravo,
+      c := charlie,
+      x := x-ray,
+      y := yankee,
+      z := zulu,
+
+- name: Show the data format expected for records_content - integer
+  copy:
+    dest: /path/to/integers.txt
+    content: |
+      1 := bar,
+      2 := baz,
+      3,
+      4,
+
+
+RETURN VALUES:
+
+# only common fields returned
+

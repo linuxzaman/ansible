@@ -1,0 +1,95 @@
+EXAMPLES:
+
+- name: Copy a single file
+  win_copy:
+    src: /srv/myfiles/foo.conf
+    dest: C:\Temp\renamed-foo.conf
+
+- name: Copy a single file, but keep a backup
+  win_copy:
+    src: /srv/myfiles/foo.conf
+    dest: C:\Temp\renamed-foo.conf
+    backup: yes
+
+- name: Copy a single file keeping the filename
+  win_copy:
+    src: /src/myfiles/foo.conf
+    dest: C:\Temp\
+
+- name: Copy folder to C:\Temp (results in C:\Temp\temp_files)
+  win_copy:
+    src: files/temp_files
+    dest: C:\Temp
+
+- name: Copy folder contents recursively
+  win_copy:
+    src: files/temp_files/
+    dest: C:\Temp
+
+- name: Copy a single file where the source is on the remote host
+  win_copy:
+    src: C:\Temp\foo.txt
+    dest: C:\ansible\foo.txt
+    remote_src: yes
+
+- name: Copy a folder recursively where the source is on the remote host
+  win_copy:
+    src: C:\Temp
+    dest: C:\ansible
+    remote_src: yes
+
+- name: Set the contents of a file
+  win_copy:
+    content: abc123
+    dest: C:\Temp\foo.txt
+
+- name: Copy a single file as another user
+  win_copy:
+    src: NuGet.config
+    dest: '%AppData%\NuGet\NuGet.config'
+  vars:
+    ansible_become_user: user
+    ansible_become_password: pass
+    # The tmp dir must be set when using win_copy as another user
+    # This ensures the become user will have permissions for the operation
+    ansible_remote_tmp: '%temp%'
+
+
+RETURN VALUES:
+
+backup_file:
+    description: Name of the backup file that was created.
+    returned: if backup=yes
+    type: str
+    sample: C:\Path\To\File.txt.11540.20150212-220915.bak
+dest:
+    description: Destination file/path.
+    returned: changed
+    type: str
+    sample: C:\Temp\
+src:
+    description: Source file used for the copy on the target machine.
+    returned: changed
+    type: str
+    sample: /home/httpd/.ansible/tmp/ansible-tmp-1423796390.97-147729857856000/source
+checksum:
+    description: SHA1 checksum of the file after running copy.
+    returned: success, src is a file
+    type: str
+    sample: 6e642bb8dd5c2e027bf21dd923337cbb4214f827
+size:
+    description: Size of the target, after execution.
+    returned: changed, src is a file
+    type: int
+    sample: 1220
+operation:
+    description: Whether a single file copy took place or a folder copy.
+    returned: success
+    type: str
+    sample: file_copy
+original_basename:
+    description: Basename of the copied file.
+    returned: changed, src is a file
+    type: str
+    sample: foo.txt
+

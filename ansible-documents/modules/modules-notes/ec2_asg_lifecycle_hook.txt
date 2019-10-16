@@ -1,0 +1,144 @@
+> EC2_ASG_LIFECYCLE_HOOK    (/usr/lib/python2.7/dist-packages/ansible/modules/cloud/amazon/ec2_asg_lifecycle_hook.py)
+
+        When no given Hook found, will create one. In case Hook found, but provided parameters are differes, will update existing Hook.
+        In case state=absent and Hook exists, will delete it.
+
+  * This module is maintained by The Ansible Community
+OPTIONS (= is mandatory):
+
+= autoscaling_group_name
+        The name of the Auto Scaling group to which you want to assign the lifecycle hook.
+
+
+- aws_access_key
+        AWS access key. If not set then the value of the AWS_ACCESS_KEY_ID, AWS_ACCESS_KEY or EC2_ACCESS_KEY environment variable is
+        used.
+        (Aliases: ec2_access_key, access_key)[Default: (null)]
+        type: str
+
+- aws_secret_key
+        AWS secret key. If not set then the value of the AWS_SECRET_ACCESS_KEY, AWS_SECRET_KEY, or EC2_SECRET_KEY environment variable is
+        used.
+        (Aliases: ec2_secret_key, secret_key)[Default: (null)]
+        type: str
+
+- debug_botocore_endpoint_logs
+        Use a botocore.endpoint logger to parse the unique (rather than total) "resource:action" API calls made during a task, outputing
+        the set to the resource_actions key in the task results. Use the aws_resource_action callback to output to total list made during
+        a playbook. The ANSIBLE_DEBUG_BOTOCORE_LOGS environment variable may also be used.
+        [Default: no]
+        type: bool
+        version_added: 2.8
+
+- default_result
+        Defines the action the Auto Scaling group should take when the lifecycle hook timeout elapses or if an unexpected failure occurs.
+        This parameter can be either CONTINUE or ABANDON.
+        (Choices: ABANDON, CONTINUE)[Default: ABANDON]
+
+- ec2_url
+        Url to use to connect to EC2 or your Eucalyptus cloud (by default the module will use EC2 endpoints). Ignored for modules where
+        region is required. Must be specified for all other modules if region is not used. If not set then the value of the EC2_URL
+        environment variable, if any, is used.
+        [Default: (null)]
+        type: str
+
+- heartbeat_timeout
+        The amount of time, in seconds, that can elapse before the lifecycle hook times out. When the lifecycle hook times out, Auto
+        Scaling performs the default action. You can prevent the lifecycle hook from timing out by calling
+        RecordLifecycleActionHeartbeat.
+        [Default: 3600 (1 hour)]
+
+= lifecycle_hook_name
+        The name of the lifecycle hook.
+
+
+- notification_meta_data
+        Contains additional information that you want to include any time Auto Scaling sends a message to the notification target.
+        [Default: (null)]
+
+- notification_target_arn
+        The ARN of the notification target that Auto Scaling will use to notify you when an instance is in the transition state for the
+        lifecycle hook. This target can be either an SQS queue or an SNS topic. If you specify an empty string, this overrides the
+        current ARN.
+        [Default: (null)]
+
+- profile
+        Uses a boto profile. Only works with boto >= 2.24.0.
+        [Default: (null)]
+        type: str
+        version_added: 1.6
+
+- region
+        The AWS region to use. If not specified then the value of the AWS_REGION or EC2_REGION environment variable, if any, is used. See
+        http://docs.aws.amazon.com/general/latest/gr/rande.html#ec2_region
+        (Aliases: aws_region, ec2_region)[Default: (null)]
+        type: str
+
+- role_arn
+        The ARN of the IAM role that allows the Auto Scaling group to publish to the specified notification target.
+        [Default: (null)]
+
+- security_token
+        AWS STS security token. If not set then the value of the AWS_SECURITY_TOKEN or EC2_SECURITY_TOKEN environment variable is used.
+        (Aliases: access_token)[Default: (null)]
+        type: str
+        version_added: 1.6
+
+- state
+        Create or delete Lifecycle Hook. Present updates existing one or creates if not found.
+        (Choices: present, absent)[Default: present]
+
+= transition
+        The instance state to which you want to attach the lifecycle hook.
+        (Choices: autoscaling:EC2_INSTANCE_TERMINATING, autoscaling:EC2_INSTANCE_LAUNCHING)
+
+- validate_certs
+        When set to "no", SSL certificates will not be validated for boto versions >= 2.6.0.
+        [Default: True]
+        type: bool
+        version_added: 1.5
+
+
+NOTES:
+      * If parameters are not set within the module, the following environment variables can be used in decreasing order of
+        precedence `AWS_URL' or `EC2_URL', `AWS_ACCESS_KEY_ID' or `AWS_ACCESS_KEY' or `EC2_ACCESS_KEY', `AWS_SECRET_ACCESS_KEY' or
+        `AWS_SECRET_KEY' or `EC2_SECRET_KEY', `AWS_SECURITY_TOKEN' or `EC2_SECURITY_TOKEN', `AWS_REGION' or `EC2_REGION'
+      * Ansible uses the boto configuration file (typically ~/.boto) if no credentials are provided. See
+        https://boto.readthedocs.io/en/latest/boto_config_tut.html
+      * `AWS_REGION' or `EC2_REGION' can be typically be used to specify the AWS region, when required, but this can also be
+        configured in the boto config file
+
+
+REQUIREMENTS:  boto, boto3>=1.4.4, python >= 2.6
+
+AUTHOR: Igor 'Tsigankov' Eyrich (@tsiganenok) <tsiganenok@gmail.com>
+        METADATA:
+          status:
+          - preview
+          supported_by: community
+        
+
+EXAMPLES:
+
+# Create / Update lifecycle hook
+- ec2_asg_lifecycle_hook:
+    region: eu-central-1
+    state: present
+    autoscaling_group_name: example
+    lifecycle_hook_name: example
+    transition: autoscaling:EC2_INSTANCE_LAUNCHING
+    heartbeat_timeout: 7000
+    default_result: ABANDON
+
+# Delete lifecycle hook
+- ec2_asg_lifecycle_hook:
+    region: eu-central-1
+    state: absent
+    autoscaling_group_name: example
+    lifecycle_hook_name: example
+
+
+RETURN VALUES:
+
+
+

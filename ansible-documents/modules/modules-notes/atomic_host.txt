@@ -1,0 +1,44 @@
+> ATOMIC_HOST    (/usr/lib/python2.7/dist-packages/ansible/modules/cloud/atomic/atomic_host.py)
+
+        Manage the atomic host platform. Rebooting of Atomic host platform should be done outside this module.
+
+  * This module is maintained by The Ansible Community
+OPTIONS (= is mandatory):
+
+- revision
+        The version number of the atomic host to be deployed. Providing `latest' will upgrade to the latest available version.
+        (Aliases: version)[Default: latest]
+
+
+NOTES:
+      * Host should be an atomic platform (verified by existence of '/run/ostree-booted' file).
+
+
+REQUIREMENTS:  atomic, python >= 2.6
+
+AUTHOR: Saravanan KR (@krsacme)
+        METADATA:
+          status:
+          - preview
+          supported_by: community
+        
+
+EXAMPLES:
+
+- name: Upgrade the atomic host platform to the latest version (atomic host upgrade)
+  atomic_host:
+    revision: latest
+
+- name: Deploy a specific revision as the atomic host (atomic host deploy 23.130)
+  atomic_host:
+    revision: 23.130
+
+
+RETURN VALUES:
+
+msg:
+    description: The command standard output
+    returned: always
+    type: str
+    sample: 'Already on latest'
+

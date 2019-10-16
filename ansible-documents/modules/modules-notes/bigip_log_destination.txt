@@ -1,0 +1,418 @@
+> BIGIP_LOG_DESTINATION    (/usr/lib/python2.7/dist-packages/ansible/modules/network/f5/bigip_log_destination.py)
+
+        Manages log destinations on a BIG-IP.
+
+  * This module is maintained by an Ansible Partner
+OPTIONS (= is mandatory):
+
+- address
+        Specifies the IP address that will receive messages from the specified local Log Destination.
+        This parameter is only available when `type' is `management-port'.
+        When creating a new log destination and `type' is `management-port', this parameter is required.
+        [Default: (null)]
+        type: str
+        version_added: 2.8
+        
+
+- description
+        The description of the log destination.
+        [Default: (null)]
+        type: str
+
+- distribution
+        Specifies the distribution method used by the Remote High Speed Log destination to send messages to pool members.
+        When `adaptive', connections to pool members will be added as required to provide enough logging bandwidth. This can have the
+        undesirable effect of logs accumulating on only one pool member when it provides sufficient logging bandwidth on its own.
+        When `balanced', sends each successive log to a new pool member, balancing the logs among them according to the pool's load
+        balancing method.
+        When `replicated', replicates each log to all pool members, for redundancy.
+        When creating a new log destination and `type' is `remote-high-speed-log', if this parameter is not specified, the default is
+        `adaptive'.
+        (Choices: adaptive, balanced, replicated)[Default: (null)]
+        type: str
+        version_added: 2.8
+        
+
+- forward_to
+        When `type' is `remote-syslog', specifies the management port log destination, which will be used to forward the logs to a single
+        log server, or a remote high-speed log destination, which will be used to forward the logs to a pool of remote log servers.
+        When `type' is `splunk' or `arcsight', specifies the log destination to which logs are forwarded. This log destination may be a
+        management port destination, a remote high-speed log destination, or a remote Syslog destination which is configured to send logs
+        to an ArcSight or Splunk server.
+        When creating a new log destination and `type' is `remote-syslog', `splunk', or `arcsight', this parameter is required.
+        [Default: (null)]
+        type: str
+        version_added: 2.8
+        
+
+= name
+        Specifies the name of the log destination.
+
+        type: str
+
+- partition
+        Device partition to manage resources on.
+        [Default: Common]
+        type: str
+
+= password
+        The password for the user account used to connect to the BIG-IP.
+        You may omit this option by setting the environment variable `F5_PASSWORD'.
+        (Aliases: pass, pwd)
+        type: str
+
+- pool
+        When `type' is `remote-high-speed-log', specifies the existing pool of remote high-speed log servers where logs will be sent.
+        When `type' is `ipfix', specifies the existing LTM pool of remote IPFIX collectors. Any BIG-IP application that uses this log
+        destination sends its IP-traffic logs to this pool of collectors.
+        When creating a new destination and `type' is `remote-high-speed-log' or `ipfix', this parameter is required.
+        [Default: (null)]
+        type: str
+        version_added: 2.8
+        
+
+- pool_settings
+        This parameter is only available when `type' is `remote-high-speed-log'.
+        Deprecated. Use the equivalent top-level parameters instead.
+        [Default: (null)]
+        suboptions:
+          distribution:
+            choices:
+            - adaptive
+            - balanced
+            - replicated
+            description:
+            - Specifies the distribution method used by the Remote High Speed Log destination
+              to send messages to pool members.
+            - When `adaptive', connections to pool members will be added as required to provide
+              enough logging bandwidth. This can have the undesirable effect of logs accumulating
+              on only one pool member when it provides sufficient logging bandwidth on its
+              own.
+            - When `balanced', sends each successive log to a new pool member, balancing
+              the logs among them according to the pool's load balancing method.
+            - When `replicated', replicates each log to all pool members, for redundancy.
+            - When creating a new log destination (and `type' is `remote-high-speed-log'),
+              if this parameter is not specified, the default is `adaptive'.
+            type: str
+          pool:
+            description:
+            - Specifies the existing pool of remote high-speed log servers where logs will
+              be sent.
+            - When creating a new destination (and `type' is `remote-high-speed-log'), this
+              parameter is required.
+            type: str
+          protocol:
+            choices:
+            - tcp
+            - udp
+            description:
+            - Specifies the protocol for the system to use to send logs to the pool of remote
+              high-speed log servers, where the logs are stored.
+            - When creating a new log destination (and `type' is `remote-high-speed-log'),
+              if this parameter is not specified, the default is `tcp'.
+            type: str
+        
+        type: dict
+
+- port
+        Specifies the port of the IP address that will receive messages from the specified local Log Destination.
+        This parameter is only available when `type' is `management-port'.
+        When creating a new log destination and `type' is `management-port', this parameter is required.
+        [Default: (null)]
+        type: int
+        version_added: 2.8
+        
+
+- protocol
+        When `type' is `remote-high-speed-log', specifies the protocol for the system to use to send logs to the pool of remote high-
+        speed log servers, where the logs are stored.
+        When `type' is `ipfix', can be IPFIX or Netflow v9, depending on the type of collectors you have in the pool that you specify.
+        When `type' is `management-port', specifies the protocol used to send messages to the specified location.
+        When `type' is `management-port', only `tcp' and `udp' are valid values.
+        (Choices: tcp, udp, ipfix, netflow-9)[Default: (null)]
+        type: str
+        version_added: 2.8
+        
+
+- provider
+        A dict object containing connection details.
+        [Default: (null)]
+        suboptions:
+          password:
+            aliases:
+            - pass
+            - pwd
+            description:
+            - The password for the user account used to connect to the BIG-IP.
+            - You may omit this option by setting the environment variable `F5_PASSWORD'.
+            required: true
+            type: str
+          server:
+            description:
+            - The BIG-IP host.
+            - You may omit this option by setting the environment variable `F5_SERVER'.
+            required: true
+            type: str
+          server_port:
+            default: 443
+            description:
+            - The BIG-IP server port.
+            - You may omit this option by setting the environment variable `F5_SERVER_PORT'.
+            type: int
+          ssh_keyfile:
+            description:
+            - Specifies the SSH keyfile to use to authenticate the connection to the remote
+              device.  This argument is only used for `cli' transports.
+            - You may omit this option by setting the environment variable `ANSIBLE_NET_SSH_KEYFILE'.
+            type: path
+          timeout:
+            default: 10
+            description:
+            - Specifies the timeout in seconds for communicating with the network device for
+              either connecting or sending commands.  If the timeout is exceeded before the
+              operation is completed, the module will error.
+            type: int
+          transport:
+            choices:
+            - cli
+            - rest
+            default: rest
+            description:
+            - Configures the transport connection to use when connecting to the remote device.
+            type: str
+          user:
+            description:
+            - The username to connect to the BIG-IP with. This user must have administrative
+              privileges on the device.
+            - You may omit this option by setting the environment variable `F5_USER'.
+            required: true
+            type: str
+          validate_certs:
+            default: true
+            description:
+            - If `no', SSL certificates are not validated. Use this only on personally controlled
+              sites using self-signed certificates.
+            - You may omit this option by setting the environment variable `F5_VALIDATE_CERTS'.
+            type: bool
+        
+        type: dict
+        version_added: 2.5
+
+= server
+        The BIG-IP host.
+        You may omit this option by setting the environment variable `F5_SERVER'.
+
+        type: str
+
+- server_port
+        The BIG-IP server port.
+        You may omit this option by setting the environment variable `F5_SERVER_PORT'.
+        [Default: 443]
+        type: int
+        version_added: 2.2
+
+- server_ssl_profile
+        If the `transport_profile' is a TCP profile, you can use this field to choose a Secure Socket Layer (SSL) profile for sending
+        logs to the IPFIX collectors.
+        An SSL server profile defines how to communicate securely over SSL or Transport Layer Security (TLS).
+        This parameter is only available when `type' is `ipfix'.
+        [Default: (null)]
+        type: str
+        version_added: 2.8
+        
+
+- state
+        When `present', ensures that the resource exists.
+        When `absent', ensures the resource is removed.
+        (Choices: present, absent)[Default: present]
+        type: str
+
+- syslog_format
+        Specifies the method to use to format the logs associated with the remote Syslog log destination.
+        When creating a new log destination (and `type' is `remote-syslog'), if this parameter is not specified, the default is `bsd-
+        syslog'.
+        The `syslog' and `rfc5424' choices are two ways of saying the same thing.
+        The `bsd-syslog' and `rfc3164' choices are two ways of saying the same thing.
+        (Choices: bsd-syslog, syslog, legacy-bigip, rfc5424, rfc3164)[Default: (null)]
+        type: str
+        version_added: 2.8
+        
+
+- syslog_settings
+        This parameter is only available when `type' is `remote-syslog'.
+        Deprecated. Use the equivalent top-level parameters instead.
+        [Default: (null)]
+        suboptions:
+          forward_to:
+            description:
+            - Specifies the management port log destination, which will be used to forward
+              the logs to a single log server, or a remote high-speed log destination, which
+              will be used to forward the logs to a pool of remote log servers.
+            - When creating a new log destination (and `type' is `remote-syslog'), this
+              parameter is required.
+            type: str
+          syslog_format:
+            choices:
+            - bsd-syslog
+            - syslog
+            - legacy-bigip
+            - rfc5424
+            - rfc3164
+            description:
+            - Specifies the method to use to format the logs associated with the remote Syslog
+              log destination.
+            - When creating a new log destination (and `type' is `remote-syslog'), if this
+              parameter is not specified, the default is `bsd-syslog'.
+            - The `syslog' and `rfc5424' choices are two ways of saying the same thing.
+            - The `bsd-syslog' and `rfc3164' choices are two ways of saying the same thing.
+            type: str
+        
+        type: dict
+
+- template_delete_delay
+        Enter the time (in seconds) that the BIG-IP device should pause between deleting an obsolete IPFIX template and reusing its
+        template ID.
+        This feature is useful for systems where you use iRules to create customized IPFIX templates.
+        [Default: (null)]
+        type: int
+        version_added: 2.8
+        
+
+- template_retransmit_interval
+        Enter the time (in seconds) between each transmission of IPFIX templates to the pool of IPFIX collectors.
+        The logging destination periodically retransmits all of its IPFIX templates at the interval you set in this field. These
+        retransmissions are helpful for UDP, a lossy transport mechanism.
+        This parameter is only available when `type' is `ipfix'.
+        [Default: (null)]
+        type: int
+        version_added: 2.8
+        
+
+- transport_profile
+        Is a transport profile based on either TCP or UDP.
+        This profile defines the TCP or UDP options used to send IP-traffic logs to the pool of collectors.
+        This parameter is only available when `type' is `ipfix'.
+        [Default: (null)]
+        type: str
+        version_added: 2.8
+        
+
+= type
+        Specifies the type of log destination.
+        Once created, this parameter cannot be changed.
+        (Choices: remote-high-speed-log, remote-syslog, arcsight, splunk, management-port, ipfix)
+        type: str
+
+= user
+        The username to connect to the BIG-IP with. This user must have administrative privileges on the device.
+        You may omit this option by setting the environment variable `F5_USER'.
+
+        type: str
+
+- validate_certs
+        If `no', SSL certificates are not validated. Use this only on personally controlled sites using self-signed certificates.
+        You may omit this option by setting the environment variable `F5_VALIDATE_CERTS'.
+        [Default: True]
+        type: bool
+        version_added: 2.0
+
+
+NOTES:
+      * For more information on using Ansible to manage F5 Networks devices see https://www.ansible.com/integrations/networks/f5.
+      * Requires BIG-IP software version >= 12.
+      * The F5 modules only manipulate the running configuration of the F5 product. To ensure that BIG-IP specific configuration
+        persists to disk, be sure to include at least one task that uses the [bigip_config] module to save the running
+        configuration. Refer to the module's documentation for the correct usage of the module to save your running configuration.
+
+
+AUTHOR: Tim Rupp (@caphrim007)
+        METADATA:
+          status:
+          - preview
+          supported_by: certified
+        
+
+EXAMPLES:
+
+- name: Create a high-speed logging destination
+  bigip_log_destination:
+    name: foo
+    type: remote-high-speed-log
+    pool: my-ltm-pool
+    provider:
+      password: secret
+      server: lb.mydomain.com
+      user: admin
+  delegate_to: localhost
+
+- name: Create a remote-syslog logging destination
+  bigip_log_destination:
+    name: foo
+    type: remote-syslog
+    syslog_format: rfc5424
+    forward_to: my-destination
+    provider:
+      password: secret
+      server: lb.mydomain.com
+      user: admin
+  delegate_to: localhost
+
+
+RETURN VALUES:
+
+forward_to:
+  description: The new Forward To value.
+  returned: changed
+  type: str
+  sample: /Common/dest1
+pool:
+  description: The new Pool value.
+  returned: changed
+  type: str
+  sample: /Common/pool1
+distribution:
+  description: The new Distribution Method value.
+  returned: changed
+  type: str
+  sample: balanced
+protocol:
+  description: The new Protocol value.
+  returned: changed
+  type: str
+  sample: tcp
+syslog_format:
+  description: The new Syslog format value.
+  returned: changed
+  type: str
+  sample: syslog
+address:
+  description: The new Address value.
+  returned: changed
+  type: str
+  sample: 1.2.3.2
+port:
+  description: The new Port value.
+  returned: changed
+  type: int
+  sample: 2020
+template_delete_delay:
+  description: The new Template Delete Delay value.
+  returned: changed
+  type: int
+  sample: 20
+template_retransmit_interval:
+  description: The new Template Retransmit Interval value.
+  returned: changed
+  type: int
+  sample: 200
+transport_profile:
+  description: The new Transport Profile value.
+  returned: changed
+  type: str
+  sample: /Common/tcp
+server_ssl_profile:
+  description: The new Server SSL Profile value.
+  returned: changed
+  type: str
+  sample: /Common/serverssl
+

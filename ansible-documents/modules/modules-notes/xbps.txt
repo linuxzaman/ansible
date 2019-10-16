@@ -1,0 +1,68 @@
+> XBPS    (/usr/lib/python2.7/dist-packages/ansible/modules/packaging/os/xbps.py)
+
+        Manage packages with the XBPS package manager.
+
+  * This module is maintained by The Ansible Community
+OPTIONS (= is mandatory):
+
+- name
+        Name of the package to install, upgrade, or remove.
+        [Default: (null)]
+
+- recurse
+        When removing a package, also remove its dependencies, provided that they are not required by other packages and were not
+        explicitly installed by a user.
+        [Default: no]
+        type: bool
+
+- state
+        Desired state of the package.
+        (Choices: present, absent, latest)[Default: present]
+
+- update_cache
+        Whether or not to refresh the master package lists. This can be run as part of a package installation or as a separate step.
+        [Default: yes]
+        type: bool
+
+- upgrade
+        Whether or not to upgrade whole system
+        [Default: no]
+        type: bool
+
+
+AUTHOR: Dino Occhialini (@dinoocch), Michael Aldridge (@the-maldridge)
+        METADATA:
+          status:
+          - preview
+          supported_by: community
+        
+
+EXAMPLES:
+
+# Install package foo
+- xbps: name=foo state=present
+# Upgrade package foo
+- xbps: name=foo state=latest update_cache=yes
+# Remove packages foo and bar
+- xbps: name=foo,bar state=absent
+# Recursively remove package foo
+- xbps: name=foo state=absent recurse=yes
+# Update package cache
+- xbps: update_cache=yes
+# Upgrade packages
+- xbps: upgrade=yes
+
+
+RETURN VALUES:
+
+msg:
+    description: Message about results
+    returned: success
+    type: str
+    sample: "System Upgraded"
+packages:
+    description: Packages that are affected/would be affected
+    type: list
+    sample: ["ansible"]
+    returned: success
+

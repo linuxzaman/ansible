@@ -1,0 +1,72 @@
+EXAMPLES:
+
+- name: Configure Boot Policy
+  intersight_rest_api:
+    api_private_key: "{{ api_private_key }}"
+    api_key_id: "{{ api_key_id }}"
+    api_key_uri: "{{ api_key_uri }}"
+    validate_certs: "{{ validate_certs }}"
+    resource_path: /boot/PrecisionPolicies
+    query_params:
+      $filter: "Name eq 'vmedia-localdisk'"
+    api_body: {
+      "Name": "vmedia-hdd",
+      "ConfiguredBootMode": "Legacy",
+      "BootDevices": [
+        {
+          "ObjectType": "boot.VirtualMedia",
+          "Enabled": true,
+          "Name": "remote-vmedia",
+          "Subtype": "cimc-mapped-dvd"
+        },
+        {
+          "ObjectType": "boot.LocalDisk",
+          "Enabled": true,
+          "Name": "localdisk",
+          "Slot": "MRAID",
+          "Bootloader": null
+        }
+      ],
+    }
+    state: present
+
+- name: Delete Boot Policy
+  intersight_rest_api:
+    api_private_key: "{{ api_private_key }}"
+    api_key_id: "{{ api_key_id }}"
+    api_key_uri: "{{ api_key_uri }}"
+    validate_certs: "{{ validate_certs }}"
+    resource_path: /boot/PrecisionPolicies
+    query_params:
+      $filter: "Name eq 'vmedia-localdisk'"
+    state: absent
+
+
+RETURN VALUES:
+
+api_repsonse:
+  description: The API response output returned by the specified resource.
+  returned: always
+  type: dict
+  sample:
+    "api_response": {
+      "BootDevices": [
+        {
+          "Enabled": true,
+          "Name": "remote-vmedia",
+          "ObjectType": "boot.VirtualMedia",
+          "Subtype": "cimc-mapped-dvd"
+        },
+        {
+          "Bootloader": null,
+          "Enabled": true,
+          "Name": "boot-lun",
+          "ObjectType": "boot.LocalDisk",
+          "Slot": "MRAID"
+        }
+      ],
+      "ConfiguredBootMode": "Legacy",
+      "Name": "vmedia-localdisk",
+      "ObjectType": "boot.PrecisionPolicy",
+    }
+

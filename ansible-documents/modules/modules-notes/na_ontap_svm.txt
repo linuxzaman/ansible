@@ -1,0 +1,201 @@
+> NA_ONTAP_SVM    (/usr/lib/python2.7/dist-packages/ansible/modules/storage/netapp/na_ontap_svm.py)
+
+        Create, modify or delete SVM on NetApp ONTAP
+
+  * This module is maintained by an Ansible Partner
+OPTIONS (= is mandatory):
+
+- aggr_list
+        List of aggregates assigned for volume operations.
+        These aggregates could be shared for use with other Vservers.
+        When specified as part of a vserver-create, this field represents the list of aggregates that are assigned to the Vserver for
+        volume operations.
+        When part of vserver-get-iter call, this will return the list of Vservers which have any of the aggregates specified as part of
+        the aggr list.
+        [Default: (null)]
+
+- allowed_protocols
+        Allowed Protocols.
+        When specified as part of a vserver-create, this field represent the list of protocols allowed on the Vserver.
+        When part of vserver-get-iter call, this will return the list of Vservers which have any of the protocols specified as part of
+        the allowed-protocols.
+        When part of vserver-modify, this field should include the existing list along with new protocol list to be added to prevent data
+        disruptions.
+        Possible values
+        nfs   NFS protocol,
+        cifs   CIFS protocol,
+        fcp   FCP protocol,
+        iscsi   iSCSI protocol,
+        ndmp   NDMP protocol,
+        http   HTTP protocol,
+        nvme   NVMe protocol
+        [Default: (null)]
+
+- comment
+        When specified as part of a vserver-create, this field represents the comment associated with the Vserver.
+        When part of vserver-get-iter call, this will return the list of matching Vservers.
+        [Default: (null)]
+        version_added: 2.8
+
+- from_name
+        Name of the SVM to be renamed
+        [Default: (null)]
+        version_added: 2.7
+
+= hostname
+        The hostname or IP address of the ONTAP instance.
+
+        type: str
+
+- http_port
+        Override the default port (80 or 443) with this port
+        [Default: (null)]
+        type: int
+
+- https
+        Enable and disable https
+        [Default: False]
+        type: bool
+
+- ipspace
+        IPSpace name
+        Cannot be modified after creation.
+        [Default: (null)]
+        version_added: 2.7
+
+- language
+        Language to use for the SVM
+        Default to C.UTF-8
+        Possible values   Language
+        c                 POSIX
+        ar                Arabic
+        cs                Czech
+        da                Danish
+        de                German
+        en                English
+        en_us             English (US)
+        es                Spanish
+        fi                Finnish
+        fr                French
+        he                Hebrew
+        hr                Croatian
+        hu                Hungarian
+        it                Italian
+        ja                Japanese euc-j
+        ja_v1             Japanese euc-j
+        ja_jp.pck         Japanese PCK (sjis)
+        ja_jp.932         Japanese cp932
+        ja_jp.pck_v2      Japanese PCK (sjis)
+        ko                Korean
+        no                Norwegian
+        nl                Dutch
+        pl                Polish
+        pt                Portuguese
+        ro                Romanian
+        ru                Russian
+        sk                Slovak
+        sl                Slovenian
+        sv                Swedish
+        tr                Turkish
+        zh                Simplified Chinese
+        zh.gbk            Simplified Chinese (GBK)
+        zh_tw             Traditional Chinese euc-tw
+        zh_tw.big5        Traditional Chinese Big 5
+        [Default: (null)]
+        version_added: 2.7
+
+= name
+        The name of the SVM to manage.
+
+
+- ontapi
+        The ontap api version to use
+        [Default: (null)]
+        type: int
+
+= password
+        Password for the specified user.
+        (Aliases: pass)
+        type: str
+
+- root_volume
+        Root volume of the SVM.
+        Cannot be modified after creation.
+        [Default: (null)]
+
+- root_volume_aggregate
+        The aggregate on which the root volume will be created.
+        Cannot be modified after creation.
+        [Default: (null)]
+
+- root_volume_security_style
+        Security Style of the root volume.
+        When specified as part of the vserver-create, this field represents the security style for the Vserver root volume.
+        When specified as part of vserver-get-iter call, this will return the list of matching Vservers.
+        The 'unified' security style, which applies only to Infinite Volumes, cannot be applied to a Vserver's root volume.
+        Cannot be modified after creation.
+        (Choices: unix, ntfs, mixed, unified)[Default: (null)]
+
+- snapshot_policy
+        Default snapshot policy setting for all volumes of the Vserver. This policy will be assigned to all volumes created in this
+        Vserver unless the volume create request explicitly provides a snapshot policy or volume is modified later with a specific
+        snapshot policy. A volume-level snapshot policy always overrides the default Vserver-wide snapshot policy.
+        [Default: (null)]
+        version_added: 2.7
+
+- state
+        Whether the specified SVM should exist or not.
+        (Choices: present, absent)[Default: present]
+
+- subtype
+        The subtype for vserver to be created.
+        Cannot be modified after creation.
+        (Choices: default, dp_destination, sync_source, sync_destination)[Default: (null)]
+        version_added: 2.7
+
+= username
+        This can be a Cluster-scoped or SVM-scoped account, depending on whether a Cluster-level or SVM-level API is required. For more
+        information, please read the documentation https://mysupport.netapp.com/NOW/download/software/nmsdk/9.4/.
+        (Aliases: user)
+        type: str
+
+- validate_certs
+        If set to `no', the SSL certificates will not be validated.
+        This should only set to `False' used on personally controlled sites using self-signed certificates.
+        [Default: True]
+        type: bool
+
+
+NOTES:
+      * The modules prefixed with na\\_ontap are built to support the ONTAP storage platform.
+
+
+REQUIREMENTS:  A physical or virtual clustered Data ONTAP system. The modules support Data ONTAP 9.1 and onward, Ansible 2.6, Python2
+        netapp-lib (2017.10.30) or later. Install using 'pip install netapp-lib', Python3 netapp-lib (2018.11.13) or
+        later. Install using 'pip install netapp-lib', To enable http on the cluster you must run the following commands
+        'set -privilege advanced;' 'system services web modify -http-enabled true;'
+
+AUTHOR: NetApp Ansible Team (@carchi8py) <ng-ansibleteam@netapp.com>
+        METADATA:
+          status:
+          - preview
+          supported_by: certified
+        
+
+EXAMPLES:
+
+- name: Create SVM
+      na_ontap_svm:
+        state: present
+        name: ansibleVServer
+        root_volume: vol1
+        root_volume_aggregate: aggr1
+        root_volume_security_style: mixed
+        hostname: "{{ netapp_hostname }}"
+        username: "{{ netapp_username }}"
+        password: "{{ netapp_password }}"
+
+
+RETURN VALUES:
+
+

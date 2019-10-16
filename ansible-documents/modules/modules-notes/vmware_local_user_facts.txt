@@ -1,0 +1,102 @@
+> VMWARE_LOCAL_USER_FACTS    (/usr/lib/python2.7/dist-packages/ansible/modules/cloud/vmware/vmware_local_user_facts.py)
+
+        This module can be used to gather facts about users present on the given ESXi host system in VMware infrastructure. All variables
+        and VMware object names are case sensitive. User must hold the 'Authorization.ModifyPermissions' privilege to invoke this module.
+
+  * This module is maintained by The Ansible Community
+OPTIONS (= is mandatory):
+
+- hostname
+        The hostname or IP address of the vSphere vCenter or ESXi server.
+        If the value is not specified in the task, the value of environment variable `VMWARE_HOST' will be used instead.
+        Environment variable support added in Ansible 2.6.
+        [Default: (null)]
+        type: str
+
+- password
+        The password of the vSphere vCenter or ESXi server.
+        If the value is not specified in the task, the value of environment variable `VMWARE_PASSWORD' will be used instead.
+        Environment variable support added in Ansible 2.6.
+        (Aliases: pass, pwd)[Default: (null)]
+        type: str
+
+- port
+        The port number of the vSphere vCenter or ESXi server.
+        If the value is not specified in the task, the value of environment variable `VMWARE_PORT' will be used instead.
+        Environment variable support added in Ansible 2.6.
+        [Default: 443]
+        type: int
+        version_added: 2.5
+
+- username
+        The username of the vSphere vCenter or ESXi server.
+        If the value is not specified in the task, the value of environment variable `VMWARE_USER' will be used instead.
+        Environment variable support added in Ansible 2.6.
+        (Aliases: admin, user)[Default: (null)]
+        type: str
+
+- validate_certs
+        Allows connection when SSL certificates are not valid. Set to `false' when certificates are not trusted.
+        If the value is not specified in the task, the value of environment variable `VMWARE_VALIDATE_CERTS' will be used instead.
+        Environment variable support added in Ansible 2.6.
+        If set to `yes', please make sure Python >= 2.7.9 is installed on the given machine.
+        [Default: True]
+        type: bool
+
+
+NOTES:
+      * Tested on ESXi 6.5
+      * The `full_name', `principal', and `user_group' properties are deprecated starting from Ansible v2.12
+
+
+REQUIREMENTS:  python >= 2.6, PyVmomi
+
+AUTHOR: Abhijeet Kasurde (@Akasurde), Christian Kotte (@ckotte)
+        METADATA:
+          status:
+          - preview
+          supported_by: community
+        
+
+EXAMPLES:
+
+- name: Gather facts about all Users on given ESXi host system
+  vmware_local_user_facts:
+    hostname: '{{ esxi_hostname }}'
+    username: '{{ esxi_username }}'
+    password: '{{ esxi_password }}'
+  delegate_to: localhost
+  register: all_user_facts
+
+
+RETURN VALUES:
+
+local_user_facts:
+    description: metadata about all local users
+    returned: always
+    type: dict
+    sample: [
+        {
+            "role": "admin",
+            "description": "Administrator",
+            "full_name": "Administrator",
+            "group": false,
+            "user_group": false,
+            "user_id": 0,
+            "user_name": "root",
+            "principal": "root",
+            "shell_access": true
+        },
+        {
+            "role": "admin",
+            "description": "DCUI User",
+            "full_name": "DCUI User",
+            "group": false,
+            "user_group": false,
+            "user_id": 100,
+            "user_name": "dcui",
+            "principal": "dcui",
+            "shell_access": false
+        },
+    ]
+

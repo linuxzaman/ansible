@@ -1,0 +1,175 @@
+> IDRAC_SERVER_CONFIG_PROFILE    (/usr/lib/python2.7/dist-packages/ansible/modules/remote_management/dellemc/idrac/idrac_server_config_profile.py)
+
+        Export the Server Configuration Profile (SCP) from the iDRAC or Import from a network share or a local file.
+
+  * This module is maintained by The Ansible Community
+OPTIONS (= is mandatory):
+
+- command
+        If `import', will perform SCP import operations.
+        If `export', will perform SCP export operations.
+        (Choices: import, export)[Default: export]
+
+- end_host_power_state
+        This option is applicable for `import' command.
+        If `On', End host power state is on.
+        If `Off', End host power state is off.
+        (Choices: On, Off)[Default: On]
+
+- export_format
+        Specify the output file format. This option is applicable for `export' command.
+        (Choices: JSON, XML)[Default: XML]
+
+- export_use
+        Specify the type of server configuration profile (SCP) to be exported. This option is applicable for `export' command.
+        (Choices: Default, Clone, Replace)[Default: Default]
+
+= idrac_ip
+        iDRAC IP Address.
+
+        type: str
+
+= idrac_password
+        iDRAC user password.
+
+        type: str
+
+- idrac_port
+        iDRAC port.
+        [Default: 443]
+        type: int
+
+= idrac_user
+        iDRAC username.
+
+        type: str
+
+= job_wait
+        Whether to wait for job completion or not.
+
+        type: bool
+
+- scp_components
+        If `ALL', this module will import all components configurations from SCP file.
+        If `IDRAC', this module will import iDRAC configuration from SCP file.
+        If `BIOS', this module will import BIOS configuration from SCP file.
+        If `NIC', this module will import NIC configuration from SCP file.
+        If `RAID', this module will import RAID configuration from SCP file.
+        (Choices: ALL, IDRAC, BIOS, NIC, RAID)[Default: ALL]
+
+- scp_file
+        Server Configuration Profile file name. This option is mandatory for `import' command.
+        [Default: (null)]
+        type: str
+
+= share_name
+        CIFS or NFS Network Share or a local path.
+
+        type: str
+
+- share_password
+        Network share user password. This option is mandatory for CIFS Network Share.
+        [Default: (null)]
+        type: str
+
+- share_user
+        Network share user in the format 'user@domain' or 'domain\\user' if user is part of a domain else 'user'. This option is
+        mandatory for CIFS Network Share.
+        [Default: (null)]
+        type: str
+
+- shutdown_type
+        This option is applicable for `import' command.
+        If `Graceful', it gracefully shuts down the server.
+        If `Forced',  it forcefully shuts down the server.
+        If `NoReboot', it does not reboot the server.
+        (Choices: Graceful, Forced, NoReboot)[Default: Graceful]
+
+
+REQUIREMENTS:  omsdk, python >= 2.7.5
+
+AUTHOR: Jagadeesh N V(@jagadeeshnv)
+        METADATA:
+          status:
+          - preview
+          supported_by: community
+        
+
+EXAMPLES:
+
+---
+- name: Import Server Configuration Profile from a network share
+  idrac_server_config_profile:
+    idrac_ip: "192.168.0.1"
+    idrac_user: "user_name"
+    idrac_password: "user_password"
+    command: "import"
+    share_name: "192.168.0.2:/share"
+    share_user: "share_user_name"
+    share_password: "share_user_password"
+    scp_file: "scp_filename.xml"
+    scp_components: "ALL"
+    job_wait: True
+
+- name: Import Server Configuration Profile from a local path
+  idrac_server_config_profile:
+    idrac_ip: "192.168.0.1"
+    idrac_user: "user_name"
+    idrac_password: "user_password"
+    command: "import"
+    share_name: "/scp_folder"
+    share_user: "share_user_name"
+    share_password: "share_user_password"
+    scp_file: "scp_filename.xml"
+    scp_components: "ALL"
+    job_wait: True
+
+- name: Export Server Configuration Profile to a network share
+  idrac_server_config_profile:
+    idrac_ip: "192.168.0.1"
+    idrac_user: "user_name"
+    idrac_password: "user_password"
+    share_name: "192.168.0.2:/share"
+    share_user: "share_user_name"
+    share_password: "share_user_password"
+    job_wait: False
+
+- name: Export Server Configuration Profile to a local path
+  idrac_server_config_profile:
+    idrac_ip: "192.168.0.1"
+    idrac_user: "user_name"
+    idrac_password: "user_password"
+    share_name: "/scp_folder"
+    share_user: "share_user_name"
+    share_password: "share_user_password"
+    job_wait: False
+
+
+RETURN VALUES:
+
+---
+msg:
+  type: str
+  description: Status of the import or export SCP job.
+  returned: always
+  sample: "Successfully imported the Server Configuration Profile"
+scp_status:
+  type: dict
+  description: SCP operation job and progress details from the iDRAC.
+  returned: success
+  sample:
+    {
+      "Id": "JID_XXXXXXXXX",
+      "JobState": "Completed",
+      "JobType": "ImportConfiguration",
+      "Message": "Successfully imported and applied Server Configuration Profile.",
+      "MessageArgs": [],
+      "MessageId": "XXX123",
+      "Name": "Import Configuration",
+      "PercentComplete": 100,
+      "StartTime": "TIME_NOW",
+      "Status": "Success",
+      "TargetSettingsURI": null,
+      "retval": true
+    }
+

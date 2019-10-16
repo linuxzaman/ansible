@@ -1,0 +1,43 @@
+EXAMPLES:
+
+# Examples don't contain auth parameter for simplicity,
+# look at ovirt_auth module to see how to reuse authentication:
+
+# Create network
+- ovirt_network:
+    data_center: mydatacenter
+    name: mynetwork
+    vlan_tag: 1
+    vm_network: true
+
+# Remove network
+- ovirt_network:
+    state: absent
+    name: mynetwork
+
+# Change Network Name
+- ovirt_network:
+    id: 00000000-0000-0000-0000-000000000000
+    name: "new_network_name"
+    data_center: mydatacenter
+
+# Add network from external provider
+- ovirt_networks:
+    data_center: mydatacenter
+    name: mynetwork
+    external_provider: ovirt-provider-ovn
+
+
+RETURN VALUES:
+
+id:
+    description: "ID of the managed network"
+    returned: "On success if network is found."
+    type: str
+    sample: 7de90f31-222c-436c-a1ca-7e655bd5b60c
+network:
+    description: "Dictionary of all the network attributes. Network attributes can be found on your oVirt/RHV instance
+                  at following url: http://ovirt.github.io/ovirt-engine-api-model/master/#types/network."
+    returned: "On success if network is found."
+    type: dict
+

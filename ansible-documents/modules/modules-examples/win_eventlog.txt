@@ -1,0 +1,88 @@
+EXAMPLES:
+
+- name: Add a new event log with two custom sources
+  win_eventlog:
+    name: MyNewLog
+    sources:
+      - NewLogSource1
+      - NewLogSource2
+    state: present
+
+- name: Change the category and message resource files used for NewLogSource1
+  win_eventlog:
+    name: MyNewLog
+    sources:
+      - NewLogSource1
+    category_file: C:\NewApp\CustomCategories.dll
+    message_file: C:\NewApp\CustomMessages.dll
+    state: present
+
+- name: Change the maximum size and overflow action for MyNewLog
+  win_eventlog:
+    name: MyNewLog
+    maximum_size: 16MB
+    overflow_action: DoNotOverwrite
+    state: present
+
+- name: Clear event entries for MyNewLog
+  win_eventlog:
+    name: MyNewLog
+    state: clear
+
+- name: Remove NewLogSource2 from MyNewLog
+  win_eventlog:
+    name: MyNewLog
+    sources:
+      - NewLogSource2
+    state: absent
+
+- name: Remove MyNewLog and all remaining sources
+  win_eventlog:
+    name: MyNewLog
+    state: absent
+
+
+RETURN VALUES:
+
+name:
+    description: The name of the event log.
+    returned: always
+    type: str
+    sample: MyNewLog
+exists:
+    description: Whether the event log exists or not.
+    returned: success
+    type: bool
+    sample: true
+entries:
+    description: The count of entries present in the event log.
+    returned: success
+    type: int
+    sample: 50
+maximum_size_kb:
+    description: Maximum size of the log in KB.
+    returned: success
+    type: int
+    sample: 512
+overflow_action:
+    description: The action the log takes once it reaches its maximum size.
+    returned: success
+    type: str
+    sample: OverwriteOlder
+retention_days:
+    description: The minimum number of days entries are retained in the log.
+    returned: success
+    type: int
+    sample: 7
+sources:
+    description: A list of the current sources for the log.
+    returned: success
+    type: list
+    sample: ["MyNewLog", "NewLogSource1", "NewLogSource2"]
+sources_changed:
+    description: A list of sources changed (e.g. re/created, removed) for the log;
+      this is empty if no sources are changed.
+    returned: always
+    type: list
+    sample: ["NewLogSource2"]
+

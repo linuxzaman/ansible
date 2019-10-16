@@ -1,0 +1,60 @@
+EXAMPLES:
+
+- name: Add drive with status available to cluster
+     tags:
+     - elementsw_add_drive
+     na_element_drive:
+       hostname: "{{ elementsw_hostname }}"
+       username: "{{ elementsw_username }}"
+       password: "{{ elementsw_password }}"
+       state: present
+       drive_id: scsi-SATA_SAMSUNG_MZ7LM48S2UJNX0J3221807
+       force_during_upgrade: false
+       force_during_bin_sync: false
+       node_id: sf4805-meg-03
+
+   - name: Remove active drive from cluster
+     tags:
+     - elementsw_remove_drive
+     na_element_drive:
+       hostname: "{{ elementsw_hostname }}"
+       username: "{{ elementsw_username }}"
+       password: "{{ elementsw_password }}"
+       state: absent
+       force_during_upgrade: false
+       node_id: sf4805-meg-03
+       drive_id: scsi-SATA_SAMSUNG_MZ7LM48S2UJNX0J321208
+
+   - name: Secure Erase drive
+     tags:
+     - elemensw_clean_drive
+     na_elementsw_drive:
+       hostname: "{{ elementsw_hostname }}"
+       username: "{{ elementsw_username }}"
+       password: "{{ elementsw_password }}"
+       state: clean
+       drive_id: scsi-SATA_SAMSUNG_MZ7LM48S2UJNX0J432109
+       node_id: sf4805-meg-03
+
+   - name: Add all the drives of a node to cluster
+     tags:
+     - elementsw_add_node
+     na_elementsw_drive:
+       hostname: "{{ elementsw_hostname }}"
+       username: "{{ elementsw_username }}"
+       password: "{{ elementsw_password }}"
+       state: present
+       force_during_upgrade: false
+       force_during_bin_sync: false
+       node_id: sf4805-meg-03
+
+
+RETURN VALUES:
+
+
+msg:
+    description: Success message
+    returned: success
+    type: str
+
+

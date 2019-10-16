@@ -1,0 +1,28 @@
+EXAMPLES:
+
+- name: Set Cluster-Level MOTD
+  na_ontap_motd:
+    vserver: my_ontap_cluster
+    message: "Cluster wide MOTD"
+    hostname: "{{ netapp_hostname }}"
+    username: "{{ netapp_username }}"
+    password: "{{ netapp_password }}"
+    state: present
+    https: true
+
+- name: Set MOTD for I(rhev_nfs_krb) SVM, do not show Cluster-Level MOTD
+  na_ontap_motd:
+    vserver: rhev_nfs_krb
+    message: "Access to rhev_nfs_krb is also restricted"
+    hostname: "{{ netapp_hostname }}"
+    username: "{{ netapp_username }}"
+    password: "{{ netapp_password }}"
+    state: present
+    show_cluster_motd: False
+    https: true
+
+
+RETURN VALUES:
+
+
+

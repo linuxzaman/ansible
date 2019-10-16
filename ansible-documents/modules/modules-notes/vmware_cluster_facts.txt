@@ -1,0 +1,120 @@
+> VMWARE_CLUSTER_FACTS    (/usr/lib/python2.7/dist-packages/ansible/modules/cloud/vmware/vmware_cluster_facts.py)
+
+        This module can be used to gather facts about clusters in VMWare infrastructure. All values and VMware object names are case
+        sensitive.
+
+  * This module is maintained by The Ansible Community
+OPTIONS (= is mandatory):
+
+- cluster_name
+        Name of the cluster.
+        If set, facts of this cluster will be returned.
+        This parameter is required, if `datacenter' is not supplied.
+        [Default: (null)]
+
+- datacenter
+        Datacenter to search for cluster/s.
+        This parameter is required, if `cluster_name' is not supplied.
+        [Default: (null)]
+
+- hostname
+        The hostname or IP address of the vSphere vCenter or ESXi server.
+        If the value is not specified in the task, the value of environment variable `VMWARE_HOST' will be used instead.
+        Environment variable support added in Ansible 2.6.
+        [Default: (null)]
+        type: str
+
+- password
+        The password of the vSphere vCenter or ESXi server.
+        If the value is not specified in the task, the value of environment variable `VMWARE_PASSWORD' will be used instead.
+        Environment variable support added in Ansible 2.6.
+        (Aliases: pass, pwd)[Default: (null)]
+        type: str
+
+- port
+        The port number of the vSphere vCenter or ESXi server.
+        If the value is not specified in the task, the value of environment variable `VMWARE_PORT' will be used instead.
+        Environment variable support added in Ansible 2.6.
+        [Default: 443]
+        type: int
+        version_added: 2.5
+
+- username
+        The username of the vSphere vCenter or ESXi server.
+        If the value is not specified in the task, the value of environment variable `VMWARE_USER' will be used instead.
+        Environment variable support added in Ansible 2.6.
+        (Aliases: admin, user)[Default: (null)]
+        type: str
+
+- validate_certs
+        Allows connection when SSL certificates are not valid. Set to `false' when certificates are not trusted.
+        If the value is not specified in the task, the value of environment variable `VMWARE_VALIDATE_CERTS' will be used instead.
+        Environment variable support added in Ansible 2.6.
+        If set to `yes', please make sure Python >= 2.7.9 is installed on the given machine.
+        [Default: True]
+        type: bool
+
+
+NOTES:
+      * Tested on vSphere 6.5
+
+
+REQUIREMENTS:  python >= 2.6, PyVmomi
+
+AUTHOR: Abhijeet Kasurde (@Akasurde)
+        METADATA:
+          status:
+          - preview
+          supported_by: community
+        
+
+EXAMPLES:
+
+- name: Gather cluster facts from given datacenter
+  vmware_cluster_facts:
+    hostname: '{{ vcenter_hostname }}'
+    username: '{{ vcenter_username }}'
+    password: '{{ vcenter_password }}'
+    datacenter: ha-datacenter
+    validate_certs: no
+  delegate_to: localhost
+  register: cluster_facts
+
+- name: Gather facts from datacenter about specific cluster
+  vmware_cluster_facts:
+    hostname: '{{ vcenter_hostname }}'
+    username: '{{ vcenter_username }}'
+    password: '{{ vcenter_password }}'
+    cluster_name: DC0_C0
+  delegate_to: localhost
+  register: cluster_facts
+
+
+RETURN VALUES:
+
+clusters:
+    description: metadata about the available clusters
+    returned: always
+    type: dict
+    sample: {
+        "DC0_C0": {
+            "drs_default_vm_behavior": null,
+            "drs_enable_vm_behavior_overrides": null,
+            "drs_vmotion_rate": null,
+            "enable_ha": null,
+            "enabled_drs": true,
+            "enabled_vsan": false,
+            "ha_admission_control_enabled": null,
+            "ha_failover_level": null,
+            "ha_host_monitoring": null,
+            "ha_restart_priority": null,
+            "ha_vm_failure_interval": null,
+            "ha_vm_max_failure_window": null,
+            "ha_vm_max_failures": null,
+            "ha_vm_min_up_time": null,
+            "ha_vm_monitoring": null,
+            "ha_vm_tools_monitoring": null,
+            "vsan_auto_claim_storage": false
+        },
+    }
+

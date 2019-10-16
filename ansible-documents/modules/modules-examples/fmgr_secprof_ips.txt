@@ -1,0 +1,24 @@
+EXAMPLES:
+
+- name: DELETE Profile
+    fmgr_secprof_ips:
+      name: "Ansible_IPS_Profile"
+      comment: "Created by Ansible Module TEST"
+      mode: "delete"
+
+  - name: CREATE Profile
+    fmgr_secprof_ips:
+      name: "Ansible_IPS_Profile"
+      comment: "Created by Ansible Module TEST"
+      mode: "set"
+      block_malicious_url: "enable"
+      entries: [{severity: "high", action: "block", log-packet: "enable"}, {severity: "medium", action: "pass"}]
+
+
+RETURN VALUES:
+
+api_result:
+  description: full API response, includes status code and message
+  returned: always
+  type: str
+

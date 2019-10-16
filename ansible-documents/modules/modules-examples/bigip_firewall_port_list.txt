@@ -1,0 +1,105 @@
+EXAMPLES:
+
+- name: Create a simple port list
+  bigip_firewall_port_list:
+    name: foo
+    ports:
+      - 80
+      - 443
+    state: present
+    provider:
+      password: secret
+      server: lb.mydomain.com
+      user: admin
+  delegate_to: localhost
+
+- name: Override the above list of ports with a new list
+  bigip_firewall_port_list:
+    name: foo
+    ports:
+      - 3389
+      - 8080
+      - 25
+    state: present
+    provider:
+      password: secret
+      server: lb.mydomain.com
+      user: admin
+  delegate_to: localhost
+
+- name: Create port list with series of ranges
+  bigip_firewall_port_list:
+    name: foo
+    port_ranges:
+      - 25-30
+      - 80-500
+      - 50-78
+    state: present
+    provider:
+      password: secret
+      server: lb.mydomain.com
+      user: admin
+  delegate_to: localhost
+
+- name: Use multiple types of port arguments
+  bigip_firewall_port_list:
+    name: foo
+    port_ranges:
+      - 25-30
+      - 80-500
+      - 50-78
+    ports:
+      - 8080
+      - 443
+    state: present
+    provider:
+      password: secret
+      server: lb.mydomain.com
+      user: admin
+  delegate_to: localhost
+
+- name: Remove port list
+  bigip_firewall_port_list:
+    name: foo
+    state: absent
+    provider:
+      password: secret
+      server: lb.mydomain.com
+      user: admin
+  delegate_to: localhost
+
+- name: Create port list from a file with one port per line
+  bigip_firewall_port_list:
+    name: lot-of-ports
+    ports: "{{ lookup('file', 'my-large-port-list.txt').split('\n') }}"
+    state: present
+    provider:
+      password: secret
+      server: lb.mydomain.com
+      user: admin
+  delegate_to: localhost
+
+
+RETURN VALUES:
+
+description:
+  description: The new description of the port list.
+  returned: changed
+  type: str
+  sample: My port list
+ports:
+  description: The new list of ports applied to the port list.
+  returned: changed
+  type: list
+  sample: [80, 443]
+port_ranges:
+  description: The new list of port ranges applied to the port list.
+  returned: changed
+  type: list
+  sample: [80-100, 200-8080]
+port_lists:
+  description: The new list of port list names applied to the port list.
+  returned: changed
+  type: list
+  sample: [/Common/list1, /Common/list2]
+

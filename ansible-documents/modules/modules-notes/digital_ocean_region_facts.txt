@@ -1,0 +1,94 @@
+> DIGITAL_OCEAN_REGION_FACTS    (/usr/lib/python2.7/dist-packages/ansible/modules/cloud/digital_ocean/digital_ocean_region_facts.py)
+
+        This module can be used to gather facts about regions.
+
+  * This module is maintained by The Ansible Community
+OPTIONS (= is mandatory):
+
+- oauth_token
+        DigitalOcean OAuth token.
+        There are several other environment variables which can be used to provide this value.
+        i.e., - 'DO_API_TOKEN', 'DO_API_KEY', 'DO_OAUTH_TOKEN' and 'OAUTH_TOKEN'
+        (Aliases: api_token)[Default: (null)]
+        type: str
+
+- timeout
+        The timeout in seconds used for polling DigitalOcean's API.
+        [Default: 30]
+        type: int
+
+- validate_certs
+        If set to `no', the SSL certificates will not be validated.
+        This should only set to `no' used on personally controlled sites using self-signed certificates.
+        [Default: True]
+        type: bool
+
+
+REQUIREMENTS:  python >= 2.6
+
+AUTHOR: Abhijeet Kasurde (@Akasurde)
+        METADATA:
+          status:
+          - preview
+          supported_by: community
+        
+
+EXAMPLES:
+
+- name: Gather facts about all regions
+  digital_ocean_region_facts:
+    oauth_token: "{{ oauth_token }}"
+
+- name: Get Name of region where slug is known
+  digital_ocean_region_facts:
+    oauth_token: "{{ oauth_token }}"
+  register: resp_out
+- debug: var=resp_out
+- set_fact:
+    region_slug: "{{ item.name }}"
+  loop: "{{ resp_out.data|json_query(name) }}"
+  vars:
+    name: "[?slug==`nyc1`]"
+- debug: var=region_slug
+
+
+RETURN VALUES:
+
+data:
+    description: DigitalOcean regions facts
+    returned: success
+    type: list
+    sample: [
+        {
+            "available": true,
+            "features": [
+                "private_networking",
+                "backups",
+                "ipv6",
+                "metadata",
+                "install_agent",
+                "storage"
+            ],
+            "name": "New York 1",
+            "sizes": [
+                "512mb",
+                "s-1vcpu-1gb",
+                "1gb",
+                "s-3vcpu-1gb",
+                "s-1vcpu-2gb",
+                "s-2vcpu-2gb",
+                "2gb",
+                "s-1vcpu-3gb",
+                "s-2vcpu-4gb",
+                "4gb",
+                "c-2",
+                "m-1vcpu-8gb",
+                "8gb",
+                "s-4vcpu-8gb",
+                "s-6vcpu-16gb",
+                "16gb"
+            ],
+            "slug": "nyc1"
+        },
+    ]
+

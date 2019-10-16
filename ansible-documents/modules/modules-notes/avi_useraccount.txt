@@ -1,0 +1,92 @@
+> AVI_USERACCOUNT    (/usr/lib/python2.7/dist-packages/ansible/modules/network/avi/avi_useraccount.py)
+
+        This module can be used for updating the password of a user. This module is useful for setting up admin password for Controller
+        bootstrap.
+
+  * This module is maintained by The Ansible Community
+OPTIONS (= is mandatory):
+
+- api_context
+        Avi API context that includes current session ID and CSRF Token.
+        This allows user to perform single login and re-use the session.
+        [Default: (null)]
+        type: dict
+        version_added: 2.5
+
+- api_version
+        Avi API version of to use for Avi API and objects.
+        [Default: 16.4.4]
+        type: str
+
+- avi_credentials
+        Avi Credentials dictionary which can be used in lieu of enumerating Avi Controller login details.
+        [Default: (null)]
+        type: dict
+        version_added: 2.5
+
+- controller
+        IP address or hostname of the controller. The default value is the environment variable `AVI_CONTROLLER'.
+        [Default: ]
+        type: str
+
+- old_password
+        Old password for update password or default password for bootstrap.
+        [Default: (null)]
+
+- password
+        Password of Avi user in Avi controller. The default value is the environment variable `AVI_PASSWORD'.
+        [Default: ]
+        type: str
+
+- tenant
+        Name of tenant used for all Avi API calls and context of object.
+        [Default: admin]
+        type: str
+
+- tenant_uuid
+        UUID of tenant used for all Avi API calls and context of object.
+        [Default: ]
+        type: str
+
+- username
+        Username used for accessing Avi controller. The default value is the environment variable `AVI_USERNAME'.
+        [Default: ]
+        type: str
+
+
+NOTES:
+      * For more information on using Ansible to manage Avi Network devices see https://www.ansible.com/ansible-avi-networks.
+
+
+REQUIREMENTS:  avisdk
+
+AUTHOR: Chaitanya Deshpande (@chaitanyaavi) <chaitanya.deshpande@avinetworks.com>
+        METADATA:
+          status:
+          - preview
+          supported_by: community
+        
+
+EXAMPLES:
+
+- name: Update user password
+    avi_useraccount:
+      controller: ""
+      username: ""
+      password: new_password
+      old_password: ""
+      api_version: ""
+
+  - name: Update user password using avi_credentials
+    avi_useraccount:
+      avi_credentials: ""
+      old_password: ""
+
+
+RETURN VALUES:
+
+obj:
+    description: Avi REST resource
+    returned: success, changed
+    type: dict
+

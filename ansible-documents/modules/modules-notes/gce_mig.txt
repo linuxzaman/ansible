@@ -1,0 +1,244 @@
+> GCE_MIG    (/usr/lib/python2.7/dist-packages/ansible/modules/cloud/google/gce_mig.py)
+
+        Create, Update or Destroy a Managed Instance Group (MIG).  See https://cloud.google.com/compute/docs/instance-groups for an
+        overview. Full install/configuration instructions for the gce* modules can be found in the comments of ansible/test/gce_tests.py.
+
+  * This module is maintained by The Ansible Community
+OPTIONS (= is mandatory):
+
+- autoscaling
+        A dictionary of configuration for the autoscaler. 'enabled (bool)', 'name (str)' and policy.max_instances (int) are required
+        fields if autoscaling is used. See https://cloud.google.com/compute/docs/reference/beta/autoscalers for more information on
+        Autoscaling.
+        [Default: (null)]
+
+- credentials_file
+        Path to the JSON file associated with the service account email
+        [Default: (null)]
+
+= name
+        Name of the Managed Instance Group.
+
+
+- named_ports
+        Define named ports that backend services can forward data to.  Format is a a list of name:port dictionaries.
+        [Default: (null)]
+        version_added: 2.3
+
+- project_id
+        GCE project ID
+        [Default: (null)]
+
+- service_account_email
+        service account email
+        [Default: (null)]
+
+- size
+        Size of Managed Instance Group.  If MIG already exists, it will be resized to the number provided here.  Required for creating
+        MIGs.
+        [Default: (null)]
+
+- state
+        desired state of the resource
+        (Choices: absent, present)[Default: present]
+
+- template
+        Instance Template to be used in creating the VMs.  See https://cloud.google.com/compute/docs/instance-templates to learn more
+        about Instance Templates.  Required for creating MIGs.
+        [Default: (null)]
+
+= zone
+        The GCE zone to use for this Managed Instance Group.
+
+
+
+NOTES:
+      * Resizing and Recreating VM are also supported.
+      * An existing instance template is required in order to create a Managed Instance Group.
+
+
+REQUIREMENTS:  python >= 2.6, apache-libcloud >= 1.2.0
+
+AUTHOR: Tom Melendez (@supertom) <tom@supertom.com>
+        METADATA:
+          status:
+          - preview
+          supported_by: community
+        
+
+EXAMPLES:
+
+# Following playbook creates, rebuilds instances, resizes and then deletes a MIG.
+# Notes:
+# - Two valid Instance Templates must exist in your GCE project in order to run
+#   this playbook.  Change the fields to match the templates used in your
+#   project.
+# - The use of the 'pause' module is not required, it is just for convenience.
+- name: Managed Instance Group Example
+  hosts: localhost
+  gather_facts: False
+  tasks:
+    - name: Create MIG
+      gce_mig:
+        name: ansible-mig-example
+        zone: us-central1-c
+        state: present
+        size: 1
+        template: my-instance-template-1
+        named_ports:
+        - name: http
+          port: 80
+        - name: foobar
+          port: 82
+
+    - name: Pause for 30 seconds
+      pause:
+        seconds: 30
+
+    - name: Recreate MIG Instances with Instance Template change.
+      gce_mig:
+        name: ansible-mig-example
+        zone: us-central1-c
+        state: present
+        template: my-instance-template-2-small
+        recreate_instances: yes
+
+    - name: Pause for 30 seconds
+      pause:
+        seconds: 30
+
+    - name: Resize MIG
+      gce_mig:
+        name: ansible-mig-example
+        zone: us-central1-c
+        state: present
+        size: 3
+
+    - name: Update MIG with Autoscaler
+      gce_mig:
+        name: ansible-mig-example
+        zone: us-central1-c
+        state: present
+        size: 3
+        template: my-instance-template-2-small
+        recreate_instances: yes
+        autoscaling:
+          enabled: yes
+          name: my-autoscaler
+          policy:
+            min_instances: 2
+            max_instances: 5
+            cool_down_period: 37
+            cpu_utilization:
+              target: .39
+            load_balancing_utilization:
+              target: 0.4
+
+    - name: Pause for 30 seconds
+      pause:
+        seconds: 30
+
+    - name: Delete MIG
+      gce_mig:
+        name: ansible-mig-example
+        zone: us-central1-c
+        state: absent
+        autoscaling:
+          enabled: no
+          name: my-autoscaler
+
+
+RETURN VALUES:
+
+zone:
+    description: Zone in which to launch MIG.
+    returned: always
+    type: str
+    sample: "us-central1-b"
+
+template:
+    description: Instance Template to use for VMs.  Must exist prior to using with MIG.
+    returned: changed
+    type: str
+    sample: "my-instance-template"
+
+name:
+    description: Name of the Managed Instance Group.
+    returned: changed
+    type: str
+    sample: "my-managed-instance-group"
+
+named_ports:
+    description: list of named ports acted upon
+    returned: when named_ports are initially set or updated
+    type: list
+    sample: [{ "name": "http", "port": 80 }, { "name": "foo", "port": 82 }]
+
+size:
+    description: Number of VMs in Managed Instance Group.
+    returned: changed
+    type: int
+    sample: 4
+
+created_instances:
+    description: Names of instances created.
+    returned: When instances are created.
+    type: list
+    sample: ["ansible-mig-new-0k4y", "ansible-mig-new-0zk5", "ansible-mig-new-kp68"]
+
+deleted_instances:
+    description: Names of instances deleted.
+    returned: When instances are deleted.
+    type: list
+    sample: ["ansible-mig-new-0k4y", "ansible-mig-new-0zk5", "ansible-mig-new-kp68"]
+
+resize_created_instances:
+    description: Names of instances created during resizing.
+    returned: When a resize results in the creation of instances.
+    type: list
+    sample: ["ansible-mig-new-0k4y", "ansible-mig-new-0zk5", "ansible-mig-new-kp68"]
+
+resize_deleted_instances:
+    description: Names of instances deleted during resizing.
+    returned: When a resize results in the deletion of instances.
+    type: list
+    sample: ["ansible-mig-new-0k4y", "ansible-mig-new-0zk5", "ansible-mig-new-kp68"]
+
+recreated_instances:
+    description: Names of instances recreated.
+    returned: When instances are recreated.
+    type: list
+    sample: ["ansible-mig-new-0k4y", "ansible-mig-new-0zk5", "ansible-mig-new-kp68"]
+
+created_autoscaler:
+    description: True if Autoscaler was attempted and created.  False otherwise.
+    returned: When the creation of an Autoscaler was attempted.
+    type: bool
+    sample: true
+
+updated_autoscaler:
+    description: True if an Autoscaler update was attempted and succeeded.
+                 False returned if update failed.
+    returned: When the update of an Autoscaler was attempted.
+    type: bool
+    sample: true
+
+deleted_autoscaler:
+    description: True if an Autoscaler delete attempted and succeeded.
+                 False returned if delete failed.
+    returned: When the delete of an Autoscaler was attempted.
+    type: bool
+    sample: true
+
+set_named_ports:
+    description: True if the named_ports have been set
+    returned: named_ports have been set
+    type: bool
+    sample: true
+
+updated_named_ports:
+    description: True if the named_ports have been updated
+    returned: named_ports have been updated
+    type: bool
+    sample: true
+

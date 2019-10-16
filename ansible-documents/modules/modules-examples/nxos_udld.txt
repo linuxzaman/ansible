@@ -1,0 +1,48 @@
+EXAMPLES:
+
+# ensure udld aggressive mode is globally disabled and se global message interval is 20
+- nxos_udld:
+    aggressive: disabled
+    msg_time: 20
+    host: "{{ inventory_hostname }}"
+    username: "{{ un }}"
+    password: "{{ pwd }}"
+
+# Ensure agg mode is globally enabled and msg time is 15
+- nxos_udld:
+    aggressive: enabled
+    msg_time: 15
+    host: "{{ inventory_hostname }}"
+    username: "{{ un }}"
+    password: "{{ pwd }}"
+
+
+RETURN VALUES:
+
+proposed:
+    description: k/v pairs of parameters passed into module
+    returned: always
+    type: dict
+    sample: {"aggressive": "enabled", "msg_time": "40"}
+existing:
+    description:
+        - k/v pairs of existing udld configuration
+    returned: always
+    type: dict
+    sample: {"aggressive": "disabled", "msg_time": "15"}
+end_state:
+    description: k/v pairs of udld configuration after module execution
+    returned: always
+    type: dict
+    sample: {"aggressive": "enabled", "msg_time": "40"}
+updates:
+    description: command sent to the device
+    returned: always
+    type: list
+    sample: ["udld message-time 40", "udld aggressive"]
+changed:
+    description: check to see if a change was made on the device
+    returned: always
+    type: bool
+    sample: true
+

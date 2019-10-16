@@ -1,0 +1,55 @@
+EXAMPLES:
+
+# Ensure vault is present
+- ipa_vault:
+    name: vault01
+    vault_type: standard
+    user: user01
+    ipa_host: ipa.example.com
+    ipa_user: admin
+    ipa_pass: topsecret
+    validate_certs: false
+
+# Ensure vault is present for Admin user
+- ipa_vault:
+    name: vault01
+    vault_type: standard
+    ipa_host: ipa.example.com
+    ipa_user: admin
+    ipa_pass: topsecret
+
+# Ensure vault is absent
+- ipa_vault:
+    name: vault01
+    vault_type: standard
+    user: user01
+    state: absent
+    ipa_host: ipa.example.com
+    ipa_user: admin
+    ipa_pass: topsecret
+
+# Modify vault if already exists
+- ipa_vault:
+    name: vault01
+    vault_type: standard
+    description: "Vault for test"
+    ipa_host: ipa.example.com
+    ipa_user: admin
+    ipa_pass: topsecret
+    replace: True
+
+# Get vault info if already exists
+- ipa_vault:
+    name: vault01
+    ipa_host: ipa.example.com
+    ipa_user: admin
+    ipa_pass: topsecret
+
+
+RETURN VALUES:
+
+vault:
+  description: Vault as returned by IPA API
+  returned: always
+  type: dict
+

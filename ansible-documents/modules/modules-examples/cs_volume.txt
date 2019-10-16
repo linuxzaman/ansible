@@ -1,0 +1,128 @@
+EXAMPLES:
+
+- name: create volume within project and zone with specified storage options
+  cs_volume:
+    name: web-vm-1-volume
+    project: Integration
+    zone: ch-zrh-ix-01
+    disk_offering: PerfPlus Storage
+    size: 20
+  delegate_to: localhost
+
+- name: create/attach volume to instance
+  cs_volume:
+    name: web-vm-1-volume
+    disk_offering: PerfPlus Storage
+    size: 20
+    vm: web-vm-1
+    state: attached
+  delegate_to: localhost
+
+- name: detach volume
+  cs_volume:
+    name: web-vm-1-volume
+    state: detached
+  delegate_to: localhost
+
+- name: remove volume
+  cs_volume:
+    name: web-vm-1-volume
+    state: absent
+  delegate_to: localhost
+
+# New in version 2.8
+- name: Extract DATA volume to make it downloadable
+  cs_volume:
+    state: extracted
+    name: web-vm-1-volume
+  register: data_vol_out
+  delegate_to: localhost
+
+- name: Create new volume by downloading source volume
+  cs_volume:
+    state: uploaded
+    name: web-vm-1-volume-2
+    format: VHD
+    url: "{{ data_vol_out.url }}"
+  delegate_to: localhost
+
+
+RETURN VALUES:
+
+id:
+  description: ID of the volume.
+  returned: success
+  type: str
+  sample:
+name:
+  description: Name of the volume.
+  returned: success
+  type: str
+  sample: web-volume-01
+display_name:
+  description: Display name of the volume.
+  returned: success
+  type: str
+  sample: web-volume-01
+group:
+  description: Group the volume belongs to
+  returned: success
+  type: str
+  sample: web
+domain:
+  description: Domain the volume belongs to
+  returned: success
+  type: str
+  sample: example domain
+project:
+  description: Project the volume belongs to
+  returned: success
+  type: str
+  sample: Production
+zone:
+  description: Name of zone the volume is in.
+  returned: success
+  type: str
+  sample: ch-gva-2
+created:
+  description: Date of the volume was created.
+  returned: success
+  type: str
+  sample: 2014-12-01T14:57:57+0100
+attached:
+  description: Date of the volume was attached.
+  returned: success
+  type: str
+  sample: 2014-12-01T14:57:57+0100
+type:
+  description: Disk volume type.
+  returned: success
+  type: str
+  sample: DATADISK
+size:
+  description: Size of disk volume.
+  returned: success
+  type: int
+  sample: 20
+vm:
+  description: Name of the vm the volume is attached to (not returned when detached)
+  returned: success
+  type: str
+  sample: web-01
+state:
+  description: State of the volume
+  returned: success
+  type: str
+  sample: Attached
+device_id:
+  description: Id of the device on user vm the volume is attached to (not returned when detached)
+  returned: success
+  type: int
+  sample: 1
+url:
+  description: The url of the uploaded volume or the download url depending extraction mode.
+  returned: success when I(state=extracted)
+  type: str
+  sample: http://1.12.3.4/userdata/387e2c7c-7c42-4ecc-b4ed-84e8367a1965.vhd
+  version_added: '2.8'
+

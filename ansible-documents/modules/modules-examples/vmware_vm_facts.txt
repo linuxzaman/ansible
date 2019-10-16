@@ -1,0 +1,86 @@
+EXAMPLES:
+
+- name: Gather all registered virtual machines
+  vmware_vm_facts:
+    hostname: '{{ vcenter_hostname }}'
+    username: '{{ vcenter_username }}'
+    password: '{{ vcenter_password }}'
+  delegate_to: localhost
+  register: vmfacts
+
+- debug:
+    var: vmfacts.virtual_machines
+
+- name: Gather only registered virtual machine templates
+  vmware_vm_facts:
+    hostname: '{{ vcenter_hostname }}'
+    username: '{{ vcenter_username }}'
+    password: '{{ vcenter_password }}'
+    vm_type: template
+  delegate_to: localhost
+  register: template_facts
+
+- debug:
+    var: template_facts.virtual_machines
+
+- name: Gather only registered virtual machines
+  vmware_vm_facts:
+    hostname: '{{ vcenter_hostname }}'
+    username: '{{ vcenter_username }}'
+    password: '{{ vcenter_password }}'
+    vm_type: vm
+  delegate_to: localhost
+  register: vm_facts
+
+- debug:
+    var: vm_facts.virtual_machines
+
+- name: Get UUID from given VM Name
+  vmware_vm_facts:
+    hostname: '{{ vcenter_hostname }}'
+    username: '{{ vcenter_username }}'
+    password: '{{ vcenter_password }}'
+    vm_type: vm
+  delegate_to: localhost
+  register: vm_facts
+
+- debug:
+    msg: "{{ item.uuid }}"
+  with_items:
+    - "{{ vm_facts.virtual_machines | json_query(query) }}"
+  vars:
+    query: "[?guest_name=='DC0_H0_VM0']"
+
+
+RETURN VALUES:
+
+virtual_machines:
+  description: list of dictionary of virtual machines and their facts
+  returned: success
+  type: list
+  sample: [
+    {
+        "guest_name": "ubuntu_t",
+        "cluster": null,
+        "esxi_hostname": "10.76.33.226",
+        "guest_fullname": "Ubuntu Linux (64-bit)",
+        "ip_address": "",
+        "mac_address": [
+            "00:50:56:87:a5:9a"
+        ],
+        "power_state": "poweredOff",
+        "uuid": "4207072c-edd8-3bd5-64dc-903fd3a0db04",
+        "vm_network": {
+            "00:50:56:87:a5:9a": {
+              "ipv4": [
+                "10.76.33.228"
+              ],
+              "ipv6": []
+            }
+        },
+        "attributes": {
+            "job": "backup-prepare"
+        }
+    }
+  ]
+

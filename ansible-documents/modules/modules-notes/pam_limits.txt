@@ -1,0 +1,96 @@
+> PAM_LIMITS    (/usr/lib/python2.7/dist-packages/ansible/modules/system/pam_limits.py)
+
+        The `pam_limits' module modifies PAM limits. The default file is `/etc/security/limits.conf'. For the full documentation, see
+        `man 5 limits.conf'.
+
+  * This module is maintained by The Ansible Community
+OPTIONS (= is mandatory):
+
+- backup
+        Create a backup file including the timestamp information so you can get the original file back if you somehow clobbered it
+        incorrectly.
+        [Default: no]
+        type: bool
+
+- comment
+        Comment associated with the limit.
+        [Default: ]
+
+- dest
+        Modify the limits.conf path.
+        [Default: /etc/security/limits.conf]
+
+= domain
+        A username, @groupname, wildcard, uid/gid range.
+
+
+= limit_item
+        The limit to be set
+        (Choices: core, data, fsize, memlock, nofile, rss, stack, cpu, nproc, as, maxlogins, maxsyslogins, priority, locks, sigpending,
+        msgqueue, nice, rtprio, chroot)
+
+= limit_type
+        Limit type, see `man 5 limits.conf' for an explanation
+        (Choices: hard, soft, -)
+
+- use_max
+        If set to `yes', the maximal value will be used or conserved. If the specified value is superior to the value in the file, file
+        content is replaced with the new value, else content is not modified.
+        [Default: no]
+        type: bool
+
+- use_min
+        If set to `yes', the minimal value will be used or conserved. If the specified value is inferior to the value in the file, file
+        content is replaced with the new value, else content is not modified.
+        [Default: no]
+        type: bool
+
+= value
+        The value of the limit.
+
+
+
+NOTES:
+      * If `dest' file doesn't exist, it is created.
+
+
+AUTHOR: Sebastien Rohaut (@usawa)
+        METADATA:
+          status:
+          - preview
+          supported_by: community
+        
+
+EXAMPLES:
+
+- name: Add or modify nofile soft limit for the user joe
+  pam_limits:
+    domain: joe
+    limit_type: soft
+    limit_item: nofile
+    value: 64000
+
+- name: Add or modify fsize hard limit for the user smith. Keep or set the maximal value.
+  pam_limits:
+    domain: smith
+    limit_type: hard
+    limit_item: fsize
+    value: 1000000
+    use_max: yes
+
+- name: Add or modify memlock, both soft and hard, limit for the user james with a comment.
+  pam_limits:
+    domain: james
+    limit_type: '-'
+    limit_item: memlock
+    value: unlimited
+    comment: unlimited memory lock for james
+
+- name: Add or modify hard nofile limits for wildcard domain
+  pam_limits:
+    domain: '*'
+    limit_type: hard
+    limit_item: nofile
+    value: 39693561
+
+

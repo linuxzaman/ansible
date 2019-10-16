@@ -1,0 +1,112 @@
+> VCA_NAT    (/usr/lib/python2.7/dist-packages/ansible/modules/cloud/vmware/vca_nat.py)
+
+        Adds or removes nat rules from a gateway in a vca environment
+
+  * This module is maintained by The Ansible Community
+OPTIONS (= is mandatory):
+
+- api_version
+        The API version to be used with the vca.
+        [Default: 5.7]
+        type: str
+
+- gateway_name
+        The name of the gateway of the vdc where the rule should be added.
+        [Default: gateway]
+        type: str
+
+- host
+        The authentication host to be used when service type is vcd.
+        [Default: (null)]
+        type: str
+
+- instance_id
+        The instance ID in a vchs environment to be used for creating the vapp.
+        [Default: (null)]
+        type: str
+
+= nat_rules
+        A list of rules to be added to the gateway, Please see examples on valid entries
+        [Default: False]
+
+- org
+        The org to login to for creating vapp.
+        This option is required when the `service_type' is `vdc'.
+        [Default: (null)]
+        type: str
+
+- password
+        The vca password, if not set the environment variable `VCA_PASS' is checked for the password.
+        (Aliases: pass, passwd)[Default: (null)]
+        type: str
+
+- purge_rules
+        If set to true, it will delete all rules in the gateway that are not given as parameter to this module.
+        [Default: False]
+        type: bool
+
+- service_type
+        The type of service we are authenticating against.
+        (Choices: vca, vcd, vchs)[Default: vca]
+        type: str
+
+- state
+        Whether the object should be added or removed.
+        (Choices: absent, present)[Default: present]
+        type: str
+
+- username
+        The vca username or email address, if not set the environment variable `VCA_USER' is checked for the username.
+        (Aliases: user)[Default: (null)]
+        type: str
+
+- validate_certs
+        If the certificates of the authentication is to be verified.
+        (Aliases: verify_certs)[Default: True]
+        type: bool
+
+- vdc_name
+        The name of the vdc where the gateway is located.
+        [Default: (null)]
+        type: str
+
+
+AUTHOR: Peter Sprygada (@privateip)
+        METADATA:
+          status:
+          - preview
+          supported_by: community
+        
+
+EXAMPLES:
+
+#An example for a source nat
+
+- hosts: localhost
+  connection: local
+  tasks:
+   - vca_nat:
+       instance_id: 'b15ff1e5-1024-4f55-889f-ea0209726282'
+       vdc_name: 'benz_ansible'
+       state: 'present'
+       nat_rules:
+         - rule_type: SNAT
+           original_ip: 192.0.2.42
+           translated_ip: 203.0.113.23
+
+#example for a DNAT
+- hosts: localhost
+  connection: local
+  tasks:
+   - vca_nat:
+       instance_id: 'b15ff1e5-1024-4f55-889f-ea0209726282'
+       vdc_name: 'benz_ansible'
+       state: 'present'
+       nat_rules:
+         - rule_type: DNAT
+           original_ip: 203.0.113.23
+           original_port: 22
+           translated_ip: 192.0.2.42
+           translated_port: 22
+
+

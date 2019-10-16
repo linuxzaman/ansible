@@ -1,0 +1,37 @@
+EXAMPLES:
+
+- name: Create CIFS share
+      na_ontap_cifs:
+        state: present
+        share_name: cifsShareName
+        path: /
+        vserver: vserverName
+        share_properties: browsable,oplocks
+        symlink_properties: read_only,enable
+        hostname: "{{ netapp_hostname }}"
+        username: "{{ netapp_username }}"
+        password: "{{ netapp_password }}"
+    - name: Delete CIFS share
+      na_ontap_cifs:
+        state: absent
+        share_name: cifsShareName
+        vserver: vserverName
+        hostname: "{{ netapp_hostname }}"
+        username: "{{ netapp_username }}"
+        password: "{{ netapp_password }}"
+    - name: Modify path CIFS share
+      na_ontap_cifs:
+        state: present
+        share_name: pb_test
+        vserver: vserverName
+        path: /
+        share_properties: show_previous_versions
+        symlink_properties: disable
+        hostname: "{{ netapp_hostname }}"
+        username: "{{ netapp_username }}"
+        password: "{{ netapp_password }}"
+
+
+RETURN VALUES:
+
+

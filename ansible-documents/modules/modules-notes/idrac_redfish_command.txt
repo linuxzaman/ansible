@@ -1,0 +1,61 @@
+> IDRAC_REDFISH_COMMAND    (/usr/lib/python2.7/dist-packages/ansible/modules/remote_management/redfish/idrac_redfish_command.py)
+
+        Builds Redfish URIs locally and sends them to remote OOB controllers to perform an action. For use with Dell iDRAC operations
+        that require Redfish OEM extensions
+
+  * This module is maintained by The Ansible Community
+OPTIONS (= is mandatory):
+
+= baseuri
+        Base URI of OOB controller
+
+
+= category
+        Category to execute on OOB controller
+
+
+= command
+        List of commands to execute on OOB controller
+
+
+= password
+        Password for authentication with OOB controller
+
+
+- timeout
+        Timeout in seconds for URL requests to OOB controller
+        [Default: 10]
+        type: int
+        version_added: 2.8
+
+= username
+        User for authentication with OOB controller
+
+
+
+AUTHOR: Jose Delarosa (@jose-delarosa)
+        METADATA:
+          status:
+          - preview
+          supported_by: community
+        
+
+EXAMPLES:
+
+- name: Create BIOS configuration job (schedule BIOS setting update)
+    idrac_redfish_command:
+      category: Systems
+      command: CreateBiosConfigJob
+      baseuri: "{{ baseuri }}"
+      username: "{{ username }}"
+      password: "{{ password }}"
+
+
+RETURN VALUES:
+
+msg:
+    description: Message with action result or error description
+    returned: always
+    type: str
+    sample: "Action was successful"
+

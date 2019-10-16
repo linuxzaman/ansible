@@ -1,0 +1,112 @@
+> UCS_NTP_SERVER    (/usr/lib/python2.7/dist-packages/ansible/modules/remote_management/ucs/ucs_ntp_server.py)
+
+        Configures NTP server on Cisco UCS Manager. Examples can be used with the L(UCS Platform
+        Emulator,https://communities.cisco.com/ucspe).
+
+  * This module is maintained by an Ansible Partner
+OPTIONS (= is mandatory):
+
+- description
+        A user-defined description of the NTP server.
+        Enter up to 256 characters.
+        You can use any characters or spaces except the following:
+        ` (accent mark),  (backslash), ^ (carat), " (double quote), = (equal sign), > (greater than), < (less than), or ' (single quote).
+        (Aliases: descr)[Default: ]
+
+= hostname
+        IP address or hostname of Cisco UCS Manager.
+
+        type: str
+
+- ntp_server
+        NTP server IP address or hostname.
+        Enter up to 63 characters that form a valid hostname.
+        Enter a valid IPV4 Address.
+        (Aliases: name)[Default: ]
+
+= password
+        Password for Cisco UCS Manager authentication.
+
+        type: str
+
+- port
+        Port number to be used during connection (by default uses 443 for https and 80 for http connection).
+        [Default: (null)]
+        type: int
+
+- proxy
+        If use_proxy is no, specfies proxy to be used for connection. e.g. 'http://proxy.xy.z:8080'
+        [Default: (null)]
+        type: str
+
+- state
+        If `absent', will remove an NTP server.
+        If `present', will add or update an NTP server.
+        (Choices: absent, present)[Default: present]
+
+- use_proxy
+        If `no', will not use the proxy as defined by system environment variable.
+        [Default: True]
+        type: bool
+
+- use_ssl
+        If `no', an HTTP connection will be used instead of the default HTTPS connection.
+        [Default: True]
+        type: bool
+
+- username
+        Username for Cisco UCS Manager authentication.
+        [Default: admin]
+        type: str
+
+
+REQUIREMENTS:  ucsmsdk
+
+AUTHOR: John McDonough (@movinalot), CiscoUcs (@CiscoUcs)
+        METADATA:
+          status:
+          - preview
+          supported_by: certified
+        
+
+EXAMPLES:
+
+- name: Configure NTP server
+  ucs_ntp_server:
+    hostname: 172.16.143.150
+    username: admin
+    password: password
+    ntp_server: 10.10.10.10
+    description: Internal NTP Server by IP address
+    state: present
+
+- name: Configure NTP server
+  ucs_ntp_server:
+    hostname: 172.16.143.150
+    username: admin
+    password: password
+    ntp_server: pool.ntp.org
+    description: External NTP Server by hostname
+    state: present
+
+- name: Remove NTP server
+  ucs_ntp_server:
+    hostname: 172.16.143.150
+    username: admin
+    password: password
+    ntp_server: 10.10.10.10
+    state: absent
+
+- name: Remove NTP server
+  ucs_ntp_server:
+    hostname: 172.16.143.150
+    username: admin
+    password: password
+    ntp_server: pool.ntp.org
+    state: absent
+
+
+RETURN VALUES:
+
+#
+

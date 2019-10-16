@@ -1,0 +1,177 @@
+> AWS_GLUE_CONNECTION    (/usr/lib/python2.7/dist-packages/ansible/modules/cloud/amazon/aws_glue_connection.py)
+
+        Manage an AWS Glue connection. See https://aws.amazon.com/glue/ for details.
+
+  * This module is maintained by The Ansible Community
+OPTIONS (= is mandatory):
+
+- aws_access_key
+        AWS access key. If not set then the value of the AWS_ACCESS_KEY_ID, AWS_ACCESS_KEY or EC2_ACCESS_KEY environment variable is
+        used.
+        (Aliases: ec2_access_key, access_key)[Default: (null)]
+        type: str
+
+- aws_secret_key
+        AWS secret key. If not set then the value of the AWS_SECRET_ACCESS_KEY, AWS_SECRET_KEY, or EC2_SECRET_KEY environment variable is
+        used.
+        (Aliases: ec2_secret_key, secret_key)[Default: (null)]
+        type: str
+
+- catalog_id
+        The ID of the Data Catalog in which to create the connection. If none is supplied, the AWS account ID is used by default.
+        [Default: (null)]
+
+= connection_properties
+        A dict of key-value pairs used as parameters for this connection.
+
+
+- connection_type
+        The type of the connection. Currently, only JDBC is supported; SFTP is not supported.
+        (Choices: JDBC, SFTP)[Default: JDBC]
+
+- debug_botocore_endpoint_logs
+        Use a botocore.endpoint logger to parse the unique (rather than total) "resource:action" API calls made during a task, outputing
+        the set to the resource_actions key in the task results. Use the aws_resource_action callback to output to total list made during
+        a playbook. The ANSIBLE_DEBUG_BOTOCORE_LOGS environment variable may also be used.
+        [Default: no]
+        type: bool
+        version_added: 2.8
+
+- description
+        The description of the connection.
+        [Default: (null)]
+
+- ec2_url
+        Url to use to connect to EC2 or your Eucalyptus cloud (by default the module will use EC2 endpoints). Ignored for modules where
+        region is required. Must be specified for all other modules if region is not used. If not set then the value of the EC2_URL
+        environment variable, if any, is used.
+        [Default: (null)]
+        type: str
+
+- match_criteria
+        A list of UTF-8 strings that specify the criteria that you can use in selecting this connection.
+        [Default: (null)]
+
+= name
+        The name of the connection.
+
+
+- profile
+        Uses a boto profile. Only works with boto >= 2.24.0.
+        [Default: (null)]
+        type: str
+        version_added: 1.6
+
+- region
+        The AWS region to use. If not specified then the value of the AWS_REGION or EC2_REGION environment variable, if any, is used. See
+        http://docs.aws.amazon.com/general/latest/gr/rande.html#ec2_region
+        (Aliases: aws_region, ec2_region)[Default: (null)]
+        type: str
+
+- security_groups
+        A list of security groups to be used by the connection. Use either security group name or ID.
+        [Default: (null)]
+
+- security_token
+        AWS STS security token. If not set then the value of the AWS_SECURITY_TOKEN or EC2_SECURITY_TOKEN environment variable is used.
+        (Aliases: access_token)[Default: (null)]
+        type: str
+        version_added: 1.6
+
+= state
+        Create or delete the AWS Glue connection.
+        (Choices: present, absent)
+
+- subnet_id
+        The subnet ID used by the connection.
+        [Default: (null)]
+
+- validate_certs
+        When set to "no", SSL certificates will not be validated for boto versions >= 2.6.0.
+        [Default: True]
+        type: bool
+        version_added: 1.5
+
+
+NOTES:
+      * If parameters are not set within the module, the following environment variables can be used in decreasing order of
+        precedence `AWS_URL' or `EC2_URL', `AWS_ACCESS_KEY_ID' or `AWS_ACCESS_KEY' or `EC2_ACCESS_KEY', `AWS_SECRET_ACCESS_KEY' or
+        `AWS_SECRET_KEY' or `EC2_SECRET_KEY', `AWS_SECURITY_TOKEN' or `EC2_SECURITY_TOKEN', `AWS_REGION' or `EC2_REGION'
+      * Ansible uses the boto configuration file (typically ~/.boto) if no credentials are provided. See
+        https://boto.readthedocs.io/en/latest/boto_config_tut.html
+      * `AWS_REGION' or `EC2_REGION' can be typically be used to specify the AWS region, when required, but this can also be
+        configured in the boto config file
+
+
+REQUIREMENTS:  boto, boto3, python >= 2.6
+
+AUTHOR: Rob White (@wimnat)
+        METADATA:
+          status:
+          - preview
+          supported_by: community
+        
+
+EXAMPLES:
+
+# Note: These examples do not set authentication details, see the AWS Guide for details.
+
+# Create an AWS Glue connection
+- aws_glue_connection:
+    name: my-glue-connection
+    connection_properties:
+      JDBC_CONNECTION_URL: jdbc:mysql://mydb:3306/databasename
+      USERNAME: my-username
+      PASSWORD: my-password
+    state: present
+
+# Delete an AWS Glue connection
+- aws_glue_connection:
+    name: my-glue-connection
+    state: absent
+
+
+RETURN VALUES:
+
+connection_properties:
+    description: A dict of key-value pairs used as parameters for this connection.
+    returned: when state is present
+    type: dict
+    sample: {'JDBC_CONNECTION_URL':'jdbc:mysql://mydb:3306/databasename','USERNAME':'x','PASSWORD':'y'}
+connection_type:
+    description: The type of the connection.
+    returned: when state is present
+    type: str
+    sample: JDBC
+creation_time:
+    description: The time this connection definition was created.
+    returned: when state is present
+    type: str
+    sample: "2018-04-21T05:19:58.326000+00:00"
+description:
+    description: Description of the job being defined.
+    returned: when state is present
+    type: str
+    sample: My first Glue job
+last_updated_time:
+    description: The last time this connection definition was updated.
+    returned: when state is present
+    type: str
+    sample: "2018-04-21T05:19:58.326000+00:00"
+match_criteria:
+    description: A list of criteria that can be used in selecting this connection.
+    returned: when state is present
+    type: list
+    sample: []
+name:
+    description: The name of the connection definition.
+    returned: when state is present
+    type: str
+    sample: my-glue-connection
+physical_connection_requirements:
+    description: A dict of physical connection requirements, such as VPC and SecurityGroup,
+                 needed for making this connection successfully.
+    returned: when state is present
+    type: dict
+    sample: {'subnet-id':'subnet-aabbccddee'}
+

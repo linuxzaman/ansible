@@ -1,0 +1,76 @@
+> UDM_DNS_ZONE    (/usr/lib/python2.7/dist-packages/ansible/modules/cloud/univention/udm_dns_zone.py)
+
+        This module allows to manage dns zones on a univention corporate server (UCS). It uses the python API of the UCS to create a new
+        object or edit it.
+
+  * This module is maintained by The Ansible Community
+OPTIONS (= is mandatory):
+
+- contact
+        Contact person in the SOA record.
+        [Default: ]
+
+- expire
+        Specifies the upper limit on the time interval that can elapse before the zone is no longer authoritative.
+        [Default: 604800]
+
+- interfaces
+        List of interface IP addresses, on which the server should response this zone. Required if `state=present'.
+        [Default: (null)]
+
+- mx
+        List of MX servers. (Must declared as A or AAAA records).
+        [Default: []]
+
+- nameserver
+        List of appropriate name servers. Required if `state=present'.
+        [Default: (null)]
+
+- refresh
+        Interval before the zone should be refreshed.
+        [Default: 3600]
+
+- retry
+        Interval that should elapse before a failed refresh should be retried.
+        [Default: 1800]
+
+- state
+        Whether the dns zone is present or not.
+        (Choices: present, absent)[Default: present]
+
+- ttl
+        Minimum TTL field that should be exported with any RR from this zone.
+        [Default: 600]
+
+= type
+        Define if the zone is a forward or reverse DNS zone.
+        (Choices: forward_zone, reverse_zone)
+
+= zone
+        DNS zone name, e.g. `example.com'.
+
+
+
+REQUIREMENTS:  Python >= 2.6
+
+AUTHOR: Tobias Rüetschi (@keachi)
+        METADATA:
+          status:
+          - preview
+          supported_by: community
+        
+
+EXAMPLES:
+
+# Create a DNS zone on a UCS
+- udm_dns_zone:
+    zone: example.com
+    type: forward_zone
+    nameserver:
+      - ucs.example.com
+    interfaces:
+      - 192.0.2.1
+
+
+RETURN VALUES:
+# 

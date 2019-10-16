@@ -1,0 +1,111 @@
+EXAMPLES:
+
+- name: Add the user 'johnd' as an admin
+  bigip_user:
+    username_credential: johnd
+    password_credential: password
+    full_name: John Doe
+    partition_access: all:admin
+    update_password: on_create
+    state: present
+    provider:
+      server: lb.mydomain.com
+      user: admin
+      password: secret
+  delegate_to: localhost
+
+- name: Change the user "johnd's" role and shell
+  bigip_user:
+    username_credential: johnd
+    partition_access: NewPartition:manager
+    shell: tmsh
+    state: present
+    provider:
+      server: lb.mydomain.com
+      user: admin
+      password: secret
+  delegate_to: localhost
+
+- name: Make the user 'johnd' an admin and set to advanced shell
+  bigip_user:
+    name: johnd
+    partition_access: all:admin
+    shell: bash
+    state: present
+    provider:
+      server: lb.mydomain.com
+      user: admin
+      password: secret
+  delegate_to: localhost
+
+- name: Remove the user 'johnd'
+  bigip_user:
+    name: johnd
+    state: absent
+    provider:
+      server: lb.mydomain.com
+      user: admin
+      password: secret
+  delegate_to: localhost
+
+- name: Update password
+  bigip_user:
+    state: present
+    username_credential: johnd
+    password_credential: newsupersecretpassword
+    provider:
+      server: lb.mydomain.com
+      user: admin
+      password: secret
+  delegate_to: localhost
+
+# Note that the second time this task runs, it would fail because
+# The password has been changed. Therefore, it is recommended that
+# you either,
+#
+#   * Put this in its own playbook that you run when you need to
+#   * Put this task in a `block`
+#   * Include `ignore_errors` on this task
+- name: Change the Admin password
+  bigip_user:
+    state: present
+    username_credential: admin
+    password_credential: NewSecretPassword
+    provider:
+      server: lb.mydomain.com
+      user: admin
+      password: secret
+  delegate_to: localhost
+
+- name: Change the root user's password
+  bigip_user:
+    username_credential: root
+    password_credential: secret
+    state: present
+    provider:
+      server: lb.mydomain.com
+      user: admin
+      password: secret
+  delegate_to: localhost
+
+
+RETURN VALUES:
+
+full_name:
+  description: Full name of the user
+  returned: changed and success
+  type: str
+  sample: John Doe
+partition_access:
+  description:
+    - List of strings containing the user's roles and which partitions they
+      are applied to. They are specified in the form "partition:role".
+  returned: changed and success
+  type: list
+  sample: ['all:admin']
+shell:
+  description: The shell assigned to the user account
+  returned: changed and success
+  type: str
+  sample: tmsh
+

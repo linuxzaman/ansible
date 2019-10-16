@@ -1,0 +1,205 @@
+> DATA_PIPELINE    (/usr/lib/python2.7/dist-packages/ansible/modules/cloud/amazon/data_pipeline.py)
+
+        Create and manage AWS Datapipelines. Creation is not idempotent in AWS, so the `uniqueId' is created by hashing the options
+        (minus objects) given to the datapipeline. The pipeline definition must be in the format given here https://docs.aws.amazon.com/d
+        atapipeline/latest/APIReference/API_PutPipelineDefinition.html#API_PutPipelineDefinition_RequestSyntax. Also operations will wait
+        for a configurable amount of time to ensure the pipeline is in the requested state.
+
+  * This module is maintained by The Ansible Community
+OPTIONS (= is mandatory):
+
+- aws_access_key
+        AWS access key. If not set then the value of the AWS_ACCESS_KEY_ID, AWS_ACCESS_KEY or EC2_ACCESS_KEY environment variable is
+        used.
+        (Aliases: ec2_access_key, access_key)[Default: (null)]
+        type: str
+
+- aws_secret_key
+        AWS secret key. If not set then the value of the AWS_SECRET_ACCESS_KEY, AWS_SECRET_KEY, or EC2_SECRET_KEY environment variable is
+        used.
+        (Aliases: ec2_secret_key, secret_key)[Default: (null)]
+        type: str
+
+- debug_botocore_endpoint_logs
+        Use a botocore.endpoint logger to parse the unique (rather than total) "resource:action" API calls made during a task, outputing
+        the set to the resource_actions key in the task results. Use the aws_resource_action callback to output to total list made during
+        a playbook. The ANSIBLE_DEBUG_BOTOCORE_LOGS environment variable may also be used.
+        [Default: no]
+        type: bool
+        version_added: 2.8
+
+- description
+        An optional description for the pipeline being created.
+        [Default: ]
+
+- ec2_url
+        Url to use to connect to EC2 or your Eucalyptus cloud (by default the module will use EC2 endpoints). Ignored for modules where
+        region is required. Must be specified for all other modules if region is not used. If not set then the value of the EC2_URL
+        environment variable, if any, is used.
+        [Default: (null)]
+        type: str
+
+= name
+        The name of the Datapipeline to create/modify/delete.
+
+
+- objects
+        A list of pipeline object definitions, each of which is a dict that takes the keys `id', `name' and `fields'.
+        [Default: (null)]
+        suboptions:
+          fields:
+            description:
+            - A list of dicts that take the keys `key' and `stringValue'/`refValue'. The
+              value is specified as a reference to another object `refValue' or as a string
+              value `stringValue' but not as both.
+          id:
+            description:
+            - The ID of the object.
+          name:
+            description:
+            - The name of the object.
+        
+
+- parameters
+        A list of parameter objects (dicts) in the pipeline definition.
+        [Default: (null)]
+        suboptions:
+          attributes:
+            description:
+            - A list of attributes (dicts) of the parameter object. Each attribute takes the
+              keys `key' and `stringValue' both of which are strings.
+          id:
+            description:
+            - The ID of the parameter object.
+        
+
+- profile
+        Uses a boto profile. Only works with boto >= 2.24.0.
+        [Default: (null)]
+        type: str
+        version_added: 1.6
+
+- region
+        The AWS region to use. If not specified then the value of the AWS_REGION or EC2_REGION environment variable, if any, is used. See
+        http://docs.aws.amazon.com/general/latest/gr/rande.html#ec2_region
+        (Aliases: aws_region, ec2_region)[Default: (null)]
+        type: str
+
+- security_token
+        AWS STS security token. If not set then the value of the AWS_SECURITY_TOKEN or EC2_SECURITY_TOKEN environment variable is used.
+        (Aliases: access_token)[Default: (null)]
+        type: str
+        version_added: 1.6
+
+- state
+        The requested state of the pipeline.
+        (Choices: present, absent, active, inactive)[Default: present]
+
+- tags
+        A dict of key:value pair(s) to add to the pipeline.
+        [Default: (null)]
+
+- timeout
+        Time in seconds to wait for the pipeline to transition to the requested state, fail otherwise.
+        [Default: 300]
+
+- validate_certs
+        When set to "no", SSL certificates will not be validated for boto versions >= 2.6.0.
+        [Default: True]
+        type: bool
+        version_added: 1.5
+
+- values
+        A list of parameter values (dicts) in the pipeline definition. Each dict takes the keys `id' and `stringValue' both of which are
+        strings.
+        [Default: (null)]
+
+
+NOTES:
+      * If parameters are not set within the module, the following environment variables can be used in decreasing order of
+        precedence `AWS_URL' or `EC2_URL', `AWS_ACCESS_KEY_ID' or `AWS_ACCESS_KEY' or `EC2_ACCESS_KEY', `AWS_SECRET_ACCESS_KEY' or
+        `AWS_SECRET_KEY' or `EC2_SECRET_KEY', `AWS_SECURITY_TOKEN' or `EC2_SECURITY_TOKEN', `AWS_REGION' or `EC2_REGION'
+      * Ansible uses the boto configuration file (typically ~/.boto) if no credentials are provided. See
+        https://boto.readthedocs.io/en/latest/boto_config_tut.html
+      * `AWS_REGION' or `EC2_REGION' can be typically be used to specify the AWS region, when required, but this can also be
+        configured in the boto config file
+
+
+REQUIREMENTS:  boto, boto3, python >= 2.6
+
+AUTHOR: Raghu Udiyar (@raags) <raghusiddarth@gmail.com>, Sloane Hertel (@s-hertel) <shertel@redhat.com>
+        METADATA:
+          status:
+          - preview
+          supported_by: community
+        
+
+EXAMPLES:
+
+# Note: These examples do not set authentication details, see the AWS Guide for details.
+
+# Create pipeline
+- data_pipeline:
+    name: test-dp
+    region: us-west-2
+    objects: "{{pipelineObjects}}"
+    parameters: "{{pipelineParameters}}"
+    values: "{{pipelineValues}}"
+    tags:
+      key1: val1
+      key2: val2
+    state: present
+
+# Example populating and activating a pipeline that demonstrates two ways of providing pipeline objects
+- data_pipeline:
+  name: test-dp
+  objects:
+    - "id": "DefaultSchedule"
+      "name": "Every 1 day"
+      "fields":
+        - "key": "period"
+          "stringValue": "1 days"
+        - "key": "type"
+          "stringValue": "Schedule"
+        - "key": "startAt"
+          "stringValue": "FIRST_ACTIVATION_DATE_TIME"
+    - "id": "Default"
+      "name": "Default"
+      "fields": [ { "key": "resourceRole", "stringValue": "my_resource_role" },
+                  { "key": "role", "stringValue": "DataPipelineDefaultRole" },
+                  { "key": "pipelineLogUri", "stringValue": "s3://my_s3_log.txt" },
+                  { "key": "scheduleType", "stringValue": "cron" },
+                  { "key": "schedule", "refValue": "DefaultSchedule" },
+                  { "key": "failureAndRerunMode", "stringValue": "CASCADE" } ]
+  state: active
+
+# Activate pipeline
+- data_pipeline:
+    name: test-dp
+    region: us-west-2
+    state: active
+
+# Delete pipeline
+- data_pipeline:
+    name: test-dp
+    region: us-west-2
+    state: absent
+
+
+RETURN VALUES:
+
+changed:
+  description: whether the data pipeline has been modified
+  type: bool
+  returned: always
+  sample:
+    changed: true
+result:
+  description:
+    - Contains the data pipeline data (data_pipeline) and a return message (msg).
+      If the data pipeline exists data_pipeline will contain the keys description, name,
+      pipeline_id, state, tags, and unique_id. If the data pipeline does not exist then
+      data_pipeline will be an empty dict. The msg describes the status of the operation.
+  returned: always
+  type: dict
+

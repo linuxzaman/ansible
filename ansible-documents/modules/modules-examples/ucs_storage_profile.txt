@@ -1,0 +1,39 @@
+EXAMPLES:
+
+- name: Configure Storage Profile
+  ucs_storage_profile:
+    hostname: 172.16.143.150
+    username: admin
+    password: password
+    name: DEE-StgProf
+    local_luns:
+    - name: Boot-LUN
+      size: '60'
+      disk_policy_name: DEE-DG
+    - name: Data-LUN
+      size: '200'
+      disk_policy_name: DEE-DG
+
+- name: Remove Storage Profile
+  ucs_storage_profile:
+    hostname: 172.16.143.150
+    username: admin
+    password: password
+    name: DEE-StgProf
+    state: absent
+
+- name: Remove Local LUN from Storage Profile
+  ucs_storage_profile:
+    hostname: 172.16.143.150
+    username: admin
+    password: password
+    name: DEE-StgProf
+    local_luns:
+    - name: Data-LUN
+      state: absent
+
+
+RETURN VALUES:
+
+#
+

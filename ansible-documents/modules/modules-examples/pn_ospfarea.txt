@@ -1,0 +1,38 @@
+EXAMPLES:
+
+- name: "Add OSPF area to vrouter"
+  pn_ospfarea:
+    state: present
+    pn_cliusername: admin
+    pn_clipassword: admin
+    pn_ospf_area: 1.0.0.0
+    pn_stub_type: stub
+
+- name: "Remove OSPF from vrouter"
+  pn_ospf:
+    state: absent
+    pn_cliusername: admin
+    pn_clipassword: admin
+    pn_vrouter_name: name-string
+    pn_ospf_area: 1.0.0.0
+
+
+RETURN VALUES:
+
+command:
+  description: The CLI command run on the target node(s).
+  returned: always
+  type: str
+stdout:
+  description: The set of responses from the ospf command.
+  returned: always
+  type: list
+stderr:
+  description: The set of error responses from the ospf command.
+  returned: on error
+  type: list
+changed:
+  description: Indicates whether the CLI caused changes on the target.
+  returned: always
+  type: bool
+

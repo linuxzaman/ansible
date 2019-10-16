@@ -1,0 +1,184 @@
+> NETBOX_SITE    (/usr/lib/python2.7/dist-packages/ansible/modules/net_tools/netbox/netbox_site.py)
+
+        Creates or removes sites from Netbox
+
+  * This module is maintained by The Ansible Community
+OPTIONS (= is mandatory):
+
+= data
+        Defines the site configuration
+
+        suboptions:
+          asn:
+            description:
+            - The ASN associated with the site
+            type: int
+          comments:
+            description:
+            - Comments for the site. This can be markdown syntax
+            type: str
+          contact_email:
+            description:
+            - Contact email for site
+            type: str
+          contact_name:
+            description:
+            - Name of contact for site
+            type: str
+          contact_phone:
+            description:
+            - Contact phone number for site
+            type: str
+          custom_fields:
+            description:
+            - must exist in Netbox
+            type: dict
+          description:
+            description:
+            - The description of the prefix
+            type: str
+          facility:
+            description:
+            - Data center provider or facility, ex. Equinix NY7
+            type: str
+          latitude:
+            description:
+            - Latitude in decimal format
+            type: int
+          longitude:
+            description:
+            - Longitude in decimal format
+            type: int
+          name:
+            description:
+            - Name of the site to be created
+            required: true
+            type: str
+          physical_address:
+            description:
+            - Physical address of site
+            type: str
+          region:
+            description:
+            - The region that the site should be associated with
+            type: str
+          shipping_address:
+            description:
+            - Shipping address of site
+            type: str
+          status:
+            choices:
+            - Active
+            - Planned
+            - Retired
+            description:
+            - Status of the site
+            type: str
+          tags:
+            description:
+            - Any tags that the prefix may need to be associated with
+            type: list
+          tenant:
+            description:
+            - The tenant the site will be assigned to
+            type: str
+          time_zone:
+            description:
+            - Timezone associated with the site, ex. America/Denver
+            type: str
+        
+
+= netbox_token
+        The token created within Netbox to authorize API access
+
+        type: str
+
+= netbox_url
+        URL of the Netbox instance resolvable by Ansible control host
+
+        type: str
+
+- state
+        Use `present' or `absent' for adding or removing.
+        (Choices: absent, present)[Default: present]
+        type: str
+
+- validate_certs
+        If `no', SSL certificates will not be validated. This should only be used on personally controlled sites using self-signed
+        certificates.
+        [Default: yes]
+        type: bool
+
+
+NOTES:
+      * Tags should be defined as a YAML list
+      * This should be ran with connection `local' and hosts `localhost'
+
+
+REQUIREMENTS:  pynetbox
+
+AUTHOR: Mikhail Yohman (@FragmentedPacket)
+        METADATA:
+          status:
+          - preview
+          supported_by: community
+        
+
+EXAMPLES:
+
+- name: "Test Netbox site module"
+  connection: local
+  hosts: localhost
+  gather_facts: False
+  tasks:
+    - name: Create site within Netbox with only required information
+      netbox_site:
+        netbox_url: http://netbox.local
+        netbox_token: thisIsMyToken
+        data:
+          name: Test - Colorado
+        state: present
+
+    - name: Delete site within netbox
+      netbox_site:
+        netbox_url: http://netbox.local
+        netbox_token: thisIsMyToken
+        data:
+          name: Test - Colorado
+        state: absent
+
+    - name: Create site with all parameters
+      netbox_site:
+        netbox_url: http://netbox.local
+        netbox_token: thisIsMyToken
+        data:
+          name: Test - California
+          status: Planned
+          region: Test Region
+          tenant: Test Tenant
+          facility: EquinoxCA7
+          asn: 65001
+          time_zone: America/Los Angeles
+          description: This is a test description
+          physical_address: Hollywood, CA, 90210
+          shipping_address: Hollywood, CA, 90210
+          latitude: 10.100000
+          longitude: 12.200000
+          contact_name: Jenny
+          contact_phone: 867-5309
+          contact_email: jenny@changednumber.com
+          comments: ### Placeholder
+        state: present
+
+
+RETURN VALUES:
+
+site:
+  description: Serialized object as created or already existent within Netbox
+  returned: on creation
+  type: dict
+msg:
+  description: Message indicating failure or info about what has been achieved
+  returned: always
+  type: str
+

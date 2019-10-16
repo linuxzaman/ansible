@@ -1,0 +1,158 @@
+> FMGR_SECPROF_PROXY    (/usr/lib/python2.7/dist-packages/ansible/modules/network/fortimanager/fmgr_secprof_proxy.py)
+
+        Manage proxy security profiles for FortiGates via FortiManager using the FMG API with playbooks
+
+  * This module is maintained by The Ansible Community
+OPTIONS (= is mandatory):
+
+- adom
+        The ADOM the configuration should belong to.
+        [Default: root]
+
+- header_client_ip
+        Actions to take on the HTTP client-IP header in forwarded requests| forwards (pass), adds, or removes the HTTP
+        header.
+        choice | pass | Forward the same HTTP header.
+        choice | add | Add the HTTP header.
+        choice | remove | Remove the HTTP header.
+        (Choices: pass, add, remove)[Default: (null)]
+
+- header_front_end_https
+        Action to take on the HTTP front-end-HTTPS header in forwarded requests| forwards (pass), adds, or removes the
+        HTTP header.
+        choice | pass | Forward the same HTTP header.
+        choice | add | Add the HTTP header.
+        choice | remove | Remove the HTTP header.
+        (Choices: pass, add, remove)[Default: (null)]
+
+- header_via_request
+        Action to take on the HTTP via header in forwarded requests| forwards (pass), adds, or removes the HTTP header
+        .
+        choice | pass | Forward the same HTTP header.
+        choice | add | Add the HTTP header.
+        choice | remove | Remove the HTTP header.
+        (Choices: pass, add, remove)[Default: (null)]
+
+- header_via_response
+        Action to take on the HTTP via header in forwarded responses| forwards (pass), adds, or removes the HTTP heade
+        r.
+        choice | pass | Forward the same HTTP header.
+        choice | add | Add the HTTP header.
+        choice | remove | Remove the HTTP header.
+        (Choices: pass, add, remove)[Default: (null)]
+
+- header_x_authenticated_groups
+        Action to take on the HTTP x-authenticated-groups header in forwarded requests| forwards (pass), adds, or remo
+        ves the HTTP header.
+        choice | pass | Forward the same HTTP header.
+        choice | add | Add the HTTP header.
+        choice | remove | Remove the HTTP header.
+        (Choices: pass, add, remove)[Default: (null)]
+
+- header_x_authenticated_user
+        Action to take on the HTTP x-authenticated-user header in forwarded requests| forwards (pass), adds, or remove
+        s the HTTP header.
+        choice | pass | Forward the same HTTP header.
+        choice | add | Add the HTTP header.
+        choice | remove | Remove the HTTP header.
+        (Choices: pass, add, remove)[Default: (null)]
+
+- header_x_forwarded_for
+        Action to take on the HTTP x-forwarded-for header in forwarded requests| forwards (pass), adds, or removes the
+        HTTP header.
+        choice | pass | Forward the same HTTP header.
+        choice | add | Add the HTTP header.
+        choice | remove | Remove the HTTP header.
+        (Choices: pass, add, remove)[Default: (null)]
+
+- headers
+        EXPERTS ONLY! KNOWLEDGE OF FMGR JSON API IS REQUIRED!
+        List of multiple child objects to be added. Expects a list of dictionaries.
+        Dictionaries must use FortiManager API parameters, not the ansible ones listed below.
+        If submitted, all other prefixed sub-parameters ARE IGNORED.
+        This object is MUTUALLY EXCLUSIVE with its options.
+        We expect that you know what you are doing with these list parameters, and are leveraging the JSON API Guide.
+        WHEN IN DOUBT, USE THE SUB OPTIONS BELOW INSTEAD TO CREATE OBJECTS WITH MULTIPLE TASKS
+        [Default: (null)]
+
+- headers_action
+        Action when HTTP the header forwarded.
+        choice | add-to-request | Add the HTTP header to request.
+        choice | add-to-response | Add the HTTP header to response.
+        choice | remove-from-request | Remove the HTTP header from request.
+        choice | remove-from-response | Remove the HTTP header from response.
+        (Choices: add-to-request, add-to-response, remove-from-request, remove-from-response)[Default: (null)]
+
+- headers_content
+        HTTP header's content.
+        [Default: (null)]
+
+- headers_name
+        HTTP forwarded header name.
+        [Default: (null)]
+
+- log_header_change
+        Enable/disable logging HTTP header changes.
+        choice | disable | Disable Enable/disable logging HTTP header changes.
+        choice | enable | Enable Enable/disable logging HTTP header changes.
+        (Choices: disable, enable)[Default: (null)]
+
+- mode
+        Sets one of three modes for managing the object.
+        Allows use of soft-adds instead of overwriting existing values
+        (Choices: add, set, delete, update)[Default: add]
+
+- name
+        Profile name.
+        [Default: (null)]
+
+- strip_encoding
+        Enable/disable stripping unsupported encoding from the request header.
+        choice | disable | Disable stripping of unsupported encoding from the request header.
+        choice | enable | Enable stripping of unsupported encoding from the request header.
+        (Choices: disable, enable)[Default: (null)]
+
+
+NOTES:
+      * Full Documentation at https://ftnt-ansible-docs.readthedocs.io/en/latest/.
+
+
+AUTHOR: Luke Weighall (@lweighall), Andrew Welsh (@Ghilli3), Jim Huber (@p4r4n0y1ng)
+        METADATA:
+          status:
+          - preview
+          supported_by: community
+        
+
+EXAMPLES:
+
+- name: DELETE Profile
+    fmgr_secprof_proxy:
+      name: "Ansible_Web_Proxy_Profile"
+      mode: "delete"
+
+  - name: CREATE Profile
+    fmgr_secprof_proxy:
+      name: "Ansible_Web_Proxy_Profile"
+      mode: "set"
+      header_client_ip: "pass"
+      header_front_end_https: "add"
+      header_via_request: "remove"
+      header_via_response: "pass"
+      header_x_authenticated_groups: "add"
+      header_x_authenticated_user: "remove"
+      strip_encoding: "enable"
+      log_header_change: "enable"
+      header_x_forwarded_for: "pass"
+      headers_action: "add-to-request"
+      headers_content: "test"
+      headers_name: "test_header"
+
+
+RETURN VALUES:
+
+api_result:
+  description: full API response, includes status code and message
+  returned: always
+  type: str
+

@@ -1,0 +1,112 @@
+> GCP_FORWARDING_RULE    (/usr/lib/python2.7/dist-packages/ansible/modules/cloud/google/_gcp_forwarding_rule.py)
+
+        Create, Update or Destroy a Forwarding_Rule. See https://cloud.google.com/compute/docs/load-balancing/http/target-proxies for an
+        overview. More details on the Global Forwarding_Rule API can be found at
+        https://cloud.google.com/compute/docs/reference/latest/globalForwardingRules More details on the Forwarding Rules API can be
+        found at https://cloud.google.com/compute/docs/reference/latest/forwardingRules
+
+DEPRECATED: 
+
+	Reason: Updated modules released with increased functionality
+	Will be removed in: Ansible 2.12
+	Alternatives: Use M(gcp_compute_forwarding_rule) or M(gcp_compute_global_forwarding_rule) instead.
+
+
+  * This module is maintained by The Ansible Community
+OPTIONS (= is mandatory):
+
+- address
+        IPv4 or named IP address. Must be of the same scope (regional, global). Reserved addresses can (and probably should) be used for
+        global forwarding rules. You may reserve IPs from the console or via the gce_eip module.
+        [Default: (null)]
+
+= forwarding_rule_name
+        Name of the Forwarding_Rule.
+
+
+- port_range
+        For global forwarding rules, must be set to 80 or 8080 for TargetHttpProxy, and 443 for TargetHttpsProxy or TargetSslProxy.
+        [Default: (null)]
+
+- protocol
+        For global forwarding rules, TCP, UDP, ESP, AH, SCTP or ICMP. Default is TCP.
+        [Default: (null)]
+
+- region
+        The region for this forwarding rule. Currently, only 'global' is supported.
+        [Default: (null)]
+
+= state
+        The state of the Forwarding Rule. 'present' or 'absent'
+        (Choices: present, absent)
+
+- target
+        Target resource for forwarding rule. For global proxy, this is a Global TargetProxy resource. Required for external load
+        balancing (including Global load balancing)
+        [Default: (null)]
+
+
+NOTES:
+      * Currently only supports global forwarding rules. As such, Load Balancing Scheme is always EXTERNAL.
+
+
+REQUIREMENTS:  python >= 2.6, google-api-python-client >= 1.6.2, google-auth >= 0.9.0, google-auth-httplib2 >= 0.0.2
+
+AUTHOR: Tom Melendez (@supertom) <tom@supertom.com>
+        METADATA:
+          status:
+          - deprecated
+          supported_by: community
+        
+
+EXAMPLES:
+
+- name: Create Minimum GLOBAL Forwarding_Rule
+  gcp_forwarding_rule:
+    service_account_email: "{{ service_account_email }}"
+    credentials_file: "{{ credentials_file }}"
+    project_id: "{{ project_id }}"
+    forwarding_rule_name: my-forwarding_rule
+    protocol: TCP
+    port_range: 80
+    region: global
+    target: my-target-proxy
+    state: present
+
+- name: Create Forwarding_Rule w/reserved static address
+  gcp_forwarding_rule:
+    service_account_email: "{{ service_account_email }}"
+    credentials_file: "{{ credentials_file }}"
+    project_id: "{{ project_id }}"
+    forwarding_rule_name: my-forwarding_rule
+    protocol: TCP
+    port_range: 80
+    address: my-reserved-static-address-name
+    region: global
+    target: my-target-proxy
+    state: present
+
+
+RETURN VALUES:
+
+forwarding_rule_name:
+    description: Name of the Forwarding_Rule
+    returned: Always
+    type: str
+    sample: my-target-proxy
+forwarding_rule:
+    description: GCP Forwarding_Rule dictionary
+    returned: Always. Refer to GCP documentation for detailed field descriptions.
+    type: dict
+    sample: { "name": "my-forwarding_rule", "target": "..." }
+region:
+    description: Region for Forwarding Rule.
+    returned: Always
+    type: bool
+    sample: true
+state:
+    description: state of the Forwarding_Rule
+    returned: Always.
+    type: str
+    sample: present
+

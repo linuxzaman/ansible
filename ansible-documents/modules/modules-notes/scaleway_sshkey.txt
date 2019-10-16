@@ -1,0 +1,86 @@
+> SCALEWAY_SSHKEY    (/usr/lib/python2.7/dist-packages/ansible/modules/cloud/scaleway/scaleway_sshkey.py)
+
+        This module manages SSH keys on Scaleway account https://developer.scaleway.com
+
+  * This module is maintained by The Ansible Community
+OPTIONS (= is mandatory):
+
+- api_timeout
+        HTTP timeout to Scaleway API in seconds.
+        (Aliases: timeout)[Default: 30]
+        type: int
+
+- api_token
+        Scaleway OAuth token.
+        (Aliases: oauth_token)[Default: (null)]
+        type: str
+
+- api_url
+        Scaleway API URL
+        (Aliases: base_url)[Default: https://account.scaleway.com]
+        type: str
+
+- query_parameters
+        List of parameters passed to the query string.
+        [Default: {}]
+        type: dict
+
+= ssh_pub_key
+        The public SSH key as a string to add.
+
+
+- state
+        Indicate desired state of the SSH key.
+        (Choices: present, absent)[Default: present]
+
+- validate_certs
+        Validate SSL certs of the Scaleway API.
+        [Default: True]
+        type: bool
+
+
+NOTES:
+      * Also see the API documentation on https://developer.scaleway.com/
+      * If `api_token' is not set within the module, the following environment variables can be used in decreasing order of
+        precedence `SCW_TOKEN', `SCW_API_KEY', `SCW_OAUTH_TOKEN' or `SCW_API_TOKEN'.
+      * If one wants to use a different `api_url' one can also set the `SCW_API_URL' environment variable.
+
+
+AUTHOR: Remy Leone (@sieben)
+        METADATA:
+          status:
+          - preview
+          supported_by: community
+        
+
+EXAMPLES:
+
+- name: "Add SSH key"
+  scaleway_sshkey:
+    ssh_pub_key: "ssh-rsa AAAA..."
+    state: "present"
+
+- name: "Delete SSH key"
+  scaleway_sshkey:
+    ssh_pub_key: "ssh-rsa AAAA..."
+    state: "absent"
+
+- name: "Add SSH key with explicit token"
+  scaleway_sshkey:
+    ssh_pub_key: "ssh-rsa AAAA..."
+    state: "present"
+    oauth_token: "6ecd2c9b-6f4f-44d4-a187-61a92078d08c"
+
+
+RETURN VALUES:
+
+data:
+    description: This is only present when C(state=present)
+    returned: when C(state=present)
+    type: dict
+    sample: {
+        "ssh_public_keys": [
+            {"key": "ssh-rsa AAAA...."}
+        ]
+    }
+

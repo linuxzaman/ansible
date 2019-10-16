@@ -1,0 +1,242 @@
+> JUNOS_INTERFACE    (/usr/lib/python2.7/dist-packages/ansible/modules/network/junos/junos_interface.py)
+
+        This module provides declarative management of Interfaces on Juniper JUNOS network devices.
+
+  * This module is maintained by The Ansible Network Team
+OPTIONS (= is mandatory):
+
+- active
+        Specifies whether or not the configuration is active or deactivated
+        [Default: True]
+        type: bool
+
+- aggregate
+        List of Interfaces definitions.
+        [Default: (null)]
+
+- delay
+        Time in seconds to wait before checking for the operational state on remote device. This wait is applicable for operational state
+        argument which are `state' with values `up'/`down', `tx_rate' and `rx_rate'.
+        [Default: 10]
+
+- description
+        Description of Interface.
+        [Default: (null)]
+
+- duplex
+        Interface link status.
+        (Choices: full, half, auto)[Default: auto]
+
+- enabled
+        Configure interface link status.
+        [Default: (null)]
+        type: bool
+
+- mtu
+        Maximum size of transmit packet.
+        [Default: (null)]
+
+= name
+        Name of the Interface.
+
+
+- neighbors
+        Check the operational state of given interface `name' for LLDP neighbor.
+        The following suboptions are available.
+        [Default: (null)]
+        suboptions:
+          host:
+            description:
+            - LLDP neighbor host for given interface `name'.
+          port:
+            description:
+            - LLDP neighbor port to which given interface `name' is connected.
+        
+
+- provider
+        *Deprecated*
+        Starting with Ansible 2.5 we recommend using `connection: network_cli' or `connection: netconf'.
+        For more information please see the L(Junos OS Platform Options guide, ../network/user_guide/platform_junos.html).
+        HORIZONTALLINE
+        A dict object containing connection details.
+        [Default: (null)]
+        suboptions:
+          host:
+            description:
+            - Specifies the DNS host name or address for connecting to the remote device over
+              the specified transport.  The value of host is used as the destination address
+              for the transport.
+            required: true
+            type: str
+          password:
+            description:
+            - Specifies the password to use to authenticate the connection to the remote device.   This
+              value is used to authenticate the SSH session. If the value is not specified
+              in the task, the value of environment variable `ANSIBLE_NET_PASSWORD' will
+              be used instead.
+            type: str
+          port:
+            default: 22
+            description:
+            - Specifies the port to use when building the connection to the remote device.  The
+              port value will default to the well known SSH port of 22 (for `transport=cli')
+              or port 830 (for `transport=netconf') device.
+            type: int
+          ssh_keyfile:
+            description:
+            - Specifies the SSH key to use to authenticate the connection to the remote device.   This
+              value is the path to the key used to authenticate the SSH session. If the value
+              is not specified in the task, the value of environment variable `ANSIBLE_NET_SSH_KEYFILE'
+              will be used instead.
+            type: path
+          timeout:
+            default: 10
+            description:
+            - Specifies the timeout in seconds for communicating with the network device for
+              either connecting or sending commands.  If the timeout is exceeded before the
+              operation is completed, the module will error.
+            type: int
+          username:
+            description:
+            - Configures the username to use to authenticate the connection to the remote
+              device.  This value is used to authenticate the SSH session. If the value is
+              not specified in the task, the value of environment variable `ANSIBLE_NET_USERNAME'
+              will be used instead.
+            type: str
+        
+        type: dict
+
+- rx_rate
+        Receiver rate in bits per second (bps).
+        This is state check parameter only.
+        Supports conditionals, see L(Conditionals in Networking Modules,../network/user_guide/network_working_with_command_output.html)
+        [Default: (null)]
+
+- speed
+        Interface link speed.
+        [Default: (null)]
+
+- state
+        State of the Interface configuration, `up' idicates present and operationally up and `down' indicates present and operationally
+        `down'
+        (Choices: present, absent, up, down)[Default: present]
+
+- tx_rate
+        Transmit rate in bits per second (bps).
+        This is state check parameter only.
+        Supports conditionals, see L(Conditionals in Networking Modules,../network/user_guide/network_working_with_command_output.html)
+        [Default: (null)]
+
+
+NOTES:
+      * This module requires the netconf system service be enabled on the remote device being managed.
+      * Tested against vSRX JUNOS version 15.1X49-D15.4, vqfx-10000 JUNOS Version 15.1X53-D60.4.
+      * Recommended connection is `netconf'. See L(the Junos OS Platform Options,../network/user_guide/platform_junos.html).
+      * This module also works with `local' connections for legacy playbooks.
+      * For information on using CLI and netconf see the :ref:`Junos OS Platform Options guide <junos_platform_options>`
+      * For more information on using Ansible to manage network devices see the :ref:`Ansible Network Guide <network_guide>`
+      * For more information on using Ansible to manage Juniper network devices see https://www.ansible.com/ansible-juniper.
+
+
+REQUIREMENTS:  ncclient (>=v0.5.2)
+
+AUTHOR: Ganesh Nalawade (@ganeshrn)
+        METADATA:
+          status:
+          - preview
+          supported_by: network
+        
+
+EXAMPLES:
+
+- name: configure interface
+  junos_interface:
+    name: ge-0/0/1
+    description: test-interface
+
+- name: remove interface
+  junos_interface:
+    name: ge-0/0/1
+    state: absent
+
+- name: make interface down
+  junos_interface:
+    name: ge-0/0/1
+    enabled: False
+
+- name: make interface up
+  junos_interface:
+    name: ge-0/0/1
+    enabled: True
+
+- name: Deactivate interface config
+  junos_interface:
+    name: ge-0/0/1
+    state: present
+    active: False
+
+- name: Activate interface config
+  net_interface:
+    name: ge-0/0/1
+    state: present
+    active: True
+
+- name: Configure interface speed, mtu, duplex
+  junos_interface:
+    name: ge-0/0/1
+    state: present
+    speed: 1g
+    mtu: 256
+    duplex: full
+
+- name: Create interface using aggregate
+  junos_interface:
+    aggregate:
+      - name: ge-0/0/1
+        description: test-interface-1
+      - name: ge-0/0/2
+        description: test-interface-2
+    speed: 1g
+    duplex: full
+    mtu: 512
+
+- name: Delete interface using aggregate
+  junos_interface:
+    aggregate:
+      - name: ge-0/0/1
+      - name: ge-0/0/2
+    state: absent
+
+- name: Check intent arguments
+  junos_interface:
+    name: "{{ name }}"
+    state: up
+    tx_rate: ge(0)
+    rx_rate: le(0)
+
+- name: Check neighbor intent
+  junos_interface:
+    name: xe-0/1/1
+    neighbors:
+    - port: Ethernet1/0/1
+      host: netdev
+
+- name: Config + intent
+  junos_interface:
+    name: "{{ name }}"
+    enabled: False
+    state: down
+
+
+RETURN VALUES:
+
+diff.prepared:
+  description: Configuration difference before and after applying change.
+  returned: when configuration is changed and diff option is enabled.
+  type: str
+  sample: >
+        [edit interfaces]
+        +   ge-0/0/1 {
+        +       description test-interface;
+        +   }
+

@@ -1,0 +1,135 @@
+> VMWARE_DRS_RULE_FACTS    (/usr/lib/python2.7/dist-packages/ansible/modules/cloud/vmware/vmware_drs_rule_facts.py)
+
+        This module can be used to gather facts about DRS VM-VM and VM-HOST rules from the given cluster.
+
+  * This module is maintained by The Ansible Community
+OPTIONS (= is mandatory):
+
+- cluster_name
+        Name of the cluster.
+        DRS facts for the given cluster will be returned.
+        This is required parameter if `datacenter' parameter is not provided.
+        [Default: (null)]
+
+- datacenter
+        Name of the datacenter.
+        DRS facts for all the clusters from the given datacenter will be returned.
+        This is required parameter if `cluster_name' parameter is not provided.
+        [Default: (null)]
+
+- hostname
+        The hostname or IP address of the vSphere vCenter or ESXi server.
+        If the value is not specified in the task, the value of environment variable `VMWARE_HOST' will be used instead.
+        Environment variable support added in Ansible 2.6.
+        [Default: (null)]
+        type: str
+
+- password
+        The password of the vSphere vCenter or ESXi server.
+        If the value is not specified in the task, the value of environment variable `VMWARE_PASSWORD' will be used instead.
+        Environment variable support added in Ansible 2.6.
+        (Aliases: pass, pwd)[Default: (null)]
+        type: str
+
+- port
+        The port number of the vSphere vCenter or ESXi server.
+        If the value is not specified in the task, the value of environment variable `VMWARE_PORT' will be used instead.
+        Environment variable support added in Ansible 2.6.
+        [Default: 443]
+        type: int
+        version_added: 2.5
+
+- username
+        The username of the vSphere vCenter or ESXi server.
+        If the value is not specified in the task, the value of environment variable `VMWARE_USER' will be used instead.
+        Environment variable support added in Ansible 2.6.
+        (Aliases: admin, user)[Default: (null)]
+        type: str
+
+- validate_certs
+        Allows connection when SSL certificates are not valid. Set to `false' when certificates are not trusted.
+        If the value is not specified in the task, the value of environment variable `VMWARE_VALIDATE_CERTS' will be used instead.
+        Environment variable support added in Ansible 2.6.
+        If set to `yes', please make sure Python >= 2.7.9 is installed on the given machine.
+        [Default: True]
+        type: bool
+
+
+NOTES:
+      * Tested on vSphere 6.5
+
+
+REQUIREMENTS:  python >= 2.6, PyVmomi
+
+AUTHOR: Abhijeet Kasurde (@Akasurde)
+        METADATA:
+          status:
+          - preview
+          supported_by: community
+        
+
+EXAMPLES:
+
+- name: Gather DRS facts about given Cluster
+  vmware_drs_rule_facts:
+    hostname: '{{ vcenter_hostname }}'
+    username: '{{ vcenter_username }}'
+    password: '{{ vcenter_password }}'
+    cluster_name: '{{ cluster_name }}'
+  delegate_to: localhost
+  register: cluster_drs_facts
+
+- name: Gather DRS facts about all Clusters in given datacenter
+  vmware_drs_rule_facts:
+    hostname: '{{ vcenter_hostname }}'
+    username: '{{ vcenter_username }}'
+    password: '{{ vcenter_password }}'
+    datacenter: '{{ datacenter_name }}'
+  delegate_to: localhost
+  register: datacenter_drs_facts
+
+
+RETURN VALUES:
+
+drs_rule_facts:
+    description: metadata about DRS rule from given cluster / datacenter
+    returned: always
+    type: dict
+    sample: {
+            "DC0_C0": [
+                {
+                    "rule_enabled": true,
+                    "rule_key": 1,
+                    "rule_mandatory": true,
+                    "rule_name": "drs_rule_0001",
+                    "rule_type": "vm_vm_rule",
+                    "rule_uuid": "52be5061-665a-68dc-3d25-85cd2d37e114",
+                    "rule_vms": [
+                        "VM_65",
+                        "VM_146"
+                    ]
+                },
+            ],
+            "DC1_C1": [
+                {
+                    "rule_affine_host_group_name": "host_group_1",
+                    "rule_affine_hosts": [
+                        "10.76.33.204"
+                    ],
+                    "rule_anti_affine_host_group_name": null,
+                    "rule_anti_affine_hosts": [],
+                    "rule_enabled": true,
+                    "rule_key": 1,
+                    "rule_mandatory": false,
+                    "rule_name": "vm_host_rule_0001",
+                    "rule_type": "vm_host_rule",
+                    "rule_uuid": "52687108-4d3a-76f2-d29c-b708c40dbe40",
+                    "rule_vm_group_name": "test_vm_group_1",
+                    "rule_vms": [
+                        "VM_8916",
+                        "VM_4010"
+                    ]
+                }
+            ],
+            }
+

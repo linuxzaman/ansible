@@ -1,0 +1,94 @@
+> PN_VROUTER_INTERFACE_IP    (/usr/lib/python2.7/dist-packages/ansible/modules/network/netvisor/pn_vrouter_interface_ip.py)
+
+        This module can be used to add an IP address on interface from a vRouter or remove an IP address on interface from a vRouter.
+
+  * This module is maintained by The Ansible Community
+OPTIONS (= is mandatory):
+
+- pn_bd
+        interface Bridge Domain.
+        [Default: (null)]
+        type: str
+
+- pn_cliswitch
+        Target switch to run the CLI on.
+        [Default: (null)]
+        type: str
+
+- pn_ip
+        IP address.
+        [Default: (null)]
+        type: str
+
+- pn_netmask
+        netmask.
+        [Default: (null)]
+        type: str
+
+- pn_nic
+        virtual NIC assigned to interface.
+        [Default: (null)]
+        type: str
+
+- pn_vnet
+        interface VLAN VNET.
+        [Default: (null)]
+        type: str
+
+- pn_vrouter_name
+        name of service config.
+        [Default: (null)]
+        type: str
+
+= state
+        State the action to perform. Use `present' to addvrouter-interface-ip and `absent' to remove vrouter-interface-ip.
+        (Choices: present, absent)
+        type: str
+
+
+AUTHOR: Pluribus Networks (@rajaspachipulusu17)
+        METADATA:
+          status:
+          - preview
+          supported_by: community
+        
+
+EXAMPLES:
+
+- name: Add vrouter interface to nic
+  pn_vrouter_interface_ip:
+    state: "present"
+    pn_cliswitch: "sw01"
+    pn_vrouter_name: "foo-vrouter"
+    pn_ip: "2620:0:1651:1::30"
+    pn_netmask: "127"
+    pn_nic: "eth0.4092"
+
+- name: Remove vrouter interface to nic
+  pn_vrouter_interface_ip:
+    state: "absent"
+    pn_cliswitch: "sw01"
+    pn_vrouter_name: "foo-vrouter"
+    pn_ip: "2620:0:1651:1::30"
+    pn_nic: "eth0.4092"
+
+
+RETURN VALUES:
+
+command:
+  description: the CLI command run on the target node.
+  returned: always
+  type: str
+stdout:
+  description: set of responses from the vrouter-interface-ip command.
+  returned: always
+  type: list
+stderr:
+  description: set of error responses from the vrouter-interface-ip command.
+  returned: on error
+  type: list
+changed:
+  description: indicates whether the CLI caused changes on the target.
+  returned: always
+  type: bool
+

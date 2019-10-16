@@ -1,0 +1,101 @@
+> CYBERARK_AUTHENTICATION    (/usr/lib/python2.7/dist-packages/ansible/modules/identity/cyberark/cyberark_authentication.py)
+
+        Authenticates to CyberArk Vault using Privileged Account Security Web Services SDK and creates a session fact that can be used by
+        other modules. It returns an Ansible fact called `cyberark_session'. Every module can use this fact as `cyberark_session'
+        parameter.
+
+  * This module is maintained by an Ansible Partner
+OPTIONS (= is mandatory):
+
+- api_base_url
+        A string containing the base URL of the server hosting CyberArk's Privileged Account Security Web Services SDK.
+        [Default: (null)]
+
+- cyberark_session
+        Dictionary set by a CyberArk authentication containing the different values to perform actions on a logged-on CyberArk session.
+        [Default: (null)]
+
+- new_password
+        The new password of the user. This parameter is optional, and enables you to change a password.
+        [Default: (null)]
+
+- password
+        The password of the user.
+        [Default: (null)]
+
+- state
+        Specifies if an authentication logon/logoff and a cyberark_session should be added/removed.
+        (Choices: present, absent)[Default: present]
+
+- use_radius_authentication
+        Whether or not users will be authenticated via a RADIUS server. Valid values are true/false.
+        [Default: no]
+        type: bool
+
+- use_shared_logon_authentication
+        Whether or not Shared Logon Authentication will be used.
+        [Default: no]
+        type: bool
+
+- username
+        The name of the user who will logon to the Vault.
+        [Default: (null)]
+
+- validate_certs
+        If `false', SSL certificates will not be validated.  This should only set to `false' used on personally controlled sites using
+        self-signed certificates.
+        [Default: yes]
+        type: bool
+
+
+AUTHOR: Edward Nunez (@enunez-cyberark) CyberArk BizDev, Cyberark Bizdev (@cyberark-bizdev), erasmix (@erasmix)
+        METADATA:
+          status:
+          - preview
+          supported_by: certified
+        
+
+EXAMPLES:
+
+- name: Logon to CyberArk Vault using PAS Web Services SDK - use_shared_logon_authentication
+  cyberark_authentication:
+    api_base_url: "{{ web_services_base_url }}"
+    use_shared_logon_authentication: yes
+
+- name: Logon to CyberArk Vault using PAS Web Services SDK - Not use_shared_logon_authentication
+  cyberark_authentication:
+    api_base_url: "{{ web_services_base_url }}"
+    username: "{{ password_object.password }}"
+    password: "{{ password_object.passprops.username }}"
+    use_shared_logon_authentication: no
+
+- name: Logoff from CyberArk Vault
+  cyberark_authentication:
+    state: absent
+    cyberark_session: "{{ cyberark_session }}"
+
+
+RETURN VALUES:
+
+cyberark_session:
+    description: Authentication facts.
+    returned: success
+    type: dict
+    sample:
+        api_base_url:
+            description: Base URL for API calls. Returned in the cyberark_session, so it can be used in subsequent calls.
+            type: str
+            returned: always
+        token:
+            description: The token that identifies the session, encoded in BASE 64.
+            type: str
+            returned: always
+        use_shared_logon_authentication:
+            description: Whether or not Shared Logon Authentication was used to establish the session.
+            type: bool
+            returned: always
+        validate_certs:
+            description: Whether or not SSL certificates should be validated.
+            type: bool
+            returned: always
+

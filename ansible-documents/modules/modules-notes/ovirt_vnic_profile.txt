@@ -1,0 +1,220 @@
+> OVIRT_VNIC_PROFILE    (/usr/lib/python2.7/dist-packages/ansible/modules/cloud/ovirt/ovirt_vnic_profile.py)
+
+        Module to manage vNIC profile of network in oVirt/RHV
+
+  * This module is maintained by The Ansible Community
+OPTIONS (= is mandatory):
+
+= auth
+        Dictionary with values needed to create HTTP/HTTPS connection to oVirt:
+
+        suboptions:
+          ca_file:
+            description:
+            - A PEM file containing the trusted CA certificates.
+            - The certificate presented by the server will be verified using these CA certificates.
+            - If `ca_file' parameter is not set, system wide CA certificate store is used.
+            - Default value is set by `OVIRT_CAFILE' environment variable.
+            type: str
+          headers:
+            description:
+            - Dictionary of HTTP headers to be added to each API call.
+            type: dict
+          hostname:
+            description:
+            - A string containing the hostname of the server, usually something like ``server.example.com'`.
+            - Default value is set by `OVIRT_HOSTNAME' environment variable.
+            - Either `url' or `hostname' is required.
+            type: str
+          insecure:
+            description:
+            - A boolean flag that indicates if the server TLS certificate and host name should
+              be checked.
+            type: bool
+          kerberos:
+            description:
+            - A boolean flag indicating if Kerberos authentication should be used instead
+              of the default basic authentication.
+            type: bool
+          password:
+            description:
+            - The password of the user.
+            - Default value is set by `OVIRT_PASSWORD' environment variable.
+            required: true
+            type: str
+          token:
+            description:
+            - Token to be used instead of login with username/password.
+            - Default value is set by `OVIRT_TOKEN' environment variable.
+            type: str
+          url:
+            description:
+            - A string containing the API URL of the server, usually something like ``https://server.example.com/ovirt-engine/api'`.
+            - Default value is set by `OVIRT_URL' environment variable.
+            - Either `url' or `hostname' is required.
+            type: str
+          username:
+            description:
+            - The name of the user, something like `admin@internal'.
+            - Default value is set by `OVIRT_USERNAME' environment variable.
+            required: true
+            type: str
+        
+        type: dict
+
+- custom_properties
+        Custom properties applied to the vNIC profile.
+        Custom properties is a list of dictionary which can have following values:
+        [Default: (null)]
+        suboptions:
+          name:
+            description:
+            - 'Name of the custom property. For example: `hugepages', `vhost', `sap_agent',
+              etc.'
+          regexp:
+            description:
+            - Regular expression to set for custom property.
+          value:
+            description:
+            - Value to set for custom property.
+        
+
+= data_center
+        Datacenter name where network reside.
+
+
+- description
+        A human-readable description in plain text.
+        [Default: (null)]
+
+- fetch_nested
+        If `True' the module will fetch additional data from the API.
+        It will fetch IDs of the VMs disks, snapshots, etc. User can configure to fetch other attributes of the nested entities by
+        specifying `nested_attributes'.
+        [Default: (null)]
+        type: bool
+        version_added: 2.3
+
+- migratable
+        Marks whether pass_through NIC is migratable or not.
+        [Default: (null)]
+        type: bool
+
+= name
+        A human-readable name in plain text.
+
+
+- nested_attributes
+        Specifies list of the attributes which should be fetched from the API.
+        This parameter apply only when `fetch_nested' is `true'.
+        [Default: (null)]
+        type: list
+        version_added: 2.3
+
+= network
+        Name of network to which is vNIC attached.
+
+
+- network_filter
+        The network filter enables to filter packets send to/from the VM's nic according to defined rules.
+        [Default: (null)]
+
+- pass_through
+        Enables passthrough to an SR-IOV-enabled host NIC.
+        When enabled `qos' and  `network_filter' are automatically set to None and `port_mirroring' to False.
+        (Choices: disabled, enabled)[Default: (null)]
+
+- poll_interval
+        Number of the seconds the module waits until another poll request on entity status is sent.
+        [Default: 3]
+        type: int
+
+- port_mirroring
+        Enables port mirroring.
+        [Default: (null)]
+        type: bool
+
+- qos
+        Quality of Service attributes regulate inbound and outbound network traffic of the NIC.
+        [Default: (null)]
+
+- state
+        Should the vNIC be absent/present.
+        (Choices: absent, present)[Default: present]
+
+- timeout
+        The amount of time in seconds the module should wait for the instance to get into desired state.
+        [Default: 180]
+        type: int
+
+- wait
+        `yes' if the module should wait for the entity to get into desired state.
+        [Default: True]
+        type: bool
+
+
+NOTES:
+      * In order to use this module you have to install oVirt Python SDK. To ensure it's installed with correct version you can
+        create the following task: `pip: name=ovirt-engine-sdk-python version=4.3.0'
+
+
+REQUIREMENTS:  python >= 2.7, ovirt-engine-sdk-python >= 4.3.0
+
+AUTHOR: Ondra Machacek (@machacekondra), Martin Necas (@mnecas)
+        METADATA:
+          status:
+          - preview
+          supported_by: community
+        
+
+EXAMPLES:
+
+# Examples don't contain auth parameter for simplicity,
+# look at ovirt_auth module to see how to reuse authentication:
+- name: Add vNIC
+  ovirt_vnic_profile:
+    name: myvnic
+    network: mynetwork
+    state: present
+    data_center: datacenter
+
+- name: Editing vNICs network_filter, custom_properties, qos
+  ovirt_vnic_profile:
+    name: myvnic
+    network: mynetwork
+    data_center: datacenter
+    qos: myqos
+    custom_properties:
+      - name: SecurityGroups
+        value: 9bd9bde9-39da-44a8-9541-aa39e1a81c9d
+    network_filter: allow-dhcp
+
+- name: Dont use migratable
+  ovirt_vnic_profile:
+    name: myvnic
+    network: mynetwork
+    data_center: datacenter
+    migratable: False
+    pass_through: enabled
+
+- name: Remove vNIC
+  ovirt_vnic_profile:
+    name: myvnic
+    network: mynetwork
+    state: absent
+    data_center: datacenter
+
+
+RETURN VALUES:
+
+id:
+    description: ID of the vNIC profile which is managed
+    returned: On success if vNIC profile is found.
+    type: str
+    sample: 7de90f31-222c-436c-a1ca-7e655bd5b60c
+vnic:
+    description: "Dictionary of all the vNIC profile attributes. Network interface attributes can be found on your oVirt/RHV instance
+                  at following url: http://ovirt.github.io/ovirt-engine-api-model/master/#types/nic."
+    returned: On success if vNIC profile is found.
+    type: dict
+

@@ -1,0 +1,56 @@
+EXAMPLES:
+
+- name: configure SNMP system name
+  exos_config:
+    lines: configure snmp sysName "{{ inventory_hostname }}"
+
+- name: configure interface settings
+  exos_config:
+    lines:
+      - configure ports 2 description-string "Master Uplink"
+    backup: yes
+
+- name: check the running-config against master config
+  exos_config:
+    diff_against: intended
+    intended_config: "{{ lookup('file', 'master.cfg') }}"
+
+- name: check the startup-config against the running-config
+  exos_config:
+    diff_against: startup
+    diff_ignore_lines:
+      - ntp clock .*
+
+- name: save running to startup when modified
+  exos_config:
+    save_when: modified
+
+- name: configurable backup path
+  exos_config:
+    lines:
+      - configure ports 2 description-string "Master Uplink"
+    backup: yes
+    backup_options:
+      filename: backup.cfg
+      dir_path: /home/user
+
+
+RETURN VALUES:
+
+updates:
+  description: The set of commands that will be pushed to the remote device
+  returned: always
+  type: list
+  sample: ['switch-attributes hostname foo', 'router ospf', 'area 0']
+commands:
+  description: The set of commands that will be pushed to the remote device
+  returned: always
+  type: list
+  sample: ['create vlan "foo"', 'configure snmp sysName "x620-red"']
+backup_path:
+  description: The full path to the backup file
+  returned: when backup is yes
+  type: str
+  sample: /playbooks/ansible/backup/x870_config.2018-08-08@15:00:21
+
+

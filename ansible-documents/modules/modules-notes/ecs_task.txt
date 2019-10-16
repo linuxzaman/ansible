@@ -1,0 +1,243 @@
+> ECS_TASK    (/usr/lib/python2.7/dist-packages/ansible/modules/cloud/amazon/ecs_task.py)
+
+        Creates or deletes instances of task definitions.
+
+  * This module is maintained by The Ansible Community
+OPTIONS (= is mandatory):
+
+- aws_access_key
+        AWS access key. If not set then the value of the AWS_ACCESS_KEY_ID, AWS_ACCESS_KEY or EC2_ACCESS_KEY environment variable is
+        used.
+        (Aliases: ec2_access_key, access_key)[Default: (null)]
+        type: str
+
+- aws_secret_key
+        AWS secret key. If not set then the value of the AWS_SECRET_ACCESS_KEY, AWS_SECRET_KEY, or EC2_SECRET_KEY environment variable is
+        used.
+        (Aliases: ec2_secret_key, secret_key)[Default: (null)]
+        type: str
+
+- cluster
+        The name of the cluster to run the task on
+        [Default: (null)]
+
+- container_instances
+        The list of container instances on which to deploy the task
+        [Default: (null)]
+
+- count
+        How many new instances to start
+        [Default: (null)]
+
+- debug_botocore_endpoint_logs
+        Use a botocore.endpoint logger to parse the unique (rather than total) "resource:action" API calls made during a task, outputing
+        the set to the resource_actions key in the task results. Use the aws_resource_action callback to output to total list made during
+        a playbook. The ANSIBLE_DEBUG_BOTOCORE_LOGS environment variable may also be used.
+        [Default: no]
+        type: bool
+        version_added: 2.8
+
+- ec2_url
+        Url to use to connect to EC2 or your Eucalyptus cloud (by default the module will use EC2 endpoints). Ignored for modules where
+        region is required. Must be specified for all other modules if region is not used. If not set then the value of the EC2_URL
+        environment variable, if any, is used.
+        [Default: (null)]
+        type: str
+
+- launch_type
+        The launch type on which to run your service
+        (Choices: EC2, FARGATE)[Default: (null)]
+        version_added: 2.8
+        
+
+- network_configuration
+        network configuration of the service. Only applicable for task definitions created with `awsvpc' `network_mode'.
+        `network_configuration' has two keys, `subnets', a list of subnet IDs to which the task is attached and `security_groups', a list
+        of group names or group IDs for the task
+        [Default: (null)]
+        version_added: 2.6
+        
+
+= operation
+        Which task operation to execute
+        (Choices: run, start, stop)
+
+- overrides
+        A dictionary of values to pass to the new instances
+        [Default: (null)]
+
+- profile
+        Uses a boto profile. Only works with boto >= 2.24.0.
+        [Default: (null)]
+        type: str
+        version_added: 1.6
+
+- region
+        The AWS region to use. If not specified then the value of the AWS_REGION or EC2_REGION environment variable, if any, is used. See
+        http://docs.aws.amazon.com/general/latest/gr/rande.html#ec2_region
+        (Aliases: aws_region, ec2_region)[Default: (null)]
+        type: str
+
+- security_token
+        AWS STS security token. If not set then the value of the AWS_SECURITY_TOKEN or EC2_SECURITY_TOKEN environment variable is used.
+        (Aliases: access_token)[Default: (null)]
+        type: str
+        version_added: 1.6
+
+- started_by
+        A value showing who or what started the task (for informational purposes)
+        [Default: (null)]
+
+- task
+        The task to stop
+        [Default: (null)]
+
+- task_definition
+        The task definition to start or run
+        [Default: (null)]
+
+- validate_certs
+        When set to "no", SSL certificates will not be validated for boto versions >= 2.6.0.
+        [Default: True]
+        type: bool
+        version_added: 1.5
+
+
+NOTES:
+      * If parameters are not set within the module, the following environment variables can be used in decreasing order of
+        precedence `AWS_URL' or `EC2_URL', `AWS_ACCESS_KEY_ID' or `AWS_ACCESS_KEY' or `EC2_ACCESS_KEY', `AWS_SECRET_ACCESS_KEY' or
+        `AWS_SECRET_KEY' or `EC2_SECRET_KEY', `AWS_SECURITY_TOKEN' or `EC2_SECURITY_TOKEN', `AWS_REGION' or `EC2_REGION'
+      * Ansible uses the boto configuration file (typically ~/.boto) if no credentials are provided. See
+        https://boto.readthedocs.io/en/latest/boto_config_tut.html
+      * `AWS_REGION' or `EC2_REGION' can be typically be used to specify the AWS region, when required, but this can also be
+        configured in the boto config file
+
+
+REQUIREMENTS:  boto, boto3, botocore, json, python >= 2.6
+
+AUTHOR: Mark Chance (@Java1Guy)
+        METADATA:
+          status:
+          - preview
+          supported_by: community
+        
+
+EXAMPLES:
+
+# Simple example of run task
+- name: Run task
+  ecs_task:
+    operation: run
+    cluster: console-sample-app-static-cluster
+    task_definition: console-sample-app-static-taskdef
+    count: 1
+    started_by: ansible_user
+  register: task_output
+
+# Simple example of start task
+
+- name: Start a task
+  ecs_task:
+      operation: start
+      cluster: console-sample-app-static-cluster
+      task_definition: console-sample-app-static-taskdef
+      task: "arn:aws:ecs:us-west-2:172139249013:task/3f8353d1-29a8-4689-bbf6-ad79937ffe8a"
+      container_instances:
+      - arn:aws:ecs:us-west-2:172139249013:container-instance/79c23f22-876c-438a-bddf-55c98a3538a8
+      started_by: ansible_user
+      network_configuration:
+        subnets:
+        - subnet-abcd1234
+        security_groups:
+        - sg-aaaa1111
+        - my_security_group
+  register: task_output
+
+- name: RUN a task on Fargate
+  ecs_task:
+      operation: run
+      cluster: console-sample-app-static-cluster
+      task_definition: console-sample-app-static-taskdef
+      task: "arn:aws:ecs:us-west-2:172139249013:task/3f8353d1-29a8-4689-bbf6-ad79937ffe8a"
+      started_by: ansible_user
+      launch_type: FARGATE
+      network_configuration:
+        subnets:
+        - subnet-abcd1234
+        security_groups:
+        - sg-aaaa1111
+        - my_security_group
+  register: task_output
+
+- name: Stop a task
+  ecs_task:
+      operation: stop
+      cluster: console-sample-app-static-cluster
+      task_definition: console-sample-app-static-taskdef
+      task: "arn:aws:ecs:us-west-2:172139249013:task/3f8353d1-29a8-4689-bbf6-ad79937ffe8a"
+
+
+RETURN VALUES:
+
+task:
+    description: details about the tast that was started
+    returned: success
+    type: complex
+    contains:
+        taskArn:
+            description: The Amazon Resource Name (ARN) that identifies the task.
+            returned: always
+            type: str
+        clusterArn:
+            description: The Amazon Resource Name (ARN) of the of the cluster that hosts the task.
+            returned: only when details is true
+            type: str
+        taskDefinitionArn:
+            description: The Amazon Resource Name (ARN) of the task definition.
+            returned: only when details is true
+            type: str
+        containerInstanceArn:
+            description: The Amazon Resource Name (ARN) of the container running the task.
+            returned: only when details is true
+            type: str
+        overrides:
+            description: The container overrides set for this task.
+            returned: only when details is true
+            type: list of complex
+        lastStatus:
+            description: The last recorded status of the task.
+            returned: only when details is true
+            type: str
+        desiredStatus:
+            description: The desired status of the task.
+            returned: only when details is true
+            type: str
+        containers:
+            description: The container details.
+            returned: only when details is true
+            type: list of complex
+        startedBy:
+            description: The used who started the task.
+            returned: only when details is true
+            type: str
+        stoppedReason:
+            description: The reason why the task was stopped.
+            returned: only when details is true
+            type: str
+        createdAt:
+            description: The timestamp of when the task was created.
+            returned: only when details is true
+            type: str
+        startedAt:
+            description: The timestamp of when the task was started.
+            returned: only when details is true
+            type: str
+        stoppedAt:
+            description: The timestamp of when the task was stopped.
+            returned: only when details is true
+            type: str
+        launchType:
+            description: The launch type on which to run your task.
+            returned: always
+            type: str
+

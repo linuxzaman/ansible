@@ -1,0 +1,82 @@
+EXAMPLES:
+
+- name: Get endpoints facts of a Traffic Manager profile
+      azure_rm_trafficmanagerendpoint_facts:
+        resource_group: myResourceGroup
+        profile_name: Testing
+
+    - name: Get specific endpoint of a Traffic Manager profile
+      azure_rm_trafficmanager_facts:
+        resource_group: myResourceGroup
+        profile_name: Testing
+        name: test_external_endpoint
+
+
+RETURN VALUES:
+
+endpoints:
+    description: List of Traffic Manager endpoints.
+    returned: always
+    type: complex
+    contains:
+        resource_group:
+            description:
+                - Name of a resource group.
+            returned: always
+            type: str
+            sample: myResourceGroup
+        name:
+            description:
+                - Name of the Traffic Manager endpoint.
+            returned: always
+            type: str
+            sample: testendpoint
+        type:
+            description:
+                - The type of the endpoint.
+            type: str
+            sample: external_endpoints
+        target_resource_id:
+            description:
+                - The Azure Resource URI of the of the endpoint.
+            type: str
+            sample: /subscriptions/xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx/resourceGroups/myResourceGroup/providers/Microsoft.ClassicCompute/domainNames/vscjavaci
+        target:
+            description:
+                - The fully-qualified DNS name of the endpoint.
+            type: str
+            sample: 8.8.8.8
+        enabled:
+            description:
+                - The status of the endpoint.
+            type: str
+            sample: Enabled
+        weight:
+            description:
+                - The weight of this endpoint when using the 'Weighted' traffic routing method.
+            type: int
+            sample: 10
+        priority:
+            description:
+                - The priority of this endpoint when using the 'Priority' traffic routing method.
+            type: str
+            sample: 3
+        location:
+            description:
+                - The location of the external or nested endpoints when using the 'Performance' traffic routing method.
+            type: str
+            sample: East US
+        min_child_endpoints:
+            description:
+                - The minimum number of endpoints that must be available in the child profile to make the parent profile available.
+            type: int
+            sample: 3
+        geo_mapping:
+            description:
+                - The list of countries/regions mapped to this endpoint when using the 'Geographic' traffic routing method.
+            type: list
+            sample: [
+                "GEO-NA",
+                "GEO-AS"
+                ]
+

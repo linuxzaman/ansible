@@ -1,0 +1,67 @@
+> NETAPP_E_SNAPSHOT_IMAGES    (/usr/lib/python2.7/dist-packages/ansible/modules/storage/netapp/netapp_e_snapshot_images.py)
+
+        Create and delete snapshots images on snapshot groups for NetApp E-series storage arrays. Only the oldest snapshot image can be
+        deleted so consistency is preserved. Related: Snapshot volumes are created from snapshot images.
+
+  * This module is maintained by The Ansible Community
+OPTIONS (= is mandatory):
+
+= api_password
+        The password to authenticate with the SANtricity WebServices Proxy or embedded REST API.
+
+
+= api_url
+        The url to the SANtricity WebServices Proxy or embedded REST API.
+
+
+= api_username
+        The username to authenticate with the SANtricity WebServices Proxy or embedded REST API.
+
+
+= snapshot_group
+        The name of the snapshot group in which you want to create a snapshot image.
+
+
+= state
+        Whether a new snapshot image should be created or oldest be deleted.
+        (Choices: create, remove)
+
+- validate_certs
+        Should https certificates be validated?
+        [Default: True]
+
+
+AUTHOR: Kevin Hulquest (@hulquest)
+        METADATA:
+          status:
+          - preview
+          supported_by: community
+        
+
+EXAMPLES:
+
+- name: Create Snapshot
+      netapp_e_snapshot_images:
+        ssid: "{{ ssid }}"
+        api_url: "{{ netapp_api_url }}"
+        api_username: "{{ netapp_api_username }}"
+        api_password: "{{ netapp_api_password }}"
+        validate_certs: "{{ validate_certs }}"
+        snapshot_group: "3300000060080E5000299C24000005B656D9F394"
+        state: 'create'
+
+
+RETURN VALUES:
+
+---
+    msg:
+        description: State of operation
+        type: str
+        returned: always
+        sample: "Created snapshot image"
+    image_id:
+        description: ID of snaphot image
+        type: str
+        returned: state == created
+        sample: "3400000060080E5000299B640063074057BC5C5E "
+

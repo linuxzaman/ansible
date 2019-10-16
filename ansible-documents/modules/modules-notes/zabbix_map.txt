@@ -1,0 +1,176 @@
+> ZABBIX_MAP    (/usr/lib/python2.7/dist-packages/ansible/modules/monitoring/zabbix/zabbix_map.py)
+
+        This module allows you to create, modify and delete Zabbix map entries, using Graphviz binaries and text description written in
+        DOT language. Nodes of the graph will become map elements and edges will become links between map elements. See
+        https://en.wikipedia.org/wiki/DOT_(graph_description_language) and https://www.graphviz.org/ for details. Inspired by
+        http://blog.zabbix.com/maps-for-the-lazy/. The following extra node attributes are supported: `zbx_host' contains name of the
+        host in Zabbix. Use this if desired type of map element is `host'. `zbx_group' contains name of the host group in Zabbix. Use
+        this if desired type of map element is `host group'. `zbx_map' contains name of the map in Zabbix. Use this if desired type of
+        map element is `map'. `zbx_label' contains label of map element. `zbx_image' contains name of the image used to display the
+        element in default state. `zbx_image_disabled' contains name of the image used to display disabled map element.
+        `zbx_image_maintenance' contains name of the image used to display map element in maintenance. `zbx_image_problem' contains name
+        of the image used to display map element with problems. `zbx_url' contains map element URL in `name:url' format. More than one
+        url could be specified by adding some prefix (e.g., `zbx_url1', `zbx_url2'). The following extra link attributes are supported:
+        `zbx_draw_style' contains link line draw style. Possible values: `line', `bold', `dotted', `dashed'. `zbx_trigger' contains name
+        of the trigger used as a link indicator in `host_name:trigger_name' format. More than one trigger could be specified by adding
+        some prefix (e.g., `zbx_trigger1', `zbx_trigger2'). `zbx_trigger_color' contains indicator color specified either as CSS3 name or
+        as a hexadecimal code starting with `#'. `zbx_trigger_draw_style' contains indicator draw style. Possible values are the same as
+        for `zbx_draw_style'.
+
+  * This module is maintained by The Ansible Community
+OPTIONS (= is mandatory):
+
+- data
+        Graph written in DOT language.
+        (Aliases: dot_data)[Default: (null)]
+
+- default_image
+        Name of the Zabbix image used to display the element if this element doesn't have the `zbx_image' attribute defined.
+        (Aliases: image)[Default: (null)]
+
+- expand_problem
+        Whether the the problem trigger will be displayed for elements with a single problem.
+        [Default: True]
+        type: bool
+
+- height
+        Height of the map.
+        [Default: 600]
+
+- highlight
+        Whether icon highlighting is enabled.
+        [Default: True]
+        type: bool
+
+- http_login_password
+        Basic Auth password
+        [Default: (null)]
+        type: str
+        version_added: 2.1
+
+= http_login_user
+        Basic Auth login
+
+        type: str
+        version_added: 2.1
+
+- label_type
+        Map element label type.
+        (Choices: label, ip, name, status, nothing, custom)[Default: name]
+
+= login_password
+        Zabbix user password.
+
+        type: str
+
+= login_user
+        Zabbix user name.
+
+        type: str
+
+- margin
+        Size of white space between map's borders and its elements.
+        [Default: 40]
+
+= name
+        Name of the map.
+        (Aliases: map_name)
+
+= server_url
+        URL of Zabbix server, with protocol (http or https). `url' is an alias for `server_url'.
+        (Aliases: url)
+        type: str
+
+- state
+        State of the map.
+        On `present', it will create if map does not exist or update the map if the associated data is different.
+        On `absent' will remove the map if it exists.
+        (Choices: present, absent)[Default: present]
+
+- timeout
+        The timeout of API request (seconds).
+        [Default: 10]
+        type: int
+
+- validate_certs
+        If set to False, SSL certificates will not be validated. This should only be used on personally controlled sites using self-
+        signed certificates.
+        [Default: True]
+        type: bool
+        version_added: 2.5
+
+- width
+        Width of the map.
+        [Default: 800]
+
+
+REQUIREMENTS:  python >= 2.6, zabbix-api, pydotplus, webcolors, Pillow, Graphviz
+
+AUTHOR: Antony Alekseyev (@Akint)
+        METADATA:
+          status:
+          - preview
+          supported_by: community
+        
+
+EXAMPLES:
+
+###
+### Example inventory:
+# [web]
+# web[01:03].example.com ansible_host=127.0.0.1
+# [db]
+# db.example.com  ansible_host=127.0.0.1
+# [backup]
+# backup.example.com   ansible_host=127.0.0.1
+###
+### Each inventory host presents in Zabbix with same name.
+###
+### Contents of 'map.j2':
+# digraph G {
+#     graph [layout=dot splines=false overlap=scale]
+#     INTERNET [zbx_url="Google:https://google.com" zbx_image="Cloud_(96)"]
+# {% for web_host in groups.web %}
+#     {% set web_loop = loop %}
+#     web{{ '%03d' % web_loop.index }} [zbx_host="{{ web_host }}"]
+#     INTERNET -> web{{ '%03d' % web_loop.index }} [zbx_trigger="{{ web_host }}:Zabbix agent on {HOST.NAME} is unreachable for 5 minutes"]
+#     {% for db_host in groups.db %}
+#       {% set db_loop = loop %}
+#     web{{ '%03d' % web_loop.index }} -> db{{ '%03d' % db_loop.index }}
+#     {% endfor %}
+# {% endfor %}
+#     { rank=same
+# {% for db_host in groups.db %}
+#     {% set db_loop = loop %}
+#     db{{ '%03d' % db_loop.index }} [zbx_host="{{ db_host }}"]
+#     {% for backup_host in groups.backup %}
+#         {% set backup_loop = loop %}
+#         db{{ '%03d' % db_loop.index }} -> backup{{ '%03d' % backup_loop.index }} [color="blue"]
+#     {% endfor %}
+# {% endfor %}
+# {% for backup_host in groups.backup %}
+#     {% set backup_loop = loop %}
+#         backup{{ '%03d' % backup_loop.index }} [zbx_host="{{ backup_host }}"]
+# {% endfor %}
+#     }
+# }
+###
+### Create Zabbix map "Demo Map" made of template 'map.j2'
+- name: Create Zabbix map
+  zabbix_map:
+    server_url: http://zabbix.example.com
+    login_user: username
+    login_password: password
+    name: Demo map
+    state: present
+    data: "{{ lookup('template', 'map.j2') }}"
+    default_image: Server_(64)
+    expand_problem: no
+    highlight: no
+    label_type: label
+  delegate_to: localhost
+  run_once: yes
+
+
+RETURN VALUES:
+ # 

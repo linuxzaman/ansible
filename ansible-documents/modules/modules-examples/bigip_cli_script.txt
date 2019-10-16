@@ -1,0 +1,36 @@
+EXAMPLES:
+
+- name: Create a cli script from an existing file
+  bigip_cli_script:
+    name: foo
+    content: "{{ lookup('file', '/absolute/path/to/cli/script.tcl') }}"
+    provider:
+      password: secret
+      server: lb.mydomain.com
+      user: admin
+  delegate_to: localhost
+
+- name: Create a cli script from a jinja template representing a cli script
+  bigip_cli_script:
+    name: foo
+    content: "{{ lookup('template', '/absolute/path/to/cli/script.tcl') }}"
+    provider:
+      password: secret
+      server: lb.mydomain.com
+      user: admin
+  delegate_to: localhost
+
+
+RETURN VALUES:
+
+param1:
+  description: The new param1 value of the resource.
+  returned: changed
+  type: bool
+  sample: true
+param2:
+  description: The new param2 value of the resource.
+  returned: changed
+  type: str
+  sample: Foo is bar
+

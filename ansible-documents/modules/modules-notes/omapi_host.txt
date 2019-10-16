@@ -1,0 +1,120 @@
+> OMAPI_HOST    (/usr/lib/python2.7/dist-packages/ansible/modules/net_tools/omapi_host.py)
+
+        Manage OMAPI hosts into compatible DHCPd servers
+
+  * This module is maintained by The Ansible Community
+OPTIONS (= is mandatory):
+
+- ddns
+        Enable dynamic DNS updates for this host.
+        [Default: False]
+        type: bool
+
+- host
+        Sets OMAPI server host to interact with.
+        [Default: localhost]
+        type: str
+
+- hostname
+        Sets the host lease hostname (mandatory if state=present).
+        (Aliases: name)[Default: (null)]
+        type: str
+
+- ip
+        Sets the lease host IP address.
+        [Default: (null)]
+        type: str
+
+= key
+        Sets the TSIG key content for authenticating against OMAPI server.
+
+        type: str
+
+= key_name
+        Sets the TSIG key name for authenticating against OMAPI server.
+
+        type: str
+
+= macaddr
+        Sets the lease host MAC address.
+
+        type: str
+
+- port
+        Sets the OMAPI server port to interact with.
+        [Default: 7911]
+        type: int
+
+= state
+        Create or remove OMAPI host.
+        (Choices: absent, present)
+        type: str
+
+- statements
+        Attach a list of OMAPI DHCP statements with host lease (without ending semicolon).
+        [Default: []]
+        type: list
+
+
+REQUIREMENTS:  pypureomapi
+
+AUTHOR: Loic Blot (@nerzhul)
+        METADATA:
+          status:
+          - preview
+          supported_by: community
+        
+
+EXAMPLES:
+
+- name: Add a host using OMAPI
+  omapi_host:
+    key_name: defomapi
+    key: +bFQtBCta6j2vWkjPkNFtgA==
+    host: 10.98.4.55
+    macaddr: 44:dd:ab:dd:11:44
+    name: server01
+    ip: 192.168.88.99
+    ddns: yes
+    statements:
+    - filename "pxelinux.0"
+    - next-server 1.1.1.1
+    state: present
+
+- name: Remove a host using OMAPI
+  omapi_host:
+    key_name: defomapi
+    key: +bFQtBCta6j2vWkjPkNFtgA==
+    host: 10.1.1.1
+    macaddr: 00:66:ab:dd:11:44
+    state: absent
+
+
+RETURN VALUES:
+
+lease:
+    description: dictionary containing host information
+    returned: success
+    type: complex
+    contains:
+        ip-address:
+            description: IP address, if there is.
+            returned: success
+            type: str
+            sample: '192.168.1.5'
+        hardware-address:
+            description: MAC address
+            returned: success
+            type: str
+            sample: '00:11:22:33:44:55'
+        hardware-type:
+            description: hardware type, generally '1'
+            returned: success
+            type: int
+            sample: 1
+        name:
+            description: hostname
+            returned: success
+            type: str
+            sample: 'mydesktop'
+

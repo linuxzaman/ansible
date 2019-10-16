@@ -1,0 +1,65 @@
+EXAMPLES:
+
+- name: CloudEngine BGP test
+  hosts: cloudengine
+  connection: local
+  gather_facts: no
+  vars:
+    cli:
+      host: "{{ inventory_hostname }}"
+      port: "{{ ansible_ssh_port }}"
+      username: "{{ username }}"
+      password: "{{ password }}"
+      transport: cli
+
+  tasks:
+
+  - name: "Enable BGP"
+    ce_bgp:
+      state: present
+      as_number: 100
+      confed_id_number: 250
+      provider: "{{ cli }}"
+
+  - name: "Disable BGP"
+    ce_bgp:
+      state: absent
+      as_number: 100
+      confed_id_number: 250
+      provider: "{{ cli }}"
+
+  - name: "Create confederation peer AS num"
+    ce_bgp:
+      state: present
+      confed_peer_as_num: 260
+      provider: "{{ cli }}"
+
+
+RETURN VALUES:
+
+changed:
+    description: check to see if a change was made on the device
+    returned: always
+    type: bool
+    sample: true
+proposed:
+    description: k/v pairs of parameters passed into module
+    returned: always
+    type: dict
+    sample: {"as_number": "100", state": "present"}
+existing:
+    description: k/v pairs of existing aaa server
+    returned: always
+    type: dict
+    sample: {"bgp_enable": [["100"], ["true"]]}
+end_state:
+    description: k/v pairs of aaa params after module execution
+    returned: always
+    type: dict
+    sample: {"bgp_enable": [["100"], ["true"]]}
+updates:
+    description: command sent to the device
+    returned: always
+    type: list
+    sample: ["bgp 100"]
+

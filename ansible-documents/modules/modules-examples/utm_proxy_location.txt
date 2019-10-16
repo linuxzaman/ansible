@@ -1,0 +1,77 @@
+EXAMPLES:
+
+- name: Create UTM proxy_location
+  utm_proxy_backend:
+    utm_host: sophos.host.name
+    utm_token: abcdefghijklmno1234
+    name: TestLocationEntry
+    backend: REF_OBJECT_STRING
+    state: present
+
+- name: Remove UTM proxy_location
+  utm_proxy_backend:
+    utm_host: sophos.host.name
+    utm_token: abcdefghijklmno1234
+    name: TestLocationEntry
+    state: absent
+
+
+RETURN VALUES:
+
+result:
+    description: The utm object that was created
+    returned: success
+    type: complex
+    contains:
+        _ref:
+            description: The reference name of the object
+            type: string
+        _locked:
+            description: Whether or not the object is currently locked
+            type: boolean
+        _type:
+            description: The type of the object
+            type: string
+        name:
+            description: The name of the object
+            type: string
+        access_control:
+            description: Whether to use access control state
+            type: string
+        allowed_networks:
+            description: List of allowed network reference names
+            type: list
+        auth_profile:
+            description: The auth profile reference name
+            type: string
+        backend:
+            description: The backend reference name
+            type: string
+        be_path:
+            description: The backend path
+            type: string
+        comment:
+            description: The comment string
+            type: string
+        denied_networks:
+            description: The list of the denied network names
+            type: list
+        hot_standby:
+            description: Use hot standy
+            type: bool
+        path:
+            description: Path name
+            type: string
+        status:
+            description: Whether the object is active or not
+            type: boolean
+        stickysession_id:
+            description: The identifier of the stickysession
+            type: string
+        stickysession_status:
+            description: Whether to use stickysession or not
+            type: bool
+        websocket_passthrough:
+            description: Whether websocket passthrough will be used or not
+            type: bool
+

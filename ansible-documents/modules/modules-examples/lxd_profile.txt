@@ -1,0 +1,77 @@
+EXAMPLES:
+
+# An example for creating a profile
+- hosts: localhost
+  connection: local
+  tasks:
+    - name: Create a profile
+      lxd_profile:
+        name: macvlan
+        state: present
+        config: {}
+        description: my macvlan profile
+        devices:
+          eth0:
+            nictype: macvlan
+            parent: br0
+            type: nic
+
+# An example for creating a profile via http connection
+- hosts: localhost
+  connection: local
+  tasks:
+  - name: create macvlan profile
+    lxd_profile:
+      url: https://127.0.0.1:8443
+      # These client_cert and client_key values are equal to the default values.
+      #client_cert: "{{ lookup('env', 'HOME') }}/.config/lxc/client.crt"
+      #client_key: "{{ lookup('env', 'HOME') }}/.config/lxc/client.key"
+      trust_password: mypassword
+      name: macvlan
+      state: present
+      config: {}
+      description: my macvlan profile
+      devices:
+        eth0:
+          nictype: macvlan
+          parent: br0
+          type: nic
+
+# An example for deleting a profile
+- hosts: localhost
+  connection: local
+  tasks:
+    - name: Delete a profile
+      lxd_profile:
+        name: macvlan
+        state: absent
+
+# An example for renaming a profile
+- hosts: localhost
+  connection: local
+  tasks:
+    - name: Rename a profile
+      lxd_profile:
+        name: macvlan
+        new_name: macvlan2
+        state: present
+
+
+RETURN VALUES:
+
+old_state:
+  description: The old state of the profile
+  returned: success
+  type: str
+  sample: "absent"
+logs:
+  description: The logs of requests and responses.
+  returned: when ansible-playbook is invoked with -vvvv.
+  type: list
+  sample: "(too long to be placed here)"
+actions:
+  description: List of actions performed for the profile.
+  returned: success
+  type: list
+  sample: '["create"]'
+

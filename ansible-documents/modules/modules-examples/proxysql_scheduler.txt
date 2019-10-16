@@ -1,0 +1,55 @@
+EXAMPLES:
+
+---
+# This example adds a schedule, it saves the scheduler config to disk, but
+# avoids loading the scheduler config to runtime (this might be because
+# several servers are being added and the user wants to push the config to
+# runtime in a single batch using the M(proxysql_manage_config) module).  It
+# uses supplied credentials to connect to the proxysql admin interface.
+
+- proxysql_scheduler:
+    login_user: 'admin'
+    login_password: 'admin'
+    interval_ms: 1000
+    filename: "/opt/maintenance.py"
+    state: present
+    load_to_runtime: False
+
+# This example removes a schedule, saves the scheduler config to disk, and
+# dynamically loads the scheduler config to runtime.  It uses credentials
+# in a supplied config file to connect to the proxysql admin interface.
+
+- proxysql_scheduler:
+    config_file: '~/proxysql.cnf'
+    filename: "/opt/old_script.py"
+    state: absent
+
+
+RETURN VALUES:
+
+stdout:
+    description: The schedule modified or removed from proxysql
+    returned: On create/update will return the newly modified schedule, on
+              delete it will return the deleted record.
+    type: dict
+    "sample": {
+        "changed": true,
+        "filename": "/opt/test.py",
+        "msg": "Added schedule to scheduler",
+        "schedules": [
+            {
+                "active": "1",
+                "arg1": null,
+                "arg2": null,
+                "arg3": null,
+                "arg4": null,
+                "arg5": null,
+                "comment": "",
+                "filename": "/opt/test.py",
+                "id": "1",
+                "interval_ms": "10000"
+            }
+        ],
+        "state": "present"
+    }
+

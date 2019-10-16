@@ -1,0 +1,184 @@
+> VMWARE_GUEST_FILE_OPERATION    (/usr/lib/python2.7/dist-packages/ansible/modules/cloud/vmware/vmware_guest_file_operation.py)
+
+        Module to copy a file to a VM, fetch a file from a VM and create or delete a directory in the guest OS.
+
+  * This module is maintained by The Ansible Community
+OPTIONS (= is mandatory):
+
+- cluster
+        The cluster hosting the virtual machine.
+        If set, it will help to speed up virtual machine search.
+        [Default: (null)]
+
+- copy
+        Copy file to vm without requiring network.
+        Valid attributes are:
+          src: file source absolute or relative
+          dest: file destination, path must be exist
+          overwrite: False or True (not required, default False)
+        [Default: (null)]
+
+- datacenter
+        The datacenter hosting the virtual machine.
+        If set, it will help to speed up virtual machine search.
+        [Default: (null)]
+
+- directory
+        Create or delete a directory.
+        Can be used to create temp directory inside guest using mktemp operation.
+        mktemp sets variable `dir' in the result with the name of the new directory.
+        mktemp operation option is added in version 2.8
+        Valid attributes are:
+          operation (str): Valid values are: create, delete, mktemp
+          path (str): directory path (required for create or remove)
+          prefix (str): temporary directory prefix (required for mktemp)
+          suffix (str): temporary directory suffix (required for mktemp)
+          recurse (boolean): Not required, default (false)
+        [Default: (null)]
+
+- fetch
+        Get file from virtual machine without requiring network.
+        Valid attributes are:
+          src: The file on the remote system to fetch. This `must' be a file, not a directory
+          dest: file destination on localhost, path must be exist
+        [Default: (null)]
+        version_added: 2.5
+        
+
+- folder
+        Destination folder, absolute path to find an existing guest or create the new guest.
+        The folder should include the datacenter. ESX's datacenter is ha-datacenter
+        Used only if `vm_id_type' is `inventory_path'.
+        Examples:
+           folder: /ha-datacenter/vm
+           folder: ha-datacenter/vm
+           folder: /datacenter1/vm
+           folder: datacenter1/vm
+           folder: /datacenter1/vm/folder1
+           folder: datacenter1/vm/folder1
+           folder: /folder1/datacenter1/vm
+           folder: folder1/datacenter1/vm
+           folder: /folder1/datacenter1/vm/folder2
+           folder: vm/folder2
+           folder: folder2
+        [Default: (null)]
+
+- hostname
+        The hostname or IP address of the vSphere vCenter or ESXi server.
+        If the value is not specified in the task, the value of environment variable `VMWARE_HOST' will be used instead.
+        Environment variable support added in Ansible 2.6.
+        [Default: (null)]
+        type: str
+
+- password
+        The password of the vSphere vCenter or ESXi server.
+        If the value is not specified in the task, the value of environment variable `VMWARE_PASSWORD' will be used instead.
+        Environment variable support added in Ansible 2.6.
+        (Aliases: pass, pwd)[Default: (null)]
+        type: str
+
+- port
+        The port number of the vSphere vCenter or ESXi server.
+        If the value is not specified in the task, the value of environment variable `VMWARE_PORT' will be used instead.
+        Environment variable support added in Ansible 2.6.
+        [Default: 443]
+        type: int
+        version_added: 2.5
+
+- username
+        The username of the vSphere vCenter or ESXi server.
+        If the value is not specified in the task, the value of environment variable `VMWARE_USER' will be used instead.
+        Environment variable support added in Ansible 2.6.
+        (Aliases: admin, user)[Default: (null)]
+        type: str
+
+- validate_certs
+        Allows connection when SSL certificates are not valid. Set to `false' when certificates are not trusted.
+        If the value is not specified in the task, the value of environment variable `VMWARE_VALIDATE_CERTS' will be used instead.
+        Environment variable support added in Ansible 2.6.
+        If set to `yes', please make sure Python >= 2.7.9 is installed on the given machine.
+        [Default: True]
+        type: bool
+
+= vm_id
+        Name of the virtual machine to work with.
+
+
+- vm_id_type
+        The VMware identification method by which the virtual machine will be identified.
+        (Choices: uuid, instance_uuid, dns_name, inventory_path, vm_name)[Default: vm_name]
+
+= vm_password
+        The password used to login-in to the virtual machine.
+
+
+= vm_username
+        The user to login in to the virtual machine.
+
+
+
+NOTES:
+      * Tested on vSphere 6
+      * Only the first match against vm_id is used, even if there are multiple matches
+
+
+REQUIREMENTS:  python >= 2.6, PyVmomi, requests
+
+AUTHOR: Stéphane Travassac (@stravassac)
+        METADATA:
+          status:
+          - preview
+          supported_by: community
+        
+
+EXAMPLES:
+
+- name: Create directory inside a vm
+  vmware_guest_file_operation:
+    hostname: "{{ vcenter_hostname }}"
+    username: "{{ vcenter_username }}"
+    password: "{{ vcenter_password }}"
+    datacenter: "{{ datacenter_name }}"
+    validate_certs: no
+    vm_id: "{{ guest_name }}"
+    vm_username: "{{ guest_username }}"
+    vm_password: "{{ guest_userpassword }}"
+    directory:
+      path: "/test"
+      operation: create
+      recurse: no
+  delegate_to: localhost
+
+- name: copy file to vm
+  vmware_guest_file_operation:
+    hostname: "{{ vcenter_hostname }}"
+    username: "{{ vcenter_username }}"
+    password: "{{ vcenter_password }}"
+    datacenter: "{{ datacenter_name }}"
+    vm_id: "{{ guest_name }}"
+    vm_username: "{{ guest_username }}"
+    vm_password: "{{ guest_userpassword }}"
+    copy:
+        src: "files/test.zip"
+        dest: "/root/test.zip"
+        overwrite: False
+  delegate_to: localhost
+
+- name: fetch file from vm
+  vmware_guest_file_operation:
+    hostname: "{{ vcenter_hostname }}"
+    username: "{{ vcenter_username }}"
+    password: "{{ vcenter_password }}"
+    datacenter: "{{ datacenter_name }}"
+    vm_id: "{{ guest_name }}"
+    vm_username: "{{ guest_username }}"
+    vm_password: "{{ guest_userpassword }}"
+    fetch:
+        src: "/root/test.zip"
+        dest: "files/test.zip"
+  delegate_to: localhost
+
+
+RETURN VALUES:
+
+

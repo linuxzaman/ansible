@@ -1,0 +1,85 @@
+> INFINI_POOL    (/usr/lib/python2.7/dist-packages/ansible/modules/storage/infinidat/infini_pool.py)
+
+        This module to creates, deletes or modifies pools on Infinibox.
+
+  * This module is maintained by The Ansible Community
+OPTIONS (= is mandatory):
+
+= name
+        Pool Name
+
+
+- password
+        Infinibox User password.
+        [Default: (null)]
+        type: str
+
+- size
+        Pool Physical Capacity in MB, GB or TB units. If pool size is not set on pool creation, size will be equal to 1TB. See examples.
+        [Default: (null)]
+
+- ssd_cache
+        Enable/Disable SSD Cache on Pool
+        [Default: True]
+        type: bool
+
+- state
+        Creates/Modifies Pool when present or removes when absent
+        (Choices: present, absent)[Default: present]
+
+= system
+        Infinibox Hostname or IPv4 Address.
+
+        type: str
+
+- user
+        Infinibox User username with sufficient priveledges ( see notes ).
+        [Default: (null)]
+
+- vsize
+        Pool Virtual Capacity in MB, GB or TB units. If pool vsize is not set on pool creation, Virtual Capacity will be equal to
+        Physical Capacity. See examples.
+        [Default: (null)]
+
+
+NOTES:
+      * Infinibox Admin level access is required for pool modifications
+      * This module requires infinisdk python library
+      * You must set INFINIBOX_USER and INFINIBOX_PASSWORD environment variables if user and password arguments are not passed to
+        the module directly
+      * Ansible uses the infinisdk configuration file `~/.infinidat/infinisdk.ini' if no credentials are provided. See
+        http://infinisdk.readthedocs.io/en/latest/getting_started.html
+
+
+REQUIREMENTS:  capacity, infinisdk, python >= 2.7
+
+AUTHOR: Gregory Shulov (@GR360RY)
+        METADATA:
+          status:
+          - preview
+          supported_by: community
+        
+
+EXAMPLES:
+
+- name: Make sure pool foo exists. Set pool physical capacity to 10TB
+  infini_pool:
+    name: foo
+    size: 10TB
+    vsize: 10TB
+    user: admin
+    password: secret
+    system: ibox001
+
+- name: Disable SSD Cache on pool
+  infini_pool:
+    name: foo
+    ssd_cache: no
+    user: admin
+    password: secret
+    system: ibox001
+
+
+RETURN VALUES:
+
+

@@ -1,0 +1,43 @@
+EXAMPLES:
+
+- name: Create user
+  pn_user:
+    pn_cliswitch: "sw01"
+    state: "present"
+    pn_scope: "fabric"
+    pn_password: "foo123"
+    pn_name: "foo"
+
+- name: Delete user
+  pn_user:
+    pn_cliswitch: "sw01"
+    state: "absent"
+    pn_name: "foo"
+
+- name: Modify user
+  pn_user:
+    pn_cliswitch: "sw01"
+    state: "update"
+    pn_password: "test1234"
+    pn_name: "foo"
+
+
+RETURN VALUES:
+
+command:
+  description: the CLI command run on the target node.
+  returned: always
+  type: str
+stdout:
+  description: set of responses from the user command.
+  returned: always
+  type: list
+stderr:
+  description: set of error responses from the user command.
+  returned: on error
+  type: list
+changed:
+  description: indicates whether the CLI caused changes on the target.
+  returned: always
+  type: bool
+

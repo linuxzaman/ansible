@@ -1,0 +1,120 @@
+> RAX_CBS_ATTACHMENTS    (/usr/lib/python2.7/dist-packages/ansible/modules/cloud/rackspace/rax_cbs_attachments.py)
+
+        Manipulate Rackspace Cloud Block Storage Volume Attachments
+
+  * This module is maintained by The Ansible Community
+OPTIONS (= is mandatory):
+
+- api_key
+        Rackspace API key, overrides `credentials'.
+        (Aliases: password)[Default: (null)]
+
+- auth_endpoint
+        The URI of the authentication service.
+        [Default: https://identity.api.rackspacecloud.com/v2.0/]
+        version_added: 1.5
+
+- credentials
+        File to find the Rackspace credentials in. Ignored if `api_key' and `username' are provided.
+        (Aliases: creds_file)[Default: (null)]
+
+- device
+        The device path to attach the volume to, e.g. /dev/xvde.
+        Before 2.4 this was a required field. Now it can be left to null to auto assign the device name.
+        [Default: (null)]
+
+- env
+        Environment as configured in `~/.pyrax.cfg', see https://github.com/rackspace/pyrax/blob/master/docs/getting_started.md#pyrax-
+        configuration.
+        [Default: (null)]
+        version_added: 1.5
+
+- identity_type
+        Authentication mechanism to use, such as rackspace or keystone.
+        [Default: rackspace]
+        version_added: 1.5
+
+- region
+        Region to create an instance in.
+        [Default: DFW]
+
+= server
+        Name or id of the server to attach/detach
+
+
+= state
+        Indicate desired state of the resource
+        (Choices: present, absent)[Default: present]
+
+- tenant_id
+        The tenant ID used for authentication.
+        [Default: (null)]
+        version_added: 1.5
+
+- tenant_name
+        The tenant name used for authentication.
+        [Default: (null)]
+        version_added: 1.5
+
+- username
+        Rackspace username, overrides `credentials'.
+        [Default: (null)]
+
+- validate_certs
+        Whether or not to require SSL validation of API endpoints.
+        (Aliases: verify_ssl)[Default: (null)]
+        type: bool
+        version_added: 1.5
+
+= volume
+        Name or id of the volume to attach/detach
+
+
+- wait
+        wait for the volume to be in 'in-use'/'available' state before returning
+        [Default: no]
+        type: bool
+
+- wait_timeout
+        how long before wait gives up, in seconds
+        [Default: 300]
+
+
+NOTES:
+      * The following environment variables can be used, `RAX_USERNAME', `RAX_API_KEY', `RAX_CREDS_FILE', `RAX_CREDENTIALS',
+        `RAX_REGION'.
+      * `RAX_CREDENTIALS' and `RAX_CREDS_FILE' points to a credentials file appropriate for pyrax. See
+        https://github.com/rackspace/pyrax/blob/master/docs/getting_started.md#authenticating
+      * `RAX_USERNAME' and `RAX_API_KEY' obviate the use of a credentials file
+      * `RAX_REGION' defines a Rackspace Public Cloud region (DFW, ORD, LON, ...)
+
+
+REQUIREMENTS:  python >= 2.6, pyrax
+
+AUTHOR: Christopher H. Laco (@claco), Matt Martz (@sivel)
+        METADATA:
+          status:
+          - preview
+          supported_by: community
+        
+
+EXAMPLES:
+
+- name: Attach a Block Storage Volume
+  gather_facts: False
+  hosts: local
+  connection: local
+  tasks:
+    - name: Storage volume attach request
+      local_action:
+        module: rax_cbs_attachments
+        credentials: ~/.raxpub
+        volume: my-volume
+        server: my-server
+        device: /dev/xvdd
+        region: DFW
+        wait: yes
+        state: present
+      register: my_volume
+
+

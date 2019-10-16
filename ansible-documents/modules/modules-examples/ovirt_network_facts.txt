@@ -1,0 +1,20 @@
+EXAMPLES:
+
+# Examples don't contain auth parameter for simplicity,
+# look at ovirt_auth module to see how to reuse authentication:
+
+# Gather facts about all networks which names start with C(vlan1):
+- ovirt_network_facts:
+    pattern: name=vlan1*
+- debug:
+    var: ovirt_networks
+
+
+RETURN VALUES:
+
+ovirt_networks:
+    description: "List of dictionaries describing the networks. Network attributes are mapped to dictionary keys,
+                  all networks attributes can be found at following url: http://ovirt.github.io/ovirt-engine-api-model/master/#types/network."
+    returned: On success.
+    type: list
+

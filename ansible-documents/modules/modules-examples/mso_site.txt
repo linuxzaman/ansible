@@ -1,0 +1,58 @@
+EXAMPLES:
+
+- name: Add a new site
+  mso_site:
+    host: mso_host
+    username: admin
+    password: SomeSecretPassword
+    site: north_europe
+    description: North European Datacenter
+    apic_username: mso_admin
+    apic_password: AnotherSecretPassword
+    apic_site_id: 12
+    urls:
+    - 10.2.3.4
+    - 10.2.4.5
+    - 10.3.5.6
+    labels:
+    - NEDC
+    - Europe
+    - Diegem
+    location:
+      latitude: 50.887318
+      longitude: 4.447084
+    state: present
+  delegate_to: localhost
+
+- name: Remove a site
+  mso_site:
+    host: mso_host
+    username: admin
+    password: SomeSecretPassword
+    site: north_europe
+    state: absent
+  delegate_to: localhost
+
+- name: Query a site
+  mso_site:
+    host: mso_host
+    username: admin
+    password: SomeSecretPassword
+    site: north_europe
+    state: query
+  delegate_to: localhost
+  register: query_result
+
+- name: Query all sites
+  mso_site:
+    host: mso_host
+    username: admin
+    password: SomeSecretPassword
+    state: query
+  delegate_to: localhost
+  register: query_result
+
+
+RETURN VALUES:
+
+

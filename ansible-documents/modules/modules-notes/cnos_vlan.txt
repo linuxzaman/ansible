@@ -1,0 +1,158 @@
+> CNOS_VLAN    (/usr/lib/python2.7/dist-packages/ansible/modules/network/cnos/cnos_vlan.py)
+
+        This module provides declarative management of VLANs on Lenovo CNOS network devices.
+
+  * This module is maintained by The Ansible Community
+OPTIONS (= is mandatory):
+
+- aggregate
+        List of VLANs definitions.
+        [Default: (null)]
+        version_added: 2.8
+
+- associated_interfaces
+        This is a intent option and checks the operational state of the for given vlan `name' for associated interfaces. If the value in
+        the `associated_interfaces' does not match with the operational state of vlan interfaces on device it will result in failure.
+        [Default: (null)]
+        version_added: 2.8
+
+- delay
+        Delay the play should wait to check for declarative intent params values.
+        [Default: 10]
+        version_added: 2.8
+
+= interfaces
+        List of interfaces that should be associated to the VLAN.
+
+        version_added: 2.8
+
+- name
+        Name of the VLAN.
+        [Default: (null)]
+        version_added: 2.8
+
+- provider
+        *Deprecated*
+        Starting with Ansible 2.5 we recommend using `connection: network_cli'.
+        For more information please see the L(CNOS Platform Options guide, ../network/user_guide/platform_cnos.html).
+        HORIZONTALLINE
+        A dict object containing connection details.
+        [Default: (null)]
+        suboptions:
+          auth_pass:
+            description:
+            - Specifies the password to use if required to enter privileged mode on the remote
+              device.  If `authorize' is false, then this argument does nothing. If the value
+              is not specified in the task, the value of environment variable `ANSIBLE_NET_AUTH_PASS'
+              will be used instead.
+          authorize:
+            default: 'no'
+            description:
+            - Instructs the module to enter privileged mode on the remote device before sending
+              any commands.  If not specified, the device will attempt to execute all commands
+              in non-privileged mode. If the value is not specified in the task, the value
+              of environment variable `ANSIBLE_NET_AUTHORIZE' will be used instead.
+            type: bool
+          host:
+            description:
+            - Specifies the DNS host name or address for connecting to the remote device over
+              the specified transport.  The value of host is used as the destination address
+              for the transport.
+            required: true
+          password:
+            description:
+            - Specifies the password to use to authenticate the connection to the remote device.   This
+              value is used to authenticate the SSH session. If the value is not specified
+              in the task, the value of environment variable `ANSIBLE_NET_PASSWORD' will
+              be used instead.
+          port:
+            default: 22
+            description:
+            - Specifies the port to use when building the connection to the remote device.
+          ssh_keyfile:
+            description:
+            - Specifies the SSH key to use to authenticate the connection to the remote device.   This
+              value is the path to the key used to authenticate the SSH session. If the value
+              is not specified in the task, the value of environment variable `ANSIBLE_NET_SSH_KEYFILE'
+              will be used instead.
+          timeout:
+            default: 10
+            description:
+            - Specifies the timeout in seconds for communicating with the network device for
+              either connecting or sending commands.  If the timeout is exceeded before the
+              operation is completed, the module will error.
+          username:
+            description:
+            - Configures the username to use to authenticate the connection to the remote
+              device.  This value is used to authenticate the SSH session. If the value is
+              not specified in the task, the value of environment variable `ANSIBLE_NET_USERNAME'
+              will be used instead.
+        
+        version_added: 2.8
+
+- purge
+        Purge VLANs not defined in the `aggregate' parameter.
+        [Default: False]
+        type: bool
+        version_added: 2.8
+
+- state
+        State of the VLAN configuration.
+        (Choices: present, absent, active, suspend)[Default: present]
+        version_added: 2.8
+
+= vlan_id
+        ID of the VLAN. Range 1-4094.
+
+        version_added: 2.8
+
+
+NOTES:
+      * Tested against CNOS 10.8.1
+
+
+AUTHOR: Anil Kumar Mureleedharan(@amuraleedhar)
+        METADATA:
+          status:
+          - preview
+          supported_by: community
+        
+
+EXAMPLES:
+
+- name: Create vlan
+  cnos_vlan:
+    vlan_id: 100
+    name: test-vlan
+    state: present
+
+- name: Add interfaces to VLAN
+  cnos_vlan:
+    vlan_id: 100
+    interfaces:
+      - Ethernet1/33
+      - Ethernet1/44
+
+- name: Check if interfaces is assigned to VLAN
+  cnos_vlan:
+    vlan_id: 100
+    associated_interfaces:
+      - Ethernet1/33
+      - Ethernet1/44
+
+- name: Delete vlan
+  cnos_vlan:
+    vlan_id: 100
+    state: absent
+
+
+RETURN VALUES:
+
+commands:
+  description: The list of configuration mode commands to send to the device
+  returned: always
+  type: list
+  sample:
+    - vlan 100
+    - name test-vlan
+

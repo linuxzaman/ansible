@@ -1,0 +1,123 @@
+> NA_ONTAP_SERVICE_PROCESSOR_NETWORK    (/usr/lib/python2.7/dist-packages/ansible/modules/storage/netapp/na_ontap_service_processor_network.py)
+
+        Modify a ONTAP service processor network
+
+  * This module is maintained by an Ansible Partner
+OPTIONS (= is mandatory):
+
+= address_type
+        Specify address class.
+        (Choices: ipv4, ipv6)
+
+- dhcp
+        Specify dhcp type.
+        (Choices: v4, none)[Default: (null)]
+
+- gateway_ip_address
+        Specify the gateway ip.
+        [Default: (null)]
+
+= hostname
+        The hostname or IP address of the ONTAP instance.
+
+        type: str
+
+- http_port
+        Override the default port (80 or 443) with this port
+        [Default: (null)]
+        type: int
+
+- https
+        Enable and disable https
+        [Default: False]
+        type: bool
+
+- ip_address
+        Specify the service processor ip address.
+        [Default: (null)]
+
+= is_enabled
+        Specify whether to enable or disable the service processor network.
+
+        type: bool
+
+- netmask
+        Specify the service processor netmask.
+        [Default: (null)]
+
+= node
+        The node where the service processor network should be enabled
+
+
+- ontapi
+        The ontap api version to use
+        [Default: (null)]
+        type: int
+
+= password
+        Password for the specified user.
+        (Aliases: pass)
+        type: str
+
+- prefix_length
+        Specify the service processor prefix_length.
+        [Default: (null)]
+
+- state
+        Whether the specified service processor network should exist or not.
+        (Choices: present)[Default: present]
+
+= username
+        This can be a Cluster-scoped or SVM-scoped account, depending on whether a Cluster-level or SVM-level API is required. For more
+        information, please read the documentation https://mysupport.netapp.com/NOW/download/software/nmsdk/9.4/.
+        (Aliases: user)
+        type: str
+
+- validate_certs
+        If set to `no', the SSL certificates will not be validated.
+        This should only set to `False' used on personally controlled sites using self-signed certificates.
+        [Default: True]
+        type: bool
+
+- wait_for_completion
+        Set this parameter to 'true' for synchronous execution (wait until SP status is successfully updated)
+        Set this parameter to 'false' for asynchronous execution
+        For asynchronous, execution exits as soon as the request is sent, without checking SP status
+        [Default: False]
+        type: bool
+        version_added: 2.8
+
+
+NOTES:
+      * The modules prefixed with na\\_ontap are built to support the ONTAP storage platform.
+
+
+REQUIREMENTS:  A physical or virtual clustered Data ONTAP system. The modules support Data ONTAP 9.1 and onward, Ansible 2.6, Python2
+        netapp-lib (2017.10.30) or later. Install using 'pip install netapp-lib', Python3 netapp-lib (2018.11.13) or
+        later. Install using 'pip install netapp-lib', To enable http on the cluster you must run the following commands
+        'set -privilege advanced;' 'system services web modify -http-enabled true;'
+
+AUTHOR: NetApp Ansible Team (@carchi8py) <ng-ansibleteam@netapp.com>
+        METADATA:
+          status:
+          - preview
+          supported_by: certified
+        
+
+EXAMPLES:
+
+- name: Modify Service Processor Network
+      na_ontap_service_processor_network:
+        state: present
+        address_type: ipv4
+        is_enabled: true
+        dhcp: v4
+        node: "{{ netapp_node }}"
+        username: "{{ netapp_username }}"
+        password: "{{ netapp_password }}"
+        hostname: "{{ netapp_hostname }}"
+
+
+RETURN VALUES:
+
+

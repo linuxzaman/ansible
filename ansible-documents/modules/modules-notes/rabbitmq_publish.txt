@@ -1,0 +1,136 @@
+> RABBITMQ_PUBLISH    (/usr/lib/python2.7/dist-packages/ansible/modules/notification/rabbitmq_publish.py)
+
+        Publish a message on a RabbitMQ queue using a blocking connection.
+
+  * This module is maintained by The Ansible Community
+OPTIONS (= is mandatory):
+
+- auto_delete
+        Set the queue to auto delete.
+        [Default: False]
+        type: bool
+
+- body
+        The body of the message.
+        A `body' cannot be provided if a `src' is specified.
+        [Default: (null)]
+
+- content_type
+        The content type of the body.
+        [Default: text/plain]
+
+- durable
+        Set the queue to be durable.
+        [Default: False]
+        type: bool
+
+- exchange
+        The exchange to publish a message to.
+        [Default: (null)]
+
+- exclusive
+        Set the queue to be exclusive.
+        [Default: False]
+        type: bool
+
+- headers
+        A dictionary of headers to post with the message.
+        [Default: {}]
+        type: dict
+
+- host
+        The RabbitMQ server hostname or IP.
+        [Default: (null)]
+
+- password
+        The RabbitMQ password.
+        [Default: (null)]
+
+- port
+        The RabbitMQ server port.
+        [Default: (null)]
+
+- proto
+        The protocol to use.
+        (Choices: amqps, amqp)[Default: (null)]
+
+- queue
+        The queue to publish a message to.  If no queue is specified, RabbitMQ will return a random queue name.
+        [Default: (null)]
+
+- routing_key
+        The routing key.
+        [Default: (null)]
+
+- src
+        A file to upload to the queue.  Automatic mime type detection is attempted if content_type is not defined (left as default).
+        A `src' cannot be provided if a `body' is specified.
+        The filename is added to the headers of the posted message to RabbitMQ. Key being the `filename', value is the filename.
+        (Aliases: file)[Default: (null)]
+
+- url
+        An URL connection string to connect to the RabbitMQ server.
+        `url' and `host'/`port'/`user'/`pass'/`vhost' are mutually exclusive, use either or but not both.
+        [Default: (null)]
+
+- username
+        The RabbitMQ username.
+        [Default: (null)]
+
+- vhost
+        The virtual host to target.
+        If default vhost is required, use `'%2F''.
+        [Default: (null)]
+
+
+NOTES:
+      * This module requires the pika python library https://pika.readthedocs.io/.
+      * Pika is a pure-Python implementation of the AMQP 0-9-1 protocol that tries to stay fairly independent of the underlying
+        network support library.
+      * This plugin is tested against RabbitMQ. Other AMQP 0.9.1 protocol based servers may work but not tested/guaranteed.
+
+
+REQUIREMENTS:  pika
+
+AUTHOR: John Imison (@Im0)
+        METADATA:
+          status:
+          - preview
+          supported_by: community
+        
+
+EXAMPLES:
+
+- name: Publish a message to a queue with headers
+  rabbitmq_publish:
+    url: "amqp://guest:guest@192.168.0.32:5672/%2F"
+    queue: 'test'
+    body: "Hello world from ansible module rabbitmq_publish"
+    content_type: "text/plain"
+    headers:
+      myHeader: myHeaderValue
+
+
+- name: Publish a file to a queue
+  rabbitmq_publish:
+    url: "amqp://guest:guest@192.168.0.32:5672/%2F"
+    queue: 'images'
+    file: 'path/to/logo.gif'
+
+- name: RabbitMQ auto generated queue
+  rabbitmq_publish:
+    url: "amqp://guest:guest@192.168.0.32:5672/%2F"
+    body: "Hello world random queue from ansible module rabbitmq_publish"
+    content_type: "text/plain"
+
+
+RETURN VALUES:
+
+result:
+  description:
+    - Contains the status I(msg), content type I(content_type) and the queue name I(queue).
+  returned: success
+  type: dict
+  sample: |
+    'result': { 'content_type': 'text/plain', 'msg': 'Successfully published to queue test', 'queue': 'test' }
+

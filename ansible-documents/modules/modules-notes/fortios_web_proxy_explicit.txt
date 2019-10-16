@@ -1,0 +1,350 @@
+> FORTIOS_WEB_PROXY_EXPLICIT    (/usr/lib/python2.7/dist-packages/ansible/modules/network/fortios/fortios_web_proxy_explicit.py)
+
+        This module is able to configure a FortiGate or FortiOS by allowing the user to set and modify web_proxy feature and explicit
+        category. Examples include all parameters and values need to be adjusted to datasources before usage. Tested with FOS v6.0.2
+
+  * This module is maintained by The Ansible Community
+OPTIONS (= is mandatory):
+
+= host
+        FortiOS or FortiGate ip address.
+
+
+- https
+        Indicates if the requests towards FortiGate must use HTTPS protocol
+        [Default: True]
+        type: bool
+
+- password
+        FortiOS or FortiGate password.
+        [Default: ]
+
+= username
+        FortiOS or FortiGate username.
+
+
+- vdom
+        Virtual domain, among those defined previously. A vdom is a virtual instance of the FortiGate that can be configured and used as
+        a different unit.
+        [Default: root]
+
+- web_proxy_explicit
+        Configure explicit Web proxy settings.
+        [Default: None]
+        suboptions:
+          ftp-incoming-port:
+            description:
+            - Accept incoming FTP-over-HTTP requests on one or more ports (0 - 65535, default
+              = 0; use the same as HTTP).
+          ftp-over-http:
+            choices:
+            - enable
+            - disable
+            description:
+            - Enable to proxy FTP-over-HTTP sessions sent from a web browser.
+          http-incoming-port:
+            description:
+            - Accept incoming HTTP requests on one or more ports (0 - 65535, default = 8080).
+          https-incoming-port:
+            description:
+            - Accept incoming HTTPS requests on one or more ports (0 - 65535, default = 0,
+              use the same as HTTP).
+          https-replacement-message:
+            choices:
+            - enable
+            - disable
+            description:
+            - Enable/disable sending the client a replacement message for HTTPS requests.
+          incoming-ip:
+            description:
+            - Restrict the explicit HTTP proxy to only accept sessions from this IP address.
+              An interface must have this IP address.
+          incoming-ip6:
+            description:
+            - Restrict the explicit web proxy to only accept sessions from this IPv6 address.
+              An interface must have this IPv6 address.
+          ipv6-status:
+            choices:
+            - enable
+            - disable
+            description:
+            - Enable/disable allowing an IPv6 web proxy destination in policies and all IPv6
+              related entries in this command.
+          message-upon-server-error:
+            choices:
+            - enable
+            - disable
+            description:
+            - Enable/disable displaying a replacement message when a server error is detected.
+          outgoing-ip:
+            description:
+            - Outgoing HTTP requests will have this IP address as their source address. An
+              interface must have this IP address.
+          outgoing-ip6:
+            description:
+            - Outgoing HTTP requests will leave this IPv6. Multiple interfaces can be specified.
+              Interfaces must have these IPv6 addresses.
+          pac-file-data:
+            description:
+            - PAC file contents enclosed in quotes (maximum of 256K bytes).
+          pac-file-name:
+            description:
+            - Pac file name.
+          pac-file-server-port:
+            description:
+            - Port number that PAC traffic from client web browsers uses to connect to the
+              explicit web proxy (0 - 65535, default = 0; use the same as HTTP).
+          pac-file-server-status:
+            choices:
+            - enable
+            - disable
+            description:
+            - Enable/disable Proxy Auto-Configuration (PAC) for users of this explicit proxy
+              profile.
+          pac-file-url:
+            description:
+            - PAC file access URL.
+          pac-policy:
+            description:
+            - PAC policies.
+            suboptions:
+              comments:
+                description:
+                - Optional comments.
+              dstaddr:
+                description:
+                - Destination address objects.
+                suboptions:
+                  name:
+                    description:
+                    - Address name. Source firewall.address.name firewall.addrgrp.name.
+                    required: true
+              pac-file-data:
+                description:
+                - PAC file contents enclosed in quotes (maximum of 256K bytes).
+              pac-file-name:
+                description:
+                - Pac file name.
+              policyid:
+                description:
+                - Policy ID.
+                required: true
+              srcaddr:
+                description:
+                - Source address objects.
+                suboptions:
+                  name:
+                    description:
+                    - Address name. Source firewall.address.name firewall.addrgrp.name firewall.proxy-address.name
+                      firewall.proxy-addrgrp.name.
+                    required: true
+              srcaddr6:
+                description:
+                - Source address6 objects.
+                suboptions:
+                  name:
+                    description:
+                    - Address name. Source firewall.address6.name firewall.addrgrp6.name.
+                    required: true
+              status:
+                choices:
+                - enable
+                - disable
+                description:
+                - Enable/disable policy.
+          pref-dns-result:
+            choices:
+            - ipv4
+            - ipv6
+            description:
+            - Prefer resolving addresses using the configured IPv4 or IPv6 DNS server (default
+              = ipv4).
+          realm:
+            description:
+            - Authentication realm used to identify the explicit web proxy (maximum of 63
+              characters).
+          sec-default-action:
+            choices:
+            - accept
+            - deny
+            description:
+            - Accept or deny explicit web proxy sessions when no web proxy firewall policy
+              exists.
+          socks:
+            choices:
+            - enable
+            - disable
+            description:
+            - Enable/disable the SOCKS proxy.
+          socks-incoming-port:
+            description:
+            - Accept incoming SOCKS proxy requests on one or more ports (0 - 65535, default
+              = 0; use the same as HTTP).
+          ssl-algorithm:
+            choices:
+            - low
+            description:
+            - 'Relative strength of encryption algorithms accepted in HTTPS deep scan: high,
+              medium, or low.'
+          status:
+            choices:
+            - enable
+            - disable
+            description:
+            - Enable/disable the explicit Web proxy for HTTP and HTTPS session.
+          strict-guest:
+            choices:
+            - enable
+            - disable
+            description:
+            - Enable/disable strict guest user checking by the explicit web proxy.
+          trace-auth-no-rsp:
+            choices:
+            - enable
+            - disable
+            description:
+            - Enable/disable logging timed-out authentication requests.
+          unknown-http-version:
+            choices:
+            - reject
+            - best-effort
+            description:
+            - Either reject unknown HTTP traffic as malformed or handle unknown HTTP traffic
+              as best as the proxy server can.
+        
+
+
+NOTES:
+      * Requires fortiosapi library developed by Fortinet
+      * Run as a local_action in your playbook
+
+
+REQUIREMENTS:  fortiosapi>=0.9.8
+
+AUTHOR: Miguel Angel Munoz (@mamunozgonzalez), Nicolas Thomas (@thomnico)
+        METADATA:
+          status:
+          - preview
+          supported_by: community
+        
+
+EXAMPLES:
+
+- hosts: localhost
+  vars:
+   host: "192.168.122.40"
+   username: "admin"
+   password: ""
+   vdom: "root"
+  tasks:
+  - name: Configure explicit Web proxy settings.
+    fortios_web_proxy_explicit:
+      host:  "{{ host }}"
+      username: "{{ username }}"
+      password: "{{ password }}"
+      vdom:  "{{ vdom }}"
+      https: "False"
+      web_proxy_explicit:
+        ftp-incoming-port: "<your_own_value>"
+        ftp-over-http: "enable"
+        http-incoming-port: "<your_own_value>"
+        https-incoming-port: "<your_own_value>"
+        https-replacement-message: "enable"
+        incoming-ip: "<your_own_value>"
+        incoming-ip6: "<your_own_value>"
+        ipv6-status: "enable"
+        message-upon-server-error: "enable"
+        outgoing-ip: "<your_own_value>"
+        outgoing-ip6: "<your_own_value>"
+        pac-file-data: "<your_own_value>"
+        pac-file-name: "<your_own_value>"
+        pac-file-server-port: "<your_own_value>"
+        pac-file-server-status: "enable"
+        pac-file-url: "<your_own_value>"
+        pac-policy:
+         -
+            comments: "<your_own_value>"
+            dstaddr:
+             -
+                name: "default_name_22 (source firewall.address.name firewall.addrgrp.name)"
+            pac-file-data: "<your_own_value>"
+            pac-file-name: "<your_own_value>"
+            policyid: "25"
+            srcaddr:
+             -
+                name: "default_name_27 (source firewall.address.name firewall.addrgrp.name firewall.proxy-address.name firewall.proxy-addrgrp.name)"
+            srcaddr6:
+             -
+                name: "default_name_29 (source firewall.address6.name firewall.addrgrp6.name)"
+            status: "enable"
+        pref-dns-result: "ipv4"
+        realm: "<your_own_value>"
+        sec-default-action: "accept"
+        socks: "enable"
+        socks-incoming-port: "<your_own_value>"
+        ssl-algorithm: "low"
+        status: "enable"
+        strict-guest: "enable"
+        trace-auth-no-rsp: "enable"
+        unknown-http-version: "reject"
+
+
+RETURN VALUES:
+
+build:
+  description: Build number of the fortigate image
+  returned: always
+  type: str
+  sample: '1547'
+http_method:
+  description: Last method used to provision the content into FortiGate
+  returned: always
+  type: str
+  sample: 'PUT'
+http_status:
+  description: Last result given by FortiGate on last operation applied
+  returned: always
+  type: str
+  sample: "200"
+mkey:
+  description: Master key (id) used in the last call to FortiGate
+  returned: success
+  type: str
+  sample: "id"
+name:
+  description: Name of the table used to fulfill the request
+  returned: always
+  type: str
+  sample: "urlfilter"
+path:
+  description: Path of the table used to fulfill the request
+  returned: always
+  type: str
+  sample: "webfilter"
+revision:
+  description: Internal revision number
+  returned: always
+  type: str
+  sample: "17.0.2.10658"
+serial:
+  description: Serial number of the unit
+  returned: always
+  type: str
+  sample: "FGVMEVYYQT3AB5352"
+status:
+  description: Indication of the operation's result
+  returned: always
+  type: str
+  sample: "success"
+vdom:
+  description: Virtual domain used
+  returned: always
+  type: str
+  sample: "root"
+version:
+  description: Version of the FortiGate
+  returned: always
+  type: str
+  sample: "v5.6.3"
+
+

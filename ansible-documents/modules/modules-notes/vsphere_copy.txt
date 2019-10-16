@@ -1,0 +1,83 @@
+> VSPHERE_COPY    (/usr/lib/python2.7/dist-packages/ansible/modules/cloud/vmware/vsphere_copy.py)
+
+        Upload files to a vCenter datastore
+
+  * This module is maintained by The Ansible Community
+OPTIONS (= is mandatory):
+
+= datacenter
+        The datacenter on the vCenter server that holds the datastore.
+
+
+= datastore
+        The datastore on the vCenter server to push files to.
+
+
+= host
+        The vCenter server on which the datastore is available.
+        (Aliases: hostname)
+
+= login
+        The login name to authenticate on the vCenter server.
+        (Aliases: username)
+
+= password
+        The password to authenticate on the vCenter server.
+
+
+= path
+        The file to push to the datastore on the vCenter server.
+
+
+= src
+        The file to push to vCenter
+
+
+- timeout
+        The timeout in seconds for the upload to the datastore.
+        [Default: 10]
+        type: int
+        version_added: 2.8
+
+- validate_certs
+        If `no', SSL certificates will not be validated. This should only be set to `no' when no other option exists.
+        [Default: yes]
+        type: bool
+
+
+NOTES:
+      * This module ought to be run from a system that can access vCenter directly and has the file to transfer. It can be the
+        normal remote target or you can change it either by using `transport: local' or using `delegate_to'.
+      * Tested on vSphere 5.5
+
+
+AUTHOR: Dag Wieers (@dagwieers)
+        METADATA:
+          status:
+          - preview
+          supported_by: community
+        
+
+EXAMPLES:
+
+- vsphere_copy:
+    host: '{{ vhost }}'
+    login: '{{ vuser }}'
+    password: '{{ vpass }}'
+    src: /some/local/file
+    datacenter: DC1 Someplace
+    datastore: datastore1
+    path: some/remote/file
+  delegate_to: localhost
+
+- vsphere_copy:
+    host: '{{ vhost }}'
+    login: '{{ vuser }}'
+    password: '{{ vpass }}'
+    src: /other/local/file
+    datacenter: DC2 Someplace
+    datastore: datastore2
+    path: other/remote/file
+  delegate_to: other_system
+
+

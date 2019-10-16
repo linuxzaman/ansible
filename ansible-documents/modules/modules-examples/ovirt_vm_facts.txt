@@ -1,0 +1,28 @@
+EXAMPLES:
+
+# Examples don't contain auth parameter for simplicity,
+# look at ovirt_auth module to see how to reuse authentication:
+
+# Gather facts about all VMs which names start with C(centos) and
+# belong to cluster C(west):
+- ovirt_vm_facts:
+    pattern: name=centos* and cluster=west
+- debug:
+    var: ovirt_vms
+
+# Gather info about next run configuration of virtual machine named myvm
+- ovirt_vm_facts:
+    pattern: name=myvm
+    next_run: true
+- debug:
+    var: ovirt_vms[0]
+
+
+RETURN VALUES:
+
+ovirt_vms:
+    description: "List of dictionaries describing the VMs. VM attributes are mapped to dictionary keys,
+                  all VMs attributes can be found at following url: http://ovirt.github.io/ovirt-engine-api-model/master/#types/vm."
+    returned: On success.
+    type: list
+

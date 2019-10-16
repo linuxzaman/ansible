@@ -1,0 +1,104 @@
+> AIX_INITTAB    (/usr/lib/python2.7/dist-packages/ansible/modules/system/aix_inittab.py)
+
+        Manages the inittab on AIX.
+
+  * This module is maintained by The Ansible Community
+OPTIONS (= is mandatory):
+
+= action
+        Action what the init has to do with this entry.
+        (Choices: boot, bootwait, hold, initdefault, off, once, ondemand, powerfail, powerwait, respawn, sysinit, wait)
+        type: str
+
+= command
+        What command has to run.
+
+        type: str
+
+- insertafter
+        After which inittabline should the new entry inserted.
+        [Default: (null)]
+        type: str
+
+= name
+        Name of the inittab entry.
+        (Aliases: service)
+        type: str
+
+= runlevel
+        Runlevel of the entry.
+
+        type: str
+
+- state
+        Whether the entry should be present or absent in the inittab file.
+        (Choices: absent, present)[Default: present]
+        type: str
+
+
+NOTES:
+      * The changes are persistent across reboots.
+      * You need root rights to read or adjust the inittab with the `lsitab', `chitab', `mkitab' or `rmitab' commands.
+      * Tested on AIX 7.1.
+
+
+REQUIREMENTS:  itertools
+
+AUTHOR: Joris Weijters (@molekuul)
+        METADATA:
+          status:
+          - preview
+          supported_by: community
+        
+
+EXAMPLES:
+
+# Add service startmyservice to the inittab, directly after service existingservice.
+- name: Add startmyservice to inittab
+  aix_inittab:
+    name: startmyservice
+    runlevel: 4
+    action: once
+    command: echo hello
+    insertafter: existingservice
+    state: present
+  become: yes
+
+# Change inittab entry startmyservice to runlevel "2" and processaction "wait".
+- name: Change startmyservice to inittab
+  aix_inittab:
+    name: startmyservice
+    runlevel: 2
+    action: wait
+    command: echo hello
+    state: present
+  become: yes
+
+- name: Remove startmyservice from inittab
+  aix_inittab:
+    name: startmyservice
+    runlevel: 2
+    action: wait
+    command: echo hello
+    state: absent
+  become: yes
+
+
+RETURN VALUES:
+
+name:
+    description: Name of the adjusted inittab entry
+    returned: always
+    type: str
+    sample: startmyservice
+msg:
+    description: Action done with the inittab entry
+    returned: changed
+    type: str
+    sample: changed inittab entry startmyservice
+changed:
+    description: Whether the inittab changed or not
+    returned: always
+    type: bool
+    sample: true
+

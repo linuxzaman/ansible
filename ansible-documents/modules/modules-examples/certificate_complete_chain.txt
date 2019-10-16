@@ -1,0 +1,55 @@
+EXAMPLES:
+
+# Given a leaf certificate for www.ansible.com and one or more intermediate
+# certificates, finds the associated root certificate.
+- name: Find root certificate
+  certificate_complete_chain:
+    input_chain: "{{ lookup('file', '/etc/ssl/csr/www.ansible.com-fullchain.pem') }}"
+    root_certificates:
+    - /etc/ca-certificates/
+  register: www_ansible_com
+- name: Write root certificate to disk
+  copy:
+    dest: /etc/ssl/csr/www.ansible.com-root.pem
+    content: "{{ www_ansible_com.root }}"
+
+# Given a leaf certificate for www.ansible.com, and a list of intermediate
+# certificates, finds the associated root certificate.
+- name: Find root certificate
+  certificate_complete_chain:
+    input_chain: "{{ lookup('file', '/etc/ssl/csr/www.ansible.com.pem') }}"
+    intermediate_certificates:
+    - /etc/ssl/csr/www.ansible.com-chain.pem
+    root_certificates:
+    - /etc/ca-certificates/
+  register: www_ansible_com
+- name: Write complete chain to disk
+  copy:
+    dest: /etc/ssl/csr/www.ansible.com-completechain.pem
+    content: "{{ ''.join(www_ansible_com.complete_chain) }}"
+- name: Write root chain (intermediates and root) to disk
+  copy:
+    dest: /etc/ssl/csr/www.ansible.com-rootchain.pem
+    content: "{{ ''.join(www_ansible_com.chain) }}"
+
+
+RETURN VALUES:
+
+root:
+    description:
+        - "The root certificate in PEM format."
+    returned: success
+    type: str
+chain:
+    description:
+        - "The chain added to the given input chain. Includes the root certificate."
+        - "Returned as a list of PEM certificates."
+    returned: success
+    type: list
+complete_chain:
+    description:
+        - "The completed chain, including leaf, all intermediates, and root."
+        - "Returned as a list of PEM certificates."
+    returned: success
+    type: list
+

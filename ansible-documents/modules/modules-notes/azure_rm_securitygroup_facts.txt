@@ -1,0 +1,268 @@
+> AZURE_RM_SECURITYGROUP_FACTS    (/usr/lib/python2.7/dist-packages/ansible/modules/cloud/azure/azure_rm_securitygroup_facts.py)
+
+        Get facts for a specific security group or all security groups within a resource group.
+
+  * This module is maintained by The Ansible Community
+OPTIONS (= is mandatory):
+
+- ad_user
+        Active Directory username. Use when authenticating with an Active Directory user rather than service principal.
+        [Default: (null)]
+        type: str
+
+- adfs_authority_url
+        Azure AD authority url. Use when authenticating with Username/password, and has your own ADFS authority.
+        [Default: (null)]
+        type: str
+        version_added: 2.6
+
+- api_profile
+        Selects an API profile to use when communicating with Azure services. Default value of `latest' is appropriate for public clouds;
+        future values will allow use with Azure Stack.
+        [Default: latest]
+        type: str
+        version_added: 2.5
+
+- auth_source
+        Controls the source of the credentials to use for authentication.
+        If not specified, ANSIBLE_AZURE_AUTH_SOURCE environment variable will be used and default to `auto' if variable is not defined.
+        `auto' will follow the default precedence of module parameters -> environment variables -> default profile in credential file
+        `~/.azure/credentials'.
+        When set to `cli', the credentials will be sources from the default Azure CLI profile.
+        Can also be set via the `ANSIBLE_AZURE_AUTH_SOURCE' environment variable.
+        When set to `msi', the host machine must be an azure resource with an enabled MSI extension. `subscription_id' or the environment
+        variable `AZURE_SUBSCRIPTION_ID' can be used to identify the subscription ID if the resource is granted access to more than one
+        subscription, otherwise the first subscription is chosen.
+        The `msi' was added in Ansible 2.6.
+        (Choices: auto, cli, credential_file, env, msi)[Default: (null)]
+        type: str
+        version_added: 2.5
+
+- cert_validation_mode
+        Controls the certificate validation behavior for Azure endpoints. By default, all modules will validate the server certificate,
+        but when an HTTPS proxy is in use, or against Azure Stack, it may be necessary to disable this behavior by passing `ignore'. Can
+        also be set via credential file profile or the `AZURE_CERT_VALIDATION' environment variable.
+        (Choices: ignore, validate)[Default: (null)]
+        type: str
+        version_added: 2.5
+
+- client_id
+        Azure client ID. Use when authenticating with a Service Principal.
+        [Default: (null)]
+        type: str
+
+- cloud_environment
+        For cloud environments other than the US public cloud, the environment name (as defined by Azure Python SDK, eg,
+        `AzureChinaCloud', `AzureUSGovernment'), or a metadata discovery endpoint URL (required for Azure Stack). Can also be set via
+        credential file profile or the `AZURE_CLOUD_ENVIRONMENT' environment variable.
+        [Default: AzureCloud]
+        type: str
+        version_added: 2.4
+
+- name
+        Only show results for a specific security group.
+        [Default: (null)]
+
+- password
+        Active Directory user password. Use when authenticating with an Active Directory user rather than service principal.
+        [Default: (null)]
+
+- profile
+        Security profile found in ~/.azure/credentials file.
+        [Default: (null)]
+        type: str
+
+= resource_group
+        Name of the resource group to use.
+
+
+- secret
+        Azure client secret. Use when authenticating with a Service Principal.
+        [Default: (null)]
+        type: str
+
+- subscription_id
+        Your Azure subscription Id.
+        [Default: (null)]
+        type: str
+
+- tags
+        Limit results by providing a list of tags. Format tags as 'key' or 'key:value'.
+        [Default: (null)]
+
+- tenant
+        Azure tenant ID. Use when authenticating with a Service Principal.
+        [Default: (null)]
+        type: str
+
+
+NOTES:
+      * For authentication with Azure you can pass parameters, set environment variables, use a profile stored in
+        ~/.azure/credentials, or log in before you run your tasks or playbook with `az login'.
+      * Authentication is also possible using a service principal or Active Directory user.
+      * To authenticate via service principal, pass subscription_id, client_id, secret and tenant or set environment variables
+        AZURE_SUBSCRIPTION_ID, AZURE_CLIENT_ID, AZURE_SECRET and AZURE_TENANT.
+      * To authenticate via Active Directory user, pass ad_user and password, or set AZURE_AD_USER and AZURE_PASSWORD in the
+        environment.
+      * Alternatively, credentials can be stored in ~/.azure/credentials. This is an ini file containing a [default] section and
+        the following keys: subscription_id, client_id, secret and tenant or subscription_id, ad_user and password. It is also
+        possible to add additional profiles. Specify the profile by passing profile or setting AZURE_PROFILE in the environment.
+
+
+SEE ALSO:
+      * Sign in with Azure CLI
+           How to authenticate using the `az login' command.
+           https://docs.microsoft.com/en-us/cli/azure/authenticate-azure-cli?view=azure-cli-latest
+
+
+REQUIREMENTS:  python >= 2.7, azure >= 2.0.0
+
+AUTHOR: Chris Houseknecht (@chouseknecht), Matt Davis (@nitzmahone)
+        METADATA:
+          status:
+          - preview
+          supported_by: community
+        
+
+EXAMPLES:
+
+- name: Get facts for one security group
+      azure_rm_securitygroup_facts:
+        resource_group: myResourceGroup
+        name: secgroup001
+
+    - name: Get facts for all security groups
+      azure_rm_securitygroup_facts:
+        resource_group: myResourceGroup
+
+
+RETURN VALUES:
+
+azure_securitygroups:
+    description: List containing security group dicts.
+    returned: always
+    type: list
+    example: [{
+        "etag": 'W/"d036f4d7-d977-429a-a8c6-879bc2523399"',
+        "id": "/subscriptions/xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx/resourceGroup/myResourceGroup/providers/Microsoft.Network/networkSecurityGroups/secgroup001",
+        "location": "eastus2",
+        "name": "secgroup001",
+        "properties": {
+            "defaultSecurityRules": [
+                {
+                    "etag": 'W/"d036f4d7-d977-429a-a8c6-879bc2523399"',
+                    "id": "/subscriptions/xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx/resourceGroup/myResourceGroup/providers/Microsoft.Network/networkSecurityGroups/secgroup001/defaultSecurityRules/AllowVnetInBound",
+                    "name": "AllowVnetInBound",
+                    "properties": {
+                        "access": "Allow",
+                        "description": "Allow inbound traffic from all VMs in VNET",
+                        "destinationAddressPrefix": "VirtualNetwork",
+                        "destinationPortRange": "*",
+                        "direction": "Inbound",
+                        "priority": 65000,
+                        "protocol": "*",
+                        "provisioningState": "Succeeded",
+                        "sourceAddressPrefix": "VirtualNetwork",
+                        "sourcePortRange": "*"
+                    }
+                },
+                {
+                    "etag": 'W/"d036f4d7-d977-429a-a8c6-879bc2523399"',
+                    "id": "/subscriptions/xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx/resourceGroup/myResourceGroup/providers/Microsoft.Network/networkSecurityGroups/secgroup001/defaultSecurityRules/AllowAzureLoadBalancerInBound",
+                    "name": "AllowAzureLoadBalancerInBound",
+                    "properties": {
+                        "access": "Allow",
+                        "description": "Allow inbound traffic from azure load balancer",
+                        "destinationAddressPrefix": "*",
+                        "destinationPortRange": "*",
+                        "direction": "Inbound",
+                        "priority": 65001,
+                        "protocol": "*",
+                        "provisioningState": "Succeeded",
+                        "sourceAddressPrefix": "AzureLoadBalancer",
+                        "sourcePortRange": "*"
+                    }
+                },
+                {
+                    "etag": 'W/"d036f4d7-d977-429a-a8c6-879bc2523399"',
+                    "id": "/subscriptions/xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx/resourceGroup/myResourceGroup/providers/Microsoft.Network/networkSecurityGroups/secgroup001/defaultSecurityRules/DenyAllInBound",
+                    "name": "DenyAllInBound",
+                    "properties": {
+                        "access": "Deny",
+                        "description": "Deny all inbound traffic",
+                        "destinationAddressPrefix": "*",
+                        "destinationPortRange": "*",
+                        "direction": "Inbound",
+                        "priority": 65500,
+                        "protocol": "*",
+                        "provisioningState": "Succeeded",
+                        "sourceAddressPrefix": "*",
+                        "sourcePortRange": "*"
+                    }
+                },
+                {
+                    "etag": 'W/"d036f4d7-d977-429a-a8c6-879bc2523399"',
+                    "id": "/subscriptions/xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx/resourceGroup/myResourceGroup/providers/Microsoft.Network/networkSecurityGroups/secgroup001/defaultSecurityRules/AllowVnetOutBound",
+                    "name": "AllowVnetOutBound",
+                    "properties": {
+                        "access": "Allow",
+                        "description": "Allow outbound traffic from all VMs to all VMs in VNET",
+                        "destinationAddressPrefix": "VirtualNetwork",
+                        "destinationPortRange": "*",
+                        "direction": "Outbound",
+                        "priority": 65000,
+                        "protocol": "*",
+                        "provisioningState": "Succeeded",
+                        "sourceAddressPrefix": "VirtualNetwork",
+                        "sourcePortRange": "*"
+                    }
+                },
+                {
+                    "etag": 'W/"d036f4d7-d977-429a-a8c6-879bc2523399"',
+                    "id": "/subscriptions/xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx/resourceGroup/myResourceGroup/providers/Microsoft.Network/networkSecurityGroups/secgroup001/defaultSecurityRules/AllowInternetOutBound",
+                    "name": "AllowInternetOutBound",
+                    "properties": {
+                        "access": "Allow",
+                        "description": "Allow outbound traffic from all VMs to Internet",
+                        "destinationAddressPrefix": "Internet",
+                        "destinationPortRange": "*",
+                        "direction": "Outbound",
+                        "priority": 65001,
+                        "protocol": "*",
+                        "provisioningState": "Succeeded",
+                        "sourceAddressPrefix": "*",
+                        "sourcePortRange": "*"
+                    }
+                },
+                {
+                    "etag": 'W/"d036f4d7-d977-429a-a8c6-879bc2523399"',
+                    "id": "/subscriptions/xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx/resourceGroup/myResourceGroup/providers/Microsoft.Network/networkSecurityGroups/secgroup001/defaultSecurityRules/DenyAllOutBound",
+                    "name": "DenyAllOutBound",
+                    "properties": {
+                        "access": "Deny",
+                        "description": "Deny all outbound traffic",
+                        "destinationAddressPrefix": "*",
+                        "destinationPortRange": "*",
+                        "direction": "Outbound",
+                        "priority": 65500,
+                        "protocol": "*",
+                        "provisioningState": "Succeeded",
+                        "sourceAddressPrefix": "*",
+                        "sourcePortRange": "*"
+                    }
+                }
+            ],
+            "networkInterfaces": [
+                {
+                    "id": "/subscriptions/xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx/resourceGroup/myResourceGroup/providers/Microsoft.Network/networkInterfaces/nic004"
+                }
+            ],
+            "provisioningState": "Succeeded",
+            "resourceGuid": "ebd00afa-5dc8-446f-810a-50dd6f671588",
+            "securityRules": []
+        },
+        "tags": {},
+        "type": "Microsoft.Network/networkSecurityGroups"
+    }]
+
+

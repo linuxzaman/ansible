@@ -1,0 +1,138 @@
+> VMWARE_VSWITCH    (/usr/lib/python2.7/dist-packages/ansible/modules/cloud/vmware/vmware_vswitch.py)
+
+        This module can be used to add, remove and update a VMware Standard Switch to an ESXi host.
+
+  * This module is maintained by The Ansible Community
+OPTIONS (= is mandatory):
+
+- esxi_hostname
+        Manage the vSwitch using this ESXi host system.
+        (Aliases: host)[Default: (null)]
+        version_added: 2.5
+
+- hostname
+        The hostname or IP address of the vSphere vCenter or ESXi server.
+        If the value is not specified in the task, the value of environment variable `VMWARE_HOST' will be used instead.
+        Environment variable support added in Ansible 2.6.
+        [Default: (null)]
+        type: str
+
+- mtu
+        MTU to configure on vSwitch.
+        [Default: 1500]
+
+- nics
+        A list of vmnic names or vmnic name to attach to vSwitch.
+        Alias `nics' is added in version 2.4.
+        (Aliases: nic_name)[Default: []]
+
+- number_of_ports
+        Number of port to configure on vSwitch.
+        [Default: 128]
+
+- password
+        The password of the vSphere vCenter or ESXi server.
+        If the value is not specified in the task, the value of environment variable `VMWARE_PASSWORD' will be used instead.
+        Environment variable support added in Ansible 2.6.
+        (Aliases: pass, pwd)[Default: (null)]
+        type: str
+
+- port
+        The port number of the vSphere vCenter or ESXi server.
+        If the value is not specified in the task, the value of environment variable `VMWARE_PORT' will be used instead.
+        Environment variable support added in Ansible 2.6.
+        [Default: 443]
+        type: int
+        version_added: 2.5
+
+- state
+        Add or remove the switch.
+        (Choices: absent, present)[Default: present]
+
+= switch
+        vSwitch name to add.
+        Alias `switch' is added in version 2.4.
+        (Aliases: switch_name)
+
+- username
+        The username of the vSphere vCenter or ESXi server.
+        If the value is not specified in the task, the value of environment variable `VMWARE_USER' will be used instead.
+        Environment variable support added in Ansible 2.6.
+        (Aliases: admin, user)[Default: (null)]
+        type: str
+
+- validate_certs
+        Allows connection when SSL certificates are not valid. Set to `false' when certificates are not trusted.
+        If the value is not specified in the task, the value of environment variable `VMWARE_VALIDATE_CERTS' will be used instead.
+        Environment variable support added in Ansible 2.6.
+        If set to `yes', please make sure Python >= 2.7.9 is installed on the given machine.
+        [Default: True]
+        type: bool
+
+
+NOTES:
+      * Tested on vSphere 5.5 and 6.5
+
+
+REQUIREMENTS:  python >= 2.6, PyVmomi
+
+AUTHOR: Joseph Callen (@jcpowermac), Russell Teague (@mtnbikenc), Abhijeet Kasurde (@Akasurde) <akasurde@redhat.com>
+        METADATA:
+          status:
+          - preview
+          supported_by: community
+        
+
+EXAMPLES:
+
+- name: Add a VMware vSwitch
+  vmware_vswitch:
+    hostname: '{{ esxi_hostname }}'
+    username: '{{ esxi_username }}'
+    password: '{{ esxi_password }}'
+    switch: vswitch_name
+    nics: vmnic_name
+    mtu: 9000
+  delegate_to: localhost
+
+- name: Add a VMWare vSwitch without any physical NIC attached
+  vmware_vswitch:
+    hostname: '{{ esxi_hostname }}'
+    username: '{{ esxi_username }}'
+    password: '{{ esxi_password }}'
+    switch: vswitch_0001
+    mtu: 9000
+  delegate_to: localhost
+
+- name: Add a VMWare vSwitch with multiple NICs
+  vmware_vswitch:
+    hostname: '{{ esxi_hostname }}'
+    username: '{{ esxi_username }}'
+    password: '{{ esxi_password }}'
+    switch: vmware_vswitch_0004
+    nics:
+    - vmnic1
+    - vmnic2
+    mtu: 9000
+  delegate_to: localhost
+
+- name: Add a VMware vSwitch to a specific host system
+  vmware_vswitch:
+    hostname: '{{ esxi_hostname }}'
+    username: '{{ esxi_username }}'
+    password: '{{ esxi_password }}'
+    esxi_hostname: DC0_H0
+    switch_name: vswitch_001
+    nic_name: vmnic0
+    mtu: 9000
+  delegate_to: localhost
+
+
+RETURN VALUES:
+
+result:
+    description: information about performed operation
+    returned: always
+    type: str
+    sample: "vSwitch 'vSwitch_1002' is created successfully"
+

@@ -1,0 +1,42 @@
+EXAMPLES:
+
+- name: Gather facts about all Users on given ESXi host system
+  vmware_local_user_facts:
+    hostname: '{{ esxi_hostname }}'
+    username: '{{ esxi_username }}'
+    password: '{{ esxi_password }}'
+  delegate_to: localhost
+  register: all_user_facts
+
+
+RETURN VALUES:
+
+local_user_facts:
+    description: metadata about all local users
+    returned: always
+    type: dict
+    sample: [
+        {
+            "role": "admin",
+            "description": "Administrator",
+            "full_name": "Administrator",
+            "group": false,
+            "user_group": false,
+            "user_id": 0,
+            "user_name": "root",
+            "principal": "root",
+            "shell_access": true
+        },
+        {
+            "role": "admin",
+            "description": "DCUI User",
+            "full_name": "DCUI User",
+            "group": false,
+            "user_group": false,
+            "user_id": 100,
+            "user_name": "dcui",
+            "principal": "dcui",
+            "shell_access": false
+        },
+    ]
+

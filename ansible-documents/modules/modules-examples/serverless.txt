@@ -1,0 +1,54 @@
+EXAMPLES:
+
+- name: Basic deploy of a service
+  serverless:
+    service_path: '{{ project_dir }}'
+    state: present
+
+- name: Deploy specific functions
+  serverless:
+    service_path: '{{ project_dir }}'
+    functions:
+      - my_func_one
+      - my_func_two
+
+- name: Deploy a project, then pull its resource list back into Ansible
+  serverless:
+    stage: dev
+    region: us-east-1
+    service_path: '{{ project_dir }}'
+  register: sls
+
+# The cloudformation stack is always named the same as the full service, so the
+# cloudformation_facts module can get a full list of the stack resources, as
+# well as stack events and outputs
+- cloudformation_facts:
+    region: us-east-1
+    stack_name: '{{ sls.service_name }}'
+    stack_resources: true
+
+- name: Deploy a project using a locally installed serverless binary
+  serverless:
+    stage: dev
+    region: us-east-1
+    service_path: '{{ project_dir }}'
+    serverless_bin_path: node_modules/.bin/serverless
+
+
+RETURN VALUES:
+
+service_name:
+  type: str
+  description: The service name specified in the serverless.yml that was just deployed.
+  returned: always
+  sample: my-fancy-service-dev
+state:
+  type: str
+  description: Whether the stack for the serverless project is present/absent.
+  returned: always
+command:
+  type: str
+  description: Full `serverless` command run by this module, in case you want to re-run the command outside the module.
+  returned: always
+  sample: serverless deploy --stage production
+

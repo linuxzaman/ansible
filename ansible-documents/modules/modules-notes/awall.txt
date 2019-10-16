@@ -1,0 +1,54 @@
+> AWALL    (/usr/lib/python2.7/dist-packages/ansible/modules/system/awall.py)
+
+        This modules allows for enable/disable/activate of `awall' policies. Alpine Wall (`awall') generates a firewall configuration
+        from the enabled policy files and activates the configuration on the system.
+
+  * This module is maintained by The Ansible Community
+OPTIONS (= is mandatory):
+
+- activate
+        Activate the new firewall rules.
+        Can be run with other steps or on its own.
+        [Default: False]
+        type: bool
+
+- name
+        One or more policy names.
+        [Default: (null)]
+        type: list
+
+- state
+        Whether the policies should be enabled or disabled.
+        (Choices: disabled, enabled)[Default: enabled]
+        type: str
+
+
+AUTHOR: Ted Trask (@tdtrask) <ttrask01@yahoo.com>
+        METADATA:
+          status:
+          - stableinterface
+          supported_by: community
+        
+
+EXAMPLES:
+
+- name: Enable "foo" and "bar" policy
+  awall:
+    name: [ foo bar ]
+    state: enabled
+
+- name: Disable "foo" and "bar" policy and activate new rules
+  awall:
+    name:
+    - foo
+    - bar
+    state: disabled
+    activate: no
+
+- name: Activate currently enabled firewall rules
+  awall:
+    activate: yes
+
+
+RETURN VALUES:
+ # 

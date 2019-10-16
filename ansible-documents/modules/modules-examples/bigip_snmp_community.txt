@@ -1,0 +1,97 @@
+EXAMPLES:
+
+- name: Create an SMNP v2c read-only community
+  bigip_snmp_community:
+    name: foo
+    version: v2c
+    source: all
+    oid: .1
+    access: ro
+    provider:
+      password: secret
+      server: lb.mydomain.com
+      user: admin
+  delegate_to: localhost
+
+- name: Create an SMNP v3 read-write community
+  bigip_snmp_community:
+    name: foo
+    version: v3
+    snmp_username: foo
+    snmp_auth_protocol: sha
+    snmp_auth_password: secret
+    snmp_privacy_protocol: aes
+    snmp_privacy_password: secret
+    oid: .1
+    access: rw
+    provider:
+      password: secret
+      server: lb.mydomain.com
+      user: admin
+  delegate_to: localhost
+
+- name: Remove the default 'public' SNMP community
+  bigip_snmp_community:
+    name: public
+    source: default
+    state: absent
+    provider:
+      password: secret
+      server: lb.mydomain.com
+      user: admin
+  delegate_to: localhost
+
+
+RETURN VALUES:
+
+community:
+  description: The new community value.
+  returned: changed
+  type: str
+  sample: community1
+oid:
+  description: The new OID value.
+  returned: changed
+  type: str
+  sample: .1
+ip_version:
+  description: The new IP version value.
+  returned: changed
+  type: str
+  sample: .1
+snmp_auth_protocol:
+  description: The new SNMP auth protocol.
+  returned: changed
+  type: str
+  sample: sha
+snmp_privacy_protocol:
+  description: The new SNMP privacy protocol.
+  returned: changed
+  type: str
+  sample: aes
+access:
+  description: The new access level for the MIB.
+  returned: changed
+  type: str
+  sample: ro
+source:
+  description: The new source address to access the MIB.
+  returned: changed
+  type: str
+  sample: 1.1.1.1
+snmp_username:
+  description: The new SNMP username.
+  returned: changed
+  type: str
+  sample: user1
+snmp_auth_password:
+  description: The new password of the given snmp_username.
+  returned: changed
+  type: str
+  sample: secret1
+snmp_privacy_password:
+  description: The new password of the given snmp_username.
+  returned: changed
+  type: str
+  sample: secret2
+

@@ -1,0 +1,175 @@
+> MERAKI_MR_L3_FIREWALL    (/usr/lib/python2.7/dist-packages/ansible/modules/network/meraki/meraki_mr_l3_firewall.py)
+
+        Allows for creation, management, and visibility into layer 3 firewalls implemented on Meraki MR access points.
+
+  * This module is maintained by The Ansible Community
+OPTIONS (= is mandatory):
+
+- allow_lan_access
+        Sets whether devices can talk to other devices on the same LAN.
+        [Default: True]
+        type: bool
+
+- auth_key
+        Authentication key provided by the dashboard. Required if environmental variable `MERAKI_KEY' is not set.
+        [Default: (null)]
+        type: str
+
+- host
+        Hostname for Meraki dashboard.
+        Only useful for internal Meraki developers.
+        [Default: api.meraki.com]
+        type: str
+
+- net_id
+        ID of network containing access points.
+        [Default: (null)]
+        type: str
+
+- net_name
+        Name of network containing access points.
+        [Default: (null)]
+        type: str
+
+- number
+        Number of SSID to apply firewall rule to.
+        (Aliases: ssid_number)[Default: (null)]
+        type: int
+
+- org_id
+        ID of organization.
+        [Default: (null)]
+        type: int
+
+- org_name
+        Name of organization.
+        (Aliases: organization)[Default: (null)]
+        type: str
+
+- output_level
+        Set amount of debug output during module execution.
+        (Choices: debug, normal)[Default: normal]
+        type: str
+
+- rules
+        List of firewall rules.
+        [Default: (null)]
+        suboptions:
+          comment:
+            description:
+            - Optional comment describing the firewall rule.
+            type: str
+          dest_cidr:
+            description:
+            - Comma-separated list of CIDR notation networks to match.
+            type: str
+          dest_port:
+            description:
+            - Comma-seperated list of destination ports to match.
+            type: str
+          policy:
+            choices:
+            - allow
+            - deny
+            description:
+            - Specifies the action that should be taken when rule is hit.
+            type: str
+          protocol:
+            choices:
+            - any
+            - icmp
+            - tcp
+            - udp
+            description:
+            - Specifies protocol to match against.
+            type: str
+        
+        type: list
+
+- ssid_name
+        Name of SSID to apply firewall rule to.
+        (Aliases: ssid)[Default: (null)]
+        type: str
+
+- state
+        Create or modify an organization.
+        (Choices: present, query)[Default: present]
+        type: str
+
+- timeout
+        Time to timeout for HTTP requests.
+        [Default: 30]
+        type: int
+
+- use_https
+        If `no', it will use HTTP. Otherwise it will use HTTPS.
+        Only useful for internal Meraki developers.
+        [Default: True]
+        type: bool
+
+- use_proxy
+        If `no', it will not use a proxy, even if one is defined in an environment variable on the target hosts.
+        [Default: (null)]
+        type: bool
+
+- validate_certs
+        Whether to validate HTTP certificates.
+        [Default: True]
+        type: bool
+
+
+NOTES:
+      * More information about the Meraki API can be found at https://dashboard.meraki.com/api_docs.
+      * Some of the options are likely only used for developers within Meraki.
+
+
+AUTHOR: Kevin Breit (@kbreit)
+        METADATA:
+          status:
+          - preview
+          supported_by: community
+        
+
+EXAMPLES:
+
+- name: Create single firewall rule
+  meraki_mr_l3_firewall:
+    auth_key: abc123
+    state: present
+    org_name: YourOrg
+    net_id: 12345
+    number: 1
+    rules:
+      - comment: Integration test rule
+        policy: allow
+        protocol: tcp
+        dest_port: 80
+        dest_cidr: 192.0.2.0/24
+    allow_lan_access: no
+  delegate_to: localhost
+
+- name: Enable local LAN access
+  meraki_mr_l3_firewall:
+    auth_key: abc123
+    state: present
+    org_name: YourOrg
+    net_id: 123
+    number: 1
+    rules:
+    allow_lan_access: yes
+  delegate_to: localhost
+
+- name: Query firewall rules
+  meraki_mr_l3_firewall:
+    auth_key: abc123
+    state: query
+    org_name: YourOrg
+    net_name: YourNet
+    number: 1
+  delegate_to: localhost
+
+
+RETURN VALUES:
+
+
+

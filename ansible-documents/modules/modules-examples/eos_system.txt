@@ -1,0 +1,51 @@
+EXAMPLES:
+
+- name: configure hostname and domain-name
+  eos_system:
+    hostname: eos01
+    domain_name: test.example.com
+
+- name: remove configuration
+  eos_system:
+    state: absent
+
+- name: configure DNS lookup sources
+  eos_system:
+    lookup_source: Management1
+
+- name: configure DNS lookup sources with VRF support
+  eos_system:
+      lookup_source:
+        - interface: Management1
+          vrf: mgmt
+        - interface: Ethernet1
+          vrf: myvrf
+
+- name: configure name servers
+  eos_system:
+    name_servers:
+      - 8.8.8.8
+      - 8.8.4.4
+
+- name: configure name servers with VRF support
+  eos_system:
+    name_servers:
+      - { server: 8.8.8.8, vrf: mgmt }
+      - { server: 8.8.4.4, vrf: mgmt }
+
+
+RETURN VALUES:
+
+commands:
+  description: The list of configuration mode commands to send to the device
+  returned: always
+  type: list
+  sample:
+    - hostname eos01
+    - ip domain-name test.example.com
+session_name:
+  description: The EOS config session name used to load the configuration
+  returned: changed
+  type: str
+  sample: ansible_1479315771
+

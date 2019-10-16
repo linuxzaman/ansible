@@ -1,0 +1,97 @@
+EXAMPLES:
+
+- name: ensure a snapshot policy daily at 1h00 UTC
+  cs_snapshot_policy:
+    volume: ROOT-478
+    schedule: '00:1'
+    max_snaps: 3
+  delegate_to: localhost
+
+- name: ensure a snapshot policy daily at 1h00 UTC on the second DATADISK of VM web-01
+  cs_snapshot_policy:
+    vm: web-01
+    volume_type: DATADISK
+    device_id: 2
+    schedule: '00:1'
+    max_snaps: 3
+  delegate_to: localhost
+
+- name: ensure a snapshot policy hourly at minute 5 UTC
+  cs_snapshot_policy:
+    volume: ROOT-478
+    schedule: '5'
+    interval_type: hourly
+    max_snaps: 1
+  delegate_to: localhost
+
+- name: ensure a snapshot policy weekly on Sunday at 05h00, TZ Europe/Zurich
+  cs_snapshot_policy:
+    volume: ROOT-478
+    schedule: '00:5:1'
+    interval_type: weekly
+    max_snaps: 1
+    time_zone: 'Europe/Zurich'
+  delegate_to: localhost
+
+- name: ensure a snapshot policy is absent
+  cs_snapshot_policy:
+    volume: ROOT-478
+    interval_type: hourly
+    state: absent
+  delegate_to: localhost
+
+
+RETURN VALUES:
+
+---
+id:
+  description: UUID of the snapshot policy.
+  returned: success
+  type: str
+  sample: a6f7a5fc-43f8-11e5-a151-feff819cdc9f
+interval_type:
+  description: interval type of the snapshot policy.
+  returned: success
+  type: str
+  sample: daily
+schedule:
+  description: schedule of the snapshot policy.
+  returned: success
+  type: str
+  sample:
+max_snaps:
+  description: maximum number of snapshots retained.
+  returned: success
+  type: int
+  sample: 10
+time_zone:
+  description: the time zone of the snapshot policy.
+  returned: success
+  type: str
+  sample: Etc/UTC
+volume:
+  description: the volume of the snapshot policy.
+  returned: success
+  type: str
+  sample: Etc/UTC
+zone:
+  description: Name of zone the volume is related to.
+  returned: success
+  type: str
+  sample: ch-gva-2
+project:
+  description: Name of project the volume is related to.
+  returned: success
+  type: str
+  sample: Production
+account:
+  description: Account the volume is related to.
+  returned: success
+  type: str
+  sample: example account
+domain:
+  description: Domain the volume is related to.
+  returned: success
+  type: str
+  sample: example domain
+

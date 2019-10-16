@@ -1,0 +1,180 @@
+> OS_FLOATING_IP    (/usr/lib/python2.7/dist-packages/ansible/modules/cloud/openstack/os_floating_ip.py)
+
+        Add or Remove a floating IP to an instance
+
+  * This module is maintained by The Ansible Community
+OPTIONS (= is mandatory):
+
+- api_timeout
+        How long should the socket layer wait before timing out for API calls. If this is omitted, nothing will be passed to the requests
+        library.
+        [Default: (null)]
+        type: int
+
+- auth
+        Dictionary containing auth information as needed by the cloud's auth plugin strategy. For the default `password' plugin, this
+        would contain `auth_url', `username', `password', `project_name' and any information about domains (for example,
+        `os_user_domain_name' or `os_project_domain_name') if the cloud supports them. For other plugins, this param will need to contain
+        whatever parameters that auth plugin requires. This parameter is not needed if a named cloud is provided or OpenStack OS_*
+        environment variables are present.
+        [Default: (null)]
+        type: dict
+
+- auth_type
+        Name of the auth plugin to use. If the cloud uses something other than password authentication, the name of the plugin should be
+        indicated here and the contents of the `auth' parameter should be updated accordingly.
+        [Default: (null)]
+        type: str
+
+- availability_zone
+        Ignored. Present for backwards compatibility
+        [Default: (null)]
+
+- ca_cert
+        A path to a CA Cert bundle that can be used as part of verifying SSL API requests.
+        (Aliases: cacert)[Default: (null)]
+        type: str
+
+- client_cert
+        A path to a client certificate to use as part of the SSL transaction.
+        (Aliases: cert)[Default: (null)]
+        type: str
+
+- client_key
+        A path to a client key to use as part of the SSL transaction.
+        (Aliases: key)[Default: (null)]
+        type: str
+
+- cloud
+        Named cloud or cloud config to operate against. If `cloud' is a string, it references a named cloud config as defined in an
+        OpenStack clouds.yaml file. Provides default values for `auth' and `auth_type'. This parameter is not needed if `auth' is
+        provided or if OpenStack OS_* environment variables are present. If `cloud' is a dict, it contains a complete cloud configuration
+        like would be in a section of clouds.yaml.
+        [Default: (null)]
+        type: raw
+
+- fixed_address
+        To which fixed IP of server the floating IP address should be attached to.
+        [Default: (null)]
+
+- floating_ip_address
+        A floating IP address to attach or to detach. Required only if `state' is absent. When `state' is present can be used to specify
+        a IP address to attach.
+        [Default: (null)]
+
+- interface
+        Endpoint URL type to fetch from the service catalog.
+        (Aliases: endpoint_type)(Choices: admin, internal, public)[Default: public]
+        type: str
+        version_added: 2.3
+
+- nat_destination
+        The name or id of a neutron private network that the fixed IP to attach floating IP is on
+        (Aliases: fixed_network, internal_network)[Default: (null)]
+        version_added: 2.3
+
+- network
+        The name or ID of a neutron external network or a nova pool name.
+        [Default: (null)]
+
+- purge
+        When `state' is absent, indicates whether or not to delete the floating IP completely, or only detach it from the server. Default
+        is to detach only.
+        [Default: no]
+        type: bool
+        version_added: 2.1
+
+- region_name
+        Name of the region.
+        [Default: (null)]
+        type: str
+
+- reuse
+        When `state' is present, and `floating_ip_address' is not present, this parameter can be used to specify whether we should try to
+        reuse a floating IP address already allocated to the project.
+        [Default: no]
+        type: bool
+
+= server
+        The name or ID of the instance to which the IP address should be assigned.
+
+
+- state
+        Should the resource be present or absent.
+        (Choices: present, absent)[Default: present]
+
+- timeout
+        Time to wait for an IP address to appear as attached. See wait.
+        [Default: 60]
+        type: int
+
+- validate_certs
+        Whether or not SSL API requests should be verified.
+        Before Ansible 2.3 this defaulted to `yes'.
+        (Aliases: verify)[Default: False]
+        type: bool
+
+- wait
+        When attaching a floating IP address, specify whether we should wait for it to appear as attached.
+        [Default: no]
+        type: bool
+
+
+NOTES:
+      * The standard OpenStack environment variables, such as `OS_USERNAME' may be used instead of providing explicit values.
+      * Auth information is driven by openstacksdk, which means that values can come from a yaml config file in
+        /etc/ansible/openstack.yaml, /etc/openstack/clouds.yaml or ~/.config/openstack/clouds.yaml, then from standard environment
+        variables, then finally by explicit parameters in plays. More information can be found at
+        https://docs.openstack.org/openstacksdk/
+
+
+REQUIREMENTS:  openstacksdk, python >= 2.7
+
+AUTHOR: Davide Guerri (@dguerri) <davide.guerri@hp.com>
+        METADATA:
+          status:
+          - preview
+          supported_by: community
+        
+
+EXAMPLES:
+
+# Assign a floating IP to the fist interface of `cattle001` from an exiting
+# external network or nova pool. A new floating IP from the first available
+# external network is allocated to the project.
+- os_floating_ip:
+     cloud: dguerri
+     server: cattle001
+
+# Assign a new floating IP to the instance fixed ip `192.0.2.3` of
+# `cattle001`. If a free floating IP is already allocated to the project, it is
+# reused; if not, a new one is created.
+- os_floating_ip:
+     cloud: dguerri
+     state: present
+     reuse: yes
+     server: cattle001
+     network: ext_net
+     fixed_address: 192.0.2.3
+     wait: true
+     timeout: 180
+
+# Assign a new floating IP from the network `ext_net` to the instance fixed
+# ip in network `private_net` of `cattle001`.
+- os_floating_ip:
+     cloud: dguerri
+     state: present
+     server: cattle001
+     network: ext_net
+     nat_destination: private_net
+     wait: true
+     timeout: 180
+
+# Detach a floating IP address from a server
+- os_floating_ip:
+     cloud: dguerri
+     state: absent
+     floating_ip_address: 203.0.113.2
+     server: cattle001
+
+

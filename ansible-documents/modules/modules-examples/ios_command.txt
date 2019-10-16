@@ -1,0 +1,55 @@
+EXAMPLES:
+
+tasks:
+  - name: run show version on remote devices
+    ios_command:
+      commands: show version
+
+  - name: run show version and check to see if output contains IOS
+    ios_command:
+      commands: show version
+      wait_for: result[0] contains IOS
+
+  - name: run multiple commands on remote nodes
+    ios_command:
+      commands:
+        - show version
+        - show interfaces
+
+  - name: run multiple commands and evaluate the output
+    ios_command:
+      commands:
+        - show version
+        - show interfaces
+      wait_for:
+        - result[0] contains IOS
+        - result[1] contains Loopback0
+  - name: run commands that require answering a prompt
+    ios_command:
+      commands:
+        - command: 'clear counters GigabitEthernet0/1'
+          prompt: 'Clear "show interface" counters on this interface \[confirm\]'
+          answer: 'y'
+        - command: 'clear counters GigabitEthernet0/2'
+          prompt: '[confirm]'
+          answer: "\r"
+
+
+RETURN VALUES:
+
+stdout:
+  description: The set of responses from the commands
+  returned: always apart from low level errors (such as action plugin)
+  type: list
+  sample: ['...', '...']
+stdout_lines:
+  description: The value of stdout split into a list
+  returned: always apart from low level errors (such as action plugin)
+  type: list
+  sample: [['...', '...'], ['...'], ['...']]
+failed_conditions:
+  description: The list of conditionals that have failed
+  returned: failed
+  type: list
+  sample: ['...', '...']
+

@@ -1,0 +1,106 @@
+> DIGITAL_OCEAN_IMAGE_FACTS    (/usr/lib/python2.7/dist-packages/ansible/modules/cloud/digital_ocean/digital_ocean_image_facts.py)
+
+        This module can be used to gather facts about DigitalOcean provided images. These images can be either of type `distribution',
+        `application' and `private'.
+
+  * This module is maintained by The Ansible Community
+OPTIONS (= is mandatory):
+
+- image_type
+        Specifies the type of image facts to be retrived.
+        If set to `application', then facts are gathered related to all application images.
+        If set to `distribution', then facts are gathered related to all distribution images.
+        If set to `private', then facts are gathered related to all private images.
+        If not set to any of above, then facts are gathered related to all images.
+        (Choices: all, application, distribution, private)[Default: all]
+
+- oauth_token
+        DigitalOcean OAuth token.
+        There are several other environment variables which can be used to provide this value.
+        i.e., - 'DO_API_TOKEN', 'DO_API_KEY', 'DO_OAUTH_TOKEN' and 'OAUTH_TOKEN'
+        (Aliases: api_token)[Default: (null)]
+        type: str
+
+- timeout
+        The timeout in seconds used for polling DigitalOcean's API.
+        [Default: 30]
+        type: int
+
+- validate_certs
+        If set to `no', the SSL certificates will not be validated.
+        This should only set to `no' used on personally controlled sites using self-signed certificates.
+        [Default: True]
+        type: bool
+
+
+REQUIREMENTS:  python >= 2.6
+
+AUTHOR: Abhijeet Kasurde (@Akasurde)
+        METADATA:
+          status:
+          - preview
+          supported_by: community
+        
+
+EXAMPLES:
+
+- name: Gather facts about all images
+  digital_ocean_image_facts:
+    image_type: all
+    oauth_token: "{{ oauth_token }}"
+
+- name: Gather facts about application images
+  digital_ocean_image_facts:
+    image_type: application
+    oauth_token: "{{ oauth_token }}"
+
+- name: Gather facts about distribution images
+  digital_ocean_image_facts:
+    image_type: distribution
+    oauth_token: "{{ oauth_token }}"
+
+- name: Get distribution about image with slug coreos-beta
+  digital_ocean_image_facts:
+  register: resp_out
+- set_fact:
+    distribution_name: "{{ item.distribution }}"
+  loop: "{{ resp_out.data|json_query(name) }}"
+  vars:
+    name: "[?slug=='coreos-beta']"
+- debug: var=distribution_name
+
+
+RETURN VALUES:
+
+data:
+    description: DigitalOcean image facts
+    returned: success
+    type: list
+    sample: [
+        {
+            "created_at": "2018-02-02T07:11:43Z",
+            "distribution": "CoreOS",
+            "id": 31434061,
+            "min_disk_size": 20,
+            "name": "1662.1.0 (beta)",
+            "public": true,
+            "regions": [
+                "nyc1",
+                "sfo1",
+                "nyc2",
+                "ams2",
+                "sgp1",
+                "lon1",
+                "nyc3",
+                "ams3",
+                "fra1",
+                "tor1",
+                "sfo2",
+                "blr1"
+            ],
+            "size_gigabytes": 0.42,
+            "slug": "coreos-beta",
+            "type": "snapshot"
+        },
+    ]
+

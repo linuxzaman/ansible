@@ -1,0 +1,100 @@
+> TOWER_ROLE    (/usr/lib/python2.7/dist-packages/ansible/modules/web_infrastructure/ansible_tower/tower_role.py)
+
+        Create, update, or destroy Ansible Tower roles. See https://www.ansible.com/tower for an overview.
+
+  * This module is maintained by The Ansible Community
+OPTIONS (= is mandatory):
+
+- credential
+        Credential the role acts on.
+        [Default: (null)]
+
+- inventory
+        Inventory the role acts on.
+        [Default: (null)]
+
+- job_template
+        The job template the role acts on.
+        [Default: (null)]
+
+- organization
+        Organization the role acts on.
+        [Default: (null)]
+
+- project
+        Project the role acts on.
+        [Default: (null)]
+
+= role
+        The role type to grant/revoke.
+        (Choices: admin, read, member, execute, adhoc, update, use, auditor)
+
+- state
+        Desired state of the resource.
+        (Choices: present, absent)[Default: present]
+
+- target_team
+        Team that the role acts on.
+        [Default: (null)]
+
+- team
+        Team that receives the permissions specified by the role.
+        [Default: (null)]
+
+- tower_config_file
+        Path to the Tower config file.
+        [Default: (null)]
+        type: path
+
+- tower_host
+        URL to your Tower instance.
+        [Default: (null)]
+        type: str
+
+- tower_password
+        Password for your Tower instance.
+        [Default: (null)]
+        type: str
+
+- tower_username
+        Username for your Tower instance.
+        [Default: (null)]
+        type: str
+
+- user
+        User that receives the permissions specified by the role.
+        [Default: (null)]
+
+- validate_certs
+        Whether to allow insecure connections to Tower.
+        If `no', SSL certificates will not be validated.
+        This should only be used on personally controlled sites using self-signed certificates.
+        (Aliases: tower_verify_ssl)[Default: (null)]
+        type: bool
+
+
+NOTES:
+      * If no `config_file' is provided we will attempt to use the tower-cli library defaults to find your Tower host information.
+      * `config_file' should contain Tower configuration in the following format host=hostname username=username password=password
+
+
+REQUIREMENTS:  ansible-tower-cli >= 3.0.2
+
+AUTHOR: Wayne Witzel III (@wwitzel3)
+        METADATA:
+          status:
+          - preview
+          supported_by: community
+        
+
+EXAMPLES:
+
+- name: Add jdoe to the member role of My Team
+  tower_role:
+    user: jdoe
+    target_team: "My Team"
+    role: member
+    state: present
+    tower_config_file: "~/tower_cli.cfg"
+
+

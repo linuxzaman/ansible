@@ -1,0 +1,45 @@
+EXAMPLES:
+
+- name: Modify stp port
+  pn_stp_port:
+    pn_cliswitch: "sw01"
+    state: "update"
+    pn_port: "1"
+    pn_filter: True
+    pn_priority: '144'
+
+- name: Modify stp port
+  pn_stp_port:
+    pn_cliswitch: "sw01"
+    state: "update"
+    pn_port: "1"
+    pn_cost: "200"
+
+- name: Modify stp port
+  pn_stp_port:
+    pn_cliswitch: "sw01"
+    state: "update"
+    pn_port: "1"
+    pn_edge: True
+    pn_cost: "200"
+
+
+RETURN VALUES:
+
+command:
+  description: the CLI command run on the target node.
+  returned: always
+  type: str
+stdout:
+  description: set of responses from the stp-port command.
+  returned: always
+  type: list
+stderr:
+  description: set of error responses from the stp-port command.
+  returned: on error
+  type: list
+changed:
+  description: indicates whether the CLI caused changes on the target.
+  returned: always
+  type: bool
+

@@ -1,0 +1,418 @@
+> ELB_APPLICATION_LB    (/usr/lib/python2.7/dist-packages/ansible/modules/cloud/amazon/elb_application_lb.py)
+
+        Manage an AWS Application Elastic Load Balancer. See https://aws.amazon.com/blogs/aws/new-aws-application-load-balancer/ for
+        details.
+
+  * This module is maintained by The Ansible Community
+OPTIONS (= is mandatory):
+
+- access_logs_enabled
+        Whether or not to enable access logs. When true, `access_logs_s3_bucket' must be set.
+        [Default: (null)]
+        type: bool
+
+- access_logs_s3_bucket
+        The name of the S3 bucket for the access logs.
+        Required if access logs in Amazon S3 are enabled.
+        The bucket must exist in the same region as the load balancer and have a bucket policy that grants Elastic Load Balancing
+        permission to write to the bucket.
+        [Default: (null)]
+
+- access_logs_s3_prefix
+        The prefix for the log location in the S3 bucket.
+        If you don't specify a prefix, the access logs are stored in the root of the bucket.
+        Cannot begin or end with a slash.
+        [Default: (null)]
+
+- aws_access_key
+        AWS access key. If not set then the value of the AWS_ACCESS_KEY_ID, AWS_ACCESS_KEY or EC2_ACCESS_KEY environment variable is
+        used.
+        (Aliases: ec2_access_key, access_key)[Default: (null)]
+        type: str
+
+- aws_secret_key
+        AWS secret key. If not set then the value of the AWS_SECRET_ACCESS_KEY, AWS_SECRET_KEY, or EC2_SECRET_KEY environment variable is
+        used.
+        (Aliases: ec2_secret_key, secret_key)[Default: (null)]
+        type: str
+
+- debug_botocore_endpoint_logs
+        Use a botocore.endpoint logger to parse the unique (rather than total) "resource:action" API calls made during a task, outputing
+        the set to the resource_actions key in the task results. Use the aws_resource_action callback to output to total list made during
+        a playbook. The ANSIBLE_DEBUG_BOTOCORE_LOGS environment variable may also be used.
+        [Default: no]
+        type: bool
+        version_added: 2.8
+
+- deletion_protection
+        Indicates whether deletion protection for the ELB is enabled.
+        [Default: False]
+        type: bool
+
+- ec2_url
+        Url to use to connect to EC2 or your Eucalyptus cloud (by default the module will use EC2 endpoints). Ignored for modules where
+        region is required. Must be specified for all other modules if region is not used. If not set then the value of the EC2_URL
+        environment variable, if any, is used.
+        [Default: (null)]
+        type: str
+
+- http2
+        Indicates whether to enable HTTP2 routing.
+        [Default: False]
+        type: bool
+        version_added: 2.6
+        
+
+- idle_timeout
+        The number of seconds to wait before an idle connection is closed.
+        [Default: 60]
+
+- listeners
+        A list of dicts containing listeners to attach to the ELB. See examples for detail of the dict required. Note that listener keys
+        are CamelCased.
+        [Default: (null)]
+
+= name
+        The name of the load balancer. This name must be unique within your AWS account, can have a maximum of 32 characters, must
+        contain only alphanumeric characters or hyphens, and must not begin or end with a hyphen.
+
+
+- profile
+        Uses a boto profile. Only works with boto >= 2.24.0.
+        [Default: (null)]
+        type: str
+        version_added: 1.6
+
+- purge_listeners
+        If yes, existing listeners will be purged from the ELB to match exactly what is defined by `listeners' parameter. If the
+        `listeners' parameter is not set then listeners will not be modified
+        [Default: True]
+        type: bool
+
+- purge_rules
+        When set to no, keep the existing load balancer rules in place. Will modify and add, but will not delete.
+        [Default: True]
+        type: bool
+        version_added: 2.7
+        
+
+- purge_tags
+        If yes, existing tags will be purged from the resource to match exactly what is defined by `tags' parameter. If the `tags'
+        parameter is not set then tags will not be modified.
+        [Default: True]
+        type: bool
+
+- region
+        The AWS region to use. If not specified then the value of the AWS_REGION or EC2_REGION environment variable, if any, is used. See
+        http://docs.aws.amazon.com/general/latest/gr/rande.html#ec2_region
+        (Aliases: aws_region, ec2_region)[Default: (null)]
+        type: str
+
+- scheme
+        Internet-facing or internal load balancer. An ELB scheme can not be modified after creation.
+        (Choices: internet-facing, internal)[Default: internet-facing]
+
+- security_groups
+        A list of the names or IDs of the security groups to assign to the load balancer. Required if state=present.
+        [Default: []]
+
+- security_token
+        AWS STS security token. If not set then the value of the AWS_SECURITY_TOKEN or EC2_SECURITY_TOKEN environment variable is used.
+        (Aliases: access_token)[Default: (null)]
+        type: str
+        version_added: 1.6
+
+- state
+        Create or destroy the load balancer.
+        (Choices: present, absent)[Default: present]
+
+- subnets
+        A list of the IDs of the subnets to attach to the load balancer. You can specify only one subnet per Availability Zone. You must
+        specify subnets from at least two Availability Zones. Required if state=present.
+        [Default: (null)]
+
+- tags
+        A dictionary of one or more tags to assign to the load balancer.
+        [Default: (null)]
+
+- validate_certs
+        When set to "no", SSL certificates will not be validated for boto versions >= 2.6.0.
+        [Default: True]
+        type: bool
+        version_added: 1.5
+
+- wait
+        Wait for the load balancer to have a state of 'active' before completing. A status check is performed every 15 seconds until a
+        successful state is reached. An error is returned after 40 failed checks.
+        [Default: False]
+        type: bool
+        version_added: 2.6
+        
+
+- wait_timeout
+        The time in seconds to use in conjunction with `wait'.
+        [Default: (null)]
+        version_added: 2.6
+        
+
+
+NOTES:
+      * Listeners are matched based on port. If a listener's port is changed then a new listener will be created.
+      * Listener rules are matched based on priority. If a rule's priority is changed then a new rule will be created.
+      * If parameters are not set within the module, the following environment variables can be used in decreasing order of
+        precedence `AWS_URL' or `EC2_URL', `AWS_ACCESS_KEY_ID' or `AWS_ACCESS_KEY' or `EC2_ACCESS_KEY', `AWS_SECRET_ACCESS_KEY' or
+        `AWS_SECRET_KEY' or `EC2_SECRET_KEY', `AWS_SECURITY_TOKEN' or `EC2_SECURITY_TOKEN', `AWS_REGION' or `EC2_REGION'
+      * Ansible uses the boto configuration file (typically ~/.boto) if no credentials are provided. See
+        https://boto.readthedocs.io/en/latest/boto_config_tut.html
+      * `AWS_REGION' or `EC2_REGION' can be typically be used to specify the AWS region, when required, but this can also be
+        configured in the boto config file
+
+
+REQUIREMENTS:  boto, boto3, python >= 2.6
+
+AUTHOR: Rob White (@wimnat)
+        METADATA:
+          status:
+          - preview
+          supported_by: community
+        
+
+EXAMPLES:
+
+# Note: These examples do not set authentication details, see the AWS Guide for details.
+
+# Create an ELB and attach a listener
+- elb_application_lb:
+    name: myelb
+    security_groups:
+      - sg-12345678
+      - my-sec-group
+    subnets:
+      - subnet-012345678
+      - subnet-abcdef000
+    listeners:
+      - Protocol: HTTP # Required. The protocol for connections from clients to the load balancer (HTTP or HTTPS) (case-sensitive).
+        Port: 80 # Required. The port on which the load balancer is listening.
+        # The security policy that defines which ciphers and protocols are supported. The default is the current predefined security policy.
+        SslPolicy: ELBSecurityPolicy-2015-05
+        Certificates: # The ARN of the certificate (only one certficate ARN should be provided)
+          - CertificateArn: arn:aws:iam::12345678987:server-certificate/test.domain.com
+        DefaultActions:
+          - Type: forward # Required. Only 'forward' is accepted at this time
+            TargetGroupName: # Required. The name of the target group
+    state: present
+
+# Create an ELB and attach a listener with logging enabled
+- elb_application_lb:
+    access_logs_enabled: yes
+    access_logs_s3_bucket: mybucket
+    access_logs_s3_prefix: "logs"
+    name: myelb
+    security_groups:
+      - sg-12345678
+      - my-sec-group
+    subnets:
+      - subnet-012345678
+      - subnet-abcdef000
+    listeners:
+      - Protocol: HTTP # Required. The protocol for connections from clients to the load balancer (HTTP or HTTPS) (case-sensitive).
+        Port: 80 # Required. The port on which the load balancer is listening.
+        # The security policy that defines which ciphers and protocols are supported. The default is the current predefined security policy.
+        SslPolicy: ELBSecurityPolicy-2015-05
+        Certificates: # The ARN of the certificate (only one certficate ARN should be provided)
+          - CertificateArn: arn:aws:iam::12345678987:server-certificate/test.domain.com
+        DefaultActions:
+          - Type: forward # Required. Only 'forward' is accepted at this time
+            TargetGroupName: # Required. The name of the target group
+    state: present
+
+# Create an ALB with listeners and rules
+- elb_application_lb:
+    name: test-alb
+    subnets:
+      - subnet-12345678
+      - subnet-87654321
+    security_groups:
+      - sg-12345678
+    scheme: internal
+    listeners:
+      - Protocol: HTTPS
+        Port: 443
+        DefaultActions:
+          - Type: forward
+            TargetGroupName: test-target-group
+        Certificates:
+          - CertificateArn: arn:aws:iam::12345678987:server-certificate/test.domain.com
+        SslPolicy: ELBSecurityPolicy-2015-05
+        Rules:
+          - Conditions:
+              - Field: path-pattern
+                Values:
+                  - '/test'
+            Priority: '1'
+            Actions:
+              - TargetGroupName: test-target-group
+                Type: forward
+    state: present
+
+# Remove an ELB
+- elb_application_lb:
+    name: myelb
+    state: absent
+
+
+RETURN VALUES:
+
+access_logs_s3_bucket:
+    description: The name of the S3 bucket for the access logs.
+    returned: when state is present
+    type: str
+    sample: mys3bucket
+access_logs_s3_enabled:
+    description: Indicates whether access logs stored in Amazon S3 are enabled.
+    returned: when state is present
+    type: str
+    sample: true
+access_logs_s3_prefix:
+    description: The prefix for the location in the S3 bucket.
+    returned: when state is present
+    type: str
+    sample: my/logs
+availability_zones:
+    description: The Availability Zones for the load balancer.
+    returned: when state is present
+    type: list
+    sample: "[{'subnet_id': 'subnet-aabbccddff', 'zone_name': 'ap-southeast-2a'}]"
+canonical_hosted_zone_id:
+    description: The ID of the Amazon Route 53 hosted zone associated with the load balancer.
+    returned: when state is present
+    type: str
+    sample: ABCDEF12345678
+created_time:
+    description: The date and time the load balancer was created.
+    returned: when state is present
+    type: str
+    sample: "2015-02-12T02:14:02+00:00"
+deletion_protection_enabled:
+    description: Indicates whether deletion protection is enabled.
+    returned: when state is present
+    type: str
+    sample: true
+dns_name:
+    description: The public DNS name of the load balancer.
+    returned: when state is present
+    type: str
+    sample: internal-my-elb-123456789.ap-southeast-2.elb.amazonaws.com
+idle_timeout_timeout_seconds:
+    description: The idle timeout value, in seconds.
+    returned: when state is present
+    type: str
+    sample: 60
+ip_address_type:
+    description:  The type of IP addresses used by the subnets for the load balancer.
+    returned: when state is present
+    type: str
+    sample: ipv4
+listeners:
+    description: Information about the listeners.
+    returned: when state is present
+    type: complex
+    contains:
+        listener_arn:
+            description: The Amazon Resource Name (ARN) of the listener.
+            returned: when state is present
+            type: str
+            sample: ""
+        load_balancer_arn:
+            description: The Amazon Resource Name (ARN) of the load balancer.
+            returned: when state is present
+            type: str
+            sample: ""
+        port:
+            description: The port on which the load balancer is listening.
+            returned: when state is present
+            type: int
+            sample: 80
+        protocol:
+            description: The protocol for connections from clients to the load balancer.
+            returned: when state is present
+            type: str
+            sample: HTTPS
+        certificates:
+            description: The SSL server certificate.
+            returned: when state is present
+            type: complex
+            contains:
+                certificate_arn:
+                    description: The Amazon Resource Name (ARN) of the certificate.
+                    returned: when state is present
+                    type: str
+                    sample: ""
+        ssl_policy:
+            description: The security policy that defines which ciphers and protocols are supported.
+            returned: when state is present
+            type: str
+            sample: ""
+        default_actions:
+            description: The default actions for the listener.
+            returned: when state is present
+            type: str
+            contains:
+                type:
+                    description: The type of action.
+                    returned: when state is present
+                    type: str
+                    sample: ""
+                target_group_arn:
+                    description: The Amazon Resource Name (ARN) of the target group.
+                    returned: when state is present
+                    type: str
+                    sample: ""
+load_balancer_arn:
+    description: The Amazon Resource Name (ARN) of the load balancer.
+    returned: when state is present
+    type: str
+    sample: arn:aws:elasticloadbalancing:ap-southeast-2:0123456789:loadbalancer/app/my-elb/001122334455
+load_balancer_name:
+    description: The name of the load balancer.
+    returned: when state is present
+    type: str
+    sample: my-elb
+routing_http2_enabled:
+    description: Indicates whether HTTP/2 is enabled.
+    returned: when state is present
+    type: str
+    sample: true
+scheme:
+    description: Internet-facing or internal load balancer.
+    returned: when state is present
+    type: str
+    sample: internal
+security_groups:
+    description: The IDs of the security groups for the load balancer.
+    returned: when state is present
+    type: list
+    sample: ['sg-0011223344']
+state:
+    description: The state of the load balancer.
+    returned: when state is present
+    type: dict
+    sample: "{'code': 'active'}"
+tags:
+    description: The tags attached to the load balancer.
+    returned: when state is present
+    type: dict
+    sample: "{
+        'Tag': 'Example'
+    }"
+type:
+    description: The type of load balancer.
+    returned: when state is present
+    type: str
+    sample: application
+vpc_id:
+    description: The ID of the VPC for the load balancer.
+    returned: when state is present
+    type: str
+    sample: vpc-0011223344
+

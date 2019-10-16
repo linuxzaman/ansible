@@ -1,0 +1,75 @@
+> SELINUX    (/usr/lib/python2.7/dist-packages/ansible/modules/system/selinux.py)
+
+        Configures the SELinux mode and policy. A reboot may be required after usage. Ansible will not issue this reboot but will let you
+        know when it is required.
+
+  * This module is maintained by The Ansible Core Team
+OPTIONS (= is mandatory):
+
+- configfile
+        The path to the SELinux configuration file, if non-standard.
+        (Aliases: conf, file)[Default: /etc/selinux/config]
+
+- policy
+        The name of the SELinux policy to use (e.g. `targeted') will be required if state is not `disabled'.
+        [Default: (null)]
+
+= state
+        The SELinux mode.
+        (Choices: disabled, enforcing, permissive)
+
+
+REQUIREMENTS:  libselinux-python
+
+AUTHOR: Derek Carter (@goozbach) <goozbach@friocorte.com>
+        METADATA:
+          status:
+          - stableinterface
+          supported_by: core
+        
+
+EXAMPLES:
+
+- name: Enable SELinux
+  selinux:
+    policy: targeted
+    state: enforcing
+
+- name: Put SELinux in permissive mode, logging actions that would be blocked.
+  selinux:
+    policy: targeted
+    state: permissive
+
+- name: Disable SELinux
+  selinux:
+    state: disabled
+
+
+RETURN VALUES:
+
+msg:
+    description: Messages that describe changes that were made.
+    returned: always
+    type: str
+    sample: Config SELinux state changed from 'disabled' to 'permissive'
+configfile:
+    description: Path to SELinux configuration file.
+    returned: always
+    type: str
+    sample: /etc/selinux/config
+policy:
+    description: Name of the SELinux policy.
+    returned: always
+    type: str
+    sample: targeted
+state:
+    description: SELinux mode.
+    returned: always
+    type: str
+    sample: enforcing
+reboot_required:
+    description: Whether or not an reboot is required for the changes to take effect.
+    returned: always
+    type: bool
+    sample: true
+

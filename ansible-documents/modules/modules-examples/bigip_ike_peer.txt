@@ -1,0 +1,104 @@
+EXAMPLES:
+
+- name: Create new IKE peer
+  bigip_ike_peer:
+    name: ike1
+    remote_address: 1.2.3.4
+    version:
+      - v1
+    provider:
+      password: secret
+      server: lb.mydomain.com
+      user: admin
+  delegate_to: localhost
+
+- name: Change presented id type - keyid-tag
+  bigip_ike_peer:
+    name: ike1
+    presented_id_type: keyid-tag
+    presented_id_value: key1
+    provider:
+      password: secret
+      server: lb.mydomain.com
+      user: admin
+  delegate_to: localhost
+
+- name: Remove IKE peer
+  bigip_ike_peer:
+    name: ike1
+    state: absent
+    provider:
+      password: secret
+      server: lb.mydomain.com
+      user: admin
+  delegate_to: localhost
+
+
+RETURN VALUES:
+
+presented_id_type:
+  description: The new Presented ID Type value of the resource.
+  returned: changed
+  type: str
+  sample: address
+verified_id_type:
+  description: The new Verified ID Type value of the resource.
+  returned: changed
+  type: str
+  sample: address
+phase1_auth_method:
+  description: The new IKE Phase 1 Credentials Authentication Method value of the resource.
+  returned: changed
+  type: str
+  sample: rsa-signature
+remote_address:
+  description: The new Remote Address value of the resource.
+  returned: changed
+  type: str
+  sample: 1.2.2.1
+version:
+  description: The new list of IKE versions.
+  returned: changed
+  type: list
+  sample: ['v1', 'v2']
+phase1_encryption_algorithm:
+  description: The new IKE Phase 1 Encryption Algorithm.
+  returned: changed
+  type: str
+  sample: 3des
+phase1_hash_algorithm:
+  description: The new IKE Phase 1 Authentication Algorithm.
+  returned: changed
+  type: str
+  sample: sha256
+phase1_perfect_forward_secrecy:
+  description: The new IKE Phase 1 Perfect Forward Secrecy.
+  returned: changed
+  type: str
+  sample: modp1024
+phase1_cert:
+  description: The new IKE Phase 1 Certificate Credentials.
+  returned: changed
+  type: str
+  sample: /Common/cert1.crt
+phase1_key:
+  description: The new IKE Phase 1 Key Credentials.
+  returned: changed
+  type: str
+  sample: /Common/cert1.key
+phase1_verify_peer_cert:
+  description: The new IKE Phase 1 Key Verify Peer Certificate setting.
+  returned: changed
+  type: bool
+  sample: yes
+verified_id_value:
+  description: The new Verified ID Value setting for the Verified ID Type.
+  returned: changed
+  type: str
+  sample: 1.2.3.1
+presented_id_value:
+  description: The new Presented ID Value setting for the Presented ID Type.
+  returned: changed
+  type: str
+  sample: 1.2.3.1
+

@@ -1,0 +1,110 @@
+> GCE_SNAPSHOT    (/usr/lib/python2.7/dist-packages/ansible/modules/cloud/google/gce_snapshot.py)
+
+        Manages snapshots for GCE instances. This module manages snapshots for the storage volumes of a GCE compute instance. If there
+        are multiple volumes, each snapshot will be prepended with the disk name
+
+  * This module is maintained by The Ansible Community
+OPTIONS (= is mandatory):
+
+= credentials_file
+        The path to the credentials file associated with the service account
+
+
+- disks
+        A list of disks to create snapshots for. If none is provided, all of the volumes will be snapshotted
+        [Default: all]
+
+= instance_name
+        The GCE instance to snapshot
+
+
+= project_id
+        The GCP project ID to use
+
+
+= service_account_email
+        GCP service account email for the project where the instance resides
+
+
+- snapshot_name
+        The name of the snapshot to manage
+        [Default: (null)]
+
+- state
+        Whether a snapshot should be `present' or `absent'
+        (Choices: present, absent)[Default: present]
+
+
+REQUIREMENTS:  python >= 2.6, apache-libcloud >= 0.19.0
+
+AUTHOR: Rob Wagner (@robwagner33)
+        METADATA:
+          status:
+          - preview
+          supported_by: community
+        
+
+EXAMPLES:
+
+- name: Create gce snapshot
+  gce_snapshot:
+    instance_name: example-instance
+    snapshot_name: example-snapshot
+    state: present
+    service_account_email: project_name@appspot.gserviceaccount.com
+    credentials_file: /path/to/credentials
+    project_id: project_name
+  delegate_to: localhost
+
+- name: Delete gce snapshot
+  gce_snapshot:
+    instance_name: example-instance
+    snapshot_name: example-snapshot
+    state: absent
+    service_account_email: project_name@appspot.gserviceaccount.com
+    credentials_file: /path/to/credentials
+    project_id: project_name
+  delegate_to: localhost
+
+# This example creates snapshots for only two of the available disks as
+# disk0-example-snapshot and disk1-example-snapshot
+- name: Create snapshots of specific disks
+  gce_snapshot:
+    instance_name: example-instance
+    snapshot_name: example-snapshot
+    state: present
+    disks:
+      - disk0
+      - disk1
+    service_account_email: project_name@appspot.gserviceaccount.com
+    credentials_file: /path/to/credentials
+    project_id: project_name
+  delegate_to: localhost
+
+
+RETURN VALUES:
+
+snapshots_created:
+    description: List of newly created snapshots
+    returned: When snapshots are created
+    type: list
+    sample: "[disk0-example-snapshot, disk1-example-snapshot]"
+
+snapshots_deleted:
+    description: List of destroyed snapshots
+    returned: When snapshots are deleted
+    type: list
+    sample: "[disk0-example-snapshot, disk1-example-snapshot]"
+
+snapshots_existing:
+    description: List of snapshots that already existed (no-op)
+    returned: When snapshots were already present
+    type: list
+    sample: "[disk0-example-snapshot, disk1-example-snapshot]"
+
+snapshots_absent:
+    description: List of snapshots that were already absent (no-op)
+    returned: When snapshots were already absent
+    type: list
+    sample: "[disk0-example-snapshot, disk1-example-snapshot]"
+

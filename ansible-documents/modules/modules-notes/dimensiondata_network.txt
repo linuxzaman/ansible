@@ -1,0 +1,139 @@
+> DIMENSIONDATA_NETWORK    (/usr/lib/python2.7/dist-packages/ansible/modules/cloud/dimensiondata/dimensiondata_network.py)
+
+        Create, update, and delete MCP 1.0 & 2.0 networks
+
+  * This module is maintained by The Ansible Community
+OPTIONS (= is mandatory):
+
+- description
+        Additional description of the network domain.
+        [Default: (null)]
+
+= location
+        The target datacenter.
+
+        type: str
+
+- mcp_password
+        The password used to authenticate to the CloudControl API.
+        If not specified, will fall back to `MCP_PASSWORD' from environment variable or `~/.dimensiondata'.
+        Required if `mcp_user' is specified.
+        [Default: (null)]
+        type: str
+
+- mcp_user
+        The username used to authenticate to the CloudControl API.
+        If not specified, will fall back to `MCP_USER' from environment variable or `~/.dimensiondata'.
+        [Default: (null)]
+        type: str
+
+= name
+        The name of the network domain to create.
+
+
+- region
+        The target region.
+        (Choices: Regions are defined in Apache libcloud project [libcloud/common/dimensiondata.py], They are also listed in
+        https://libcloud.readthedocs.io/en/latest/compute/drivers/dimensiondata.html, Note that the default value "na" stands for "North
+        America"., The module prepends 'dd-' to the region choice.)[Default: na]
+        type: str
+
+- service_plan
+        The service plan, either "ESSENTIALS" or "ADVANCED".
+        MCP 2.0 Only.
+        (Choices: ESSENTIALS, ADVANCED)[Default: ESSENTIALS]
+
+- state
+        Should the resource be present or absent.
+        (Choices: present, absent)[Default: present]
+
+- validate_certs
+        If `false', SSL certificates will not be validated.
+        This should only be used on private instances of the CloudControl API that use self-signed certificates.
+        [Default: True]
+        type: bool
+
+- wait
+        Should we wait for the task to complete before moving onto the next.
+        [Default: False]
+        type: bool
+
+- wait_poll_interval
+        The amount of time (in seconds) to wait between checks for task completion.
+        Only applicable if `wait=true'.
+        [Default: 2]
+        type: int
+
+- wait_time
+        The maximum amount of time (in seconds) to wait for the task to complete.
+        Only applicable if `wait=true'.
+        [Default: 600]
+        type: int
+
+
+AUTHOR: Aimon Bustardo (@aimonb)
+        METADATA:
+          status:
+          - preview
+          supported_by: community
+        
+
+EXAMPLES:
+
+# Create an MCP 1.0 network
+- dimensiondata_network:
+    region: na
+    location: NA5
+    name: mynet
+# Create an MCP 2.0 network
+- dimensiondata_network:
+    region: na
+    mcp_user: my_user
+    mcp_password: my_password
+    location: NA9
+    name: mynet
+    service_plan: ADVANCED
+# Delete a network
+- dimensiondata_network:
+    region: na
+    location: NA1
+    name: mynet
+    state: absent
+
+
+RETURN VALUES:
+
+network:
+    description: Dictionary describing the network.
+    returned: On success when I(state=present).
+    type: complex
+    contains:
+        id:
+            description: Network ID.
+            type: str
+            sample: "8c787000-a000-4050-a215-280893411a7d"
+        name:
+            description: Network name.
+            type: str
+            sample: "My network"
+        description:
+            description: Network description.
+            type: str
+            sample: "My network description"
+        location:
+            description: Datacenter location.
+            type: str
+            sample: NA3
+        status:
+            description: Network status. (MCP 2.0 only)
+            type: str
+            sample: NORMAL
+        private_net:
+            description: Private network subnet. (MCP 1.0 only)
+            type: str
+            sample: "10.2.3.0"
+        multicast:
+            description: Multicast enabled? (MCP 1.0 only)
+            type: bool
+            sample: false
+

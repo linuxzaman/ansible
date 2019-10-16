@@ -1,0 +1,120 @@
+> PANOS_QUERY_RULES    (/usr/lib/python2.7/dist-packages/ansible/modules/network/panos/_panos_query_rules.py)
+
+        - Security policies allow you to enforce rules and take action, and can be as general or specific as needed. The policy rules are
+        compared against the incoming traffic in sequence, and because the first rule that matches the traffic is applied, the more
+        specific rules must precede the more general ones.
+
+DEPRECATED: 
+
+	Reason: Consolidating code base.
+	Will be removed in: Ansible 2.12
+	Alternatives: Use U(https://galaxy.ansible.com/PaloAltoNetworks/paloaltonetworks) instead.
+
+
+  * This module is maintained by The Ansible Community
+OPTIONS (= is mandatory):
+
+- api_key
+        API key that can be used instead of `username'/`password' credentials.
+        [Default: (null)]
+
+- application
+        Name of the application or application group to be queried.
+        [Default: (null)]
+
+- destination_ip
+        The destination IP address to be queried.
+        [Default: (null)]
+
+- destination_port
+        The destination port to be queried.
+        [Default: (null)]
+
+- destination_zone
+        Name of the destination security zone to be queried.
+        [Default: (null)]
+
+- devicegroup
+        The Panorama device group in which to conduct the query.
+        [Default: (null)]
+
+= ip_address
+        IP address (or hostname) of PAN-OS firewall or Panorama management console being queried.
+
+
+= password
+        Password credentials to use for authentication.
+
+
+- protocol
+        The protocol used to be queried.  Must be either `tcp' or `udp'.
+        (Choices: tcp, udp)[Default: (null)]
+
+- source_ip
+        The source IP address to be queried.
+        [Default: (null)]
+
+- source_port
+        The source port to be queried.
+        [Default: (null)]
+
+- source_zone
+        Name of the source security zone to be queried.
+        [Default: (null)]
+
+- tag_name
+        Name of the rule tag to be queried.
+        [Default: (null)]
+
+- username
+        Username credentials to use for authentication.
+        [Default: admin]
+
+
+NOTES:
+      * Checkmode is not supported.
+      * Panorama is supported.
+
+
+REQUIREMENTS:  pan-python can be obtained from PyPI https://pypi.org/project/pan-python/, pandevice can be obtained from PyPI
+        https://pypi.org/project/pandevice/, xmltodict can be obtains from PyPI https://pypi.org/project/xmltodict/
+
+AUTHOR: Bob Hagen (@rnh556)
+        METADATA:
+          status:
+          - deprecated
+          supported_by: community
+        
+
+EXAMPLES:
+
+- name: search for rules with tcp/3306
+  panos_query_rules:
+    ip_address: '{{ ip_address }}'
+    username: '{{ username }}'
+    password: '{{ password }}'
+    source_zone: 'DevNet'
+    destination_zone: 'DevVPC'
+    destination_port: '3306'
+    protocol: 'tcp'
+
+- name: search devicegroup for inbound rules to dmz host
+  panos_query_rules:
+    ip_address: '{{ ip_address }}'
+    api_key: '{{ api_key }}'
+    destination_zone: 'DMZ'
+    destination_ip: '10.100.42.18'
+    address: 'DeviceGroupA'
+
+- name: search for rules containing a specified rule tag
+  panos_query_rules:
+    ip_address: '{{ ip_address }}'
+    username: '{{ username }}'
+    password: '{{ password }}'
+    tag_name: 'ProjectX'
+
+
+RETURN VALUES:
+
+# Default return values
+

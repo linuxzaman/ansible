@@ -1,0 +1,61 @@
+EXAMPLES:
+
+- name: Get Canonical name of particular target on particular ESXi host system
+  vmware_target_canonical_facts:
+    hostname: '{{ vcenter_hostname }}'
+    username: '{{ vcenter_username }}'
+    password: '{{ vcenter_password }}'
+    target_id: 7
+    esxi_hostname: esxi_hostname
+  delegate_to: localhost
+
+- name: Get Canonical name of all target on particular ESXi host system
+  vmware_target_canonical_facts:
+    hostname: '{{ vcenter_hostname }}'
+    username: '{{ vcenter_username }}'
+    password: '{{ vcenter_password }}'
+    esxi_hostname: '{{ esxi_hostname }}'
+  delegate_to: localhost
+
+- name: Get Canonical name of all ESXi hostname on particular Cluster
+  vmware_target_canonical_facts:
+    hostname: '{{ vcenter_hostname }}'
+    username: '{{ vcenter_username }}'
+    password: '{{ vcenter_password }}'
+    cluster_name: '{{ cluster_name }}'
+  delegate_to: localhost
+
+
+RETURN VALUES:
+
+canonical:
+    description: metadata about SCSI Target device
+    returned: if host system and target id is given
+    type: str
+    sample: "mpx.vmhba0:C0:T0:L0"
+
+scsi_tgt_facts:
+    description: metadata about all SCSI Target devices
+    returned: if host system or cluster is given
+    type: dict
+    sample: {
+        "DC0_C0_H0": {
+            "scsilun_canonical": {
+                "key-vim.host.ScsiDisk-0000000000766d686261303a303a30": "mpx.vmhba0:C0:T0:L0",
+                "key-vim.host.ScsiLun-0005000000766d686261313a303a30": "mpx.vmhba1:C0:T0:L0"
+            },
+            "target_lun_uuid": {
+                "0": "key-vim.host.ScsiDisk-0000000000766d686261303a303a30"
+            }
+        },
+        "DC0_C0_H1": {
+            "scsilun_canonical": {
+                "key-vim.host.ScsiDisk-0000000000766d686261303a303a30": "mpx.vmhba0:C0:T0:L0",
+                "key-vim.host.ScsiLun-0005000000766d686261313a303a30": "mpx.vmhba1:C0:T0:L0"
+            },
+            "target_lun_uuid": {
+                "0": "key-vim.host.ScsiDisk-0000000000766d686261303a303a30"
+            }
+        },
+    }
+

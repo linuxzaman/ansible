@@ -1,0 +1,70 @@
+> RHSM_REPOSITORY    (/usr/lib/python2.7/dist-packages/ansible/modules/packaging/os/rhsm_repository.py)
+
+        Manage (Enable/Disable) RHSM repositories to the Red Hat Subscription Management entitlement platform using the `subscription-
+        manager' command.
+
+  * This module is maintained by The Ansible Community
+OPTIONS (= is mandatory):
+
+= name
+        The ID of repositories to enable.
+        To operate on several repositories this can accept a comma separated list or a YAML list.
+
+
+- purge
+        Disable all currently enabled repositories that are not not specified in `name'. Only set this to `True' if passing in a list of
+        repositories to the `name' field. Using this with `loop' will most likely not have the desired result.
+        [Default: False]
+        type: bool
+        version_added: 2.8
+
+= state
+        If state is equal to present or disabled, indicates the desired repository state.
+        (Choices: present, enabled, absent, disabled)[Default: present]
+
+
+NOTES:
+      * In order to manage RHSM repositories the system must be already registered to RHSM manually or using the Ansible
+        `redhat_subscription' module.
+
+
+REQUIREMENTS:  subscription-manager
+
+AUTHOR: Giovanni Sciortino (@giovannisciortino)
+        METADATA:
+          status:
+          - preview
+          supported_by: community
+        
+
+EXAMPLES:
+
+- name: Enable a RHSM repository
+  rhsm_repository:
+    name: rhel-7-server-rpms
+
+- name: Disable all RHSM repositories
+  rhsm_repository:
+    name: '*'
+    state: disabled
+
+- name: Enable all repositories starting with rhel-6-server
+  rhsm_repository:
+    name: rhel-6-server*
+    state: enabled
+
+- name: Disable all repositories except rhel-7-server-rpms
+  rhsm_repository:
+    name: rhel-7-server-rpms
+    purge: True
+
+
+RETURN VALUES:
+
+repositories:
+  description:
+    - The list of RHSM repositories with their states.
+    - When this module is used to change the repository states, this list contains the updated states after the changes.
+  returned: success
+  type: list
+

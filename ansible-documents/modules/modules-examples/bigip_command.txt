@@ -1,0 +1,94 @@
+EXAMPLES:
+
+- name: run show version on remote devices
+  bigip_command:
+    commands: show sys version
+    provider:
+      server: lb.mydomain.com
+      password: secret
+      user: admin
+  delegate_to: localhost
+
+- name: run show version and check to see if output contains BIG-IP
+  bigip_command:
+    commands: show sys version
+    wait_for: result[0] contains BIG-IP
+    provider:
+      server: lb.mydomain.com
+      password: secret
+      user: admin
+  register: result
+  delegate_to: localhost
+
+- name: run multiple commands on remote nodes
+  bigip_command:
+    commands:
+      - show sys version
+      - list ltm virtual
+    provider:
+      server: lb.mydomain.com
+      password: secret
+      user: admin
+  delegate_to: localhost
+
+- name: run multiple commands and evaluate the output
+  bigip_command:
+    commands:
+      - show sys version
+      - list ltm virtual
+    wait_for:
+      - result[0] contains BIG-IP
+      - result[1] contains my-vs
+    provider:
+      server: lb.mydomain.com
+      password: secret
+      user: admin
+  register: result
+  delegate_to: localhost
+
+- name: tmsh prefixes will automatically be handled
+  bigip_command:
+    commands:
+      - show sys version
+      - tmsh list ltm virtual
+    provider:
+      server: lb.mydomain.com
+      password: secret
+      user: admin
+  delegate_to: localhost
+
+- name: Delete all LTM nodes in Partition1, assuming no dependencies exist
+  bigip_command:
+    commands:
+      - delete ltm node all
+    chdir: Partition1
+    provider:
+      server: lb.mydomain.com
+      password: secret
+      user: admin
+  delegate_to: localhost
+
+
+RETURN VALUES:
+
+stdout:
+  description: The set of responses from the commands.
+  returned: always
+  type: list
+  sample: ['...', '...']
+stdout_lines:
+  description: The value of stdout split into a list.
+  returned: always
+  type: list
+  sample: [['...', '...'], ['...'], ['...']]
+failed_conditions:
+  description: The list of conditionals that have failed.
+  returned: failed
+  type: list
+  sample: ['...', '...']
+warn:
+  description: Whether or not to raise warnings about modification commands.
+  returned: changed
+  type: bool
+  sample: True
+

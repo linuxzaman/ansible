@@ -1,0 +1,238 @@
+> UTM_PROXY_FRONTEND    (/usr/lib/python2.7/dist-packages/ansible/modules/web_infrastructure/sophos_utm/utm_proxy_frontend.py)
+
+        Create, update or destroy a reverse_proxy frontend entry in Sophos UTM. This module needs to have the REST Ability of the UTM to
+        be activated.
+
+  * This module is maintained by The Ansible Community
+OPTIONS (= is mandatory):
+
+- add_content_type_header
+        Whether to add the content type header or not
+        [Default: False]
+        type: bool
+
+- address
+        The reference name of the network/interface_address object.
+        [Default: REF_DefaultInternalAddress]
+
+- allowed_networks
+        A list of reference names for the allowed networks.
+        [Default: [u'REF_NetworkAny']]
+
+- certificate
+        The reference name of the ca/host_key_cert object.
+        [Default: ]
+
+- comment
+        An optional comment to add to the object
+        [Default: ]
+
+- disable_compression
+        Whether to enable the compression
+        [Default: False]
+        type: bool
+
+- domain
+        A list of domain names for the frontend object
+        [Default: (null)]
+
+- exceptions
+        A list of exception ref names (reverse_proxy/exception)
+        [Default: []]
+
+- headers
+        A dictionary of additional headers to be sent to POST and PUT requests.
+        Is needed for some modules
+        [Default: (null)]
+        type: dict
+
+- htmlrewrite
+        Whether to enable html rewrite or not
+        [Default: False]
+        type: bool
+
+- htmlrewrite_cookies
+        Whether to enable html rewrite cookie or not
+        [Default: False]
+        type: bool
+
+- implicitredirect
+        Whether to enable implicit redirection or not
+        [Default: False]
+        type: bool
+
+- lbmethod
+        Which loadbalancer method should be used
+        (Choices: , bybusyness, bytraffic, byrequests)[Default: bybusyness]
+
+- locations
+        A list of location ref names (reverse_proxy/location)
+        [Default: []]
+
+= name
+        The name of the object. Will be used to identify the entry
+
+
+- port
+        The frontend http port
+        [Default: 80]
+
+- preservehost
+        Whether to preserve host header
+        [Default: False]
+        type: bool
+
+- profile
+        The reference string of the reverse_proxy/profile
+        [Default: ]
+
+- state
+        The desired state of the object.
+        `present' will create or update an object
+        `absent' will delete an object if it was present
+        (Choices: absent, present)[Default: present]
+        type: str
+
+- status
+        Whether to activate the frontend entry or not
+        [Default: True]
+        type: bool
+
+- type
+        Which protocol should be used
+        (Choices: http, https)[Default: http]
+
+= utm_host
+        The REST Endpoint of the Sophos UTM.
+
+        type: str
+
+- utm_port
+        The port of the REST interface.
+        [Default: 4444]
+        type: int
+
+- utm_protocol
+        The protocol of the REST Endpoint.
+        (Choices: http, https)[Default: https]
+        type: str
+
+= utm_token
+        The token used to identify at the REST-API. See https://www.sophos.com/en-us/medialibrary/PDFs/documentation/UTMonAWS/Sophos-UTM-
+        RESTful-API.pdf?la=en, Chapter 2.4.2.
+
+        type: str
+
+- validate_certs
+        Whether the REST interface's ssl certificate should be verified or not.
+        [Default: True]
+        type: bool
+
+- xheaders
+        Whether to pass the host header or not
+        [Default: False]
+        type: bool
+
+
+AUTHOR: Johannes Brunswicker (@MatrixCrawler)
+        METADATA:
+          status:
+          - preview
+          supported_by: community
+        
+
+EXAMPLES:
+
+- name: Create utm proxy_frontend
+  utm_proxy_frontend:
+    utm_host: sophos.host.name
+    utm_token: abcdefghijklmno1234
+    name: TestFrontendEntry
+    host: REF_OBJECT_STRING
+    state: present
+
+- name: Remove utm proxy_frontend
+  utm_proxy_frontend:
+    utm_host: sophos.host.name
+    utm_token: abcdefghijklmno1234
+    name: TestFrontendEntry
+    state: absent
+
+
+RETURN VALUES:
+
+result:
+    description: The utm object that was created
+    returned: success
+    type: complex
+    contains:
+        _ref:
+            description: The reference name of the object
+            type: string
+        _locked:
+            description: Whether or not the object is currently locked
+            type: boolean
+        _type:
+            description: The type of the object
+            type: string
+        name:
+            description: The name of the object
+            type: string
+        add_content_type_header:
+            description: Whether to add the content type header
+            type: bool
+        address:
+            description: The reference name of the address
+            type: string
+        allowed_networks:
+            description: List of reference names of networks associated
+            type: list
+        certificate:
+            description: Reference name of certificate (ca/host_key_cert)
+            type: string
+        comment:
+            description: The comment string
+            type: string
+        disable_compression:
+            description: State of compression support
+            type: bool
+        domain:
+            description: List of hostnames
+            type: list
+        exceptions:
+            description: List of associated proxy exceptions
+            type: list
+        htmlrewrite:
+            description: State of html rewrite
+            type: bool
+        htmlrewrite_cookies:
+            description: Whether the html rewrite cookie will be set
+            type: bool
+        implicitredirect:
+            description: Whether to use implicit redirection
+            type: bool
+        lbmethod:
+            description: The method of loadbalancer to use
+            type: string
+        locations:
+            description: The reference names of reverse_proxy/locations associated with the object
+            type: list
+        port:
+            description: The port of the frontend connection
+            type: int
+        preservehost:
+            description: Preserve host header
+            type: bool
+        profile:
+            description: The associated reverse_proxy/profile
+            type: string
+        status:
+            description: Whether the frontend object is active or not
+            type: bool
+        type:
+            description: The connection type
+            type: string
+        xheaders:
+            description: The xheaders state
+            type: bool
+

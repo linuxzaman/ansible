@@ -1,0 +1,88 @@
+> DLADM_IPTUN    (/usr/lib/python2.7/dist-packages/ansible/modules/network/illumos/dladm_iptun.py)
+
+        Manage IP tunnel interfaces on Solaris/illumos systems.
+
+  * This module is maintained by The Ansible Community
+OPTIONS (= is mandatory):
+
+- local_address
+        Literat IP address or hostname corresponding to the tunnel source.
+        (Aliases: local)[Default: (null)]
+
+= name
+        IP tunnel interface name.
+
+
+- remote_address
+        Literal IP address or hostname corresponding to the tunnel destination.
+        (Aliases: remote)[Default: (null)]
+
+- state
+        Create or delete Solaris/illumos VNIC.
+        (Choices: present, absent)[Default: present]
+
+- temporary
+        Specifies that the IP tunnel interface is temporary. Temporary IP tunnel interfaces do not persist across reboots.
+        [Default: False]
+        type: bool
+
+- type
+        Specifies the type of tunnel to be created.
+        (Aliases: tunnel_type)(Choices: ipv4, ipv6, 6to4)[Default: ipv4]
+
+
+AUTHOR: Adam Števko (@xen0l)
+        METADATA:
+          status:
+          - preview
+          supported_by: community
+        
+
+EXAMPLES:
+
+- name: Create IPv4 tunnel interface 'iptun0'
+  dladm_iptun: name=iptun0 local_address=192.0.2.23 remote_address=203.0.113.10 state=present
+
+- name: Change IPv4 tunnel remote address
+  dladm_iptun: name=iptun0 type=ipv4 local_address=192.0.2.23 remote_address=203.0.113.11
+
+- name: Create IPv6 tunnel interface 'tun0'
+  dladm_iptun: name=tun0 type=ipv6 local_address=192.0.2.23 remote_address=203.0.113.42
+
+- name: Remove 'iptun0' tunnel interface
+  dladm_iptun: name=iptun0 state=absent
+
+
+RETURN VALUES:
+
+name:
+    description: tunnel interface name
+    returned: always
+    type: str
+    sample: iptun0
+state:
+    description: state of the target
+    returned: always
+    type: str
+    sample: present
+temporary:
+    description: specifies if operation will persist across reboots
+    returned: always
+    type: bool
+    sample: True
+local_address:
+    description: local IP address
+    returned: always
+    type: str
+    sample: 1.1.1.1/32
+remote_address:
+    description: remote IP address
+    returned: always
+    type: str
+    sample: 2.2.2.2/32
+type:
+    description: tunnel type
+    returned: always
+    type: str
+    sample: ipv4
+

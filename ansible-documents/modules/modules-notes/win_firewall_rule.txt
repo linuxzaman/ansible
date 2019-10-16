@@ -1,0 +1,140 @@
+> WIN_FIREWALL_RULE    (/usr/lib/python2.7/dist-packages/ansible/modules/windows/win_firewall_rule.py)
+
+        Allows you to create/remove/update firewall rules.
+
+  * This module is maintained by The Ansible Community
+OPTIONS (= is mandatory):
+
+- action
+        What to do with the items this rule is for.
+        Defaults to `allow' when creating a new rule.
+        (Choices: allow, block)[Default: (null)]
+        type: str
+
+- description
+        Description for the firewall rule.
+        [Default: (null)]
+        type: str
+
+- direction
+        Whether this rule is for inbound or outbound traffic.
+        Defaults to `in' when creating a new rule.
+        (Choices: in, out)[Default: (null)]
+        type: str
+
+- enabled
+        Whether this firewall rule is enabled or disabled.
+        Defaults to `true' when creating a new rule.
+        (Aliases: enable)[Default: (null)]
+        type: bool
+
+- force
+        Replace any existing rule by removing it first.
+        This is no longer required in Ansible 2.4 as rules no longer need replacing when being modified.
+        DEPRECATED in Ansible 2.4 and will be removed in Ansible 2.9.
+        [Default: False]
+        type: bool
+
+- localip
+        The local ip address this rule applies to.
+        Set to `any' to apply to all local ip addresses.
+        Defaults to `any' when creating a new rule.
+        [Default: (null)]
+        type: str
+
+- localport
+        The local port this rule applies to.
+        Set to `any' to apply to all local ports.
+        Defaults to `any' when creating a new rule.
+        [Default: (null)]
+        type: str
+
+= name
+        The rule's display name.
+
+        type: str
+
+- profiles
+        The profile this rule applies to.
+        Defaults to `domain,private,public' when creating a new rule.
+        (Aliases: profile)[Default: (null)]
+        type: list
+
+- program
+        The program this rule applies to.
+        Set to `any' to apply to all programs.
+        Defaults to `any' when creating a new rule.
+        [Default: (null)]
+        type: str
+
+- protocol
+        The protocol this rule applies to.
+        Set to `any' to apply to all services.
+        Defaults to `any' when creating a new rule.
+        [Default: (null)]
+        type: str
+
+- remoteip
+        The remote ip address/range this rule applies to.
+        Set to `any' to apply to all remote ip addresses.
+        Defaults to `any' when creating a new rule.
+        [Default: (null)]
+        type: str
+
+- remoteport
+        The remote port this rule applies to.
+        Set to `any' to apply to all remote ports.
+        Defaults to `any' when creating a new rule.
+        [Default: (null)]
+        type: str
+
+- service
+        The service this rule applies to.
+        Set to `any' to apply to all services.
+        Defaults to `any' when creating a new rule.
+        [Default: (null)]
+        type: str
+
+- state
+        Should this rule be added or removed.
+        (Choices: absent, present)[Default: present]
+        type: str
+
+
+SEE ALSO:
+      * Module win_firewall
+           The official documentation on the win_firewall module.
+           https://docs.ansible.com/ansible/latest/modules/win_firewall_module.html
+
+
+AUTHOR: Artem Zinenko (@ar7z1), Timothy Vandenbrande (@TimothyVandenbrande)
+        METADATA:
+          status:
+          - preview
+          supported_by: community
+        
+
+EXAMPLES:
+
+- name: Firewall rule to allow SMTP on TCP port 25
+  win_firewall_rule:
+    name: SMTP
+    localport: 25
+    action: allow
+    direction: in
+    protocol: tcp
+    state: present
+    enabled: yes
+
+- name: Firewall rule to allow RDP on TCP port 3389
+  win_firewall_rule:
+    name: Remote Desktop
+    localport: 3389
+    action: allow
+    direction: in
+    protocol: tcp
+    profiles: private
+    state: present
+    enabled: yes
+
+

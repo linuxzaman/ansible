@@ -1,0 +1,88 @@
+> NETAPP_E_STORAGE_SYSTEM    (/usr/lib/python2.7/dist-packages/ansible/modules/storage/netapp/netapp_e_storage_system.py)
+
+        Manage the arrays accessible via a NetApp Web Services Proxy for NetApp E-series storage arrays.
+
+  * This module is maintained by The Ansible Community
+OPTIONS (= is mandatory):
+
+= api_password
+        The password to authenticate with the SANtricity WebServices Proxy or embedded REST API.
+
+
+= api_url
+        The url to the SANtricity WebServices Proxy or embedded REST API.
+
+
+= api_username
+        The username to authenticate with the SANtricity WebServices Proxy or embedded REST API.
+
+
+- array_password
+        The management password of the array to manage, if set.
+        [Default: (null)]
+
+- array_wwn
+        The WWN of the array to manage. Only necessary if in-band managing multiple arrays on the same agent host.  Mutually exclusive of
+        controller_addresses parameter.
+        [Default: (null)]
+
+= controller_addresses
+        The list addresses for the out-of-band management adapter or the agent host. Mutually exclusive of array_wwn parameter.
+
+
+- enable_trace
+        Enable trace logging for SYMbol calls to the storage system.
+        [Default: no]
+        type: bool
+
+- meta_tags
+        Optional meta tags to associate to this storage system
+        [Default: (null)]
+
+= ssid
+        The ID of the array to manage. This value must be unique for each array.
+
+
+= state
+        Whether the specified array should be configured on the Web Services Proxy or not.
+        (Choices: present, absent)
+
+- validate_certs
+        Should https certificates be validated?
+        [Default: yes]
+        type: bool
+
+
+AUTHOR: Kevin Hulquest (@hulquest)
+        METADATA:
+          status:
+          - preview
+          supported_by: community
+        
+
+EXAMPLES:
+
+---
+    - name:  Presence of storage system
+      netapp_e_storage_system:
+        ssid: "{{ item.key }}"
+        state: present
+        api_url: "{{ netapp_api_url }}"
+        api_username: "{{ netapp_api_username }}"
+        api_password: "{{ netapp_api_password }}"
+        validate_certs: "{{ netapp_api_validate_certs }}"
+        controller_addresses:
+          - "{{ item.value.address1 }}"
+          - "{{ item.value.address2 }}"
+      with_dict: "{{ storage_systems }}"
+      when: check_storage_system
+
+
+RETURN VALUES:
+
+msg:
+    description: State of request
+    type: str
+    returned: always
+    sample: 'Storage system removed.'
+

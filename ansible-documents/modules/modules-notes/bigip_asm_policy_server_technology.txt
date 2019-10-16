@@ -1,0 +1,182 @@
+> BIGIP_ASM_POLICY_SERVER_TECHNOLOGY    (/usr/lib/python2.7/dist-packages/ansible/modules/network/f5/bigip_asm_policy_server_technology.py)
+
+        Manages Server Technology on ASM policy.
+
+  * This module is maintained by an Ansible Partner
+OPTIONS (= is mandatory):
+
+= name
+        Specifies the name of the server technology to apply on or remove from the ASM policy.
+        (Choices: jQuery, Java Servlets/JSP, ASP, WebDAV, IIS, Front Page Server Extensions (FPSE), ASP.NET, Microsoft Windows,
+        Unix/Linux, Macromedia ColdFusion, WordPress, Apache Tomcat, Apache/NCSA HTTP Server, Outlook Web Access, PHP, Microsoft SQL
+        Server, Oracle, MySQL, Lotus Domino, BEA Systems WebLogic Server, Macromedia JRun, Novell, Cisco, SSI (Server Side Includes),
+        Proxy Servers, CGI, Sybase/ASE, IBM DB2, PostgreSQL, XML, Apache Struts, Elasticsearch, JBoss, Citrix, Node.js, Django, MongoDB,
+        Ruby, JavaServer Faces (JSF), Joomla, Jetty)
+        type: str
+
+- partition
+        This parameter is only used when identifying ASM policy.
+        [Default: Common]
+        type: str
+
+= password
+        The password for the user account used to connect to the BIG-IP.
+        You may omit this option by setting the environment variable `F5_PASSWORD'.
+        (Aliases: pass, pwd)
+        type: str
+
+= policy_name
+        Specifies the name of an existing ASM policy to add or remove server technology.
+
+        type: str
+
+- provider
+        A dict object containing connection details.
+        [Default: (null)]
+        suboptions:
+          password:
+            aliases:
+            - pass
+            - pwd
+            description:
+            - The password for the user account used to connect to the BIG-IP.
+            - You may omit this option by setting the environment variable `F5_PASSWORD'.
+            required: true
+            type: str
+          server:
+            description:
+            - The BIG-IP host.
+            - You may omit this option by setting the environment variable `F5_SERVER'.
+            required: true
+            type: str
+          server_port:
+            default: 443
+            description:
+            - The BIG-IP server port.
+            - You may omit this option by setting the environment variable `F5_SERVER_PORT'.
+            type: int
+          ssh_keyfile:
+            description:
+            - Specifies the SSH keyfile to use to authenticate the connection to the remote
+              device.  This argument is only used for `cli' transports.
+            - You may omit this option by setting the environment variable `ANSIBLE_NET_SSH_KEYFILE'.
+            type: path
+          timeout:
+            default: 10
+            description:
+            - Specifies the timeout in seconds for communicating with the network device for
+              either connecting or sending commands.  If the timeout is exceeded before the
+              operation is completed, the module will error.
+            type: int
+          transport:
+            choices:
+            - cli
+            - rest
+            default: rest
+            description:
+            - Configures the transport connection to use when connecting to the remote device.
+            type: str
+          user:
+            description:
+            - The username to connect to the BIG-IP with. This user must have administrative
+              privileges on the device.
+            - You may omit this option by setting the environment variable `F5_USER'.
+            required: true
+            type: str
+          validate_certs:
+            default: true
+            description:
+            - If `no', SSL certificates are not validated. Use this only on personally controlled
+              sites using self-signed certificates.
+            - You may omit this option by setting the environment variable `F5_VALIDATE_CERTS'.
+            type: bool
+        
+        type: dict
+        version_added: 2.5
+
+= server
+        The BIG-IP host.
+        You may omit this option by setting the environment variable `F5_SERVER'.
+
+        type: str
+
+- server_port
+        The BIG-IP server port.
+        You may omit this option by setting the environment variable `F5_SERVER_PORT'.
+        [Default: 443]
+        type: int
+        version_added: 2.2
+
+- state
+        When `present', ensures that the resource exists.
+        When `absent', ensures the resource is removed.
+        (Choices: present, absent)[Default: present]
+        type: str
+
+= user
+        The username to connect to the BIG-IP with. This user must have administrative privileges on the device.
+        You may omit this option by setting the environment variable `F5_USER'.
+
+        type: str
+
+- validate_certs
+        If `no', SSL certificates are not validated. Use this only on personally controlled sites using self-signed certificates.
+        You may omit this option by setting the environment variable `F5_VALIDATE_CERTS'.
+        [Default: True]
+        type: bool
+        version_added: 2.0
+
+
+NOTES:
+      * This module is primarily used as a component of configuring ASM policy in Ansible Galaxy ASM Policy Role.
+      * Requires BIG-IP >= 13.0.0
+      * For more information on using Ansible to manage F5 Networks devices see https://www.ansible.com/integrations/networks/f5.
+      * Requires BIG-IP software version >= 12.
+      * The F5 modules only manipulate the running configuration of the F5 product. To ensure that BIG-IP specific configuration
+        persists to disk, be sure to include at least one task that uses the [bigip_config] module to save the running
+        configuration. Refer to the module's documentation for the correct usage of the module to save your running configuration.
+
+
+AUTHOR: Wojciech Wypior (@wojtek0806)
+        METADATA:
+          status:
+          - preview
+          supported_by: certified
+        
+
+EXAMPLES:
+
+- name: Add Server Technology to ASM Policy
+  bigip_asm_policy_server_technology:
+    name: Joomla
+    policy_name: FooPolicy
+    provider:
+      password: secret
+      server: lb.mydomain.com
+      user: admin
+  delegate_to: localhost
+- name: Remove Server Technology from ASM Policy
+  bigip_asm_policy_server_technology:
+    name: Joomla
+    policy_name: FooPolicy
+    state: absent
+    provider:
+      password: secret
+      server: lb.mydomain.com
+      user: admin
+  delegate_to: localhost
+
+
+RETURN VALUES:
+
+policy_name:
+  description: The name of the ASM policy
+  returned: changed
+  type: str
+  sample: FooPolicy
+name:
+  description: The name of Server Technology added/removed on ASM policy
+  returned: changed
+  type: str
+  sample: Joomla
+

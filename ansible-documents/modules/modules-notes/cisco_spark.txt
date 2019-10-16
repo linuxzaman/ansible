@@ -1,0 +1,97 @@
+> CISCO_SPARK    (/usr/lib/python2.7/dist-packages/ansible/modules/notification/cisco_spark.py)
+
+        Send a message to a Cisco Spark Room or Individual with options to control the formatting.
+
+  * This module is maintained by The Ansible Community
+OPTIONS (= is mandatory):
+
+= message
+        The message you would like to send.
+
+
+- message_type
+        Specifies how you would like the message formatted.
+        (Choices: text, markdown)[Default: text]
+
+= personal_token
+        Your personal access token required to validate the Spark API.
+        (Aliases: token)
+
+= recipient_id
+        The unique identifier associated with the supplied `recipient_type'.
+
+
+= recipient_type
+        The request parameter you would like to send the message to.
+        Messages can be sent to either a room or individual (by ID or E-Mail).
+        (Choices: roomId, toPersonEmail, toPersonId)
+
+
+NOTES:
+      * The `recipient_id' type must be valid for the supplied `recipient_id'.
+      * Full API documentation can be found at https://developer.ciscospark.com/endpoint-messages-post.html.
+
+
+AUTHOR: Drew Rusell (@drew-russell)
+        METADATA:
+          status:
+          - stableinterface
+          supported_by: community
+        
+
+EXAMPLES:
+
+# Note: The following examples assume a variable file has been imported
+# that contains the appropriate information.
+
+- name: Cisco Spark - Markdown Message to a Room
+  cisco_spark:
+    recipient_type: roomId
+    recipient_id: "{{ room_id }}"
+    message_type: markdown
+    personal_token: "{{ token }}"
+    message: "**Cisco Spark Ansible Module - Room Message in Markdown**"
+
+- name: Cisco Spark - Text Message to a Room
+  cisco_spark:
+    recipient_type: roomId
+    recipient_id: "{{ room_id }}"
+    message_type: text
+    personal_token: "{{ token }}"
+    message: "Cisco Spark Ansible Module - Room Message in Text"
+
+- name: Cisco Spark - Text Message by an Individuals ID
+  cisco_spark:
+    recipient_type: toPersonId
+    recipient_id: "{{ person_id}}"
+    message_type: text
+    personal_token: "{{ token }}"
+    message: "Cisco Spark Ansible Module - Text Message to Individual by ID"
+
+- name: Cisco Spark - Text Message by an Individuals E-Mail Address
+  cisco_spark:
+    recipient_type: toPersonEmail
+    recipient_id: "{{ person_email }}"
+    message_type: text
+    personal_token: "{{ token }}"
+    message: "Cisco Spark Ansible Module - Text Message to Individual by E-Mail"
+
+
+RETURN VALUES:
+
+status_code:
+  description:
+    - The Response Code returned by the Spark API.
+    - Full Response Code explanations can be found at U(https://developer.ciscospark.com/endpoint-messages-post.html).
+  returned: always
+  type: int
+  sample: 200
+
+message:
+    description:
+      - The Response Message returned by the Spark API.
+      - Full Response Code explanations can be found at U(https://developer.ciscospark.com/endpoint-messages-post.html).
+    returned: always
+    type: str
+    sample: OK (585 bytes)
+

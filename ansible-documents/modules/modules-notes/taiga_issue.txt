@@ -1,0 +1,101 @@
+> TAIGA_ISSUE    (/usr/lib/python2.7/dist-packages/ansible/modules/web_infrastructure/taiga_issue.py)
+
+        Creates/deletes an issue in a Taiga Project Management Platform (https://taiga.io). An issue is identified by the combination of
+        project, issue subject and issue type. This module implements the creation or deletion of issues (not the update).
+
+  * This module is maintained by The Ansible Community
+OPTIONS (= is mandatory):
+
+- attachment
+        Path to a file to be attached to the issue.
+        [Default: (null)]
+
+- attachment_description
+        A string describing the file to be attached to the issue.
+        [Default: ]
+
+- description
+        The issue description.
+        [Default: ]
+
+= issue_type
+        The issue type. Must exist previously.
+
+
+- priority
+        The issue priority. Must exist previously.
+        [Default: Normal]
+
+= project
+        Name of the project containing the issue. Must exist previously.
+
+
+- severity
+        The issue severity. Must exist previously.
+        [Default: Normal]
+
+- state
+        Whether the issue should be present or not.
+        (Choices: present, absent)[Default: present]
+
+- status
+        The issue status. Must exist previously.
+        [Default: New]
+
+= subject
+        The issue subject.
+
+
+- tags
+        A lists of tags to be assigned to the issue.
+        [Default: []]
+
+- taiga_host
+        The hostname of the Taiga instance.
+        [Default: https://api.taiga.io]
+
+
+NOTES:
+      * The authentication is achieved either by the environment variable TAIGA_TOKEN or by the pair of environment variables
+        TAIGA_USERNAME and TAIGA_PASSWORD
+
+
+REQUIREMENTS:  python-taiga
+
+AUTHOR: Alejandro Guirao (@lekum)
+        METADATA:
+          status:
+          - preview
+          supported_by: community
+        
+
+EXAMPLES:
+
+# Create an issue in the my hosted Taiga environment and attach an error log
+- taiga_issue:
+    taiga_host: https://mytaigahost.example.com
+    project: myproject
+    subject: An error has been found
+    issue_type: Bug
+    priority: High
+    status: New
+    severity: Important
+    description: An error has been found. Please check the attached error log for details.
+    attachment: /path/to/error.log
+    attachment_description: Error log file
+    tags:
+      - Error
+      - Needs manual check
+    state: present
+
+# Deletes the previously created issue
+- taiga_issue:
+    taiga_host: https://mytaigahost.example.com
+    project: myproject
+    subject: An error has been found
+    issue_type: Bug
+    state: absent
+
+
+RETURN VALUES:
+# 

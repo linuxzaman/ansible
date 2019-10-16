@@ -1,0 +1,68 @@
+EXAMPLES:
+
+- name: Authenticate using email and API token and fetch all domains
+  dnsimple:
+    account_email: test@example.com
+    account_api_token: dummyapitoken
+  delegate_to: localhost
+
+- name: Fetch my.com domain records
+  dnsimple:
+    domain: my.com
+    state: present
+  delegate_to: localhost
+  register: records
+
+- name: Delete a domain
+  dnsimple:
+    domain: my.com
+    state: absent
+  delegate_to: localhost
+
+- name: Create a test.my.com A record to point to 127.0.0.1
+  dnsimple:
+    domain: my.com
+    record: test
+    type: A
+    value: 127.0.0.1
+  delegate_to: localhost
+  register: record
+
+- name: Delete record using record_ids
+  dnsimple:
+    domain: my.com
+    record_ids: '{{ record["id"] }}'
+    state: absent
+  delegate_to: localhost
+
+- name: Create a my.com CNAME record to example.com
+  dnsimple:
+    domain: my.com
+    record: ''
+    type: CNAME
+    value: example.com
+    state: present
+  delegate_to: localhost
+
+- name: change TTL value for a record
+  dnsimple:
+    domain: my.com
+    record: ''
+    type: CNAME
+    value: example.com
+    ttl: 600
+    state: present
+  delegate_to: localhost
+
+- name: Delete the record
+  dnsimple:
+    domain: my.com
+    record: ''
+    type: CNAME
+    value: example.com
+    state: absent
+  delegate_to: localhost
+
+
+RETURN VALUES:
+# 

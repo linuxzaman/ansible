@@ -1,0 +1,127 @@
+> NA_ELEMENTSW_SNAPSHOT    (/usr/lib/python2.7/dist-packages/ansible/modules/storage/netapp/na_elementsw_snapshot.py)
+
+        Create, Modify or Delete Snapshot on Element OS Cluster.
+
+  * This module is maintained by an Ansible Partner
+OPTIONS (= is mandatory):
+
+= account_id
+        Account ID or Name of Parent/Source Volume.
+
+
+- enable_remote_replication
+        Flag, whether to replicate the snapshot created to a remote replication cluster.
+        To enable specify 'true' value.
+        [Default: (null)]
+        type: bool
+
+- expiration_time
+        The date and time (format ISO 8601 date string) at which this snapshot will expire.
+        [Default: (null)]
+
+= hostname
+        The hostname or IP address of the SolidFire cluster.
+
+
+- name
+        Name of new snapshot create.
+        If unspecified, date and time when the snapshot was taken is used.
+        [Default: (null)]
+
+= password
+        Element OS access account password
+        (Aliases: pass)
+
+- retention
+        Retention period for the snapshot.
+        Format is 'HH:mm:ss'.
+        [Default: (null)]
+
+- snap_mirror_label
+        Label used by SnapMirror software to specify snapshot retention policy on SnapMirror endpoint.
+        [Default: (null)]
+
+- src_snapshot_id
+        ID or Name of an existing snapshot.
+        Required when `state=present', to modify snapshot properties.
+        Required when `state=present', to create snapshot from another snapshot in the volume.
+        Required when `state=absent', to delete snapshot.
+        [Default: (null)]
+
+= src_volume_id
+        ID or Name of active volume.
+
+
+- state
+        Whether the specified snapshot should exist or not.
+        (Choices: present, absent)[Default: present]
+
+= username
+        Element OS access account user-name
+        (Aliases: user)
+
+
+NOTES:
+      * The modules prefixed with na\\_elementsw are built to support the SolidFire storage platform.
+
+
+REQUIREMENTS:  The modules were developed with SolidFire 10.1, solidfire-sdk-python (1.1.0.92) or greater. Install using 'pip install
+        solidfire-sdk-python'
+
+AUTHOR: NetApp Ansible Team (@carchi8py) <ng-ansibleteam@netapp.com>
+        METADATA:
+          status:
+          - preview
+          supported_by: certified
+        
+
+EXAMPLES:
+
+- name: Create snapshot
+     tags:
+     - elementsw_create_snapshot
+     na_elementsw_snapshot:
+       hostname: "{{ elementsw_hostname }}"
+       username: "{{ elementsw_username }}"
+       password: "{{ elementsw_password }}"
+       state: present
+       src_volume_id: 118
+       account_id: sagarsh
+       name: newsnapshot-1
+
+   - name: Modify Snapshot
+     tags:
+     - elementsw_modify_snapshot
+     na_elementsw_snapshot:
+       hostname: "{{ elementsw_hostname }}"
+       username: "{{ elementsw_username }}"
+       password: "{{ elementsw_password }}"
+       state: present
+       src_volume_id: sagarshansivolume
+       src_snapshot_id: test1
+       account_id: sagarsh
+       expiration_time: '2018-06-16T12:24:56Z'
+       enable_remote_replication: false
+
+   - name: Delete Snapshot
+     tags:
+     - elementsw_delete_snapshot
+     na_elementsw_snapshot:
+       hostname: "{{ elementsw_hostname }}"
+       username: "{{ elementsw_username }}"
+       password: "{{ elementsw_password }}"
+       state: absent
+       src_snapshot_id: deltest1
+       account_id: sagarsh
+       src_volume_id: sagarshansivolume
+
+
+RETURN VALUES:
+
+
+msg:
+    description: Success message
+    returned: success
+    type: str
+
+

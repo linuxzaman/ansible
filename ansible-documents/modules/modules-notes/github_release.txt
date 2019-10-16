@@ -1,0 +1,127 @@
+> GITHUB_RELEASE    (/usr/lib/python2.7/dist-packages/ansible/modules/source_control/github_release.py)
+
+        Fetch metadata about GitHub Releases
+
+  * This module is maintained by The Ansible Community
+OPTIONS (= is mandatory):
+
+= action
+        Action to perform
+        (Choices: latest_release, create_release)
+
+- body
+        Description of the release when creating a release
+        [Default: (null)]
+        version_added: 2.4
+        
+
+- draft
+        Sets if the release is a draft or not. (boolean)
+        [Default: no]
+        type: bool
+        version_added: 2.4
+        
+
+- name
+        Name of release when creating a release
+        [Default: (null)]
+        version_added: 2.4
+        
+
+- password
+        The GitHub account password for the user. Mutually exclusive with `token'.
+        [Default: (null)]
+        version_added: 2.4
+
+- prerelease
+        Sets if the release is a prerelease or not. (boolean)
+        [Default: no]
+        type: bool
+        version_added: 2.4
+        
+
+= repo
+        Repository name
+
+
+- tag
+        Tag name when creating a release. Required when using action is set to `create_release'.
+        [Default: (null)]
+        version_added: 2.4
+        
+
+- target
+        Target of release when creating a release
+        [Default: (null)]
+        version_added: 2.4
+        
+
+- token
+        GitHub Personal Access Token for authenticating. Mutually exclusive with `password'.
+        [Default: (null)]
+
+= user
+        The GitHub account that owns the repository
+
+
+
+REQUIREMENTS:  github3.py >= 1.0.0a3
+
+AUTHOR: Adrian Moisey (@adrianmoisey)
+        METADATA:
+          status:
+          - preview
+          supported_by: community
+        
+
+EXAMPLES:
+
+- name: Get latest release of a public repository
+  github_release:
+    user: ansible
+    repo: ansible
+    action: latest_release
+
+- name: Get latest release of testuseer/testrepo
+  github_release:
+    token: tokenabc1234567890
+    user: testuser
+    repo: testrepo
+    action: latest_release
+
+- name: Get latest release of test repo using username and password. Ansible 2.4.
+  github_release:
+    user: testuser
+    password: secret123
+    repo: testrepo
+    action: latest_release
+
+- name: Create a new release
+  github_release:
+    token: tokenabc1234567890
+    user: testuser
+    repo: testrepo
+    action: create_release
+    tag: test
+    target: master
+    name: My Release
+    body: Some description
+
+
+RETURN VALUES:
+
+create_release:
+    description:
+    - Version of the created release
+    - "For Ansible version 2.5 and later, if specified release version already exists, then State is unchanged"
+    - "For Ansible versions prior to 2.5, if specified release version already exists, then State is skipped"
+    type: str
+    returned: success
+    sample: 1.1.0
+
+latest_release:
+    description: Version of the latest release
+    type: str
+    returned: success
+    sample: 1.1.0
+

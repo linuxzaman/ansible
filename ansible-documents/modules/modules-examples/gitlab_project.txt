@@ -1,0 +1,51 @@
+EXAMPLES:
+
+- name: Delete Gitlab Project
+  gitlab_project:
+    api_url: https://gitlab.example.com/
+    api_token: "{{ access_token }}"
+    validate_certs: False
+    name: my_first_project
+    state: absent
+  delegate_to: localhost
+
+- name: Create Gitlab Project in group Ansible
+  gitlab_project:
+    api_url: https://gitlab.example.com/
+    validate_certs: True
+    api_username: dj-wasabi
+    api_password: "MySecretPassword"
+    name: my_first_project
+    group: ansible
+    issues_enabled: False
+    wiki_enabled: True
+    snippets_enabled: True
+    import_url: http://git.example.com/example/lab.git
+    state: present
+  delegate_to: localhost
+
+
+RETURN VALUES:
+
+msg:
+  description: Success or failure message
+  returned: always
+  type: str
+  sample: "Success"
+
+result:
+  description: json parsed response from the server
+  returned: always
+  type: dict
+
+error:
+  description: the error message returned by the Gitlab API
+  returned: failed
+  type: str
+  sample: "400: path is already in use"
+
+project:
+  description: API object
+  returned: always
+  type: dict
+

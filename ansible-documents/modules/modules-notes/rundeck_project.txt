@@ -1,0 +1,69 @@
+> RUNDECK_PROJECT    (/usr/lib/python2.7/dist-packages/ansible/modules/web_infrastructure/rundeck_project.py)
+
+        Create and remove Rundeck projects through HTTP API.
+
+  * This module is maintained by The Ansible Community
+OPTIONS (= is mandatory):
+
+- api_version
+        Sets the API version used by module.
+        API version must be at least 14.
+        [Default: 14]
+
+= name
+        Sets the project name.
+
+
+- state
+        Create or remove Rundeck project.
+        (Choices: present, absent)[Default: present]
+
+= token
+        Sets the token to authenticate against Rundeck API.
+
+
+= url
+        Sets the rundeck instance URL.
+
+
+
+AUTHOR: Loic Blot (@nerzhul)
+        METADATA:
+          status:
+          - preview
+          supported_by: community
+        
+
+EXAMPLES:
+
+- name: Create a rundeck project
+  rundeck_project:
+    name: "Project_01"
+    api_version: 18
+    url: "https://rundeck.example.org"
+    token: "mytoken"
+    state: present
+
+- name: Remove a rundeck project
+  rundeck_project:
+    name: "Project_02"
+    url: "https://rundeck.example.org"
+    token: "mytoken"
+    state: absent
+
+
+RETURN VALUES:
+
+rundeck_response:
+    description: Rundeck response when a failure occurs
+    returned: failed
+    type: str
+before:
+    description: dictionary containing project information before modification
+    returned: success
+    type: dict
+after:
+    description: dictionary containing project information after modification
+    returned: success
+    type: dict
+

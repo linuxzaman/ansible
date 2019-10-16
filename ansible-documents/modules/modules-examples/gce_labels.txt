@@ -1,0 +1,71 @@
+EXAMPLES:
+
+- name: Add labels on an existing instance (using resource_url)
+  gce_labels:
+    service_account_email: "{{ service_account_email }}"
+    credentials_file: "{{ credentials_file }}"
+    project_id: "{{ project_id }}"
+    labels:
+      webserver-frontend: homepage
+      environment: test
+      experiment-name: kennedy
+    resource_url: https://www.googleapis.com/compute/beta/projects/myproject/zones/us-central1-f/instances/example-instance
+    state: present
+- name: Add labels on an image (using resource params)
+  gce_labels:
+    service_account_email: "{{ service_account_email }}"
+    credentials_file: "{{ credentials_file }}"
+    project_id: "{{ project_id }}"
+    labels:
+      webserver-frontend: homepage
+      environment: test
+      experiment-name: kennedy
+    resource_type: images
+    resource_location: global
+    resource_name: my-custom-image
+    state: present
+- name: Remove specified labels from the GCE instance
+  gce_labels:
+    service_account_email: "{{ service_account_email }}"
+    credentials_file: "{{ credentials_file }}"
+    project_id: "{{ project_id }}"
+    labels:
+      environment: prod
+      experiment-name: kennedy
+    resource_url: https://www.googleapis.com/compute/beta/projects/myproject/zones/us-central1-f/instances/example-instance
+    state: absent
+
+
+RETURN VALUES:
+
+labels:
+    description: List of labels that exist on the resource.
+    returned: Always.
+    type: dict
+    sample: [ { 'webserver-frontend': 'homepage', 'environment': 'test', 'environment-name': 'kennedy' } ]
+resource_url:
+    description: The 'self_link' of the GCE resource.
+    returned: Always.
+    type: str
+    sample: 'https://www.googleapis.com/compute/beta/projects/myproject/zones/us-central1-f/instances/example-instance'
+resource_type:
+    description: The type of the GCE resource.
+    returned: Always.
+    type: str
+    sample: instances
+resource_location:
+    description: The location of the GCE resource.
+    returned: Always.
+    type: str
+    sample: us-central1-f
+resource_name:
+    description: The name of the GCE resource.
+    returned: Always.
+    type: str
+    sample: my-happy-little-instance
+state:
+    description: state of the labels
+    returned: Always.
+    type: str
+    sample: present
+

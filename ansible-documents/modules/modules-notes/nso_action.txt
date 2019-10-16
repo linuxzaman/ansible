@@ -1,0 +1,84 @@
+> NSO_ACTION    (/usr/lib/python2.7/dist-packages/ansible/modules/network/nso/nso_action.py)
+
+        This module provides support for executing Cisco NSO actions and then verifying that the output is as expected.
+
+  * This module is maintained by an Ansible Partner
+OPTIONS (= is mandatory):
+
+- input
+        NSO action parameters.
+        [Default: (null)]
+
+- output_invalid
+        List of result parameter names that will cause the task to fail if they are present.
+        [Default: (null)]
+
+- output_required
+        Required output parameters.
+        [Default: (null)]
+
+= password
+        NSO password
+
+        type: str
+
+= path
+        Path to NSO action.
+
+
+- timeout
+        JSON-RPC request timeout in seconds
+        [Default: 300]
+        type: int
+        version_added: 2.6
+
+= url
+        NSO JSON-RPC URL, http://localhost:8080/jsonrpc
+
+        type: str
+
+= username
+        NSO username
+
+        type: str
+
+- validate_certs
+        When set to true, validates the SSL certificate of NSO when using SSL
+        [Default: False]
+        type: bool
+
+- validate_strict
+        If set to true, the task will fail if any output parameters not in output_required is present in the output.
+        [Default: (null)]
+        type: bool
+
+
+REQUIREMENTS:  Cisco NSO version 3.4 or higher.
+
+AUTHOR: Claes Nästén (@cnasten)
+        METADATA:
+          status:
+          - preview
+          supported_by: certified
+        
+
+EXAMPLES:
+
+- name: Sync NSO device
+  nso_action:
+    url: http://localhost:8080/jsonrpc
+    username: username
+    password: password
+    path: /ncs:devices/device{ce0}/sync-from
+    input: {}
+
+
+RETURN VALUES:
+
+output:
+  description: Action output
+  returned: success
+  type: dict
+  sample:
+    result: true
+

@@ -1,0 +1,118 @@
+> AOS_BLUEPRINT_PARAM    (/usr/lib/python2.7/dist-packages/ansible/modules/network/aos/_aos_blueprint_param.py)
+
+        Apstra AOS Blueprint Parameter module let you manage your Blueprint Parameter easily. You can create access, define and delete
+        Blueprint Parameter. The list of Parameters supported is different per Blueprint. The option `get_param_list' can help you to
+        access the list of supported Parameters for your blueprint. This module is idempotent and support the `check' mode. It's using
+        the AOS REST API.
+
+DEPRECATED: 
+
+	Reason: This module does not support AOS 2.1 or later
+	Will be removed in: Ansible 2.9
+	Alternatives: See new modules at U(https://www.ansible.com/ansible-apstra).
+
+
+  * This module is maintained by The Ansible Community
+OPTIONS (= is mandatory):
+
+= blueprint
+        Blueprint Name or Id as defined in AOS.
+
+
+- get_param_list
+        Get the complete list of supported parameters for this blueprint and the description of those parameters.
+        [Default: (null)]
+
+- name
+        Name of blueprint parameter, as defined by AOS design template. You can use the option `get_param_list' to get the complete list
+        of supported parameters for your blueprint.
+        [Default: (null)]
+
+- param_map
+        Defines the aos-pyez collection that will is used to map the user-defined item name into the AOS unique ID value.  For example,
+        if the caller provides an IP address pool `param_value' called "Server-IpAddrs", then the aos-pyez collection is 'IpPools'. Some
+        `param_map' are already defined by default like `logical_device_maps'.
+        [Default: (null)]
+
+= session
+        An existing AOS session as obtained by [aos_login] module.
+
+
+- state
+        Indicate what is the expected state of the Blueprint Parameter (present or not).
+        (Choices: present, absent)[Default: present]
+
+- value
+        Blueprint parameter value.  This value may be transformed by using the `param_map' field; used when the blueprint parameter
+        requires an AOS unique ID value.
+        [Default: (null)]
+
+
+REQUIREMENTS:  aos-pyez >= 0.6.0
+
+AUTHOR: jeremy@apstra.com (@jeremyschulman)
+        METADATA:
+          status:
+          - deprecated
+          supported_by: community
+        
+
+EXAMPLES:
+
+- name: Add Logical Device Maps information in a Blueprint
+  aos_blueprint_param:
+    session: "{{ aos_session }}"
+    blueprint: "my-blueprint-l2"
+    name: "logical_device_maps"
+    value:
+      spine_1: CumulusVX-Spine-Switch
+      spine_2: CumulusVX-Spine-Switch
+      leaf_1: CumulusVX-Leaf-Switch
+      leaf_2: CumulusVX-Leaf-Switch
+      leaf_3: CumulusVX-Leaf-Switch
+    state: present
+
+- name: Access Logical Device Maps information from a Blueprint
+  aos_blueprint_param:
+    session: "{{ aos_session }}"
+    blueprint: "my-blueprint-l2"
+    name: "logical_device_maps"
+    state: present
+
+- name: Reset Logical Device Maps information in a Blueprint
+  aos_blueprint_param:
+    session: "{{ aos_session }}"
+    blueprint: "my-blueprint-l2"
+    name: "logical_device_maps"
+    state: absent
+
+- name: Get list of all supported Params for a blueprint
+  aos_blueprint_param:
+    session: "{{ aos_session }}"
+    blueprint: "my-blueprint-l2"
+    get_param_list: yes
+  register: params_list
+- debug: var=params_list
+
+- name: Add Resource Pools information in a Blueprint, by providing a param_map
+  aos_blueprint_param:
+    session: "{{ aos_session }}"
+    blueprint: "my-blueprint-l2"
+    name: "resource_pools"
+    value:
+        leaf_loopback_ips: ['Switches-IpAddrs']
+        spine_loopback_ips: ['Switches-IpAddrs']
+        spine_leaf_link_ips: ['Switches-IpAddrs']
+        spine_asns: ['Private-ASN-pool']
+        leaf_asns: ['Private-ASN-pool']
+        virtual_network_svi_subnets: ['Servers-IpAddrs']
+    param_map:
+        leaf_loopback_ips: IpPools
+        spine_loopback_ips: IpPools
+        spine_leaf_link_ips: IpPools
+        spine_asns: AsnPools
+        leaf_asns: AsnPools
+        virtual_network_svi_subnets: IpPools
+    state: present
+
+

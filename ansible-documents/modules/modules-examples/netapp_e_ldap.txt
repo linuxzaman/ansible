@@ -1,0 +1,38 @@
+EXAMPLES:
+
+- name: Disable LDAP authentication
+      netapp_e_ldap:
+        api_url: "10.1.1.1:8443"
+        api_username: "admin"
+        api_password: "myPass"
+        ssid: "1"
+        state: absent
+
+    - name: Remove the 'default' LDAP domain configuration
+      netapp_e_ldap:
+        state: absent
+        identifier: default
+
+    - name: Define a new LDAP domain, utilizing defaults where possible
+      netapp_e_ldap:
+        state: present
+        bind_username: "CN=MyBindAccount,OU=ServiceAccounts,DC=example,DC=com"
+        bind_password: "mySecretPass"
+        server: "ldap://example.com:389"
+        search_base: 'OU=Users,DC=example,DC=com'
+        role_mappings:
+          ".*dist-dev-storage.*":
+            - storage.admin
+            - security.admin
+            - support.admin
+            - storage.monitor
+
+
+RETURN VALUES:
+
+msg:
+    description: Success message
+    returned: on success
+    type: str
+    sample: The ldap settings have been updated.
+

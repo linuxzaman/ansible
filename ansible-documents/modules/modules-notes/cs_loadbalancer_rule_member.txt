@@ -1,0 +1,244 @@
+> CS_LOADBALANCER_RULE_MEMBER    (/usr/lib/python2.7/dist-packages/ansible/modules/cloud/cloudstack/cs_loadbalancer_rule_member.py)
+
+        Add and remove load balancer rule members.
+
+  * This module is maintained by The Ansible Community
+OPTIONS (= is mandatory):
+
+- account
+        Account the rule is related to.
+        [Default: (null)]
+        type: str
+
+- api_http_method
+        HTTP method used to query the API endpoint.
+        If not given, the `CLOUDSTACK_METHOD' env variable is considered.
+        As the last option, the value is taken from the ini config file, also see the notes.
+        Fallback value is `get' if not specified.
+        (Choices: get, post)[Default: (null)]
+        type: str
+
+- api_key
+        API key of the CloudStack API.
+        If not given, the `CLOUDSTACK_KEY' env variable is considered.
+        As the last option, the value is taken from the ini config file, also see the notes.
+        [Default: (null)]
+        type: str
+
+- api_region
+        Name of the ini section in the `cloustack.ini' file.
+        If not given, the `CLOUDSTACK_REGION' env variable is considered.
+        [Default: cloudstack]
+        type: str
+
+- api_secret
+        Secret key of the CloudStack API.
+        If not set, the `CLOUDSTACK_SECRET' env variable is considered.
+        As the last option, the value is taken from the ini config file, also see the notes.
+        [Default: (null)]
+        type: str
+
+- api_timeout
+        HTTP timeout in seconds.
+        If not given, the `CLOUDSTACK_TIMEOUT' env variable is considered.
+        As the last option, the value is taken from the ini config file, also see the notes.
+        Fallback value is 10 seconds if not specified.
+        [Default: (null)]
+        type: int
+
+- api_url
+        URL of the CloudStack API e.g. https://cloud.example.com/client/api.
+        If not given, the `CLOUDSTACK_ENDPOINT' env variable is considered.
+        As the last option, the value is taken from the ini config file, also see the notes.
+        [Default: (null)]
+        type: str
+
+- domain
+        Domain the rule is related to.
+        [Default: (null)]
+        type: str
+
+- ip_address
+        Public IP address from where the network traffic will be load balanced from.
+        Only needed to find the rule if `name' is not unique.
+        (Aliases: public_ip)[Default: (null)]
+        type: str
+
+= name
+        The name of the load balancer rule.
+
+        type: str
+
+- poll_async
+        Poll async jobs until job has finished.
+        [Default: True]
+        type: bool
+
+- project
+        Name of the project the firewall rule is related to.
+        [Default: (null)]
+        type: str
+
+- state
+        Should the VMs be present or absent from the rule.
+        (Choices: present, absent)[Default: present]
+        type: str
+
+= vms
+        List of VMs to assign to or remove from the rule.
+        (Aliases: vm)
+        type: list
+
+- zone
+        Name of the zone in which the rule should be located.
+        If not set, default zone is used.
+        [Default: (null)]
+        type: str
+
+
+NOTES:
+      * Ansible uses the `cs' library's configuration method if credentials are not provided by the arguments `api_url', `api_key',
+        `api_secret'. Configuration is read from several locations, in the following order. The `CLOUDSTACK_ENDPOINT',
+        `CLOUDSTACK_KEY', `CLOUDSTACK_SECRET' and `CLOUDSTACK_METHOD'. `CLOUDSTACK_TIMEOUT' environment variables. A
+        `CLOUDSTACK_CONFIG' environment variable pointing to an `.ini' file. A `cloudstack.ini' file in the current working
+        directory. A `.cloudstack.ini' file in the users home directory. Optionally multiple credentials and endpoints can be
+        specified using ini sections in `cloudstack.ini'. Use the argument `api_region' to select the section name, default section
+        is `cloudstack'. See https://github.com/exoscale/cs for more information.
+      * A detailed guide about cloudstack modules can be found in the L(CloudStack Cloud
+        Guide,../scenario_guides/guide_cloudstack.html).
+      * This module supports check mode.
+
+
+REQUIREMENTS:  python >= 2.6, cs >= 0.6.10
+
+AUTHOR: Darren Worrall (@dazworrall), René Moser (@resmo)
+        METADATA:
+          status:
+          - stableinterface
+          supported_by: community
+        
+
+EXAMPLES:
+
+- name: Add VMs to an existing load balancer
+  cs_loadbalancer_rule_member:
+    name: balance_http
+    vms:
+      - web01
+      - web02
+  delegate_to: localhost
+
+- name: Remove a VM from an existing load balancer
+  cs_loadbalancer_rule_member:
+    name: balance_http
+    vms:
+      - web01
+      - web02
+    state: absent
+  delegate_to: localhost
+
+# Rolling upgrade of hosts
+- hosts: webservers
+  serial: 1
+  pre_tasks:
+    - name: Remove from load balancer
+      cs_loadbalancer_rule_member:
+        name: balance_http
+        vm: "{{ ansible_hostname }}"
+        state: absent
+      delegate_to: localhost
+  tasks:
+    # Perform update
+  post_tasks:
+    - name: Add to load balancer
+      cs_loadbalancer_rule_member:
+        name: balance_http
+        vm: "{{ ansible_hostname }}"
+        state: present
+      delegate_to: localhost
+
+
+RETURN VALUES:
+
+---
+id:
+  description: UUID of the rule.
+  returned: success
+  type: str
+  sample: a6f7a5fc-43f8-11e5-a151-feff819cdc9f
+zone:
+  description: Name of zone the rule is related to.
+  returned: success
+  type: str
+  sample: ch-gva-2
+project:
+  description: Name of project the rule is related to.
+  returned: success
+  type: str
+  sample: Production
+account:
+  description: Account the rule is related to.
+  returned: success
+  type: str
+  sample: example account
+domain:
+  description: Domain the rule is related to.
+  returned: success
+  type: str
+  sample: example domain
+algorithm:
+  description: Load balancer algorithm used.
+  returned: success
+  type: str
+  sample: source
+cidr:
+  description: CIDR to forward traffic from.
+  returned: success
+  type: str
+  sample: 0.0.0.0/0
+name:
+  description: Name of the rule.
+  returned: success
+  type: str
+  sample: http-lb
+description:
+  description: Description of the rule.
+  returned: success
+  type: str
+  sample: http load balancer rule
+protocol:
+  description: Protocol of the rule.
+  returned: success
+  type: str
+  sample: tcp
+public_port:
+  description: Public port.
+  returned: success
+  type: int
+  sample: 80
+private_port:
+  description: Private IP address.
+  returned: success
+  type: int
+  sample: 80
+public_ip:
+  description: Public IP address.
+  returned: success
+  type: str
+  sample: 1.2.3.4
+vms:
+  description: Rule members.
+  returned: success
+  type: list
+  sample: '[ "web01", "web02" ]'
+tags:
+  description: List of resource tags associated with the rule.
+  returned: success
+  type: list
+  sample: '[ { "key": "foo", "value": "bar" } ]'
+state:
+  description: State of the rule.
+  returned: success
+  type: str
+  sample: Add
+

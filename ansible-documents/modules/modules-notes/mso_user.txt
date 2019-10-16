@@ -1,0 +1,189 @@
+> MSO_USER    (/usr/lib/python2.7/dist-packages/ansible/modules/network/aci/mso_user.py)
+
+        Manage users on Cisco ACI Multi-Site.
+
+  * This module is maintained by The Ansible Community
+OPTIONS (= is mandatory):
+
+- account_status
+        The status of the user account.
+        (Choices: active)[Default: (null)]
+        type: str
+
+- domain
+        The domain this user belongs to.
+        When creating new users, this defaults to `Local'.
+        [Default: (null)]
+        type: str
+
+- email
+        The email address of the user.
+        This parameter is required when creating new users.
+        [Default: (null)]
+        type: str
+
+- first_name
+        The first name of the user.
+        This parameter is required when creating new users.
+        [Default: (null)]
+        type: str
+
+= host
+        IP Address or hostname of the ACI Multi Site Orchestrator host.
+        (Aliases: hostname)
+        type: str
+
+- last_name
+        The last name of the user.
+        This parameter is required when creating new users.
+        [Default: (null)]
+        type: str
+
+- output_level
+        Influence the output of this ACI module.
+        `normal' means the standard output, incl. `current' dict
+        `info' adds informational output, incl. `previous', `proposed' and `sent' dicts
+        `debug' adds debugging output, incl. `filter_string', `method', `response', `status' and `url' information
+        (Choices: debug, info, normal)[Default: normal]
+        type: str
+
+= password
+        The password to use for authentication.
+        This option is mutual exclusive with `private_key'. If `private_key' is provided too, it will be used instead.
+
+        type: str
+
+- phone
+        The phone number of the user.
+        This parameter is required when creating new users.
+        [Default: (null)]
+        type: str
+
+- port
+        Port number to be used for the REST connection.
+        The default value depends on parameter `use_ssl`.
+        [Default: (null)]
+        type: int
+
+- roles
+        The roles for this user.
+        [Default: (null)]
+        type: list
+
+- state
+        Use `present' or `absent' for adding or removing.
+        Use `query' for listing an object or multiple objects.
+        (Choices: absent, present, query)[Default: present]
+        type: str
+
+- timeout
+        The socket level timeout in seconds.
+        [Default: 30]
+        type: int
+
+- use_proxy
+        If `no', it will not use a proxy, even if one is defined in an environment variable on the target hosts.
+        [Default: True]
+        type: bool
+
+- use_ssl
+        If `no', an HTTP connection will be used instead of the default HTTPS connection.
+        [Default: True]
+        type: bool
+
+= user
+        The name of the user.
+        (Aliases: name)
+        type: str
+
+- user_password
+        The password of the user.
+        [Default: (null)]
+        type: str
+
+- username
+        The username to use for authentication.
+        [Default: admin]
+        type: str
+
+- validate_certs
+        If `no', SSL certificates will not be validated.
+        This should only set to `no' when used on personally controlled sites using self-signed certificates.
+        [Default: True]
+        type: bool
+
+
+NOTES:
+      * A default installation of ACI Multi-Site ships with admin password 'we1come!' which requires a password change on first
+        login. See the examples of how to change the 'admin' password using Ansible.
+      * Please read the :ref:`aci_guide` for more detailed information on how to manage your ACI infrastructure using Ansible.
+      * This module was written to support ACI Multi Site Orchestrator v2.1 or newer. Some or all functionality may not work on
+        earlier versions.
+
+
+REQUIREMENTS:  Multi Site Orchestrator v2.1 or newer
+
+AUTHOR: Dag Wieers (@dagwieers)
+        METADATA:
+          status:
+          - preview
+          supported_by: community
+        
+
+EXAMPLES:
+
+- name: Update initial admin password
+  mso_user:
+    host: mso_host
+    username: admin
+    password: we1come!
+    user_name: admin
+    user_password: SomeSecretPassword
+    state: present
+  delegate_to: localhost
+
+- name: Add a new user
+  mso_user:
+    host: mso_host
+    username: admin
+    password: SomeSecretPassword
+    user_name: dag
+    description: Test user
+    first_name: Dag
+    last_name: Wieers
+    email: dag@wieers.com
+    phone: +32 478 436 299
+    state: present
+  delegate_to: localhost
+
+- name: Remove a user
+  mso_user:
+    host: mso_host
+    username: admin
+    password: SomeSecretPassword
+    user_name: dag
+    state: absent
+  delegate_to: localhost
+
+- name: Query a user
+  mso_user:
+    host: mso_host
+    username: admin
+    password: SomeSecretPassword
+    user_name: dag
+    state: query
+  delegate_to: localhost
+  register: query_result
+
+- name: Query all users
+  mso_user:
+    host: mso_host
+    username: admin
+    password: SomeSecretPassword
+    state: query
+  delegate_to: localhost
+  register: query_result
+
+
+RETURN VALUES:
+ # 

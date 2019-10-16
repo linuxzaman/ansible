@@ -1,0 +1,181 @@
+> EC2_LC_FIND    (/usr/lib/python2.7/dist-packages/ansible/modules/cloud/amazon/ec2_lc_find.py)
+
+        Returns list of matching Launch Configurations for a given name, along with other useful information Results can be sorted and
+        sliced It depends on boto Based on the work by Tom Bamford (https://github.com/tombamford)
+
+  * This module is maintained by The Ansible Community
+OPTIONS (= is mandatory):
+
+- aws_access_key
+        AWS access key. If not set then the value of the AWS_ACCESS_KEY_ID, AWS_ACCESS_KEY or EC2_ACCESS_KEY environment variable is
+        used.
+        (Aliases: ec2_access_key, access_key)[Default: (null)]
+        type: str
+
+- aws_secret_key
+        AWS secret key. If not set then the value of the AWS_SECRET_ACCESS_KEY, AWS_SECRET_KEY, or EC2_SECRET_KEY environment variable is
+        used.
+        (Aliases: ec2_secret_key, secret_key)[Default: (null)]
+        type: str
+
+- debug_botocore_endpoint_logs
+        Use a botocore.endpoint logger to parse the unique (rather than total) "resource:action" API calls made during a task, outputing
+        the set to the resource_actions key in the task results. Use the aws_resource_action callback to output to total list made during
+        a playbook. The ANSIBLE_DEBUG_BOTOCORE_LOGS environment variable may also be used.
+        [Default: no]
+        type: bool
+        version_added: 2.8
+
+- ec2_url
+        Url to use to connect to EC2 or your Eucalyptus cloud (by default the module will use EC2 endpoints). Ignored for modules where
+        region is required. Must be specified for all other modules if region is not used. If not set then the value of the EC2_URL
+        environment variable, if any, is used.
+        [Default: (null)]
+        type: str
+
+- limit
+        How many results to show.
+        Corresponds to Python slice notation like list[:limit].
+        [Default: (null)]
+
+= name_regex
+        A Launch Configuration to match
+        It'll be compiled as regex
+
+
+- profile
+        Uses a boto profile. Only works with boto >= 2.24.0.
+        [Default: (null)]
+        type: str
+        version_added: 1.6
+
+= region
+        The AWS region to use.
+        (Aliases: aws_region, ec2_region)
+
+- security_token
+        AWS STS security token. If not set then the value of the AWS_SECURITY_TOKEN or EC2_SECURITY_TOKEN environment variable is used.
+        (Aliases: access_token)[Default: (null)]
+        type: str
+        version_added: 1.6
+
+- sort_order
+        Order in which to sort results.
+        (Choices: ascending, descending)[Default: ascending]
+
+- validate_certs
+        When set to "no", SSL certificates will not be validated for boto versions >= 2.6.0.
+        [Default: True]
+        type: bool
+        version_added: 1.5
+
+
+NOTES:
+      * If parameters are not set within the module, the following environment variables can be used in decreasing order of
+        precedence `AWS_URL' or `EC2_URL', `AWS_ACCESS_KEY_ID' or `AWS_ACCESS_KEY' or `EC2_ACCESS_KEY', `AWS_SECRET_ACCESS_KEY' or
+        `AWS_SECRET_KEY' or `EC2_SECRET_KEY', `AWS_SECURITY_TOKEN' or `EC2_SECURITY_TOKEN', `AWS_REGION' or `EC2_REGION'
+      * Ansible uses the boto configuration file (typically ~/.boto) if no credentials are provided. See
+        https://boto.readthedocs.io/en/latest/boto_config_tut.html
+      * `AWS_REGION' or `EC2_REGION' can be typically be used to specify the AWS region, when required, but this can also be
+        configured in the boto config file
+
+
+REQUIREMENTS:  boto, boto3, python >= 2.6
+
+AUTHOR: Jose Armesto (@fiunchinho)
+        METADATA:
+          status:
+          - preview
+          supported_by: community
+        
+
+EXAMPLES:
+
+# Note: These examples do not set authentication details, see the AWS Guide for details.
+
+# Search for the Launch Configurations that start with "app"
+- ec2_lc_find:
+    name_regex: app.*
+    sort_order: descending
+    limit: 2
+
+
+RETURN VALUES:
+
+image_id:
+    description: AMI id
+    returned: when Launch Configuration was found
+    type: str
+    sample: "ami-0d75df7e"
+user_data:
+    description: User data used to start instance
+    returned: when Launch Configuration was found
+    type: str
+    sample: "ZXhwb3J0IENMT1VE"
+name:
+    description: Name of the Launch Configuration
+    returned: when Launch Configuration was found
+    type: str
+    sample: "myapp-v123"
+arn:
+    description: Name of the AMI
+    returned: when Launch Configuration was found
+    type: str
+    sample: "arn:aws:autoscaling:eu-west-1:12345:launchConfiguration:d82f050e-e315:launchConfigurationName/yourproject"
+instance_type:
+    description: Type of ec2 instance
+    returned: when Launch Configuration was found
+    type: str
+    sample: "t2.small"
+created_time:
+    description: When it was created
+    returned: when Launch Configuration was found
+    type: str
+    sample: "2016-06-29T14:59:22.222000+00:00"
+ebs_optimized:
+    description: Launch Configuration EBS optimized property
+    returned: when Launch Configuration was found
+    type: bool
+    sample: False
+instance_monitoring:
+    description: Launch Configuration instance monitoring property
+    returned: when Launch Configuration was found
+    type: str
+    sample: {"Enabled": false}
+classic_link_vpc_security_groups:
+    description: Launch Configuration classic link vpc security groups property
+    returned: when Launch Configuration was found
+    type: list
+    sample: []
+block_device_mappings:
+    description: Launch Configuration block device mappings property
+    returned: when Launch Configuration was found
+    type: list
+    sample: []
+keyname:
+    description: Launch Configuration ssh key
+    returned: when Launch Configuration was found
+    type: str
+    sample: mykey
+security_groups:
+    description: Launch Configuration security groups
+    returned: when Launch Configuration was found
+    type: list
+    sample: []
+kernel_id:
+    description: Launch Configuration kernel to use
+    returned: when Launch Configuration was found
+    type: str
+    sample: ''
+ram_disk_id:
+    description: Launch Configuration ram disk property
+    returned: when Launch Configuration was found
+    type: str
+    sample: ''
+associate_public_address:
+    description: Assign public address or not
+    returned: when Launch Configuration was found
+    type: bool
+    sample: True
+...
+

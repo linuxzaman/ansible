@@ -1,0 +1,104 @@
+> DIGITAL_OCEAN_SNAPSHOT_FACTS    (/usr/lib/python2.7/dist-packages/ansible/modules/cloud/digital_ocean/digital_ocean_snapshot_facts.py)
+
+        This module can be used to gather facts about snapshot facts based upon provided values such as droplet, volume and snapshot id.
+
+  * This module is maintained by The Ansible Community
+OPTIONS (= is mandatory):
+
+- oauth_token
+        DigitalOcean OAuth token.
+        There are several other environment variables which can be used to provide this value.
+        i.e., - 'DO_API_TOKEN', 'DO_API_KEY', 'DO_OAUTH_TOKEN' and 'OAUTH_TOKEN'
+        (Aliases: api_token)[Default: (null)]
+        type: str
+
+- snapshot_id
+        To retrieve information about a snapshot, please specify this as a snapshot id.
+        If set to actual snapshot id, then facts are gathered related to that particular snapshot only.
+        This is required parameter, if `snapshot_type' is set to `by_id'.
+        [Default: (null)]
+
+- snapshot_type
+        Specifies the type of snapshot facts to be retrived.
+        If set to `droplet', then facts are gathered related to snapshots based on Droplets only.
+        If set to `volume', then facts are gathered related to snapshots based on volumes only.
+        If set to `by_id', then facts are gathered related to snapshots based on snapshot id only.
+        If not set to any of the above, then facts are gathered related to all snapshots.
+        (Choices: all, droplet, volume, by_id)[Default: all]
+
+- timeout
+        The timeout in seconds used for polling DigitalOcean's API.
+        [Default: 30]
+        type: int
+
+- validate_certs
+        If set to `no', the SSL certificates will not be validated.
+        This should only set to `no' used on personally controlled sites using self-signed certificates.
+        [Default: True]
+        type: bool
+
+
+REQUIREMENTS:  python >= 2.6
+
+AUTHOR: Abhijeet Kasurde (@Akasurde)
+        METADATA:
+          status:
+          - preview
+          supported_by: community
+        
+
+EXAMPLES:
+
+- name: Gather facts about all snapshots
+  digital_ocean_snapshot_facts:
+    snapshot_type: all
+    oauth_token: "{{ oauth_token }}"
+
+- name: Gather facts about droplet snapshots
+  digital_ocean_snapshot_facts:
+    snapshot_type: droplet
+    oauth_token: "{{ oauth_token }}"
+
+- name: Gather facts about volume snapshots
+  digital_ocean_snapshot_facts:
+    snapshot_type: volume
+    oauth_token: "{{ oauth_token }}"
+
+- name: Gather facts about snapshot by snapshot id
+  digital_ocean_snapshot_facts:
+    snapshot_type: by_id
+    snapshot_id: 123123123
+    oauth_token: "{{ oauth_token }}"
+
+- name: Get facts about snapshot named big-data-snapshot1
+  digital_ocean_snapshot_facts:
+  register: resp_out
+- set_fact:
+    snapshot_id: "{{ item.id }}"
+  loop: "{{ resp_out.data|json_query(name) }}"
+  vars:
+    name: "[?name=='big-data-snapshot1']"
+- debug: var=snapshot_id
+
+
+RETURN VALUES:
+
+data:
+    description: DigitalOcean snapshot facts
+    returned: success
+    type: list
+    sample: [
+        {
+            "id": "4f60fc64-85d1-11e6-a004-000f53315871",
+            "name": "big-data-snapshot1",
+            "regions": [
+                "nyc1"
+            ],
+            "created_at": "2016-09-28T23:14:30Z",
+            "resource_id": "89bcc42f-85cf-11e6-a004-000f53315871",
+            "resource_type": "volume",
+            "min_disk_size": 10,
+            "size_gigabytes": 0
+        },
+    ]
+

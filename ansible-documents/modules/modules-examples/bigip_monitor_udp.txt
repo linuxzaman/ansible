@@ -1,0 +1,57 @@
+EXAMPLES:
+
+- name: Create UDP Monitor
+  bigip_monitor_udp:
+    state: present
+    ip: 10.10.10.10
+    name: my_udp_monitor
+    provider:
+      server: lb.mydomain.com
+      user: admin
+      password: secret
+  delegate_to: localhost
+
+- name: Remove UDP Monitor
+  bigip_monitor_udp:
+    state: absent
+    name: my_udp_monitor
+    provider:
+      server: lb.mydomain.com
+      user: admin
+      password: secret
+  delegate_to: localhost
+
+
+RETURN VALUES:
+
+parent:
+  description: New parent template of the monitor.
+  returned: changed
+  type: str
+  sample: http
+description:
+  description: The description of the monitor.
+  returned: changed
+  type: str
+  sample: Important Monitor
+ip:
+  description: The new IP of IP/port definition.
+  returned: changed
+  type: str
+  sample: 10.12.13.14
+interval:
+  description: The new interval in which to run the monitor check.
+  returned: changed
+  type: int
+  sample: 2
+timeout:
+  description: The new timeout in which the remote system must respond to the monitor.
+  returned: changed
+  type: int
+  sample: 10
+time_until_up:
+  description: The new time in which to mark a system as up after first successful response.
+  returned: changed
+  type: int
+  sample: 2
+

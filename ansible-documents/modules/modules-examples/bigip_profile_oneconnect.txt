@@ -1,0 +1,56 @@
+EXAMPLES:
+
+- name: Create a OneConnect profile
+  bigip_profile_oneconnect:
+    name: foo
+    state: present
+    provider:
+      user: admin
+      password: secret
+      server: lb.mydomain.com
+  delegate_to: localhost
+
+
+RETURN VALUES:
+
+source_mask:
+  description: Value that the system applies to the source address to determine its eligibility for reuse.
+  returned: changed
+  type: str
+  sample: 255.255.255.255
+description:
+  description: Description of the profile.
+  returned: changed
+  type: str
+  sample: My profile
+maximum_size:
+  description: Maximum number of connections that the system holds in the connection reuse pool.
+  returned: changed
+  type: int
+  sample: 3000
+maximum_age:
+  description: Maximum number of seconds allowed for a connection in the connection reuse pool.
+  returned: changed
+  type: int
+  sample: 2000
+maximum_reuse:
+  description: Maximum number of times that a server-side connection can be reused.
+  returned: changed
+  type: int
+  sample: 1000
+idle_timeout_override:
+  description: The new idle timeout override.
+  returned: changed
+  type: str
+  sample: disabled
+limit_type:
+  description: New limit type of the profile.
+  returned: changed
+  type: str
+  sample: idle
+share_pools:
+  description: Share connections among similar virtual servers.
+  returned: changed
+  type: bool
+  sample: yes
+

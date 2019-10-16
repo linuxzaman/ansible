@@ -1,0 +1,34 @@
+EXAMPLES:
+
+- name: Add device to CA Spectrum
+  local_action:
+    module: spectrum_device
+    device: '{{ ansible_host }}'
+    community: secret
+    landscape: '0x100000'
+    oneclick_url: http://oneclick.example.com:8080
+    oneclick_user: username
+    oneclick_password: password
+    state: present
+
+
+- name: Remove device from CA Spectrum
+  local_action:
+    module: spectrum_device
+    device: '{{ ansible_host }}'
+    landscape: '{{ landscape_handle }}'
+    oneclick_url: http://oneclick.example.com:8080
+    oneclick_user: username
+    oneclick_password: password
+    use_proxy: no
+    state: absent
+
+
+RETURN VALUES:
+
+device:
+  description: device data when state = present
+  returned: success
+  type: dict
+  sample: {'model_handle': '0x1007ab', 'landscape': '0x100000', 'address': '10.10.5.1'}
+

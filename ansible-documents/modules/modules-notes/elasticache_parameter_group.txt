@@ -1,0 +1,157 @@
+> ELASTICACHE_PARAMETER_GROUP    (/usr/lib/python2.7/dist-packages/ansible/modules/cloud/amazon/elasticache_parameter_group.py)
+
+        Manage cache security groups in Amazon Elasticache. Returns information about the specified cache cluster.
+
+  * This module is maintained by The Ansible Community
+OPTIONS (= is mandatory):
+
+- aws_access_key
+        AWS access key. If not set then the value of the AWS_ACCESS_KEY_ID, AWS_ACCESS_KEY or EC2_ACCESS_KEY environment variable is
+        used.
+        (Aliases: ec2_access_key, access_key)[Default: (null)]
+        type: str
+
+- aws_secret_key
+        AWS secret key. If not set then the value of the AWS_SECRET_ACCESS_KEY, AWS_SECRET_KEY, or EC2_SECRET_KEY environment variable is
+        used.
+        (Aliases: ec2_secret_key, secret_key)[Default: (null)]
+        type: str
+
+- debug_botocore_endpoint_logs
+        Use a botocore.endpoint logger to parse the unique (rather than total) "resource:action" API calls made during a task, outputing
+        the set to the resource_actions key in the task results. Use the aws_resource_action callback to output to total list made during
+        a playbook. The ANSIBLE_DEBUG_BOTOCORE_LOGS environment variable may also be used.
+        [Default: no]
+        type: bool
+        version_added: 2.8
+
+- description
+        A user-specified description for the cache parameter group.
+        [Default: (null)]
+
+- ec2_url
+        Url to use to connect to EC2 or your Eucalyptus cloud (by default the module will use EC2 endpoints). Ignored for modules where
+        region is required. Must be specified for all other modules if region is not used. If not set then the value of the EC2_URL
+        environment variable, if any, is used.
+        [Default: (null)]
+        type: str
+
+- group_family
+        The name of the cache parameter group family that the cache parameter group can be used with. Required when creating a cache
+        parameter group.
+        (Choices: memcached1.4, memcached1.5, redis2.6, redis2.8, redis3.2, redis4.0, redis5.0)[Default: (null)]
+
+= name
+        A user-specified name for the cache parameter group.
+
+
+- profile
+        Uses a boto profile. Only works with boto >= 2.24.0.
+        [Default: (null)]
+        type: str
+        version_added: 1.6
+
+- region
+        The AWS region to use. If not specified then the value of the AWS_REGION or EC2_REGION environment variable, if any, is used. See
+        http://docs.aws.amazon.com/general/latest/gr/rande.html#ec2_region
+        (Aliases: aws_region, ec2_region)[Default: (null)]
+        type: str
+
+- security_token
+        AWS STS security token. If not set then the value of the AWS_SECURITY_TOKEN or EC2_SECURITY_TOKEN environment variable is used.
+        (Aliases: access_token)[Default: (null)]
+        type: str
+        version_added: 1.6
+
+= state
+        Idempotent actions that will create/modify, destroy, or reset a cache parameter group as needed.
+        (Choices: present, absent, reset)
+
+- validate_certs
+        When set to "no", SSL certificates will not be validated for boto versions >= 2.6.0.
+        [Default: True]
+        type: bool
+        version_added: 1.5
+
+- values
+        A user-specified dictionary of parameters to reset or modify for the cache parameter group.
+        [Default: (null)]
+
+
+NOTES:
+      * If parameters are not set within the module, the following environment variables can be used in decreasing order of
+        precedence `AWS_URL' or `EC2_URL', `AWS_ACCESS_KEY_ID' or `AWS_ACCESS_KEY' or `EC2_ACCESS_KEY', `AWS_SECRET_ACCESS_KEY' or
+        `AWS_SECRET_KEY' or `EC2_SECRET_KEY', `AWS_SECURITY_TOKEN' or `EC2_SECURITY_TOKEN', `AWS_REGION' or `EC2_REGION'
+      * Ansible uses the boto configuration file (typically ~/.boto) if no credentials are provided. See
+        https://boto.readthedocs.io/en/latest/boto_config_tut.html
+      * `AWS_REGION' or `EC2_REGION' can be typically be used to specify the AWS region, when required, but this can also be
+        configured in the boto config file
+
+
+REQUIREMENTS:  boto, boto3, botocore, python >= 2.6
+
+AUTHOR: Sloane Hertel (@s-hertel)
+        METADATA:
+          status:
+          - preview
+          supported_by: community
+        
+
+EXAMPLES:
+
+# Note: None of these examples set aws_access_key, aws_secret_key, or region.
+# It is assumed that their matching environment variables are set.
+---
+- hosts: localhost
+  connection: local
+  tasks:
+    - name: 'Create a test parameter group'
+      elasticache_parameter_group:
+        name: 'test-param-group'
+        group_family: 'redis3.2'
+        description: 'This is a cache parameter group'
+        state: 'present'
+    - name: 'Modify a test parameter group'
+      elasticache_parameter_group:
+        name: 'test-param-group'
+        values:
+          activerehashing: yes
+          client-output-buffer-limit-normal-hard-limit: 4
+        state: 'present'
+    - name: 'Reset all modifiable parameters for the test parameter group'
+      elasticache_parameter_group:
+        name: 'test-param-group'
+        state: reset
+    - name: 'Delete a test parameter group'
+      elasticache_parameter_group:
+        name: 'test-param-group'
+        state: 'absent'
+
+
+RETURN VALUES:
+
+elasticache:
+  description: cache parameter group information and response metadata
+  returned: always
+  type: dict
+  sample:
+    cache_parameter_group:
+      cache_parameter_group_family: redis3.2
+      cache_parameter_group_name: test-please-delete
+      description: "initial description"
+    response_metadata:
+      http_headers:
+        content-length: "562"
+        content-type: text/xml
+        date: "Mon, 06 Feb 2017 22:14:08 GMT"
+        x-amzn-requestid: 947291f9-ecb9-11e6-85bd-3baa4eca2cc1
+      http_status_code: 200
+      request_id: 947291f9-ecb9-11e6-85bd-3baa4eca2cc1
+      retry_attempts: 0
+changed:
+  description: if the cache parameter group has changed
+  returned: always
+  type: bool
+  sample:
+    changed: true
+

@@ -1,0 +1,43 @@
+EXAMPLES:
+
+- name: Create or update a rundeck ACL policy in project Ansible
+  rundeck_acl_policy:
+    name: "Project_01"
+    api_version: 18
+    url: "https://rundeck.example.org"
+    token: "mytoken"
+    state: present
+    project: "Ansible"
+    policy:
+      description: "my policy"
+      context:
+        application: rundeck
+      for:
+        project:
+          - allow: read
+      by:
+        group: "build"
+
+- name: Remove a rundeck system policy
+  rundeck_acl_policy:
+    name: "Project_02"
+    url: "https://rundeck.example.org"
+    token: "mytoken"
+    state: absent
+
+
+RETURN VALUES:
+
+rundeck_response:
+    description: Rundeck response when a failure occurs.
+    returned: failed
+    type: str
+before:
+    description: dictionnary containing ACL policy informations before modification.
+    returned: success
+    type: dict
+after:
+    description: dictionnary containing ACL policy informations after modification.
+    returned: success
+    type: dict
+

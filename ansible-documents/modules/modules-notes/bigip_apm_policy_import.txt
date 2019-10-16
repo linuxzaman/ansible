@@ -1,0 +1,205 @@
+> BIGIP_APM_POLICY_IMPORT    (/usr/lib/python2.7/dist-packages/ansible/modules/network/f5/bigip_apm_policy_import.py)
+
+        Manage BIG-IP APM policy or APM access profile imports.
+
+  * This module is maintained by an Ansible Partner
+OPTIONS (= is mandatory):
+
+- force
+        When set to `yes' any existing policy with the same name will be overwritten by the new import.
+        If policy does not exist this setting is ignored.
+        [Default: False]
+        type: bool
+
+= name
+        The name of the APM policy or APM access profile to create or override.
+
+        type: str
+
+- partition
+        Device partition to manage resources on.
+        [Default: Common]
+
+= password
+        The password for the user account used to connect to the BIG-IP.
+        You may omit this option by setting the environment variable `F5_PASSWORD'.
+        (Aliases: pass, pwd)
+        type: str
+
+- provider
+        A dict object containing connection details.
+        [Default: (null)]
+        suboptions:
+          password:
+            aliases:
+            - pass
+            - pwd
+            description:
+            - The password for the user account used to connect to the BIG-IP.
+            - You may omit this option by setting the environment variable `F5_PASSWORD'.
+            required: true
+            type: str
+          server:
+            description:
+            - The BIG-IP host.
+            - You may omit this option by setting the environment variable `F5_SERVER'.
+            required: true
+            type: str
+          server_port:
+            default: 443
+            description:
+            - The BIG-IP server port.
+            - You may omit this option by setting the environment variable `F5_SERVER_PORT'.
+            type: int
+          ssh_keyfile:
+            description:
+            - Specifies the SSH keyfile to use to authenticate the connection to the remote
+              device.  This argument is only used for `cli' transports.
+            - You may omit this option by setting the environment variable `ANSIBLE_NET_SSH_KEYFILE'.
+            type: path
+          timeout:
+            default: 10
+            description:
+            - Specifies the timeout in seconds for communicating with the network device for
+              either connecting or sending commands.  If the timeout is exceeded before the
+              operation is completed, the module will error.
+            type: int
+          transport:
+            choices:
+            - cli
+            - rest
+            default: rest
+            description:
+            - Configures the transport connection to use when connecting to the remote device.
+            type: str
+          user:
+            description:
+            - The username to connect to the BIG-IP with. This user must have administrative
+              privileges on the device.
+            - You may omit this option by setting the environment variable `F5_USER'.
+            required: true
+            type: str
+          validate_certs:
+            default: true
+            description:
+            - If `no', SSL certificates are not validated. Use this only on personally controlled
+              sites using self-signed certificates.
+            - You may omit this option by setting the environment variable `F5_VALIDATE_CERTS'.
+            type: bool
+        
+        type: dict
+        version_added: 2.5
+
+= server
+        The BIG-IP host.
+        You may omit this option by setting the environment variable `F5_SERVER'.
+
+        type: str
+
+- server_port
+        The BIG-IP server port.
+        You may omit this option by setting the environment variable `F5_SERVER_PORT'.
+        [Default: 443]
+        type: int
+        version_added: 2.2
+
+- source
+        Full path to a file to be imported into the BIG-IP APM.
+        [Default: (null)]
+        type: path
+
+- type
+        Specifies the type of item to export from device.
+        (Choices: profile_access, access_policy)[Default: profile_access]
+        type: str
+
+= user
+        The username to connect to the BIG-IP with. This user must have administrative privileges on the device.
+        You may omit this option by setting the environment variable `F5_USER'.
+
+        type: str
+
+- validate_certs
+        If `no', SSL certificates are not validated. Use this only on personally controlled sites using self-signed certificates.
+        You may omit this option by setting the environment variable `F5_VALIDATE_CERTS'.
+        [Default: True]
+        type: bool
+        version_added: 2.0
+
+
+NOTES:
+      * Due to ID685681 it is not possible to execute ng_* tools via REST api on v12.x and 13.x, once this is fixed this
+        restriction will be removed.
+      * Requires BIG-IP >= 14.0.0
+      * For more information on using Ansible to manage F5 Networks devices see https://www.ansible.com/integrations/networks/f5.
+      * Requires BIG-IP software version >= 12.
+      * The F5 modules only manipulate the running configuration of the F5 product. To ensure that BIG-IP specific configuration
+        persists to disk, be sure to include at least one task that uses the [bigip_config] module to save the running
+        configuration. Refer to the module's documentation for the correct usage of the module to save your running configuration.
+
+
+AUTHOR: Wojciech Wypior (@wojtek0806)
+        METADATA:
+          status:
+          - preview
+          supported_by: certified
+        
+
+EXAMPLES:
+
+- name: Import APM profile
+  bigip_apm_policy_import:
+    name: new_apm_profile
+    source: /root/apm_profile.tar.gz
+    provider:
+      server: lb.mydomain.com
+      user: admin
+      password: secret
+  delegate_to: localhost
+
+- name: Import APM policy
+  bigip_apm_policy_import:
+    name: new_apm_policy
+    source: /root/apm_policy.tar.gz
+    type: access_policy
+    provider:
+      server: lb.mydomain.com
+      user: admin
+      password: secret
+  delegate_to: localhost
+
+- name: Override existing APM policy
+  bigip_asm_policy:
+    name: new_apm_policy
+    source: /root/apm_policy.tar.gz
+    force: yes
+    provider:
+      server: lb.mydomain.com
+      user: admin
+      password: secret
+  delegate_to: localhost
+
+
+RETURN VALUES:
+
+source:
+  description: Local path to APM policy file.
+  returned: changed
+  type: str
+  sample: /root/some_policy.tar.gz
+name:
+  description: Name of the APM policy or APM access profile to be created/overwritten.
+  returned: changed
+  type: str
+  sample: APM_policy_global
+type:
+  description: Set to specify type of item to export.
+  returned: changed
+  type: str
+  sample: access_policy
+force:
+  description: Set when overwriting an existing policy or profile.
+  returned: changed
+  type: bool
+  sample: yes
+

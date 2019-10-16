@@ -1,0 +1,63 @@
+EXAMPLES:
+
+- name: Create a DNS zone for DNS express
+  bigip_dns_zone:
+    name: foo.bar.com
+    dns_express:
+      enabled: yes
+      server: dns-lab
+      allow_notify_from:
+        - 192.168.39.10
+      notify_action: consume
+      verify_tsig: no
+      response_policy: no
+    provider:
+      password: secret
+      server: lb.mydomain.com
+      user: admin
+  delegate_to: localhost
+
+
+RETURN VALUES:
+
+enabled:
+  description: Whether the zone is enabled or not.
+  returned: changed
+  type: bool
+  sample: yes
+allow_notify_from:
+  description: The new DNS Express Allow NOTIFY From value.
+  returned: changed
+  type: list
+  sample: ['1.1.1.1', '2.2.2.2']
+notify_action:
+  description: The new DNS Express Notify Action value.
+  returned: changed
+  type: str
+  sample: consume
+verify_tsig:
+  description: The new DNS Express Verify Notify TSIG value.
+  returned: changed
+  type: bool
+  sample: yes
+express_server:
+  description: The new DNS Express Server value.
+  returned: changed
+  type: str
+  sample: server1
+response_policy:
+  description: The new DNS Express Response Policy value.
+  returned: changed
+  type: bool
+  sample: no
+nameservers:
+  description: The new Zone Transfer Clients Nameservers value.
+  returned: changed
+  type: list
+  sample: ['/Common/server1', '/Common/server2']
+tsig_server_key:
+  description: The new TSIG Server Key value.
+  returned: changed
+  type: str
+  sample: /Common/key1
+

@@ -1,0 +1,120 @@
+> PN_VLAG    (/usr/lib/python2.7/dist-packages/ansible/modules/network/netvisor/_pn_vlag.py)
+
+        Execute vlag-create/vlag-delete/vlag-modify command. A virtual link aggregation group (VLAG) allows links that are physically
+        connected to two different Pluribus Networks devices to appear as a single trunk to a third device. The third device can be a
+        switch, server, or any Ethernet device. A VLAG can provide Layer 2 multipathing, which allows you to create redundancy by
+        increasing bandwidth, enabling multiple parallel paths between nodes and loadbalancing traffic where alternative paths exist.
+
+DEPRECATED: 
+
+	Reason: Doesn't support latest Pluribus Networks netvisor
+	Will be removed in: Ansible 2.12
+	Alternatives: Latest modules will be pushed in Ansible future versions.
+
+
+  * This module is maintained by The Ansible Community
+OPTIONS (= is mandatory):
+
+- pn_clipassword
+        Provide login password if user is not root.
+        [Default: (null)]
+
+- pn_cliswitch
+        Target switch(es) to run this command on.
+        [Default: local]
+
+- pn_cliusername
+        Provide login username if user is not root.
+        [Default: (null)]
+
+- pn_failover_action
+        Specify the failover action as move or ignore.
+        (Choices: move, ignore)[Default: (null)]
+
+- pn_lacp_fallback
+        Specify the LACP fallback mode as bundles or individual.
+        (Choices: bundle, individual)[Default: (null)]
+
+- pn_lacp_fallback_timeout
+        Specify the LACP fallback timeout in seconds. The range is between 30 and 60 seconds with a default value of 50 seconds.
+        [Default: (null)]
+
+- pn_lacp_mode
+        Specify the LACP mode.
+        (Choices: off, passive, active)[Default: (null)]
+
+- pn_lacp_timeout
+        Specify the LACP timeout as slow(30 seconds) or fast(4 seconds).
+        (Choices: slow, fast)[Default: (null)]
+
+- pn_mode
+        Specify the mode for the VLAG. Active-standby indicates one side is active and the other side is in standby mode. Active-active
+        indicates that both sides of the vlag are up by default.
+        (Choices: active-active, active-standby)[Default: (null)]
+
+= pn_name
+        The `pn_name' takes a valid name for vlag configuration.
+
+
+- pn_peer_port
+        Specify the peer VLAG port.
+        Required for vlag-create.
+        [Default: (null)]
+
+- pn_peer_switch
+        Specify the fabric-name of the peer switch.
+        [Default: (null)]
+
+- pn_port
+        Specify the local VLAG port.
+        Required for vlag-create.
+        [Default: (null)]
+
+= state
+        State the action to perform. Use 'present' to create vlag, 'absent' to delete vlag and 'update' to modify vlag.
+        (Choices: present, absent, update)
+
+
+AUTHOR: Pluribus Networks (@amitsi)
+        METADATA:
+          status:
+          - deprecated
+          supported_by: community
+        
+
+EXAMPLES:
+
+- name: create a VLAG
+  pn_vlag:
+    state: 'present'
+    pn_name: spine-to-leaf
+    pn_port: 'spine01-to-leaf'
+    pn_peer_port: 'spine02-to-leaf'
+    pn_peer_switch: spine02
+    pn_mode: 'active-active'
+
+- name: delete VLAGs
+  pn_vlag:
+    state: 'absent'
+    pn_name: spine-to-leaf
+
+
+RETURN VALUES:
+
+command:
+  description: The CLI command run on the target node(s).
+  returned: always
+  type: str
+stdout:
+  description: The set of responses from the vlag command.
+  returned: always
+  type: list
+stderr:
+  description: The set of error responses from the vlag command.
+  returned: on error
+  type: list
+changed:
+  description: Indicates whether the CLI caused changes on the target.
+  returned: always
+  type: bool
+

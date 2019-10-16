@@ -1,0 +1,107 @@
+EXAMPLES:
+
+- name: Create a load balancer rule
+  cs_loadbalancer_rule:
+    name: balance_http
+    public_ip: 1.2.3.4
+    algorithm: leastconn
+    public_port: 80
+    private_port: 8080
+  delegate_to: localhost
+
+- name: Update algorithm of an existing load balancer rule
+  cs_loadbalancer_rule:
+    name: balance_http
+    public_ip: 1.2.3.4
+    algorithm: roundrobin
+    public_port: 80
+    private_port: 8080
+  delegate_to: localhost
+
+- name: Delete a load balancer rule
+  cs_loadbalancer_rule:
+    name: balance_http
+    public_ip: 1.2.3.4
+    state: absent
+  delegate_to: localhost
+
+
+RETURN VALUES:
+
+---
+id:
+  description: UUID of the rule.
+  returned: success
+  type: str
+  sample: a6f7a5fc-43f8-11e5-a151-feff819cdc9f
+zone:
+  description: Name of zone the rule is related to.
+  returned: success
+  type: str
+  sample: ch-gva-2
+project:
+  description: Name of project the rule is related to.
+  returned: success
+  type: str
+  sample: Production
+account:
+  description: Account the rule is related to.
+  returned: success
+  type: str
+  sample: example account
+domain:
+  description: Domain the rule is related to.
+  returned: success
+  type: str
+  sample: example domain
+algorithm:
+  description: Load balancer algorithm used.
+  returned: success
+  type: str
+  sample: source
+cidr:
+  description: CIDR to forward traffic from.
+  returned: success
+  type: str
+  sample: 0.0.0.0/0
+name:
+  description: Name of the rule.
+  returned: success
+  type: str
+  sample: http-lb
+description:
+  description: Description of the rule.
+  returned: success
+  type: str
+  sample: http load balancer rule
+protocol:
+  description: Protocol of the rule.
+  returned: success
+  type: str
+  sample: tcp
+public_port:
+  description: Public port.
+  returned: success
+  type: int
+  sample: 80
+private_port:
+  description: Private IP address.
+  returned: success
+  type: int
+  sample: 80
+public_ip:
+  description: Public IP address.
+  returned: success
+  type: str
+  sample: 1.2.3.4
+tags:
+  description: List of resource tags associated with the rule.
+  returned: success
+  type: list
+  sample: '[ { "key": "foo", "value": "bar" } ]'
+state:
+  description: State of the rule.
+  returned: success
+  type: str
+  sample: Add
+

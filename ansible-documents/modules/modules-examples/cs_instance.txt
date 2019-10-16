@@ -1,0 +1,219 @@
+EXAMPLES:
+
+# NOTE: Names of offerings and ISOs depending on the CloudStack configuration.
+- name: create a instance from an ISO
+  cs_instance:
+    name: web-vm-1
+    iso: Linux Debian 7 64-bit
+    hypervisor: VMware
+    project: Integration
+    zone: ch-zrh-ix-01
+    service_offering: 1cpu_1gb
+    disk_offering: PerfPlus Storage
+    disk_size: 20
+    networks:
+      - Server Integration
+      - Sync Integration
+      - Storage Integration
+  delegate_to: localhost
+
+- name: for changing a running instance, use the 'force' parameter
+  cs_instance:
+    name: web-vm-1
+    display_name: web-vm-01.example.com
+    iso: Linux Debian 7 64-bit
+    service_offering: 2cpu_2gb
+    force: yes
+  delegate_to: localhost
+
+# NOTE: user_data can be used to kickstart the instance using cloud-init yaml config.
+- name: create or update a instance on Exoscale's public cloud using display_name.
+  cs_instance:
+    display_name: web-vm-1
+    template: Linux Debian 7 64-bit
+    service_offering: Tiny
+    ssh_key: john@example.com
+    tags:
+      - key: admin
+        value: john
+      - key: foo
+        value: bar
+    user_data: |
+        #cloud-config
+        packages:
+          - nginx
+  delegate_to: localhost
+
+- name: create an instance with multiple interfaces specifying the IP addresses
+  cs_instance:
+    name: web-vm-1
+    template: Linux Debian 7 64-bit
+    service_offering: Tiny
+    ip_to_networks:
+      - network: NetworkA
+        ip: 10.1.1.1
+      - network: NetworkB
+        ip: 192.0.2.1
+  delegate_to: localhost
+
+- name: ensure an instance is stopped
+  cs_instance:
+    name: web-vm-1
+    state: stopped
+  delegate_to: localhost
+
+- name: ensure an instance is running
+  cs_instance:
+    name: web-vm-1
+    state: started
+  delegate_to: localhost
+
+- name: remove an instance
+  cs_instance:
+    name: web-vm-1
+    state: absent
+  delegate_to: localhost
+
+
+RETURN VALUES:
+
+---
+id:
+  description: UUID of the instance.
+  returned: success
+  type: str
+  sample: 04589590-ac63-4ffc-93f5-b698b8ac38b6
+name:
+  description: Name of the instance.
+  returned: success
+  type: str
+  sample: web-01
+display_name:
+  description: Display name of the instance.
+  returned: success
+  type: str
+  sample: web-01
+group:
+  description: Group name of the instance is related.
+  returned: success
+  type: str
+  sample: web
+created:
+  description: Date of the instance was created.
+  returned: success
+  type: str
+  sample: 2014-12-01T14:57:57+0100
+password_enabled:
+  description: True if password setting is enabled.
+  returned: success
+  type: bool
+  sample: true
+password:
+  description: The password of the instance if exists.
+  returned: if available
+  type: str
+  sample: Ge2oe7Do
+ssh_key:
+  description: Name of SSH key deployed to instance.
+  returned: if available
+  type: str
+  sample: key@work
+domain:
+  description: Domain the instance is related to.
+  returned: success
+  type: str
+  sample: example domain
+account:
+  description: Account the instance is related to.
+  returned: success
+  type: str
+  sample: example account
+project:
+  description: Name of project the instance is related to.
+  returned: success
+  type: str
+  sample: Production
+default_ip:
+  description: Default IP address of the instance.
+  returned: success
+  type: str
+  sample: 10.23.37.42
+default_ip6:
+  description: Default IPv6 address of the instance.
+  returned: if available
+  type: str
+  sample: 2a04:c43:c00:a07:4b4:beff:fe00:74
+  version_added: '2.6'
+public_ip:
+  description: Public IP address with instance via static NAT rule.
+  returned: if available
+  type: str
+  sample: 1.2.3.4
+iso:
+  description: Name of ISO the instance was deployed with.
+  returned: if available
+  type: str
+  sample: Debian-8-64bit
+template:
+  description: Name of template the instance was deployed with.
+  returned: success
+  type: str
+  sample: Linux Debian 9 64-bit
+template_display_text:
+  description: Display text of template the instance was deployed with.
+  returned: success
+  type: str
+  sample: Linux Debian 9 64-bit 200G Disk (2017-10-08-622866)
+  version_added: '2.6'
+service_offering:
+  description: Name of the service offering the instance has.
+  returned: success
+  type: str
+  sample: 2cpu_2gb
+zone:
+  description: Name of zone the instance is in.
+  returned: success
+  type: str
+  sample: ch-gva-2
+state:
+  description: State of the instance.
+  returned: success
+  type: str
+  sample: Running
+security_groups:
+  description: Security groups the instance is in.
+  returned: success
+  type: list
+  sample: '[ "default" ]'
+affinity_groups:
+  description: Affinity groups the instance is in.
+  returned: success
+  type: list
+  sample: '[ "webservers" ]'
+tags:
+  description: List of resource tags associated with the instance.
+  returned: success
+  type: list
+  sample: '[ { "key": "foo", "value": "bar" } ]'
+hypervisor:
+  description: Hypervisor related to this instance.
+  returned: success
+  type: str
+  sample: KVM
+host:
+  description: Hostname of hypervisor an instance is running on.
+  returned: success and instance is running
+  type: str
+  sample: host-01.example.com
+  version_added: '2.6'
+instance_name:
+  description: Internal name of the instance (ROOT admin only).
+  returned: success
+  type: str
+  sample: i-44-3992-VM
+user-data:
+  description: Optional data sent to the instance.
+  returned: success
+  type: str
+  sample: VXNlciBkYXRhIGV4YW1wbGUK
+

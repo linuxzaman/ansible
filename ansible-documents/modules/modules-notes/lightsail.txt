@@ -1,0 +1,197 @@
+> LIGHTSAIL    (/usr/lib/python2.7/dist-packages/ansible/modules/cloud/amazon/lightsail.py)
+
+        Creates or instances in AWS Lightsail and optionally wait for it to be 'running'.
+
+  * This module is maintained by The Ansible Community
+OPTIONS (= is mandatory):
+
+- aws_access_key
+        AWS access key. If not set then the value of the AWS_ACCESS_KEY_ID, AWS_ACCESS_KEY or EC2_ACCESS_KEY environment variable is
+        used.
+        (Aliases: ec2_access_key, access_key)[Default: (null)]
+        type: str
+
+- aws_secret_key
+        AWS secret key. If not set then the value of the AWS_SECRET_ACCESS_KEY, AWS_SECRET_KEY, or EC2_SECRET_KEY environment variable is
+        used.
+        (Aliases: ec2_secret_key, secret_key)[Default: (null)]
+        type: str
+
+- blueprint_id
+        ID of the instance blueprint image. Required when state='present'
+        [Default: (null)]
+
+- bundle_id
+        Bundle of specification info for the instance. Required when state='present'
+        [Default: (null)]
+
+- debug_botocore_endpoint_logs
+        Use a botocore.endpoint logger to parse the unique (rather than total) "resource:action" API calls made during a task, outputing
+        the set to the resource_actions key in the task results. Use the aws_resource_action callback to output to total list made during
+        a playbook. The ANSIBLE_DEBUG_BOTOCORE_LOGS environment variable may also be used.
+        [Default: no]
+        type: bool
+        version_added: 2.8
+
+- ec2_url
+        Url to use to connect to EC2 or your Eucalyptus cloud (by default the module will use EC2 endpoints). Ignored for modules where
+        region is required. Must be specified for all other modules if region is not used. If not set then the value of the EC2_URL
+        environment variable, if any, is used.
+        [Default: (null)]
+        type: str
+
+- key_pair_name
+        Name of the key pair to use with the instance
+        [Default: (null)]
+
+= name
+        Name of the instance
+
+
+- profile
+        Uses a boto profile. Only works with boto >= 2.24.0.
+        [Default: (null)]
+        type: str
+        version_added: 1.6
+
+- region
+        The AWS region to use. If not specified then the value of the AWS_REGION or EC2_REGION environment variable, if any, is used. See
+        http://docs.aws.amazon.com/general/latest/gr/rande.html#ec2_region
+        (Aliases: aws_region, ec2_region)[Default: (null)]
+        type: str
+
+- security_token
+        AWS STS security token. If not set then the value of the AWS_SECURITY_TOKEN or EC2_SECURITY_TOKEN environment variable is used.
+        (Aliases: access_token)[Default: (null)]
+        type: str
+        version_added: 1.6
+
+- state
+        Indicate desired state of the target.
+        (Choices: present, absent, running, restarted, stopped)[Default: present]
+
+- user_data
+        Launch script that can configure the instance with additional data
+        [Default: (null)]
+
+- validate_certs
+        When set to "no", SSL certificates will not be validated for boto versions >= 2.6.0.
+        [Default: True]
+        type: bool
+        version_added: 1.5
+
+- wait
+        Wait for the instance to be in state 'running' before returning.  If wait is "no" an ip_address may not be returned
+        [Default: yes]
+        type: bool
+
+- wait_timeout
+        How long before wait gives up, in seconds.
+        [Default: 300]
+
+- zone
+        AWS availability zone in which to launch the instance. Required when state='present'
+        [Default: (null)]
+
+
+NOTES:
+      * If parameters are not set within the module, the following environment variables can be used in decreasing order of
+        precedence `AWS_URL' or `EC2_URL', `AWS_ACCESS_KEY_ID' or `AWS_ACCESS_KEY' or `EC2_ACCESS_KEY', `AWS_SECRET_ACCESS_KEY' or
+        `AWS_SECRET_KEY' or `EC2_SECRET_KEY', `AWS_SECURITY_TOKEN' or `EC2_SECURITY_TOKEN', `AWS_REGION' or `EC2_REGION'
+      * Ansible uses the boto configuration file (typically ~/.boto) if no credentials are provided. See
+        https://boto.readthedocs.io/en/latest/boto_config_tut.html
+      * `AWS_REGION' or `EC2_REGION' can be typically be used to specify the AWS region, when required, but this can also be
+        configured in the boto config file
+
+
+REQUIREMENTS:  boto, boto3, python >= 2.6
+
+AUTHOR: Nick Ball (@nickball)
+        METADATA:
+          status:
+          - preview
+          supported_by: community
+        
+
+EXAMPLES:
+
+# Create a new Lightsail instance, register the instance details
+- lightsail:
+    state: present
+    name: myinstance
+    region: us-east-1
+    zone: us-east-1a
+    blueprint_id: ubuntu_16_04
+    bundle_id: nano_1_0
+    key_pair_name: id_rsa
+    user_data: " echo 'hello world' > /home/ubuntu/test.txt"
+    wait_timeout: 500
+  register: my_instance
+
+- debug:
+    msg: "Name is {{ my_instance.instance.name }}"
+
+- debug:
+    msg: "IP is {{ my_instance.instance.public_ip_address }}"
+
+# Delete an instance if present
+- lightsail:
+    state: absent
+    region: us-east-1
+    name: myinstance
+
+
+RETURN VALUES:
+
+changed:
+  description: if a snapshot has been modified/created
+  returned: always
+  type: bool
+  sample:
+    changed: true
+instance:
+  description: instance data
+  returned: always
+  type: dict
+  sample:
+    arn: "arn:aws:lightsail:us-east-1:448830907657:Instance/1fef0175-d6c8-480e-84fa-214f969cda87"
+    blueprint_id: "ubuntu_16_04"
+    blueprint_name: "Ubuntu"
+    bundle_id: "nano_1_0"
+    created_at: "2017-03-27T08:38:59.714000-04:00"
+    hardware:
+      cpu_count: 1
+      ram_size_in_gb: 0.5
+    is_static_ip: false
+    location:
+      availability_zone: "us-east-1a"
+      region_name: "us-east-1"
+    name: "my_instance"
+    networking:
+      monthly_transfer:
+        gb_per_month_allocated: 1024
+      ports:
+        - access_direction: "inbound"
+          access_from: "Anywhere (0.0.0.0/0)"
+          access_type: "public"
+          common_name: ""
+          from_port: 80
+          protocol: tcp
+          to_port: 80
+        - access_direction: "inbound"
+          access_from: "Anywhere (0.0.0.0/0)"
+          access_type: "public"
+          common_name: ""
+          from_port: 22
+          protocol: tcp
+          to_port: 22
+    private_ip_address: "172.26.8.14"
+    public_ip_address: "34.207.152.202"
+    resource_type: "Instance"
+    ssh_key_name: "keypair"
+    state:
+      code: 16
+      name: running
+    support_code: "588307843083/i-0997c97831ee21e33"
+    username: "ubuntu"
+

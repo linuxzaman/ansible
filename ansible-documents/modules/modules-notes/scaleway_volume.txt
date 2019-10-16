@@ -1,0 +1,108 @@
+> SCALEWAY_VOLUME    (/usr/lib/python2.7/dist-packages/ansible/modules/cloud/scaleway/scaleway_volume.py)
+
+        This module manages volumes on Scaleway account https://developer.scaleway.com
+
+  * This module is maintained by The Ansible Community
+OPTIONS (= is mandatory):
+
+- api_timeout
+        HTTP timeout to Scaleway API in seconds.
+        (Aliases: timeout)[Default: 30]
+        type: int
+
+- api_token
+        Scaleway OAuth token.
+        (Aliases: oauth_token)[Default: (null)]
+        type: str
+
+- api_url
+        Scaleway API URL.
+        (Aliases: base_url)[Default: https://api.scaleway.com]
+        type: str
+
+= name
+        Name used to identify the volume.
+
+
+- organization
+        ScaleWay organization ID to which volume belongs.
+        [Default: (null)]
+
+- query_parameters
+        List of parameters passed to the query string.
+        [Default: {}]
+        type: dict
+
+= region
+        Scaleway region to use (for example par1).
+        (Choices: ams1, EMEA-NL-EVS, par1, EMEA-FR-PAR1)
+
+- size
+        Size of the volume in bytes.
+        [Default: (null)]
+
+- state
+        Indicate desired state of the volume.
+        (Choices: present, absent)[Default: present]
+
+- validate_certs
+        Validate SSL certs of the Scaleway API.
+        [Default: True]
+        type: bool
+
+- volume_type
+        Type of the volume (for example 'l_ssd').
+        [Default: (null)]
+
+
+NOTES:
+      * Also see the API documentation on https://developer.scaleway.com/
+      * If `api_token' is not set within the module, the following environment variables can be used in decreasing order of
+        precedence `SCW_TOKEN', `SCW_API_KEY', `SCW_OAUTH_TOKEN' or `SCW_API_TOKEN'.
+      * If one wants to use a different `api_url' one can also set the `SCW_API_URL' environment variable.
+
+
+AUTHOR: Henryk Konsek (@hekonsek)
+        METADATA:
+          status:
+          - preview
+          supported_by: community
+        
+
+EXAMPLES:
+
+- name: Create 10GB volume
+    scaleway_volume:
+      name: my-volume
+      state: present
+      region: par1
+      organization: "{{ scw_org }}"
+      "size": 10000000000
+      volume_type: l_ssd
+    register: server_creation_check_task
+
+  - name: Make sure volume deleted
+    scaleway_volume:
+      name: my-volume
+      state: absent
+      region: par1
+
+
+RETURN VALUES:
+
+data:
+    description: This is only present when C(state=present)
+    returned: when C(state=present)
+    type: dict
+    sample: {
+      "volume": {
+        "export_uri": null,
+        "id": "c675f420-cfeb-48ff-ba2a-9d2a4dbe3fcd",
+        "name": "volume-0-3",
+        "organization": "000a115d-2852-4b0a-9ce8-47f1134ba95a",
+         "server": null,
+         "size": 10000000000,
+         "volume_type": "l_ssd"
+  }
+}
+

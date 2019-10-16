@@ -1,0 +1,41 @@
+EXAMPLES:
+
+# Examples don't contain the auth parameter for simplicity,
+# look at the ovirt_auth module to see how to reuse authentication.
+
+- name: Create an event
+  ovirt_event:
+    state: present
+    description: "The file system /home on host xyz is almost full!"
+    origin: "mymonitor"
+    custom_id: 123456789
+    severity: warning
+
+- name: Create an event and link it to a specific object
+  ovirt_event:
+    state: present
+    description: "The file system /home is almost full!"
+    origin: "mymonitor"
+    custom_id: 123456789
+    severity: warning
+    vm: "c79db183-46ef-44d1-95f9-1a368c516c19"
+
+- name: Remove an event
+  ovirt_event:
+    state: absent
+    id: 123456789
+    wait: false
+
+
+RETURN VALUES:
+
+id:
+    description: "ID of the event that was created."
+    returned: "On success."
+    type: str
+event:
+    description: "Dictionary of all the Event attributes. All event attributes can be found at the following url:
+                  http://ovirt.github.io/ovirt-engine-api-model/master/#types/event"
+    returned: "On success."
+    type: dict
+

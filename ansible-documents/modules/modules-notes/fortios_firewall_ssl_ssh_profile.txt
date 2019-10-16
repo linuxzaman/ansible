@@ -1,0 +1,642 @@
+> FORTIOS_FIREWALL_SSL_SSH_PROFILE    (/usr/lib/python2.7/dist-packages/ansible/modules/network/fortios/fortios_firewall_ssl_ssh_profile.py)
+
+        This module is able to configure a FortiGate or FortiOS by allowing the user to configure firewall feature and ssl_ssh_profile
+        category. Examples includes all options and need to be adjusted to datasources before usage. Tested with FOS v6.0.2
+
+  * This module is maintained by The Ansible Community
+OPTIONS (= is mandatory):
+
+- firewall_ssl_ssh_profile
+        Configure SSL/SSH protocol options.
+        [Default: None]
+        suboptions:
+          caname:
+            description:
+            - CA certificate used by SSL Inspection. Source vpn.certificate.local.name.
+          comment:
+            description:
+            - Optional comments.
+          ftps:
+            description:
+            - Configure FTPS options.
+            suboptions:
+              allow-invalid-server-cert:
+                choices:
+                - enable
+                - disable
+                description:
+                - When enabled, allows SSL sessions whose server certificate validation failed.
+              client-cert-request:
+                choices:
+                - bypass
+                - inspect
+                - block
+                description:
+                - Action based on client certificate request.
+              ports:
+                description:
+                - Ports to use for scanning (1 - 65535, default = 443).
+              status:
+                choices:
+                - disable
+                - deep-inspection
+                description:
+                - Configure protocol inspection status.
+              unsupported-ssl:
+                choices:
+                - bypass
+                - inspect
+                - block
+                description:
+                - Action based on the SSL encryption used being unsupported.
+              untrusted-cert:
+                choices:
+                - allow
+                - block
+                - ignore
+                description:
+                - Allow, ignore, or block the untrusted SSL session server certificate.
+          https:
+            description:
+            - Configure HTTPS options.
+            suboptions:
+              allow-invalid-server-cert:
+                choices:
+                - enable
+                - disable
+                description:
+                - When enabled, allows SSL sessions whose server certificate validation failed.
+              client-cert-request:
+                choices:
+                - bypass
+                - inspect
+                - block
+                description:
+                - Action based on client certificate request.
+              ports:
+                description:
+                - Ports to use for scanning (1 - 65535, default = 443).
+              status:
+                choices:
+                - disable
+                - certificate-inspection
+                - deep-inspection
+                description:
+                - Configure protocol inspection status.
+              unsupported-ssl:
+                choices:
+                - bypass
+                - inspect
+                - block
+                description:
+                - Action based on the SSL encryption used being unsupported.
+              untrusted-cert:
+                choices:
+                - allow
+                - block
+                - ignore
+                description:
+                - Allow, ignore, or block the untrusted SSL session server certificate.
+          imaps:
+            description:
+            - Configure IMAPS options.
+            suboptions:
+              allow-invalid-server-cert:
+                choices:
+                - enable
+                - disable
+                description:
+                - When enabled, allows SSL sessions whose server certificate validation failed.
+              client-cert-request:
+                choices:
+                - bypass
+                - inspect
+                - block
+                description:
+                - Action based on client certificate request.
+              ports:
+                description:
+                - Ports to use for scanning (1 - 65535, default = 443).
+              status:
+                choices:
+                - disable
+                - deep-inspection
+                description:
+                - Configure protocol inspection status.
+              unsupported-ssl:
+                choices:
+                - bypass
+                - inspect
+                - block
+                description:
+                - Action based on the SSL encryption used being unsupported.
+              untrusted-cert:
+                choices:
+                - allow
+                - block
+                - ignore
+                description:
+                - Allow, ignore, or block the untrusted SSL session server certificate.
+          mapi-over-https:
+            choices:
+            - enable
+            - disable
+            description:
+            - Enable/disable inspection of MAPI over HTTPS.
+          name:
+            description:
+            - Name.
+            required: true
+          pop3s:
+            description:
+            - Configure POP3S options.
+            suboptions:
+              allow-invalid-server-cert:
+                choices:
+                - enable
+                - disable
+                description:
+                - When enabled, allows SSL sessions whose server certificate validation failed.
+              client-cert-request:
+                choices:
+                - bypass
+                - inspect
+                - block
+                description:
+                - Action based on client certificate request.
+              ports:
+                description:
+                - Ports to use for scanning (1 - 65535, default = 443).
+              status:
+                choices:
+                - disable
+                - deep-inspection
+                description:
+                - Configure protocol inspection status.
+              unsupported-ssl:
+                choices:
+                - bypass
+                - inspect
+                - block
+                description:
+                - Action based on the SSL encryption used being unsupported.
+              untrusted-cert:
+                choices:
+                - allow
+                - block
+                - ignore
+                description:
+                - Allow, ignore, or block the untrusted SSL session server certificate.
+          rpc-over-https:
+            choices:
+            - enable
+            - disable
+            description:
+            - Enable/disable inspection of RPC over HTTPS.
+          server-cert:
+            description:
+            - Certificate used by SSL Inspection to replace server certificate. Source vpn.certificate.local.name.
+          server-cert-mode:
+            choices:
+            - re-sign
+            - replace
+            description:
+            - Re-sign or replace the server's certificate.
+          smtps:
+            description:
+            - Configure SMTPS options.
+            suboptions:
+              allow-invalid-server-cert:
+                choices:
+                - enable
+                - disable
+                description:
+                - When enabled, allows SSL sessions whose server certificate validation failed.
+              client-cert-request:
+                choices:
+                - bypass
+                - inspect
+                - block
+                description:
+                - Action based on client certificate request.
+              ports:
+                description:
+                - Ports to use for scanning (1 - 65535, default = 443).
+              status:
+                choices:
+                - disable
+                - deep-inspection
+                description:
+                - Configure protocol inspection status.
+              unsupported-ssl:
+                choices:
+                - bypass
+                - inspect
+                - block
+                description:
+                - Action based on the SSL encryption used being unsupported.
+              untrusted-cert:
+                choices:
+                - allow
+                - block
+                - ignore
+                description:
+                - Allow, ignore, or block the untrusted SSL session server certificate.
+          ssh:
+            description:
+            - Configure SSH options.
+            suboptions:
+              inspect-all:
+                choices:
+                - disable
+                - deep-inspection
+                description:
+                - Level of SSL inspection.
+              ports:
+                description:
+                - Ports to use for scanning (1 - 65535, default = 443).
+              ssh-algorithm:
+                choices:
+                - compatible
+                - high-encryption
+                description:
+                - Relative strength of encryption algorithms accepted during negotiation.
+              ssh-policy-check:
+                choices:
+                - disable
+                - enable
+                description:
+                - Enable/disable SSH policy check.
+              ssh-tun-policy-check:
+                choices:
+                - disable
+                - enable
+                description:
+                - Enable/disable SSH tunnel policy check.
+              status:
+                choices:
+                - disable
+                - deep-inspection
+                description:
+                - Configure protocol inspection status.
+              unsupported-version:
+                choices:
+                - bypass
+                - block
+                description:
+                - Action based on SSH version being unsupported.
+          ssl:
+            description:
+            - Configure SSL options.
+            suboptions:
+              allow-invalid-server-cert:
+                choices:
+                - enable
+                - disable
+                description:
+                - When enabled, allows SSL sessions whose server certificate validation failed.
+              client-cert-request:
+                choices:
+                - bypass
+                - inspect
+                - block
+                description:
+                - Action based on client certificate request.
+              inspect-all:
+                choices:
+                - disable
+                - certificate-inspection
+                - deep-inspection
+                description:
+                - Level of SSL inspection.
+              unsupported-ssl:
+                choices:
+                - bypass
+                - inspect
+                - block
+                description:
+                - Action based on the SSL encryption used being unsupported.
+              untrusted-cert:
+                choices:
+                - allow
+                - block
+                - ignore
+                description:
+                - Allow, ignore, or block the untrusted SSL session server certificate.
+          ssl-anomalies-log:
+            choices:
+            - disable
+            - enable
+            description:
+            - Enable/disable logging SSL anomalies.
+          ssl-exempt:
+            description:
+            - Servers to exempt from SSL inspection.
+            suboptions:
+              address:
+                description:
+                - IPv4 address object. Source firewall.address.name firewall.addrgrp.name.
+              address6:
+                description:
+                - IPv6 address object. Source firewall.address6.name firewall.addrgrp6.name.
+              fortiguard-category:
+                description:
+                - FortiGuard category ID.
+              id:
+                description:
+                - ID number.
+                required: true
+              regex:
+                description:
+                - Exempt servers by regular expression.
+              type:
+                choices:
+                - fortiguard-category
+                - address
+                - address6
+                - wildcard-fqdn
+                - regex
+                description:
+                - Type of address object (IPv4 or IPv6) or FortiGuard category.
+              wildcard-fqdn:
+                description:
+                - Exempt servers by wildcard FQDN. Source firewall.wildcard-fqdn.custom.name
+                  firewall.wildcard-fqdn.group.name.
+          ssl-exemptions-log:
+            choices:
+            - disable
+            - enable
+            description:
+            - Enable/disable logging SSL exemptions.
+          ssl-server:
+            description:
+            - SSL servers.
+            suboptions:
+              ftps-client-cert-request:
+                choices:
+                - bypass
+                - inspect
+                - block
+                description:
+                - Action based on client certificate request during the FTPS handshake.
+              https-client-cert-request:
+                choices:
+                - bypass
+                - inspect
+                - block
+                description:
+                - Action based on client certificate request during the HTTPS handshake.
+              id:
+                description:
+                - SSL server ID.
+                required: true
+              imaps-client-cert-request:
+                choices:
+                - bypass
+                - inspect
+                - block
+                description:
+                - Action based on client certificate request during the IMAPS handshake.
+              ip:
+                description:
+                - IPv4 address of the SSL server.
+              pop3s-client-cert-request:
+                choices:
+                - bypass
+                - inspect
+                - block
+                description:
+                - Action based on client certificate request during the POP3S handshake.
+              smtps-client-cert-request:
+                choices:
+                - bypass
+                - inspect
+                - block
+                description:
+                - Action based on client certificate request during the SMTPS handshake.
+              ssl-other-client-cert-request:
+                choices:
+                - bypass
+                - inspect
+                - block
+                description:
+                - Action based on client certificate request during an SSL protocol handshake.
+          state:
+            choices:
+            - present
+            - absent
+            description:
+            - Indicates whether to create or remove the object
+          untrusted-caname:
+            description:
+            - Untrusted CA certificate used by SSL Inspection. Source vpn.certificate.local.name.
+          use-ssl-server:
+            choices:
+            - disable
+            - enable
+            description:
+            - Enable/disable the use of SSL server table for SSL offloading.
+          whitelist:
+            choices:
+            - enable
+            - disable
+            description:
+            - Enable/disable exempting servers by FortiGuard whitelist.
+        
+
+= host
+        FortiOS or FortiGate ip adress.
+
+
+- https
+        Indicates if the requests towards FortiGate must use HTTPS protocol
+        [Default: True]
+        type: bool
+
+- password
+        FortiOS or FortiGate password.
+        [Default: ]
+
+= username
+        FortiOS or FortiGate username.
+
+
+- vdom
+        Virtual domain, among those defined previously. A vdom is a virtual instance of the FortiGate that can be configured and used as
+        a different unit.
+        [Default: root]
+
+
+NOTES:
+      * Requires fortiosapi library developed by Fortinet
+      * Run as a local_action in your playbook
+
+
+REQUIREMENTS:  fortiosapi>=0.9.8
+
+AUTHOR: Miguel Angel Munoz (@mamunozgonzalez), Nicolas Thomas (@thomnico)
+        METADATA:
+          status:
+          - preview
+          supported_by: community
+        
+
+EXAMPLES:
+
+- hosts: localhost
+  vars:
+   host: "192.168.122.40"
+   username: "admin"
+   password: ""
+   vdom: "root"
+  tasks:
+  - name: Configure SSL/SSH protocol options.
+    fortios_firewall_ssl_ssh_profile:
+      host:  "{{ host }}"
+      username: "{{ username }}"
+      password: "{{ password }}"
+      vdom:  "{{ vdom }}"
+      https: "False"
+      firewall_ssl_ssh_profile:
+        state: "present"
+        caname: "<your_own_value> (source vpn.certificate.local.name)"
+        comment: "Optional comments."
+        ftps:
+            allow-invalid-server-cert: "enable"
+            client-cert-request: "bypass"
+            ports: "8"
+            status: "disable"
+            unsupported-ssl: "bypass"
+            untrusted-cert: "allow"
+        https:
+            allow-invalid-server-cert: "enable"
+            client-cert-request: "bypass"
+            ports: "15"
+            status: "disable"
+            unsupported-ssl: "bypass"
+            untrusted-cert: "allow"
+        imaps:
+            allow-invalid-server-cert: "enable"
+            client-cert-request: "bypass"
+            ports: "22"
+            status: "disable"
+            unsupported-ssl: "bypass"
+            untrusted-cert: "allow"
+        mapi-over-https: "enable"
+        name: "default_name_27"
+        pop3s:
+            allow-invalid-server-cert: "enable"
+            client-cert-request: "bypass"
+            ports: "31"
+            status: "disable"
+            unsupported-ssl: "bypass"
+            untrusted-cert: "allow"
+        rpc-over-https: "enable"
+        server-cert: "<your_own_value> (source vpn.certificate.local.name)"
+        server-cert-mode: "re-sign"
+        smtps:
+            allow-invalid-server-cert: "enable"
+            client-cert-request: "bypass"
+            ports: "41"
+            status: "disable"
+            unsupported-ssl: "bypass"
+            untrusted-cert: "allow"
+        ssh:
+            inspect-all: "disable"
+            ports: "47"
+            ssh-algorithm: "compatible"
+            ssh-policy-check: "disable"
+            ssh-tun-policy-check: "disable"
+            status: "disable"
+            unsupported-version: "bypass"
+        ssl:
+            allow-invalid-server-cert: "enable"
+            client-cert-request: "bypass"
+            inspect-all: "disable"
+            unsupported-ssl: "bypass"
+            untrusted-cert: "allow"
+        ssl-anomalies-log: "disable"
+        ssl-exempt:
+         -
+            address: "<your_own_value> (source firewall.address.name firewall.addrgrp.name)"
+            address6: "<your_own_value> (source firewall.address6.name firewall.addrgrp6.name)"
+            fortiguard-category: "63"
+            id:  "64"
+            regex: "<your_own_value>"
+            type: "fortiguard-category"
+            wildcard-fqdn: "<your_own_value> (source firewall.wildcard-fqdn.custom.name firewall.wildcard-fqdn.group.name)"
+        ssl-exemptions-log: "disable"
+        ssl-server:
+         -
+            ftps-client-cert-request: "bypass"
+            https-client-cert-request: "bypass"
+            id:  "72"
+            imaps-client-cert-request: "bypass"
+            ip: "<your_own_value>"
+            pop3s-client-cert-request: "bypass"
+            smtps-client-cert-request: "bypass"
+            ssl-other-client-cert-request: "bypass"
+        untrusted-caname: "<your_own_value> (source vpn.certificate.local.name)"
+        use-ssl-server: "disable"
+        whitelist: "enable"
+
+
+RETURN VALUES:
+
+build:
+  description: Build number of the fortigate image
+  returned: always
+  type: str
+  sample: '1547'
+http_method:
+  description: Last method used to provision the content into FortiGate
+  returned: always
+  type: str
+  sample: 'PUT'
+http_status:
+  description: Last result given by FortiGate on last operation applied
+  returned: always
+  type: str
+  sample: "200"
+mkey:
+  description: Master key (id) used in the last call to FortiGate
+  returned: success
+  type: str
+  sample: "id"
+name:
+  description: Name of the table used to fulfill the request
+  returned: always
+  type: str
+  sample: "urlfilter"
+path:
+  description: Path of the table used to fulfill the request
+  returned: always
+  type: str
+  sample: "webfilter"
+revision:
+  description: Internal revision number
+  returned: always
+  type: str
+  sample: "17.0.2.10658"
+serial:
+  description: Serial number of the unit
+  returned: always
+  type: str
+  sample: "FGVMEVYYQT3AB5352"
+status:
+  description: Indication of the operation's result
+  returned: always
+  type: str
+  sample: "success"
+vdom:
+  description: Virtual domain used
+  returned: always
+  type: str
+  sample: "root"
+version:
+  description: Version of the FortiGate
+  returned: always
+  type: str
+  sample: "v5.6.3"
+
+

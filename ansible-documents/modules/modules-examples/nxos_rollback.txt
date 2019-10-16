@@ -1,0 +1,27 @@
+EXAMPLES:
+
+- nxos_rollback:
+    checkpoint_file: backup.cfg
+    username: "{{ un }}"
+    password: "{{ pwd }}"
+    host: "{{ inventory_hostname }}"
+- nxos_rollback:
+    rollback_to: backup.cfg
+    username: "{{ un }}"
+    password: "{{ pwd }}"
+    host: "{{ inventory_hostname }}"
+
+
+RETURN VALUES:
+
+filename:
+    description: The filename of the checkpoint/rollback file.
+    returned: success
+    type: str
+    sample: 'backup.cfg'
+status:
+    description: Which operation took place and whether it was successful.
+    returned: success
+    type: str
+    sample: 'rollback executed'
+

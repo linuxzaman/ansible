@@ -1,0 +1,50 @@
+EXAMPLES:
+
+- name: List application security groups in specific resource group
+    azure_rm_applicationsecuritygroup_facts:
+      resource_group: myResourceGroup
+
+  - name: List application security groups in specific subscription
+    azure_rm_applicationsecuritygroup_facts:
+
+  - name: Get application security group by name
+    azure_rm_applicationsecuritygroup_facts:
+        resource_group: myResourceGroup
+        name: myApplicationSecurityGroup
+        tags:
+            - foo
+
+
+RETURN VALUES:
+
+applicationsecuritygroups:
+    description:
+        - List of application security groups.
+    returned: always
+    type: complex
+    contains:
+        id:
+            description: Id of the application security group.
+            type: str
+            returned: always
+            sample:
+                "/subscriptions/xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx/resourceGroups/myResourceGroup/providers/Microsoft.Network/applicationSecurityGroups/MyAsg"
+        location:
+            description:
+                - Loation of the application security group.
+            type: str
+            returned: always
+            sample: eastus
+        name:
+            description:
+                - Name of the resource.
+            type: str
+            returned: always
+            sample: myAsg
+        provisioning_state:
+            description:
+                - Provisioning state of application security group.
+            type: str
+            returned: always
+            sample: Succeeded
+

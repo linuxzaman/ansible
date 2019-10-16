@@ -1,0 +1,192 @@
+> IPA_SUDORULE    (/usr/lib/python2.7/dist-packages/ansible/modules/identity/ipa/ipa_sudorule.py)
+
+        Add, modify or delete sudo rule within IPA server using IPA API.
+
+  * This module is maintained by The Ansible Community
+OPTIONS (= is mandatory):
+
+- cmd
+        List of commands assigned to the rule.
+        If an empty list is passed all commands will be removed from the rule.
+        If option is omitted commands will not be checked or changed.
+        [Default: (null)]
+
+- cmdcategory
+        Command category the rule applies to.
+        (Choices: all)[Default: (null)]
+
+= cn
+        Canonical name.
+        Can not be changed as it is the unique identifier.
+        (Aliases: name)
+
+- description
+        Description of the sudo rule.
+        [Default: (null)]
+
+- host
+        List of hosts assigned to the rule.
+        If an empty list is passed all hosts will be removed from the rule.
+        If option is omitted hosts will not be checked or changed.
+        Option `hostcategory' must be omitted to assign hosts.
+        [Default: (null)]
+
+- hostcategory
+        Host category the rule applies to.
+        If 'all' is passed one must omit `host' and `hostgroup'.
+        Option `host' and `hostgroup' must be omitted to assign 'all'.
+        (Choices: all)[Default: (null)]
+
+- hostgroup
+        List of host groups assigned to the rule.
+        If an empty list is passed all host groups will be removed from the rule.
+        If option is omitted host groups will not be checked or changed.
+        Option `hostcategory' must be omitted to assign host groups.
+        [Default: (null)]
+
+- ipa_host
+        IP or hostname of IPA server.
+        If the value is not specified in the task, the value of environment variable `IPA_HOST' will be used instead.
+        If both the environment variable `IPA_HOST' and the value are not specified in the task, then DNS will be used to try to discover
+        the FreeIPA server.
+        The relevant entry needed in FreeIPA is the 'ipa-ca' entry.
+        If neither the DNS entry, nor the environment `IPA_HOST', nor the value are available in the task, then the default value will be
+        used.
+        Environment variable fallback mechanism is added in Ansible 2.5.
+        [Default: ipa.example.com]
+        type: str
+
+= ipa_pass
+        Password of administrative user.
+        If the value is not specified in the task, the value of environment variable `IPA_PASS' will be used instead.
+        Note that if the 'urllib_gssapi' library is available, it is possible to use GSSAPI to authenticate to FreeIPA.
+        If the environment variable `KRB5CCNAME' is available, the module will use this kerberos credentials cache to authenticate to the
+        FreeIPA server.
+        If the environment variable `KRB5_CLIENT_KTNAME' is available, and `KRB5CCNAME' is not; the module will use this kerberos keytab
+        to authenticate.
+        If GSSAPI is not available, the usage of 'ipa_pass' is required.
+        Environment variable fallback mechanism is added in Ansible 2.5.
+
+        type: str
+
+- ipa_port
+        Port of FreeIPA / IPA server.
+        If the value is not specified in the task, the value of environment variable `IPA_PORT' will be used instead.
+        If both the environment variable `IPA_PORT' and the value are not specified in the task, then default value is set.
+        Environment variable fallback mechanism is added in Ansible 2.5.
+        [Default: 443]
+        type: int
+
+- ipa_prot
+        Protocol used by IPA server.
+        If the value is not specified in the task, the value of environment variable `IPA_PROT' will be used instead.
+        If both the environment variable `IPA_PROT' and the value are not specified in the task, then default value is set.
+        Environment variable fallback mechanism is added in Ansible 2.5.
+        (Choices: http, https)[Default: https]
+        type: str
+
+- ipa_timeout
+        Specifies idle timeout (in seconds) for the connection.
+        For bulk operations, you may want to increase this in order to avoid timeout from IPA server.
+        If the value is not specified in the task, the value of environment variable `IPA_TIMEOUT' will be used instead.
+        If both the environment variable `IPA_TIMEOUT' and the value are not specified in the task, then default value is set.
+        [Default: 10]
+        type: int
+        version_added: 2.7
+
+- ipa_user
+        Administrative account used on IPA server.
+        If the value is not specified in the task, the value of environment variable `IPA_USER' will be used instead.
+        If both the environment variable `IPA_USER' and the value are not specified in the task, then default value is set.
+        Environment variable fallback mechanism is added in Ansible 2.5.
+        [Default: admin]
+        type: str
+
+- runasgroupcategory
+        RunAs Group category the rule applies to.
+        (Choices: all)[Default: (null)]
+        version_added: 2.5
+
+- runasusercategory
+        RunAs User category the rule applies to.
+        (Choices: all)[Default: (null)]
+        version_added: 2.5
+
+- state
+        State to ensure
+        (Choices: present, absent, enabled, disabled)[Default: present]
+
+- sudoopt
+        List of options to add to the sudo rule.
+        [Default: (null)]
+
+- user
+        List of users assigned to the rule.
+        If an empty list is passed all users will be removed from the rule.
+        If option is omitted users will not be checked or changed.
+        [Default: (null)]
+
+- usercategory
+        User category the rule applies to.
+        (Choices: all)[Default: (null)]
+
+- usergroup
+        List of user groups assigned to the rule.
+        If an empty list is passed all user groups will be removed from the rule.
+        If option is omitted user groups will not be checked or changed.
+        [Default: (null)]
+
+- validate_certs
+        This only applies if `ipa_prot' is `https'.
+        If set to `no', the SSL certificates will not be validated.
+        This should only set to `no' used on personally controlled sites using self-signed certificates.
+        [Default: True]
+        type: bool
+
+
+AUTHOR: Thomas Krahn (@Nosmoht)
+        METADATA:
+          status:
+          - preview
+          supported_by: community
+        
+
+EXAMPLES:
+
+# Ensure sudo rule is present that's allows all every body to execute any command on any host without being asked for a password.
+- ipa_sudorule:
+    name: sudo_all_nopasswd
+    cmdcategory: all
+    description: Allow to run every command with sudo without password
+    hostcategory: all
+    sudoopt:
+    - '!authenticate'
+    usercategory: all
+    ipa_host: ipa.example.com
+    ipa_user: admin
+    ipa_pass: topsecret
+# Ensure user group developers can run every command on host group db-server as well as on host db01.example.com.
+- ipa_sudorule:
+    name: sudo_dev_dbserver
+    description: Allow developers to run every command with sudo on all database server
+    cmdcategory: all
+    host:
+    - db01.example.com
+    hostgroup:
+    - db-server
+    sudoopt:
+    - '!authenticate'
+    usergroup:
+    - developers
+    ipa_host: ipa.example.com
+    ipa_user: admin
+    ipa_pass: topsecret
+
+
+RETURN VALUES:
+
+sudorule:
+  description: Sudorule as returned by IPA
+  returned: always
+  type: dict
+

@@ -1,0 +1,88 @@
+EXAMPLES:
+
+- name: Create a GTM FirePass monitor
+  bigip_gtm_monitor_firepass:
+    name: my_monitor
+    ip: 1.1.1.1
+    port: 80
+    state: present
+    provider:
+      user: admin
+      password: secret
+      server: lb.mydomain.com
+  delegate_to: localhost
+
+- name: Remove FirePass Monitor
+  bigip_gtm_monitor_firepass:
+    name: my_monitor
+    state: absent
+    provider:
+      user: admin
+      password: secret
+      server: lb.mydomain.com
+  delegate_to: localhost
+
+- name: Add FirePass monitor for all addresses, port 514
+  bigip_gtm_monitor_firepass:
+    name: my_monitor
+    port: 514
+    provider:
+      user: admin
+      password: secret
+      server: lb.mydomain.com
+  delegate_to: localhost
+
+
+RETURN VALUES:
+
+parent:
+  description: New parent template of the monitor.
+  returned: changed
+  type: str
+  sample: firepass_gtm
+ip:
+  description: The new IP of IP/port definition.
+  returned: changed
+  type: str
+  sample: 10.12.13.14
+port:
+  description: The new port the monitor checks the resource on.
+  returned: changed
+  type: str
+  sample: 8080
+interval:
+  description: The new interval in which to run the monitor check.
+  returned: changed
+  type: int
+  sample: 2
+timeout:
+  description: The new timeout in which the remote system must respond to the monitor.
+  returned: changed
+  type: int
+  sample: 10
+ignore_down_response:
+  description: Whether to ignore the down response or not.
+  returned: changed
+  type: bool
+  sample: True
+probe_timeout:
+  description: The new timeout in which the system will timeout the monitor probe.
+  returned: changed
+  type: int
+  sample: 10
+cipher_list:
+  description: The new value for the cipher list.
+  returned: changed
+  type: str
+  sample: +3DES:+kEDH
+max_load_average:
+  description: The new value for the max load average.
+  returned: changed
+  type: int
+  sample: 12
+concurrency_limit:
+  description: The new value for the concurrency limit.
+  returned: changed
+  type: int
+  sample: 95
+

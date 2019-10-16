@@ -1,0 +1,84 @@
+> ONEVIEW_FCOE_NETWORK_FACTS    (/usr/lib/python2.7/dist-packages/ansible/modules/remote_management/oneview/oneview_fcoe_network_facts.py)
+
+        Retrieve the facts about one or more of the FCoE Networks from OneView.
+
+  * This module is maintained by The Ansible Community
+OPTIONS (= is mandatory):
+
+- config
+        Path to a .json configuration file containing the OneView client configuration. The configuration file is optional and when used
+        should be present in the host running the ansible commands. If the file path is not provided, the configuration will be loaded
+        from environment variables. For links to example configuration files or how to use the environment variables verify the notes
+        section.
+        [Default: (null)]
+        type: path
+
+- name
+        FCoE Network name.
+        [Default: (null)]
+
+- params
+        List of params to delimit, filter and sort the list of resources.
+        params allowed: - `start': The first item to return, using 0-based indexing. - `count': The number of resources to return. -
+        `filter': A general filter/query string to narrow the list of items returned. - `sort': The sort order of the returned data set.
+        [Default: (null)]
+        type: dict
+
+
+NOTES:
+      * A sample configuration file for the config parameter can be found at: https://github.com/HewlettPackard/oneview-
+        ansible/blob/master/examples/oneview_config-rename.json
+      * Check how to use environment variables for configuration at: https://github.com/HewlettPackard/oneview-ansible#environment-
+        variables
+      * Additional Playbooks for the HPE OneView Ansible modules can be found at: https://github.com/HewlettPackard/oneview-
+        ansible/tree/master/examples
+      * The OneView API version used will directly affect returned and expected fields in resources. Information on setting the
+        desired API version and can be found at: https://github.com/HewlettPackard/oneview-ansible#setting-your-oneview-version
+
+
+REQUIREMENTS:  hpOneView >= 2.0.1, python >= 2.7.9
+
+AUTHOR: Felipe Bulsoni (@fgbulsoni), Thiago Miotto (@tmiotto), Adriane Cardozo (@adriane-cardozo)
+        METADATA:
+          status:
+          - preview
+          supported_by: community
+        
+
+EXAMPLES:
+
+- name: Gather facts about all FCoE Networks
+  oneview_fcoe_network_facts:
+    config: /etc/oneview/oneview_config.json
+  delegate_to: localhost
+
+- debug: var=fcoe_networks
+
+- name: Gather paginated, filtered and sorted facts about FCoE Networks
+  oneview_fcoe_network_facts:
+    config: /etc/oneview/oneview_config.json
+    params:
+      start: 0
+      count: 3
+      sort: 'name:descending'
+      filter: 'vlanId=2'
+  delegate_to: localhost
+
+- debug: var=fcoe_networks
+
+- name: Gather facts about a FCoE Network by name
+  oneview_fcoe_network_facts:
+    config: /etc/oneview/oneview_config.json
+    name: Test FCoE Network Facts
+  delegate_to: localhost
+
+- debug: var=fcoe_networks
+
+
+RETURN VALUES:
+
+fcoe_networks:
+    description: Has all the OneView facts about the FCoE Networks.
+    returned: Always, but can be null.
+    type: dict
+

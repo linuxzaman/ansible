@@ -1,0 +1,30 @@
+EXAMPLES:
+
+- name: Gather facts about all ESXi Host in given Cluster
+  vmware_host_package_facts:
+    hostname: '{{ vcenter_hostname }}'
+    username: '{{ vcenter_username }}'
+    password: '{{ vcenter_password }}'
+    cluster_name: cluster_name
+  delegate_to: localhost
+  register: cluster_host_packages
+
+- name: Gather facts about ESXi Host
+  vmware_host_package_facts:
+    hostname: '{{ vcenter_hostname }}'
+    username: '{{ vcenter_username }}'
+    password: '{{ vcenter_password }}'
+    esxi_hostname: '{{ esxi_hostname }}'
+  delegate_to: localhost
+  register: host_packages
+
+
+RETURN VALUES:
+
+hosts_package_facts:
+    description:
+    - dict with hostname as key and dict with package facts as value
+    returned: hosts_package_facts
+    type: dict
+    sample: { "hosts_package_facts": { "localhost.localdomain": []}}
+

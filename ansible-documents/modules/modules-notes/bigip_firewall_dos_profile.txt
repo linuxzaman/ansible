@@ -1,0 +1,186 @@
+> BIGIP_FIREWALL_DOS_PROFILE    (/usr/lib/python2.7/dist-packages/ansible/modules/network/f5/bigip_firewall_dos_profile.py)
+
+        Manages AFM Denial of Service (DoS) profiles on a BIG-IP. To manage the vectors associated with a DoS profile, refer to the
+        `bigip_firewall_dos_vector' module.
+
+  * This module is maintained by an Ansible Partner
+OPTIONS (= is mandatory):
+
+- default_whitelist
+        The default whitelist address list for the system to use to determine which IP addresses are legitimate.
+        The system does not examine traffic from the IP addresses in the list when performing DoS prevention.
+        To define a new whitelist, use the `bigip_firewall_address_list' module.
+        [Default: (null)]
+        type: str
+
+- description
+        The description of the DoS profile.
+        [Default: (null)]
+        type: str
+
+= name
+        Specifies the name of the profile.
+
+        type: str
+
+- partition
+        Device partition to manage resources on.
+        [Default: Common]
+        type: str
+
+= password
+        The password for the user account used to connect to the BIG-IP.
+        You may omit this option by setting the environment variable `F5_PASSWORD'.
+        (Aliases: pass, pwd)
+        type: str
+
+- provider
+        A dict object containing connection details.
+        [Default: (null)]
+        suboptions:
+          password:
+            aliases:
+            - pass
+            - pwd
+            description:
+            - The password for the user account used to connect to the BIG-IP.
+            - You may omit this option by setting the environment variable `F5_PASSWORD'.
+            required: true
+            type: str
+          server:
+            description:
+            - The BIG-IP host.
+            - You may omit this option by setting the environment variable `F5_SERVER'.
+            required: true
+            type: str
+          server_port:
+            default: 443
+            description:
+            - The BIG-IP server port.
+            - You may omit this option by setting the environment variable `F5_SERVER_PORT'.
+            type: int
+          ssh_keyfile:
+            description:
+            - Specifies the SSH keyfile to use to authenticate the connection to the remote
+              device.  This argument is only used for `cli' transports.
+            - You may omit this option by setting the environment variable `ANSIBLE_NET_SSH_KEYFILE'.
+            type: path
+          timeout:
+            default: 10
+            description:
+            - Specifies the timeout in seconds for communicating with the network device for
+              either connecting or sending commands.  If the timeout is exceeded before the
+              operation is completed, the module will error.
+            type: int
+          transport:
+            choices:
+            - cli
+            - rest
+            default: rest
+            description:
+            - Configures the transport connection to use when connecting to the remote device.
+            type: str
+          user:
+            description:
+            - The username to connect to the BIG-IP with. This user must have administrative
+              privileges on the device.
+            - You may omit this option by setting the environment variable `F5_USER'.
+            required: true
+            type: str
+          validate_certs:
+            default: true
+            description:
+            - If `no', SSL certificates are not validated. Use this only on personally controlled
+              sites using self-signed certificates.
+            - You may omit this option by setting the environment variable `F5_VALIDATE_CERTS'.
+            type: bool
+        
+        type: dict
+        version_added: 2.5
+
+= server
+        The BIG-IP host.
+        You may omit this option by setting the environment variable `F5_SERVER'.
+
+        type: str
+
+- server_port
+        The BIG-IP server port.
+        You may omit this option by setting the environment variable `F5_SERVER_PORT'.
+        [Default: 443]
+        type: int
+        version_added: 2.2
+
+- state
+        When `present', ensures that the resource exists.
+        When `absent', ensures the resource is removed.
+        (Choices: present, absent)[Default: present]
+        type: str
+
+- threshold_sensitivity
+        Specifies the threshold sensitivity for the DoS profile.
+        Thresholds for detecting attacks are higher when sensitivity is `low', and lower when sensitivity is `high'.
+        When creating a new profile, if this parameter is not specified, the default is `medium'.
+        (Choices: low, medium, high)[Default: (null)]
+        type: str
+
+= user
+        The username to connect to the BIG-IP with. This user must have administrative privileges on the device.
+        You may omit this option by setting the environment variable `F5_USER'.
+
+        type: str
+
+- validate_certs
+        If `no', SSL certificates are not validated. Use this only on personally controlled sites using self-signed certificates.
+        You may omit this option by setting the environment variable `F5_VALIDATE_CERTS'.
+        [Default: True]
+        type: bool
+        version_added: 2.0
+
+
+NOTES:
+      * For more information on using Ansible to manage F5 Networks devices see https://www.ansible.com/integrations/networks/f5.
+      * Requires BIG-IP software version >= 12.
+      * The F5 modules only manipulate the running configuration of the F5 product. To ensure that BIG-IP specific configuration
+        persists to disk, be sure to include at least one task that uses the [bigip_config] module to save the running
+        configuration. Refer to the module's documentation for the correct usage of the module to save your running configuration.
+
+
+AUTHOR: Tim Rupp (@caphrim007)
+        METADATA:
+          status:
+          - preview
+          supported_by: certified
+        
+
+EXAMPLES:
+
+- name: Create a new DoS profile
+  bigip_firewall_dos_profile:
+    name: profile1
+    description: DoS profile 1
+    provider:
+      password: secret
+      server: lb.mydomain.com
+      user: admin
+  delegate_to: localhost
+
+
+RETURN VALUES:
+
+threshold_sensitivity:
+  description: The new threshold sensitivity of the profile.
+  returned: changed
+  type: str
+  sample: low
+default_whitelist:
+  description: The new whitelist attached to the profile.
+  returned: changed
+  type: str
+  sample: /Common/whitelist1
+description:
+  description: The description of the profile.
+  returned: changed
+  type: str
+  sample: New description
+

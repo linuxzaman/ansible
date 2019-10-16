@@ -1,0 +1,82 @@
+EXAMPLES:
+
+- name: Create simple volume with workload tags (volume meta data)
+  netapp_e_volume:
+    ssid: "{{ ssid }}"
+    api_url: "{{ netapp_api_url }}"
+    api_username: "{{ netapp_api_username }}"
+    api_password: "{{ netapp_api_password }}"
+    validate_certs: "{{ netapp_api_validate_certs }}"
+    state: present
+    name: volume
+    storage_pool_name: storage_pool
+    size: 300
+    size_unit: gb
+    workload_name: volume_tag
+    metadata:
+      key1: value1
+      key2: value2
+- name: Create a thin volume
+  netapp_e_volume:
+    ssid: "{{ ssid }}"
+    api_url: "{{ netapp_api_url }}"
+    api_username: "{{ netapp_api_username }}"
+    api_password: "{{ netapp_api_password }}"
+    validate_certs: "{{ netapp_api_validate_certs }}"
+    state: present
+    name: volume1
+    storage_pool_name: storage_pool
+    size: 131072
+    size_unit: gb
+    thin_provision: true
+    thin_volume_repo_size: 32
+    thin_volume_max_repo_size: 1024
+- name: Expand thin volume's virtual size
+  netapp_e_volume:
+    ssid: "{{ ssid }}"
+    api_url: "{{ netapp_api_url }}"
+    api_username: "{{ netapp_api_username }}"
+    api_password: "{{ netapp_api_password }}"
+    validate_certs: "{{ netapp_api_validate_certs }}"
+    state: present
+    name: volume1
+    storage_pool_name: storage_pool
+    size: 262144
+    size_unit: gb
+    thin_provision: true
+    thin_volume_repo_size: 32
+    thin_volume_max_repo_size: 1024
+- name: Expand thin volume's maximum repository size
+  netapp_e_volume:
+    ssid: "{{ ssid }}"
+    api_url: "{{ netapp_api_url }}"
+    api_username: "{{ netapp_api_username }}"
+    api_password: "{{ netapp_api_password }}"
+    validate_certs: "{{ netapp_api_validate_certs }}"
+    state: present
+    name: volume1
+    storage_pool_name: storage_pool
+    size: 262144
+    size_unit: gb
+    thin_provision: true
+    thin_volume_repo_size: 32
+    thin_volume_max_repo_size: 2048
+- name: Delete volume
+  netapp_e_volume:
+    ssid: "{{ ssid }}"
+    api_url: "{{ netapp_api_url }}"
+    api_username: "{{ netapp_api_username }}"
+    api_password: "{{ netapp_api_password }}"
+    validate_certs: "{{ netapp_api_validate_certs }}"
+    state: absent
+    name: volume
+
+
+RETURN VALUES:
+
+msg:
+    description: State of volume
+    type: str
+    returned: always
+    sample: "Standard volume [workload_vol_1] has been created."
+

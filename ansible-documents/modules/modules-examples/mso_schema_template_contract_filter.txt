@@ -1,0 +1,56 @@
+EXAMPLES:
+
+- name: Add a new contract filter
+  mso_schema_template_contract_filter:
+    host: mso_host
+    username: admin
+    password: SomeSecretPassword
+    schema: Schema 1
+    template: Template 1
+    contract: Contract 1
+    scope: global
+    filter: Filter 1
+    state: present
+  delegate_to: localhost
+
+- name: Remove a contract filter
+  mso_schema_template_contract_filter:
+    host: mso_host
+    username: admin
+    password: SomeSecretPassword
+    schema: Schema 1
+    template: Template 1
+    contract: Contract 1
+    filter: Filter 1
+    state: absent
+  delegate_to: localhost
+
+- name: Query a specific contract filter
+  mso_schema_template_contract_filter:
+    host: mso_host
+    username: admin
+    password: SomeSecretPassword
+    schema: Schema 1
+    template: Template 1
+    contract: Contract 1
+    filter: Filter 1
+    state: query
+  delegate_to: localhost
+  register: query_result
+
+- name: Query all contract filters
+  mso_schema_template_contract_filter:
+    host: mso_host
+    username: admin
+    password: SomeSecretPassword
+    schema: Schema 1
+    template: Template 1
+    contract: Contract 1
+    state: query
+  delegate_to: localhost
+  register: query_result
+
+
+RETURN VALUES:
+
+

@@ -1,0 +1,181 @@
+> JUNOS_STATIC_ROUTE    (/usr/lib/python2.7/dist-packages/ansible/modules/network/junos/junos_static_route.py)
+
+        This module provides declarative management of static IP routes on Juniper JUNOS network devices.
+
+  * This module is maintained by The Ansible Network Team
+OPTIONS (= is mandatory):
+
+- active
+        Specifies whether or not the configuration is active or deactivated
+        [Default: True]
+        type: bool
+
+= address
+        Network address with prefix of the static route.
+        (Aliases: prefix)
+
+- aggregate
+        List of static route definitions
+        [Default: (null)]
+
+= next_hop
+        Next hop IP of the static route.
+
+
+- preference
+        Global admin preference of the static route.
+        (Aliases: admin_distance)[Default: (null)]
+
+- provider
+        *Deprecated*
+        Starting with Ansible 2.5 we recommend using `connection: network_cli' or `connection: netconf'.
+        For more information please see the L(Junos OS Platform Options guide, ../network/user_guide/platform_junos.html).
+        HORIZONTALLINE
+        A dict object containing connection details.
+        [Default: (null)]
+        suboptions:
+          host:
+            description:
+            - Specifies the DNS host name or address for connecting to the remote device over
+              the specified transport.  The value of host is used as the destination address
+              for the transport.
+            required: true
+            type: str
+          password:
+            description:
+            - Specifies the password to use to authenticate the connection to the remote device.   This
+              value is used to authenticate the SSH session. If the value is not specified
+              in the task, the value of environment variable `ANSIBLE_NET_PASSWORD' will
+              be used instead.
+            type: str
+          port:
+            default: 22
+            description:
+            - Specifies the port to use when building the connection to the remote device.  The
+              port value will default to the well known SSH port of 22 (for `transport=cli')
+              or port 830 (for `transport=netconf') device.
+            type: int
+          ssh_keyfile:
+            description:
+            - Specifies the SSH key to use to authenticate the connection to the remote device.   This
+              value is the path to the key used to authenticate the SSH session. If the value
+              is not specified in the task, the value of environment variable `ANSIBLE_NET_SSH_KEYFILE'
+              will be used instead.
+            type: path
+          timeout:
+            default: 10
+            description:
+            - Specifies the timeout in seconds for communicating with the network device for
+              either connecting or sending commands.  If the timeout is exceeded before the
+              operation is completed, the module will error.
+            type: int
+          username:
+            description:
+            - Configures the username to use to authenticate the connection to the remote
+              device.  This value is used to authenticate the SSH session. If the value is
+              not specified in the task, the value of environment variable `ANSIBLE_NET_USERNAME'
+              will be used instead.
+            type: str
+        
+        type: dict
+
+- qualified_next_hop
+        Qualified next hop IP of the static route. Qualified next hops allow to associate preference with a particular next-hop address.
+        [Default: (null)]
+
+- qualified_preference
+        Assign preference for qualified next hop.
+        [Default: (null)]
+
+- state
+        State of the static route configuration.
+        (Choices: present, absent)[Default: present]
+
+
+NOTES:
+      * This module requires the netconf system service be enabled on the remote device being managed.
+      * Tested against vSRX JUNOS version 15.1X49-D15.4, vqfx-10000 JUNOS Version 15.1X53-D60.4.
+      * Recommended connection is `netconf'. See L(the Junos OS Platform Options,../network/user_guide/platform_junos.html).
+      * This module also works with `local' connections for legacy playbooks.
+      * For information on using CLI and netconf see the :ref:`Junos OS Platform Options guide <junos_platform_options>`
+      * For more information on using Ansible to manage network devices see the :ref:`Ansible Network Guide <network_guide>`
+      * For more information on using Ansible to manage Juniper network devices see https://www.ansible.com/ansible-juniper.
+
+
+REQUIREMENTS:  ncclient (>=v0.5.2)
+
+AUTHOR: Ganesh Nalawade (@ganeshrn)
+        METADATA:
+          status:
+          - preview
+          supported_by: network
+        
+
+EXAMPLES:
+
+- name: configure static route
+  junos_static_route:
+    address: 192.168.2.0/24
+    next_hop: 10.0.0.1
+    preference: 10
+    qualified_next_hop: 10.0.0.2
+    qualified_preference: 3
+    state: present
+
+- name: delete static route
+  junos_static_route:
+    address: 192.168.2.0/24
+    state: absent
+
+- name: deactivate static route configuration
+  junos_static_route:
+    address: 192.168.2.0/24
+    next_hop: 10.0.0.1
+    preference: 10
+    qualified_next_hop: 10.0.0.2
+    qualified_preference: 3
+    state: present
+    active: False
+
+- name: activate static route configuration
+  junos_static_route:
+    address: 192.168.2.0/24
+    next_hop: 10.0.0.1
+    preference: 10
+    qualified_next_hop: 10.0.0.2
+    qualified_preference: 3
+    state: present
+    active: True
+
+- name: Configure static route using aggregate
+  junos_static_route:
+    aggregate:
+    - { address: 4.4.4.0/24, next_hop: 3.3.3.3, qualified_next_hop: 5.5.5.5, qualified_preference: 30 }
+    - { address: 5.5.5.0/24, next_hop: 6.6.6.6, qualified_next_hop: 7.7.7.7, qualified_preference: 12 }
+    preference: 10
+
+- name: Delete static route using aggregate
+  junos_static_route:
+    aggregate:
+    - address: 4.4.4.0/24
+    - address: 5.5.5.0/24
+    state: absent
+
+
+RETURN VALUES:
+
+diff.prepared:
+  description: Configuration difference before and after applying change.
+  returned: when configuration is changed and diff option is enabled.
+  type: str
+  sample: >
+          [edit routing-options static]
+               route 2.2.2.0/24 { ... }
+          +    route 4.4.4.0/24 {
+                  next-hop 3.3.3.3;
+                  qualified-next-hop 5.5.5.5 {
+          +            preference 30;
+                   }
+          +        preference 10;
+          +    }
+

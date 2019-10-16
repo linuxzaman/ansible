@@ -1,0 +1,89 @@
+EXAMPLES:
+
+- name: create a new user
+  ios_user:
+    name: ansible
+    nopassword: True
+    sshkey: "{{ lookup('file', '~/.ssh/id_rsa.pub') }}"
+    state: present
+
+- name: create a new user with multiple keys
+  ios_user:
+    name: ansible
+    sshkey:
+      - "{{ lookup('file', '~/.ssh/id_rsa.pub') }}"
+      - "{{ lookup('file', '~/path/to/public_key') }}"
+    state: present
+
+- name: remove all users except admin
+  ios_user:
+    purge: yes
+
+- name: remove all users except admin and these listed users
+  ios_user:
+    aggregate:
+      - name: testuser1
+      - name: testuser2
+      - name: testuser3
+    purge: yes
+
+- name: set multiple users to privilege level 15
+  ios_user:
+    aggregate:
+      - name: netop
+      - name: netend
+    privilege: 15
+    state: present
+
+- name: set user view/role
+  ios_user:
+    name: netop
+    view: network-operator
+    state: present
+
+- name: Change Password for User netop
+  ios_user:
+    name: netop
+    configured_password: "{{ new_password }}"
+    update_password: always
+    state: present
+
+- name: Aggregate of users
+  ios_user:
+    aggregate:
+      - name: ansibletest2
+      - name: ansibletest3
+    view: network-admin
+
+- name: Add a user specifying password type
+  ios_user:
+    name: ansibletest4
+    configured_password: "{{ new_password }}"
+    password_type: password
+
+- name: Add a user with MD5 hashed password
+  ios_user:
+    name: ansibletest5
+    hashed_password:
+      type: 5
+      value: $3$8JcDilcYgFZi.yz4ApaqkHG2.8/
+
+- name: Delete users with aggregate
+  ios_user:
+    aggregate:
+      - name: ansibletest1
+      - name: ansibletest2
+      - name: ansibletest3
+    state: absent
+
+
+RETURN VALUES:
+
+commands:
+  description: The list of configuration mode commands to send to the device
+  returned: always
+  type: list
+  sample:
+    - username ansible secret password
+    - username admin secret admin
+

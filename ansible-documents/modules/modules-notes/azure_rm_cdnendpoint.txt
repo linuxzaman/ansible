@@ -1,0 +1,259 @@
+> AZURE_RM_CDNENDPOINT    (/usr/lib/python2.7/dist-packages/ansible/modules/cloud/azure/azure_rm_cdnendpoint.py)
+
+        Create, update, start, stop and delete a Azure CDN endpoint.
+
+  * This module is maintained by The Ansible Community
+OPTIONS (= is mandatory):
+
+- ad_user
+        Active Directory username. Use when authenticating with an Active Directory user rather than service principal.
+        [Default: (null)]
+        type: str
+
+- adfs_authority_url
+        Azure AD authority url. Use when authenticating with Username/password, and has your own ADFS authority.
+        [Default: (null)]
+        type: str
+        version_added: 2.6
+
+- api_profile
+        Selects an API profile to use when communicating with Azure services. Default value of `latest' is appropriate for public clouds;
+        future values will allow use with Azure Stack.
+        [Default: latest]
+        type: str
+        version_added: 2.5
+
+- append_tags
+        Use to control if tags field is canonical or just appends to existing tags.
+        When canonical, any tags not found in the tags parameter will be removed from the object's metadata.
+        [Default: True]
+        type: bool
+
+- auth_source
+        Controls the source of the credentials to use for authentication.
+        If not specified, ANSIBLE_AZURE_AUTH_SOURCE environment variable will be used and default to `auto' if variable is not defined.
+        `auto' will follow the default precedence of module parameters -> environment variables -> default profile in credential file
+        `~/.azure/credentials'.
+        When set to `cli', the credentials will be sources from the default Azure CLI profile.
+        Can also be set via the `ANSIBLE_AZURE_AUTH_SOURCE' environment variable.
+        When set to `msi', the host machine must be an azure resource with an enabled MSI extension. `subscription_id' or the environment
+        variable `AZURE_SUBSCRIPTION_ID' can be used to identify the subscription ID if the resource is granted access to more than one
+        subscription, otherwise the first subscription is chosen.
+        The `msi' was added in Ansible 2.6.
+        (Choices: auto, cli, credential_file, env, msi)[Default: (null)]
+        type: str
+        version_added: 2.5
+
+- cert_validation_mode
+        Controls the certificate validation behavior for Azure endpoints. By default, all modules will validate the server certificate,
+        but when an HTTPS proxy is in use, or against Azure Stack, it may be necessary to disable this behavior by passing `ignore'. Can
+        also be set via credential file profile or the `AZURE_CERT_VALIDATION' environment variable.
+        (Choices: ignore, validate)[Default: (null)]
+        type: str
+        version_added: 2.5
+
+- client_id
+        Azure client ID. Use when authenticating with a Service Principal.
+        [Default: (null)]
+        type: str
+
+- cloud_environment
+        For cloud environments other than the US public cloud, the environment name (as defined by Azure Python SDK, eg,
+        `AzureChinaCloud', `AzureUSGovernment'), or a metadata discovery endpoint URL (required for Azure Stack). Can also be set via
+        credential file profile or the `AZURE_CLOUD_ENVIRONMENT' environment variable.
+        [Default: AzureCloud]
+        type: str
+        version_added: 2.4
+
+- content_types_to_compress
+        List of content types on which compression applies.
+        [Default: (null)]
+        type: list
+
+- is_compression_enabled
+        Indicates whether content compression is enabled on CDN.
+        [Default: False]
+        type: bool
+
+- is_http_allowed
+        Indicates whether HTTP traffic is allowed on the endpoint.
+        [Default: True]
+        type: bool
+
+- is_https_allowed
+        Indicates whether HTTPS traffic is allowed on the endpoint.
+        [Default: True]
+        type: bool
+
+- location
+        Valid azure location. Defaults to location of the resource group.
+        [Default: (null)]
+
+= name
+        Name of the Azure CDN endpoint.
+
+
+- origin_host_header
+        The host header value sent to the origin with each request.
+        [Default: (null)]
+        type: str
+
+- origin_path
+        A directory path on the origin that CDN can use to retrieve content from.
+        [Default: (null)]
+        type: str
+
+= origins
+        Set of source of the content being delivered via CDN.
+
+        suboptions:
+          host_name:
+            description:
+            - The address of the origin. It can be a domain name, IPv4 address, or IPv6 address.
+            required: true
+          http_port:
+            description:
+            - The value of the HTTP port. Must be between 1 and 65535
+          https_port:
+            description:
+            - The value of the HTTPS port. Must be between 1 and 65535
+          name:
+            description:
+            - Origin name
+            required: true
+        
+
+- password
+        Active Directory user password. Use when authenticating with an Active Directory user rather than service principal.
+        [Default: (null)]
+
+- profile
+        Security profile found in ~/.azure/credentials file.
+        [Default: (null)]
+        type: str
+
+= profile_name
+        Name of the CDN profile where the endpoint attached to.
+
+
+- purge
+        Use with `state' `present' to purge the endpoint. Set to `true' to have the endpoint be purged.
+        [Default: False]
+        type: bool
+
+- purge_content_paths
+        Use with `state' `present' and `purge' `true' to specify content paths to be purged.
+        [Default: [u'/']]
+        type: list
+
+- query_string_caching_behavior
+        Defines how CDN caches requests that include query strings
+        (Choices: ignore_query_string, bypass_caching, use_query_string, not_set)[Default: ignore_query_string]
+        type: str
+
+= resource_group
+        Name of a resource group where the Azure CDN endpoint exists or will be created.
+
+
+- secret
+        Azure client secret. Use when authenticating with a Service Principal.
+        [Default: (null)]
+        type: str
+
+- started
+        Use with `state' `present' to start the endpoint. Set to `false' to stop the endpoint. Set to `true' to start the endpoint.
+        [Default: (null)]
+        type: bool
+
+- state
+        Assert the state of the Azure CDN endpoint. Use `present' to create or update a Azure CDN endpoint and `absent' to delete it.
+        (Choices: absent, present)[Default: present]
+
+- subscription_id
+        Your Azure subscription Id.
+        [Default: (null)]
+        type: str
+
+- tags
+        Dictionary of string:string pairs to assign as metadata to the object.
+        Metadata tags on the object will be updated with any provided values.
+        To remove tags set append_tags option to false.
+        [Default: (null)]
+        type: dict
+
+- tenant
+        Azure tenant ID. Use when authenticating with a Service Principal.
+        [Default: (null)]
+        type: str
+
+
+NOTES:
+      * For authentication with Azure you can pass parameters, set environment variables, use a profile stored in
+        ~/.azure/credentials, or log in before you run your tasks or playbook with `az login'.
+      * Authentication is also possible using a service principal or Active Directory user.
+      * To authenticate via service principal, pass subscription_id, client_id, secret and tenant or set environment variables
+        AZURE_SUBSCRIPTION_ID, AZURE_CLIENT_ID, AZURE_SECRET and AZURE_TENANT.
+      * To authenticate via Active Directory user, pass ad_user and password, or set AZURE_AD_USER and AZURE_PASSWORD in the
+        environment.
+      * Alternatively, credentials can be stored in ~/.azure/credentials. This is an ini file containing a [default] section and
+        the following keys: subscription_id, client_id, secret and tenant or subscription_id, ad_user and password. It is also
+        possible to add additional profiles. Specify the profile by passing profile or setting AZURE_PROFILE in the environment.
+
+
+SEE ALSO:
+      * Sign in with Azure CLI
+           How to authenticate using the `az login' command.
+           https://docs.microsoft.com/en-us/cli/azure/authenticate-azure-cli?view=azure-cli-latest
+
+
+REQUIREMENTS:  python >= 2.7, azure >= 2.0.0
+
+AUTHOR: Yunge Zhu (@yungezz)
+        METADATA:
+          status:
+          - preview
+          supported_by: community
+        
+
+EXAMPLES:
+
+- name: Create a Azure CDN endpoint
+      azure_rm_cdnendpoint:
+          resource_group: myResourceGroup
+          profile_name: myProfile
+          name: myEndpoint
+          origins:
+            - name: TestOrig
+              host_name: "www.example.com"
+          tags:
+              testing: testing
+              delete: on-exit
+              foo: bar
+    - name: Delete a Azure CDN endpoint
+      azure_rm_cdnendpoint:
+          resource_group: myResourceGroup
+          profile_name: myProfile
+          name: myEndpoint
+          state: absent
+
+
+RETURN VALUES:
+
+state:
+    description: Current state of the Azure CDN endpoint
+    returned: always
+    type: str
+id:
+    description:
+        - Id of the CDN endpoint.
+    returned: always
+    type: str
+    sample: "/subscriptions/xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx/resourcegroups/myResourceGroup/providers/Microsoft.Cdn/profiles/myProfile/endpoints/
+             myEndpoint"
+host_name:
+    description:
+        - Host name of the CDN endpoint.
+    returned: always
+    type: str
+    sample: "myendpoint.azureedge.net"
+

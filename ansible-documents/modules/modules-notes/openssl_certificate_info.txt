@@ -1,0 +1,214 @@
+> OPENSSL_CERTIFICATE_INFO    (/usr/lib/python2.7/dist-packages/ansible/modules/crypto/openssl_certificate_info.py)
+
+        This module allows one to query information on OpenSSL certificates. It uses the pyOpenSSL or cryptography python library to
+        interact with OpenSSL. If both the cryptography and PyOpenSSL libraries are available (and meet the minimum version requirements)
+        cryptography will be preferred as a backend over PyOpenSSL (unless the backend is forced with `select_crypto_backend')
+
+  * This module is maintained by The Ansible Community
+OPTIONS (= is mandatory):
+
+= path
+        Remote absolute path where the certificate file is loaded from.
+
+        type: path
+
+- select_crypto_backend
+        Determines which crypto backend to use.
+        The default choice is `auto', which tries to use `cryptography' if available, and falls back to `pyopenssl'.
+        If set to `pyopenssl', will try to use the L(pyOpenSSL,https://pypi.org/project/pyOpenSSL/) library.
+        If set to `cryptography', will try to use the L(cryptography,https://cryptography.io/) library.
+        (Choices: auto, cryptography, pyopenssl)[Default: auto]
+        type: str
+
+- valid_at
+        A dict of names mapping to time specifications. Every time specified here will be checked whether the certificate is valid at
+        this point. See the `valid_at' return value for informations on the result.
+        Time can be specified either as relative time or as absolute timestamp.
+        Time will always be interpreted as UTC.
+        Valid format is `[+-]timespec | ASN.1 TIME' where timespec can be an integer + `[w | d | h | m | s]' (e.g. `+32w1d2h', and ASN.1
+        TIME (i.e. pattern `YYYYMMDDHHMMSSZ'). Note that all timestamps will be treated as being in UTC.
+        [Default: (null)]
+        type: dict
+
+
+NOTES:
+      * All timestamp values are provided in ASN.1 TIME format, i.e. following the `YYYYMMDDHHMMSSZ' pattern. They are all in UTC.
+
+
+SEE ALSO:
+      * Module openssl_certificate
+           The official documentation on the openssl_certificate module.
+           https://docs.ansible.com/ansible/latest/modules/openssl_certificate_module.html
+
+
+REQUIREMENTS:  PyOpenSSL >= 0.15 or cryptography >= 1.6
+
+AUTHOR: Felix Fontein (@felixfontein), Yanis Guenane (@Spredzy), Markus Teufelberger (@MarkusTeufelberger)
+        METADATA:
+          status:
+          - preview
+          supported_by: community
+        
+
+EXAMPLES:
+
+- name: Generate a Self Signed OpenSSL certificate
+  openssl_certificate:
+    path: /etc/ssl/crt/ansible.com.crt
+    privatekey_path: /etc/ssl/private/ansible.com.pem
+    csr_path: /etc/ssl/csr/ansible.com.csr
+    provider: selfsigned
+
+
+# Get information on the certificate
+
+- name: Get information on generated certificate
+  openssl_certificate_info:
+    path: /etc/ssl/crt/ansible.com.crt
+  register: result
+
+- name: Dump information
+  debug:
+    var: result
+
+
+# Check whether the certificate is valid or not valid at certain times, fail
+# if this is not the case. The first task (openssl_certificate_info) collects
+# the information, and the second task (assert) validates the result and
+# makes the playbook fail in case something is not as expected.
+
+- name: Test whether that certificate is valid tomorrow and/or in three weeks
+  openssl_certificate_info:
+    path: /etc/ssl/crt/ansible.com.crt
+    valid_at:
+      point_1: "+1d"
+      point_2: "+3w"
+  register: result
+
+- name: Validate that certificate is valid tomorrow, but not in three weeks
+  assert:
+    that:
+      - result.valid_at.point_1      # valid in one day
+      - not result.valid_at.point_2  # not valid in three weeks
+
+
+RETURN VALUES:
+
+expired:
+    description: Whether the certificate is expired (i.e. C(notAfter) is in the past)
+    returned: success
+    type: bool
+basic_constraints:
+    description: Entries in the C(basic_constraints) extension, or C(none) if extension is not present.
+    returned: success
+    type: list
+    sample: "[CA:TRUE, pathlen:1]"
+basic_constraints_critical:
+    description: Whether the C(basic_constraints) extension is critical.
+    returned: success
+    type: bool
+extended_key_usage:
+    description: Entries in the C(extended_key_usage) extension, or C(none) if extension is not present.
+    returned: success
+    type: list
+    sample: "[Biometric Info, DVCS, Time Stamping]"
+extended_key_usage_critical:
+    description: Whether the C(extended_key_usage) extension is critical.
+    returned: success
+    type: bool
+extensions_by_oid:
+    description: Returns a dictionary for every extension OID
+    returned: success
+    type: complex
+    contains:
+        critical:
+            description: Whether the extension is critical.
+            returned: success
+            type: bool
+        value:
+            description: The Base64 encoded value (in DER format) of the extension
+            returned: success
+            type: str
+            sample: "MAMCAQU="
+    sample: '{"1.3.6.1.5.5.7.1.24": { "critical": false, "value": "MAMCAQU="}}'
+key_usage:
+    description: Entries in the C(key_usage) extension, or C(none) if extension is not present.
+    returned: success
+    type: str
+    sample: "[Key Agreement, Data Encipherment]"
+key_usage_critical:
+    description: Whether the C(key_usage) extension is critical.
+    returned: success
+    type: bool
+subject_alt_name:
+    description: Entries in the C(subject_alt_name) extension, or C(none) if extension is not present.
+    returned: success
+    type: list
+    sample: "[DNS:www.ansible.com, IP:1.2.3.4]"
+subject_alt_name_critical:
+    description: Whether the C(subject_alt_name) extension is critical.
+    returned: success
+    type: bool
+ocsp_must_staple:
+    description: C(yes) if the OCSP Must Staple extension is present, C(none) otherwise.
+    returned: success
+    type: bool
+ocsp_must_staple_critical:
+    description: Whether the C(ocsp_must_staple) extension is critical.
+    returned: success
+    type: bool
+issuer:
+    description: The certificate's issuer.
+    returned: success
+    type: dict
+    sample: '{"organizationName": "Ansible"}'
+subject:
+    description: The certificate's subject.
+    returned: success
+    type: dict
+    sample: '{"commonName": "www.example.com", "emailAddress": "test@example.com"}'
+not_after:
+    description: C(notAfter) date as ASN.1 TIME
+    returned: success
+    type: str
+    sample: 20190413202428Z
+not_before:
+    description: C(notBefore) date as ASN.1 TIME
+    returned: success
+    type: str
+    sample: 20190331202428Z
+public_key:
+    description: Certificate's public key in PEM format
+    returned: success
+    type: str
+    sample: "-----BEGIN PUBLIC KEY-----\nMIICIjANBgkqhkiG9w0BAQEFAAOCAg8A..."
+public_key_fingerprints:
+    description:
+        - Fingerprints of certificate's public key.
+        - For every hash algorithm available, the fingerprint is computed.
+    returned: success
+    type: dict
+    sample: "{'sha256': 'd4:b3:aa:6d:c8:04:ce:4e:ba:f6:29:4d:92:a3:94:b0:c2:ff:bd:bf:33:63:11:43:34:0f:51:b0:95:09:2f:63',
+              'sha512': 'f7:07:4a:f0:b0:f0:e6:8b:95:5f:f9:e6:61:0a:32:68:f1..."
+signature_algorithm:
+    description: The signature algorithm used to sign the certificate.
+    returned: success
+    type: str
+    sample: sha256WithRSAEncryption
+serial_number:
+    description: The certificate's serial number.
+    returned: success
+    type: int
+    sample: 1234
+version:
+    description: The certificate version.
+    returned: success
+    type: int
+    sample: 3
+valid_at:
+    description: For every time stamp provided in the I(valid_at) option, a
+                 boolean whether the certificate is valid at that point in time
+                 or not.
+    returned: success
+    type: dict
+

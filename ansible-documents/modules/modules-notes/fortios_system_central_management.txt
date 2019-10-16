@@ -1,0 +1,268 @@
+> FORTIOS_SYSTEM_CENTRAL_MANAGEMENT    (/usr/lib/python2.7/dist-packages/ansible/modules/network/fortios/fortios_system_central_management.py)
+
+        This module is able to configure a FortiGate or FortiOS by allowing the user to configure system feature and central_management
+        category. Examples includes all options and need to be adjusted to datasources before usage. Tested with FOS v6.0.2
+
+  * This module is maintained by The Ansible Community
+OPTIONS (= is mandatory):
+
+= host
+        FortiOS or FortiGate ip address.
+
+
+- https
+        Indicates if the requests towards FortiGate must use HTTPS protocol
+        [Default: False]
+        type: bool
+
+- password
+        FortiOS or FortiGate password.
+        [Default: ]
+
+- system_central_management
+        Configure central management.
+        [Default: None]
+        suboptions:
+          allow-monitor:
+            choices:
+            - enable
+            - disable
+            description:
+            - Enable/disable allowing the central management server to remotely monitor this
+              FortiGate
+          allow-push-configuration:
+            choices:
+            - enable
+            - disable
+            description:
+            - Enable/disable allowing the central management server to push configuration
+              changes to this FortiGate.
+          allow-push-firmware:
+            choices:
+            - enable
+            - disable
+            description:
+            - Enable/disable allowing the central management server to push firmware updates
+              to this FortiGate.
+          allow-remote-firmware-upgrade:
+            choices:
+            - enable
+            - disable
+            description:
+            - Enable/disable remotely upgrading the firmware on this FortiGate from the central
+              management server.
+          enc-algorithm:
+            choices:
+            - default
+            - high
+            - low
+            description:
+            - Encryption strength for communications between the FortiGate and central management.
+          fmg:
+            description:
+            - IP address or FQDN of the FortiManager.
+          fmg-source-ip:
+            description:
+            - IPv4 source address that this FortiGate uses when communicating with FortiManager.
+          fmg-source-ip6:
+            description:
+            - IPv6 source address that this FortiGate uses when communicating with FortiManager.
+          include-default-servers:
+            choices:
+            - enable
+            - disable
+            description:
+            - Enable/disable inclusion of public FortiGuard servers in the override server
+              list.
+          mode:
+            choices:
+            - normal
+            - backup
+            description:
+            - Central management mode.
+          schedule-config-restore:
+            choices:
+            - enable
+            - disable
+            description:
+            - Enable/disable allowing the central management server to restore the configuration
+              of this FortiGate.
+          schedule-script-restore:
+            choices:
+            - enable
+            - disable
+            description:
+            - Enable/disable allowing the central management server to restore the scripts
+              stored on this FortiGate.
+          serial-number:
+            description:
+            - Serial number.
+          server-list:
+            description:
+            - Additional severs that the FortiGate can use for updates (for AV, IPS, updates)
+              and ratings (for web filter and antispam ratings) servers.
+            suboptions:
+              addr-type:
+                choices:
+                - ipv4
+                - ipv6
+                - fqdn
+                description:
+                - Indicate whether the FortiGate communicates with the override server using
+                  an IPv4 address, an IPv6 address or a FQDN.
+              fqdn:
+                description:
+                - FQDN address of override server.
+              id:
+                description:
+                - ID.
+                required: true
+              server-address:
+                description:
+                - IPv4 address of override server.
+              server-address6:
+                description:
+                - IPv6 address of override server.
+              server-type:
+                choices:
+                - update
+                - rating
+                description:
+                - FortiGuard service type.
+          type:
+            choices:
+            - fortimanager
+            - fortiguard
+            - none
+            description:
+            - Central management type.
+          vdom:
+            description:
+            - Virtual domain (VDOM) name to use when communicating with FortiManager. Source
+              system.vdom.name.
+        
+
+= username
+        FortiOS or FortiGate username.
+
+
+- vdom
+        Virtual domain, among those defined previously. A vdom is a virtual instance of the FortiGate that can be configured and used as
+        a different unit.
+        [Default: root]
+
+
+NOTES:
+      * Requires fortiosapi library developed by Fortinet
+      * Run as a local_action in your playbook
+
+
+REQUIREMENTS:  fortiosapi>=0.9.8
+
+AUTHOR: Miguel Angel Munoz (@mamunozgonzalez), Nicolas Thomas (@thomnico)
+        METADATA:
+          status:
+          - preview
+          supported_by: community
+        
+
+EXAMPLES:
+
+- hosts: localhost
+  vars:
+   host: "192.168.122.40"
+   username: "admin"
+   password: ""
+   vdom: "root"
+  tasks:
+  - name: Configure central management.
+    fortios_system_central_management:
+      host:  "{{  host }}"
+      username: "{{ username }}"
+      password: "{{ password }}"
+      vdom:  "{{  vdom }}"
+      system_central_management:
+        allow-monitor: "enable"
+        allow-push-configuration: "enable"
+        allow-push-firmware: "enable"
+        allow-remote-firmware-upgrade: "enable"
+        enc-algorithm: "default"
+        fmg: "<your_own_value>"
+        fmg-source-ip: "<your_own_value>"
+        fmg-source-ip6: "<your_own_value>"
+        include-default-servers: "enable"
+        mode: "normal"
+        schedule-config-restore: "enable"
+        schedule-script-restore: "enable"
+        serial-number: "<your_own_value>"
+        server-list:
+         -
+            addr-type: "ipv4"
+            fqdn: "<your_own_value>"
+            id:  "19"
+            server-address: "<your_own_value>"
+            server-address6: "<your_own_value>"
+            server-type: "update"
+        type: "fortimanager"
+        vdom: "<your_own_value> (source system.vdom.name)"
+
+
+RETURN VALUES:
+
+build:
+  description: Build number of the fortigate image
+  returned: always
+  type: str
+  sample: '1547'
+http_method:
+  description: Last method used to provision the content into FortiGate
+  returned: always
+  type: str
+  sample: 'PUT'
+http_status:
+  description: Last result given by FortiGate on last operation applied
+  returned: always
+  type: str
+  sample: "200"
+mkey:
+  description: Master key (id) used in the last call to FortiGate
+  returned: success
+  type: str
+  sample: "key1"
+name:
+  description: Name of the table used to fulfill the request
+  returned: always
+  type: str
+  sample: "urlfilter"
+path:
+  description: Path of the table used to fulfill the request
+  returned: always
+  type: str
+  sample: "webfilter"
+revision:
+  description: Internal revision number
+  returned: always
+  type: str
+  sample: "17.0.2.10658"
+serial:
+  description: Serial number of the unit
+  returned: always
+  type: str
+  sample: "FGVMEVYYQT3AB5352"
+status:
+  description: Indication of the operation's result
+  returned: always
+  type: str
+  sample: "success"
+vdom:
+  description: Virtual domain used
+  returned: always
+  type: str
+  sample: "root"
+version:
+  description: Version of the FortiGate
+  returned: always
+  type: str
+  sample: "v5.6.3"
+
+

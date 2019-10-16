@@ -1,0 +1,297 @@
+> ACME_INSPECT    (/usr/lib/python2.7/dist-packages/ansible/modules/crypto/acme/acme_inspect.py)
+
+        Allows to send direct requests to an ACME server with the L(ACME protocol,https://tools.ietf.org/html/rfc8555), which is
+        supported by CAs such as L(Let's Encrypt,https://letsencrypt.org/). This module can be used to debug failed certificate request
+        attempts, for example when [acme_certificate] fails or encounters a problem which you wish to investigate. The module can also be
+        used to directly access features of an ACME servers which are not yet supported by the Ansible ACME modules.
+
+  * This module is maintained by The Ansible Community
+OPTIONS (= is mandatory):
+
+- account_key_content
+        Content of the ACME account RSA or Elliptic Curve key.
+        Mutually exclusive with `account_key_src'.
+        Required if `account_key_src' is not used.
+        `Warning': the content will be written into a temporary file, which will be deleted by Ansible when the module completes. Since
+        this is an important private key — it can be used to change the account key, or to revoke your certificates without knowing their
+        private keys —, this might not be acceptable.
+        In case `cryptography' is used, the content is not written into a temporary file. It can still happen that it is written to disk
+        by Ansible in the process of moving the module with its argument to the node where it is executed.
+        [Default: (null)]
+        type: str
+        version_added: 2.5
+
+- account_key_src
+        Path to a file containing the ACME account RSA or Elliptic Curve key.
+        RSA keys can be created with `openssl genrsa ...'. Elliptic curve keys can be created with `openssl ecparam -genkey ...'. Any
+        other tool creating private keys in PEM format can be used as well.
+        Mutually exclusive with `account_key_content'.
+        Required if `account_key_content' is not used.
+        (Aliases: account_key)[Default: (null)]
+        type: path
+
+- account_uri
+        If specified, assumes that the account URI is as given. If the account key does not match this account, or an account with this
+        URI does not exist, the module fails.
+        [Default: (null)]
+        type: str
+        version_added: 2.7
+
+- acme_directory
+        The ACME directory to use. This is the entry point URL to access CA server API.
+        For safety reasons the default is set to the Let's Encrypt staging server (for the ACME v1 protocol). This will create
+        technically correct, but untrusted certificates.
+        For Let's Encrypt, all staging endpoints can be found here: https://letsencrypt.org/docs/staging-environment/
+        For Let's Encrypt, the production directory URL for ACME v1 is https://acme-v01.api.letsencrypt.org/directory, and the production
+        directory URL for ACME v2 is https://acme-v02.api.letsencrypt.org/directory.
+        `Warning': So far, the module has only been tested against Let's Encrypt (staging and production) and against the L(Pebble
+        testing server,https://github.com/letsencrypt/Pebble).
+        [Default: https://acme-staging.api.letsencrypt.org/directory]
+        type: str
+
+- acme_version
+        The ACME version of the endpoint.
+        Must be 1 for the classic Let's Encrypt ACME endpoint, or 2 for the new standardized ACME v2 endpoint.
+        (Choices: 1, 2)[Default: 1]
+        type: int
+        version_added: 2.5
+
+- content
+        An encoded JSON object which will be sent as the content if `method' is `post'.
+        Required when `method' is `post', and not allowed otherwise.
+        [Default: (null)]
+        type: str
+
+- fail_on_acme_error
+        If `method' is `post' or `get', make the module fail in case an ACME error is returned.
+        [Default: True]
+        type: bool
+
+- method
+        The method to use to access the given URL on the ACME server.
+        The value `post' executes an authenticated POST request. The content must be specified in the `content' option.
+        The value `get' executes an authenticated POST-as-GET request for ACME v2, and a regular GET request for ACME v1.
+        The value `directory-only' only retrieves the directory, without doing a request.
+        (Choices: get, post, directory-only)[Default: get]
+        type: str
+
+- select_crypto_backend
+        Determines which crypto backend to use.
+        The default choice is `auto', which tries to use `cryptography' if available, and falls back to `openssl'.
+        If set to `openssl', will try to use the `openssl' binary.
+        If set to `cryptography', will try to use the L(cryptography,https://cryptography.io/) library.
+        (Choices: auto, cryptography, openssl)[Default: auto]
+        type: str
+        version_added: 2.7
+
+- url
+        The URL to send the request to.
+        Must be specified if `method' is not `directory-only'.
+        [Default: (null)]
+        type: str
+
+- validate_certs
+        Whether calls to the ACME directory will validate TLS certificates.
+        `Warning': Should `only ever' be set to `no' for testing purposes, for example when testing against a local Pebble server.
+        [Default: True]
+        type: bool
+        version_added: 2.5
+
+
+NOTES:
+      * The `account_uri' option must be specified for properly authenticated ACME v2 requests (except a `new-account' request).
+      * Using the `ansible' tool, [acme_inspect] can be used to directly execute ACME requests without the need of writing a
+        playbook. For example, the following command retrieves the ACME account with ID 1 from Let's Encrypt (assuming
+        `/path/to/key' is the correct private account key): `ansible localhost -m acme_inspect -a "account_key_src=/path/to/key
+        acme_directory=https://acme-v02.api.letsencrypt.org/directory acme_version=2
+        account_uri=https://acme-v02.api.letsencrypt.org/acme/acct/1 method=get
+        url=https://acme-v02.api.letsencrypt.org/acme/acct/1"'
+      * If a new enough version of the `cryptography' library is available (see Requirements for details), it will be used instead
+        of the `openssl' binary. This can be explicitly disabled or enabled with the `select_crypto_backend' option. Note that
+        using the `openssl' binary will be slower and less secure, as private key contents always have to be stored on disk (see
+        `account_key_content').
+      * Although the defaults are chosen so that the module can be used with the L(Let's Encrypt,https://letsencrypt.org/) CA, the
+        module can in principle be used with any CA providing an ACME endpoint.
+
+
+SEE ALSO:
+      * Automatic Certificate Management Environment (ACME)
+           The specification of the ACME protocol (RFC 8555).
+           https://tools.ietf.org/html/rfc8555
+      * ACME TLS ALPN Challenge Extension
+           The current draft specification of the `tls-alpn-01' challenge.
+           https://tools.ietf.org/html/draft-ietf-acme-tls-alpn-05
+
+
+REQUIREMENTS:  python >= 2.6, either openssl or L(cryptography,https://cryptography.io/) >= 1.5
+
+AUTHOR: Felix Fontein (@felixfontein)
+        METADATA:
+          status:
+          - preview
+          supported_by: community
+        
+
+EXAMPLES:
+
+- name: Get directory
+  acme_inspect:
+    acme_directory: https://acme-staging-v02.api.letsencrypt.org/directory
+    acme_version: 2
+    method: directory-only
+  register: directory
+
+- name: Create an account
+  acme_inspect:
+    acme_directory: https://acme-staging-v02.api.letsencrypt.org/directory
+    acme_version: 2
+    account_key_src: /etc/pki/cert/private/account.key
+    url: "{{ directory.newAccount}}"
+    method: post
+    content: '{"termsOfServiceAgreed":true}'
+  register: account_creation
+  # account_creation.headers.location contains the account URI
+  # if creation was successful
+
+- name: Get account information
+  acme_inspect:
+    acme_directory: https://acme-staging-v02.api.letsencrypt.org/directory
+    acme_version: 2
+    account_key_src: /etc/pki/cert/private/account.key
+    account_uri: "{{ account_creation.headers.location }}"
+    url: "{{ account_creation.headers.location }}"
+    method: get
+
+- name: Update account contacts
+  acme_inspect:
+    acme_directory: https://acme-staging-v02.api.letsencrypt.org/directory
+    acme_version: 2
+    account_key_src: /etc/pki/cert/private/account.key
+    account_uri: "{{ account_creation.headers.location }}"
+    url: "{{ account_creation.headers.location }}"
+    method: post
+    content: '{{ account_info | to_json }}'
+  vars:
+    account_info:
+      # For valid values, see
+      # https://tools.ietf.org/html/rfc8555#section-7.3
+      contact:
+      - mailto:me@example.com
+
+- name: Create certificate order
+  acme_certificate:
+    acme_directory: https://acme-staging-v02.api.letsencrypt.org/directory
+    acme_version: 2
+    account_key_src: /etc/pki/cert/private/account.key
+    account_uri: "{{ account_creation.headers.location }}"
+    csr: /etc/pki/cert/csr/sample.com.csr
+    fullchain_dest: /etc/httpd/ssl/sample.com-fullchain.crt
+    challenge: http-01
+  register: certificate_request
+
+# Assume something went wrong. certificate_request.order_uri contains
+# the order URI.
+
+- name: Get order information
+  acme_inspect:
+    acme_directory: https://acme-staging-v02.api.letsencrypt.org/directory
+    acme_version: 2
+    account_key_src: /etc/pki/cert/private/account.key
+    account_uri: "{{ account_creation.headers.location }}"
+    url: "{{ certificate_request.order_uri }}"
+    method: get
+  register: order
+
+- name: Get first authz for order
+  acme_inspect:
+    acme_directory: https://acme-staging-v02.api.letsencrypt.org/directory
+    acme_version: 2
+    account_key_src: /etc/pki/cert/private/account.key
+    account_uri: "{{ account_creation.headers.location }}"
+    url: "{{ order.output_json.authorizations[0] }}"
+    method: get
+  register: authz
+
+- name: Get HTTP-01 challenge for authz
+  acme_inspect:
+    acme_directory: https://acme-staging-v02.api.letsencrypt.org/directory
+    acme_version: 2
+    account_key_src: /etc/pki/cert/private/account.key
+    account_uri: "{{ account_creation.headers.location }}"
+    url: "{{ authz.output_json.challenges | selectattr('type', 'equalto', 'http-01') }}"
+    method: get
+  register: http01challenge
+
+- name: Activate HTTP-01 challenge manually
+  acme_inspect:
+    acme_directory: https://acme-staging-v02.api.letsencrypt.org/directory
+    acme_version: 2
+    account_key_src: /etc/pki/cert/private/account.key
+    account_uri: "{{ account_creation.headers.location }}"
+    url: "{{ http01challenge.url }}"
+    method: post
+    content: '{}'
+
+
+RETURN VALUES:
+
+directory:
+  description: The ACME directory's content
+  returned: always
+  type: dict
+  sample: |
+    {
+      "a85k3x9f91A4": "https://community.letsencrypt.org/t/adding-random-entries-to-the-directory/33417",
+      "keyChange": "https://acme-v02.api.letsencrypt.org/acme/key-change",
+      "meta": {
+          "caaIdentities": [
+              "letsencrypt.org"
+          ],
+          "termsOfService": "https://letsencrypt.org/documents/LE-SA-v1.2-November-15-2017.pdf",
+          "website": "https://letsencrypt.org"
+      },
+      "newAccount": "https://acme-v02.api.letsencrypt.org/acme/new-acct",
+      "newNonce": "https://acme-v02.api.letsencrypt.org/acme/new-nonce",
+      "newOrder": "https://acme-v02.api.letsencrypt.org/acme/new-order",
+      "revokeCert": "https://acme-v02.api.letsencrypt.org/acme/revoke-cert"
+    }
+headers:
+  description: The request's HTTP headers (with lowercase keys)
+  returned: always
+  type: dict
+  sample: |
+    {
+      "boulder-requester": "12345",
+      "cache-control": "max-age=0, no-cache, no-store",
+      "connection": "close",
+      "content-length": "904",
+      "content-type": "application/json",
+      "cookies": {},
+      "cookies_string": "",
+      "date": "Wed, 07 Nov 2018 12:34:56 GMT",
+      "expires": "Wed, 07 Nov 2018 12:44:56 GMT",
+      "link": "<https://letsencrypt.org/documents/LE-SA-v1.2-November-15-2017.pdf>;rel="terms-of-service"",
+      "msg": "OK (904 bytes)",
+      "pragma": "no-cache",
+      "replay-nonce": "1234567890abcdefghijklmnopqrstuvwxyzABCDEFGH",
+      "server": "nginx",
+      "status": 200,
+      "strict-transport-security": "max-age=604800",
+      "url": "https://acme-v02.api.letsencrypt.org/acme/acct/46161",
+      "x-frame-options": "DENY"
+    }
+output_text:
+  description: The raw text output
+  returned: always
+  type: str
+  sample: "{\n  \"id\": 12345,\n  \"key\": {\n    \"kty\": \"RSA\",\n ..."
+output_json:
+  description: The output parsed as JSON
+  returned: if output can be parsed as JSON
+  type: dict
+  sample:
+    - id: 12345
+    - key:
+      - kty: RSA
+      - ...
+

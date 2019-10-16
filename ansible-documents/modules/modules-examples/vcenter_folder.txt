@@ -1,0 +1,60 @@
+EXAMPLES:
+
+- name: Create a VM folder on given datacenter
+  vcenter_folder:
+    hostname: '{{ vcenter_hostname }}'
+    username: '{{ vcenter_username }}'
+    password: '{{ vcenter_password }}'
+    datacenter_name: datacenter_name
+    folder_name: sample_vm_folder
+    folder_type: vm
+    state: present
+  register: vm_folder_creation_result
+  delegate_to: localhost
+
+- name: Create a datastore folder on given datacenter
+  vcenter_folder:
+    hostname: '{{ vcenter_hostname }}'
+    username: '{{ vcenter_username }}'
+    password: '{{ vcenter_password }}'
+    datacenter_name: datacenter_name
+    folder_name: sample_datastore_folder
+    folder_type: datastore
+    state: present
+  register: datastore_folder_creation_result
+  delegate_to: localhost
+
+- name: Create a sub folder under VM folder on given datacenter
+  vcenter_folder:
+    hostname: '{{ vcenter_hostname }}'
+    username: '{{ vcenter_username }}'
+    password: '{{ vcenter_password }}'
+    datacenter_name: datacenter_name
+    folder_name: sample_sub_folder
+    parent_folder: vm_folder
+    state: present
+  register: sub_folder_creation_result
+  delegate_to: localhost
+
+- name: Delete a VM folder on given datacenter
+  vcenter_folder:
+    hostname: '{{ vcenter_hostname }}'
+    username: '{{ vcenter_username }}'
+    password: '{{ vcenter_password }}'
+    datacenter_name: datacenter_name
+    folder_name: sample_vm_folder
+    folder_type: vm
+    state: absent
+  register: vm_folder_deletion_result
+  delegate_to: localhost
+
+
+RETURN VALUES:
+
+result:
+    description:
+    - string stating about result
+    returned: success
+    type: str
+    sample: "Folder 'sub_network_folder' of type 'vm' created under vm_folder successfully."
+

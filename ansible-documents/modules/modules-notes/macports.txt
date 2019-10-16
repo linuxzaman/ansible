@@ -1,0 +1,87 @@
+> MACPORTS    (/usr/lib/python2.7/dist-packages/ansible/modules/packaging/os/macports.py)
+
+        Manages MacPorts packages (ports)
+
+  * This module is maintained by The Ansible Community
+OPTIONS (= is mandatory):
+
+- name
+        A list of port names.
+        (Aliases: port)[Default: (null)]
+
+- selfupdate
+        Update Macports and the ports tree, either prior to installing ports or as a separate step.
+        Equivalent to running `port selfupdate'.
+        (Aliases: update_cache, update_ports)[Default: no]
+        type: bool
+
+- state
+        Indicates the desired state of the port.
+        (Choices: present, absent, active, inactive)[Default: present]
+
+- upgrade
+        Upgrade all outdated ports, either prior to installing ports or as a separate step.
+        Equivalent to running `port upgrade outdated'.
+        [Default: no]
+        type: bool
+        version_added: 2.8
+
+- variant
+        A port variant specification.
+        `variant' is only supported with state: `installed'/`present'.
+        (Aliases: variants)[Default: (null)]
+        version_added: 2.7
+
+
+AUTHOR: Jimmy Tang (@jcftang)
+        METADATA:
+          status:
+          - preview
+          supported_by: community
+        
+
+EXAMPLES:
+
+- name: Install the foo port
+  macports:
+    name: foo
+
+- name: Install the universal, x11 variant of the foo port
+  macports:
+    name: foo
+    variant: +universal+x11
+
+- name: Install a list of ports
+  macports:
+    name: "{{ ports }}"
+  vars:
+    ports:
+    - foo
+    - foo-tools
+
+- name: Update Macports and the ports tree, then upgrade all outdated ports
+  macports:
+    selfupdate: yes
+    upgrade: yes
+
+- name: Update Macports and the ports tree, then install the foo port
+  macports:
+    name: foo
+    selfupdate: yes
+
+- name: Remove the foo port
+  macports:
+    name: foo
+    state: absent
+
+- name: Activate the foo port
+  macports:
+    name: foo
+    state: active
+
+- name: Deactivate the foo port
+  macports:
+    name: foo
+    state: inactive
+
+

@@ -1,0 +1,163 @@
+> NA_ONTAP_SNAPMIRROR    (/usr/lib/python2.7/dist-packages/ansible/modules/storage/netapp/na_ontap_snapmirror.py)
+
+        Create/Delete/Initialize SnapMirror volume/vserver relationships Modify schedule for a SnapMirror relationship
+
+  * This module is maintained by an Ansible Partner
+OPTIONS (= is mandatory):
+
+- destination_path
+        Specifies the destination endpoint of the SnapMirror relationship.
+        [Default: (null)]
+
+- destination_volume
+        Specifies the name of the destination volume for the SnapMirror.
+        [Default: (null)]
+
+- destination_vserver
+        Name of the destination vserver for the SnapMirror.
+        [Default: (null)]
+
+= hostname
+        The hostname or IP address of the ONTAP instance.
+
+        type: str
+
+- http_port
+        Override the default port (80 or 443) with this port
+        [Default: (null)]
+        type: int
+
+- https
+        Enable and disable https
+        [Default: False]
+        type: bool
+
+- ontapi
+        The ontap api version to use
+        [Default: (null)]
+        type: int
+
+= password
+        Password for the specified user.
+        (Aliases: pass)
+        type: str
+
+- policy
+        Specify the name of the SnapMirror policy that applies to this relationship.
+        [Default: (null)]
+        version_added: 2.8
+
+- relationship_type
+        Specify the type of SnapMirror relationship.
+        (Choices: data_protection, load_sharing, vault, restore, transition_data_protection, extended_data_protection)[Default: (null)]
+
+- schedule
+        Specify the name of the current schedule, which is used to update the SnapMirror relationship.
+        Optional for create, modifiable.
+        [Default: (null)]
+
+- source_hostname
+        Source hostname or IP address.
+        Required for SnapMirror delete
+        [Default: (null)]
+
+- source_password
+        Source password.
+        Optional if this is same as destination password.
+        [Default: (null)]
+
+- source_path
+        Specifies the source endpoint of the SnapMirror relationship.
+        [Default: (null)]
+
+- source_username
+        Source username.
+        Optional if this is same as destination username.
+        [Default: (null)]
+
+- source_volume
+        Specifies the name of the source volume for the SnapMirror.
+        [Default: (null)]
+
+- source_vserver
+        Name of the source vserver for the SnapMirror.
+        [Default: (null)]
+
+- state
+        Whether the specified relationship should exist or not.
+        (Choices: present, absent)[Default: present]
+
+= username
+        This can be a Cluster-scoped or SVM-scoped account, depending on whether a Cluster-level or SVM-level API is required. For more
+        information, please read the documentation https://mysupport.netapp.com/NOW/download/software/nmsdk/9.4/.
+        (Aliases: user)
+        type: str
+
+- validate_certs
+        If set to `no', the SSL certificates will not be validated.
+        This should only set to `False' used on personally controlled sites using self-signed certificates.
+        [Default: True]
+        type: bool
+
+
+NOTES:
+      * The modules prefixed with na\\_ontap are built to support the ONTAP storage platform.
+
+
+REQUIREMENTS:  A physical or virtual clustered Data ONTAP system. The modules support Data ONTAP 9.1 and onward, Ansible 2.6, Python2
+        netapp-lib (2017.10.30) or later. Install using 'pip install netapp-lib', Python3 netapp-lib (2018.11.13) or
+        later. Install using 'pip install netapp-lib', To enable http on the cluster you must run the following commands
+        'set -privilege advanced;' 'system services web modify -http-enabled true;'
+
+AUTHOR: NetApp Ansible Team (@carchi8py) <ng-ansibleteam@netapp.com>
+        METADATA:
+          status:
+          - preview
+          supported_by: certified
+        
+
+EXAMPLES:
+
+- name: Create SnapMirror
+      na_ontap_snapmirror:
+        state: present
+        source_volume: test_src
+        destination_volume: test_dest
+        source_vserver: ansible_src
+        destination_vserver: ansible_dest
+        schedule: hourly
+        policy: MirrorAllSnapshots
+        hostname: "{{ netapp_hostname }}"
+        username: "{{ netapp_username }}"
+        password: "{{ netapp_password }}"
+
+    - name: Delete SnapMirror
+      na_ontap_snapmirror:
+        state: absent
+        destination_path: <path>
+        source_hostname: "{{ source_hostname }}"
+        hostname: "{{ netapp_hostname }}"
+        username: "{{ netapp_username }}"
+        password: "{{ netapp_password }}"
+
+    - name: Set schedule to NULL
+      na_ontap_snapmirror:
+        state: present
+        destination_path: <path>
+        schedule: ""
+        hostname: "{{ netapp_hostname }}"
+        username: "{{ netapp_username }}"
+        password: "{{ netapp_password }}"
+
+    - name: Release SnapMirror
+      na_ontap_snapmirror:
+        state: release
+        destination_path: <path>
+        hostname: "{{ netapp_hostname }}"
+        username: "{{ netapp_username }}"
+        password: "{{ netapp_password }}"
+
+
+RETURN VALUES:
+
+

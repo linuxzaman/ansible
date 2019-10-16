@@ -1,0 +1,123 @@
+> KUBEVIRT_CDI_UPLOAD    (/usr/lib/python2.7/dist-packages/ansible/modules/cloud/kubevirt/kubevirt_cdi_upload.py)
+
+        Use Openshift Python SDK to create UploadTokenRequest objects. Transfer contents of local files to the CDI Upload Proxy.
+
+  * This module is maintained by The Ansible Community
+OPTIONS (= is mandatory):
+
+- api_key
+        Token used to authenticate with the API. Can also be specified via K8S_AUTH_API_KEY environment variable.
+        [Default: (null)]
+        type: str
+
+- ca_cert
+        Path to a CA certificate used to authenticate with the API. The full certificate chain must be provided to avoid certificate
+        validation errors. Can also be specified via K8S_AUTH_SSL_CA_CERT environment variable.
+        (Aliases: ssl_ca_cert)[Default: (null)]
+        type: path
+
+- client_cert
+        Path to a certificate used to authenticate with the API. Can also be specified via K8S_AUTH_CERT_FILE environment variable.
+        (Aliases: cert_file)[Default: (null)]
+        type: path
+
+- client_key
+        Path to a key file used to authenticate with the API. Can also be specified via K8S_AUTH_KEY_FILE environment variable.
+        (Aliases: key_file)[Default: (null)]
+        type: path
+
+- context
+        The name of a context found in the config file. Can also be specified via K8S_AUTH_CONTEXT environment variable.
+        [Default: (null)]
+        type: str
+
+- host
+        Provide a URL for accessing the API. Can also be specified via K8S_AUTH_HOST environment variable.
+        [Default: (null)]
+        type: str
+
+- kubeconfig
+        Path to an existing Kubernetes config file. If not provided, and no other connection options are provided, the openshift client
+        will attempt to load the default configuration file from `~/.kube/config.json'. Can also be specified via K8S_AUTH_KUBECONFIG
+        environment variable.
+        [Default: (null)]
+        type: path
+
+- merge_type
+        Whether to override the default patch merge approach with a specific type. By default, the strategic merge will typically be
+        used.
+        (Choices: json, merge, strategic-merge)[Default: (null)]
+        type: list
+
+- password
+        Provide a password for authenticating with the API. Can also be specified via K8S_AUTH_PASSWORD environment variable.
+        Please read the description of the `username' option for a discussion of when this option is applicable.
+        [Default: (null)]
+        type: str
+
+- path
+        Path of local image file to transfer.
+        [Default: (null)]
+
+= pvc_name
+        Use to specify the name of the target PersistentVolumeClaim.
+
+
+= pvc_namespace
+        Use to specify the namespace of the target PersistentVolumeClaim.
+
+
+- upload_host
+        URL containing the host and port on which the CDI Upload Proxy is available.
+        More info: https://github.com/kubevirt/containerized-data-importer/blob/master/doc/upload.md#expose-cdi-uploadproxy-service
+        [Default: (null)]
+
+- upload_host_validate_certs
+        Whether or not to verify the CDI Upload Proxy's SSL certificates against your system's CA trust store.
+        (Aliases: upload_host_verify_ssl)[Default: True]
+        type: bool
+
+- username
+        Provide a username for authenticating with the API. Can also be specified via K8S_AUTH_USERNAME environment variable.
+        Please note that this only works with clusters configured to use HTTP Basic Auth. If your cluster has a different form of
+        authentication (e.g. OAuth2 in OpenShift), this option will not work as expected and you should look into the `k8s_auth' module,
+        as that might do what you need.
+        [Default: (null)]
+        type: str
+
+- validate_certs
+        Whether or not to verify the API server's SSL certificates. Can also be specified via K8S_AUTH_VERIFY_SSL environment variable.
+        (Aliases: verify_ssl)[Default: (null)]
+        type: bool
+
+
+NOTES:
+      * The OpenShift Python client wraps the K8s Python client, providing full access to all of the APIS and models available on
+        both platforms. For API version details and additional information visit https://github.com/openshift/openshift-restclient-
+        python
+      * To avoid SSL certificate validation errors when `validate_certs' is `True', the full certificate chain for the API server
+        must be provided via `ca_cert' or in the kubeconfig file.
+
+
+REQUIREMENTS:  python >= 2.7, openshift >= 0.8.2, requests >= 2.0.0
+
+AUTHOR: KubeVirt Team (@kubevirt)
+        METADATA:
+          status:
+          - preview
+          supported_by: community
+        
+
+EXAMPLES:
+
+- name: Upload local image to pvc-vm1
+  kubevirt_cdi_upload:
+    pvc_namespace: default
+    pvc_name: pvc-vm1
+    upload_host: https://localhost:8443
+    upload_host_validate_certs: false
+    path: /tmp/cirros-0.4.0-x86_64-disk.img
+
+
+RETURN VALUES:
+# 

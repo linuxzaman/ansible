@@ -1,0 +1,105 @@
+> UCS_DNS_SERVER    (/usr/lib/python2.7/dist-packages/ansible/modules/remote_management/ucs/ucs_dns_server.py)
+
+        Configure DNS servers on Cisco UCS Manager. Examples can be used with the L(UCS Platform
+        Emulator,https://communities.cisco.com/ucspe).
+
+  * This module is maintained by The Ansible Community
+OPTIONS (= is mandatory):
+
+- delegate_to
+        Where the module will be run
+        [Default: localhost]
+        type: str
+
+- description
+        A user-defined description of the DNS server.
+        Enter up to 256 characters.
+        You can use any characters or spaces except the following:
+        ` (accent mark),  (backslash), ^ (carat), " (double quote), = (equal sign), > (greater than), < (less than), or ' (single quote).
+        (Aliases: descr)[Default: (null)]
+        type: str
+
+- dns_server
+        DNS server IP address.
+        Enter a valid IPV4 Address.
+        UCS Manager supports up to 4 DNS Servers
+        (Aliases: name)[Default: (null)]
+        type: str
+
+= hostname
+        IP address or hostname of Cisco UCS Manager.
+
+        type: str
+
+= password
+        Password for Cisco UCS Manager authentication.
+
+        type: str
+
+- port
+        Port number to be used during connection (by default uses 443 for https and 80 for http connection).
+        [Default: (null)]
+        type: int
+
+- proxy
+        If use_proxy is no, specfies proxy to be used for connection. e.g. 'http://proxy.xy.z:8080'
+        [Default: (null)]
+        type: str
+
+- state
+        If `absent', will remove a DNS server.
+        If `present', will add or update a DNS server.
+        (Choices: absent, present)[Default: present]
+        type: str
+
+- use_proxy
+        If `no', will not use the proxy as defined by system environment variable.
+        [Default: True]
+        type: bool
+
+- use_ssl
+        If `no', an HTTP connection will be used instead of the default HTTPS connection.
+        [Default: True]
+        type: bool
+
+- username
+        Username for Cisco UCS Manager authentication.
+        [Default: admin]
+        type: str
+
+
+REQUIREMENTS:  ucsmsdk
+
+AUTHOR: John McDonough (@movinalot), CiscoUcs (@CiscoUcs)
+        METADATA:
+          status:
+          - preview
+          supported_by: community
+        
+
+EXAMPLES:
+
+- name: Configure DNS server
+  ucs_dns_server:
+    hostname: 172.16.143.150
+    username: admin
+    password: password
+    dns_server: 10.10.10.10
+    description: DNS Server IP address
+    state: present
+    delegate_to: localhost
+
+- name: Remove DNS server
+  ucs_dns_server:
+    hostname: 172.16.143.150
+    username: admin
+    password: password
+    dns_server: 10.10.10.10
+    state: absent
+    delegate_to: localhost
+
+
+RETURN VALUES:
+
+#
+

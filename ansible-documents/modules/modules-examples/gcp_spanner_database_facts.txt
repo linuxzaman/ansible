@@ -1,0 +1,38 @@
+EXAMPLES:
+
+- name: " a database facts"
+  gcp_spanner_database_facts:
+    instance: "{{ instance }}"
+    project: test_project
+    auth_kind: serviceaccount
+    service_account_file: "/tmp/auth.pem"
+    state: facts
+
+
+RETURN VALUES:
+
+items:
+  description: List of items
+  returned: always
+  type: complex
+  contains:
+    name:
+      description:
+      - A unique identifier for the database, which cannot be changed after the instance
+        is created. Values are of the form [a-z][-a-z0-9]*[a-z0-9].
+      returned: success
+      type: str
+    extraStatements:
+      description:
+      - 'An optional list of DDL statements to run inside the newly created database.
+        Statements can create tables, indexes, etc. These statements execute atomically
+        with the creation of the database: if there is an error in any statement,
+        the database is not created.'
+      returned: success
+      type: list
+    instance:
+      description:
+      - The instance to create the database on.
+      returned: success
+      type: dict
+

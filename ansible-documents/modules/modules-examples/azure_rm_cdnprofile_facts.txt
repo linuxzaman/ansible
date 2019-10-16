@@ -1,0 +1,73 @@
+EXAMPLES:
+
+- name: Get facts for one CDN profile
+      azure_rm_cdnprofile_facts:
+        name: Testing
+        resource_group: myResourceGroup
+
+    - name: Get facts for all CDN profiles
+      azure_rm_cdnprofile_facts:
+
+    - name: Get facts by tags
+      azure_rm_cdnprofile_facts:
+        tags:
+          - Environment:Test
+
+
+RETURN VALUES:
+
+cdnprofiles:
+    description: List of CDN profiles.
+    returned: always
+    type: complex
+    contains:
+        resource_group:
+            description:
+                - Name of a resource group where the CDN profile exists.
+            returned: always
+            type: str
+            sample: myResourceGroup
+        name:
+            description:
+                - Name of the CDN profile.
+            returned: always
+            type: str
+            sample: Testing
+        location:
+            description:
+                - Location of the CDN profile.
+            type: str
+            sample: WestUS
+        id:
+            description:
+                - ID of the CDN profile.
+            type: str
+            sample: /subscriptions/xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx/resourcegroups/myResourceGroup/providers/Microsoft.Cdn/profiles/cdntest
+        provisioning_state:
+            description:
+                - Provisioning status of the profile.
+            type: str
+            sample: Succeeded
+        resource_state:
+            description:
+                - Resource status of the profile.
+            type: str
+            sample: Active
+        sku:
+            description:
+                - The pricing tier, defines a CDN provider, feature list and rate of the CDN profile.
+            type: str
+            sample: standard_verizon
+        type:
+            description:
+                - The type of the CDN profile.
+            type: str
+            sample: Microsoft.Cdn/profiles
+        tags:
+            description:
+                - The tags of the CDN profile.
+            type: list
+            sample: [
+                {"foo": "bar"}
+            ]
+

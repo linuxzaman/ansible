@@ -1,0 +1,29 @@
+EXAMPLES:
+
+- name: Enable failure auditing for the subcategory "File System"
+  win_audit_policy_system:
+    subcategory: File System
+    audit_type: failure
+
+- name: Enable all auditing types for the category "Account logon events"
+  win_audit_policy_system:
+    category: Account logon events
+    audit_type: success, failure
+
+- name: Disable auditing for the subcategory "File System"
+  win_audit_policy_system:
+    subcategory: File System
+    audit_type: none
+
+
+RETURN VALUES:
+
+current_audit_policy:
+  description: details on the policy being targetted
+  returned: always
+  type: dict
+  sample: |-
+    {
+      "File Share":"failure"
+    }
+

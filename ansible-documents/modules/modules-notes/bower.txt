@@ -1,0 +1,82 @@
+> BOWER    (/usr/lib/python2.7/dist-packages/ansible/modules/packaging/language/bower.py)
+
+        Manage bower packages with bower
+
+  * This module is maintained by The Ansible Community
+OPTIONS (= is mandatory):
+
+- name
+        The name of a bower package to install
+        [Default: (null)]
+
+- offline
+        Install packages from local cache, if the packages were installed before
+        [Default: no]
+        type: bool
+
+= path
+        The base path where to install the bower packages
+
+
+- production
+        Install with --production flag
+        [Default: no]
+        type: bool
+        version_added: 2.0
+
+- relative_execpath
+        Relative path to bower executable from install path
+        [Default: (null)]
+        version_added: 2.1
+
+- state
+        The state of the bower package
+        (Choices: present, absent, latest)[Default: present]
+
+- version
+        The version to be installed
+        [Default: (null)]
+
+
+AUTHOR: Michael Warkentin (@mwarkentin)
+        METADATA:
+          status:
+          - preview
+          supported_by: community
+        
+
+EXAMPLES:
+
+- name: Install "bootstrap" bower package.
+  bower:
+    name: bootstrap
+
+- name: Install "bootstrap" bower package on version 3.1.1.
+  bower:
+    name: bootstrap
+    version: '3.1.1'
+
+- name: Remove the "bootstrap" bower package.
+  bower:
+    name: bootstrap
+    state: absent
+
+- name: Install packages based on bower.json.
+  bower:
+    path: /app/location
+
+- name: Update packages based on bower.json to their latest version.
+  bower:
+    path: /app/location
+    state: latest
+
+# install bower locally and run from there
+- npm:
+    path: /app/location
+    name: bower
+    global: no
+- bower:
+    path: /app/location
+    relative_execpath: node_modules/.bin
+
+

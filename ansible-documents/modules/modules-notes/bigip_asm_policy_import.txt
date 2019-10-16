@@ -1,0 +1,206 @@
+> BIGIP_ASM_POLICY_IMPORT    (/usr/lib/python2.7/dist-packages/ansible/modules/network/f5/bigip_asm_policy_import.py)
+
+        Manage BIG-IP ASM policies policy imports.
+
+  * This module is maintained by an Ansible Partner
+OPTIONS (= is mandatory):
+
+- force
+        When set to `yes' any existing policy with the same name will be overwritten by the new import.
+        Works for both inline and file imports, if the policy does not exist this setting is ignored.
+        [Default: False]
+        type: bool
+
+- inline
+        When specified the ASM policy is created from a provided string.
+        Content needs to be provided in a valid XML format otherwise the operation will fail.
+        [Default: (null)]
+        type: str
+
+= name
+        The ASM policy to create or override.
+
+        type: str
+
+- partition
+        Device partition to create policy on.
+        [Default: Common]
+        type: str
+
+= password
+        The password for the user account used to connect to the BIG-IP.
+        You may omit this option by setting the environment variable `F5_PASSWORD'.
+        (Aliases: pass, pwd)
+        type: str
+
+- provider
+        A dict object containing connection details.
+        [Default: (null)]
+        suboptions:
+          password:
+            aliases:
+            - pass
+            - pwd
+            description:
+            - The password for the user account used to connect to the BIG-IP.
+            - You may omit this option by setting the environment variable `F5_PASSWORD'.
+            required: true
+            type: str
+          server:
+            description:
+            - The BIG-IP host.
+            - You may omit this option by setting the environment variable `F5_SERVER'.
+            required: true
+            type: str
+          server_port:
+            default: 443
+            description:
+            - The BIG-IP server port.
+            - You may omit this option by setting the environment variable `F5_SERVER_PORT'.
+            type: int
+          ssh_keyfile:
+            description:
+            - Specifies the SSH keyfile to use to authenticate the connection to the remote
+              device.  This argument is only used for `cli' transports.
+            - You may omit this option by setting the environment variable `ANSIBLE_NET_SSH_KEYFILE'.
+            type: path
+          timeout:
+            default: 10
+            description:
+            - Specifies the timeout in seconds for communicating with the network device for
+              either connecting or sending commands.  If the timeout is exceeded before the
+              operation is completed, the module will error.
+            type: int
+          transport:
+            choices:
+            - cli
+            - rest
+            default: rest
+            description:
+            - Configures the transport connection to use when connecting to the remote device.
+            type: str
+          user:
+            description:
+            - The username to connect to the BIG-IP with. This user must have administrative
+              privileges on the device.
+            - You may omit this option by setting the environment variable `F5_USER'.
+            required: true
+            type: str
+          validate_certs:
+            default: true
+            description:
+            - If `no', SSL certificates are not validated. Use this only on personally controlled
+              sites using self-signed certificates.
+            - You may omit this option by setting the environment variable `F5_VALIDATE_CERTS'.
+            type: bool
+        
+        type: dict
+        version_added: 2.5
+
+= server
+        The BIG-IP host.
+        You may omit this option by setting the environment variable `F5_SERVER'.
+
+        type: str
+
+- server_port
+        The BIG-IP server port.
+        You may omit this option by setting the environment variable `F5_SERVER_PORT'.
+        [Default: 443]
+        type: int
+        version_added: 2.2
+
+- source
+        Full path to a policy file to be imported into the BIG-IP ASM.
+        Policy files exported from newer versions of BIG-IP cannot be imported into older versions of BIG-IP. The opposite, however, is
+        true; you can import older into newer.
+        The file format can be binary of XML.
+        [Default: (null)]
+        type: path
+
+= user
+        The username to connect to the BIG-IP with. This user must have administrative privileges on the device.
+        You may omit this option by setting the environment variable `F5_USER'.
+
+        type: str
+
+- validate_certs
+        If `no', SSL certificates are not validated. Use this only on personally controlled sites using self-signed certificates.
+        You may omit this option by setting the environment variable `F5_VALIDATE_CERTS'.
+        [Default: True]
+        type: bool
+        version_added: 2.0
+
+
+NOTES:
+      * For more information on using Ansible to manage F5 Networks devices see https://www.ansible.com/integrations/networks/f5.
+      * Requires BIG-IP software version >= 12.
+      * The F5 modules only manipulate the running configuration of the F5 product. To ensure that BIG-IP specific configuration
+        persists to disk, be sure to include at least one task that uses the [bigip_config] module to save the running
+        configuration. Refer to the module's documentation for the correct usage of the module to save your running configuration.
+
+
+AUTHOR: Wojciech Wypior (@wojtek0806)
+        METADATA:
+          status:
+          - preview
+          supported_by: certified
+        
+
+EXAMPLES:
+
+- name: Import ASM policy
+  bigip_asm_policy_import:
+    name: new_asm_policy
+    file: /root/asm_policy.xml
+    provider:
+      server: lb.mydomain.com
+      user: admin
+      password: secret
+  delegate_to: localhost
+
+- name: Import ASM policy inline
+  bigip_asm_policy_import:
+    name: foo-policy4
+    inline: <xml>content</xml>
+    provider:
+      server: lb.mydomain.com
+      user: admin
+      password: secret
+  delegate_to: localhost
+
+- name: Override existing ASM policy
+  bigip_asm_policy:
+    name: new_asm_policy
+    file: /root/asm_policy_new.xml
+    force: yes
+    provider:
+      server: lb.mydomain.com
+      user: admin
+      password: secret
+  delegate_to: localhost
+
+
+RETURN VALUES:
+
+source:
+  description: Local path to an ASM policy file.
+  returned: changed
+  type: str
+  sample: /root/some_policy.xml
+inline:
+  description: Contents of policy as an inline string
+  returned: changed
+  type: str
+  sample: <xml>foobar contents</xml>
+name:
+  description: Name of the ASM policy to be created/overwritten
+  returned: changed
+  type: str
+  sample: Asm_APP1_Transparent
+force:
+  description: Set when overwriting an existing policy
+  returned: changed
+  type: bool
+  sample: yes
+

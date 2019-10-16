@@ -1,0 +1,106 @@
+EXAMPLES:
+
+- name: 1.2.3.4:80 -> web01:8080
+  cs_portforward:
+    ip_address: 1.2.3.4
+    vm: web01
+    public_port: 80
+    private_port: 8080
+  delegate_to: localhost
+
+- name: forward SSH and open firewall
+  cs_portforward:
+    ip_address: '{{ public_ip }}'
+    vm: '{{ inventory_hostname }}'
+    public_port: '{{ ansible_ssh_port }}'
+    private_port: 22
+    open_firewall: true
+  delegate_to: localhost
+
+- name: forward DNS traffic, but do not open firewall
+  cs_portforward:
+    ip_address: 1.2.3.4
+    vm: '{{ inventory_hostname }}'
+    public_port: 53
+    private_port: 53
+    protocol: udp
+  delegate_to: localhost
+
+- name: remove ssh port forwarding
+  cs_portforward:
+    ip_address: 1.2.3.4
+    public_port: 22
+    private_port: 22
+    state: absent
+  delegate_to: localhost
+
+
+RETURN VALUES:
+
+---
+id:
+  description: UUID of the public IP address.
+  returned: success
+  type: str
+  sample: a6f7a5fc-43f8-11e5-a151-feff819cdc9f
+ip_address:
+  description: Public IP address.
+  returned: success
+  type: str
+  sample: 1.2.3.4
+protocol:
+  description: Protocol.
+  returned: success
+  type: str
+  sample: tcp
+private_port:
+  description: Start port on the virtual machine's IP address.
+  returned: success
+  type: int
+  sample: 80
+private_end_port:
+  description: End port on the virtual machine's IP address.
+  returned: success
+  type: int
+  sample: 80
+public_port:
+  description: Start port on the public IP address.
+  returned: success
+  type: int
+  sample: 80
+public_end_port:
+  description: End port on the public IP address.
+  returned: success
+  type: int
+  sample: 80
+tags:
+  description: Tags related to the port forwarding.
+  returned: success
+  type: list
+  sample: []
+vm_name:
+  description: Name of the virtual machine.
+  returned: success
+  type: str
+  sample: web-01
+vm_display_name:
+  description: Display name of the virtual machine.
+  returned: success
+  type: str
+  sample: web-01
+vm_guest_ip:
+  description: IP of the virtual machine.
+  returned: success
+  type: str
+  sample: 10.101.65.152
+vpc:
+  description: Name of the VPC.
+  returned: success
+  type: str
+  sample: my_vpc
+network:
+  description: Name of the network.
+  returned: success
+  type: str
+  sample: dmz
+

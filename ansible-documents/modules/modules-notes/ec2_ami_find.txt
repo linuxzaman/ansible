@@ -1,0 +1,300 @@
+> EC2_AMI_FIND    (/usr/lib/python2.7/dist-packages/ansible/modules/cloud/amazon/_ec2_ami_find.py)
+
+        Returns list of matching AMIs with AMI ID, along with other useful information Can search AMIs with different owners Can search
+        by matching tag(s), by AMI name and/or other criteria Results can be sorted and sliced
+
+DEPRECATED: 
+
+	Reason: Various AWS modules have been combined and replaced with M(ec2_ami_facts).
+	Will be removed in: Ansible 2.9
+	Alternatives: Use M(ec2_ami_facts) instead.
+
+
+  * This module is maintained by The Ansible Community
+OPTIONS (= is mandatory):
+
+- ami_id
+        An AMI ID to match.
+        [Default: (null)]
+
+- ami_tags
+        A hash/dictionary of tags to match for the AMI.
+        [Default: (null)]
+
+- architecture
+        An architecture type to match (e.g. x86_64).
+        [Default: (null)]
+
+- aws_access_key
+        AWS access key. If not set then the value of the AWS_ACCESS_KEY_ID, AWS_ACCESS_KEY or EC2_ACCESS_KEY environment variable is
+        used.
+        (Aliases: ec2_access_key, access_key)[Default: (null)]
+        type: str
+
+- aws_secret_key
+        AWS secret key. If not set then the value of the AWS_SECRET_ACCESS_KEY, AWS_SECRET_KEY, or EC2_SECRET_KEY environment variable is
+        used.
+        (Aliases: ec2_secret_key, secret_key)[Default: (null)]
+        type: str
+
+- debug_botocore_endpoint_logs
+        Use a botocore.endpoint logger to parse the unique (rather than total) "resource:action" API calls made during a task, outputing
+        the set to the resource_actions key in the task results. Use the aws_resource_action callback to output to total list made during
+        a playbook. The ANSIBLE_DEBUG_BOTOCORE_LOGS environment variable may also be used.
+        [Default: no]
+        type: bool
+        version_added: 2.8
+
+- ec2_url
+        Url to use to connect to EC2 or your Eucalyptus cloud (by default the module will use EC2 endpoints). Ignored for modules where
+        region is required. Must be specified for all other modules if region is not used. If not set then the value of the EC2_URL
+        environment variable, if any, is used.
+        [Default: (null)]
+        type: str
+
+- hypervisor
+        A hypervisor type type to match (e.g. xen).
+        [Default: (null)]
+
+- is_public
+        Whether or not the image(s) are public.
+        [Default: (null)]
+        type: bool
+
+- name
+        An AMI name to match.
+        [Default: (null)]
+
+- no_result_action
+        What to do when no results are found.
+        'success' reports success and returns an empty array
+        'fail' causes the module to report failure
+        (Choices: success, fail)[Default: success]
+
+- owner
+        Search AMIs owned by the specified owner
+        Can specify an AWS account ID, or one of the special IDs 'self', 'amazon' or 'aws-marketplace'
+        If not specified, all EC2 AMIs in the specified region will be searched.
+        You can include wildcards in many of the search options. An asterisk (*) matches zero or more characters, and a question mark (?)
+        matches exactly one character. You can escape special characters using a backslash (\) before the character. For example, a value
+        of \*amazon\?\\ searches for the literal string *amazon?\.
+        [Default: (null)]
+
+- platform
+        Platform type to match.
+        [Default: (null)]
+
+- product_code
+        Marketplace product code to match.
+        [Default: (null)]
+        version_added: 2.3
+
+- profile
+        Uses a boto profile. Only works with boto >= 2.24.0.
+        [Default: (null)]
+        type: str
+        version_added: 1.6
+
+= region
+        The AWS region to use.
+        (Aliases: aws_region, ec2_region)
+
+- root_device_type
+        Root device type to match (e.g. ebs, instance-store).
+        [Default: (null)]
+        version_added: 2.5
+
+- security_token
+        AWS STS security token. If not set then the value of the AWS_SECURITY_TOKEN or EC2_SECURITY_TOKEN environment variable is used.
+        (Aliases: access_token)[Default: (null)]
+        type: str
+        version_added: 1.6
+
+- sort
+        Optional attribute which with to sort the results.
+        If specifying 'tag', the 'tag_name' parameter is required.
+        Starting at version 2.1, additional sort choices of architecture, block_device_mapping, creationDate, hypervisor, is_public,
+        location, owner_id, platform, root_device_name, root_device_type, state, and virtualization_type are supported.
+        (Choices: name, description, tag, architecture, block_device_mapping, creationDate, hypervisor, is_public, location, owner_id,
+        platform, root_device_name, root_device_type, state, virtualization_type)[Default: (null)]
+
+- sort_end
+        Which result to end with (when sorting).
+        Corresponds to Python slice notation.
+        [Default: (null)]
+
+- sort_order
+        Order in which to sort results.
+        Only used when the 'sort' parameter is specified.
+        (Choices: ascending, descending)[Default: ascending]
+
+- sort_start
+        Which result to start with (when sorting).
+        Corresponds to Python slice notation.
+        [Default: (null)]
+
+- sort_tag
+        Tag name with which to sort results.
+        Required when specifying 'sort=tag'.
+        [Default: (null)]
+
+- state
+        AMI state to match.
+        [Default: available]
+
+- validate_certs
+        When set to "no", SSL certificates will not be validated for boto versions >= 2.6.0.
+        [Default: True]
+        type: bool
+        version_added: 1.5
+
+- virtualization_type
+        Virtualization type to match (e.g. hvm).
+        [Default: (null)]
+
+
+NOTES:
+      * This module is not backwards compatible with the previous version of the ec2_search_ami module which worked only for Ubuntu
+        AMIs listed on cloud-images.ubuntu.com.
+      * See the example below for a suggestion of how to search by distro/release.
+      * If parameters are not set within the module, the following environment variables can be used in decreasing order of
+        precedence `AWS_URL' or `EC2_URL', `AWS_ACCESS_KEY_ID' or `AWS_ACCESS_KEY' or `EC2_ACCESS_KEY', `AWS_SECRET_ACCESS_KEY' or
+        `AWS_SECRET_KEY' or `EC2_SECRET_KEY', `AWS_SECURITY_TOKEN' or `EC2_SECURITY_TOKEN', `AWS_REGION' or `EC2_REGION'
+      * Ansible uses the boto configuration file (typically ~/.boto) if no credentials are provided. See
+        https://boto.readthedocs.io/en/latest/boto_config_tut.html
+      * `AWS_REGION' or `EC2_REGION' can be typically be used to specify the AWS region, when required, but this can also be
+        configured in the boto config file
+
+
+REQUIREMENTS:  boto, python >= 2.6
+
+AUTHOR: Tom Bamford (@tombamford)
+        METADATA:
+          status:
+          - deprecated
+          supported_by: community
+        
+
+EXAMPLES:
+
+# Note: These examples do not set authentication details, see the AWS Guide for details.
+
+# Search for the AMI tagged "project:website"
+- ec2_ami_find:
+    owner: self
+    ami_tags:
+      project: website
+    no_result_action: fail
+  register: ami_find
+
+# Search for the latest Ubuntu 14.04 AMI
+- ec2_ami_find:
+    name: "ubuntu/images/ebs/ubuntu-trusty-14.04-amd64-server-*"
+    owner: 099720109477
+    sort: name
+    sort_order: descending
+    sort_end: 1
+  register: ami_find
+
+# Launch an EC2 instance
+- ec2:
+    image: "{{ ami_find.results[0].ami_id }}"
+    instance_type: m3.medium
+    key_name: mykey
+    wait: yes
+
+
+RETURN VALUES:
+
+ami_id:
+    description: id of found amazon image
+    returned: when AMI found
+    type: str
+    sample: "ami-e9095e8c"
+architecture:
+    description: architecture of image
+    returned: when AMI found
+    type: str
+    sample: "x86_64"
+block_device_mapping:
+    description: block device mapping associated with image
+    returned: when AMI found
+    type: dict
+    sample: "{
+        '/dev/xvda': {
+            'delete_on_termination': true,
+            'encrypted': false,
+            'size': 8,
+            'snapshot_id': 'snap-ca0330b8',
+            'volume_type': 'gp2'
+    }"
+creationDate:
+    description: creation date of image
+    returned: when AMI found
+    type: str
+    sample: "2015-10-15T22:43:44.000Z"
+description:
+    description: description of image
+    returned: when AMI found
+    type: str
+    sample: "test-server01"
+hypervisor:
+    description: type of hypervisor
+    returned: when AMI found
+    type: str
+    sample: "xen"
+is_public:
+    description: whether image is public
+    returned: when AMI found
+    type: bool
+    sample: false
+location:
+    description: location of image
+    returned: when AMI found
+    type: str
+    sample: "435210894375/test-server01-20151015-234343"
+name:
+    description: ami name of image
+    returned: when AMI found
+    type: str
+    sample: "test-server01-20151015-234343"
+owner_id:
+    description: owner of image
+    returned: when AMI found
+    type: str
+    sample: "435210894375"
+platform:
+    description: platform of image
+    returned: when AMI found
+    type: str
+    sample: null
+root_device_name:
+    description: root device name of image
+    returned: when AMI found
+    type: str
+    sample: "/dev/xvda"
+root_device_type:
+    description: root device type of image
+    returned: when AMI found
+    type: str
+    sample: "ebs"
+state:
+    description: state of image
+    returned: when AMI found
+    type: str
+    sample: "available"
+tags:
+    description: tags assigned to image
+    returned: when AMI found
+    type: dict
+    sample: "{
+        'Environment': 'devel',
+        'Name': 'test-server01',
+        'Role': 'web'
+    }"
+virtualization_type:
+    description: image virtualization type
+    returned: when AMI found
+    type: str
+    sample: "hvm"
+

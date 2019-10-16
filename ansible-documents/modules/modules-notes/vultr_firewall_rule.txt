@@ -1,0 +1,198 @@
+> VULTR_FIREWALL_RULE    (/usr/lib/python2.7/dist-packages/ansible/modules/cloud/vultr/vultr_firewall_rule.py)
+
+        Create and remove firewall rules.
+
+  * This module is maintained by The Ansible Community
+OPTIONS (= is mandatory):
+
+- api_account
+        Name of the ini section in the `vultr.ini' file.
+        The ENV variable `VULTR_API_ACCOUNT' is used as default, when defined.
+        [Default: default]
+        type: str
+
+- api_endpoint
+        URL to API endpint (without trailing slash).
+        The ENV variable `VULTR_API_ENDPOINT' is used as default, when defined.
+        Fallback value is https://api.vultr.com if not specified.
+        [Default: (null)]
+        type: str
+
+- api_key
+        API key of the Vultr API.
+        The ENV variable `VULTR_API_KEY' is used as default, when defined.
+        [Default: (null)]
+        type: str
+
+- api_retries
+        Amount of retries in case of the Vultr API retuns an HTTP 503 code.
+        The ENV variable `VULTR_API_RETRIES' is used as default, when defined.
+        Fallback value is 5 retries if not specified.
+        [Default: (null)]
+        type: int
+
+- api_timeout
+        HTTP timeout to Vultr API.
+        The ENV variable `VULTR_API_TIMEOUT' is used as default, when defined.
+        Fallback value is 60 seconds if not specified.
+        [Default: (null)]
+        type: int
+
+- cidr
+        Network in CIDR format
+        The CIDR format must match with the `ip_version' value.
+        Required if `state=present'.
+        Defaulted to 0.0.0.0/0 or ::/0 depending on `ip_version'.
+        [Default: (null)]
+
+- end_port
+        End port for the firewall rule.
+        Only considered if `protocol' is tcp or udp and `state=present'.
+        [Default: (null)]
+
+= group
+        Name of the firewall group.
+
+
+- ip_version
+        IP address version
+        (Aliases: ip_type)(Choices: v4, v6)[Default: v4]
+
+- protocol
+        Protocol of the firewall rule.
+        (Choices: icmp, tcp, udp, gre)[Default: tcp]
+
+- start_port
+        Start port for the firewall rule.
+        Required if `protocol' is tcp or udp and `state=present'.
+        (Aliases: port)[Default: (null)]
+
+- state
+        State of the firewall rule.
+        (Choices: present, absent)[Default: present]
+
+- validate_certs
+        Validate SSL certs of the Vultr API.
+        [Default: True]
+        type: bool
+
+
+NOTES:
+      * Also see the API documentation on https://www.vultr.com/api/.
+
+
+REQUIREMENTS:  python >= 2.6
+
+AUTHOR: René Moser (@resmo)
+        METADATA:
+          status:
+          - preview
+          supported_by: community
+        
+
+EXAMPLES:
+
+- name: ensure a firewall rule is present
+  local_action:
+    module: vultr_firewall_rule
+    group: application
+    protocol: tcp
+    start_port: 8000
+    end_port: 9000
+    cidr: 17.17.17.0/24
+
+- name: open DNS port for all ipv4 and ipv6
+  local_action:
+    module: vultr_firewall_rule
+    group: dns
+    protocol: udp
+    port: 53
+    ip_version: "{{ item }}"
+  with_items: [ v4, v6 ]
+
+- name: allow ping
+  local_action:
+    module: vultr_firewall_rule
+    group: web
+    protocol: icmp
+
+- name: ensure a firewall rule is absent
+  local_action:
+    module: vultr_firewall_rule
+    group: application
+    protocol: tcp
+    start_port: 8000
+    end_port: 9000
+    cidr: 17.17.17.0/24
+    state: absent
+
+
+RETURN VALUES:
+
+---
+vultr_api:
+  description: Response from Vultr API with a few additions/modification
+  returned: success
+  type: complex
+  contains:
+    api_account:
+      description: Account used in the ini file to select the key
+      returned: success
+      type: str
+      sample: default
+    api_timeout:
+      description: Timeout used for the API requests
+      returned: success
+      type: int
+      sample: 60
+    api_retries:
+      description: Amount of max retries for the API requests
+      returned: success
+      type: int
+      sample: 5
+    api_endpoint:
+      description: Endpoint used for the API requests
+      returned: success
+      type: str
+      sample: "https://api.vultr.com"
+vultr_firewall_rule:
+  description: Response from Vultr API
+  returned: success
+  type: complex
+  contains:
+    rule_number:
+      description: Rule number of the firewall rule
+      returned: success
+      type: int
+      sample: 2
+    action:
+      description: Action of the firewall rule
+      returned: success
+      type: str
+      sample: accept
+    protocol:
+      description: Protocol of the firewall rule
+      returned: success
+      type: str
+      sample: tcp
+    start_port:
+      description: Start port of the firewall rule
+      returned: success and protocol is tcp or udp
+      type: int
+      sample: 80
+    end_port:
+      description: End port of the firewall rule
+      returned: success and when port range and protocol is tcp or udp
+      type: int
+      sample: 8080
+    cidr:
+      description: CIDR of the firewall rule (IPv4 or IPv6)
+      returned: success and when port range
+      type: str
+      sample: 0.0.0.0/0
+    group:
+      description: Firewall group the rule is into.
+      returned: success
+      type: str
+      sample: web
+

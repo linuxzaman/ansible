@@ -1,0 +1,245 @@
+> POSTGRESQL_TABLE    (/usr/lib/python2.7/dist-packages/ansible/modules/database/postgresql/postgresql_table.py)
+
+        Allows to create, drop, rename, truncate a table, or change some table attributes https://www.postgresql.org/docs/current/sql-
+        createtable.html.
+
+  * This module is maintained by The Ansible Community
+OPTIONS (= is mandatory):
+
+- ca_cert
+        Specifies the name of a file containing SSL certificate authority (CA) certificate(s).
+        If the file exists, the server's certificate will be verified to be signed by one of these authorities.
+        (Aliases: ssl_rootcert)[Default: (null)]
+        type: str
+
+- columns
+        Columns that are needed.
+        [Default: (null)]
+        type: list
+
+- db
+        Name of database to connect and where the table will be created.
+        (Aliases: login_db)[Default: (null)]
+        type: str
+
+- including
+        Keywords that are used with like parameter, may be DEFAULTS, CONSTRAINTS, INDEXES, STORAGE, COMMENTS or ALL. Needs `like'
+        specified. Mutually exclusive with `columns', `rename', and `truncate'.
+        [Default: (null)]
+        type: str
+
+- like
+        Create a table like another table (with similar DDL). Mutually exclusive with `columns', `rename', and `truncate'.
+        [Default: (null)]
+        type: str
+
+- login_host
+        Host running the database.
+        [Default: (null)]
+        type: str
+
+- login_password
+        The password used to authenticate with.
+        [Default: (null)]
+        type: str
+
+- login_unix_socket
+        Path to a Unix domain socket for local connections.
+        [Default: (null)]
+        type: str
+
+- login_user
+        The username used to authenticate with.
+        [Default: postgres]
+        type: str
+
+- owner
+        Set a table owner.
+        [Default: (null)]
+        type: str
+
+- port
+        Database port to connect to.
+        (Aliases: login_port)[Default: 5432]
+        type: int
+
+- rename
+        New table name. Mutually exclusive with `tablespace', `owner', `unlogged', `like', `including', `columns', `truncate', and
+        `storage_params'.
+        [Default: (null)]
+        type: str
+
+- session_role
+        Switch to session_role after connecting. The specified session_role must be a role that the current login_user is a member of.
+        Permissions checking for SQL commands is carried out as though the session_role were the one that had logged in originally.
+        [Default: (null)]
+        type: str
+
+- ssl_mode
+        Determines whether or with what priority a secure SSL TCP/IP connection will be negotiated with the server.
+        See https://www.postgresql.org/docs/current/static/libpq-ssl.html for more information on the modes.
+        Default of `prefer' matches libpq default.
+        (Choices: allow, disable, prefer, require, verify-ca, verify-full)[Default: prefer]
+        type: str
+
+- state
+        The table state. `state=absent' is mutually exclusive with `tablespace', `owner', `unlogged', `like', `including', `columns',
+        `truncate', `storage_params' and, `rename'.
+        (Choices: absent, present)[Default: present]
+        type: str
+
+- storage_params
+        Storage parameters like fillfactor, autovacuum_vacuum_treshold, etc. Mutually exclusive with `rename' and `truncate'.
+        [Default: (null)]
+        type: list
+
+= table
+        Table name.
+        (Aliases: name)
+        type: str
+
+- tablespace
+        Set a tablespace for the table.
+        [Default: (null)]
+        type: str
+
+- truncate
+        Truncate a table. Mutually exclusive with `tablespace', `owner', `unlogged', `like', `including', `columns', `rename', and
+        `storage_params'.
+        [Default: False]
+        type: bool
+
+- unlogged
+        Create an unlogged table.
+        [Default: False]
+        type: bool
+
+
+NOTES:
+      * If you do not pass db parameter, tables will be created in the database named postgres.
+      * PostgreSQL allows to create columnless table, so columns param is optional.
+      * The default authentication assumes that you are either logging in as or sudo'ing to the postgres account on the host.
+      * To avoid "Peer authentication failed for user postgres" error, use postgres user as a `become_user'.
+      * Unlogged tables are available from PostgreSQL server version 9.1 https://www.postgresql.org/docs/9.1/sql-createtable.html.
+      * This module uses psycopg2, a Python PostgreSQL database adapter. You must ensure that psycopg2 is installed on the host
+        before using this module.
+      * If the remote host is the PostgreSQL server (which is the default case), then PostgreSQL must also be installed on the
+        remote host. For Ubuntu-based systems, install the postgresql, libpq-dev, and python-psycopg2 packages on the remote host
+        before using this module.
+      * The default authentication assumes that you are either logging in as or sudo'ing to the `postgres' account on the host.
+      * This module uses `psycopg2', a Python PostgreSQL database adapter. You must ensure that psycopg2 is installed on the host
+        before using this module. If the remote host is the PostgreSQL server (which is the default case), then PostgreSQL must
+        also be installed on the remote host. For Ubuntu-based systems, install the `postgresql', `libpq-dev', and `python-
+        psycopg2' packages on the remote host before using this module.
+      * The ca_cert parameter requires at least Postgres version 8.4 and `psycopg2' version 2.4.3.
+
+
+REQUIREMENTS:  psycopg2
+
+AUTHOR: Andrew Klychkov (@Andersson007)
+        METADATA:
+          status:
+          - preview
+          supported_by: community
+        
+
+EXAMPLES:
+
+- name: Create tbl2 in the acme database with the DDL like tbl1 with testuser as an owner
+  postgresql_table:
+    db: acme
+    name: tbl2
+    like: tbl1
+    owner: testuser
+
+- name: Create tbl2 in the acme database and tablespace ssd with the DDL like tbl1 including comments and indexes
+  postgresql_table:
+    db: acme
+    table: tbl2
+    like: tbl1
+    including: comments, indexes
+    tablespace: ssd
+
+- name: Create test_table with several columns in ssd tablespace with fillfactor=10 and autovacuum_analyze_threshold=1
+  postgresql_table:
+    name: test_table
+    columns:
+    - id bigserial primary key
+    - num bigint
+    - stories text
+    tablespace: ssd
+    storage_params:
+    - fillfactor=10
+    - autovacuum_analyze_threshold=1
+
+- name: Create an unlogged table in schema acme
+  postgresql_table:
+    name: acme.useless_data
+    columns: waste_id int
+    unlogged: true
+
+- name: Rename table foo to bar
+  postgresql_table:
+    table: foo
+    rename: bar
+
+- name: Rename table foo from schema acme to bar
+  postgresql_table:
+    name: acme.foo
+    rename: bar
+
+- name: Set owner to someuser
+  postgresql_table:
+    name: foo
+    owner: someuser
+
+- name: Change tablespace of foo table to new_tablespace and set owner to new_user
+  postgresql_table:
+    name: foo
+    tablespace: new_tablespace
+    owner: new_user
+
+- name: Truncate table foo
+  postgresql_table:
+    name: foo
+    truncate: yes
+
+- name: Drop table foo from schema acme
+  postgresql_table:
+    name: acme.foo
+    state: absent
+
+
+RETURN VALUES:
+
+table:
+  description: Name of a table.
+  returned: always
+  type: str
+  sample: 'foo'
+state:
+  description: Table state.
+  returned: always
+  type: str
+  sample: 'present'
+owner:
+  description: Table owner.
+  returned: always
+  type: str
+  sample: 'postgres'
+tablespace:
+  description: Tablespace.
+  returned: always
+  type: str
+  sample: 'ssd_tablespace'
+queries:
+  description: List of executed queries.
+  returned: always
+  type: str
+  sample: [ 'CREATE TABLE "test_table" (id bigint)' ]
+storage_params:
+  description: Storage parameters.
+  returned: always
+  type: list
+  sample: [ "fillfactor=100", "autovacuum_analyze_threshold=1" ]
+

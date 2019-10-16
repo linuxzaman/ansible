@@ -1,0 +1,129 @@
+> XFS_QUOTA    (/usr/lib/python2.7/dist-packages/ansible/modules/system/xfs_quota.py)
+
+        Configure quotas on XFS filesystems. Before using this module /etc/projects and /etc/projid need to be configured.
+
+  * This module is maintained by The Ansible Community
+OPTIONS (= is mandatory):
+
+- bhard
+        Hard blocks quota limit.
+        This argument supports human readable sizes.
+        [Default: (null)]
+        type: str
+
+- bsoft
+        Soft blocks quota limit.
+        This argument supports human readable sizes.
+        [Default: (null)]
+        type: str
+
+- ihard
+        Hard inodes quota limit.
+        [Default: (null)]
+        type: int
+
+- isoft
+        Soft inodes quota limit.
+        [Default: (null)]
+        type: int
+
+= mountpoint
+        The mount point on which to apply the quotas.
+
+        type: str
+
+- name
+        The name of the user, group or project to apply the quota to, if other than default.
+        [Default: (null)]
+        type: str
+
+- rtbhard
+        Hard realtime blocks quota limit.
+        This argument supports human readable sizes.
+        [Default: (null)]
+        type: str
+
+- rtbsoft
+        Soft realtime blocks quota limit.
+        This argument supports human readable sizes.
+        [Default: (null)]
+        type: str
+
+- state
+        Whether to apply the limits or remove them.
+        When removing limit, they are set to 0, and not quite removed.
+        (Choices: present, absent)[Default: present]
+        type: str
+
+= type
+        The XFS quota type.
+        (Choices: user, group, project)
+        type: str
+
+
+REQUIREMENTS:  xfsprogs
+
+AUTHOR: William Leemans (@bushvin)
+        METADATA:
+          status:
+          - preview
+          supported_by: community
+        
+
+EXAMPLES:
+
+- name: Set default project soft and hard limit on /opt of 1g
+  xfs_quota:
+    type: project
+    mountpoint: /opt
+    bsoft: 1g
+    bhard: 1g
+    state: present
+
+- name: Remove the default limits on /opt
+  xfs_quota:
+    type: project
+    mountpoint: /opt
+    state: absent
+
+- name: Set default soft user inode limits on /home of 1024 inodes and hard of 2048
+  xfs_quota:
+    type: user
+    mountpoint: /home
+    isoft: 1024
+    ihard: 2048
+
+
+RETURN VALUES:
+
+bhard:
+    description: the current bhard setting in bytes
+    returned: always
+    type: int
+    sample: 1024
+bsoft:
+    description: the current bsoft setting in bytes
+    returned: always
+    type: int
+    sample: 1024
+ihard:
+    description: the current ihard setting in bytes
+    returned: always
+    type: int
+    sample: 100
+isoft:
+    description: the current isoft setting in bytes
+    returned: always
+    type: int
+    sample: 100
+rtbhard:
+    description: the current rtbhard setting in bytes
+    returned: always
+    type: int
+    sample: 1024
+rtbsoft:
+    description: the current rtbsoft setting in bytes
+    returned: always
+    type: int
+    sample: 1024
+

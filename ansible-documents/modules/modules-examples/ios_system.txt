@@ -1,0 +1,37 @@
+EXAMPLES:
+
+- name: configure hostname and domain name
+  ios_system:
+    hostname: ios01
+    domain_name: test.example.com
+    domain_search:
+      - ansible.com
+      - redhat.com
+      - cisco.com
+
+- name: remove configuration
+  ios_system:
+    state: absent
+
+- name: configure DNS lookup sources
+  ios_system:
+    lookup_source: MgmtEth0/0/CPU0/0
+    lookup_enabled: yes
+
+- name: configure name servers
+  ios_system:
+    name_servers:
+      - 8.8.8.8
+      - 8.8.4.4
+
+
+RETURN VALUES:
+
+commands:
+  description: The list of configuration mode commands to send to the device
+  returned: always
+  type: list
+  sample:
+    - hostname ios01
+    - ip domain name test.example.com
+

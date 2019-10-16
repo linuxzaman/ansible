@@ -1,0 +1,114 @@
+> PN_IGMP_SNOOPING    (/usr/lib/python2.7/dist-packages/ansible/modules/network/netvisor/pn_igmp_snooping.py)
+
+        This module can be used to modify Internet Group Management Protocol (IGMP) snooping.
+
+  * This module is maintained by The Ansible Community
+OPTIONS (= is mandatory):
+
+- pn_cliswitch
+        Target switch to run the CLI on.
+        [Default: (null)]
+        type: str
+
+- pn_enable
+        enable or disable IGMP snooping.
+        [Default: (null)]
+        type: bool
+
+- pn_enable_vlans
+        enable per VLAN IGMP snooping.
+        [Default: (null)]
+        type: str
+
+- pn_igmpv2_vlans
+        VLANs on which to use IGMPv2 protocol.
+        [Default: (null)]
+        type: str
+
+- pn_igmpv3_vlans
+        VLANs on which to use IGMPv3 protocol.
+        [Default: (null)]
+        type: str
+
+- pn_no_snoop_linklocal_vlans
+        Remove snooping of link-local groups(224.0.0.0/24) on these vlans.
+        [Default: (null)]
+        type: str
+
+- pn_query_interval
+        IGMP query interval in seconds.
+        [Default: (null)]
+        type: str
+
+- pn_query_max_response_time
+        maximum response time, in seconds, advertised in IGMP queries.
+        [Default: (null)]
+        type: str
+
+- pn_scope
+        IGMP snooping scope - fabric or local.
+        (Choices: local, fabric)[Default: (null)]
+
+- pn_snoop_linklocal_vlans
+        Allow snooping of link-local groups(224.0.0.0/24) on these vlans.
+        [Default: (null)]
+        type: str
+
+- pn_vxlan
+        enable or disable IGMP snooping on vxlans.
+        [Default: (null)]
+        type: bool
+
+= state
+        State the action to perform. Use `update' to modify the igmp-snooping.
+        (Choices: update)
+        type: str
+
+
+AUTHOR: Pluribus Networks (@rajaspachipulusu17)
+        METADATA:
+          status:
+          - preview
+          supported_by: community
+        
+
+EXAMPLES:
+
+- name: 'Modify IGMP Snooping'
+  pn_igmp_snooping:
+    pn_cliswitch: 'sw01'
+    state: 'update'
+    pn_vxlan: True
+    pn_enable_vlans: '1-399,401-4092'
+    pn_no_snoop_linklocal_vlans: 'none'
+    pn_igmpv3_vlans: '1-399,401-4092'
+
+- name: 'Modify IGMP Snooping'
+  pn_igmp_snooping:
+    pn_cliswitch: 'sw01'
+    state: 'update'
+    pn_vxlan: False
+    pn_enable_vlans: '1-399'
+    pn_no_snoop_linklocal_vlans: 'none'
+    pn_igmpv3_vlans: '1-399'
+
+
+RETURN VALUES:
+
+command:
+  description: the CLI command run on the target node.
+  returned: always
+  type: str
+stdout:
+  description: set of responses from the igmp-snooping command.
+  returned: always
+  type: list
+stderr:
+  description: set of error responses from the igmp-snooping command.
+  returned: on error
+  type: list
+changed:
+  description: indicates whether the CLI caused changes on the target.
+  returned: always
+  type: bool
+

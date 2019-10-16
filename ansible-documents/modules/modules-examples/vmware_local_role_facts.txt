@@ -1,0 +1,57 @@
+EXAMPLES:
+
+- name: Gather facts about local role from an ESXi
+  vmware_local_role_facts:
+    hostname: '{{ esxi_hostname }}'
+    username: '{{ esxi_username }}'
+    password: '{{ esxi_password }}'
+  register: fact_details
+  delegate_to: localhost
+- name: Get Admin privileges
+  set_fact:
+    admin_priv: "{{ fact_details.local_role_facts['Admin']['privileges'] }}"
+- debug:
+    msg: "{{ admin_priv }}"
+
+
+RETURN VALUES:
+
+local_role_facts:
+    description: Facts about role present on ESXi host
+    returned: always
+    type: dict
+    sample: [
+        {
+            "privileges": [
+                "Alarm.Acknowledge",
+                "Alarm.Create",
+                "Alarm.Delete",
+                "Alarm.DisableActions",
+            ],
+            "role_id": -12,
+            "role_info_label": "Ansible User",
+            "role_info_summary": "Ansible Automation user",
+            "role_name": "AnsiUser1",
+            "role_system": true
+        },
+        {
+            "privileges": [],
+            "role_id": -5,
+            "role_info_label": "No access",
+            "role_info_summary": "Used for restricting granted access",
+            "role_name": "NoAccess",
+            "role_system": true
+        },
+        {
+            "privileges": [
+                "System.Anonymous",
+                "System.View"
+            ],
+            "role_id": -3,
+            "role_info_label": "View",
+            "role_info_summary": "Visibility access (cannot be granted)",
+            "role_name": "View",
+            "role_system": true
+        }
+    ]
+

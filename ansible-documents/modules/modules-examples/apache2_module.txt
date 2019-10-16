@@ -1,0 +1,50 @@
+EXAMPLES:
+
+# enables the Apache2 module "wsgi"
+- apache2_module:
+    state: present
+    name: wsgi
+# disables the Apache2 module "wsgi"
+- apache2_module:
+    state: absent
+    name: wsgi
+# disable default modules for Debian
+- apache2_module:
+    state: absent
+    name: autoindex
+    force: True
+# disable mpm_worker and ignore warnings about missing mpm module
+- apache2_module:
+    state: absent
+    name: mpm_worker
+    ignore_configcheck: True
+# enable dump_io module, which is identified as dumpio_module inside apache2
+- apache2_module:
+    state: present
+    name: dump_io
+    identifier: dumpio_module
+
+
+RETURN VALUES:
+
+result:
+    description: message about action taken
+    returned: always
+    type: str
+warnings:
+    description: list of warning messages
+    returned: when needed
+    type: list
+rc:
+    description: return code of underlying command
+    returned: failed
+    type: int
+stdout:
+    description: stdout of underlying command
+    returned: failed
+    type: str
+stderr:
+    description: stderr of underlying command
+    returned: failed
+    type: str
+

@@ -1,0 +1,36 @@
+EXAMPLES:
+
+- name: collect interface information using rpc
+  junos_rpc:
+    rpc: get-interface-information
+    args:
+      interface-name: em0
+      media: True
+
+- name: get system information
+  junos_rpc:
+    rpc: get-system-information
+
+- name: load configuration
+  junos_rpc:
+    rpc: load-configuration
+    attrs:
+      action: override
+      url: /tmp/config.conf
+
+
+RETURN VALUES:
+
+xml:
+  description: The xml return string from the rpc request.
+  returned: always
+  type: str
+output:
+  description: The rpc rely converted to the output format.
+  returned: always
+  type: str
+output_lines:
+  description: The text output split into lines for readability.
+  returned: always
+  type: list
+

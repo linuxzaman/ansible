@@ -1,0 +1,61 @@
+EXAMPLES:
+
+# Radius Server Host Basic settings
+  - name: "Radius Server Host Basic settings"
+    nxos_aaa_server_host:
+        state: present
+        server_type: radius
+        address: 1.2.3.4
+        acct_port: 2084
+        host_timeout: 10
+
+# Radius Server Host Key Configuration
+  - name: "Radius Server Host Key Configuration"
+    nxos_aaa_server_host:
+        state: present
+        server_type: radius
+        address: 1.2.3.4
+        key: hello
+        encrypt_type: 7
+
+# TACACS Server Host Configuration
+  - name: "Tacacs Server Host Configuration"
+    nxos_aaa_server_host:
+        state: present
+        server_type: tacacs
+        tacacs_port: 89
+        host_timeout: 10
+        address: 5.6.7.8
+
+
+RETURN VALUES:
+
+proposed:
+    description: k/v pairs of parameters passed into module
+    returned: always
+    type: dict
+    sample: {"address": "1.2.3.4", "auth_port": "2084",
+            "host_timeout": "10", "server_type": "radius"}
+existing:
+    description:
+        - k/v pairs of existing configuration
+    returned: always
+    type: dict
+    sample: {}
+end_state:
+    description: k/v pairs of configuration after module execution
+    returned: always
+    type: dict
+    sample: {"address": "1.2.3.4", "auth_port": "2084",
+            "host_timeout": "10", "server_type": "radius"}
+updates:
+    description: command sent to the device
+    returned: always
+    type: list
+    sample: ["radius-server host 1.2.3.4 auth-port 2084 timeout 10"]
+changed:
+    description: check to see if a change was made on the device
+    returned: always
+    type: bool
+    sample: true
+

@@ -1,0 +1,90 @@
+> SLXOS_LINKAGG    (/usr/lib/python2.7/dist-packages/ansible/modules/network/slxos/slxos_linkagg.py)
+
+        This module provides declarative management of link aggregation groups on Extreme Networks SLX-OS network devices.
+
+  * This module is maintained by The Ansible Community
+OPTIONS (= is mandatory):
+
+- aggregate
+        List of link aggregation definitions.
+        [Default: (null)]
+
+- group
+        Channel-group number for the port-channel Link aggregation group. Range 1-1024.
+        [Default: (null)]
+
+- members
+        List of members of the link aggregation group.
+        [Default: (null)]
+
+- mode
+        Mode of the link aggregation group.
+        (Choices: active, on, passive)[Default: (null)]
+
+- purge
+        Purge links not defined in the `aggregate' parameter.
+        [Default: (null)]
+        type: bool
+
+- state
+        State of the link aggregation group.
+        (Choices: present, absent)[Default: present]
+
+
+NOTES:
+      * Tested against SLX-OS 17s.1.02
+
+
+AUTHOR: Matthew Stone (@bigmstone)
+        METADATA:
+          status:
+          - preview
+          supported_by: community
+        
+
+EXAMPLES:
+
+- name: create link aggregation group
+  slxos_linkagg:
+    group: 10
+    state: present
+
+- name: delete link aggregation group
+  slxos_linkagg:
+    group: 10
+    state: absent
+
+- name: set link aggregation group to members
+  slxos_linkagg:
+    group: 200
+    mode: active
+    members:
+      - Ethernet 0/1
+      - Ethernet 0/2
+
+- name: remove link aggregation group from Ethernet 0/1
+  slxos_linkagg:
+    group: 200
+    mode: active
+    members:
+      - Ethernet 0/1
+
+- name: Create aggregate of linkagg definitions
+  slxos_linkagg:
+    aggregate:
+      - { group: 3, mode: on, members: [Ethernet 0/1] }
+      - { group: 100, mode: passive, members: [Ethernet 0/2] }
+
+
+RETURN VALUES:
+
+commands:
+  description: The list of configuration mode commands to send to the device
+  returned: always, except for the platforms that use Netconf transport to manage the device.
+  type: list
+  sample:
+    - interface port-channel 30
+    - interface Ethernet 0/3
+    - channel-group 30 mode on
+    - no interface port-channel 30
+

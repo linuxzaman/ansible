@@ -1,0 +1,122 @@
+> LDAP_ENTRY    (/usr/lib/python2.7/dist-packages/ansible/modules/net_tools/ldap/ldap_entry.py)
+
+        Add or remove LDAP entries. This module only asserts the existence or non-existence of an LDAP entry, not its attributes. To
+        assert the attribute values of an entry, see [ldap_attr].
+
+  * This module is maintained by The Ansible Community
+OPTIONS (= is mandatory):
+
+- attributes
+        If `state=present', attributes necessary to create an entry. Existing entries are never modified. To assert specific attribute
+        values on an existing entry, use [ldap_attr] module instead.
+        [Default: (null)]
+
+- bind_dn
+        A DN to bind with. If this is omitted, we'll try a SASL bind with the EXTERNAL mechanism.
+        If this is blank, we'll use an anonymous bind.
+        [Default: (null)]
+        type: str
+
+- bind_pw
+        The password to use with `bind_dn'.
+        [Default: (null)]
+        type: str
+
+= dn
+        The DN of the entry to add or remove.
+
+        type: str
+
+- objectClass
+        If `state=present', value or list of values to use when creating the entry. It can either be a string or an actual list of
+        strings.
+        [Default: (null)]
+
+- params
+        List of options which allows to overwrite any of the task or the `attributes' options. To remove an option, set the value of the
+        option to `null'.
+        [Default: (null)]
+
+- server_uri
+        A URI to the LDAP server.
+        The default value lets the underlying LDAP client library look for a UNIX domain socket in its default location.
+        [Default: ldapi:///]
+        type: str
+
+- start_tls
+        If true, we'll use the START_TLS LDAP extension.
+        [Default: False]
+        type: bool
+
+- state
+        The target state of the entry.
+        (Choices: present, absent)[Default: present]
+
+- validate_certs
+        If set to `no', SSL certificates will not be validated.
+        This should only be used on sites using self-signed certificates.
+        [Default: True]
+        type: bool
+        version_added: 2.4
+
+
+NOTES:
+      * The default authentication settings will attempt to use a SASL EXTERNAL bind over a UNIX domain socket. This works well
+        with the default Ubuntu install for example, which includes a cn=peercred,cn=external,cn=auth ACL rule allowing root to
+        modify the server configuration. If you need to use a simple bind to access your server, pass the credentials in `bind_dn'
+        and `bind_pw'.
+
+
+REQUIREMENTS:  python-ldap
+
+AUTHOR: Jiri Tyr (@jtyr)
+        METADATA:
+          status:
+          - preview
+          supported_by: community
+        
+
+EXAMPLES:
+
+- name: Make sure we have a parent entry for users
+  ldap_entry:
+    dn: ou=users,dc=example,dc=com
+    objectClass: organizationalUnit
+
+- name: Make sure we have an admin user
+  ldap_entry:
+    dn: cn=admin,dc=example,dc=com
+    objectClass:
+      - simpleSecurityObject
+      - organizationalRole
+    attributes:
+      description: An LDAP administrator
+      userPassword: "{SSHA}tabyipcHzhwESzRaGA7oQ/SDoBZQOGND"
+
+- name: Get rid of an old entry
+  ldap_entry:
+    dn: ou=stuff,dc=example,dc=com
+    state: absent
+    server_uri: ldap://localhost/
+    bind_dn: cn=admin,dc=example,dc=com
+    bind_pw: password
+
+#
+# The same as in the previous example but with the authentication details
+# stored in the ldap_auth variable:
+#
+# ldap_auth:
+#   server_uri: ldap://localhost/
+#   bind_dn: cn=admin,dc=example,dc=com
+#   bind_pw: password
+- name: Get rid of an old entry
+  ldap_entry:
+    dn: ou=stuff,dc=example,dc=com
+    state: absent
+    params: "{{ ldap_auth }}"
+
+
+RETURN VALUES:
+
+# Default return values
+

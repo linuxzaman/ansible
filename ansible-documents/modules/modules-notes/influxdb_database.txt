@@ -1,0 +1,120 @@
+> INFLUXDB_DATABASE    (/usr/lib/python2.7/dist-packages/ansible/modules/database/influxdb/influxdb_database.py)
+
+        Manage InfluxDB databases.
+
+  * This module is maintained by The Ansible Community
+OPTIONS (= is mandatory):
+
+= database_name
+        Name of the database.
+
+
+- hostname
+        The hostname or IP address on which InfluxDB server is listening.
+        Since Ansible 2.5, defaulted to localhost.
+        [Default: localhost]
+        type: str
+
+- password
+        Password that will be used to authenticate against InfluxDB server.
+        Alias `login_password' added in Ansible 2.5.
+        (Aliases: login_password)[Default: root]
+        type: str
+
+- port
+        The port on which InfluxDB server is listening
+        [Default: 8086]
+        type: int
+
+- proxies
+        HTTP(S) proxy to use for Requests to connect to InfluxDB server.
+        [Default: (null)]
+        type: dict
+        version_added: 2.5
+
+- retries
+        Number of retries client will try before aborting.
+        `0' indicates try until success.
+        [Default: 3]
+        type: int
+        version_added: 2.5
+
+- ssl
+        Use https instead of http to connect to InfluxDB server.
+        [Default: (null)]
+        type: bool
+        version_added: 2.5
+
+- state
+        Determines if the database should be created or destroyed.
+        (Choices: present, absent)[Default: present]
+
+- timeout
+        Number of seconds Requests will wait for client to establish a connection.
+        [Default: (null)]
+        type: int
+        version_added: 2.5
+
+- udp_port
+        UDP port to connect to InfluxDB server.
+        [Default: 4444]
+        type: int
+        version_added: 2.5
+
+- use_udp
+        Use UDP to connect to InfluxDB server.
+        [Default: (null)]
+        type: bool
+        version_added: 2.5
+
+- username
+        Username that will be used to authenticate against InfluxDB server.
+        Alias `login_username' added in Ansible 2.5.
+        (Aliases: login_username)[Default: root]
+        type: str
+
+- validate_certs
+        If set to `no', the SSL certificates will not be validated.
+        This should only set to `no' used on personally controlled sites using self-signed certificates.
+        [Default: True]
+        type: bool
+        version_added: 2.5
+
+
+REQUIREMENTS:  python >= 2.6, influxdb >= 0.9 & <= 1.2.4, requests
+
+AUTHOR: Kamil Szczygiel (@kamsz)
+        METADATA:
+          status:
+          - preview
+          supported_by: community
+        
+
+EXAMPLES:
+
+# Example influxdb_database command from Ansible Playbooks
+- name: Create database
+  influxdb_database:
+      hostname: "{{influxdb_ip_address}}"
+      database_name: "{{influxdb_database_name}}"
+
+- name: Destroy database
+  influxdb_database:
+      hostname: "{{influxdb_ip_address}}"
+      database_name: "{{influxdb_database_name}}"
+      state: absent
+
+- name: Create database using custom credentials
+  influxdb_database:
+      hostname: "{{influxdb_ip_address}}"
+      username: "{{influxdb_username}}"
+      password: "{{influxdb_password}}"
+      database_name: "{{influxdb_database_name}}"
+      ssl: yes
+      validate_certs: yes
+
+
+RETURN VALUES:
+
+# only defaults
+

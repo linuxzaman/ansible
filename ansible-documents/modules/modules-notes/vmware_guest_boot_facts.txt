@@ -1,0 +1,111 @@
+> VMWARE_GUEST_BOOT_FACTS    (/usr/lib/python2.7/dist-packages/ansible/modules/cloud/vmware/vmware_guest_boot_facts.py)
+
+        This module can be used to gather facts aboyt boot options for the given virtual machine.
+
+  * This module is maintained by The Ansible Community
+OPTIONS (= is mandatory):
+
+- hostname
+        The hostname or IP address of the vSphere vCenter or ESXi server.
+        If the value is not specified in the task, the value of environment variable `VMWARE_HOST' will be used instead.
+        Environment variable support added in Ansible 2.6.
+        [Default: (null)]
+        type: str
+
+- name
+        Name of the VM to work with.
+        This is required if `uuid' parameter is not supplied.
+        [Default: (null)]
+
+- name_match
+        If multiple virtual machines matching the name, use the first or last found.
+        (Choices: first, last)[Default: first]
+
+- password
+        The password of the vSphere vCenter or ESXi server.
+        If the value is not specified in the task, the value of environment variable `VMWARE_PASSWORD' will be used instead.
+        Environment variable support added in Ansible 2.6.
+        (Aliases: pass, pwd)[Default: (null)]
+        type: str
+
+- port
+        The port number of the vSphere vCenter or ESXi server.
+        If the value is not specified in the task, the value of environment variable `VMWARE_PORT' will be used instead.
+        Environment variable support added in Ansible 2.6.
+        [Default: 443]
+        type: int
+        version_added: 2.5
+
+- use_instance_uuid
+        Whether to use the VMWare instance UUID rather than the BIOS UUID.
+        [Default: False]
+        type: bool
+        version_added: 2.8
+
+- username
+        The username of the vSphere vCenter or ESXi server.
+        If the value is not specified in the task, the value of environment variable `VMWARE_USER' will be used instead.
+        Environment variable support added in Ansible 2.6.
+        (Aliases: admin, user)[Default: (null)]
+        type: str
+
+- uuid
+        UUID of the instance to manage if known, this is VMware's BIOS UUID by default.
+        This is required if `name' parameter is not supplied.
+        [Default: (null)]
+
+- validate_certs
+        Allows connection when SSL certificates are not valid. Set to `false' when certificates are not trusted.
+        If the value is not specified in the task, the value of environment variable `VMWARE_VALIDATE_CERTS' will be used instead.
+        Environment variable support added in Ansible 2.6.
+        If set to `yes', please make sure Python >= 2.7.9 is installed on the given machine.
+        [Default: True]
+        type: bool
+
+
+NOTES:
+      * Tested on vSphere 6.5
+
+
+REQUIREMENTS:  python >= 2.6, PyVmomi
+
+AUTHOR: Abhijeet Kasurde (@Akasurde) <akasurde@redhat.com>
+        METADATA:
+          status:
+          - preview
+          supported_by: community
+        
+
+EXAMPLES:
+
+- name: Gather facts about virtual machine's boot order and related parameters
+  vmware_guest_boot_facts:
+    hostname: "{{ vcenter_hostname }}"
+    username: "{{ vcenter_username }}"
+    password: "{{ vcenter_password }}"
+    validate_certs: no
+    name: "{{ vm_name }}"
+  register: vm_boot_order_facts
+
+
+RETURN VALUES:
+
+vm_boot_facts:
+    description: metadata about boot order of virtual machine
+    returned: always
+    type: dict
+    sample: {
+        "current_boot_order": [
+            "floppy",
+            "disk",
+            "ethernet",
+            "cdrom"
+        ],
+        "current_boot_delay": 2000,
+        "current_boot_retry_delay": 22300,
+        "current_boot_retry_enabled": true,
+        "current_enter_bios_setup": true,
+        "current_boot_firmware": "bios",
+        "current_secure_boot_enabled": false,
+    }
+

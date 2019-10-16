@@ -1,0 +1,78 @@
+> PN_SNMP_COMMUNITY    (/usr/lib/python2.7/dist-packages/ansible/modules/network/netvisor/pn_snmp_community.py)
+
+        This module can be used to create SNMP communities for SNMPv1 or delete SNMP communities for SNMPv1 or modify SNMP communities
+        for SNMPv1.
+
+  * This module is maintained by The Ansible Community
+OPTIONS (= is mandatory):
+
+- pn_cliswitch
+        Target switch to run the CLI on.
+        [Default: (null)]
+
+- pn_community_string
+        community name.
+        [Default: (null)]
+        type: str
+
+- pn_community_type
+        community type.
+        (Choices: read-only, read-write)[Default: (null)]
+        type: str
+
+= state
+        State the action to perform. Use `present' to create snmp-community and `absent' to delete snmp-community `update' to update
+        snmp-community.
+        (Choices: present, absent, update)
+        type: str
+
+
+AUTHOR: Pluribus Networks (@rajaspachipulusu17)
+        METADATA:
+          status:
+          - preview
+          supported_by: community
+        
+
+EXAMPLES:
+
+- name: Create snmp community
+  pn_snmp_community:
+    pn_cliswitch: "sw01"
+    state: "present"
+    pn_community_string: "foo"
+    pn_community_type: "read-write"
+
+- name: Delete snmp community
+  pn_snmp_community:
+    pn_cliswitch: "sw01"
+    state: "absent"
+    pn_community_string: "foo"
+
+- name: Modify snmp community
+  pn_snmp_community:
+    pn_cliswitch: "sw01"
+    state: "update"
+    pn_community_string: "foo"
+    pn_community_type: "read-only"
+
+
+RETURN VALUES:
+
+command:
+  description: the CLI command run on the target node.
+  returned: always
+  type: str
+stdout:
+  description: set of responses from the snmp-community command.
+  returned: always
+  type: list
+stderr:
+  description: set of error responses from the snmp-community command.
+  returned: on error
+  type: list
+changed:
+  description: indicates whether the CLI caused changes on the target.
+  returned: always
+  type: bool
+

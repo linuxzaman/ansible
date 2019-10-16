@@ -1,0 +1,130 @@
+> IPA_SUBCA    (/usr/lib/python2.7/dist-packages/ansible/modules/identity/ipa/ipa_subca.py)
+
+        Add, modify, enable, disable and delete an IPA Lightweight Sub Certificate Authorities using IPA API.
+
+  * This module is maintained by The Ansible Community
+OPTIONS (= is mandatory):
+
+- ipa_host
+        IP or hostname of IPA server.
+        If the value is not specified in the task, the value of environment variable `IPA_HOST' will be used instead.
+        If both the environment variable `IPA_HOST' and the value are not specified in the task, then DNS will be used to try to discover
+        the FreeIPA server.
+        The relevant entry needed in FreeIPA is the 'ipa-ca' entry.
+        If neither the DNS entry, nor the environment `IPA_HOST', nor the value are available in the task, then the default value will be
+        used.
+        Environment variable fallback mechanism is added in Ansible 2.5.
+        [Default: ipa.example.com]
+        type: str
+
+= ipa_pass
+        Password of administrative user.
+        If the value is not specified in the task, the value of environment variable `IPA_PASS' will be used instead.
+        Note that if the 'urllib_gssapi' library is available, it is possible to use GSSAPI to authenticate to FreeIPA.
+        If the environment variable `KRB5CCNAME' is available, the module will use this kerberos credentials cache to authenticate to the
+        FreeIPA server.
+        If the environment variable `KRB5_CLIENT_KTNAME' is available, and `KRB5CCNAME' is not; the module will use this kerberos keytab
+        to authenticate.
+        If GSSAPI is not available, the usage of 'ipa_pass' is required.
+        Environment variable fallback mechanism is added in Ansible 2.5.
+
+        type: str
+
+- ipa_port
+        Port of FreeIPA / IPA server.
+        If the value is not specified in the task, the value of environment variable `IPA_PORT' will be used instead.
+        If both the environment variable `IPA_PORT' and the value are not specified in the task, then default value is set.
+        Environment variable fallback mechanism is added in Ansible 2.5.
+        [Default: 443]
+        type: int
+
+- ipa_prot
+        Protocol used by IPA server.
+        If the value is not specified in the task, the value of environment variable `IPA_PROT' will be used instead.
+        If both the environment variable `IPA_PROT' and the value are not specified in the task, then default value is set.
+        Environment variable fallback mechanism is added in Ansible 2.5.
+        (Choices: http, https)[Default: https]
+        type: str
+
+- ipa_timeout
+        Specifies idle timeout (in seconds) for the connection.
+        For bulk operations, you may want to increase this in order to avoid timeout from IPA server.
+        If the value is not specified in the task, the value of environment variable `IPA_TIMEOUT' will be used instead.
+        If both the environment variable `IPA_TIMEOUT' and the value are not specified in the task, then default value is set.
+        [Default: 10]
+        type: int
+        version_added: 2.7
+
+- ipa_user
+        Administrative account used on IPA server.
+        If the value is not specified in the task, the value of environment variable `IPA_USER' will be used instead.
+        If both the environment variable `IPA_USER' and the value are not specified in the task, then default value is set.
+        Environment variable fallback mechanism is added in Ansible 2.5.
+        [Default: admin]
+        type: str
+
+- state
+        State to ensure
+        State 'disable' and 'enable' is available for FreeIPA 4.4.2 version and onwards
+        (Choices: present, absent, enabled, disabled)[Default: present]
+
+= subca_desc
+        The Sub Certificate Authority's description.
+
+
+= subca_name
+        The Sub Certificate Authority name which needs to be managed.
+        (Aliases: name)
+
+= subca_subject
+        The Sub Certificate Authority's Subject. e.g., 'CN=SampleSubCA1,O=testrelm.test'
+
+
+- validate_certs
+        This only applies if `ipa_prot' is `https'.
+        If set to `no', the SSL certificates will not be validated.
+        This should only set to `no' used on personally controlled sites using self-signed certificates.
+        [Default: True]
+        type: bool
+
+
+AUTHOR: Abhijeet Kasurde (@Akasurde)
+        METADATA:
+          status:
+          - preview
+          supported_by: community
+        
+
+EXAMPLES:
+
+# Ensure IPA Sub CA is present
+- ipa_subca:
+    ipa_host: spider.example.com
+    ipa_pass: Passw0rd!
+    state: present
+    subca_name: AnsibleSubCA1
+    subca_subject: 'CN=AnsibleSubCA1,O=example.com'
+    subca_desc: Ansible Sub CA
+
+# Ensure that IPA Sub CA is removed
+- ipa_subca:
+    ipa_host: spider.example.com
+    ipa_pass: Passw0rd!
+    state: absent
+    subca_name: AnsibleSubCA1
+
+# Ensure that IPA Sub CA is disabled
+- ipa_subca:
+    ipa_host: spider.example.com
+    ipa_pass: Passw0rd!
+    state: disable
+    subca_name: AnsibleSubCA1
+
+
+RETURN VALUES:
+
+subca:
+  description: IPA Sub CA record as returned by IPA API.
+  returned: always
+  type: dict
+

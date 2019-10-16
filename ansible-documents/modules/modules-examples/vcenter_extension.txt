@@ -1,0 +1,39 @@
+EXAMPLES:
+
+- name: Register vCenter Extension
+      vcenter_extension:
+         hostname: "{{ groups['vcsa'][0] }}"
+         username: "{{ vcenter_username }}"
+         password: "{{ site_password }}"
+         extension_key: "{{ extension_key }}"
+         version: "1.0"
+         company: "Acme"
+         name: "Acme Extension"
+         description: "acme management"
+         email: "user@example.com"
+         url: "https://10.0.0.1/ACME-vSphere-web-plugin-1.0.zip"
+         ssl_thumbprint: "{{ ssl_thumbprint }}"
+         state: present
+      delegate_to: localhost
+      register: register_extension
+
+    - name: Deregister vCenter Extension
+      vcenter_extension:
+         hostname: "{{ groups['vcsa'][0] }}"
+         username: "{{ vcenter_username }}"
+         password: "{{ site_password }}"
+         extension_key: "{{ extension_key }}"
+         version: "1.0"
+         state: absent
+      delegate_to: localhost
+      register: deregister_extension
+
+
+RETURN VALUES:
+
+result:
+    description: information about performed operation
+    returned: always
+    type: str
+    sample: "'com.acme.Extension' installed."
+

@@ -1,0 +1,51 @@
+> WIN_HOSTNAME    (/usr/lib/python2.7/dist-packages/ansible/modules/windows/win_hostname.py)
+
+        Manages local Windows computer name. A reboot is required for the computer name to take effect.
+
+  * This module is maintained by The Ansible Community
+OPTIONS (= is mandatory):
+
+= name
+        The hostname to set for the computer.
+
+        type: str
+
+
+SEE ALSO:
+      * Module win_dns_client
+           The official documentation on the win_dns_client module.
+           https://docs.ansible.com/ansible/latest/modules/win_dns_client_module.html
+
+
+AUTHOR: Ripon Banik (@riponbanik)
+        METADATA:
+          status:
+          - preview
+          supported_by: community
+        
+
+EXAMPLES:
+
+- name: Change the hostname to sample-hostname
+  win_hostname:
+    name: sample-hostname
+  register: res
+
+- name: Reboot
+  win_reboot:
+  when: res.reboot_required
+
+
+RETURN VALUES:
+
+old_name:
+  description: The original hostname that was set before it was changed.
+  returned: always
+  type: str
+  sample: old_hostname
+reboot_required:
+  description: Whether a reboot is required to complete the hostname change.
+  returned: always
+  type: bool
+  sample: true
+

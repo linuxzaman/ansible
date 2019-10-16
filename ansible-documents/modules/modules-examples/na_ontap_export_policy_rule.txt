@@ -1,0 +1,47 @@
+EXAMPLES:
+
+- name: Create ExportPolicyRule
+      na_ontap_export_policy_rule:
+        state: present
+        name: default123
+        vserver: ci_dev
+        client_match: 0.0.0.0/0,1.1.1.0/24
+        ro_rule: krb5,krb5i
+        rw_rule: any
+        protocol: nfs,nfs3
+        super_user_security: any
+        allow_suid: true
+        hostname: "{{ netapp_hostname }}"
+        username: "{{ netapp_username }}"
+        password: "{{ netapp_password }}"
+
+    - name: Modify ExportPolicyRule
+      na_ontap_export_policy_rule:
+        state: present
+        name: default123
+        rule_index: 100
+        client_match: 0.0.0.0/0
+        ro_rule: ntlm
+        rw_rule: any
+        protocol: any
+        allow_suid: false
+        hostname: "{{ netapp_hostname }}"
+        username: "{{ netapp_username }}"
+        password: "{{ netapp_password }}"
+
+    - name: Delete ExportPolicyRule
+      na_ontap_export_policy_rule:
+        state: absent
+        name: default123
+        rule_index: 100
+        vserver: ci_dev
+        hostname: "{{ netapp_hostname }}"
+        username: "{{ netapp_username }}"
+        password: "{{ netapp_password }}"
+
+
+RETURN VALUES:
+
+
+
+

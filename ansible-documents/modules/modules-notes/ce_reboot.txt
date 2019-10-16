@@ -1,0 +1,57 @@
+> CE_REBOOT    (/usr/lib/python2.7/dist-packages/ansible/modules/network/cloudengine/ce_reboot.py)
+
+        Reboot a HUAWEI CloudEngine switches.
+
+  * This module is maintained by The Ansible Community
+OPTIONS (= is mandatory):
+
+= confirm
+        Safeguard boolean. Set to true if you're sure you want to reboot.
+
+        type: bool
+
+- save_config
+        Flag indicating whether to save the configuration.
+        [Default: False]
+        type: bool
+
+
+REQUIREMENTS:  ncclient
+
+AUTHOR: Gong Jianjun (@QijunPan)
+        METADATA:
+          status:
+          - preview
+          supported_by: community
+        
+
+EXAMPLES:
+
+- name: reboot module test
+  hosts: cloudengine
+  connection: local
+  gather_facts: no
+  vars:
+    cli:
+      host: "{{ inventory_hostname }}"
+      port: "{{ ansible_ssh_port }}"
+      username: "{{ username }}"
+      password: "{{ password }}"
+      transport: cli
+
+  tasks:
+  - name: Reboot the device
+    ce_reboot:
+      confirm: true
+      save_config: true
+      provider: "{{ cli }}"
+
+
+RETURN VALUES:
+
+rebooted:
+    description: Whether the device was instructed to reboot.
+    returned: success
+    type: bool
+    sample: true
+

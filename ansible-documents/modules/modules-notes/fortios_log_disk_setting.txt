@@ -1,0 +1,296 @@
+> FORTIOS_LOG_DISK_SETTING    (/usr/lib/python2.7/dist-packages/ansible/modules/network/fortios/fortios_log_disk_setting.py)
+
+        This module is able to configure a FortiGate or FortiOS by allowing the user to set and modify log_disk feature and setting
+        category. Examples include all parameters and values need to be adjusted to datasources before usage. Tested with FOS v6.0.2
+
+  * This module is maintained by The Ansible Community
+OPTIONS (= is mandatory):
+
+= host
+        FortiOS or FortiGate ip address.
+
+
+- https
+        Indicates if the requests towards FortiGate must use HTTPS protocol
+        [Default: True]
+        type: bool
+
+- log_disk_setting
+        Settings for local disk logging.
+        [Default: None]
+        suboptions:
+          diskfull:
+            choices:
+            - overwrite
+            - nolog
+            description:
+            - Action to take when disk is full. The system can overwrite the oldest log messages
+              or stop logging when the disk is full (default = overwrite).
+          dlp-archive-quota:
+            description:
+            - DLP archive quota (MB).
+          full-final-warning-threshold:
+            description:
+            - Log full final warning threshold as a percent (3 - 100, default = 95).
+          full-first-warning-threshold:
+            description:
+            - Log full first warning threshold as a percent (1 - 98, default = 75).
+          full-second-warning-threshold:
+            description:
+            - Log full second warning threshold as a percent (2 - 99, default = 90).
+          ips-archive:
+            choices:
+            - enable
+            - disable
+            description:
+            - Enable/disable IPS packet archiving to the local disk.
+          log-quota:
+            description:
+            - Disk log quota (MB).
+          max-log-file-size:
+            description:
+            - Maximum log file size before rolling (1 - 100 Mbytes).
+          max-policy-packet-capture-size:
+            description:
+            - Maximum size of policy sniffer in MB (0 means unlimited).
+          maximum-log-age:
+            description:
+            - Delete log files older than (days).
+          report-quota:
+            description:
+            - Report quota (MB).
+          roll-day:
+            choices:
+            - sunday
+            - monday
+            - tuesday
+            - wednesday
+            - thursday
+            - friday
+            - saturday
+            description:
+            - Day of week on which to roll log file.
+          roll-schedule:
+            choices:
+            - daily
+            - weekly
+            description:
+            - Frequency to check log file for rolling.
+          roll-time:
+            description:
+            - Time of day to roll the log file (hh:mm).
+          source-ip:
+            description:
+            - Source IP address to use for uploading disk log files.
+          status:
+            choices:
+            - enable
+            - disable
+            description:
+            - Enable/disable local disk logging.
+          upload:
+            choices:
+            - enable
+            - disable
+            description:
+            - Enable/disable uploading log files when they are rolled.
+          upload-delete-files:
+            choices:
+            - enable
+            - disable
+            description:
+            - Delete log files after uploading (default = enable).
+          upload-destination:
+            choices:
+            - ftp-server
+            description:
+            - The type of server to upload log files to. Only FTP is currently supported.
+          upload-ssl-conn:
+            choices:
+            - default
+            - high
+            - low
+            - disable
+            description:
+            - Enable/disable encrypted FTPS communication to upload log files.
+          uploaddir:
+            description:
+            - The remote directory on the FTP server to upload log files to.
+          uploadip:
+            description:
+            - IP address of the FTP server to upload log files to.
+          uploadpass:
+            description:
+            - Password required to log into the FTP server to upload disk log files.
+          uploadport:
+            description:
+            - TCP port to use for communicating with the FTP server (default = 21).
+          uploadsched:
+            choices:
+            - disable
+            - enable
+            description:
+            - Set the schedule for uploading log files to the FTP server (default = disable
+              = upload when rolling).
+          uploadtime:
+            description:
+            - Time of day at which log files are uploaded if uploadsched is enabled (hh:mm
+              or hh).
+          uploadtype:
+            choices:
+            - traffic
+            - event
+            - virus
+            - webfilter
+            - IPS
+            - spamfilter
+            - dlp-archive
+            - anomaly
+            - voip
+            - dlp
+            - app-ctrl
+            - waf
+            - netscan
+            - gtp
+            - dns
+            description:
+            - Types of log files to upload. Separate multiple entries with a space.
+          uploaduser:
+            description:
+            - Username required to log into the FTP server to upload disk log files.
+        
+
+- password
+        FortiOS or FortiGate password.
+        [Default: ]
+
+= username
+        FortiOS or FortiGate username.
+
+
+- vdom
+        Virtual domain, among those defined previously. A vdom is a virtual instance of the FortiGate that can be configured and used as
+        a different unit.
+        [Default: root]
+
+
+NOTES:
+      * Requires fortiosapi library developed by Fortinet
+      * Run as a local_action in your playbook
+
+
+REQUIREMENTS:  fortiosapi>=0.9.8
+
+AUTHOR: Miguel Angel Munoz (@mamunozgonzalez), Nicolas Thomas (@thomnico)
+        METADATA:
+          status:
+          - preview
+          supported_by: community
+        
+
+EXAMPLES:
+
+- hosts: localhost
+  vars:
+   host: "192.168.122.40"
+   username: "admin"
+   password: ""
+   vdom: "root"
+  tasks:
+  - name: Settings for local disk logging.
+    fortios_log_disk_setting:
+      host:  "{{ host }}"
+      username: "{{ username }}"
+      password: "{{ password }}"
+      vdom:  "{{ vdom }}"
+      https: "False"
+      log_disk_setting:
+        diskfull: "overwrite"
+        dlp-archive-quota: "4"
+        full-final-warning-threshold: "5"
+        full-first-warning-threshold: "6"
+        full-second-warning-threshold: "7"
+        ips-archive: "enable"
+        log-quota: "9"
+        max-log-file-size: "10"
+        max-policy-packet-capture-size: "11"
+        maximum-log-age: "12"
+        report-quota: "13"
+        roll-day: "sunday"
+        roll-schedule: "daily"
+        roll-time: "<your_own_value>"
+        source-ip: "84.230.14.43"
+        status: "enable"
+        upload: "enable"
+        upload-delete-files: "enable"
+        upload-destination: "ftp-server"
+        upload-ssl-conn: "default"
+        uploaddir: "<your_own_value>"
+        uploadip: "<your_own_value>"
+        uploadpass: "<your_own_value>"
+        uploadport: "26"
+        uploadsched: "disable"
+        uploadtime: "<your_own_value>"
+        uploadtype: "traffic"
+        uploaduser: "<your_own_value>"
+
+
+RETURN VALUES:
+
+build:
+  description: Build number of the fortigate image
+  returned: always
+  type: str
+  sample: '1547'
+http_method:
+  description: Last method used to provision the content into FortiGate
+  returned: always
+  type: str
+  sample: 'PUT'
+http_status:
+  description: Last result given by FortiGate on last operation applied
+  returned: always
+  type: str
+  sample: "200"
+mkey:
+  description: Master key (id) used in the last call to FortiGate
+  returned: success
+  type: str
+  sample: "id"
+name:
+  description: Name of the table used to fulfill the request
+  returned: always
+  type: str
+  sample: "urlfilter"
+path:
+  description: Path of the table used to fulfill the request
+  returned: always
+  type: str
+  sample: "webfilter"
+revision:
+  description: Internal revision number
+  returned: always
+  type: str
+  sample: "17.0.2.10658"
+serial:
+  description: Serial number of the unit
+  returned: always
+  type: str
+  sample: "FGVMEVYYQT3AB5352"
+status:
+  description: Indication of the operation's result
+  returned: always
+  type: str
+  sample: "success"
+vdom:
+  description: Virtual domain used
+  returned: always
+  type: str
+  sample: "root"
+version:
+  description: Version of the FortiGate
+  returned: always
+  type: str
+  sample: "v5.6.3"
+
+

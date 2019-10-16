@@ -1,0 +1,112 @@
+> CE_VXLAN_VAP    (/usr/lib/python2.7/dist-packages/ansible/modules/network/cloudengine/ce_vxlan_vap.py)
+
+        Manages VXLAN Virtual access point on HUAWEI CloudEngine Devices.
+
+  * This module is maintained by The Ansible Community
+OPTIONS (= is mandatory):
+
+- bind_vlan_id
+        Specifies the VLAN binding to a BD(Bridge Domain). The value is an integer ranging ranging from 1 to 4094.
+        [Default: (null)]
+
+- bridge_domain_id
+        Specifies a bridge domain ID. The value is an integer ranging from 1 to 16777215.
+        [Default: (null)]
+
+- ce_vid
+        When `encapsulation' is 'dot1q', specifies a VLAN ID in the outer VLAN tag. When `encapsulation' is 'qinq', specifies an outer
+        VLAN ID for double-tagged packets to be received by a Layer 2 sub-interface. The value is an integer ranging from 1 to 4094.
+        [Default: (null)]
+
+- encapsulation
+        Specifies an encapsulation type of packets allowed to pass through a Layer 2 sub-interface.
+        (Choices: dot1q, default, untag, qinq, none)[Default: (null)]
+
+- l2_sub_interface
+        Specifies an Sub-Interface full name, i.e. "10GE1/0/41.1". The value is a string of 1 to 63 case-insensitive characters, spaces
+        supported.
+        [Default: (null)]
+
+- pe_vid
+        When `encapsulation' is 'qinq', specifies an inner VLAN ID for double-tagged packets to be received by a Layer 2 sub-interface.
+        The value is an integer ranging from 1 to 4094.
+        [Default: (null)]
+
+- state
+        Determines whether the config should be present or not on the device.
+        (Choices: present, absent)[Default: present]
+
+
+AUTHOR: QijunPan (@QijunPan)
+        METADATA:
+          status:
+          - preview
+          supported_by: community
+        
+
+EXAMPLES:
+
+- name: vxlan vap module test
+  hosts: ce128
+  connection: local
+  gather_facts: no
+  vars:
+    cli:
+      host: "{{ inventory_hostname }}"
+      port: "{{ ansible_ssh_port }}"
+      username: "{{ username }}"
+      password: "{{ password }}"
+      transport: cli
+
+  tasks:
+
+  - name: Create a papping between a VLAN and a BD
+    ce_vxlan_vap:
+      bridge_domain_id: 100
+      bind_vlan_id: 99
+      provider: "{{ cli }}"
+
+  - name: Bind a Layer 2 sub-interface to a BD
+    ce_vxlan_vap:
+      bridge_domain_id: 100
+      l2_sub_interface: 10GE2/0/20.1
+      provider: "{{ cli }}"
+
+  - name: Configure an encapsulation type on a Layer 2 sub-interface
+    ce_vxlan_vap:
+      l2_sub_interface: 10GE2/0/20.1
+      encapsulation: dot1q
+      provider: "{{ cli }}"
+
+
+RETURN VALUES:
+
+proposed:
+    description: k/v pairs of parameters passed into module
+    returned: verbose mode
+    type: dict
+    sample: {"bridge_domain_id": "100", "bind_vlan_id": "99", state="present"}
+existing:
+    description: k/v pairs of existing configuration
+    returned: verbose mode
+    type: dict
+    sample: {"bridge_domain_id": "100", "bind_intf_list": ["10GE2/0/20.1", "10GE2/0/20.2"],
+             "bind_vlan_list": []}
+end_state:
+    description: k/v pairs of configuration after module execution
+    returned: verbose mode
+    type: dict
+    sample: {"bridge_domain_id": "100", "bind_intf_list": ["110GE2/0/20.1", "10GE2/0/20.2"],
+             "bind_vlan_list": ["99"]}
+updates:
+    description: commands sent to the device
+    returned: always
+    type: list
+    sample: ["bridge-domain 100",
+             "l2 binding vlan 99"]
+changed:
+    description: check to see if a change was made on the device
+    returned: always
+    type: bool
+    sample: true
+

@@ -1,0 +1,75 @@
+> TEMPFILE    (/usr/lib/python2.7/dist-packages/ansible/modules/files/tempfile.py)
+
+        The `tempfile' module creates temporary files and directories. `mktemp' command takes different parameters on various systems,
+        this module helps to avoid troubles related to that. Files/directories created by module are accessible only by creator. In case
+        you need to make them world-accessible you need to use [file] module. For Windows targets, use the [win_tempfile] module instead.
+
+  * This module is maintained by The Ansible Community
+OPTIONS (= is mandatory):
+
+- path
+        Location where temporary file or directory should be created.
+        If path is not specified, the default system temporary directory will be used.
+        [Default: (null)]
+        type: path
+
+- prefix
+        Prefix of file/directory name created by module.
+        [Default: ansible.]
+        type: str
+
+- state
+        Whether to create file or directory.
+        (Choices: directory, file)[Default: file]
+        type: str
+
+- suffix
+        Suffix of file/directory name created by module.
+        [Default: ]
+        type: str
+
+
+SEE ALSO:
+      * Module file
+           The official documentation on the file module.
+           https://docs.ansible.com/ansible/latest/modules/file_module.html
+      * Module win_tempfile
+           The official documentation on the win_tempfile module.
+           https://docs.ansible.com/ansible/latest/modules/win_tempfile_module.html
+
+
+AUTHOR: Krzysztof Magosa (@krzysztof-magosa)
+        METADATA:
+          status:
+          - preview
+          supported_by: community
+        
+
+EXAMPLES:
+
+- name: create temporary build directory
+  tempfile:
+    state: directory
+    suffix: build
+
+- name: create temporary file
+  tempfile:
+    state: file
+    suffix: temp
+  register: tempfile_1
+
+- name: use the registered var and the file module to remove the temporary file
+  file:
+    path: "{{ tempfile_1.path }}"
+    state: absent
+  when: tempfile_1.path is defined
+
+
+RETURN VALUES:
+
+path:
+  description: Path to created file or directory
+  returned: success
+  type: str
+  sample: "/tmp/ansible.bMlvdk"
+

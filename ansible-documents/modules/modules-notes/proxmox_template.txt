@@ -1,0 +1,113 @@
+> PROXMOX_TEMPLATE    (/usr/lib/python2.7/dist-packages/ansible/modules/cloud/misc/proxmox_template.py)
+
+        allows you to upload/delete templates in Proxmox VE cluster
+
+  * This module is maintained by The Ansible Community
+OPTIONS (= is mandatory):
+
+= api_host
+        the host of the Proxmox VE cluster
+
+
+- api_password
+        the password to authenticate with
+        you can use PROXMOX_PASSWORD environment variable
+        [Default: (null)]
+
+= api_user
+        the user to authenticate with
+
+
+- content_type
+        content type
+        required only for `state=present'
+        (Choices: vztmpl, iso)[Default: vztmpl]
+
+- force
+        can be used only with `state=present', exists template will be overwritten
+        [Default: no]
+        type: bool
+
+= node
+        Proxmox VE node, when you will operate with template
+
+
+- src
+        path to uploaded file
+        required only for `state=present'
+        (Aliases: path)[Default: (null)]
+
+- state
+        Indicate desired state of the template
+        (Choices: present, absent)[Default: present]
+
+- storage
+        target storage
+        [Default: local]
+
+- template
+        the template name
+        required only for states `absent', `info'
+        [Default: (null)]
+
+- timeout
+        timeout for operations
+        [Default: 30]
+
+- validate_certs
+        enable / disable https certificate verification
+        [Default: no]
+        type: bool
+
+
+NOTES:
+      * Requires proxmoxer and requests modules on host. This modules can be installed with pip.
+
+
+REQUIREMENTS:  proxmoxer, requests
+
+AUTHOR: Sergei Antipov (@UnderGreen)
+        METADATA:
+          status:
+          - preview
+          supported_by: community
+        
+
+EXAMPLES:
+
+# Upload new openvz template with minimal options
+- proxmox_template:
+    node: uk-mc02
+    api_user: root@pam
+    api_password: 1q2w3e
+    api_host: node1
+    src: ~/ubuntu-14.04-x86_64.tar.gz
+
+# Upload new openvz template with minimal options use environment PROXMOX_PASSWORD variable(you should export it before)
+- proxmox_template:
+    node: uk-mc02
+    api_user: root@pam
+    api_host: node1
+    src: ~/ubuntu-14.04-x86_64.tar.gz
+
+# Upload new openvz template with all options and force overwrite
+- proxmox_template:
+    node: uk-mc02
+    api_user: root@pam
+    api_password: 1q2w3e
+    api_host: node1
+    storage: local
+    content_type: vztmpl
+    src: ~/ubuntu-14.04-x86_64.tar.gz
+    force: yes
+
+# Delete template with minimal options
+- proxmox_template:
+    node: uk-mc02
+    api_user: root@pam
+    api_password: 1q2w3e
+    api_host: node1
+    template: ubuntu-14.04-x86_64.tar.gz
+    state: absent
+
+

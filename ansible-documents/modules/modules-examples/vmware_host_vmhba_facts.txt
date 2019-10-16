@@ -1,0 +1,75 @@
+EXAMPLES:
+
+- name: Gather facts about vmhbas of all ESXi Host in the given Cluster
+  vmware_host_vmhba_facts:
+    hostname: '{{ vcenter_hostname }}'
+    username: '{{ vcenter_username }}'
+    password: '{{ vcenter_password }}'
+    cluster_name: '{{ cluster_name }}'
+  delegate_to: localhost
+  register: cluster_host_vmhbas
+
+- name: Gather facts about vmhbas of an ESXi Host
+  vmware_host_vmhba_facts:
+    hostname: '{{ vcenter_hostname }}'
+    username: '{{ vcenter_username }}'
+    password: '{{ vcenter_password }}'
+    esxi_hostname: '{{ esxi_hostname }}'
+  delegate_to: localhost
+  register: host_vmhbas
+
+
+RETURN VALUES:
+
+hosts_vmhbas_facts:
+    description:
+    - dict with hostname as key and dict with vmhbas facts as value.
+    returned: hosts_vmhbas_facts
+    type: dict
+    sample:
+        {
+            "10.76.33.204": {
+                "vmhba_details": [
+                    {
+                        "adapter": "HPE Smart Array P440ar",
+                        "bus": 3,
+                        "device": "vmhba0",
+                        "driver": "nhpsa",
+                        "location": "0000:03:00.0",
+                        "model": "Smart Array P440ar",
+                        "node_wwn": "50:01:43:80:37:18:9e:a0",
+                        "status": "unknown",
+                        "type": "SAS"
+                    },
+                    {
+                        "adapter": "QLogic Corp ISP2532-based 8Gb Fibre Channel to PCI Express HBA",
+                        "bus": 5,
+                        "device": "vmhba1",
+                        "driver": "qlnativefc",
+                        "location": "0000:05:00.0",
+                        "model": "ISP2532-based 8Gb Fibre Channel to PCI Express HBA",
+                        "node_wwn": "57:64:96:32:15:90:23:95:82",
+                        "port_type": "unknown",
+                        "port_wwn": "57:64:96:32:15:90:23:95:82",
+                        "speed": 8,
+                        "status": "online",
+                        "type": "Fibre Channel"
+                    },
+                    {
+                        "adapter": "QLogic Corp ISP2532-based 8Gb Fibre Channel to PCI Express HBA",
+                        "bus": 8,
+                        "device": "vmhba2",
+                        "driver": "qlnativefc",
+                        "location": "0000:08:00.0",
+                        "model": "ISP2532-based 8Gb Fibre Channel to PCI Express HBA",
+                        "node_wwn": "57:64:96:32:15:90:23:95:21",
+                        "port_type": "unknown",
+                        "port_wwn": "57:64:96:32:15:90:23:95:21",
+                        "speed": 8,
+                        "status": "online",
+                        "type": "Fibre Channel"
+                    }
+                ],
+            }
+        }
+

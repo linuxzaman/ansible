@@ -1,0 +1,105 @@
+> UCS_TIMEZONE    (/usr/lib/python2.7/dist-packages/ansible/modules/remote_management/ucs/ucs_timezone.py)
+
+        Configures timezone on Cisco UCS Manager. Examples can be used with the L(UCS Platform
+        Emulator,https://communities.cisco.com/ucspe).
+
+  * This module is maintained by an Ansible Partner
+OPTIONS (= is mandatory):
+
+- admin_state
+        The admin_state setting
+        The enabled admin_state indicates the timezone confguration is utilized by UCS Manager.
+        The disabled admin_state indicates the timezone confguration is ignored by UCS Manager.
+        (Choices: disabled, enabled)[Default: enabled]
+
+- description
+        A user-defined description of the timezone.
+        Enter up to 256 characters.
+        You can use any characters or spaces except the following:
+        ` (accent mark),  (backslash), ^ (carat), " (double quote), = (equal sign), > (greater than), < (less than), or ' (single quote).
+        (Aliases: descr)[Default: ]
+
+= hostname
+        IP address or hostname of Cisco UCS Manager.
+
+        type: str
+
+= password
+        Password for Cisco UCS Manager authentication.
+
+        type: str
+
+- port
+        Port number to be used during connection (by default uses 443 for https and 80 for http connection).
+        [Default: (null)]
+        type: int
+
+- proxy
+        If use_proxy is no, specfies proxy to be used for connection. e.g. 'http://proxy.xy.z:8080'
+        [Default: (null)]
+        type: str
+
+- state
+        If `absent', will unset timezone.
+        If `present', will set or update timezone.
+        (Choices: absent, present)[Default: present]
+
+- timezone
+        The timezone name.
+        Time zone names are from the L(tz database,https://en.wikipedia.org/wiki/List_of_tz_database_time_zones)
+        The timezone name is case sensitive.
+        The timezone name can be between 0 and 510 alphanumeric characters.
+        You cannot use spaces or any special characters other than
+        "-" (hyphen), "_" (underscore), "/" (backslash).
+        [Default: (null)]
+
+- use_proxy
+        If `no', will not use the proxy as defined by system environment variable.
+        [Default: True]
+        type: bool
+
+- use_ssl
+        If `no', an HTTP connection will be used instead of the default HTTPS connection.
+        [Default: True]
+        type: bool
+
+- username
+        Username for Cisco UCS Manager authentication.
+        [Default: admin]
+        type: str
+
+
+REQUIREMENTS:  ucsmsdk
+
+AUTHOR: John McDonough (@movinalot), CiscoUcs (@CiscoUcs)
+        METADATA:
+          status:
+          - preview
+          supported_by: certified
+        
+
+EXAMPLES:
+
+- name: Configure Time Zone
+  ucs_timezone:
+    hostname: 172.16.143.150
+    username: admin
+    password: password
+    state: present
+    admin_state: enabled
+    timezone: America/Los_Angeles
+    description: 'Time Zone for Los Angeles'
+
+- name: Unconfigure Time Zone
+  ucs_timezone:
+    hostname: 172.16.143.150
+    username: admin
+    password: password
+    state: absent
+    admin_state: disabled
+
+
+RETURN VALUES:
+
+#
+

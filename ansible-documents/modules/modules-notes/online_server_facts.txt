@@ -1,0 +1,145 @@
+> ONLINE_SERVER_FACTS    (/usr/lib/python2.7/dist-packages/ansible/modules/cloud/online/online_server_facts.py)
+
+        Gather facts about the servers. https://www.online.net/en/dedicated-server
+
+  * This module is maintained by The Ansible Community
+OPTIONS (= is mandatory):
+
+- api_timeout
+        HTTP timeout to Online API in seconds.
+        (Aliases: timeout)[Default: 30]
+        type: int
+
+- api_token
+        Online OAuth token.
+        (Aliases: oauth_token)[Default: (null)]
+        type: str
+
+- api_url
+        Online API URL
+        (Aliases: base_url)[Default: https://api.online.net]
+        type: str
+
+- validate_certs
+        Validate SSL certs of the Online API.
+        [Default: True]
+        type: bool
+
+
+NOTES:
+      * Also see the API documentation on https://console.online.net/en/api/
+      * If `api_token' is not set within the module, the following environment variables can be used in decreasing order of
+        precedence `ONLINE_TOKEN', `ONLINE_API_KEY', `ONLINE_OAUTH_TOKEN', `ONLINE_API_TOKEN'
+      * If one wants to use a different `api_url' one can also set the `ONLINE_API_URL' environment variable.
+
+
+AUTHOR: Remy Leone (@sieben)
+        METADATA:
+          status:
+          - preview
+          supported_by: community
+        
+
+EXAMPLES:
+
+- name: Gather Online server facts
+  online_server_facts:
+    api_token: '0d1627e8-bbf0-44c5-a46f-5c4d3aef033f'
+
+
+RETURN VALUES:
+
+---
+online_server_facts:
+  description: Response from Online API
+  returned: success
+  type: complex
+  contains:
+    "online_server_facts": [
+        {
+            "abuse": "abuse@example.com",
+            "anti_ddos": false,
+            "bmc": {
+                "session_key": null
+            },
+            "boot_mode": "normal",
+            "contacts": {
+                "owner": "foobar",
+                "tech": "foobar"
+            },
+            "disks": [
+                {
+                    "$ref": "/api/v1/server/hardware/disk/68452"
+                },
+                {
+                    "$ref": "/api/v1/server/hardware/disk/68453"
+                }
+            ],
+            "drive_arrays": [
+                {
+                    "disks": [
+                        {
+                            "$ref": "/api/v1/server/hardware/disk/68452"
+                        },
+                        {
+                            "$ref": "/api/v1/server/hardware/disk/68453"
+                        }
+                    ],
+                    "raid_controller": {
+                        "$ref": "/api/v1/server/hardware/raidController/9910"
+                    },
+                    "raid_level": "RAID1"
+                }
+            ],
+            "hardware_watch": true,
+            "hostname": "sd-42",
+            "id": 42,
+            "ip": [
+                {
+                    "address": "195.154.172.149",
+                    "mac": "28:92:4a:33:5e:c6",
+                    "reverse": "195-154-172-149.rev.poneytelecom.eu.",
+                    "switch_port_state": "up",
+                    "type": "public"
+                },
+                {
+                    "address": "10.90.53.212",
+                    "mac": "28:92:4a:33:5e:c7",
+                    "reverse": null,
+                    "switch_port_state": "up",
+                    "type": "private"
+                }
+            ],
+            "last_reboot": "2018-08-23T08:32:03.000Z",
+            "location": {
+                "block": "A",
+                "datacenter": "DC3",
+                "position": 19,
+                "rack": "A23",
+                "room": "4 4-4"
+            },
+            "network": {
+                "ip": [
+                    "195.154.172.149"
+                ],
+                "ipfo": [],
+                "private": [
+                    "10.90.53.212"
+                ]
+            },
+            "offer": "Pro-1-S-SATA",
+            "os": {
+                "name": "FreeBSD",
+                "version": "11.1-RELEASE"
+            },
+            "power": "ON",
+            "proactive_monitoring": false,
+            "raid_controllers": [
+                {
+                    "$ref": "/api/v1/server/hardware/raidController/9910"
+                }
+            ],
+            "support": "Basic service level"
+        }
+    ]
+

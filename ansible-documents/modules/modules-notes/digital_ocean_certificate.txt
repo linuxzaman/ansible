@@ -1,0 +1,97 @@
+> DIGITAL_OCEAN_CERTIFICATE    (/usr/lib/python2.7/dist-packages/ansible/modules/cloud/digital_ocean/digital_ocean_certificate.py)
+
+        Create, Retrieve and remove certificates DigitalOcean.
+
+  * This module is maintained by The Ansible Community
+OPTIONS (= is mandatory):
+
+- certificate_chain
+        The full PEM-formatted trust chain between the certificate authority's certificate and your domain's SSL certificate.
+        [Default: (null)]
+
+- leaf_certificate
+        A PEM-formatted public SSL Certificate.
+        [Default: (null)]
+
+= name
+        The name of the certificate.
+
+
+- oauth_token
+        DigitalOcean OAuth token.
+        There are several other environment variables which can be used to provide this value.
+        i.e., - 'DO_API_TOKEN', 'DO_API_KEY', 'DO_OAUTH_TOKEN' and 'OAUTH_TOKEN'
+        (Aliases: api_token)[Default: (null)]
+        type: str
+
+- private_key
+        A PEM-formatted private key content of SSL Certificate.
+        [Default: (null)]
+
+- state
+        Whether the certificate should be present or absent.
+        (Choices: present, absent)[Default: present]
+
+- timeout
+        The timeout in seconds used for polling DigitalOcean's API.
+        [Default: 30]
+        type: int
+
+- validate_certs
+        If set to `no', the SSL certificates will not be validated.
+        This should only set to `no' used on personally controlled sites using self-signed certificates.
+        [Default: True]
+        type: bool
+
+
+NOTES:
+      * Two environment variables can be used, DO_API_KEY, DO_OAUTH_TOKEN and DO_API_TOKEN. They both refer to the v2 token.
+
+
+AUTHOR: Abhijeet Kasurde (@Akasurde)
+        METADATA:
+          status:
+          - preview
+          supported_by: community
+        
+
+EXAMPLES:
+
+- name: create a certificate
+  digital_ocean_certificate:
+    name: production
+    state: present
+    private_key: "-----BEGIN PRIVATE KEY-----
+MIIEvgIBADANBgkqhkM8OI7pRpgyj1I
+-----END PRIVATE KEY-----"
+    leaf_certificate: "-----BEGIN CERTIFICATE-----
+MIIFDmg2Iaw==
+-----END CERTIFICATE-----"
+    oauth_token: b7d03a6947b217efb6f3ec3bd365652
+
+- name: create a certificate using file lookup plugin
+  digital_ocean_certificate:
+    name: production
+    state: present
+    private_key: "{{ lookup('file', 'test.key') }}"
+    leaf_certificate: "{{ lookup('file', 'test.cert') }}"
+    oauth_token: "{{ oauth_token }}"
+
+- name: create a certificate with trust chain
+  digital_ocean_certificate:
+    name: production
+    state: present
+    private_key: "{{ lookup('file', 'test.key') }}"
+    leaf_certificate: "{{ lookup('file', 'test.cert') }}"
+    certificate_chain: "{{ lookup('file', 'chain.cert') }}"
+    oauth_token: "{{ oauth_token }}"
+
+- name: remove a certificate
+  digital_ocean_certificate:
+    name: production
+    state: absent
+    oauth_token: "{{ oauth_token }}"
+
+
+RETURN VALUES:
+ # 

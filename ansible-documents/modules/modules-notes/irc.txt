@@ -1,0 +1,115 @@
+> IRC    (/usr/lib/python2.7/dist-packages/ansible/modules/notification/irc.py)
+
+        Send a message to an IRC channel. This is a very simplistic implementation.
+
+  * This module is maintained by The Ansible Community
+OPTIONS (= is mandatory):
+
+= channel
+        Channel name.  One of nick_to or channel needs to be set.  When both are set, the message will be sent to both of them.
+
+
+- color
+        Text color for the message. ("none" is a valid option in 1.6 or later, in 1.6 and prior, the default color is black, not "none").
+        Added 11 more colors in version 2.0.
+        (Choices: none, white, black, blue, green, red, brown, purple, orange, yellow, light_green, teal, light_cyan, light_blue, pink,
+        gray, light_gray)[Default: none]
+
+- key
+        Channel key
+        [Default: (null)]
+        version_added: 1.7
+
+= msg
+        The message body.
+
+
+- nick
+        Nickname to send the message from. May be shortened, depending on server's NICKLEN setting.
+        [Default: ansible]
+
+- nick_to
+        A list of nicknames to send the message to. One of nick_to or channel needs to be set.  When both are defined, the message will
+        be sent to both of them.
+        [Default: (null)]
+        version_added: 2.0
+
+- part
+        Designates whether user should part from channel after sending message or not. Useful for when using a faux bot and not wanting
+        join/parts between messages.
+        [Default: yes]
+        type: bool
+        version_added: 2.0
+
+- passwd
+        Server password
+        [Default: (null)]
+
+- port
+        IRC server port number
+        [Default: 6667]
+
+- server
+        IRC server name/address
+        [Default: localhost]
+
+- style
+        Text style for the message. Note italic does not work on some clients
+        (Choices: bold, underline, reverse, italic)[Default: (null)]
+        version_added: 2.0
+
+- timeout
+        Timeout to use while waiting for successful registration and join messages, this is to prevent an endless loop
+        [Default: 30]
+        version_added: 1.5
+
+- topic
+        Set the channel topic
+        [Default: (null)]
+        version_added: 2.0
+
+- use_ssl
+        Designates whether TLS/SSL should be used when connecting to the IRC server
+        [Default: no]
+        type: bool
+        version_added: 1.8
+
+
+REQUIREMENTS:  socket
+
+AUTHOR: Jan-Piet Mens (@jpmens), Matt Martz (@sivel)
+        METADATA:
+          status:
+          - stableinterface
+          supported_by: community
+        
+
+EXAMPLES:
+
+- irc:
+    server: irc.example.net
+    channel: #t1
+    msg: Hello world
+
+- local_action:
+    module: irc
+    port: 6669
+    server: irc.example.net
+    channel: #t1
+    msg: 'All finished at {{ ansible_date_time.iso8601 }}'
+    color: red
+    nick: ansibleIRC
+
+- local_action:
+    module: irc
+    port: 6669
+    server: irc.example.net
+    channel: #t1
+    nick_to:
+      - nick1
+      - nick2
+    msg: 'All finished at {{ ansible_date_time.iso8601 }}'
+    color: red
+    nick: ansibleIRC
+
+

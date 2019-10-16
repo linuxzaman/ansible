@@ -1,0 +1,55 @@
+EXAMPLES:
+
+- name: "Adding a project hook"
+  gitlab_hook:
+    api_url: https://gitlab.example.com/
+    api_token: "{{ access_token }}"
+    project: "my_group/my_project"
+    hook_url: "https://my-ci-server.example.com/gitlab-hook"
+    state: present
+    push_events: yes
+    tag_push_events: yes
+    hook_validate_certs: no
+    token: "my-super-secret-token-that-my-ci-server-will-check"
+
+- name: "Delete the previous hook"
+  gitlab_hook:
+    api_url: https://gitlab.example.com/
+    api_token: "{{ access_token }}"
+    project: "my_group/my_project"
+    hook_url: "https://my-ci-server.example.com/gitlab-hook"
+    state: absent
+
+- name: "Delete a hook by numeric project id"
+  gitlab_hook:
+    api_url: https://gitlab.example.com/
+    api_token: "{{ access_token }}"
+    project: 10
+    hook_url: "https://my-ci-server.example.com/gitlab-hook"
+    state: absent
+
+
+RETURN VALUES:
+
+msg:
+  description: Success or failure message
+  returned: always
+  type: str
+  sample: "Success"
+
+result:
+  description: json parsed response from the server
+  returned: always
+  type: dict
+
+error:
+  description: the error message returned by the Gitlab API
+  returned: failed
+  type: str
+  sample: "400: path is already in use"
+
+hook:
+  description: API object
+  returned: always
+  type: dict
+

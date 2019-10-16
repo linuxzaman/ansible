@@ -1,0 +1,84 @@
+> GCP_TARGET_PROXY    (/usr/lib/python2.7/dist-packages/ansible/modules/cloud/google/_gcp_target_proxy.py)
+
+        Create, Update or Destroy a Target_Proxy. See https://cloud.google.com/compute/docs/load-balancing/http/target-proxies for an
+        overview. More details on the Target_Proxy API can be found at
+        https://cloud.google.com/compute/docs/reference/latest/targetHttpProxies#resource-representations.
+
+DEPRECATED: 
+
+	Reason: Updated modules released with increased functionality
+	Will be removed in: Ansible 2.12
+	Alternatives: Use M(gcp_compute_target_http_proxy) instead.
+
+
+  * This module is maintained by The Ansible Community
+OPTIONS (= is mandatory):
+
+= target_proxy_name
+        Name of the Target_Proxy.
+
+
+= target_proxy_type
+        Type of Target_Proxy. HTTP, HTTPS or SSL. Only HTTP is currently supported.
+
+
+- url_map_name
+        Name of the Url Map.  Required if type is HTTP or HTTPS proxy.
+        [Default: (null)]
+
+
+NOTES:
+      * Currently only supports global HTTP proxy.
+
+
+REQUIREMENTS:  python >= 2.6, google-api-python-client >= 1.6.2, google-auth >= 0.9.0, google-auth-httplib2 >= 0.0.2
+
+AUTHOR: Tom Melendez (@supertom) <tom@supertom.com>
+        METADATA:
+          status:
+          - deprecated
+          supported_by: community
+        
+
+EXAMPLES:
+
+- name: Create Minimum HTTP Target_Proxy
+  gcp_target_proxy:
+    service_account_email: "{{ service_account_email }}"
+    credentials_file: "{{ credentials_file }}"
+    project_id: "{{ project_id }}"
+    target_proxy_name: my-target_proxy
+    target_proxy_type: HTTP
+    url_map_name: my-url-map
+    state: present
+
+
+RETURN VALUES:
+
+state:
+    description: state of the Target_Proxy
+    returned: Always.
+    type: str
+    sample: present
+updated_target_proxy:
+    description: True if the target_proxy has been updated. Will not appear on
+                 initial target_proxy creation.
+    returned: if the target_proxy has been updated.
+    type: bool
+    sample: true
+target_proxy_name:
+    description: Name of the Target_Proxy
+    returned: Always
+    type: str
+    sample: my-target-proxy
+target_proxy_type:
+    description: Type of Target_Proxy. One of HTTP, HTTPS or SSL.
+    returned: Always
+    type: str
+    sample: HTTP
+target_proxy:
+    description: GCP Target_Proxy dictionary
+    returned: Always. Refer to GCP documentation for detailed field descriptions.
+    type: dict
+    sample: { "name": "my-target-proxy", "urlMap": "..." }
+

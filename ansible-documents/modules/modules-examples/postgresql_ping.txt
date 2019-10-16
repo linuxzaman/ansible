@@ -1,0 +1,30 @@
+EXAMPLES:
+
+# PostgreSQL ping dbsrv server from the shell:
+# ansible dbsrv -m postgresql_ping
+
+# In the example below you need to generate certificates previously.
+# See https://www.postgresql.org/docs/current/libpq-ssl.html for more information.
+- name: PostgreSQL ping dbsrv server using not default credentials and ssl
+  postgresql_ping:
+    db: protected_db
+    login_host: dbsrv
+    login_user: secret
+    login_password: secret_pass
+    ca_cert: /root/root.crt
+    ssl_mode: verify-full
+
+
+RETURN VALUES:
+
+is_available:
+  description: PostgreSQL server availability.
+  returned: always
+  type: bool
+  sample: true
+server_version:
+  description: PostgreSQL server version.
+  returned: always
+  type: dict
+  sample: { major: 10, minor: 1 }
+

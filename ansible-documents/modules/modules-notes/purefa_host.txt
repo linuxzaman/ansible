@@ -1,0 +1,155 @@
+> PUREFA_HOST    (/usr/lib/python2.7/dist-packages/ansible/modules/storage/purestorage/purefa_host.py)
+
+        Create, delete or modify hosts on Pure Storage FlashArrays.
+
+  * This module is maintained by The Ansible Community
+OPTIONS (= is mandatory):
+
+= api_token
+        FlashArray API token for admin privileged user.
+
+        type: str
+
+= fa_url
+        FlashArray management IPv4 address or Hostname.
+
+        type: str
+
+= host
+        The name of the host.
+
+        type: str
+
+- iqn
+        List of IQNs of the host if protocol is iscsi or mixed.
+        [Default: (null)]
+        type: list
+
+- lun
+        LUN ID to assign to volume for host. Must be unique.
+        If not provided the ID will be automatically assigned.
+        Range for LUN ID is 1 to 4095.
+        [Default: (null)]
+        type: int
+        version_added: 2.8
+
+- nqn
+        List of NQNs of the host if protocol is nvme or mixed.
+        [Default: (null)]
+        type: list
+        version_added: 2.8
+
+- personality
+        Define which operating system the host is. Recommend for ActiveCluster integration.
+        (Choices: hpux, vms, aix, esxi, solaris, hitachi-vsp, oracle-vm-server, delete, )[Default: ]
+        type: str
+        version_added: 2.7
+
+- protocol
+        Defines the host connection protocol for volumes.
+        (Choices: fc, iscsi, nvme, mixed)[Default: iscsi]
+        type: str
+
+- state
+        Define whether the host should exist or not.
+        When removing host all connected volumes will be disconnected.
+        (Choices: absent, present)[Default: present]
+        type: str
+
+- volume
+        Volume name to map to the host.
+        [Default: (null)]
+        type: str
+
+- wwns
+        List of wwns of the host if protocol is fc or mixed.
+        [Default: (null)]
+        type: list
+
+
+NOTES:
+      * If specifying `lun' option ensure host support requested value
+      * This module requires the `purestorage' Python library
+      * You must set `PUREFA_URL' and `PUREFA_API' environment variables if `fa_url' and `api_token' arguments are not passed to
+        the module directly
+
+
+REQUIREMENTS:  python >= 2.7, purestorage
+
+AUTHOR: Pure Storage Ansible Team (@sdodsley) <pure-ansible-team@purestorage.com>
+        METADATA:
+          status:
+          - preview
+          supported_by: community
+        
+
+EXAMPLES:
+
+- name: Create new AIX host
+  purefa_host:
+    host: foo
+    personaility: aix
+    fa_url: 10.10.10.2
+    api_token: e31060a7-21fc-e277-6240-25983c6c4592
+
+- name: Delete host
+  purefa_host:
+    host: foo
+    fa_url: 10.10.10.2
+    api_token: e31060a7-21fc-e277-6240-25983c6c4592
+    state: absent
+
+- name: Make host bar with wwn ports
+  purefa_host:
+    host: bar
+    protocol: fc
+    wwns:
+    - 00:00:00:00:00:00:00
+    - 11:11:11:11:11:11:11
+    fa_url: 10.10.10.2
+    api_token: e31060a7-21fc-e277-6240-25983c6c4592
+
+- name: Make host bar with iSCSI ports
+  purefa_host:
+    host: bar
+    protocol: iscsi
+    iqn:
+    - iqn.1994-05.com.redhat:7d366003913
+    fa_url: 10.10.10.2
+    api_token: e31060a7-21fc-e277-6240-25983c6c4592
+
+- name: Make host bar with NVMe ports
+  purefa_host:
+    host: bar
+    protocol: nvme
+    nqn:
+    - nqn.2014-08.com.vendor:nvme:nvm-subsystem-sn-d78432
+    fa_url: 10.10.10.2
+    api_token: e31060a7-21fc-e277-6240-25983c6c4592
+
+- name: Make mixed protocol host
+  purefa_host:
+    host: bar
+    protocol: mixed
+    nqn:
+    - nqn.2014-08.com.vendor:nvme:nvm-subsystem-sn-d78432
+    iqn:
+    - iqn.1994-05.com.redhat:7d366003914
+    wwns:
+    - 00:00:00:00:00:00:01
+    - 11:11:11:11:11:11:12
+    fa_url: 10.10.10.2
+    api_token: e31060a7-21fc-e277-6240-25983c6c4592
+
+- name: Map host foo to volume bar as LUN ID 12
+  purefa_host:
+    host: foo
+    volume: bar
+    lun: 12
+    fa_url: 10.10.10.2
+    api_token: e31060a7-21fc-e277-6240-25983c6c4592
+
+
+RETURN VALUES:
+
+

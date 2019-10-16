@@ -1,0 +1,923 @@
+> BIGIP_VIRTUAL_SERVER    (/usr/lib/python2.7/dist-packages/ansible/modules/network/f5/bigip_virtual_server.py)
+
+        Manage LTM virtual servers on a BIG-IP.
+
+  * This module is maintained by an Ansible Partner
+OPTIONS (= is mandatory):
+
+- address_translation
+        Specifies, when `enabled', that the system translates the address of the virtual server.
+        When `disabled', specifies that the system uses the address without translation.
+        This option is useful when the system is load balancing devices that have the same IP address.
+        When creating a new virtual server, the default is `enabled'.
+        [Default: (null)]
+        type: bool
+        version_added: 2.6
+        
+
+- clone_pools
+        Specifies a pool or list of pools that the virtual server uses to replicate either client-side or server-side traffic.
+        Typically this option is used for intrusion detection.
+        [Default: (null)]
+        suboptions:
+          context:
+            choices:
+            - clientside
+            - serverside
+            description:
+            - The context option for a clone pool to replicate either client-side or server-side
+              traffic.
+            type: str
+          pool_name:
+            description:
+            - The pool name to which the server replicates the traffic.
+            - Only pools created on Common partition or on the same partition as the virtual
+              server can be used.
+            - Referencing pool on common partition needs to be done in the full path format,
+              for example, `/Common/pool_name'.
+            required: true
+            type: str
+        
+        type: list
+        version_added: 2.8
+        
+
+- default_persistence_profile
+        Default Profile which manages the session persistence.
+        If you want to remove the existing default persistence profile, specify an empty value; `""'. See the documentation for an
+        example.
+        When `type' is `dhcp', this parameter will be ignored.
+        [Default: (null)]
+        type: str
+
+- description
+        Virtual server description.
+        [Default: (null)]
+        type: str
+
+- destination
+        Destination IP of the virtual server.
+        Required when `state' is `present' and virtual server does not exist.
+        When `type' is `internal', this parameter is ignored. For all other types, it is required.
+        Destination can also be specified as a name for an existing Virtual Address.
+        (Aliases: address, ip)[Default: (null)]
+        type: str
+
+- disabled_vlans
+        List of VLANs to be disabled. If the partition is not specified in the VLAN, then the `partition' option of this module will be
+        used.
+        This parameter is mutually exclusive with the `enabled_vlans' parameters.
+        [Default: (null)]
+        type: list
+        version_added: 2.5
+        
+
+- enabled_vlans
+        List of VLANs to be enabled. When a VLAN named `all' is used, all VLANs will be allowed. VLANs can be specified with or without
+        the leading partition. If the partition is not specified in the VLAN, then the `partition' option of this module will be used.
+        This parameter is mutually exclusive with the `disabled_vlans' parameter.
+        [Default: (null)]
+        type: list
+        version_added: 2.2
+        
+
+- fallback_persistence_profile
+        Specifies the persistence profile you want the system to use if it cannot use the specified default persistence profile.
+        If you want to remove the existing fallback persistence profile, specify an empty value; `""'. See the documentation for an
+        example.
+        When `type' is `dhcp', this parameter will be ignored.
+        [Default: (null)]
+        type: str
+        version_added: 2.3
+        
+
+- firewall_enforced_policy
+        Applies the specify AFM policy to the virtual in an enforcing way.
+        When creating a new virtual, if this parameter is not specified, the enforced policy is disabled.
+        [Default: (null)]
+        type: str
+        version_added: 2.6
+        
+
+- firewall_staged_policy
+        Applies the specify AFM policy to the virtual in an enforcing way.
+        A staged policy shows the results of the policy rules in the log, while not actually applying the rules to traffic.
+        When creating a new virtual, if this parameter is not specified, the staged policy is disabled.
+        [Default: (null)]
+        type: str
+        version_added: 2.6
+        
+
+- insert_metadata
+        When set to `no' it will not set metadata on the device.
+        Currently there is a limitation that non-admin users cannot set metadata on the object, despite being able to create and modify
+        virtual server objects, setting this option to `no' will allow such users to utilize this module to manage Virtual Server objects
+        on the device.
+        [Default: True]
+        type: bool
+        version_added: 2.8
+        
+
+- ip_intelligence_policy
+        Specifies the IP intelligence policy applied to the virtual server.
+        This parameter requires that a valid BIG-IP security module such as ASM or AFM be provisioned.
+        [Default: (null)]
+        type: str
+        version_added: 2.8
+        
+
+- ip_protocol
+        Specifies a network protocol name you want the system to use to direct traffic on this virtual server.
+        When creating a new virtual server, if this parameter is not specified, the default is `tcp'.
+        The Protocol setting is not available when you select Performance (HTTP) as the Type.
+        The value of this argument can be specified in either it's numeric value, or, for convenience, in a select number of named
+        values. Refer to `choices' for examples.
+        For a list of valid IP protocol numbers, refer to this page https://en.wikipedia.org/wiki/List_of_IP_protocol_numbers
+        When `type' is `dhcp', this module will force the `ip_protocol' parameter to be `17' (UDP).
+        (Choices: ah, any, bna, esp, etherip, gre, icmp, ipencap, ipv6, ipv6-auth, ipv6-crypt, ipv6-icmp, isp-ip, mux, ospf, sctp, tcp,
+        udp, udplite)[Default: (null)]
+        type: str
+        version_added: 2.6
+        
+
+- irules
+        List of rules to be applied in priority order.
+        If you want to remove existing iRules, specify a single empty value; `""'. See the documentation for an example.
+        When `type' is `dhcp', this parameter will be ignored.
+        When `type' is `stateless', this parameter will be ignored.
+        When `type' is `reject', this parameter will be ignored.
+        When `type' is `internal', this parameter will be ignored.
+        (Aliases: all_rules)[Default: (null)]
+        type: list
+        version_added: 2.2
+        
+
+- mask
+        Specifies the destination address network mask. This parameter will work with IPv4 and IPv6 type of addresses.
+        This is an optional parameter which can be specified when creating or updating virtual server.
+        If `destination' is set in CIDR notation format and `mask' is provided the `mask' parameter takes precedence.
+        If catchall destination is specified, i.e. `0.0.0.0' for IPv4 `::' for IPv6, mask parameter is set to `any' or `any6'
+        respectively.
+        When the `destination' is provided not in CIDR notation and `mask' is not specified, `255.255.255.255' or
+        `ffff:ffff:ffff:ffff:ffff:ffff:ffff:ffff' is set for IPv4 and IPv6 addresses respectively.
+        When `destination' is provided in CIDR notation format and `mask' is not specified the mask parameter is inferred from
+        `destination'.
+        When `destination' is provided as Virtual Address name, and `mask' is not specified, the mask will be `None' allowing device set
+        it with its internal defaults.
+        [Default: (null)]
+        type: str
+        version_added: 2.8
+        
+
+- metadata
+        Arbitrary key/value pairs that you can attach to a virtual server. This is useful in situations where you might want to annotate
+        a virtual to be managed by Ansible.
+        Key names will be stored as strings; this includes names that are numbers.
+        Values for all of the keys will be stored as strings; this includes values that are numbers.
+        Data will be persisted, not ephemeral.
+        [Default: (null)]
+        type: raw
+        version_added: 2.5
+        
+
+- mirror
+        Specifies that the system mirrors connections on each member of a redundant pair.
+        When creating a new virtual server, if this parameter is not specified, the default is `disabled'.
+        [Default: (null)]
+        type: bool
+        version_added: 2.8
+        
+
+= name
+        Virtual server name.
+        (Aliases: vs)
+        type: str
+
+- partition
+        Device partition to manage resources on.
+        [Default: Common]
+        type: str
+        version_added: 2.5
+        
+
+= password
+        The password for the user account used to connect to the BIG-IP.
+        You may omit this option by setting the environment variable `F5_PASSWORD'.
+        (Aliases: pass, pwd)
+        type: str
+
+- policies
+        Specifies the policies for the virtual server.
+        When `type' is `dhcp', this parameter will be ignored.
+        When `type' is `reject', this parameter will be ignored.
+        When `type' is `internal', this parameter will be ignored.
+        (Aliases: all_policies)[Default: (null)]
+        type: list
+
+- pool
+        Default pool for the virtual server.
+        If you want to remove the existing pool, specify an empty value; `""'. See the documentation for an example.
+        When creating a new virtual server, and `type' is `stateless', this parameter is required.
+        If `type' is `stateless', the `pool' that is used must not have any members which define a `rate_limit'.
+        [Default: (null)]
+        type: str
+
+- port
+        Port of the virtual server. Required when `state' is `present' and virtual server does not exist.
+        If you do not want to specify a particular port, use the value `0'. The result is that the virtual server will listen on any
+        port.
+        When `type' is `dhcp', this module will force the `port' parameter to be `67'.
+        When `type' is `internal', this module will force the `port' parameter to be `0'.
+        In addition to specifying a port number, a select number of service names may also be provided.
+        The string `ftp' may be substituted for for port `21'.
+        The string `http' may be substituted for for port `80'.
+        The string `https' may be substituted for for port `443'.
+        The string `telnet' may be substituted for for port `23'.
+        The string `smtp' may be substituted for for port `25'.
+        The string `snmp' may be substituted for for port `161'.
+        The string `snmp-trap' may be substituted for for port `162'.
+        The string `ssh' may be substituted for for port `22'.
+        The string `tftp' may be substituted for for port `69'.
+        The string `isakmp' may be substituted for for port `500'.
+        The string `mqtt' may be substituted for for port `1883'.
+        The string `mqtt-tls' may be substituted for for port `8883'.
+        [Default: (null)]
+        type: str
+
+- port_translation
+        Specifies, when `enabled', that the system translates the port of the virtual server.
+        When `disabled', specifies that the system uses the port without translation. Turning off port translation for a virtual server
+        is useful if you want to use the virtual server to load balance connections to any service.
+        When creating a new virtual server, the default is `enabled'.
+        [Default: (null)]
+        type: bool
+        version_added: 2.6
+        
+
+- profiles
+        List of profiles (HTTP, ClientSSL, ServerSSL, etc) to apply to both sides of the connection (client-side and server-side).
+        If you only want to apply a particular profile to the client-side of the connection, specify `client-side' for the profile's
+        `context'.
+        If you only want to apply a particular profile to the server-side of the connection, specify `server-side' for the profile's
+        `context'.
+        If `context' is not provided, it will default to `all'.
+        If you want to remove a profile from the list of profiles currently active on the virtual, then simply remove it from the
+        `profiles' list. See examples for an illustration of this.
+        If you want to add a profile to the list of profiles currently active on the virtual, then simply add it to the `profiles' list.
+        See examples for an illustration of this.
+        *Profiles matter*. This module will fail to configure a BIG-IP if you mix up your profiles, or, if you attempt to set an IP
+        protocol which your current, or new, profiles do not support. Both this module, and BIG-IP, will tell you when you are wrong,
+        with an error resembling `lists profiles incompatible with its protocol'.
+        If you are unsure what correct profile combinations are, then have a BIG-IP available to you in which you can make changes and
+        copy what the correct combinations are.
+        (Aliases: all_profiles)[Default: (null)]
+        suboptions:
+          context:
+            choices:
+            - all
+            - server-side
+            - client-side
+            default: all
+            description:
+            - The side of the connection on which the profile should be applied.
+            type: str
+          name:
+            description:
+            - Name of the profile.
+            - If this is not specified, then it is assumed that the profile item is only a
+              name of a profile.
+            - This must be specified if a context is specified.
+            type: str
+        
+        type: list
+
+- provider
+        A dict object containing connection details.
+        [Default: (null)]
+        suboptions:
+          password:
+            aliases:
+            - pass
+            - pwd
+            description:
+            - The password for the user account used to connect to the BIG-IP.
+            - You may omit this option by setting the environment variable `F5_PASSWORD'.
+            required: true
+            type: str
+          server:
+            description:
+            - The BIG-IP host.
+            - You may omit this option by setting the environment variable `F5_SERVER'.
+            required: true
+            type: str
+          server_port:
+            default: 443
+            description:
+            - The BIG-IP server port.
+            - You may omit this option by setting the environment variable `F5_SERVER_PORT'.
+            type: int
+          ssh_keyfile:
+            description:
+            - Specifies the SSH keyfile to use to authenticate the connection to the remote
+              device.  This argument is only used for `cli' transports.
+            - You may omit this option by setting the environment variable `ANSIBLE_NET_SSH_KEYFILE'.
+            type: path
+          timeout:
+            default: 10
+            description:
+            - Specifies the timeout in seconds for communicating with the network device for
+              either connecting or sending commands.  If the timeout is exceeded before the
+              operation is completed, the module will error.
+            type: int
+          transport:
+            choices:
+            - cli
+            - rest
+            default: rest
+            description:
+            - Configures the transport connection to use when connecting to the remote device.
+            type: str
+          user:
+            description:
+            - The username to connect to the BIG-IP with. This user must have administrative
+              privileges on the device.
+            - You may omit this option by setting the environment variable `F5_USER'.
+            required: true
+            type: str
+          validate_certs:
+            default: true
+            description:
+            - If `no', SSL certificates are not validated. Use this only on personally controlled
+              sites using self-signed certificates.
+            - You may omit this option by setting the environment variable `F5_VALIDATE_CERTS'.
+            type: bool
+        
+        type: dict
+        version_added: 2.5
+
+- rate_limit
+        Virtual server rate limit (connections-per-second). Setting this to 0 disables the limit.
+        The valid value range is `0' - `4294967295'.
+        [Default: (null)]
+        type: int
+        version_added: 2.8
+        
+
+- rate_limit_dst_mask
+        Specifies a mask, in bits, to be applied to the destination address as part of the rate limiting.
+        The default value is `0', which is equivalent to using the entire address - `32' in IPv4, or `128' in IPv6.
+        The valid value range is `0' - `4294967295'.
+        [Default: (null)]
+        type: int
+        version_added: 2.8
+        
+
+- rate_limit_mode
+        Indicates whether the rate limit is applied per virtual object, per source address, per destination address, or some combination
+        thereof.
+        The default value is 'object', which does not use the source or destination address as part of the key.
+        (Choices: object, object-source, object-destination, object-source-destination, destination, source, source-destination)[Default:
+        object]
+        type: str
+        version_added: 2.8
+        
+
+- rate_limit_src_mask
+        Specifies a mask, in bits, to be applied to the source address as part of the rate limiting.
+        The default value is `0', which is equivalent to using the entire address - `32' in IPv4, or `128' in IPv6.
+        The valid value range is `0' - `4294967295'.
+        [Default: (null)]
+        type: int
+        version_added: 2.8
+        
+
+- security_log_profiles
+        Specifies the log profile applied to the virtual server.
+        To make use of this feature, the AFM module must be licensed and provisioned.
+        The `Log all requests' and `Log illegal requests' are mutually exclusive and therefore, this module will raise an error if the
+        two are specified together.
+        [Default: (null)]
+        type: list
+        version_added: 2.6
+        
+
+- security_nat_policy
+        Specify the Firewall NAT policies for the virtual server.
+        You can specify one or more NAT policies to use.
+        The most specific policy is used. For example, if you specify that the virtual server use the device policy and the route domain
+        policy, the route domain policy overrides the device policy.
+        [Default: (null)]
+        suboptions:
+          policy:
+            description:
+            - Policy to apply a NAT policy directly to the virtual server.
+            - The virtual server NAT policy is the most specific, and overrides a route domain
+              and device policy, if specified.
+            - To remove the policy, specify an empty string value.
+            type: str
+          use_device_policy:
+            description:
+            - Specify that the virtual server uses the device NAT policy, as specified in
+              the Firewall Options.
+            - The device policy is used if no route domain or virtual server NAT setting is
+              specified.
+            type: bool
+          use_route_domain_policy:
+            description:
+            - Specify that the virtual server uses the route domain policy, as specified in
+              the Route Domain Security settings.
+            - When specified, the route domain policy overrides the device policy, and is
+              overridden by a virtual server policy.
+            type: bool
+        
+        type: dict
+        version_added: 2.7
+        
+
+= server
+        The BIG-IP host.
+        You may omit this option by setting the environment variable `F5_SERVER'.
+
+        type: str
+
+- server_port
+        The BIG-IP server port.
+        You may omit this option by setting the environment variable `F5_SERVER_PORT'.
+        [Default: 443]
+        type: int
+        version_added: 2.2
+
+- snat
+        Source network address policy.
+        When `type' is `dhcp', this parameter is ignored.
+        When `type' is `reject', this parameter will be ignored.
+        When `type' is `internal', this parameter will be ignored.
+        The name of a SNAT pool (eg "/Common/snat_pool_name") can be specified to enable SNAT with the specific pool.
+        To remove SNAT, specify the word `none'.
+        To specify automap, use the word `automap'.
+        [Default: (null)]
+        type: str
+
+- source
+        Specifies an IP address or network from which the virtual server accepts traffic.
+        The virtual server accepts clients only from one of these IP addresses.
+        For this setting to function effectively, specify a value other than 0.0.0.0/0 or ::/0 (that is, any/0, any6/0).
+        In order to maximize utility of this setting, specify the most specific address prefixes covering all customer addresses and no
+        others.
+        Specify the IP address in Classless Inter-Domain Routing (CIDR) format; address/prefix, where the prefix length is in bits. For
+        example, for IPv4, 10.0.0.1/32 or 10.0.0.0/24, and for IPv6, ffe1::0020/64 or 2001:ed8:77b5:2:10:10:100:42/64.
+        [Default: (null)]
+        type: str
+        version_added: 2.5
+        
+
+- source_port
+        Specifies whether the system preserves the source port of the connection.
+        When creating a new virtual server, if this parameter is not specified, the default is `preserve'.
+        (Choices: preserve, preserve-strict, change)[Default: (null)]
+        type: str
+        version_added: 2.8
+        
+
+- state
+        The virtual server state. If `absent', delete the virtual server if it exists. `present' creates the virtual server and enable
+        it. If `enabled', enable the virtual server if it exists. If `disabled', create the virtual server if needed, and set state to
+        `disabled'.
+        (Choices: present, absent, enabled, disabled)[Default: present]
+        type: str
+
+- type
+        Specifies the network service provided by this virtual server.
+        When creating a new virtual server, if this parameter is not provided, the default will be `standard'.
+        This value cannot be changed after it is set.
+        When `standard', specifies a virtual server that directs client traffic to a load balancing pool and is the most basic type of
+        virtual server. When you first create the virtual server, you assign an existing default pool to it. From then on, the virtual
+        server automatically directs traffic to that default pool.
+        When `forwarding-l2', specifies a virtual server that shares the same IP address as a node in an associated VLAN.
+        When `forwarding-ip', specifies a virtual server like other virtual servers, except that the virtual server has no pool members
+        to load balance. The virtual server simply forwards the packet directly to the destination IP address specified in the client
+        request.
+        When `performance-http', specifies a virtual server with which you associate a Fast HTTP profile. Together, the virtual server
+        and profile increase the speed at which the virtual server processes HTTP requests.
+        When `performance-l4', specifies a virtual server with which you associate a Fast L4 profile. Together, the virtual server and
+        profile increase the speed at which the virtual server processes layer 4 requests.
+        When `stateless', specifies a virtual server that accepts traffic matching the virtual server address and load balances the
+        packet to the pool members without attempting to match the packet to a pre-existing connection in the connection table. New
+        connections are immediately removed from the connection table. This addresses the requirement for one-way UDP traffic that needs
+        to be processed at very high throughput levels, for example, load balancing syslog traffic to a pool of syslog servers. Stateless
+        virtual servers are not suitable for processing traffic that requires stateful tracking, such as TCP traffic. Stateless virtual
+        servers do not support iRules, persistence, connection mirroring, rateshaping, or SNAT automap.
+        When `reject', specifies that the BIG-IP system rejects any traffic destined for the virtual server IP address.
+        When `dhcp', specifies a virtual server that relays Dynamic Host Control Protocol (DHCP) client requests for an IP address to one
+        or more DHCP servers, and provides DHCP server responses with an available IP address for the client.
+        When `internal', specifies a virtual server that supports modification of HTTP requests and responses. Internal virtual servers
+        enable usage of ICAP (Internet Content Adaptation Protocol) servers to modify HTTP requests and responses by creating and
+        applying an ICAP profile and adding Request Adapt or Response Adapt profiles to the virtual server.
+        When `message-routing', specifies a virtual server that uses a SIP application protocol and functions in accordance with a SIP
+        session profile and SIP router profile.
+        (Choices: standard, forwarding-l2, forwarding-ip, performance-http, performance-l4, stateless, reject, dhcp, internal, message-
+        routing)[Default: standard]
+        type: str
+        version_added: 2.6
+        
+
+= user
+        The username to connect to the BIG-IP with. This user must have administrative privileges on the device.
+        You may omit this option by setting the environment variable `F5_USER'.
+
+        type: str
+
+- validate_certs
+        If `no', SSL certificates are not validated. Use this only on personally controlled sites using self-signed certificates.
+        You may omit this option by setting the environment variable `F5_VALIDATE_CERTS'.
+        [Default: True]
+        type: bool
+        version_added: 2.0
+
+
+NOTES:
+      * For more information on using Ansible to manage F5 Networks devices see https://www.ansible.com/integrations/networks/f5.
+      * Requires BIG-IP software version >= 12.
+      * The F5 modules only manipulate the running configuration of the F5 product. To ensure that BIG-IP specific configuration
+        persists to disk, be sure to include at least one task that uses the [bigip_config] module to save the running
+        configuration. Refer to the module's documentation for the correct usage of the module to save your running configuration.
+
+
+AUTHOR: Tim Rupp (@caphrim007), Wojciech Wypior (@wojtek0806)
+        METADATA:
+          status:
+          - preview
+          supported_by: certified
+        
+
+EXAMPLES:
+
+- name: Modify Port of the Virtual Server
+  bigip_virtual_server:
+    state: present
+    partition: Common
+    name: my-virtual-server
+    port: 8080
+    provider:
+      server: lb.mydomain.net
+      user: admin
+      password: secret
+  delegate_to: localhost
+
+- name: Delete virtual server
+  bigip_virtual_server:
+    state: absent
+    partition: Common
+    name: my-virtual-server
+    provider:
+      server: lb.mydomain.net
+      user: admin
+      password: secret
+  delegate_to: localhost
+
+- name: Add virtual server
+  bigip_virtual_server:
+    state: present
+    partition: Common
+    name: my-virtual-server
+    destination: 10.10.10.10
+    port: 443
+    pool: my-pool
+    snat: Automap
+    description: Test Virtual Server
+    profiles:
+      - http
+      - fix
+      - name: clientssl
+        context: server-side
+      - name: ilx
+        context: client-side
+    policies:
+      - my-ltm-policy-for-asm
+      - ltm-uri-policy
+      - ltm-policy-2
+      - ltm-policy-3
+    enabled_vlans:
+      - /Common/vlan2
+    provider:
+      server: lb.mydomain.net
+      user: admin
+      password: secret
+  delegate_to: localhost
+
+- name: Add FastL4 virtual server
+  bigip_virtual_server:
+    destination: 1.1.1.1
+    name: fastl4_vs
+    port: 80
+    profiles:
+      - fastL4
+    state: present
+    provider:
+      server: lb.mydomain.net
+      user: admin
+      password: secret
+  delegate_to: localhost
+
+- name: Add iRules to the Virtual Server
+  bigip_virtual_server:
+    name: my-virtual-server
+    irules:
+      - irule1
+      - irule2
+    provider:
+      server: lb.mydomain.net
+      user: admin
+      password: secret
+  delegate_to: localhost
+
+- name: Remove one iRule from the Virtual Server
+  bigip_virtual_server:
+    name: my-virtual-server
+    irules:
+      - irule2
+    provider:
+      server: lb.mydomain.net
+      user: admin
+      password: secret
+  delegate_to: localhost
+
+- name: Remove all iRules from the Virtual Server
+  bigip_virtual_server:
+    name: my-virtual-server
+    irules: ""
+    provider:
+      server: lb.mydomain.net
+      user: admin
+      password: secret
+  delegate_to: localhost
+
+- name: Remove pool from the Virtual Server
+  bigip_virtual_server:
+    name: my-virtual-server
+    pool: ""
+    provider:
+      server: lb.mydomain.net
+      user: admin
+      password: secret
+  delegate_to: localhost
+
+- name: Add metadata to virtual
+  bigip_pool:
+    state: absent
+    name: my-pool
+    partition: Common
+    metadata:
+      ansible: 2.4
+      updated_at: 2017-12-20T17:50:46Z
+    provider:
+      server: lb.mydomain.com
+      user: admin
+      password: secret
+  delegate_to: localhost
+
+- name: Add virtual with two profiles
+  bigip_pool:
+    state: absent
+    name: my-pool
+    partition: Common
+    profiles:
+      - http
+      - tcp
+    provider:
+      server: lb.mydomain.com
+      user: admin
+      password: secret
+  delegate_to: localhost
+
+- name: Remove HTTP profile from previous virtual
+  bigip_pool:
+    state: absent
+    name: my-pool
+    partition: Common
+    profiles:
+      - tcp
+    provider:
+      server: lb.mydomain.com
+      user: admin
+      password: secret
+  delegate_to: localhost
+
+- name: Add the HTTP profile back to the previous virtual
+  bigip_pool:
+    state: absent
+    name: my-pool
+    partition: Common
+    profiles:
+      - http
+      - tcp
+    provider:
+      server: lb.mydomain.com
+      user: admin
+      password: secret
+  delegate_to: localhost
+
+- name: Add virtual server with rate limit
+  bigip_virtual_server:
+    state: present
+    partition: Common
+    name: my-virtual-server
+    destination: 10.10.10.10
+    port: 443
+    pool: my-pool
+    snat: Automap
+    description: Test Virtual Server
+    profiles:
+      - http
+      - fix
+      - name: clientssl
+        context: server-side
+      - name: ilx
+        context: client-side
+    policies:
+      - my-ltm-policy-for-asm
+      - ltm-uri-policy
+      - ltm-policy-2
+      - ltm-policy-3
+    enabled_vlans:
+      - /Common/vlan2
+    rate_limit: 400
+    rate_limit_mode: destination
+    rate_limit_dst_mask: 32
+    provider:
+      server: lb.mydomain.net
+      user: admin
+      password: secret
+  delegate_to: localhost
+
+- name: Add FastL4 virtual server with clone_pools
+  bigip_virtual_server:
+    destination: 1.1.1.1
+    name: fastl4_vs
+    port: 80
+    profiles:
+      - fastL4
+    state: present
+    clone_pools:
+      - pool_name: FooPool
+        context: clientside
+    provider:
+      server: lb.mydomain.net
+      user: admin
+      password: secret
+  delegate_to: localhost
+
+
+RETURN VALUES:
+
+description:
+  description: New description of the virtual server.
+  returned: changed
+  type: str
+  sample: This is my description
+default_persistence_profile:
+  description: Default persistence profile set on the virtual server.
+  returned: changed
+  type: str
+  sample: /Common/dest_addr
+destination:
+  description: Destination of the virtual server.
+  returned: changed
+  type: str
+  sample: 1.1.1.1
+disabled:
+  description: Whether the virtual server is disabled, or not.
+  returned: changed
+  type: bool
+  sample: True
+disabled_vlans:
+  description: List of VLANs that the virtual is disabled for.
+  returned: changed
+  type: list
+  sample: ['/Common/vlan1', '/Common/vlan2']
+enabled:
+  description: Whether the virtual server is enabled, or not.
+  returned: changed
+  type: bool
+  sample: False
+enabled_vlans:
+  description: List of VLANs that the virtual is enabled for.
+  returned: changed
+  type: list
+  sample: ['/Common/vlan5', '/Common/vlan6']
+fallback_persistence_profile:
+  description: Fallback persistence profile set on the virtual server.
+  returned: changed
+  type: str
+  sample: /Common/source_addr
+irules:
+  description: iRules set on the virtual server.
+  returned: changed
+  type: list
+  sample: ['/Common/irule1', '/Common/irule2']
+pool:
+  description: Pool that the virtual server is attached to.
+  returned: changed
+  type: str
+  sample: /Common/my-pool
+policies:
+  description: List of policies attached to the virtual.
+  returned: changed
+  type: list
+  sample: ['/Common/policy1', '/Common/policy2']
+port:
+  description: Port that the virtual server is configured to listen on.
+  returned: changed
+  type: int
+  sample: 80
+profiles:
+  description: List of profiles set on the virtual server.
+  returned: changed
+  type: list
+  sample: [{'name': 'tcp', 'context': 'server-side'}, {'name': 'tcp-legacy', 'context': 'client-side'}]
+snat:
+  description: SNAT setting of the virtual server.
+  returned: changed
+  type: str
+  sample: Automap
+source:
+  description: Source address, in CIDR form, set on the virtual server.
+  returned: changed
+  type: str
+  sample: 1.2.3.4/32
+metadata:
+  description: The new value of the virtual.
+  returned: changed
+  type: dict
+  sample: {'key1': 'foo', 'key2': 'bar'}
+address_translation:
+  description: The new value specifying whether address translation is on or off.
+  returned: changed
+  type: bool
+  sample: True
+port_translation:
+  description: The new value specifying whether port translation is on or off.
+  returned: changed
+  type: bool
+  sample: True
+source_port:
+  description: Specifies whether the system preserves the source port of the connection.
+  returned: changed
+  type: str
+  sample: change
+mirror:
+  description: Specifies that the system mirrors connections on each member of a redundant pair.
+  returned: changed
+  type: bool
+  sample: True
+ip_protocol:
+  description: The new value of the IP protocol.
+  returned: changed
+  type: int
+  sample: 6
+firewall_enforced_policy:
+  description: The new enforcing firewall policy.
+  returned: changed
+  type: str
+  sample: /Common/my-enforced-fw
+firewall_staged_policy:
+  description: The new staging firewall policy.
+  returned: changed
+  type: str
+  sample: /Common/my-staged-fw
+security_log_profiles:
+  description: The new list of security log profiles.
+  returned: changed
+  type: list
+  sample: ['/Common/profile1', '/Common/profile2']
+ip_intelligence_policy:
+  description: The new IP Intelligence Policy assigned to the virtual.
+  returned: changed
+  type: str
+  sample: /Common/ip-intelligence
+rate_limit:
+  description: The maximum number of connections per second allowed for a virtual server.
+  returned: changed
+  type: int
+  sample: 5000
+rate_limit_src_mask:
+  description: Specifies a mask, in bits, to be applied to the source address as part of the rate limiting.
+  returned: changed
+  type: int
+  sample: 32
+rate_limit_dst_mask:
+  description: Specifies a mask, in bits, to be applied to the destination address as part of the rate limiting.
+  returned: changed
+  type: int
+  sample: 32
+rate_limit_mode:
+  description: Sets the type of rate limiting to be used on the virtual server.
+  returned: changed
+  type: str
+  sample: object-source
+clone_pools:
+  description: Pools to which virtual server copies traffic.
+  returned: changed
+  type: list
+  sample: [{'pool_name':'/Common/Pool1', 'context': 'clientside'}]
+

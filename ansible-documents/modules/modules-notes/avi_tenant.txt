@@ -1,0 +1,132 @@
+> AVI_TENANT    (/usr/lib/python2.7/dist-packages/ansible/modules/network/avi/avi_tenant.py)
+
+        This module is used to configure Tenant object more examples at https://github.com/avinetworks/devops
+
+  * This module is maintained by The Ansible Community
+OPTIONS (= is mandatory):
+
+- api_context
+        Avi API context that includes current session ID and CSRF Token.
+        This allows user to perform single login and re-use the session.
+        [Default: (null)]
+        type: dict
+        version_added: 2.5
+
+- api_version
+        Avi API version of to use for Avi API and objects.
+        [Default: 16.4.4]
+        type: str
+
+- avi_api_patch_op
+        Patch operation to use when using avi_api_update_method as patch.
+        (Choices: add, replace, delete)[Default: (null)]
+        version_added: 2.5
+
+- avi_api_update_method
+        Default method for object update is HTTP PUT.
+        Setting to patch will override that behavior to use HTTP PATCH.
+        (Choices: put, patch)[Default: put]
+        version_added: 2.5
+
+- avi_credentials
+        Avi Credentials dictionary which can be used in lieu of enumerating Avi Controller login details.
+        [Default: (null)]
+        type: dict
+        version_added: 2.5
+
+- config_settings
+        Tenantconfiguration settings for tenant.
+        [Default: (null)]
+
+- controller
+        IP address or hostname of the controller. The default value is the environment variable `AVI_CONTROLLER'.
+        [Default: ]
+        type: str
+
+- created_by
+        Creator of this tenant.
+        [Default: (null)]
+
+- description
+        User defined description for the object.
+        [Default: (null)]
+
+- local
+        Boolean flag to set local.
+        Default value when not specified in API or module is interpreted by Avi Controller as True.
+        [Default: (null)]
+        type: bool
+
+= name
+        Name of the object.
+
+
+- password
+        Password of Avi user in Avi controller. The default value is the environment variable `AVI_PASSWORD'.
+        [Default: ]
+        type: str
+
+- state
+        The state that should be applied on the entity.
+        (Choices: absent, present)[Default: present]
+
+- tenant
+        Name of tenant used for all Avi API calls and context of object.
+        [Default: admin]
+        type: str
+
+- tenant_uuid
+        UUID of tenant used for all Avi API calls and context of object.
+        [Default: ]
+        type: str
+
+- url
+        Avi controller URL of the object.
+        [Default: (null)]
+
+- username
+        Username used for accessing Avi controller. The default value is the environment variable `AVI_USERNAME'.
+        [Default: ]
+        type: str
+
+- uuid
+        Unique object identifier of the object.
+        [Default: (null)]
+
+
+NOTES:
+      * For more information on using Ansible to manage Avi Network devices see https://www.ansible.com/ansible-avi-networks.
+
+
+REQUIREMENTS:  avisdk
+
+AUTHOR: Gaurav Rastogi (@grastogi23) <grastogi@avinetworks.com>
+        METADATA:
+          status:
+          - preview
+          supported_by: community
+        
+
+EXAMPLES:
+
+- name: Create Tenant using Service Engines in provider mode
+    avi_tenant:
+      controller: '{{ controller }}'
+      password: '{{ password }}'
+      username: '{{ username }}'
+      config_settings:
+        se_in_provider_context: false
+        tenant_access_to_provider_se: true
+        tenant_vrf: false
+      description: VCenter, Open Stack, AWS Virtual services
+      local: true
+      name: Demo
+
+
+RETURN VALUES:
+
+obj:
+    description: Tenant (api/tenant) object
+    returned: success, changed
+    type: dict
+

@@ -1,0 +1,84 @@
+> ONYX_PROTOCOL    (/usr/lib/python2.7/dist-packages/ansible/modules/network/onyx/onyx_protocol.py)
+
+        This module provides a mechanism for enabling and disabling protocols Mellanox on ONYX network devices.
+
+  * This module is maintained by The Ansible Community
+OPTIONS (= is mandatory):
+
+- bgp
+        BGP protocol
+        (Choices: enabled, disabled)[Default: (null)]
+
+- dcb_pfc
+        DCB priority flow control
+        (Choices: enabled, disabled)[Default: (null)]
+
+- igmp_snooping
+        IP IGMP snooping
+        (Choices: enabled, disabled)[Default: (null)]
+
+- ip_l3
+        IP L3 support
+        (Choices: enabled, disabled)[Default: (null)]
+
+- ip_routing
+        IP routing support
+        (Choices: enabled, disabled)[Default: (null)]
+
+- lacp
+        LACP protocol
+        (Choices: enabled, disabled)[Default: (null)]
+
+- lldp
+        LLDP protocol
+        (Choices: enabled, disabled)[Default: (null)]
+
+- magp
+        MAGP protocol
+        (Choices: enabled, disabled)[Default: (null)]
+
+- mlag
+        MLAG protocol
+        (Choices: enabled, disabled)[Default: (null)]
+
+- ospf
+        OSPF protocol
+        (Choices: enabled, disabled)[Default: (null)]
+
+- spanning_tree
+        Spanning Tree support
+        (Choices: enabled, disabled)[Default: (null)]
+
+
+NOTES:
+      * Tested on ONYX 3.6.4000
+
+
+AUTHOR: Samer Deeb (@samerd)
+        METADATA:
+          status:
+          - preview
+          supported_by: community
+        
+
+EXAMPLES:
+
+- name: enable protocols for MLAG
+  onyx_protocol:
+    lacp: enabled
+    spanning_tree: disabled
+    ip_routing: enabled
+    mlag: enabled
+    dcb_pfc: enabled
+
+
+RETURN VALUES:
+
+commands:
+  description: The list of configuration mode commands to send to the device.
+  returned: always
+  type: list
+  sample:
+    - no spanning-tree
+    - protocol mlag
+

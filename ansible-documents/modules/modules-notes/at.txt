@@ -1,0 +1,68 @@
+> AT    (/usr/lib/python2.7/dist-packages/ansible/modules/system/at.py)
+
+        Use this module to schedule a command or script file to run once in the future. All jobs are executed in the 'a' queue.
+
+  * This module is maintained by The Ansible Core Team
+OPTIONS (= is mandatory):
+
+- command
+        A command to be executed in the future.
+        [Default: (null)]
+        type: str
+
+= count
+        The count of units in the future to execute the command or script file.
+
+        type: int
+
+- script_file
+        An existing script file to be executed in the future.
+        [Default: (null)]
+        type: str
+
+- state
+        The state dictates if the command or script file should be evaluated as present(added) or absent(deleted).
+        (Choices: absent, present)[Default: present]
+        type: str
+
+- unique
+        If a matching job is present a new job will not be added.
+        [Default: False]
+        type: bool
+
+= units
+        The type of units in the future to execute the command or script file.
+        (Choices: minutes, hours, days, weeks)
+        type: str
+
+
+REQUIREMENTS:  at
+
+AUTHOR: Richard Isaacson (@risaacson)
+        METADATA:
+          status:
+          - preview
+          supported_by: core
+        
+
+EXAMPLES:
+
+- name: Schedule a command to execute in 20 minutes as root
+  at:
+    command: ls -d / >/dev/null
+    count: 20
+    units: minutes
+
+- name: Match a command to an existing job and delete the job
+  at:
+    command: ls -d / >/dev/null
+    state: absent
+
+- name: Schedule a command to execute in 20 minutes making sure it is unique in the queue
+  at:
+    command: ls -d / >/dev/null
+    count: 20
+    units: minutes
+    unique: yes
+
+

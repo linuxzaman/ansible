@@ -1,0 +1,697 @@
+> FORTIOS_WEBFILTER_PROFILE    (/usr/lib/python2.7/dist-packages/ansible/modules/network/fortios/fortios_webfilter_profile.py)
+
+        This module is able to configure a FortiGate or FortiOS by allowing the user to configure webfilter feature and profile category.
+        Examples includes all options and need to be adjusted to datasources before usage. Tested with FOS v6.0.2
+
+  * This module is maintained by The Ansible Community
+OPTIONS (= is mandatory):
+
+= host
+        FortiOS or FortiGate ip address.
+
+
+- https
+        Indicates if the requests towards FortiGate must use HTTPS protocol
+        [Default: False]
+        type: bool
+
+- password
+        FortiOS or FortiGate password.
+        [Default: ]
+
+= username
+        FortiOS or FortiGate username.
+
+
+- vdom
+        Virtual domain, among those defined previously. A vdom is a virtual instance of the FortiGate that can be configured and used as
+        a different unit.
+        [Default: root]
+
+- webfilter_profile
+        Configure Web filter profiles.
+        [Default: None]
+        suboptions:
+          comment:
+            description:
+            - Optional comments.
+          extended-log:
+            choices:
+            - enable
+            - disable
+            description:
+            - Enable/disable extended logging for web filtering.
+          ftgd-wf:
+            description:
+            - FortiGuard Web Filter settings.
+            suboptions:
+              exempt-quota:
+                description:
+                - Do not stop quota for these categories.
+              filters:
+                description:
+                - FortiGuard filters.
+                suboptions:
+                  action:
+                    choices:
+                    - block
+                    - authenticate
+                    - monitor
+                    - warning
+                    description:
+                    - Action to take for matches.
+                  auth-usr-grp:
+                    description:
+                    - Groups with permission to authenticate.
+                    suboptions:
+                      name:
+                        description:
+                        - User group name. Source user.group.name.
+                        required: true
+                  category:
+                    description:
+                    - Categories and groups the filter examines.
+                  id:
+                    description:
+                    - ID number.
+                    required: true
+                  log:
+                    choices:
+                    - enable
+                    - disable
+                    description:
+                    - Enable/disable logging.
+                  override-replacemsg:
+                    description:
+                    - Override replacement message.
+                  warn-duration:
+                    description:
+                    - Duration of warnings.
+                  warning-duration-type:
+                    choices:
+                    - session
+                    - timeout
+                    description:
+                    - Re-display warning after closing browser or after a timeout.
+                  warning-prompt:
+                    choices:
+                    - per-domain
+                    - per-category
+                    description:
+                    - Warning prompts in each category or each domain.
+              max-quota-timeout:
+                description:
+                - Maximum FortiGuard quota used by single page view in seconds (excludes streams).
+              options:
+                choices:
+                - error-allow
+                - rate-server-ip
+                - connect-request-bypass
+                - ftgd-disable
+                description:
+                - Options for FortiGuard Web Filter.
+              ovrd:
+                description:
+                - Allow web filter profile overrides.
+              quota:
+                description:
+                - FortiGuard traffic quota settings.
+                suboptions:
+                  category:
+                    description:
+                    - FortiGuard categories to apply quota to (category action must be set
+                      to monitor).
+                  duration:
+                    description:
+                    - Duration of quota.
+                  id:
+                    description:
+                    - ID number.
+                    required: true
+                  override-replacemsg:
+                    description:
+                    - Override replacement message.
+                  type:
+                    choices:
+                    - time
+                    - traffic
+                    description:
+                    - Quota type.
+                  unit:
+                    choices:
+                    - B
+                    - KB
+                    - MB
+                    - GB
+                    description:
+                    - Traffic quota unit of measurement.
+                  value:
+                    description:
+                    - Traffic quota value.
+              rate-crl-urls:
+                choices:
+                - disable
+                - enable
+                description:
+                - Enable/disable rating CRL by URL.
+              rate-css-urls:
+                choices:
+                - disable
+                - enable
+                description:
+                - Enable/disable rating CSS by URL.
+              rate-image-urls:
+                choices:
+                - disable
+                - enable
+                description:
+                - Enable/disable rating images by URL.
+              rate-javascript-urls:
+                choices:
+                - disable
+                - enable
+                description:
+                - Enable/disable rating JavaScript by URL.
+          https-replacemsg:
+            choices:
+            - enable
+            - disable
+            description:
+            - Enable replacement messages for HTTPS.
+          inspection-mode:
+            choices:
+            - proxy
+            - flow-based
+            description:
+            - Web filtering inspection mode.
+          log-all-url:
+            choices:
+            - enable
+            - disable
+            description:
+            - Enable/disable logging all URLs visited.
+          name:
+            description:
+            - Profile name.
+            required: true
+          options:
+            choices:
+            - activexfilter
+            - cookiefilter
+            - javafilter
+            - block-invalid-url
+            - jscript
+            - js
+            - vbs
+            - unknown
+            - intrinsic
+            - wf-referer
+            - wf-cookie
+            - per-user-bwl
+            description:
+            - Options.
+          override:
+            description:
+            - Web Filter override settings.
+            suboptions:
+              ovrd-cookie:
+                choices:
+                - allow
+                - deny
+                description:
+                - Allow/deny browser-based (cookie) overrides.
+              ovrd-dur:
+                description:
+                - Override duration.
+              ovrd-dur-mode:
+                choices:
+                - constant
+                - ask
+                description:
+                - Override duration mode.
+              ovrd-scope:
+                choices:
+                - user
+                - user-group
+                - ip
+                - browser
+                - ask
+                description:
+                - Override scope.
+              ovrd-user-group:
+                description:
+                - User groups with permission to use the override.
+                suboptions:
+                  name:
+                    description:
+                    - User group name. Source user.group.name.
+                    required: true
+              profile:
+                description:
+                - Web filter profile with permission to create overrides.
+                suboptions:
+                  name:
+                    description:
+                    - Web profile. Source webfilter.profile.name.
+                    required: true
+              profile-attribute:
+                choices:
+                - User-Name
+                - NAS-IP-Address
+                - Framed-IP-Address
+                - Framed-IP-Netmask
+                - Filter-Id
+                - Login-IP-Host
+                - Reply-Message
+                - Callback-Number
+                - Callback-Id
+                - Framed-Route
+                - Framed-IPX-Network
+                - Class
+                - Called-Station-Id
+                - Calling-Station-Id
+                - NAS-Identifier
+                - Proxy-State
+                - Login-LAT-Service
+                - Login-LAT-Node
+                - Login-LAT-Group
+                - Framed-AppleTalk-Zone
+                - Acct-Session-Id
+                - Acct-Multi-Session-Id
+                description:
+                - Profile attribute to retrieve from the RADIUS server.
+              profile-type:
+                choices:
+                - list
+                - radius
+                description:
+                - Override profile type.
+          ovrd-perm:
+            choices:
+            - bannedword-override
+            - urlfilter-override
+            - fortiguard-wf-override
+            - contenttype-check-override
+            description:
+            - Permitted override types.
+          post-action:
+            choices:
+            - normal
+            - block
+            description:
+            - Action taken for HTTP POST traffic.
+          replacemsg-group:
+            description:
+            - Replacement message group. Source system.replacemsg-group.name.
+          state:
+            choices:
+            - present
+            - absent
+            description:
+            - Indicates whether to create or remove the object
+          web:
+            description:
+            - Web content filtering settings.
+            suboptions:
+              blacklist:
+                choices:
+                - enable
+                - disable
+                description:
+                - Enable/disable automatic addition of URLs detected by FortiSandbox to blacklist.
+              bword-table:
+                description:
+                - Banned word table ID. Source webfilter.content.id.
+              bword-threshold:
+                description:
+                - Banned word score threshold.
+              content-header-list:
+                description:
+                - Content header list. Source webfilter.content-header.id.
+              keyword-match:
+                description:
+                - Search keywords to log when match is found.
+                suboptions:
+                  pattern:
+                    description:
+                    - Pattern/keyword to search for.
+                    required: true
+              log-search:
+                choices:
+                - enable
+                - disable
+                description:
+                - Enable/disable logging all search phrases.
+              safe-search:
+                choices:
+                - url
+                - header
+                description:
+                - Safe search type.
+              urlfilter-table:
+                description:
+                - URL filter table ID. Source webfilter.urlfilter.id.
+              whitelist:
+                choices:
+                - exempt-av
+                - exempt-webcontent
+                - exempt-activex-java-cookie
+                - exempt-dlp
+                - exempt-rangeblock
+                - extended-log-others
+                description:
+                - FortiGuard whitelist settings.
+              youtube-restrict:
+                choices:
+                - none
+                - strict
+                - moderate
+                description:
+                - YouTube EDU filter level.
+          web-content-log:
+            choices:
+            - enable
+            - disable
+            description:
+            - Enable/disable logging logging blocked web content.
+          web-extended-all-action-log:
+            choices:
+            - enable
+            - disable
+            description:
+            - Enable/disable extended any filter action logging for web filtering.
+          web-filter-activex-log:
+            choices:
+            - enable
+            - disable
+            description:
+            - Enable/disable logging ActiveX.
+          web-filter-applet-log:
+            choices:
+            - enable
+            - disable
+            description:
+            - Enable/disable logging Java applets.
+          web-filter-command-block-log:
+            choices:
+            - enable
+            - disable
+            description:
+            - Enable/disable logging blocked commands.
+          web-filter-cookie-log:
+            choices:
+            - enable
+            - disable
+            description:
+            - Enable/disable logging cookie filtering.
+          web-filter-cookie-removal-log:
+            choices:
+            - enable
+            - disable
+            description:
+            - Enable/disable logging blocked cookies.
+          web-filter-js-log:
+            choices:
+            - enable
+            - disable
+            description:
+            - Enable/disable logging Java scripts.
+          web-filter-jscript-log:
+            choices:
+            - enable
+            - disable
+            description:
+            - Enable/disable logging JScripts.
+          web-filter-referer-log:
+            choices:
+            - enable
+            - disable
+            description:
+            - Enable/disable logging referrers.
+          web-filter-unknown-log:
+            choices:
+            - enable
+            - disable
+            description:
+            - Enable/disable logging unknown scripts.
+          web-filter-vbs-log:
+            choices:
+            - enable
+            - disable
+            description:
+            - Enable/disable logging VBS scripts.
+          web-ftgd-err-log:
+            choices:
+            - enable
+            - disable
+            description:
+            - Enable/disable logging rating errors.
+          web-ftgd-quota-usage:
+            choices:
+            - enable
+            - disable
+            description:
+            - Enable/disable logging daily quota usage.
+          web-invalid-domain-log:
+            choices:
+            - enable
+            - disable
+            description:
+            - Enable/disable logging invalid domain names.
+          web-url-log:
+            choices:
+            - enable
+            - disable
+            description:
+            - Enable/disable logging URL filtering.
+          wisp:
+            choices:
+            - enable
+            - disable
+            description:
+            - Enable/disable web proxy WISP.
+          wisp-algorithm:
+            choices:
+            - primary-secondary
+            - round-robin
+            - auto-learning
+            description:
+            - WISP server selection algorithm.
+          wisp-servers:
+            description:
+            - WISP servers.
+            suboptions:
+              name:
+                description:
+                - Server name. Source web-proxy.wisp.name.
+                required: true
+          youtube-channel-filter:
+            description:
+            - YouTube channel filter.
+            suboptions:
+              channel-id:
+                description:
+                - YouTube channel ID to be filtered.
+              comment:
+                description:
+                - Comment.
+              id:
+                description:
+                - ID.
+                required: true
+          youtube-channel-status:
+            choices:
+            - disable
+            - blacklist
+            - whitelist
+            description:
+            - YouTube channel filter status.
+        
+
+
+NOTES:
+      * Requires fortiosapi library developed by Fortinet
+      * Run as a local_action in your playbook
+
+
+REQUIREMENTS:  fortiosapi>=0.9.8
+
+AUTHOR: Miguel Angel Munoz (@mamunozgonzalez), Nicolas Thomas (@thomnico)
+        METADATA:
+          status:
+          - preview
+          supported_by: community
+        
+
+EXAMPLES:
+
+- hosts: localhost
+  vars:
+   host: "192.168.122.40"
+   username: "admin"
+   password: ""
+   vdom: "root"
+  tasks:
+  - name: Configure Web filter profiles.
+    fortios_webfilter_profile:
+      host:  "{{ host }}"
+      username: "{{ username }}"
+      password: "{{ password }}"
+      vdom:  "{{ vdom }}"
+      webfilter_profile:
+        state: "present"
+        comment: "Optional comments."
+        extended-log: "enable"
+        ftgd-wf:
+            exempt-quota: "<your_own_value>"
+            filters:
+             -
+                action: "block"
+                auth-usr-grp:
+                 -
+                    name: "default_name_10 (source user.group.name)"
+                category: "11"
+                id:  "12"
+                log: "enable"
+                override-replacemsg: "<your_own_value>"
+                warn-duration: "<your_own_value>"
+                warning-duration-type: "session"
+                warning-prompt: "per-domain"
+            max-quota-timeout: "18"
+            options: "error-allow"
+            ovrd: "<your_own_value>"
+            quota:
+             -
+                category: "<your_own_value>"
+                duration: "<your_own_value>"
+                id:  "24"
+                override-replacemsg: "<your_own_value>"
+                type: "time"
+                unit: "B"
+                value: "28"
+            rate-crl-urls: "disable"
+            rate-css-urls: "disable"
+            rate-image-urls: "disable"
+            rate-javascript-urls: "disable"
+        https-replacemsg: "enable"
+        inspection-mode: "proxy"
+        log-all-url: "enable"
+        name: "default_name_36"
+        options: "activexfilter"
+        override:
+            ovrd-cookie: "allow"
+            ovrd-dur: "<your_own_value>"
+            ovrd-dur-mode: "constant"
+            ovrd-scope: "user"
+            ovrd-user-group:
+             -
+                name: "default_name_44 (source user.group.name)"
+            profile:
+             -
+                name: "default_name_46 (source webfilter.profile.name)"
+            profile-attribute: "User-Name"
+            profile-type: "list"
+        ovrd-perm: "bannedword-override"
+        post-action: "normal"
+        replacemsg-group: "<your_own_value> (source system.replacemsg-group.name)"
+        web:
+            blacklist: "enable"
+            bword-table: "54 (source webfilter.content.id)"
+            bword-threshold: "55"
+            content-header-list: "56 (source webfilter.content-header.id)"
+            keyword-match:
+             -
+                pattern: "<your_own_value>"
+            log-search: "enable"
+            safe-search: "url"
+            urlfilter-table: "61 (source webfilter.urlfilter.id)"
+            whitelist: "exempt-av"
+            youtube-restrict: "none"
+        web-content-log: "enable"
+        web-extended-all-action-log: "enable"
+        web-filter-activex-log: "enable"
+        web-filter-applet-log: "enable"
+        web-filter-command-block-log: "enable"
+        web-filter-cookie-log: "enable"
+        web-filter-cookie-removal-log: "enable"
+        web-filter-js-log: "enable"
+        web-filter-jscript-log: "enable"
+        web-filter-referer-log: "enable"
+        web-filter-unknown-log: "enable"
+        web-filter-vbs-log: "enable"
+        web-ftgd-err-log: "enable"
+        web-ftgd-quota-usage: "enable"
+        web-invalid-domain-log: "enable"
+        web-url-log: "enable"
+        wisp: "enable"
+        wisp-algorithm: "primary-secondary"
+        wisp-servers:
+         -
+            name: "default_name_83 (source web-proxy.wisp.name)"
+        youtube-channel-filter:
+         -
+            channel-id: "<your_own_value>"
+            comment: "Comment."
+            id:  "87"
+        youtube-channel-status: "disable"
+
+
+RETURN VALUES:
+
+build:
+  description: Build number of the fortigate image
+  returned: always
+  type: str
+  sample: '1547'
+http_method:
+  description: Last method used to provision the content into FortiGate
+  returned: always
+  type: str
+  sample: 'PUT'
+http_status:
+  description: Last result given by FortiGate on last operation applied
+  returned: always
+  type: str
+  sample: "200"
+mkey:
+  description: Master key (id) used in the last call to FortiGate
+  returned: success
+  type: str
+  sample: "key1"
+name:
+  description: Name of the table used to fulfill the request
+  returned: always
+  type: str
+  sample: "urlfilter"
+path:
+  description: Path of the table used to fulfill the request
+  returned: always
+  type: str
+  sample: "webfilter"
+revision:
+  description: Internal revision number
+  returned: always
+  type: str
+  sample: "17.0.2.10658"
+serial:
+  description: Serial number of the unit
+  returned: always
+  type: str
+  sample: "FGVMEVYYQT3AB5352"
+status:
+  description: Indication of the operation's result
+  returned: always
+  type: str
+  sample: "success"
+vdom:
+  description: Virtual domain used
+  returned: always
+  type: str
+  sample: "root"
+version:
+  description: Version of the FortiGate
+  returned: always
+  type: str
+  sample: "v5.6.3"
+
+

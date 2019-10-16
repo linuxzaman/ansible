@@ -1,0 +1,72 @@
+> PANOS_CHECK    (/usr/lib/python2.7/dist-packages/ansible/modules/network/panos/_panos_check.py)
+
+        Check if PAN-OS device is ready for being configured (no pending jobs). The check could be done once or multiple times until the
+        device is ready.
+
+DEPRECATED: 
+
+	Reason: Consolidating code base.
+	Will be removed in: Ansible 2.12
+	Alternatives: Use U(https://galaxy.ansible.com/PaloAltoNetworks/paloaltonetworks) instead.
+
+
+  * This module is maintained by The Ansible Community
+OPTIONS (= is mandatory):
+
+- interval
+        time waited between checks
+        [Default: 0]
+
+= ip_address
+        IP address (or hostname) of PAN-OS device.
+
+        type: str
+
+= password
+        Password for authentication.
+
+        type: str
+
+- timeout
+        timeout of API calls
+        [Default: 0]
+
+- username
+        Username for authentication.
+        [Default: admin]
+        type: str
+
+
+REQUIREMENTS:  pan-python
+
+AUTHOR: Luigi Mori (@jtschichold), Ivan Bojer (@ivanbojer)
+        METADATA:
+          status:
+          - deprecated
+          supported_by: community
+        
+
+EXAMPLES:
+
+# single check on 192.168.1.1 with credentials admin/admin
+- name: check if ready
+  panos_check:
+    ip_address: "192.168.1.1"
+    password: "admin"
+
+# check for 10 times, every 30 seconds, if device 192.168.1.1
+# is ready, using credentials admin/admin
+- name: wait for reboot
+  panos_check:
+    ip_address: "192.168.1.1"
+    password: "admin"
+  register: result
+  until: result is not failed
+  retries: 10
+  delay: 30
+
+
+RETURN VALUES:
+
+# Default return values
+

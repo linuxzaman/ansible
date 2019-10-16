@@ -1,0 +1,73 @@
+> WIN_SNMP    (/usr/lib/python2.7/dist-packages/ansible/modules/windows/win_snmp.py)
+
+        This module configures the Windows SNMP service.
+
+  * This module is maintained by The Ansible Community
+OPTIONS (= is mandatory):
+
+- action
+        `add' will add new SNMP community strings and/or SNMP managers
+        `set' will replace SNMP community strings and/or SNMP managers. An empty list for either `community_strings' or
+        `permitted_managers' will result in the respective lists being removed entirely.
+        `remove' will remove SNMP community strings and/or SNMP managers
+        (Choices: add, set, remove)[Default: set]
+        type: str
+
+- community_strings
+        The list of read-only SNMP community strings.
+        [Default: (null)]
+        type: list
+
+- permitted_managers
+        The list of permitted SNMP managers.
+        [Default: (null)]
+        type: list
+
+
+AUTHOR: Michael Cassaniti (@mcassaniti)
+        METADATA:
+          status:
+          - preview
+          supported_by: community
+        
+
+EXAMPLES:
+
+---
+  - hosts: Windows
+    tasks:
+      - name: Replace SNMP communities and managers
+        win_snmp:
+          communities:
+            - public
+          managers:
+            - 192.168.1.2
+          action: set
+
+  - hosts: Windows
+    tasks:
+      - name: Replace SNMP communities and clear managers
+        win_snmp:
+          communities:
+            - public
+          managers: []
+          action: set
+
+
+RETURN VALUES:
+
+community_strings:
+    description: The list of community strings for this machine.
+    type: list
+    returned: always
+    sample:
+      - public
+      - snmp-ro
+permitted_managers:
+    description: The list of permitted managers for this machine.
+    type: list
+    returned: always
+    sample:
+      - 192.168.1.1
+      - 192.168.1.2
+

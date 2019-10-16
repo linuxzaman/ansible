@@ -1,0 +1,58 @@
+> DIGITAL_OCEAN_ACCOUNT_FACTS    (/usr/lib/python2.7/dist-packages/ansible/modules/cloud/digital_ocean/digital_ocean_account_facts.py)
+
+        This module can be used to gather facts about User account.
+
+  * This module is maintained by The Ansible Community
+OPTIONS (= is mandatory):
+
+- oauth_token
+        DigitalOcean OAuth token.
+        There are several other environment variables which can be used to provide this value.
+        i.e., - 'DO_API_TOKEN', 'DO_API_KEY', 'DO_OAUTH_TOKEN' and 'OAUTH_TOKEN'
+        (Aliases: api_token)[Default: (null)]
+        type: str
+
+- timeout
+        The timeout in seconds used for polling DigitalOcean's API.
+        [Default: 30]
+        type: int
+
+- validate_certs
+        If set to `no', the SSL certificates will not be validated.
+        This should only set to `no' used on personally controlled sites using self-signed certificates.
+        [Default: True]
+        type: bool
+
+
+REQUIREMENTS:  python >= 2.6
+
+AUTHOR: Abhijeet Kasurde (@Akasurde)
+        METADATA:
+          status:
+          - preview
+          supported_by: community
+        
+
+EXAMPLES:
+
+- name: Gather facts about user account
+  digital_ocean_account_facts:
+    oauth_token: "{{ oauth_token }}"
+
+
+RETURN VALUES:
+
+data:
+    description: DigitalOcean account facts
+    returned: success
+    type: dict
+    sample: {
+        "droplet_limit": 10,
+        "email": "testuser1@gmail.com",
+        "email_verified": true,
+        "floating_ip_limit": 3,
+        "status": "active",
+        "status_message": "",
+        "uuid": "aaaaaaaaaaaaaa"
+    }
+

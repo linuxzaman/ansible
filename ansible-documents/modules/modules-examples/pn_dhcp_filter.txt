@@ -1,0 +1,43 @@
+EXAMPLES:
+
+- name: dhcp filter create
+  pn_dhcp_filter:
+    pn_cliswitch: "sw01"
+    pn_name: "foo"
+    state: "present"
+    pn_trusted_ports: "1"
+
+- name: dhcp filter delete
+  pn_dhcp_filter:
+    pn_cliswitch: "sw01"
+    pn_name: "foo"
+    state: "absent"
+    pn_trusted_ports: "1"
+
+- name: dhcp filter modify
+  pn_dhcp_filter:
+    pn_cliswitch: "sw01"
+    pn_name: "foo"
+    state: "update"
+    pn_trusted_ports: "1,2"
+
+
+RETURN VALUES:
+
+command:
+  description: the CLI command run on the target node.
+  returned: always
+  type: str
+stdout:
+  description: set of responses from the dhcp-filter command.
+  returned: always
+  type: list
+stderr:
+  description: set of error responses from the dhcp-filter command.
+  returned: on error
+  type: list
+changed:
+  description: indicates whether the CLI caused changes on the target.
+  returned: always
+  type: bool
+

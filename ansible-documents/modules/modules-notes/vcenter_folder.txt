@@ -1,0 +1,152 @@
+> VCENTER_FOLDER    (/usr/lib/python2.7/dist-packages/ansible/modules/cloud/vmware/vcenter_folder.py)
+
+        This module can be used to create, delete, move and rename folder on then given datacenter.
+
+  * This module is maintained by The Ansible Community
+OPTIONS (= is mandatory):
+
+= datacenter
+        Name of the datacenter.
+        (Aliases: datacenter_name)
+
+= folder_name
+        Name of folder to be managed.
+        This is case sensitive parameter.
+        Folder name should be under 80 characters. This is a VMware restriction.
+
+
+- folder_type
+        This is type of folder.
+        If set to `vm', then 'VM and Template Folder' is created under datacenter.
+        If set to `host', then 'Host and Cluster Folder' is created under datacenter.
+        If set to `datastore', then 'Storage Folder' is created under datacenter.
+        If set to `network', then 'Network Folder' is created under datacenter.
+        This parameter is required, if `state' is set to `present' and parent_folder is absent.
+        This option is ignored, if `parent_folder' is set.
+        (Choices: datastore, host, network, vm)[Default: vm]
+
+- hostname
+        The hostname or IP address of the vSphere vCenter or ESXi server.
+        If the value is not specified in the task, the value of environment variable `VMWARE_HOST' will be used instead.
+        Environment variable support added in Ansible 2.6.
+        [Default: (null)]
+        type: str
+
+- parent_folder
+        Name of the parent folder under which new folder needs to be created.
+        This is case sensitive parameter.
+        Please specify unique folder name as there is no way to detect duplicate names.
+        If user wants to create a folder under '/DC0/vm/vm_folder', this value will be 'vm_folder'.
+        [Default: (null)]
+
+- password
+        The password of the vSphere vCenter or ESXi server.
+        If the value is not specified in the task, the value of environment variable `VMWARE_PASSWORD' will be used instead.
+        Environment variable support added in Ansible 2.6.
+        (Aliases: pass, pwd)[Default: (null)]
+        type: str
+
+- port
+        The port number of the vSphere vCenter or ESXi server.
+        If the value is not specified in the task, the value of environment variable `VMWARE_PORT' will be used instead.
+        Environment variable support added in Ansible 2.6.
+        [Default: 443]
+        type: int
+        version_added: 2.5
+
+- state
+        State of folder.
+        If set to `present' without parent folder parameter, then folder with `folder_type' is created.
+        If set to `present' with parent folder parameter,  then folder in created under parent folder. `folder_type' is ignored.
+        If set to `absent', then folder is unregistered and destroyed.
+        (Choices: present, absent)[Default: present]
+
+- username
+        The username of the vSphere vCenter or ESXi server.
+        If the value is not specified in the task, the value of environment variable `VMWARE_USER' will be used instead.
+        Environment variable support added in Ansible 2.6.
+        (Aliases: admin, user)[Default: (null)]
+        type: str
+
+- validate_certs
+        Allows connection when SSL certificates are not valid. Set to `false' when certificates are not trusted.
+        If the value is not specified in the task, the value of environment variable `VMWARE_VALIDATE_CERTS' will be used instead.
+        Environment variable support added in Ansible 2.6.
+        If set to `yes', please make sure Python >= 2.7.9 is installed on the given machine.
+        [Default: True]
+        type: bool
+
+
+NOTES:
+      * Tested on vSphere 6.5
+
+
+REQUIREMENTS:  python >= 2.6, PyVmomi
+
+AUTHOR: Abhijeet Kasurde (@Akasurde), Christian Kotte (@ckotte) <christian.kotte@gmx.de>
+        METADATA:
+          status:
+          - preview
+          supported_by: community
+        
+
+EXAMPLES:
+
+- name: Create a VM folder on given datacenter
+  vcenter_folder:
+    hostname: '{{ vcenter_hostname }}'
+    username: '{{ vcenter_username }}'
+    password: '{{ vcenter_password }}'
+    datacenter_name: datacenter_name
+    folder_name: sample_vm_folder
+    folder_type: vm
+    state: present
+  register: vm_folder_creation_result
+  delegate_to: localhost
+
+- name: Create a datastore folder on given datacenter
+  vcenter_folder:
+    hostname: '{{ vcenter_hostname }}'
+    username: '{{ vcenter_username }}'
+    password: '{{ vcenter_password }}'
+    datacenter_name: datacenter_name
+    folder_name: sample_datastore_folder
+    folder_type: datastore
+    state: present
+  register: datastore_folder_creation_result
+  delegate_to: localhost
+
+- name: Create a sub folder under VM folder on given datacenter
+  vcenter_folder:
+    hostname: '{{ vcenter_hostname }}'
+    username: '{{ vcenter_username }}'
+    password: '{{ vcenter_password }}'
+    datacenter_name: datacenter_name
+    folder_name: sample_sub_folder
+    parent_folder: vm_folder
+    state: present
+  register: sub_folder_creation_result
+  delegate_to: localhost
+
+- name: Delete a VM folder on given datacenter
+  vcenter_folder:
+    hostname: '{{ vcenter_hostname }}'
+    username: '{{ vcenter_username }}'
+    password: '{{ vcenter_password }}'
+    datacenter_name: datacenter_name
+    folder_name: sample_vm_folder
+    folder_type: vm
+    state: absent
+  register: vm_folder_deletion_result
+  delegate_to: localhost
+
+
+RETURN VALUES:
+
+result:
+    description:
+    - string stating about result
+    returned: success
+    type: str
+    sample: "Folder 'sub_network_folder' of type 'vm' created under vm_folder successfully."
+

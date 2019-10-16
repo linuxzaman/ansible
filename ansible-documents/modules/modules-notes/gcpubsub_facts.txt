@@ -1,0 +1,71 @@
+> GCPUBSUB_FACTS    (/usr/lib/python2.7/dist-packages/ansible/modules/cloud/google/gcpubsub_facts.py)
+
+        List Topics/Subscriptions from Google PubSub.  Use the gcpubsub module for topic/subscription management. See
+        https://cloud.google.com/pubsub/docs for an overview.
+
+  * This module is maintained by The Ansible Community
+OPTIONS (= is mandatory):
+
+- state
+        list is the only valid option.
+        [Default: (null)]
+
+- topic
+        GCP pubsub topic name.  Only the name, not the full path, is required.
+        [Default: (null)]
+
+= view
+        Choices are 'topics' or 'subscriptions'
+
+
+
+NOTES:
+      * list state enables user to list topics or subscriptions in the project.  See examples for details.
+
+
+REQUIREMENTS:  python >= 2.6, google-auth >= 0.5.0, google-cloud-pubsub >= 0.22.0
+
+AUTHOR: Tom Melendez (@supertom) <tom@supertom.com>
+        METADATA:
+          status:
+          - preview
+          supported_by: community
+        
+
+EXAMPLES:
+
+## List all Topics in a project
+- gcpubsub_facts:
+    view: topics
+    state: list
+
+## List all Subscriptions in a project
+- gcpubsub_facts:
+    view: subscriptions
+    state: list
+
+## List all Subscriptions for a Topic in a project
+- gcpubsub_facts:
+    view: subscriptions
+    topic: my-topic
+    state: list
+
+
+RETURN VALUES:
+
+subscriptions:
+    description: List of subscriptions.
+    returned: When view is set to subscriptions.
+    type: list
+    sample: ["mysubscription", "mysubscription2"]
+topic:
+    description: Name of topic. Used to filter subscriptions.
+    returned: Always
+    type: str
+    sample: "mytopic"
+topics:
+    description: List of topics.
+    returned: When view is set to topics.
+    type: list
+    sample: ["mytopic", "mytopic2"]
+

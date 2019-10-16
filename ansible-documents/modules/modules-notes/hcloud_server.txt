@@ -1,0 +1,187 @@
+> HCLOUD_SERVER    (/usr/lib/python2.7/dist-packages/ansible/modules/cloud/hcloud/hcloud_server.py)
+
+        Create, update and manage cloud servers on the Hetzner Cloud.
+
+  * This module is maintained by The Ansible Community
+OPTIONS (= is mandatory):
+
+= api_token
+        This is the API Token for the Hetzner Cloud.
+
+        type: str
+
+- backups
+        Enable or disable Backups for the given Server.
+        [Default: False]
+        type: bool
+
+- datacenter
+        Datacenter of Server.
+        Required of no `location' is given and server does not exists.
+        [Default: (null)]
+        type: str
+
+- endpoint
+        This is the API Endpoint for the Hetzner Cloud.
+        [Default: https://api.hetzner.cloud/v1]
+        type: str
+
+- force_upgrade
+        Force the upgrade of the server.
+        Power off the server if it is running on upgrade.
+        [Default: False]
+        type: bool
+
+- id
+        The ID of the Hetzner Cloud server to manage.
+        Only required if no server `name' is given
+        [Default: (null)]
+        type: int
+
+- image
+        Image the server should be created from.
+        Required if server does not exists.
+        [Default: (null)]
+        type: str
+
+- labels
+        User-defined labels (key-value pairs).
+        [Default: (null)]
+        type: dict
+
+- location
+        Location of Server.
+        Required if no `datacenter' is given and server does not exists.
+        [Default: (null)]
+        type: str
+
+- name
+        The Name of the Hetzner Cloud server to manage.
+        Only required if no server `id' is given or a server does not exists.
+        [Default: (null)]
+        type: str
+
+- server_type
+        The Server Type of the Hetzner Cloud server to manage.
+        Required if server does not exists.
+        [Default: (null)]
+        type: str
+
+- ssh_keys
+        List of SSH key names
+        The key names correspond to the SSH keys configured for your Hetzner Cloud account access.
+        [Default: (null)]
+        type: list
+
+- state
+        State of the server.
+        (Choices: absent, present, restarted, started, stopped, rebuild)[Default: present]
+        type: str
+
+- upgrade_disk
+        Resize the disk size, when resizing a server.
+        If you want to downgrade the server later, this value should be False.
+        [Default: False]
+        type: bool
+
+- user_data
+        User Data to be passed to the server on creation.
+        Only used if server does not exists.
+        [Default: (null)]
+        type: str
+
+- volumes
+        List of Volumes IDs that should be attached to the server on server creation.
+        [Default: (null)]
+        type: list
+
+
+SEE ALSO:
+      * Documentation for Hetzner Cloud API
+           Complete reference for the Hetzner Cloud API.
+           https://docs.hetzner.cloud/
+
+
+REQUIREMENTS:  hcloud-python >= 1.0.0
+
+AUTHOR: Lukas Kaemmerling (@lkaemmerling)
+        METADATA:
+          status:
+          - preview
+          supported_by: community
+        
+
+EXAMPLES:
+
+- name: Create a basic server
+  hcloud_server:
+    name: my-server
+    server_type: cx11
+    image: ubuntu-18.04
+    state: present
+
+- name: Create a basic server with ssh key
+  hcloud_server:
+    name: my-server
+    server_type: cx11
+    image: ubuntu-18.04
+    location: fsn1
+    ssh_keys:
+      - me@myorganisation
+    state: present
+
+- name: Resize an existing server
+  hcloud_server:
+    name: my-server
+    server_type: cx21
+    keep_disk: yes
+    state: present
+
+- name: Ensure the server is absent (remove if needed)
+  hcloud_server:
+    name: my-server
+    state: absent
+
+- name: Ensure the server is started
+  hcloud_server:
+    name: my-server
+    state: started
+
+- name: Ensure the server is stopped
+  hcloud_server:
+    name: my-server
+    state: stopped
+
+- name: Ensure the server is restarted
+  hcloud_server:
+    name: my-server
+    state: restarted
+
+- name: Ensure the server is rebuild
+  hcloud_server:
+    name: my-server
+    image: ubuntu-18.04
+    state: rebuild
+
+
+RETURN VALUES:
+
+hcloud_server:
+    description: The server instance
+    returned: Always
+    type: dict
+    sample: {
+        "backup_window": null,
+        "datacenter": "nbg1-dc3",
+        "id": 1937415,
+        "image": "ubuntu-18.04",
+        "ipv4_address": "116.203.104.109",
+        "ipv6": "2a01:4f8:1c1c:c140::/64",
+        "labels": {},
+        "location": "nbg1",
+        "name": "mein-server-2",
+        "rescue_enabled": false,
+        "server_type": "cx11",
+        "status": "running"
+    }
+

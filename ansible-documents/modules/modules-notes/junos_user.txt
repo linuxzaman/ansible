@@ -1,0 +1,184 @@
+> JUNOS_USER    (/usr/lib/python2.7/dist-packages/ansible/modules/network/junos/junos_user.py)
+
+        This module manages locally configured user accounts on remote network devices running the JUNOS operating system.  It provides a
+        set of arguments for creating, removing and updating locally defined accounts
+
+  * This module is maintained by The Ansible Network Team
+OPTIONS (= is mandatory):
+
+- active
+        Specifies whether or not the configuration is active or deactivated
+        [Default: yes]
+        type: bool
+        version_added: 2.4
+
+- aggregate
+        The `aggregate' argument defines a list of users to be configured on the remote device.  The list of users will be compared
+        against the current users and only changes will be added or removed from the device configuration.  This argument is mutually
+        exclusive with the name argument.
+        (Aliases: users, collection)[Default: (null)]
+        version_added: 2.4
+
+- encrypted_password
+        The `encrypted_password' argument set already hashed password for the user account on the remote system.
+        [Default: (null)]
+        version_added: 2.8
+
+- full_name
+        The `full_name' argument provides the full name of the user account to be created on the remote device.  This argument accepts
+        any text string value.
+        [Default: (null)]
+
+- name
+        The `name' argument defines the username of the user to be created on the system.  This argument must follow appropriate
+        usernaming conventions for the target device running JUNOS.  This argument is mutually exclusive with the `aggregate' argument.
+        [Default: (null)]
+
+- provider
+        *Deprecated*
+        Starting with Ansible 2.5 we recommend using `connection: network_cli' or `connection: netconf'.
+        For more information please see the L(Junos OS Platform Options guide, ../network/user_guide/platform_junos.html).
+        HORIZONTALLINE
+        A dict object containing connection details.
+        [Default: (null)]
+        suboptions:
+          host:
+            description:
+            - Specifies the DNS host name or address for connecting to the remote device over
+              the specified transport.  The value of host is used as the destination address
+              for the transport.
+            required: true
+            type: str
+          password:
+            description:
+            - Specifies the password to use to authenticate the connection to the remote device.   This
+              value is used to authenticate the SSH session. If the value is not specified
+              in the task, the value of environment variable `ANSIBLE_NET_PASSWORD' will
+              be used instead.
+            type: str
+          port:
+            default: 22
+            description:
+            - Specifies the port to use when building the connection to the remote device.  The
+              port value will default to the well known SSH port of 22 (for `transport=cli')
+              or port 830 (for `transport=netconf') device.
+            type: int
+          ssh_keyfile:
+            description:
+            - Specifies the SSH key to use to authenticate the connection to the remote device.   This
+              value is the path to the key used to authenticate the SSH session. If the value
+              is not specified in the task, the value of environment variable `ANSIBLE_NET_SSH_KEYFILE'
+              will be used instead.
+            type: path
+          timeout:
+            default: 10
+            description:
+            - Specifies the timeout in seconds for communicating with the network device for
+              either connecting or sending commands.  If the timeout is exceeded before the
+              operation is completed, the module will error.
+            type: int
+          username:
+            description:
+            - Configures the username to use to authenticate the connection to the remote
+              device.  This value is used to authenticate the SSH session. If the value is
+              not specified in the task, the value of environment variable `ANSIBLE_NET_USERNAME'
+              will be used instead.
+            type: str
+        
+        type: dict
+
+- purge
+        The `purge' argument instructs the module to consider the users definition absolute.  It will remove any previously configured
+        users on the device with the exception of the current defined set of aggregate.
+        [Default: no]
+        type: bool
+
+- role
+        The `role' argument defines the role of the user account on the remote system.  User accounts can have more than one role
+        configured.
+        (Choices: operator, read-only, super-user, unauthorized)[Default: (null)]
+
+- sshkey
+        The `sshkey' argument defines the public SSH key to be configured for the user account on the remote system.  This argument must
+        be a valid SSH key
+        [Default: (null)]
+
+- state
+        The `state' argument configures the state of the user definitions as it relates to the device operational configuration.  When
+        set to `present', the user should be configured in the device active configuration and when set to `absent' the user should not
+        be in the device active configuration
+        (Choices: present, absent)[Default: present]
+
+
+NOTES:
+      * This module requires the netconf system service be enabled on the remote device being managed.
+      * Tested against vSRX JUNOS version 15.1X49-D15.4, vqfx-10000 JUNOS Version 15.1X53-D60.4.
+      * Recommended connection is `netconf'. See L(the Junos OS Platform Options,../network/user_guide/platform_junos.html).
+      * This module also works with `local' connections for legacy playbooks.
+      * For information on using CLI and netconf see the :ref:`Junos OS Platform Options guide <junos_platform_options>`
+      * For more information on using Ansible to manage network devices see the :ref:`Ansible Network Guide <network_guide>`
+      * For more information on using Ansible to manage Juniper network devices see https://www.ansible.com/ansible-juniper.
+
+
+REQUIREMENTS:  ncclient (>=v0.5.2)
+
+AUTHOR: Peter Sprygada (@privateip)
+        METADATA:
+          status:
+          - preview
+          supported_by: network
+        
+
+EXAMPLES:
+
+- name: create new user account
+  junos_user:
+    name: ansible
+    role: super-user
+    sshkey: "{{ lookup('file', '~/.ssh/ansible.pub') }}"
+    state: present
+
+- name: remove a user account
+  junos_user:
+    name: ansible
+    state: absent
+
+- name: remove all user accounts except ansible
+  junos_user:
+    aggregate:
+    - name: ansible
+    purge: yes
+
+- name: set user password
+  junos_user:
+    name: ansible
+    role: super-user
+    encrypted_password: "{{ 'my-password' | password_hash('sha512') }}"
+    state: present
+
+- name: Create list of users
+  junos_user:
+    aggregate:
+      - {name: test_user1, full_name: test_user2, role: operator, state: present}
+      - {name: test_user2, full_name: test_user2, role: read-only, state: present}
+
+- name: Delete list of users
+  junos_user:
+    aggregate:
+      - {name: test_user1, full_name: test_user2, role: operator, state: absent}
+      - {name: test_user2, full_name: test_user2, role: read-only, state: absent}
+
+
+RETURN VALUES:
+
+diff.prepared:
+  description: Configuration difference before and after applying change.
+  returned: when configuration is changed and diff option is enabled.
+  type: str
+  sample: >
+          [edit system login]
+          +    user test-user {
+          +        uid 2005;
+          +        class read-only;
+          +    }
+

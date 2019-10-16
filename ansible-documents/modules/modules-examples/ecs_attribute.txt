@@ -1,0 +1,50 @@
+EXAMPLES:
+
+# Note: These examples do not set authentication details, see the AWS Guide for details.
+
+# Set attributes
+- ecs_attribute:
+    state: present
+    cluster: test-cluster
+    ec2_instance_id: "{{ ec2_id }}"
+    attributes:
+      - flavor: test
+      - migrated
+  delegate_to: localhost
+
+# Delete attributes
+- ecs_attribute:
+    state: absent
+    cluster: test-cluster
+    ec2_instance_id: "{{ ec2_id }}"
+    attributes:
+      - flavor: test
+      - migrated
+  delegate_to: localhost
+
+
+RETURN VALUES:
+
+attributes:
+    description: attributes
+    type: complex
+    returned: always
+    contains:
+        cluster:
+            description: cluster name
+            type: str
+        ec2_instance_id:
+            description: ec2 instance id of ecs container instance
+            type: str
+        attributes:
+            description: list of attributes
+            type: list of complex
+            contains:
+                name:
+                    description: name of the attribute
+                    type: str
+                value:
+                    description: value of the attribute
+                    returned: if present
+                    type: str
+

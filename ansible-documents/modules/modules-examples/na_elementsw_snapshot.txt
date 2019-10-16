@@ -1,0 +1,50 @@
+EXAMPLES:
+
+- name: Create snapshot
+     tags:
+     - elementsw_create_snapshot
+     na_elementsw_snapshot:
+       hostname: "{{ elementsw_hostname }}"
+       username: "{{ elementsw_username }}"
+       password: "{{ elementsw_password }}"
+       state: present
+       src_volume_id: 118
+       account_id: sagarsh
+       name: newsnapshot-1
+
+   - name: Modify Snapshot
+     tags:
+     - elementsw_modify_snapshot
+     na_elementsw_snapshot:
+       hostname: "{{ elementsw_hostname }}"
+       username: "{{ elementsw_username }}"
+       password: "{{ elementsw_password }}"
+       state: present
+       src_volume_id: sagarshansivolume
+       src_snapshot_id: test1
+       account_id: sagarsh
+       expiration_time: '2018-06-16T12:24:56Z'
+       enable_remote_replication: false
+
+   - name: Delete Snapshot
+     tags:
+     - elementsw_delete_snapshot
+     na_elementsw_snapshot:
+       hostname: "{{ elementsw_hostname }}"
+       username: "{{ elementsw_username }}"
+       password: "{{ elementsw_password }}"
+       state: absent
+       src_snapshot_id: deltest1
+       account_id: sagarsh
+       src_volume_id: sagarshansivolume
+
+
+RETURN VALUES:
+
+
+msg:
+    description: Success message
+    returned: success
+    type: str
+
+

@@ -1,0 +1,51 @@
+EXAMPLES:
+
+# Install "foo" and "bar" snap
+- name: Install foo
+  snap:
+    name:
+      - foo
+      - bar
+
+# Remove "foo" snap
+- name: Remove foo
+  snap:
+    name: foo
+    state: absent
+
+# Install a snap with classic confinement
+- name: Install "foo" with option --classic
+  snap:
+    name: foo
+    classic: yes
+
+# Install a snap with from a specific channel
+- name: Install "foo" with option --channel=latest/edge
+  snap:
+    name: foo
+    channel: latest/edge
+
+
+RETURN VALUES:
+
+classic:
+    description: Whether or not the snaps were installed with the classic confinement
+    type: bool
+    returned: When snaps are installed
+channel:
+    description: The channel the snaps were installed from
+    type: str
+    returned: When snaps are installed
+cmd:
+    description: The command that was executed on the host
+    type: str
+    returned: When changed is true
+snaps_installed:
+    description: The list of actually installed snaps
+    type: list
+    returned: When any snaps have been installed
+snaps_removed:
+    description: The list of actually removed snaps
+    type: list
+    returned: When any snaps have been removed
+

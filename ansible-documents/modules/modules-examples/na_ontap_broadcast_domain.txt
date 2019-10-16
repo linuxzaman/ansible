@@ -1,0 +1,48 @@
+EXAMPLES:
+
+- name: create broadcast domain
+      na_ontap_broadcast_domain:
+        state: present
+        username: "{{ netapp_username }}"
+        password: "{{ netapp_password }}"
+        hostname: "{{ netapp_hostname }}"
+        name: ansible_domain
+        mtu: 1000
+        ipspace: Default
+        ports: ["khutton-vsim1:e0d-12", "khutton-vsim1:e0d-13"]
+    - name: modify broadcast domain
+      na_ontap_broadcast_domain:
+        state: present
+        username: "{{ netapp_username }}"
+        password: "{{ netapp_password }}"
+        hostname: "{{ netapp_hostname }}"
+        name: ansible_domain
+        mtu: 1100
+        ipspace: Default
+        ports: ["khutton-vsim1:e0d-12", "khutton-vsim1:e0d-13"]
+    - name: split broadcast domain
+      na_ontap_broadcast_domain:
+        state: present
+        username: "{{ netapp_username }}"
+        password: "{{ netapp_password }}"
+        hostname: "{{ netapp_hostname }}"
+        from_name: ansible_domain
+        name: new_ansible_domain
+        mtu: 1200
+        ipspace: Default
+        ports: khutton-vsim1:e0d-12
+    - name: delete broadcast domain
+      na_ontap_broadcast_domain:
+        state: absent
+        username: "{{ netapp_username }}"
+        password: "{{ netapp_password }}"
+        hostname: "{{ netapp_hostname }}"
+        name: ansible_domain
+        ipspace: Default
+
+
+RETURN VALUES:
+
+
+
+

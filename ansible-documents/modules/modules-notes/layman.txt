@@ -1,0 +1,67 @@
+> LAYMAN    (/usr/lib/python2.7/dist-packages/ansible/modules/packaging/os/layman.py)
+
+        Uses Layman to manage an additional repositories for the Portage package manager on Gentoo Linux. Please note that Layman must be
+        installed on a managed node prior using this module.
+
+  * This module is maintained by The Ansible Community
+OPTIONS (= is mandatory):
+
+- list_url
+        An URL of the alternative overlays list that defines the overlay to install. This list will be fetched and saved under
+        `${overlay_defs}'/${name}.xml), where `overlay_defs' is readed from the Layman's configuration.
+        [Default: (null)]
+
+= name
+        The overlay id to install, synchronize, or uninstall. Use 'ALL' to sync all of the installed overlays (can be used only when
+        `state=updated').
+
+
+- state
+        Whether to install (`present'), sync (`updated'), or uninstall (`absent') the overlay.
+        (Choices: present, absent, updated)[Default: present]
+
+- validate_certs
+        If `no', SSL certificates will not be validated. This should only be set to `no' when no other option exists.  Prior to 1.9.3 the
+        code defaulted to `no'.
+        [Default: yes]
+        type: bool
+        version_added: 1.9.3
+
+
+REQUIREMENTS:  python >= 2.6, layman python module
+
+AUTHOR: Jakub Jirutka (@jirutka)
+        METADATA:
+          status:
+          - preview
+          supported_by: community
+        
+
+EXAMPLES:
+
+# Install the overlay 'mozilla' which is on the central overlays list.
+- layman:
+    name: mozilla
+
+# Install the overlay 'cvut' from the specified alternative list.
+- layman:
+    name: cvut
+    list_url: 'http://raw.github.com/cvut/gentoo-overlay/master/overlay.xml'
+
+# Update (sync) the overlay 'cvut', or install if not installed yet.
+- layman:
+    name: cvut
+    list_url: 'http://raw.github.com/cvut/gentoo-overlay/master/overlay.xml'
+    state: updated
+
+# Update (sync) all of the installed overlays.
+- layman:
+    name: ALL
+    state: updated
+
+# Uninstall the overlay 'cvut'.
+- layman:
+    name: cvut
+    state: absent
+
+

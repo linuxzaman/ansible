@@ -1,0 +1,73 @@
+> DLADM_VLAN    (/usr/lib/python2.7/dist-packages/ansible/modules/network/illumos/dladm_vlan.py)
+
+        Create or delete VLAN interfaces on Solaris/illumos systems.
+
+  * This module is maintained by The Ansible Community
+OPTIONS (= is mandatory):
+
+= link
+        VLAN underlying link name.
+
+
+= name
+        VLAN interface name.
+
+
+- state
+        Create or delete Solaris/illumos VNIC.
+        (Choices: present, absent)[Default: present]
+
+- temporary
+        Specifies that the VLAN interface is temporary. Temporary VLANs do not persist across reboots.
+        [Default: False]
+        type: bool
+
+- vlan_id
+        VLAN ID value for VLAN interface.
+        (Aliases: vid)[Default: False]
+
+
+AUTHOR: Adam Števko (@xen0l)
+        METADATA:
+          status:
+          - preview
+          supported_by: community
+        
+
+EXAMPLES:
+
+- name: Create 'vlan42' VLAN over 'bnx0' link
+  dladm_vlan: name=vlan42 link=bnx0 vlan_id=42 state=present
+
+- name: Remove 'vlan1337' VLAN interface
+  dladm_vlan: name=vlan1337 state=absent
+
+
+RETURN VALUES:
+
+name:
+    description: VLAN name
+    returned: always
+    type: str
+    sample: vlan42
+state:
+    description: state of the target
+    returned: always
+    type: str
+    sample: present
+temporary:
+    description: specifies if operation will persist across reboots
+    returned: always
+    type: bool
+    sample: True
+link:
+    description: VLAN's underlying link name
+    returned: always
+    type: str
+    sample: e100g0
+vlan_id:
+    description: VLAN ID
+    returned: always
+    type: str
+    sample: 42
+

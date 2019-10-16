@@ -1,0 +1,129 @@
+> WIN_DOMAIN_COMPUTER    (/usr/lib/python2.7/dist-packages/ansible/modules/windows/win_domain_computer.py)
+
+        Create, read, update and delete computers in Active Directory using a windows bridge computer to launch New-ADComputer, Get-
+        ADComputer, Set-ADComputer, Remove-ADComputer and Move-ADObject powershell commands.
+
+  * This module is maintained by The Ansible Community
+OPTIONS (= is mandatory):
+
+- description
+        Specifies a description of the object.
+        This parameter sets the value of the Description property for the object.
+        The LDAP display name (ldapDisplayName) for this property is description.
+        [Default: ]
+        type: str
+
+- dns_hostname
+        Specifies the fully qualified domain name (FQDN) of the computer.
+        This parameter sets the DNSHostName property for a computer object.
+        The LDAP display name for this property is dNSHostName.
+        Required when `state=present'.
+        [Default: (null)]
+        type: str
+
+- domain_password
+        The password for `username'.
+        [Default: (null)]
+        type: str
+        version_added: 2.8
+
+- domain_server
+        Specifies the Active Directory Domain Services instance to connect to.
+        Can be in the form of an FQDN or NetBIOS name.
+        If not specified then the value is based on the domain of the computer running PowerShell.
+        [Default: (null)]
+        type: str
+        version_added: 2.8
+
+- domain_username
+        The username to use when interacting with AD.
+        If this is not set then the user Ansible used to log in with will be used instead when using CredSSP or Kerberos with credential
+        delegation.
+        [Default: (null)]
+        type: str
+        version_added: 2.8
+
+- enabled
+        Specifies if an account is enabled.
+        An enabled account requires a password.
+        This parameter sets the Enabled property for an account object.
+        This parameter also sets the ADS_UF_ACCOUNTDISABLE flag of the Active Directory User Account Control (UAC) attribute.
+        [Default: True]
+        type: bool
+
+= name
+        Specifies the name of the object.
+        This parameter sets the Name property of the Active Directory object.
+        The LDAP display name (ldapDisplayName) of this property is name.
+
+        type: str
+
+- ou
+        Specifies the X.500 path of the Organizational Unit (OU) or container where the new object is created. Required when
+        `state=present'.
+        [Default: (null)]
+        type: str
+
+- sam_account_name
+        Specifies the Security Account Manager (SAM) account name of the computer.
+        It maximum is 256 characters, 15 is advised for older operating systems compatibility.
+        The LDAP display name (ldapDisplayName) for this property is sAMAccountName.
+        If ommitted the value is the same as `name'.
+        Note that all computer SAMAccountNames need to end with a $.
+        [Default: (null)]
+        type: str
+
+- state
+        Specified whether the computer should be `present' or `absent' in Active Directory.
+        (Choices: absent, present)[Default: present]
+        type: str
+
+
+SEE ALSO:
+      * Module win_domain
+           The official documentation on the win_domain module.
+           https://docs.ansible.com/ansible/latest/modules/win_domain_module.html
+      * Module win_domain_controller
+           The official documentation on the win_domain_controller module.
+           https://docs.ansible.com/ansible/latest/modules/win_domain_controller_module.html
+      * Module win_domain_group
+           The official documentation on the win_domain_group module.
+           https://docs.ansible.com/ansible/latest/modules/win_domain_group_module.html
+      * Module win_domain_membership
+           The official documentation on the win_domain_membership module.
+           https://docs.ansible.com/ansible/latest/modules/win_domain_membership_module.html
+      * Module win_domain_user
+           The official documentation on the win_domain_user module.
+           https://docs.ansible.com/ansible/latest/modules/win_domain_user_module.html
+
+
+AUTHOR: Daniel Sánchez Fábregas (@Daniel-Sanchez-Fabregas)
+        METADATA:
+          status:
+          - preview
+          supported_by: community
+        
+
+EXAMPLES:
+
+- name: Add linux computer to Active Directory OU using a windows machine
+    win_domain_computer:
+      name: one_linux_server.my_org.local
+      sam_account_name: linux_server
+      dns_hostname: one_linux_server.my_org.local
+      ou: "OU=servers,DC=my_org,DC=local"
+      description: Example of linux server
+      enabled: yes
+      state: present
+    delegate_to: my_windows_bridge.my_org.local
+
+  - name: Remove linux computer from Active Directory using a windows machine
+    win_domain_computer:
+      name: one_linux_server.my_org.local
+      state: absent
+    delegate_to: my_windows_bridge.my_org.local
+
+
+RETURN VALUES:
+
+

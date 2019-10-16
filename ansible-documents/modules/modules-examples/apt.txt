@@ -1,0 +1,121 @@
+EXAMPLES:
+
+- name: Update repositories cache and install "foo" package
+  apt:
+    name: foo
+    update_cache: yes
+
+- name: Install apache httpd but avoid starting it immediately (state=present is optional)
+  apt:
+    name: apache2
+    state: present
+  environment:
+    RUNLEVEL: 1
+
+- name: Remove "foo" package
+  apt:
+    name: foo
+    state: absent
+
+- name: Install the package "foo"
+  apt:
+    name: foo
+
+- name: Install a list of packages
+  apt:
+    name: "{{ packages }}"
+  vars:
+    packages:
+    - foo
+    - foo-tools
+
+- name: Install the version '1.00' of package "foo"
+  apt:
+    name: foo=1.00
+
+- name: Update the repository cache and update package "nginx" to latest version using default release squeeze-backport
+  apt:
+    name: nginx
+    state: latest
+    default_release: squeeze-backports
+    update_cache: yes
+
+- name: Install latest version of "openjdk-6-jdk" ignoring "install-recommends"
+  apt:
+    name: openjdk-6-jdk
+    state: latest
+    install_recommends: no
+
+- name: Upgrade all packages to the latest version
+  apt:
+    name: "*"
+    state: latest
+
+- name: Update all packages to the latest version
+  apt:
+    upgrade: dist
+
+- name: Run the equivalent of "apt-get update" as a separate step
+  apt:
+    update_cache: yes
+
+- name: Only run "update_cache=yes" if the last one is more than 3600 seconds ago
+  apt:
+    update_cache: yes
+    cache_valid_time: 3600
+
+- name: Pass options to dpkg on run
+  apt:
+    upgrade: dist
+    update_cache: yes
+    dpkg_options: 'force-confold,force-confdef'
+
+- name: Install a .deb package
+  apt:
+    deb: /tmp/mypackage.deb
+
+- name: Install the build dependencies for package "foo"
+  apt:
+    pkg: foo
+    state: build-dep
+
+- name: Install a .deb package from the internet.
+  apt:
+    deb: https://example.com/python-ppq_0.1-1_all.deb
+
+- name: Remove useless packages from the cache
+  apt:
+    autoclean: yes
+
+- name: Remove dependencies that are no longer required
+  apt:
+    autoremove: yes
+
+
+RETURN VALUES:
+
+cache_updated:
+    description: if the cache was updated or not
+    returned: success, in some cases
+    type: bool
+    sample: True
+cache_update_time:
+    description: time of the last cache update (0 if unknown)
+    returned: success, in some cases
+    type: int
+    sample: 1425828348000
+stdout:
+    description: output from apt
+    returned: success, when needed
+    type: str
+    sample: "Reading package lists...
+Building dependency tree...
+Reading state information...
+The following extra packages will be installed:
+  apache2-bin ..."
+stderr:
+    description: error output from apt
+    returned: success, when needed
+    type: str
+    sample: "AH00558: apache2: Could not reliably determine the server's fully qualified domain name, using 127.0.1.1. Set the 'ServerName' directive globally to ..."
+

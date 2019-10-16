@@ -1,0 +1,44 @@
+EXAMPLES:
+
+- name: create a object
+  gcp_storage_object:
+    name: ansible-storage-module
+    action: download
+    bucket: ansible-bucket
+    src: modules.zip
+    dest: "~/modules.zip"
+    project: test_project
+    auth_kind: serviceaccount
+    service_account_file: "/tmp/auth.pem"
+    state: present
+
+
+RETURN VALUES:
+
+action:
+  description:
+  - Upload or download from the bucket.
+  returned: success
+  type: str
+overwrite:
+  description:
+  - "'Overwrite the file on the bucket/local machine. If overwrite is false and a
+    difference exists between GCS + local, module will fail with error' ."
+  returned: success
+  type: bool
+src:
+  description:
+  - Source location of file (may be local machine or cloud depending on action).
+  returned: success
+  type: str
+dest:
+  description:
+  - Destination location of file (may be local machine or cloud depending on action).
+  returned: success
+  type: str
+bucket:
+  description:
+  - The name of the bucket.
+  returned: success
+  type: str
+

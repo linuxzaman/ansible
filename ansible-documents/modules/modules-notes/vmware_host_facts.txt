@@ -1,0 +1,144 @@
+> VMWARE_HOST_FACTS    (/usr/lib/python2.7/dist-packages/ansible/modules/cloud/vmware/vmware_host_facts.py)
+
+        This module can be used to gathers facts like CPU, memory, datastore, network and system etc. about ESXi host system. Please
+        specify hostname or IP address of ESXi host system as `hostname'. If hostname or IP address of vCenter is provided as `hostname'
+        and `esxi_hostname' is not specified, then the module will throw an error. VSAN facts added in 2.7 version.
+
+  * This module is maintained by The Ansible Community
+OPTIONS (= is mandatory):
+
+- esxi_hostname
+        ESXi hostname.
+        Host facts about the specified ESXi server will be returned.
+        By specifying this option, you can select which ESXi hostsystem is returned if connecting to a vCenter.
+        [Default: (null)]
+        version_added: 2.8
+        
+
+- hostname
+        The hostname or IP address of the vSphere vCenter or ESXi server.
+        If the value is not specified in the task, the value of environment variable `VMWARE_HOST' will be used instead.
+        Environment variable support added in Ansible 2.6.
+        [Default: (null)]
+        type: str
+
+- password
+        The password of the vSphere vCenter or ESXi server.
+        If the value is not specified in the task, the value of environment variable `VMWARE_PASSWORD' will be used instead.
+        Environment variable support added in Ansible 2.6.
+        (Aliases: pass, pwd)[Default: (null)]
+        type: str
+
+- port
+        The port number of the vSphere vCenter or ESXi server.
+        If the value is not specified in the task, the value of environment variable `VMWARE_PORT' will be used instead.
+        Environment variable support added in Ansible 2.6.
+        [Default: 443]
+        type: int
+        version_added: 2.5
+
+- username
+        The username of the vSphere vCenter or ESXi server.
+        If the value is not specified in the task, the value of environment variable `VMWARE_USER' will be used instead.
+        Environment variable support added in Ansible 2.6.
+        (Aliases: admin, user)[Default: (null)]
+        type: str
+
+- validate_certs
+        Allows connection when SSL certificates are not valid. Set to `false' when certificates are not trusted.
+        If the value is not specified in the task, the value of environment variable `VMWARE_VALIDATE_CERTS' will be used instead.
+        Environment variable support added in Ansible 2.6.
+        If set to `yes', please make sure Python >= 2.7.9 is installed on the given machine.
+        [Default: True]
+        type: bool
+
+
+REQUIREMENTS:  python >= 2.6, PyVmomi
+
+AUTHOR: Wei Gao (@woshihaoren)
+        METADATA:
+          status:
+          - preview
+          supported_by: community
+        
+
+EXAMPLES:
+
+- name: Gather vmware host facts
+  vmware_host_facts:
+    hostname: "{{ esxi_server }}"
+    username: "{{ esxi_username }}"
+    password: "{{ esxi_password }}"
+  register: host_facts
+  delegate_to: localhost
+
+- name: Gather vmware host facts from vCenter
+  vmware_host_facts:
+    hostname: "{{ vcenter_server }}"
+    username: "{{ vcenter_user }}"
+    password: "{{ vcenter_pass }}"
+    esxi_hostname: "{{ esxi_hostname }}"
+  register: host_facts
+  delegate_to: localhost
+
+- name: Get VSAN Cluster UUID from host facts
+  vmware_host_facts:
+    hostname: "{{ esxi_server }}"
+    username: "{{ esxi_username }}"
+    password: "{{ esxi_password }}"
+  register: host_facts
+- set_fact:
+    cluster_uuid: "{{ host_facts['ansible_facts']['vsan_cluster_uuid'] }}"
+
+
+RETURN VALUES:
+
+ansible_facts:
+  description: system info about the host machine
+  returned: always
+  type: dict
+  sample:
+    {
+        "ansible_all_ipv4_addresses": [
+            "10.76.33.200"
+        ],
+        "ansible_bios_date": "2011-01-01T00:00:00+00:00",
+        "ansible_bios_version": "0.5.1",
+        "ansible_datastore": [
+            {
+                "free": "11.63 GB",
+                "name": "datastore1",
+                "total": "12.50 GB"
+            }
+        ],
+        "ansible_distribution": "VMware ESXi",
+        "ansible_distribution_build": "4887370",
+        "ansible_distribution_version": "6.5.0",
+        "ansible_hostname": "10.76.33.100",
+        "ansible_interfaces": [
+            "vmk0"
+        ],
+        "ansible_memfree_mb": 2702,
+        "ansible_memtotal_mb": 4095,
+        "ansible_os_type": "vmnix-x86",
+        "ansible_processor": "Intel Xeon E312xx (Sandy Bridge)",
+        "ansible_processor_cores": 2,
+        "ansible_processor_count": 2,
+        "ansible_processor_vcpus": 2,
+        "ansible_product_name": "KVM",
+        "ansible_product_serial": "NA",
+        "ansible_system_vendor": "Red Hat",
+        "ansible_vmk0": {
+            "device": "vmk0",
+            "ipv4": {
+                "address": "10.76.33.100",
+                "netmask": "255.255.255.0"
+            },
+            "macaddress": "52:54:00:56:7d:59",
+            "mtu": 1500
+        },
+        "vsan_cluster_uuid": null,
+        "vsan_node_uuid": null,
+        "vsan_health": "unknown",
+    }
+

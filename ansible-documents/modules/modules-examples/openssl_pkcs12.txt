@@ -1,0 +1,67 @@
+EXAMPLES:
+
+- name: Generate PKCS#12 file
+  openssl_pkcs12:
+    action: export
+    path: /opt/certs/ansible.p12
+    friendly_name: raclette
+    privatekey_path: /opt/certs/keys/key.pem
+    certificate_path: /opt/certs/cert.pem
+    other_certificates: /opt/certs/ca.pem
+    state: present
+
+- name: Change PKCS#12 file permission
+  openssl_pkcs12:
+    action: export
+    path: /opt/certs/ansible.p12
+    friendly_name: raclette
+    privatekey_path: /opt/certs/keys/key.pem
+    certificate_path: /opt/certs/cert.pem
+    other_certificates: /opt/certs/ca.pem
+    state: present
+    mode: '0600'
+
+- name: Regen PKCS#12 file
+  openssl_pkcs12:
+    action: export
+    src: /opt/certs/ansible.p12
+    path: /opt/certs/ansible.p12
+    friendly_name: raclette
+    privatekey_path: /opt/certs/keys/key.pem
+    certificate_path: /opt/certs/cert.pem
+    other_certificates: /opt/certs/ca.pem
+    state: present
+    mode: '0600'
+    force: yes
+
+- name: Dump/Parse PKCS#12 file
+  openssl_pkcs12:
+    action: parse
+    src: /opt/certs/ansible.p12
+    path: /opt/certs/ansible.pem
+    state: present
+
+- name: Remove PKCS#12 file
+  openssl_pkcs12:
+    path: /opt/certs/ansible.p12
+    state: absent
+
+
+RETURN VALUES:
+
+filename:
+    description: Path to the generate PKCS#12 file.
+    returned: changed or success
+    type: str
+    sample: /opt/certs/ansible.p12
+privatekey:
+    description: Path to the TLS/SSL private key the public key was generated from.
+    returned: changed or success
+    type: str
+    sample: /etc/ssl/private/ansible.com.pem
+backup_file:
+    description: Name of backup file created.
+    returned: changed and if I(backup) is C(yes)
+    type: str
+    sample: /path/to/ansible.com.pem.2019-03-09@11:22~
+

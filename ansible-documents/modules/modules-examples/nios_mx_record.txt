@@ -1,0 +1,42 @@
+EXAMPLES:
+
+- name: configure an MX record
+  nios_mx_record:
+    name: ansible.com
+    mx: mailhost.ansible.com
+    preference: 0
+    state: present
+    provider:
+      host: "{{ inventory_hostname_short }}"
+      username: admin
+      password: admin
+  connection: local
+
+- name: add a comment to an existing MX record
+  nios_mx_record:
+    name: ansible.com
+    mx: mailhost.ansible.com
+    preference: 0
+    comment: this is a test comment
+    state: present
+    provider:
+      host: "{{ inventory_hostname_short }}"
+      username: admin
+      password: admin
+  connection: local
+
+- name: remove an MX record from the system
+  nios_mx_record:
+    name: ansible.com
+    mx: mailhost.ansible.com
+    preference: 0
+    state: absent
+    provider:
+      host: "{{ inventory_hostname_short }}"
+      username: admin
+      password: admin
+  connection: local
+
+
+RETURN VALUES:
+ # 

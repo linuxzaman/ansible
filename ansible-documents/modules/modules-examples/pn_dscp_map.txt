@@ -1,0 +1,35 @@
+EXAMPLES:
+
+- name: dscp map create
+  pn_dscp_map:
+    pn_cliswitch: "sw01"
+    state: "present"
+    pn_name: "foo"
+    pn_scope: "local"
+
+- name: dscp map delete
+  pn_dscp_map:
+    pn_cliswitch: "sw01"
+    state: "absent"
+    pn_name: "foo"
+
+
+RETURN VALUES:
+
+command:
+  description: the CLI command run on the target node.
+  returned: always
+  type: str
+stdout:
+  description: set of responses from the dscp-map command.
+  returned: always
+  type: list
+stderr:
+  description: set of error responses from the dscp-map command.
+  returned: on error
+  type: list
+changed:
+  description: indicates whether the CLI caused changes on the target.
+  returned: always
+  type: bool
+

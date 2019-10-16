@@ -1,0 +1,80 @@
+EXAMPLES:
+
+- name: Create a LDAP monitor
+  bigip_monitor_ldap:
+    name: foo
+    provider:
+      password: secret
+      server: lb.mydomain.com
+      user: admin
+  delegate_to: localhost
+
+
+RETURN VALUES:
+
+parent:
+  description: New parent template of the monitor.
+  returned: changed
+  type: str
+  sample: ldap
+description:
+  description: The description of the monitor.
+  returned: changed
+  type: str
+  sample: Important_Monitor
+ip:
+  description: The new IP of IP/port definition.
+  returned: changed
+  type: str
+  sample: 10.12.13.14
+interval:
+  description: The new interval in which to run the monitor check.
+  returned: changed
+  type: int
+  sample: 2
+timeout:
+  description: The new timeout in which the remote system must respond to the monitor.
+  returned: changed
+  type: int
+  sample: 10
+time_until_up:
+  description: The new time in which to mark a system as up after first successful response.
+  returned: changed
+  type: int
+  sample: 2
+security:
+  description: The new Security setting of the resource.
+  returned: changed
+  type: str
+  sample: ssl
+debug:
+  description: The new Debug setting of the resource.
+  returned: changed
+  type: bool
+  sample: yes
+mandatory_attributes:
+  description: The new Mandatory Attributes setting of the resource.
+  returned: changed
+  type: bool
+  sample: no
+chase_referrals:
+  description: The new Chase Referrals setting of the resource.
+  returned: changed
+  type: bool
+  sample: yes
+manual_resume:
+  description: The new Manual Resume setting of the resource.
+  returned: changed
+  type: bool
+  sample: no
+filter:
+  description: The new LDAP Filter setting of the resource.
+  returned: changed
+  type: str
+  sample: filter1
+base:
+  description: The new LDAP Base setting of the resource.
+  returned: changed
+  type: str
+  sample: base
+

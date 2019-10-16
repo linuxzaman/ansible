@@ -1,0 +1,79 @@
+> ONYX_VXLAN    (/usr/lib/python2.7/dist-packages/ansible/modules/network/onyx/onyx_vxlan.py)
+
+        This module provides declarative management of Vxlan configuration on Mellanox ONYX network devices.
+
+  * This module is maintained by The Ansible Community
+OPTIONS (= is mandatory):
+
+- arp_suppression
+        A flag telling if to configure arp suppression.
+        [Default: False]
+        type: bool
+
+- bgp
+        configure bgp on nve interface.
+        [Default: True]
+        type: bool
+
+- loopback_id
+        loopback interface ID.
+        [Default: (null)]
+
+- mlag_tunnel_ip
+        vxlan Mlag tunnel IP
+        [Default: (null)]
+
+= nve_id
+        nve interface ID.
+
+
+- vni_vlan_list
+        Each item in the list has two attributes vlan_id, vni_id.
+        [Default: (null)]
+
+
+NOTES:
+      * Tested on ONYX evpn_dev.031.
+      * nve protocol must be enabled.
+
+
+AUTHOR: Anas Badaha (@anasb)
+        METADATA:
+          status:
+          - preview
+          supported_by: community
+        
+
+EXAMPLES:
+
+- name: configure Vxlan
+  onyx_vxlan:
+    nve_id: 1
+    loopback_id: 1
+    bgp: yes
+    mlag-tunnel-ip: 100.0.0.1
+    vni_vlan_list:
+      - vlan_id: 10
+        vni_id: 10010
+      - vlan_id: 6
+        vni_id: 10060
+    arp_suppression: yes
+
+
+RETURN VALUES:
+
+commands:
+  description: The list of configuration mode commands to send to the device.
+  returned: always
+  type: list
+  sample:
+    - interface nve 1
+    - interface nve 1 vxlan source interface loopback 1
+    - interface nve 1 nve controller bgp
+    - interface nve 1 vxlan mlag-tunnel-ip 100.0.0.1
+    - interface nve 1 nve vni 10010 vlan 10
+    - interface nve 1 nve vni 10060 vlan 6
+    - interface nve 1 nve neigh-suppression
+    - interface vlan 6
+    - interface vlan 10
+

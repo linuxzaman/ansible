@@ -1,0 +1,52 @@
+EXAMPLES:
+
+- name: Create a service for glance
+  os_keystone_endpoint:
+     cloud: mycloud
+     service: glance
+     endpoint_interface: public
+     url: http://controller:9292
+     region: RegionOne
+     state: present
+
+- name: Delete a service for nova
+  os_keystone_endpoint:
+     cloud: mycloud
+     service: nova
+     endpoint_interface: public
+     region: RegionOne
+     state: absent
+
+
+RETURN VALUES:
+
+endpoint:
+    description: Dictionary describing the endpoint.
+    returned: On success when I(state) is C(present)
+    type: complex
+    contains:
+        id:
+            description: Endpoint ID.
+            type: str
+            sample: 3292f020780b4d5baf27ff7e1d224c44
+        region:
+            description: Region Name.
+            type: str
+            sample: RegionOne
+        service_id:
+            description: Service ID.
+            type: str
+            sample: b91f1318f735494a825a55388ee118f3
+        interface:
+            description: Endpoint Interface.
+            type: str
+            sample: public
+        url:
+            description: Service URL.
+            type: str
+            sample: http://controller:9292
+        enabled:
+            description: Service status.
+            type: bool
+            sample: True
+

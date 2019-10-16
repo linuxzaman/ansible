@@ -1,0 +1,90 @@
+> IPMI_BOOT    (/usr/lib/python2.7/dist-packages/ansible/modules/remote_management/ipmi/ipmi_boot.py)
+
+        Use this module to manage order of boot devices
+
+  * This module is maintained by The Ansible Community
+OPTIONS (= is mandatory):
+
+= bootdev
+        Set boot device to use on next reboot
+        (Choices: network -- Request network boot, floppy -- Boot from floppy, hd -- Boot from hard drive, safe -- Boot from hard drive,
+        requesting 'safe mode', optical -- boot from CD/DVD/BD drive, setup -- Boot into setup utility, default -- remove any IPMI
+        directed boot device request)
+
+= name
+        Hostname or ip address of the BMC.
+
+
+= password
+        Password to connect to the BMC.
+
+
+- persistent
+        If set, ask that system firmware uses this device beyond next boot. Be aware many systems do not honor this.
+        [Default: no]
+        type: bool
+
+- port
+        Remote RMCP port.
+        [Default: 623]
+
+- state
+        Whether to ensure that boot devices is desired.
+        (Choices: present -- Request system turn on, absent -- Request system turn on)[Default: present]
+
+- uefiboot
+        If set, request UEFI boot explicitly. Strictly speaking, the spec suggests that if not set, the system should BIOS boot and
+        offers no "don't care" option. In practice, this flag not being set does not preclude UEFI boot on any system I've encountered.
+        [Default: no]
+        type: bool
+
+= user
+        Username to use to connect to the BMC.
+
+
+
+REQUIREMENTS:  python >= 2.6, pyghmi
+
+AUTHOR: Bulat Gaifullin (@bgaifullin) <gaifullinbf@gmail.com>
+        METADATA:
+          status:
+          - preview
+          supported_by: community
+        
+
+EXAMPLES:
+
+# Ensure bootdevice is HD.
+- ipmi_boot:
+    name: test.testdomain.com
+    user: admin
+    password: password
+    bootdev: hd
+
+# Ensure bootdevice is not Network
+- ipmi_boot:
+    name: test.testdomain.com
+    user: admin
+    password: password
+    bootdev: network
+    state: absent
+
+
+RETURN VALUES:
+
+bootdev:
+    description: The boot device name which will be used beyond next boot.
+    returned: success
+    type: str
+    sample: default
+persistent:
+    description: If True, system firmware will use this device beyond next boot.
+    returned: success
+    type: bool
+    sample: false
+uefimode:
+    description: If True, system firmware will use UEFI boot explicitly beyond next boot.
+    returned: success
+    type: bool
+    sample: false
+

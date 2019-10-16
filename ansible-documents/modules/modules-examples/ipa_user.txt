@@ -1,0 +1,50 @@
+EXAMPLES:
+
+# Ensure pinky is present and always reset password
+- ipa_user:
+    name: pinky
+    state: present
+    krbpasswordexpiration: 20200119235959
+    givenname: Pinky
+    sn: Acme
+    mail:
+    - pinky@acme.com
+    telephonenumber:
+    - '+555123456'
+    sshpubkey:
+    - ssh-rsa ....
+    - ssh-dsa ....
+    uidnumber: 1001
+    gidnumber: 100
+    ipa_host: ipa.example.com
+    ipa_user: admin
+    ipa_pass: topsecret
+
+# Ensure brain is absent
+- ipa_user:
+    name: brain
+    state: absent
+    ipa_host: ipa.example.com
+    ipa_user: admin
+    ipa_pass: topsecret
+
+# Ensure pinky is present but don't reset password if already exists
+- ipa_user:
+    name: pinky
+    state: present
+    givenname: Pinky
+    sn: Acme
+    password: zounds
+    ipa_host: ipa.example.com
+    ipa_user: admin
+    ipa_pass: topsecret
+    update_password: on_create
+
+
+RETURN VALUES:
+
+user:
+  description: User as returned by IPA API
+  returned: always
+  type: dict
+

@@ -1,0 +1,177 @@
+> AVI_IPAMDNSPROVIDERPROFILE    (/usr/lib/python2.7/dist-packages/ansible/modules/network/avi/avi_ipamdnsproviderprofile.py)
+
+        This module is used to configure IpamDnsProviderProfile object more examples at https://github.com/avinetworks/devops
+
+  * This module is maintained by The Ansible Community
+OPTIONS (= is mandatory):
+
+- allocate_ip_in_vrf
+        If this flag is set, only allocate ip from networks in the virtual service vrf.
+        Applicable for avi vantage ipam only.
+        Field introduced in 17.2.4.
+        Default value when not specified in API or module is interpreted by Avi Controller as False.
+        [Default: (null)]
+        type: bool
+        version_added: 2.5
+
+- api_context
+        Avi API context that includes current session ID and CSRF Token.
+        This allows user to perform single login and re-use the session.
+        [Default: (null)]
+        type: dict
+        version_added: 2.5
+
+- api_version
+        Avi API version of to use for Avi API and objects.
+        [Default: 16.4.4]
+        type: str
+
+- avi_api_patch_op
+        Patch operation to use when using avi_api_update_method as patch.
+        (Choices: add, replace, delete)[Default: (null)]
+        version_added: 2.5
+
+- avi_api_update_method
+        Default method for object update is HTTP PUT.
+        Setting to patch will override that behavior to use HTTP PATCH.
+        (Choices: put, patch)[Default: put]
+        version_added: 2.5
+
+- avi_credentials
+        Avi Credentials dictionary which can be used in lieu of enumerating Avi Controller login details.
+        [Default: (null)]
+        type: dict
+        version_added: 2.5
+
+- aws_profile
+        Provider details if type is aws.
+        [Default: (null)]
+
+- azure_profile
+        Provider details if type is microsoft azure.
+        Field introduced in 17.2.1.
+        [Default: (null)]
+        version_added: 2.5
+
+- controller
+        IP address or hostname of the controller. The default value is the environment variable `AVI_CONTROLLER'.
+        [Default: ]
+        type: str
+
+- custom_profile
+        Provider details if type is custom.
+        Field introduced in 17.1.1.
+        [Default: (null)]
+
+- gcp_profile
+        Provider details if type is google cloud.
+        [Default: (null)]
+
+- infoblox_profile
+        Provider details if type is infoblox.
+        [Default: (null)]
+
+- internal_profile
+        Provider details if type is avi.
+        [Default: (null)]
+
+= name
+        Name for the ipam/dns provider profile.
+
+
+- openstack_profile
+        Provider details if type is openstack.
+        [Default: (null)]
+
+- password
+        Password of Avi user in Avi controller. The default value is the environment variable `AVI_PASSWORD'.
+        [Default: ]
+        type: str
+
+- proxy_configuration
+        Field introduced in 17.1.1.
+        [Default: (null)]
+
+- state
+        The state that should be applied on the entity.
+        (Choices: absent, present)[Default: present]
+
+- tenant
+        Name of tenant used for all Avi API calls and context of object.
+        [Default: admin]
+        type: str
+
+- tenant_ref
+        It is a reference to an object of type tenant.
+        [Default: (null)]
+
+- tenant_uuid
+        UUID of tenant used for all Avi API calls and context of object.
+        [Default: ]
+        type: str
+
+= type
+        Provider type for the ipam/dns provider profile.
+        Enum options - IPAMDNS_TYPE_INFOBLOX, IPAMDNS_TYPE_AWS, IPAMDNS_TYPE_OPENSTACK, IPAMDNS_TYPE_GCP, IPAMDNS_TYPE_INFOBLOX_DNS,
+        IPAMDNS_TYPE_CUSTOM,
+        IPAMDNS_TYPE_CUSTOM_DNS, IPAMDNS_TYPE_AZURE, IPAMDNS_TYPE_INTERNAL, IPAMDNS_TYPE_INTERNAL_DNS, IPAMDNS_TYPE_AWS_DNS,
+        IPAMDNS_TYPE_AZURE_DNS.
+
+
+- url
+        Avi controller URL of the object.
+        [Default: (null)]
+
+- username
+        Username used for accessing Avi controller. The default value is the environment variable `AVI_USERNAME'.
+        [Default: ]
+        type: str
+
+- uuid
+        Uuid of the ipam/dns provider profile.
+        [Default: (null)]
+
+
+NOTES:
+      * For more information on using Ansible to manage Avi Network devices see https://www.ansible.com/ansible-avi-networks.
+
+
+REQUIREMENTS:  avisdk
+
+AUTHOR: Gaurav Rastogi (@grastogi23) <grastogi@avinetworks.com>
+        METADATA:
+          status:
+          - preview
+          supported_by: community
+        
+
+EXAMPLES:
+
+- name: Create IPAM DNS provider setting
+    avi_ipamdnsproviderprofile:
+      controller: '{{ controller }}'
+      username: '{{ username }}'
+      password: '{{ password }}'
+      internal_profile:
+        dns_service_domain:
+        - domain_name: ashish.local
+          num_dns_ip: 1
+          pass_through: true
+          record_ttl: 100
+        - domain_name: guru.local
+          num_dns_ip: 1
+          pass_through: true
+          record_ttl: 200
+        ttl: 300
+      name: Ashish-DNS
+      tenant_ref: Demo
+      type: IPAMDNS_TYPE_INTERNAL
+
+
+RETURN VALUES:
+
+obj:
+    description: IpamDnsProviderProfile (api/ipamdnsproviderprofile) object
+    returned: success, changed
+    type: dict
+

@@ -1,0 +1,74 @@
+> OPENDJ_BACKENDPROP    (/usr/lib/python2.7/dist-packages/ansible/modules/identity/opendj/opendj_backendprop.py)
+
+        This module will update settings for OpenDJ with the command set-backend-prop. It will check first via de get-backend-prop if
+        configuration needs to be applied.
+
+  * This module is maintained by The Ansible Community
+OPTIONS (= is mandatory):
+
+= backend
+        The name of the backend on which the property needs to be updated.
+
+
+= hostname
+        The hostname of the OpenDJ server.
+
+
+= name
+        The configuration setting to update.
+
+
+- opendj_bindir
+        The path to the bin directory of OpenDJ.
+        [Default: /opt/opendj/bin]
+
+- password
+        The password for the cn=Directory Manager user.
+        Either password or passwordfile is needed.
+        [Default: (null)]
+
+- passwordfile
+        Location to the password file which holds the password for the cn=Directory Manager user.
+        Either password or passwordfile is needed.
+        [Default: (null)]
+
+= port
+        The Admin port on which the OpenDJ instance is available.
+
+
+- state
+        If configuration needs to be added/updated
+        [Default: present]
+
+- username
+        The username to connect to.
+        [Default: cn=Directory Manager]
+
+= value
+        The value for the configuration item.
+
+
+
+AUTHOR: Werner Dijkerman (@dj-wasabi)
+        METADATA:
+          status:
+          - preview
+          supported_by: community
+        
+
+EXAMPLES:
+
+- name: "Add or update OpenDJ backend properties"
+    action: opendj_backendprop
+            hostname=localhost
+            port=4444
+            username="cn=Directory Manager"
+            password=password
+            backend=userRoot
+            name=index-entry-limit
+            value=5000
+
+
+RETURN VALUES:
+
+

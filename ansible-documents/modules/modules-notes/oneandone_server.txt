@@ -1,0 +1,182 @@
+> ONEANDONE_SERVER    (/usr/lib/python2.7/dist-packages/ansible/modules/cloud/oneandone/oneandone_server.py)
+
+        Create, destroy, update, start, stop, and reboot a 1&1 Host server. When the server is created it can optionally wait for it to
+        be 'running' before returning.
+
+  * This module is maintained by The Ansible Community
+OPTIONS (= is mandatory):
+
+- api_url
+        Custom API URL. Overrides the ONEANDONE_API_URL environement variable.
+        [Default: (null)]
+
+- appliance
+        The operating system name or ID for the server. It is required only for 'present' state.
+        [Default: (null)]
+
+= auth_token
+        Authenticating API token provided by 1&1. Overrides the ONEANDONE_AUTH_TOKEN environement variable.
+
+
+- auto_increment
+        When creating multiple servers at once, whether to differentiate hostnames by appending a count after them or substituting the
+        count where there is a %02d or %03d in the hostname string.
+        [Default: yes]
+        type: bool
+
+- cores_per_processor
+        The number of cores per processor. It must be provided with vcore, ram, and hdds parameters.
+        [Default: (null)]
+
+- count
+        The number of servers to create.
+        [Default: 1]
+
+- datacenter
+        The datacenter location.
+        (Choices: US, ES, DE, GB)[Default: US]
+
+- description
+        The description of the server.
+        [Default: (null)]
+
+- firewall_policy
+        The firewall policy name or ID.
+        [Default: (null)]
+
+= fixed_instance_size
+        The instance size name or ID of the server. It is required only for 'present' state, and it is mutually exclusive with vcore,
+        cores_per_processor, ram, and hdds parameters.
+        (Choices: S, M, L, XL, XXL, 3XL, 4XL, 5XL)
+
+- hdds
+        A list of hard disks with nested "size" and "is_main" properties. It must be provided with vcore, cores_per_processor, and ram
+        parameters.
+        [Default: (null)]
+
+- hostname
+        The hostname or ID of the server. Only used when state is 'present'.
+        [Default: (null)]
+
+- load_balancer
+        The load balancer name or ID.
+        [Default: (null)]
+
+- monitoring_policy
+        The monitoring policy name or ID.
+        [Default: (null)]
+
+- private_network
+        The private network name or ID.
+        [Default: (null)]
+
+- ram
+        The amount of RAM memory. It must be provided with with vcore, cores_per_processor, and hdds parameters.
+        [Default: (null)]
+
+- server
+        Server identifier (ID or hostname). It is required for all states except 'running' and 'present'.
+        [Default: (null)]
+
+- server_type
+        The type of server to be built.
+        (Choices: cloud, baremetal, k8s_node)[Default: cloud]
+
+- ssh_key
+        User's public SSH key (contents, not path).
+        [Default: (null)]
+
+- state
+        Define a server's state to create, remove, start or stop it.
+        (Choices: present, absent, running, stopped)[Default: present]
+
+- vcore
+        The total number of processors. It must be provided with cores_per_processor, ram, and hdds parameters.
+        [Default: (null)]
+
+- wait
+        Wait for the server to be in state 'running' before returning. Also used for delete operation (set to 'false' if you don't want
+        to wait for each individual server to be deleted before moving on with other tasks.)
+        [Default: yes]
+        type: bool
+
+- wait_interval
+        Defines the number of seconds to wait when using the wait_for methods
+        [Default: 5]
+
+- wait_timeout
+        how long before wait gives up, in seconds
+        [Default: 600]
+
+
+REQUIREMENTS:  1and1, python >= 2.6
+
+AUTHOR: Amel Ajdinovic (@aajdinov), Ethan Devenport (@edevenport)
+        METADATA:
+          status:
+          - preview
+          supported_by: community
+        
+
+EXAMPLES:
+
+# Provisioning example. Creates three servers and enumerate their names.
+
+- oneandone_server:
+    auth_token: oneandone_private_api_key
+    hostname: node%02d
+    fixed_instance_size: XL
+    datacenter: US
+    appliance: C5A349786169F140BCBC335675014C08
+    auto_increment: true
+    count: 3
+
+# Create three servers, passing in an ssh_key.
+
+- oneandone_server:
+    auth_token: oneandone_private_api_key
+    hostname: node%02d
+    vcore: 2
+    cores_per_processor: 4
+    ram: 8.0
+    hdds:
+      - size: 50
+        is_main: false
+    datacenter: ES
+    appliance: C5A349786169F140BCBC335675014C08
+    count: 3
+    wait: yes
+    wait_timeout: 600
+    wait_interval: 10
+    ssh_key: SSH_PUBLIC_KEY
+
+# Removing server
+
+- oneandone_server:
+    auth_token: oneandone_private_api_key
+    state: absent
+    server: 'node01'
+
+# Starting server.
+
+- oneandone_server:
+    auth_token: oneandone_private_api_key
+    state: running
+    server: 'node01'
+
+# Stopping server
+
+- oneandone_server:
+    auth_token: oneandone_private_api_key
+    state: stopped
+    server: 'node01'
+
+
+RETURN VALUES:
+
+servers:
+    description: Information about each server that was processed
+    type: list
+    sample: '[{"hostname": "my-server", "id": "server-id"}]'
+    returned: always
+

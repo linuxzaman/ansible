@@ -1,0 +1,28 @@
+EXAMPLES:
+
+- name: Create a nameserver
+  bigip_dns_nameserver:
+    name: foo
+    address: 10.10.10.10
+    service_port: 53
+    state: present
+    provider:
+      password: secret
+      server: lb.mydomain.com
+      user: admin
+  delegate_to: localhost
+
+
+RETURN VALUES:
+
+address:
+  description: Address which the nameserver listens for DNS messages.
+  returned: changed
+  type: str
+  sample: 127.0.0.1
+service_port:
+  description: Service port on which the nameserver listens for DNS messages.
+  returned: changed
+  type: int
+  sample: 53
+

@@ -1,0 +1,120 @@
+> VSPHERE_FILE    (/usr/lib/python2.7/dist-packages/ansible/modules/cloud/vmware/vsphere_file.py)
+
+        Manage files on a vCenter datastore.
+
+  * This module is maintained by The Ansible Community
+OPTIONS (= is mandatory):
+
+= datacenter
+        The datacenter on the vCenter server that holds the datastore.
+
+        type: str
+
+= datastore
+        The datastore on the vCenter server to push files to.
+
+        type: str
+
+= host
+        The vCenter server on which the datastore is available.
+        (Aliases: hostname)
+        type: str
+
+= password
+        The password to authenticate on the vCenter server.
+
+        type: str
+
+= path
+        The file or directory on the datastore on the vCenter server.
+        (Aliases: dest)
+        type: str
+
+- state
+        The state of or the action on the provided path.
+        If `absent', the file will be removed.
+        If `directory', the directory will be created.
+        If `file', more information of the (existing) file will be returned.
+        If `touch', an empty file will be created if the path does not exist.
+        (Choices: absent, directory, file, touch)[Default: file]
+        type: str
+
+- timeout
+        The timeout in seconds for the upload to the datastore.
+        [Default: 10]
+        type: int
+
+= username
+        The user name to authenticate on the vCenter server.
+
+        type: str
+
+- validate_certs
+        If `no', SSL certificates will not be validated. This should only be set to `no' when no other option exists.
+        [Default: True]
+        type: bool
+
+
+NOTES:
+      * The vSphere folder API does not allow to remove directory objects.
+
+
+AUTHOR: Dag Wieers (@dagwieers)
+        METADATA:
+          status:
+          - preview
+          supported_by: community
+        
+
+EXAMPLES:
+
+- name: Create an empty file on a datastore
+  vsphere_file:
+    host: '{{ vhost }}'
+    username: '{{ vuser }}'
+    password: '{{ vpass }}'
+    datacenter: DC1 Someplace
+    datastore: datastore1
+    path: some/remote/file
+    state: touch
+  delegate_to: localhost
+
+- name: Create a directory on a datastore
+  vsphere_copy:
+    host: '{{ vhost }}'
+    username: '{{ vuser }}'
+    password: '{{ vpass }}'
+    src: /other/local/file
+    datacenter: DC2 Someplace
+    datastore: datastore2
+    path: other/remote/file
+    state: directory
+  delegate_to: localhost
+
+- name: Query a file on a datastore
+  vsphere_file:
+    host: '{{ vhost }}'
+    username: '{{ vuser }}'
+    password: '{{ vpass }}'
+    datacenter: DC1 Someplace
+    datastore: datastore1
+    path: some/remote/file
+    state: touch
+  delegate_to: localhost
+  ignore_errors: yes
+
+- name: Delete a file on a datastore
+  vsphere_copy:
+    host: '{{ vhost }}'
+    username: '{{ vuser }}'
+    password: '{{ vpass }}'
+    datacenter: DC2 Someplace
+    datastore: datastore2
+    path: other/remote/file
+    state: absent
+  delegate_to: localhost
+
+
+RETURN VALUES:
+
+

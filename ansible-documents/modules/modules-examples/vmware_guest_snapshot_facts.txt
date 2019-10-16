@@ -1,0 +1,38 @@
+EXAMPLES:
+
+- name: Gather snapshot facts about the virtual machine in the given vCenter
+    vmware_guest_snapshot_facts:
+      hostname: "{{ vcenter_hostname }}"
+      username: "{{ vcenter_username }}"
+      password: "{{ vcenter_password }}"
+      datacenter: "{{ datacenter_name }}"
+      name: "{{ guest_name }}"
+    delegate_to: localhost
+    register: snapshot_facts
+
+
+RETURN VALUES:
+
+guest_snapshots:
+    description: metadata about the snapshot facts
+    returned: always
+    type: dict
+    sample: {
+        "current_snapshot": {
+            "creation_time": "2018-02-10T14:48:31.999459+00:00",
+            "description": "",
+            "id": 28,
+            "name": "snap_0003",
+            "state": "poweredOff"
+        },
+        "snapshots": [
+            {
+                "creation_time": "2018-02-10T14:48:31.999459+00:00",
+                "description": "",
+                "id": 28,
+                "name": "snap_0003",
+                "state": "poweredOff"
+            }
+        ]
+    }
+

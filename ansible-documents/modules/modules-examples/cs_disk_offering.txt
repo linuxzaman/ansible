@@ -1,0 +1,115 @@
+EXAMPLES:
+
+- name: Create a disk offering with local storage
+  cs_disk_offering:
+    name: small
+    display_text: Small 10GB
+    disk_size: 10
+    storage_type: local
+  delegate_to: localhost
+
+- name: Create or update a disk offering with shared storage
+  cs_disk_offering:
+    name: small
+    display_text: Small 10GB
+    disk_size: 10
+    storage_type: shared
+    storage_tags: SAN01
+  delegate_to: localhost
+
+- name: Remove a disk offering
+  cs_disk_offering:
+    name: small
+    state: absent
+  delegate_to: localhost
+
+
+RETURN VALUES:
+
+---
+id:
+  description: UUID of the disk offering
+  returned: success
+  type: str
+  sample: a6f7a5fc-43f8-11e5-a151-feff819cdc9f
+disk_size:
+  description: Size of the disk offering in GB
+  returned: success
+  type: int
+  sample: 10
+iops_max:
+  description: Max iops of the disk offering
+  returned: success
+  type: int
+  sample: 1000
+iops_min:
+  description: Min iops of the disk offering
+  returned: success
+  type: int
+  sample: 500
+bytes_read_rate:
+  description: Bytes read rate of the disk offering
+  returned: success
+  type: int
+  sample: 1000
+bytes_write_rate:
+  description: Bytes write rate of the disk offering
+  returned: success
+  type: int
+  sample: 1000
+iops_read_rate:
+  description: IO requests per second read rate of the disk offering
+  returned: success
+  type: int
+  sample: 1000
+iops_write_rate:
+  description: IO requests per second write rate of the disk offering
+  returned: success
+  type: int
+  sample: 1000
+created:
+  description: Date the offering was created
+  returned: success
+  type: str
+  sample: 2017-11-19T10:48:59+0000
+display_text:
+  description: Display text of the offering
+  returned: success
+  type: str
+  sample: Small 10GB
+domain:
+  description: Domain the offering is into
+  returned: success
+  type: str
+  sample: ROOT
+storage_tags:
+  description: List of storage tags
+  returned: success
+  type: list
+  sample: [ 'eco' ]
+customized:
+  description: Whether the offering uses custom IOPS or not
+  returned: success
+  type: bool
+  sample: false
+name:
+  description: Name of the system offering
+  returned: success
+  type: str
+  sample: Micro
+provisioning_type:
+  description: Provisioning type used to create volumes
+  returned: success
+  type: str
+  sample: thin
+storage_type:
+  description: Storage type used to create volumes
+  returned: success
+  type: str
+  sample: shared
+display_offering:
+  description: Whether to display the offering to the end user or not.
+  returned: success
+  type: bool
+  sample: false
+

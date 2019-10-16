@@ -1,0 +1,224 @@
+> OS_FLAVOR_FACTS    (/usr/lib/python2.7/dist-packages/ansible/modules/cloud/openstack/os_flavor_facts.py)
+
+        Retrieve facts about available OpenStack instance flavors. By default, facts about ALL flavors are retrieved. Filters can be
+        applied to get facts for only matching flavors. For example, you can filter on the amount of RAM available to the flavor, or the
+        number of virtual CPUs available to the flavor, or both. When specifying multiple filters, *ALL* filters must match on a flavor
+        before that flavor is returned as a fact.
+
+  * This module is maintained by The Ansible Community
+OPTIONS (= is mandatory):
+
+- api_timeout
+        How long should the socket layer wait before timing out for API calls. If this is omitted, nothing will be passed to the requests
+        library.
+        [Default: (null)]
+        type: int
+
+- auth
+        Dictionary containing auth information as needed by the cloud's auth plugin strategy. For the default `password' plugin, this
+        would contain `auth_url', `username', `password', `project_name' and any information about domains (for example,
+        `os_user_domain_name' or `os_project_domain_name') if the cloud supports them. For other plugins, this param will need to contain
+        whatever parameters that auth plugin requires. This parameter is not needed if a named cloud is provided or OpenStack OS_*
+        environment variables are present.
+        [Default: (null)]
+        type: dict
+
+- auth_type
+        Name of the auth plugin to use. If the cloud uses something other than password authentication, the name of the plugin should be
+        indicated here and the contents of the `auth' parameter should be updated accordingly.
+        [Default: (null)]
+        type: str
+
+- availability_zone
+        Ignored. Present for backwards compatibility
+        [Default: (null)]
+
+- ca_cert
+        A path to a CA Cert bundle that can be used as part of verifying SSL API requests.
+        (Aliases: cacert)[Default: (null)]
+        type: str
+
+- client_cert
+        A path to a client certificate to use as part of the SSL transaction.
+        (Aliases: cert)[Default: (null)]
+        type: str
+
+- client_key
+        A path to a client key to use as part of the SSL transaction.
+        (Aliases: key)[Default: (null)]
+        type: str
+
+- cloud
+        Named cloud or cloud config to operate against. If `cloud' is a string, it references a named cloud config as defined in an
+        OpenStack clouds.yaml file. Provides default values for `auth' and `auth_type'. This parameter is not needed if `auth' is
+        provided or if OpenStack OS_* environment variables are present. If `cloud' is a dict, it contains a complete cloud configuration
+        like would be in a section of clouds.yaml.
+        [Default: (null)]
+        type: raw
+
+- ephemeral
+        A string used for filtering flavors based on the amount of ephemeral storage. Format is the same as the `ram' parameter
+        [Default: no]
+        type: bool
+        version_added: 2.3
+
+- interface
+        Endpoint URL type to fetch from the service catalog.
+        (Aliases: endpoint_type)(Choices: admin, internal, public)[Default: public]
+        type: str
+        version_added: 2.3
+
+- limit
+        Limits the number of flavors returned. All matching flavors are returned by default.
+        [Default: (null)]
+
+- name
+        A flavor name. Cannot be used with `ram' or `vcpus' or `ephemeral'.
+        [Default: (null)]
+
+- ram
+        A string used for filtering flavors based on the amount of RAM (in MB) desired. This string accepts the following special values:
+        'MIN' (return flavors with the minimum amount of RAM), and 'MAX' (return flavors with the maximum amount of RAM).
+        A specific amount of RAM may also be specified. Any flavors with this exact amount of RAM will be returned.
+        A range of acceptable RAM may be given using a special syntax. Simply prefix the amount of RAM with one of these acceptable range
+        values: '<', '>', '<=', '>='. These values represent less than, greater than, less than or equal to, and greater than or equal
+        to, respectively.
+        [Default: no]
+        type: bool
+
+- region_name
+        Name of the region.
+        [Default: (null)]
+        type: str
+
+- timeout
+        How long should ansible wait for the requested resource.
+        [Default: 180]
+        type: int
+
+- validate_certs
+        Whether or not SSL API requests should be verified.
+        Before Ansible 2.3 this defaulted to `yes'.
+        (Aliases: verify)[Default: False]
+        type: bool
+
+- vcpus
+        A string used for filtering flavors based on the number of virtual CPUs desired. Format is the same as the `ram' parameter.
+        [Default: no]
+        type: bool
+
+- wait
+        Should ansible wait until the requested resource is complete.
+        [Default: True]
+        type: bool
+
+
+NOTES:
+      * This module creates a new top-level `openstack_flavors' fact, which contains a list of unsorted flavors.
+      * The standard OpenStack environment variables, such as `OS_USERNAME' may be used instead of providing explicit values.
+      * Auth information is driven by openstacksdk, which means that values can come from a yaml config file in
+        /etc/ansible/openstack.yaml, /etc/openstack/clouds.yaml or ~/.config/openstack/clouds.yaml, then from standard environment
+        variables, then finally by explicit parameters in plays. More information can be found at
+        https://docs.openstack.org/openstacksdk/
+
+
+REQUIREMENTS:  openstacksdk, python >= 2.7
+
+AUTHOR: David Shrewsbury (@Shrews)
+        METADATA:
+          status:
+          - preview
+          supported_by: community
+        
+
+EXAMPLES:
+
+# Gather facts about all available flavors
+- os_flavor_facts:
+    cloud: mycloud
+
+# Gather facts for the flavor named "xlarge-flavor"
+- os_flavor_facts:
+    cloud: mycloud
+    name: "xlarge-flavor"
+
+# Get all flavors that have exactly 512 MB of RAM.
+- os_flavor_facts:
+    cloud: mycloud
+    ram: "512"
+
+# Get all flavors that have 1024 MB or more of RAM.
+- os_flavor_facts:
+    cloud: mycloud
+    ram: ">=1024"
+
+# Get a single flavor that has the minimum amount of RAM. Using the 'limit'
+# option will guarantee only a single flavor is returned.
+- os_flavor_facts:
+    cloud: mycloud
+    ram: "MIN"
+    limit: 1
+
+# Get all flavors with 1024 MB of RAM or more, AND exactly 2 virtual CPUs.
+- os_flavor_facts:
+    cloud: mycloud
+    ram: ">=1024"
+    vcpus: "2"
+
+# Get all flavors with 1024 MB of RAM or more, exactly 2 virtual CPUs, and
+# less than 30gb of ephemeral storage.
+- os_flavor_facts:
+    cloud: mycloud
+    ram: ">=1024"
+    vcpus: "2"
+    ephemeral: "<30"
+
+
+RETURN VALUES:
+
+openstack_flavors:
+    description: Dictionary describing the flavors.
+    returned: On success.
+    type: complex
+    contains:
+        id:
+            description: Flavor ID.
+            returned: success
+            type: str
+            sample: "515256b8-7027-4d73-aa54-4e30a4a4a339"
+        name:
+            description: Flavor name.
+            returned: success
+            type: str
+            sample: "tiny"
+        disk:
+            description: Size of local disk, in GB.
+            returned: success
+            type: int
+            sample: 10
+        ephemeral:
+            description: Ephemeral space size, in GB.
+            returned: success
+            type: int
+            sample: 10
+        ram:
+            description: Amount of memory, in MB.
+            returned: success
+            type: int
+            sample: 1024
+        swap:
+            description: Swap space size, in MB.
+            returned: success
+            type: int
+            sample: 100
+        vcpus:
+            description: Number of virtual CPUs.
+            returned: success
+            type: int
+            sample: 2
+        is_public:
+            description: Make flavor accessible to the public.
+            returned: success
+            type: bool
+            sample: true
+

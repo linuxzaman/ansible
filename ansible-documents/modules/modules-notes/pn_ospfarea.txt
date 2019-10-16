@@ -1,0 +1,102 @@
+> PN_OSPFAREA    (/usr/lib/python2.7/dist-packages/ansible/modules/network/netvisor/_pn_ospfarea.py)
+
+        Execute vrouter-ospf-add, vrouter-ospf-remove command. This command adds/removes Open Shortest Path First(OSPF) area to/from a
+        virtual router(vRouter) service.
+
+DEPRECATED: 
+
+	Reason: Doesn't support latest Pluribus Networks netvisor
+	Will be removed in: Ansible 2.12
+	Alternatives: Latest modules will be pushed in Ansible future versions.
+
+
+  * This module is maintained by The Ansible Community
+OPTIONS (= is mandatory):
+
+= pn_clipassword
+        Login password.
+
+
+- pn_cliswitch
+        Target switch(es) to run the CLI on.
+        [Default: (null)]
+
+= pn_cliusername
+        Login username.
+
+
+= pn_ospf_area
+        Specify the OSPF area number.
+
+
+- pn_prefix_listin
+        OSPF prefix list for filtering incoming packets.
+        [Default: (null)]
+
+- pn_prefix_listout
+        OSPF prefix list for filtering outgoing packets.
+        [Default: (null)]
+
+- pn_quiet
+        Enable/disable system information.
+        [Default: True]
+        type: bool
+
+- pn_stub_type
+        Specify the OSPF stub type.
+        (Choices: none, stub, stub-no-summary, nssa, nssa-no-summary)[Default: (null)]
+
+= pn_vrouter_name
+        Specify the name of the vRouter.
+
+
+= state
+        State the action to perform. Use 'present' to add ospf-area, 'absent' to remove ospf-area and 'update' to modify ospf-area.
+        (Choices: present, absent, update)
+
+
+AUTHOR: Pluribus Networks (@amitsi)
+        METADATA:
+          status:
+          - deprecated
+          supported_by: community
+        
+
+EXAMPLES:
+
+- name: "Add OSPF area to vrouter"
+  pn_ospfarea:
+    state: present
+    pn_cliusername: admin
+    pn_clipassword: admin
+    pn_ospf_area: 1.0.0.0
+    pn_stub_type: stub
+
+- name: "Remove OSPF from vrouter"
+  pn_ospf:
+    state: absent
+    pn_cliusername: admin
+    pn_clipassword: admin
+    pn_vrouter_name: name-string
+    pn_ospf_area: 1.0.0.0
+
+
+RETURN VALUES:
+
+command:
+  description: The CLI command run on the target node(s).
+  returned: always
+  type: str
+stdout:
+  description: The set of responses from the ospf command.
+  returned: always
+  type: list
+stderr:
+  description: The set of error responses from the ospf command.
+  returned: on error
+  type: list
+changed:
+  description: Indicates whether the CLI caused changes on the target.
+  returned: always
+  type: bool
+

@@ -1,0 +1,109 @@
+> LOGICMONITOR_FACTS    (/usr/lib/python2.7/dist-packages/ansible/modules/monitoring/logicmonitor_facts.py)
+
+        LogicMonitor is a hosted, full-stack, infrastructure monitoring platform. This module collects facts about hosts and host groups
+        within your LogicMonitor account.
+
+  * This module is maintained by The Ansible Community
+OPTIONS (= is mandatory):
+
+- collector
+        The fully qualified domain name of a collector in your LogicMonitor account.
+        This is optional for querying a LogicMonitor host when a displayname is specified.
+        This is required for querying a LogicMonitor host when a displayname is not specified.
+        [Default: (null)]
+
+= company
+        The LogicMonitor account company name. If you would log in to your account at "superheroes.logicmonitor.com" you would use
+        "superheroes".
+
+
+- displayname
+        The display name of a host in your LogicMonitor account or the desired display name of a device to add into monitoring.
+        [Default: hostname -f]
+
+- fullpath
+        The fullpath of the hostgroup object you would like to manage.
+        Recommend running on a single ansible host.
+        Required for management of LogicMonitor host groups (target=hostgroup).
+        [Default: (null)]
+
+- hostname
+        The hostname of a host in your LogicMonitor account, or the desired hostname of a device to add into monitoring.
+        Required for managing hosts (target=host).
+        [Default: hostname -f]
+
+= password
+        The password for the chosen LogicMonitor User.
+        If an md5 hash is used, the digest flag must be set to true.
+
+
+= target
+        The LogicMonitor object you wish to manage.
+        (Choices: host, hostgroup)
+
+= user
+        A LogicMonitor user name. The module will authenticate and perform actions on behalf of this user.
+
+
+
+NOTES:
+      * You must have an existing LogicMonitor account for this module to function.
+
+
+REQUIREMENTS:  An existing LogicMonitor account, Linux
+
+AUTHOR: Ethan Culler-Mayeno (@ethanculler), Jeff Wozniak (@woz5999)
+        METADATA:
+          status:
+          - preview
+          supported_by: community
+        
+
+EXAMPLES:
+
+# Always run those modules on localhost using delegate_to:localhost, or localaction
+
+- name: query a list of hosts
+  logicmonitor_facts:
+    target: host
+    company: yourcompany
+    user: Luigi
+    password: ImaLuigi,number1!
+  delegate_to: localhost
+
+- name: query a host group
+  logicmonitor_facts:
+    target: hostgroup
+    fullpath: /servers/production
+    company: yourcompany
+    user: mario
+    password: itsame.Mario!
+  delegate_to: localhost
+
+
+RETURN VALUES:
+
+---
+    ansible_facts:
+        description: LogicMonitor properties set for the specified object
+        returned: success
+        type: list
+        example: >
+            {
+                "name": "dc",
+                "value": "1"
+            },
+            {
+                "name": "type",
+                "value": "prod"
+            },
+            {
+                "name": "system.categories",
+                "value": ""
+            },
+            {
+                "name": "snmp.community",
+                "value": "********"
+            }
+...
+

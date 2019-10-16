@@ -1,0 +1,139 @@
+> ZABBIX_MAINTENANCE    (/usr/lib/python2.7/dist-packages/ansible/modules/monitoring/zabbix/zabbix_maintenance.py)
+
+        This module will let you create Zabbix maintenance windows.
+
+  * This module is maintained by The Ansible Community
+OPTIONS (= is mandatory):
+
+- collect_data
+        Type of maintenance. With data collection, or without.
+        [Default: yes]
+        type: bool
+
+= desc
+        Short description of maintenance window.
+        [Default: Created by Ansible]
+
+- host_groups
+        Host groups to manage maintenance window for. Separate multiple groups with commas. `host_group' is an alias for `host_groups'.
+        *Required* option when `state' is `present' and no `host_names' specified.
+        (Aliases: host_group)[Default: (null)]
+
+- host_names
+        Hosts to manage maintenance window for. Separate multiple hosts with commas. `host_name' is an alias for `host_names'. *Required*
+        option when `state' is `present' and no `host_groups' specified.
+        (Aliases: host_name)[Default: (null)]
+
+- http_login_password
+        Basic Auth password
+        [Default: (null)]
+        type: str
+        version_added: 2.1
+
+= http_login_user
+        Basic Auth login
+
+        type: str
+        version_added: 2.1
+
+= login_password
+        Zabbix user password.
+
+        type: str
+
+= login_user
+        Zabbix user name.
+
+        type: str
+
+- minutes
+        Length of maintenance window in minutes.
+        [Default: 10]
+
+= name
+        Unique name of maintenance window.
+
+
+= server_url
+        URL of Zabbix server, with protocol (http or https). `url' is an alias for `server_url'.
+        (Aliases: url)
+        type: str
+
+- state
+        Create or remove a maintenance window. Maintenance window to remove is identified by name.
+        (Choices: present, absent)[Default: present]
+
+- timeout
+        The timeout of API request (seconds).
+        [Default: 10]
+        type: int
+
+- validate_certs
+        If set to False, SSL certificates will not be validated. This should only be used on personally controlled sites using self-
+        signed certificates.
+        [Default: True]
+        type: bool
+        version_added: 2.5
+
+
+NOTES:
+      * Useful for setting hosts in maintenance mode before big update, and removing maintenance window after update.
+      * Module creates maintenance window from now() to now() + minutes, so if Zabbix server's time and host's time are not
+        synchronized, you will get strange results.
+      * Install required module with 'pip install zabbix-api' command.
+
+
+REQUIREMENTS:  python >= 2.6, zabbix-api
+
+AUTHOR: Alexander Bulimov (@abulimov)
+        METADATA:
+          status:
+          - preview
+          supported_by: community
+        
+
+EXAMPLES:
+
+- name: Create a named maintenance window for host www1 for 90 minutes
+  zabbix_maintenance:
+    name: Update of www1
+    host_name: www1.example.com
+    state: present
+    minutes: 90
+    server_url: https://monitoring.example.com
+    login_user: ansible
+    login_password: pAsSwOrD
+
+- name: Create a named maintenance window for host www1 and host groups Office and Dev
+  zabbix_maintenance:
+    name: Update of www1
+    host_name: www1.example.com
+    host_groups:
+      - Office
+      - Dev
+    state: present
+    server_url: https://monitoring.example.com
+    login_user: ansible
+    login_password: pAsSwOrD
+
+- name: Create a named maintenance window for hosts www1 and db1, without data collection.
+  zabbix_maintenance:
+    name: update
+    host_names:
+      - www1.example.com
+      - db1.example.com
+    state: present
+    collect_data: False
+    server_url: https://monitoring.example.com
+    login_user: ansible
+    login_password: pAsSwOrD
+
+- name: Remove maintenance window by name
+  zabbix_maintenance:
+    name: Test1
+    state: absent
+    server_url: https://monitoring.example.com
+    login_user: ansible
+    login_password: pAsSwOrD
+
+

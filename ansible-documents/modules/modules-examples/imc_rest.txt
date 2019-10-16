@@ -1,0 +1,175 @@
+EXAMPLES:
+
+- name: Power down server
+  imc_rest:
+    hostname: '{{ imc_hostname }}'
+    username: '{{ imc_username }}'
+    password: '{{ imc_password }}'
+    validate_certs: no
+    content: |
+      <configConfMo><inConfig>
+        <computeRackUnit dn="sys/rack-unit-1" adminPower="down"/>
+      </inConfig></configConfMo>
+  delegate_to: localhost
+
+- name: Configure IMC using multiple XML fragments
+  imc_rest:
+    hostname: '{{ imc_hostname }}'
+    username: '{{ imc_username }}'
+    password: '{{ imc_password }}'
+    validate_certs: no
+    timeout: 120
+    content: |
+      <!-- Configure Serial-on-LAN -->
+      <configConfMo><inConfig>
+        <solIf dn="sys/rack-unit-1/sol-if" adminState="enable" speed=="115200" comport="com0"/>
+      </inConfig></configConfMo>
+
+      <!-- Configure Console Redirection -->
+      <configConfMo><inConfig>
+        <biosVfConsoleRedirection dn="sys/rack-unit-1/bios/bios-settings/Console-redirection"
+          vpBaudRate="115200"
+          vpConsoleRedirection="com-0"
+          vpFlowControl="none"
+          vpTerminalType="vt100"
+          vpPuttyKeyPad="LINUX"
+          vpRedirectionAfterPOST="Always Enable"/>
+      </inConfig></configConfMo>
+  delegate_to: localhost
+
+- name: Enable PXE boot and power-cycle server
+  imc_rest:
+    hostname: '{{ imc_hostname }}'
+    username: '{{ imc_username }}'
+    password: '{{ imc_password }}'
+    validate_certs: no
+    content: |
+      <!-- Configure PXE boot -->
+      <configConfMo><inConfig>
+        <lsbootLan dn="sys/rack-unit-1/boot-policy/lan-read-only" access="read-only" order="1" prot="pxe" type="lan"/>
+      </inConfig></configConfMo>
+
+      <!-- Power cycle server -->
+      <configConfMo><inConfig>
+        <computeRackUnit dn="sys/rack-unit-1" adminPower="cycle-immediate"/>
+      </inConfig></configConfMo>
+  delegate_to: localhost
+
+- name: Reconfigure IMC to boot from storage
+  imc_rest:
+    hostname: '{{ imc_host }}'
+    username: '{{ imc_username }}'
+    password: '{{ imc_password }}'
+    validate_certs: no
+    content: |
+      <configConfMo><inConfig>
+        <lsbootStorage dn="sys/rack-unit-1/boot-policy/storage-read-write" access="read-write" order="1" type="storage"/>
+      </inConfig></configConfMo>
+  delegate_to: localhost
+
+- name: Add customer description to server
+  imc_rest:
+    hostname: '{{ imc_host }}'
+    username: '{{ imc_username }}'
+    password: '{{ imc_password }}'
+    validate_certs: no
+    content: |
+        <configConfMo><inConfig>
+          <computeRackUnit dn="sys/rack-unit-1" usrLbl="Customer Lab - POD{{ pod_id }} - {{ inventory_hostname_short }}"/>
+        </inConfig></configConfMo>
+    delegate_to: localhost
+
+- name: Disable HTTP and increase session timeout to max value 10800 secs
+  imc_rest:
+    hostname: '{{ imc_host }}'
+    username: '{{ imc_username }}'
+    password: '{{ imc_password }}'
+    validate_certs: no
+    timeout: 120
+    content: |
+        <configConfMo><inConfig>
+          <commHttp dn="sys/svc-ext/http-svc" adminState="disabled"/>
+        </inConfig></configConfMo>
+
+        <configConfMo><inConfig>
+          <commHttps dn="sys/svc-ext/https-svc" adminState="enabled" sessionTimeout="10800"/>
+        </inConfig></configConfMo>
+    delegate_to: localhost
+
+
+RETURN VALUES:
+
+aaLogin:
+  description: Cisco IMC XML output for the login, translated to JSON using Cobra convention
+  returned: success
+  type: dict
+  sample: |
+    "attributes": {
+        "cookie": "",
+        "outCookie": "1498902428/9de6dc36-417c-157c-106c-139efe2dc02a",
+        "outPriv": "admin",
+        "outRefreshPeriod": "600",
+        "outSessionId": "114",
+        "outVersion": "2.0(13e)",
+        "response": "yes"
+    }
+configConfMo:
+  description: Cisco IMC XML output for any configConfMo XML fragments, translated to JSON using Cobra convention
+  returned: success
+  type: dict
+  sample: |
+elapsed:
+  description: Elapsed time in seconds
+  returned: always
+  type: int
+  sample: 31
+response:
+  description: HTTP response message, including content length
+  returned: always
+  type: str
+  sample: OK (729 bytes)
+status:
+  description: The HTTP response status code
+  returned: always
+  type: dict
+  sample: 200
+error:
+  description: Cisco IMC XML error output for last request, translated to JSON using Cobra convention
+  returned: failed
+  type: dict
+  sample: |
+    "attributes": {
+        "cookie": "",
+        "errorCode": "ERR-xml-parse-error",
+        "errorDescr": "XML PARSING ERROR: Element 'computeRackUnit', attribute 'admin_Power': The attribute 'admin_Power' is not allowed. ",
+        "invocationResult": "594",
+        "response": "yes"
+    }
+error_code:
+  description: Cisco IMC error code
+  returned: failed
+  type: str
+  sample: ERR-xml-parse-error
+error_text:
+  description: Cisco IMC error message
+  returned: failed
+  type: str
+  sample: |
+    XML PARSING ERROR: Element 'computeRackUnit', attribute 'admin_Power': The attribute 'admin_Power' is not allowed.
+input:
+  description: RAW XML input sent to the Cisco IMC, causing the error
+  returned: failed
+  type: str
+  sample: |
+    <configConfMo><inConfig><computeRackUnit dn="sys/rack-unit-1" admin_Power="down"/></inConfig></configConfMo>
+output:
+  description: RAW XML output eceived from the Cisco IMC, with error details
+  returned: failed
+  type: str
+  sample: >
+    <error cookie=""
+      response="yes"
+      errorCode="ERR-xml-parse-error"
+      invocationResult="594"
+      errorDescr="XML PARSING ERROR: Element 'computeRackUnit', attribute 'admin_Power': The attribute 'admin_Power' is not allowed.\n"/>
+

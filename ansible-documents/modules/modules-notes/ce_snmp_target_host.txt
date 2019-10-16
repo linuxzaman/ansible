@@ -1,0 +1,135 @@
+> CE_SNMP_TARGET_HOST    (/usr/lib/python2.7/dist-packages/ansible/modules/network/cloudengine/ce_snmp_target_host.py)
+
+        Manages SNMP target host configurations on HUAWEI CloudEngine switches.
+
+  * This module is maintained by The Ansible Community
+OPTIONS (= is mandatory):
+
+- address
+        Network Address.
+        [Default: (null)]
+
+- connect_port
+        Udp port used by SNMP agent to connect the Network management.
+        [Default: (null)]
+
+- host_name
+        Unique name to identify target host entry.
+        [Default: (null)]
+
+- interface_name
+        Name of the interface to send the trap message.
+        [Default: (null)]
+
+- is_public_net
+        To enable or disable Public Net-manager for target Host.
+        (Choices: no_use, true, false)[Default: no_use]
+
+- notify_type
+        To configure notify type as trap or inform.
+        (Choices: trap, inform)[Default: (null)]
+
+- recv_port
+        UDP Port number used by network management to receive alarm messages.
+        [Default: (null)]
+
+- security_level
+        Security level indicating whether to use authentication and encryption.
+        (Choices: noAuthNoPriv, authentication, privacy)[Default: (null)]
+
+- security_model
+        Security Model.
+        (Choices: v1, v2c, v3)[Default: (null)]
+
+- security_name
+        Security Name.
+        [Default: (null)]
+
+- security_name_v3
+        Security Name V3.
+        [Default: (null)]
+
+- version
+        Version(s) Supported by SNMP Engine.
+        (Choices: none, v1, v2c, v3, v1v2c, v1v3, v2cv3, all)[Default: (null)]
+
+- vpn_name
+        VPN instance Name.
+        [Default: (null)]
+
+
+AUTHOR: wangdezhuang (@QijunPan)
+        METADATA:
+          status:
+          - preview
+          supported_by: community
+        
+
+EXAMPLES:
+
+- name: CloudEngine snmp target host test
+  hosts: cloudengine
+  connection: local
+  gather_facts: no
+  vars:
+    cli:
+      host: "{{ inventory_hostname }}"
+      port: "{{ ansible_ssh_port }}"
+      username: "{{ username }}"
+      password: "{{ password }}"
+      transport: cli
+
+  tasks:
+
+  - name: "Config SNMP version"
+    ce_snmp_target_host:
+      state: present
+      version: v2cv3
+      provider: "{{ cli }}"
+
+  - name: "Config SNMP target host"
+    ce_snmp_target_host:
+      state: present
+      host_name: test1
+      address: 1.1.1.1
+      notify_type: trap
+      vpn_name: js
+      security_model: v2c
+      security_name: wdz
+      provider: "{{ cli }}"
+
+
+RETURN VALUES:
+
+changed:
+    description: check to see if a change was made on the device
+    returned: always
+    type: bool
+    sample: true
+proposed:
+    description: k/v pairs of parameters passed into module
+    returned: always
+    type: dict
+    sample: {"address": "10.135.182.158", "host_name": "test2",
+             "notify_type": "trap", "security_level": "authentication",
+             "security_model": "v3", "security_name_v3": "wdz",
+             "state": "present", "vpn_name": "js"}
+existing:
+    description: k/v pairs of existing aaa server
+    returned: always
+    type: dict
+    sample: {}
+end_state:
+    description: k/v pairs of aaa params after module execution
+    returned: always
+    type: dict
+    sample: {"target host info": [{"address": "10.135.182.158", "domain": "snmpUDPDomain",
+                                   "nmsName": "test2", "notifyType": "trap",
+                                   "securityLevel": "authentication", "securityModel": "v3",
+                                   "securityNameV3": "wdz", "vpnInstanceName": "js"}]}
+updates:
+    description: command sent to the device
+    returned: always
+    type: list
+    sample: ["snmp-agent target-host host-name test2 trap address udp-domain 10.135.182.158 vpn-instance js params securityname wdz v3 authentication"]
+

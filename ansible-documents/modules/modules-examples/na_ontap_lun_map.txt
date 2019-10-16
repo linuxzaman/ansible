@@ -1,0 +1,56 @@
+EXAMPLES:
+
+- name: Create LUN mapping
+  na_ontap_lun_map:
+    state: present
+    initiator_group_name: ansibleIgroup3234
+    path: /vol/iscsi_path/iscsi_lun
+    vserver: ci_dev
+    hostname: "{{ netapp_hostname }}"
+    username: "{{ netapp_username }}"
+    password: "{{ netapp_password }}"
+
+- name: Unmap LUN
+  na_ontap_lun_map:
+    state: absent
+    initiator_group_name: ansibleIgroup3234
+    path: /vol/iscsi_path/iscsi_lun
+    vserver: ci_dev
+    hostname: "{{ netapp_hostname }}"
+    username: "{{ netapp_username }}"
+    password: "{{ netapp_password }}"
+
+
+RETURN VALUES:
+
+lun_node:
+    description: NetApp controller that is hosting the LUN.
+    returned: success
+    type: str
+    sample: node01
+lun_ostype:
+    description: Specifies the OS of the host accessing the LUN.
+    returned: success
+    type: str
+    sample: vmware
+lun_serial:
+    description: A unique, 12-byte, ASCII string used to identify the LUN.
+    returned: success
+    type: str
+    sample: 80E7/]LZp1Tt
+lun_naa_id:
+    description: The Network Address Authority (NAA) identifier for the LUN.
+    returned: success
+    type: str
+    sample: 600a0980383045372f5d4c5a70315474
+lun_state:
+    description: Online or offline status of the LUN.
+    returned: success
+    type: str
+    sample: online
+lun_size:
+    description: Size of the LUN in bytes.
+    returned: success
+    type: int
+    sample: 2199023255552
+

@@ -1,0 +1,62 @@
+EXAMPLES:
+
+---
+- name: Add a PowerShell module
+  win_psmodule:
+    name: PowerShellModule
+    state: present
+
+- name: Add an exact version of PowerShell module
+  win_psmodule:
+    name: PowerShellModule
+    required_version: "4.0.2"
+    state: present
+
+- name: Install or update an existing PowerShell module to the newest version
+  win_psmodule:
+    name: PowerShellModule
+    state: latest
+
+- name: Install newer version of built-in Windows module
+  win_psmodule:
+    name: Pester
+    skip_publisher_check: yes
+    state: present
+
+- name: Add a PowerShell module and register a repository
+  win_psmodule:
+    name: MyCustomModule
+    repository: MyRepository
+    state: present
+
+- name: Add a PowerShell module from a specific repository
+  win_psmodule:
+    name: PowerShellModule
+    repository: MyRepository
+    state: present
+
+- name: Remove a PowerShell module
+  win_psmodule:
+    name: PowerShellModule
+    state: absent
+
+
+RETURN VALUES:
+
+---
+output:
+  description: A message describing the task result.
+  returned: always
+  sample: "Module PowerShellCookbook installed"
+  type: str
+nuget_changed:
+  description: True when Nuget package provider is installed.
+  returned: always
+  type: bool
+  sample: true
+repository_changed:
+  description: True when a custom repository is installed or removed.
+  returned: always
+  type: bool
+  sample: true
+

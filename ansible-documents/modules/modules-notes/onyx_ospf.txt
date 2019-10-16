@@ -1,0 +1,68 @@
+> ONYX_OSPF    (/usr/lib/python2.7/dist-packages/ansible/modules/network/onyx/onyx_ospf.py)
+
+        This module provides declarative management and configuration of OSPF protocol on Mellanox ONYX network devices.
+
+  * This module is maintained by The Ansible Community
+OPTIONS (= is mandatory):
+
+- interfaces
+        List of interfaces and areas. Required if `state=present'.
+        [Default: (null)]
+        suboptions:
+          area:
+            description:
+            - OSPF area.
+            required: true
+          name:
+            description:
+            - Intrface name.
+            required: true
+        
+
+= ospf
+        OSPF instance number 1-65535
+
+
+- router_id
+        OSPF router ID. Required if `state=present'.
+        [Default: (null)]
+
+- state
+        OSPF state.
+        (Choices: present, absent)[Default: present]
+
+
+NOTES:
+      * Tested on ONYX 3.6.4000
+
+
+AUTHOR: Samer Deeb (@samerd)
+        METADATA:
+          status:
+          - preview
+          supported_by: community
+        
+
+EXAMPLES:
+
+- name: add ospf router to interface
+  onyx_ospf:
+    ospf: 2
+    router_id: 192.168.8.2
+    interfaces:
+      - name: Eth1/1
+      - area: 0.0.0.0
+
+
+RETURN VALUES:
+
+commands:
+  description: The list of configuration mode commands to send to the device.
+  returned: always
+  type: list
+  sample:
+    - router ospf 2
+    - router-id 192.168.8.2
+    - exit
+    - interface ethernet 1/1 ip ospf area 0.0.0.0
+

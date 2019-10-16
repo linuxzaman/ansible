@@ -1,0 +1,115 @@
+EXAMPLES:
+
+- name: Generate an OpenSSL Certificate Signing Request
+  openssl_csr:
+    path: /etc/ssl/csr/www.ansible.com.csr
+    privatekey_path: /etc/ssl/private/ansible.com.pem
+    common_name: www.ansible.com
+
+- name: Generate an OpenSSL Certificate Signing Request with a passphrase protected private key
+  openssl_csr:
+    path: /etc/ssl/csr/www.ansible.com.csr
+    privatekey_path: /etc/ssl/private/ansible.com.pem
+    privatekey_passphrase: ansible
+    common_name: www.ansible.com
+
+- name: Generate an OpenSSL Certificate Signing Request with Subject information
+  openssl_csr:
+    path: /etc/ssl/csr/www.ansible.com.csr
+    privatekey_path: /etc/ssl/private/ansible.com.pem
+    country_name: FR
+    organization_name: Ansible
+    email_address: jdoe@ansible.com
+    common_name: www.ansible.com
+
+- name: Generate an OpenSSL Certificate Signing Request with subjectAltName extension
+  openssl_csr:
+    path: /etc/ssl/csr/www.ansible.com.csr
+    privatekey_path: /etc/ssl/private/ansible.com.pem
+    subject_alt_name: 'DNS:www.ansible.com,DNS:m.ansible.com'
+
+- name: Generate an OpenSSL CSR with subjectAltName extension with dynamic list
+  openssl_csr:
+    path: /etc/ssl/csr/www.ansible.com.csr
+    privatekey_path: /etc/ssl/private/ansible.com.pem
+    subject_alt_name: "{{ item.value | map('regex_replace', '^', 'DNS:') | list }}"
+  with_dict:
+    dns_server:
+    - www.ansible.com
+    - m.ansible.com
+
+- name: Force re-generate an OpenSSL Certificate Signing Request
+  openssl_csr:
+    path: /etc/ssl/csr/www.ansible.com.csr
+    privatekey_path: /etc/ssl/private/ansible.com.pem
+    force: yes
+    common_name: www.ansible.com
+
+- name: Generate an OpenSSL Certificate Signing Request with special key usages
+  openssl_csr:
+    path: /etc/ssl/csr/www.ansible.com.csr
+    privatekey_path: /etc/ssl/private/ansible.com.pem
+    common_name: www.ansible.com
+    key_usage:
+      - digitalSignature
+      - keyAgreement
+    extended_key_usage:
+      - clientAuth
+
+- name: Generate an OpenSSL Certificate Signing Request with OCSP Must Staple
+  openssl_csr:
+    path: /etc/ssl/csr/www.ansible.com.csr
+    privatekey_path: /etc/ssl/private/ansible.com.pem
+    common_name: www.ansible.com
+    ocsp_must_staple: yes
+
+
+RETURN VALUES:
+
+privatekey:
+    description: Path to the TLS/SSL private key the CSR was generated for
+    returned: changed or success
+    type: str
+    sample: /etc/ssl/private/ansible.com.pem
+filename:
+    description: Path to the generated Certificate Signing Request
+    returned: changed or success
+    type: str
+    sample: /etc/ssl/csr/www.ansible.com.csr
+subject:
+    description: A list of the subject tuples attached to the CSR
+    returned: changed or success
+    type: list
+    sample: "[('CN', 'www.ansible.com'), ('O', 'Ansible')]"
+subjectAltName:
+    description: The alternative names this CSR is valid for
+    returned: changed or success
+    type: list
+    sample: [ 'DNS:www.ansible.com', 'DNS:m.ansible.com' ]
+keyUsage:
+    description: Purpose for which the public key may be used
+    returned: changed or success
+    type: list
+    sample: [ 'digitalSignature', 'keyAgreement' ]
+extendedKeyUsage:
+    description: Additional restriction on the public key purposes
+    returned: changed or success
+    type: list
+    sample: [ 'clientAuth' ]
+basicConstraints:
+    description: Indicates if the certificate belongs to a CA
+    returned: changed or success
+    type: list
+    sample: ['CA:TRUE', 'pathLenConstraint:0']
+ocsp_must_staple:
+    description: Indicates whether the certificate has the OCSP
+                 Must Staple feature enabled
+    returned: changed or success
+    type: bool
+    sample: false
+backup_file:
+    description: Name of backup file created.
+    returned: changed and if I(backup) is C(yes)
+    type: str
+    sample: /path/to/www.ansible.com.csr.2019-03-09@11:22~
+

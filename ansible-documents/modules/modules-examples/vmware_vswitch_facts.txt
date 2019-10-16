@@ -1,0 +1,47 @@
+EXAMPLES:
+
+- name: Gather vswitch facts about all ESXi Host in given Cluster
+  vmware_vswitch_facts:
+    hostname: '{{ vcenter_hostname }}'
+    username: '{{ vcenter_username }}'
+    password: '{{ vcenter_password }}'
+    cluster_name: '{{ cluster_name }}'
+    delegate_to: localhost
+  register: all_hosts_vswitch_facts
+
+- name: Gather firewall facts about ESXi Host
+  vmware_vswitch_facts:
+    hostname: '{{ vcenter_hostname }}'
+    username: '{{ vcenter_username }}'
+    password: '{{ vcenter_password }}'
+    esxi_hostname: '{{ esxi_hostname }}'
+    delegate_to: localhost
+  register: all_vswitch_facts
+
+
+RETURN VALUES:
+
+hosts_vswitch_facts:
+    description: metadata about host's vswitch configuration
+    returned: on success
+    type: dict
+    sample: {
+        "10.76.33.218": {
+            "vSwitch0": {
+                "mtu": 1500,
+                "num_ports": 128,
+                "pnics": [
+                    "vmnic0"
+                ]
+            },
+            "vSwitch_0011": {
+                "mtu": 1500,
+                "num_ports": 128,
+                "pnics": [
+                    "vmnic2",
+                    "vmnic1"
+                    ]
+            },
+        },
+    }
+

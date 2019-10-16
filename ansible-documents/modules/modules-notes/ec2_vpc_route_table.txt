@@ -1,0 +1,278 @@
+> EC2_VPC_ROUTE_TABLE    (/usr/lib/python2.7/dist-packages/ansible/modules/cloud/amazon/ec2_vpc_route_table.py)
+
+        Manage route tables for AWS virtual private clouds
+
+  * This module is maintained by The Ansible Community
+OPTIONS (= is mandatory):
+
+- aws_access_key
+        AWS access key. If not set then the value of the AWS_ACCESS_KEY_ID, AWS_ACCESS_KEY or EC2_ACCESS_KEY environment variable is
+        used.
+        (Aliases: ec2_access_key, access_key)[Default: (null)]
+        type: str
+
+- aws_secret_key
+        AWS secret key. If not set then the value of the AWS_SECRET_ACCESS_KEY, AWS_SECRET_KEY, or EC2_SECRET_KEY environment variable is
+        used.
+        (Aliases: ec2_secret_key, secret_key)[Default: (null)]
+        type: str
+
+- debug_botocore_endpoint_logs
+        Use a botocore.endpoint logger to parse the unique (rather than total) "resource:action" API calls made during a task, outputing
+        the set to the resource_actions key in the task results. Use the aws_resource_action callback to output to total list made during
+        a playbook. The ANSIBLE_DEBUG_BOTOCORE_LOGS environment variable may also be used.
+        [Default: no]
+        type: bool
+        version_added: 2.8
+
+- ec2_url
+        Url to use to connect to EC2 or your Eucalyptus cloud (by default the module will use EC2 endpoints). Ignored for modules where
+        region is required. Must be specified for all other modules if region is not used. If not set then the value of the EC2_URL
+        environment variable, if any, is used.
+        [Default: (null)]
+        type: str
+
+- lookup
+        Look up route table by either tags or by route table ID. Non-unique tag lookup will fail. If no tags are specified then no lookup
+        for an existing route table is performed and a new route table will be created. To change tags of a route table you must look up
+        by id.
+        (Choices: tag, id)[Default: tag]
+
+- profile
+        Uses a boto profile. Only works with boto >= 2.24.0.
+        [Default: (null)]
+        type: str
+        version_added: 1.6
+
+- propagating_vgw_ids
+        Enable route propagation from virtual gateways specified by ID.
+        [Default: (null)]
+
+- purge_routes
+        Purge existing routes that are not found in routes.
+        [Default: yes]
+        type: bool
+        version_added: 2.3
+
+- purge_subnets
+        Purge existing subnets that are not found in subnets. Ignored unless the subnets option is supplied.
+        [Default: true]
+        type: bool
+        version_added: 2.3
+
+- purge_tags
+        Purge existing tags that are not found in route table
+        [Default: no]
+        type: bool
+        version_added: 2.5
+
+- region
+        The AWS region to use. If not specified then the value of the AWS_REGION or EC2_REGION environment variable, if any, is used. See
+        http://docs.aws.amazon.com/general/latest/gr/rande.html#ec2_region
+        (Aliases: aws_region, ec2_region)[Default: (null)]
+        type: str
+
+- route_table_id
+        The ID of the route table to update or delete.
+        [Default: (null)]
+
+- routes
+        List of routes in the route table. Routes are specified as dicts containing the keys 'dest' and one of 'gateway_id',
+        'instance_id', 'network_interface_id', or 'vpc_peering_connection_id'. If 'gateway_id' is specified, you can refer to the VPC's
+        IGW by using the value 'igw'. Routes are required for present states.
+        [Default: (null)]
+
+- security_token
+        AWS STS security token. If not set then the value of the AWS_SECURITY_TOKEN or EC2_SECURITY_TOKEN environment variable is used.
+        (Aliases: access_token)[Default: (null)]
+        type: str
+        version_added: 1.6
+
+- state
+        Create or destroy the VPC route table
+        (Choices: present, absent)[Default: present]
+
+- subnets
+        An array of subnets to add to this route table. Subnets may be specified by either subnet ID, Name tag, or by a CIDR such as
+        '10.0.0.0/24'.
+        [Default: (null)]
+
+- tags
+        A dictionary of resource tags of the form: { tag1: value1, tag2: value2 }. Tags are used to uniquely identify route tables within
+        a VPC when the route_table_id is not supplied.
+        (Aliases: resource_tags)[Default: (null)]
+
+- validate_certs
+        When set to "no", SSL certificates will not be validated for boto versions >= 2.6.0.
+        [Default: True]
+        type: bool
+        version_added: 1.5
+
+= vpc_id
+        VPC ID of the VPC in which to create the route table.
+
+
+
+NOTES:
+      * If parameters are not set within the module, the following environment variables can be used in decreasing order of
+        precedence `AWS_URL' or `EC2_URL', `AWS_ACCESS_KEY_ID' or `AWS_ACCESS_KEY' or `EC2_ACCESS_KEY', `AWS_SECRET_ACCESS_KEY' or
+        `AWS_SECRET_KEY' or `EC2_SECRET_KEY', `AWS_SECURITY_TOKEN' or `EC2_SECURITY_TOKEN', `AWS_REGION' or `EC2_REGION'
+      * Ansible uses the boto configuration file (typically ~/.boto) if no credentials are provided. See
+        https://boto.readthedocs.io/en/latest/boto_config_tut.html
+      * `AWS_REGION' or `EC2_REGION' can be typically be used to specify the AWS region, when required, but this can also be
+        configured in the boto config file
+
+
+REQUIREMENTS:  python >= 2.6, boto
+
+AUTHOR: Robert Estelle (@erydo), Rob White (@wimnat), Will Thames (@willthames)
+        METADATA:
+          status:
+          - stableinterface
+          supported_by: community
+        
+
+EXAMPLES:
+
+# Note: These examples do not set authentication details, see the AWS Guide for details.
+
+# Basic creation example:
+- name: Set up public subnet route table
+  ec2_vpc_route_table:
+    vpc_id: vpc-1245678
+    region: us-west-1
+    tags:
+      Name: Public
+    subnets:
+      - "{{ jumpbox_subnet.subnet.id }}"
+      - "{{ frontend_subnet.subnet.id }}"
+      - "{{ vpn_subnet.subnet_id }}"
+    routes:
+      - dest: 0.0.0.0/0
+        gateway_id: "{{ igw.gateway_id }}"
+  register: public_route_table
+
+- name: Set up NAT-protected route table
+  ec2_vpc_route_table:
+    vpc_id: vpc-1245678
+    region: us-west-1
+    tags:
+      Name: Internal
+    subnets:
+      - "{{ application_subnet.subnet.id }}"
+      - 'Database Subnet'
+      - '10.0.0.0/8'
+    routes:
+      - dest: 0.0.0.0/0
+        instance_id: "{{ nat.instance_id }}"
+  register: nat_route_table
+
+- name: delete route table
+  ec2_vpc_route_table:
+    vpc_id: vpc-1245678
+    region: us-west-1
+    route_table_id: "{{ route_table.id }}"
+    lookup: id
+    state: absent
+
+
+RETURN VALUES:
+
+route_table:
+  description: Route Table result
+  returned: always
+  type: complex
+  contains:
+    associations:
+      description: List of subnets associated with the route table
+      returned: always
+      type: complex
+      contains:
+        main:
+          description: Whether this is the main route table
+          returned: always
+          type: bool
+          sample: false
+        route_table_association_id:
+          description: ID of association between route table and subnet
+          returned: always
+          type: str
+          sample: rtbassoc-ab47cfc3
+        route_table_id:
+          description: ID of the route table
+          returned: always
+          type: str
+          sample: rtb-bf779ed7
+        subnet_id:
+          description: ID of the subnet
+          returned: always
+          type: str
+          sample: subnet-82055af9
+    id:
+      description: ID of the route table (same as route_table_id for backwards compatibility)
+      returned: always
+      type: str
+      sample: rtb-bf779ed7
+    propagating_vgws:
+      description: List of Virtual Private Gateways propagating routes
+      returned: always
+      type: list
+      sample: []
+    route_table_id:
+      description: ID of the route table
+      returned: always
+      type: str
+      sample: rtb-bf779ed7
+    routes:
+      description: List of routes in the route table
+      returned: always
+      type: complex
+      contains:
+        destination_cidr_block:
+          description: CIDR block of destination
+          returned: always
+          type: str
+          sample: 10.228.228.0/22
+        gateway_id:
+          description: ID of the gateway
+          returned: when gateway is local or internet gateway
+          type: str
+          sample: local
+        instance_id:
+          description: ID of a NAT instance
+          returned: when the route is via an EC2 instance
+          type: str
+          sample: i-abcd123456789
+        instance_owner_id:
+          description: AWS account owning the NAT instance
+          returned: when the route is via an EC2 instance
+          type: str
+          sample: 123456789012
+        nat_gateway_id:
+          description: ID of the NAT gateway
+          returned: when the route is via a NAT gateway
+          type: str
+          sample: local
+        origin:
+          description: mechanism through which the route is in the table
+          returned: always
+          type: str
+          sample: CreateRouteTable
+        state:
+          description: state of the route
+          returned: always
+          type: str
+          sample: active
+    tags:
+      description: Tags applied to the route table
+      returned: always
+      type: dict
+      sample:
+        Name: Public route table
+        Public: 'true'
+    vpc_id:
+      description: ID for the VPC in which the route lives
+      returned: always
+      type: str
+      sample: vpc-6e2d2407
+

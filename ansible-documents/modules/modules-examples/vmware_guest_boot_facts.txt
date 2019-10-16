@@ -1,0 +1,33 @@
+EXAMPLES:
+
+- name: Gather facts about virtual machine's boot order and related parameters
+  vmware_guest_boot_facts:
+    hostname: "{{ vcenter_hostname }}"
+    username: "{{ vcenter_username }}"
+    password: "{{ vcenter_password }}"
+    validate_certs: no
+    name: "{{ vm_name }}"
+  register: vm_boot_order_facts
+
+
+RETURN VALUES:
+
+vm_boot_facts:
+    description: metadata about boot order of virtual machine
+    returned: always
+    type: dict
+    sample: {
+        "current_boot_order": [
+            "floppy",
+            "disk",
+            "ethernet",
+            "cdrom"
+        ],
+        "current_boot_delay": 2000,
+        "current_boot_retry_delay": 22300,
+        "current_boot_retry_enabled": true,
+        "current_enter_bios_setup": true,
+        "current_boot_firmware": "bios",
+        "current_secure_boot_enabled": false,
+    }
+

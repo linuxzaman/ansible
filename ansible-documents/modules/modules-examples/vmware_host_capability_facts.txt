@@ -1,0 +1,38 @@
+EXAMPLES:
+
+- name: Gather capability facts about all ESXi Host in given Cluster
+  vmware_host_capability_facts:
+    hostname: '{{ vcenter_hostname }}'
+    username: '{{ vcenter_username }}'
+    password: '{{ vcenter_password }}'
+    cluster_name: cluster_name
+  delegate_to: localhost
+  register: all_cluster_hosts_facts
+
+- name: Gather capability facts about ESXi Host
+  vmware_host_capability_facts:
+    hostname: '{{ vcenter_hostname }}'
+    username: '{{ vcenter_username }}'
+    password: '{{ vcenter_password }}'
+    esxi_hostname: '{{ esxi_hostname }}'
+  delegate_to: localhost
+  register: hosts_facts
+
+
+RETURN VALUES:
+
+hosts_capability_facts:
+    description: metadata about host's capability information
+    returned: always
+    type: dict
+    sample: {
+            "esxi_hostname_0001": {
+                "accel3dSupported": false,
+                "backgroundSnapshotsSupported": false,
+                "checkpointFtCompatibilityIssues": [],
+                "checkpointFtSupported": false,
+                "cloneFromSnapshotSupported": true,
+                "cpuHwMmuSupported": true,
+            }
+    }
+

@@ -1,0 +1,80 @@
+> IBM_SA_HOST_PORTS    (/usr/lib/python2.7/dist-packages/ansible/modules/storage/ibm/ibm_sa_host_ports.py)
+
+        This module adds ports to or removes them from the hosts on IBM Spectrum Accelerate Family storage systems.
+
+  * This module is maintained by The Ansible Community
+OPTIONS (= is mandatory):
+
+= endpoints
+        The hostname or management IP of Spectrum Accelerate storage system.
+
+        type: str
+
+- fcaddress
+        Fiber channel address.
+        [Default: (null)]
+
+= host
+        Host name.
+
+
+- iscsi_name
+        iSCSI initiator name.
+        [Default: (null)]
+
+- num_of_visible_targets
+        Number of visible targets.
+        [Default: (null)]
+
+= password
+        Password for username on the spectrum accelerate storage system.
+
+        type: str
+
+= state
+        Host ports state.
+        (Choices: present, absent)[Default: present]
+
+= username
+        Management user on the spectrum accelerate storage system.
+
+        type: str
+
+
+NOTES:
+      * This module requires pyxcli python library. Use 'pip install pyxcli' in order to get pyxcli.
+
+
+REQUIREMENTS:  python >= 2.7, pyxcli
+
+AUTHOR: Tzur Eliyahu (@tzure)
+        METADATA:
+          status:
+          - preview
+          supported_by: community
+        
+
+EXAMPLES:
+
+- name: Add ports for host.
+  ibm_sa_host_ports:
+    host: test_host
+    iscsi_name: iqn.1994-05.com***
+    username: admin
+    password: secret
+    endpoints: hostdev-system
+    state: present
+
+- name: Remove ports for host.
+  ibm_sa_host_ports:
+    host: test_host
+    iscsi_name: iqn.1994-05.com***
+    username: admin
+    password: secret
+    endpoints: hostdev-system
+    state: absent
+
+
+RETURN VALUES:
+
+

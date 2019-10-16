@@ -1,0 +1,158 @@
+> NA_ONTAP_FLEXCACHE    (/usr/lib/python2.7/dist-packages/ansible/modules/storage/netapp/na_ontap_flexcache.py)
+
+        Create/Delete FlexCache volume relationships
+
+  * This module is maintained by an Ansible Partner
+OPTIONS (= is mandatory):
+
+- aggr_list
+        List of aggregates to host target FlexCache volume.
+        [Default: (null)]
+
+- aggr_list_multiplier
+        Aggregate list repeat count.
+        [Default: (null)]
+
+- auto_provision_as
+        Use this parameter to automatically select existing aggregates for volume provisioning.Eg flexgroup
+        Note that the fastest aggregate type with at least one aggregate on each node of the cluster will be selected.
+        [Default: (null)]
+
+- force_offline
+        Offline FlexCache volume before deleting the FlexCache relationship.
+        The volume will be destroyed and data can be lost.
+        [Default: False]
+        type: bool
+
+- force_unmount
+        Unmount FlexCache volume. Delete the junction path at which the volume is mounted before deleting the FlexCache relationship.
+        [Default: False]
+        type: bool
+
+= hostname
+        The hostname or IP address of the ONTAP instance.
+
+        type: str
+
+- http_port
+        Override the default port (80 or 443) with this port
+        [Default: (null)]
+        type: int
+
+- https
+        Enable and disable https
+        [Default: False]
+        type: bool
+
+- junction_path
+        Junction path of the cache volume.
+        [Default: (null)]
+
+- ontapi
+        The ontap api version to use
+        [Default: (null)]
+        type: int
+
+- origin_cluster
+        Name of the origin cluster for the FlexCache.
+        Defaults to cluster associated with target vserver if absent.
+        Not used for creation.
+        [Default: (null)]
+
+- origin_volume
+        Name of the origin volume for the FlexCache.
+        Required for creation.
+        [Default: (null)]
+
+- origin_vserver
+        Name of the origin vserver for the FlexCache.
+        Required for creation.
+        [Default: (null)]
+
+= password
+        Password for the specified user.
+        (Aliases: pass)
+        type: str
+
+- size
+        Size of cache volume.
+        [Default: (null)]
+
+- size_unit
+        The unit used to interpret the size parameter.
+        (Choices: bytes, b, kb, mb, gb, tb, pb, eb, zb, yb)[Default: gb]
+
+- state
+        Whether the specified relationship should exist or not.
+        (Choices: present, absent)[Default: present]
+
+- time_out
+        time to wait for flexcache creation or deletion in seconds
+        if 0, the request is asynchronous
+        default is set to 3 minutes
+        [Default: 180]
+
+= username
+        This can be a Cluster-scoped or SVM-scoped account, depending on whether a Cluster-level or SVM-level API is required. For more
+        information, please read the documentation https://mysupport.netapp.com/NOW/download/software/nmsdk/9.4/.
+        (Aliases: user)
+        type: str
+
+- validate_certs
+        If set to `no', the SSL certificates will not be validated.
+        This should only set to `False' used on personally controlled sites using self-signed certificates.
+        [Default: True]
+        type: bool
+
+= volume
+        Name of the target volume for the FlexCache.
+
+
+= vserver
+        Name of the target vserver for the FlexCache.
+        Note that hostname, username, password are intended for the target vserver.
+
+
+
+NOTES:
+      * The modules prefixed with na\\_ontap are built to support the ONTAP storage platform.
+
+
+REQUIREMENTS:  A physical or virtual clustered Data ONTAP system. The modules support Data ONTAP 9.1 and onward, Ansible 2.6, Python2
+        netapp-lib (2017.10.30) or later. Install using 'pip install netapp-lib', Python3 netapp-lib (2018.11.13) or
+        later. Install using 'pip install netapp-lib', To enable http on the cluster you must run the following commands
+        'set -privilege advanced;' 'system services web modify -http-enabled true;'
+
+AUTHOR: NetApp Ansible Team (@carchi8py) <ng-ansibleteam@netapp.com>
+        METADATA:
+          status:
+          - preview
+          supported_by: certified
+        
+
+EXAMPLES:
+
+- name: Create FlexCache
+      na_ontap_FlexCache:
+        state: present
+        origin_volume: test_src
+        volume: test_dest
+        origin_vserver: ansible_src
+        vserver: ansible_dest
+        hostname: "{{ netapp_hostname }}"
+        username: "{{ netapp_username }}"
+        password: "{{ netapp_password }}"
+
+    - name: Delete FlexCache
+      na_ontap_FlexCache:
+        state: absent
+        volume: test_dest
+        vserver: ansible_dest
+        hostname: "{{ netapp_hostname }}"
+        username: "{{ netapp_username }}"
+        password: "{{ netapp_password }}"
+
+
+RETURN VALUES:
+
+

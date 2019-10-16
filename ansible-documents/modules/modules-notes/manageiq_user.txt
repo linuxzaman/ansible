@@ -1,0 +1,157 @@
+> MANAGEIQ_USER    (/usr/lib/python2.7/dist-packages/ansible/modules/remote_management/manageiq/manageiq_user.py)
+
+        The manageiq_user module supports adding, updating and deleting users in ManageIQ.
+
+  * This module is maintained by The Ansible Community
+OPTIONS (= is mandatory):
+
+- email
+        The users' E-mail address.
+        [Default: (null)]
+
+- group
+        The name of the group to which the user belongs.
+        [Default: (null)]
+
+= manageiq_connection
+        ManageIQ connection configuration information.
+
+        suboptions:
+          ca_cert:
+            aliases:
+            - ca_bundle_path
+            description:
+            - The path to a CA bundle file or directory with certificates. defaults to None.
+            type: path
+          password:
+            description:
+            - ManageIQ password. `MIQ_PASSWORD' env var if set. otherwise, required if no
+              token is passed in.
+            type: str
+          token:
+            description:
+            - ManageIQ token. `MIQ_TOKEN' env var if set. otherwise, required if no username
+              or password is passed in.
+            type: str
+          url:
+            description:
+            - ManageIQ environment url. `MIQ_URL' env var if set. otherwise, it is required
+              to pass it.
+            required: true
+            type: str
+          username:
+            description:
+            - ManageIQ username. `MIQ_USERNAME' env var if set. otherwise, required if no
+              token is passed in.
+            type: str
+          validate_certs:
+            aliases:
+            - verify_ssl
+            default: true
+            description:
+            - Whether SSL certificates should be verified for HTTPS requests. defaults to
+              True.
+            type: bool
+        
+        type: dict
+
+- name
+        The users' full name.
+        [Default: (null)]
+
+- password
+        The users' password.
+        [Default: (null)]
+
+- state
+        absent - user should not exist, present - user should be.
+        (Choices: absent, present)[Default: present]
+
+- update_password
+        `always' will update passwords unconditionally.  `on_create' will only set the password for a newly created user.
+        (Choices: always, on_create)[Default: always]
+        version_added: 2.5
+
+= userid
+        The unique userid in manageiq, often mentioned as username.
+
+
+
+REQUIREMENTS:  manageiq-client https://github.com/ManageIQ/manageiq-api-client-python/
+
+AUTHOR: Daniel Korn (@dkorn)
+        METADATA:
+          status:
+          - preview
+          supported_by: community
+        
+
+EXAMPLES:
+
+- name: Create a new user in ManageIQ
+  manageiq_user:
+    userid: 'jdoe'
+    name: 'Jane Doe'
+    password: 'VerySecret'
+    group: 'EvmGroup-user'
+    email: 'jdoe@example.com'
+    manageiq_connection:
+      url: 'http://127.0.0.1:3000'
+      username: 'admin'
+      password: 'smartvm'
+      validate_certs: False
+
+- name: Create a new user in ManageIQ using a token
+  manageiq_user:
+    userid: 'jdoe'
+    name: 'Jane Doe'
+    password: 'VerySecret'
+    group: 'EvmGroup-user'
+    email: 'jdoe@example.com'
+    manageiq_connection:
+      url: 'http://127.0.0.1:3000'
+      token: 'sometoken'
+      validate_certs: False
+
+- name: Delete a user in ManageIQ
+  manageiq_user:
+    state: 'absent'
+    userid: 'jdoe'
+    manageiq_connection:
+      url: 'http://127.0.0.1:3000'
+      username: 'admin'
+      password: 'smartvm'
+      validate_certs: False
+
+- name: Delete a user in ManageIQ using a token
+  manageiq_user:
+    state: 'absent'
+    userid: 'jdoe'
+    manageiq_connection:
+      url: 'http://127.0.0.1:3000'
+      token: 'sometoken'
+      validate_certs: False
+
+- name: Update email of user in ManageIQ
+  manageiq_user:
+    userid: 'jdoe'
+    email: 'jaustine@example.com'
+    manageiq_connection:
+      url: 'http://127.0.0.1:3000'
+      username: 'admin'
+      password: 'smartvm'
+      validate_certs: False
+
+- name: Update email of user in ManageIQ using a token
+  manageiq_user:
+    userid: 'jdoe'
+    email: 'jaustine@example.com'
+    manageiq_connection:
+      url: 'http://127.0.0.1:3000'
+      token: 'sometoken'
+      validate_certs: False
+
+
+RETURN VALUES:
+
+

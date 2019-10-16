@@ -1,0 +1,36 @@
+EXAMPLES:
+
+- name: port config modify
+  pn_port_config:
+    pn_cliswitch: "sw01"
+    state: "update"
+    pn_port: "all"
+    pn_dscp_map: "foo"
+
+- name: port config modify
+  pn_port_config:
+    pn_cliswitch: "sw01"
+    state: "update"
+    pn_port: "all"
+    pn_host_enable: true
+
+
+RETURN VALUES:
+
+command:
+  description: the CLI command run on the target node.
+  returned: always
+  type: str
+stdout:
+  description: set of responses from the port-config command.
+  returned: always
+  type: list
+stderr:
+  description: set of error responses from the port-config command.
+  returned: on error
+  type: list
+changed:
+  description: indicates whether the CLI caused changes on the target.
+  returned: always
+  type: bool
+

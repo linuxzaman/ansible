@@ -1,0 +1,74 @@
+> WIN_AUDIT_POLICY_SYSTEM    (/usr/lib/python2.7/dist-packages/ansible/modules/windows/win_audit_policy_system.py)
+
+        Used to make changes to the system wide Audit Policy.
+
+  * This module is maintained by The Ansible Community
+OPTIONS (= is mandatory):
+
+= audit_type
+        The type of event you would like to audit for.
+        Accepts a list. See examples.
+        (Choices: failure, none, success)
+        type: list
+
+- category
+        Single string value for the category you would like to adjust the policy on.
+        Cannot be used with `subcategory'. You must define one or the other.
+        Changing this setting causes all subcategories to be adjusted to the defined `audit_type'.
+        [Default: (null)]
+        type: str
+
+- subcategory
+        Single string value for the subcategory you would like to adjust the policy on.
+        Cannot be used with `category'. You must define one or the other.
+        [Default: (null)]
+        type: str
+
+
+NOTES:
+      * It is recommended to take a backup of the policies before adjusting them for the first time.
+      * See this page for in depth information https://technet.microsoft.com/en-us/library/cc766468.aspx.
+
+
+SEE ALSO:
+      * Module win_audit_rule
+           The official documentation on the win_audit_rule module.
+           https://docs.ansible.com/ansible/latest/modules/win_audit_rule_module.html
+
+
+AUTHOR: Noah Sparks (@nwsparks)
+        METADATA:
+          status:
+          - preview
+          supported_by: community
+        
+
+EXAMPLES:
+
+- name: Enable failure auditing for the subcategory "File System"
+  win_audit_policy_system:
+    subcategory: File System
+    audit_type: failure
+
+- name: Enable all auditing types for the category "Account logon events"
+  win_audit_policy_system:
+    category: Account logon events
+    audit_type: success, failure
+
+- name: Disable auditing for the subcategory "File System"
+  win_audit_policy_system:
+    subcategory: File System
+    audit_type: none
+
+
+RETURN VALUES:
+
+current_audit_policy:
+  description: details on the policy being targetted
+  returned: always
+  type: dict
+  sample: |-
+    {
+      "File Share":"failure"
+    }
+

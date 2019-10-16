@@ -1,0 +1,40 @@
+EXAMPLES:
+
+- name: configure link aggregation group
+  onyx_linkagg:
+    name: Po1
+    members:
+      - Eth1/1
+      - Eth1/2
+
+- name: remove configuration
+  onyx_linkagg:
+    name: Po1
+    state: absent
+
+- name: Create aggregate of linkagg definitions
+  onyx_linkagg:
+    aggregate:
+        - { name: Po1, members: [Eth1/1] }
+        - { name: Po2, members: [Eth1/2] }
+
+- name: Remove aggregate of linkagg definitions
+  onyx_linkagg:
+    aggregate:
+      - name: Po1
+      - name: Po2
+    state: absent
+
+
+RETURN VALUES:
+
+commands:
+  description: The list of configuration mode commands to send to the device
+  returned: always.
+  type: list
+  sample:
+    - interface port-channel 1
+    - exit
+    - interface ethernet 1/1 channel-group 1 mode on
+    - interface ethernet 1/2 channel-group 1 mode on
+

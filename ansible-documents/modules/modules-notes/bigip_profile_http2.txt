@@ -1,0 +1,281 @@
+> BIGIP_PROFILE_HTTP2    (/usr/lib/python2.7/dist-packages/ansible/modules/network/f5/bigip_profile_http2.py)
+
+        Manage HTTP2 profiles on a BIG-IP.
+
+  * This module is maintained by an Ansible Partner
+OPTIONS (= is mandatory):
+
+- activation_modes
+        Specifies what will cause an incoming connection to be handled as a HTTP/2 connection.
+        The `alpn' and `always' are mutually exclusive.
+        When creating a new profile, if this parameter is not specified, the default is provided by the parent profile.
+        (Choices: alpn, always)[Default: (null)]
+        type: list
+
+- description
+        Description of the profile.
+        [Default: (null)]
+        type: str
+
+- enforce_tls_requirements
+        Specifies whether the system requires TLS for communications between specified senders and recipients.
+        When creating a new profile, if this parameter is not specified, the default is provided by the parent profile.
+        [Default: (null)]
+        type: bool
+
+- frame_size
+        Specifies the size of data frames, in bytes, that HTTP/2 sends to the client.
+        When creating a new profile, if this parameter is not specified, the default is provided by the parent profile.
+        The valid value range in bytes is `1024 - 16384'.
+        [Default: (null)]
+        type: int
+
+- header_table_size
+        Specifies the size of the header table, in bytes.
+        When creating a new profile, if this parameter is not specified, the default is provided by the parent profile.
+        The valid value range in bytes is `0 - 65535'.
+        [Default: (null)]
+        type: int
+
+- idle_timeout
+        Specifies the number of seconds that an HTTP/2 connection is idly left open before being shut down.
+        When creating a new profile, if this parameter is not specified, the default is provided by the parent profile.
+        [Default: (null)]
+        type: int
+
+- insert_header
+        Specifies whether an HTTP header indicating the use of HTTP/2 should be inserted into the request that goes to the server.
+        When creating a new profile, if this parameter is not specified, the default is provided by the parent profile.
+        [Default: (null)]
+        type: bool
+
+- insert_header_name
+        Specifies the name of the HTTP header controlled by `insert_header' parameter.
+        When creating a new profile, if this parameter is not specified, the default is provided by the parent profile.
+        [Default: (null)]
+        type: str
+
+= name
+        Specifies the name of the profile.
+
+        type: str
+
+- parent
+        Specifies the profile from which this profile inherits settings.
+        When creating a new profile, if this parameter is not specified, the default is the system-supplied `http2' profile.
+        [Default: /Common/http2]
+        type: str
+
+- partition
+        Device partition to manage resources on.
+        [Default: Common]
+        type: str
+
+= password
+        The password for the user account used to connect to the BIG-IP.
+        You may omit this option by setting the environment variable `F5_PASSWORD'.
+        (Aliases: pass, pwd)
+        type: str
+
+- provider
+        A dict object containing connection details.
+        [Default: (null)]
+        suboptions:
+          password:
+            aliases:
+            - pass
+            - pwd
+            description:
+            - The password for the user account used to connect to the BIG-IP.
+            - You may omit this option by setting the environment variable `F5_PASSWORD'.
+            required: true
+            type: str
+          server:
+            description:
+            - The BIG-IP host.
+            - You may omit this option by setting the environment variable `F5_SERVER'.
+            required: true
+            type: str
+          server_port:
+            default: 443
+            description:
+            - The BIG-IP server port.
+            - You may omit this option by setting the environment variable `F5_SERVER_PORT'.
+            type: int
+          ssh_keyfile:
+            description:
+            - Specifies the SSH keyfile to use to authenticate the connection to the remote
+              device.  This argument is only used for `cli' transports.
+            - You may omit this option by setting the environment variable `ANSIBLE_NET_SSH_KEYFILE'.
+            type: path
+          timeout:
+            default: 10
+            description:
+            - Specifies the timeout in seconds for communicating with the network device for
+              either connecting or sending commands.  If the timeout is exceeded before the
+              operation is completed, the module will error.
+            type: int
+          transport:
+            choices:
+            - cli
+            - rest
+            default: rest
+            description:
+            - Configures the transport connection to use when connecting to the remote device.
+            type: str
+          user:
+            description:
+            - The username to connect to the BIG-IP with. This user must have administrative
+              privileges on the device.
+            - You may omit this option by setting the environment variable `F5_USER'.
+            required: true
+            type: str
+          validate_certs:
+            default: true
+            description:
+            - If `no', SSL certificates are not validated. Use this only on personally controlled
+              sites using self-signed certificates.
+            - You may omit this option by setting the environment variable `F5_VALIDATE_CERTS'.
+            type: bool
+        
+        type: dict
+        version_added: 2.5
+
+- receive_window
+        Specifies the way that the HTTP/2 profile performs flow control.
+        When creating a new profile, if this parameter is not specified, the default is provided by the parent profile.
+        The valid value range in kilobytes is `16 - 128'.
+        [Default: (null)]
+        type: int
+
+= server
+        The BIG-IP host.
+        You may omit this option by setting the environment variable `F5_SERVER'.
+
+        type: str
+
+- server_port
+        The BIG-IP server port.
+        You may omit this option by setting the environment variable `F5_SERVER_PORT'.
+        [Default: 443]
+        type: int
+        version_added: 2.2
+
+- state
+        When `present', ensures that the profile exists.
+        When `absent', ensures the profile is removed.
+        (Choices: present, absent)[Default: present]
+        type: str
+
+- streams
+        Specifies the number of outstanding concurrent requests that are allowed on a single HTTP/2 connection.
+        When creating a new profile, if this parameter is not specified, the default is provided by the parent profile.
+        The valid value range is `1 - 256'.
+        [Default: (null)]
+        type: int
+
+= user
+        The username to connect to the BIG-IP with. This user must have administrative privileges on the device.
+        You may omit this option by setting the environment variable `F5_USER'.
+
+        type: str
+
+- validate_certs
+        If `no', SSL certificates are not validated. Use this only on personally controlled sites using self-signed certificates.
+        You may omit this option by setting the environment variable `F5_VALIDATE_CERTS'.
+        [Default: True]
+        type: bool
+        version_added: 2.0
+
+- write_size
+        Specifies the total size of combined data frames, in bytes, that HTTP/2 sends in a single write.
+        When creating a new profile, if this parameter is not specified, the default is provided by the parent profile.
+        The valid value range in bytes is `2048 - 32768'.
+        [Default: (null)]
+        type: int
+
+
+NOTES:
+      * For more information on using Ansible to manage F5 Networks devices see https://www.ansible.com/integrations/networks/f5.
+      * Requires BIG-IP software version >= 12.
+      * The F5 modules only manipulate the running configuration of the F5 product. To ensure that BIG-IP specific configuration
+        persists to disk, be sure to include at least one task that uses the [bigip_config] module to save the running
+        configuration. Refer to the module's documentation for the correct usage of the module to save your running configuration.
+
+
+AUTHOR: Wojciech Wypior (@wojtek0806)
+        METADATA:
+          status:
+          - preview
+          supported_by: certified
+        
+
+EXAMPLES:
+
+- name: Create HTTP2 profile
+  bigip_profile_http2:
+    name: my_profile
+    insert_header: yes
+    insert_header_name: FOO
+    state: present
+    provider:
+      user: admin
+      password: secret
+      server: lb.mydomain.com
+  delegate_to: localhost
+
+- name: Remove HTTP profile
+  bigip_profile_http2:
+    name: my_profile
+    state: absent
+    provider:
+      server: lb.mydomain.com
+      user: admin
+      password: secret
+  delegate_to: localhost
+
+- name: Add HTTP profile set activation modes
+  bigip_profile_http:
+    name: my_profile
+    activation_modes:
+      - always
+    provider:
+      password: secret
+      server: lb.mydomain.com
+      user: admin
+  delegate_to: localhost
+
+
+RETURN VALUES:
+
+description:
+  description: Description of the profile.
+  returned: changed
+  type: str
+  sample: My profile
+insert_header_name:
+  description: Specifies the name of the HTTP2 header
+  returned: changed
+  type: str
+  sample: X-HTTP2
+streams:
+  description: The number of outstanding concurrent requests allowed on a single HTTP/2 connection
+  returned: changed
+  type: int
+  sample: 30
+enforce_tls_requirements:
+  description: pecifies whether the system requires TLS for communications.
+  returned: changed
+  type: bool
+  sample: yes
+frame_size:
+  description: The size of the data frames
+  returned: changed
+  type: int
+  sample: 30
+activation_modes:
+  description: Specifies HTTP/2 connection handling modes
+  returned: changed
+  type: list
+  sample: ['always']
+

@@ -1,0 +1,37 @@
+EXAMPLES:
+
+---
+- name: Asynchronous yum task
+  yum:
+    name: docker-io
+    state: present
+  async: 1000
+  poll: 0
+  register: yum_sleeper
+
+- name: Wait for asynchronous job to end
+  async_status:
+    jid: '{{ yum_sleeper.ansible_job_id }}'
+  register: job_result
+  until: job_result.finished
+  retries: 30
+
+
+RETURN VALUES:
+
+ansible_job_id:
+  description: The asynchronous job id
+  returned: success
+  type: str
+  sample: '360874038559.4169'
+finished:
+  description: Whether the asynchronous job has finished (C(1)) or not (C(0))
+  returned: success
+  type: int
+  sample: 1
+started:
+  description: Whether the asynchronous job has started (C(1)) or not (C(0))
+  returned: success
+  type: int
+  sample: 1
+

@@ -1,0 +1,156 @@
+> NETSCALER_SSL_CERTKEY    (/usr/lib/python2.7/dist-packages/ansible/modules/network/netscaler/netscaler_ssl_certkey.py)
+
+        Manage ssl cerificate keys.
+
+  * This module is maintained by The Ansible Community
+OPTIONS (= is mandatory):
+
+- cert
+        Name of and, optionally, path to the X509 certificate file that is used to form the certificate-key pair. The certificate file
+        should be present on the appliance's hard-disk drive or solid-state drive. Storing a certificate in any location other than the
+        default might cause inconsistency in a high availability setup. /nsconfig/ssl/ is the default path.
+        Minimum length = 1
+        [Default: (null)]
+
+- certkey
+        Name for the certificate and private-key pair. Must begin with an ASCII alphanumeric or underscore `_' character, and must
+        contain only ASCII alphanumeric, underscore `_', hash `#', period `.', space ` ', colon `:', at `@', equals `=', and hyphen `-'
+        characters. Cannot be changed after the certificate-key pair is created.
+        The following requirement applies only to the NetScaler CLI:
+        If the name includes one or more spaces, enclose the name in double or single quotation marks (for example, "my cert" or 'my
+        cert').
+        Minimum length = 1
+        [Default: (null)]
+
+- expirymonitor
+        Issue an alert when the certificate is about to expire.
+        (Choices: enabled, disabled)[Default: (null)]
+
+- inform
+        Input format of the certificate and the private-key files. The three formats supported by the appliance are:
+        PEM - Privacy Enhanced Mail
+        DER - Distinguished Encoding Rule
+        PFX - Personal Information Exchange.
+        (Choices: DER, PEM, PFX)[Default: (null)]
+
+- key
+        Name of and, optionally, path to the private-key file that is used to form the certificate-key pair. The certificate file should
+        be present on the appliance's hard-disk drive or solid-state drive. Storing a certificate in any location other than the default
+        might cause inconsistency in a high availability setup. /nsconfig/ssl/ is the default path.
+        Minimum length = 1
+        [Default: (null)]
+
+= nitro_pass
+        The password with which to authenticate to the netscaler node.
+
+        type: str
+
+- nitro_protocol
+        Which protocol to use when accessing the nitro API objects.
+        (Choices: http, https)[Default: http]
+        type: str
+
+- nitro_timeout
+        Time in seconds until a timeout error is thrown when establishing a new session with Netscaler
+        [Default: 310]
+        type: float
+
+= nitro_user
+        The username with which to authenticate to the netscaler node.
+
+        type: str
+
+- notificationperiod
+        Time, in number of days, before certificate expiration, at which to generate an alert that the certificate is about to expire.
+        Minimum value = `10'
+        Maximum value = `100'
+        [Default: (null)]
+
+= nsip
+        The ip address of the netscaler appliance where the nitro API calls will be made.
+        The port can be specified with the colon (:). E.g. 192.168.1.1:555.
+
+        type: str
+
+- passplain
+        Pass phrase used to encrypt the private-key. Required when adding an encrypted private-key in PEM format.
+        Minimum length = 1
+        [Default: (null)]
+
+- password
+        Passphrase that was used to encrypt the private-key. Use this option to load encrypted private-keys in PEM format.
+        [Default: (null)]
+
+- save_config
+        If `yes' the module will save the configuration on the netscaler node if it makes any changes.
+        The module will not save the configuration on the netscaler node if it made no changes.
+        [Default: True]
+        type: bool
+
+- state
+        The state of the resource being configured by the module on the netscaler node.
+        When present the resource will be created if needed and configured according to the module's parameters.
+        When absent the resource will be deleted from the netscaler node.
+        (Choices: absent, present)[Default: present]
+        type: str
+
+- validate_certs
+        If `no', SSL certificates will not be validated. This should only be used on personally controlled sites using self-signed
+        certificates.
+        [Default: True]
+        type: bool
+
+
+NOTES:
+      * For more information on using Ansible to manage Citrix NetScaler Network devices see https://www.ansible.com/ansible-
+        netscaler.
+
+
+REQUIREMENTS:  nitro python sdk
+
+AUTHOR: George Nikolopoulos (@giorgos-nikolopoulos)
+        METADATA:
+          status:
+          - preview
+          supported_by: community
+        
+
+EXAMPLES:
+
+- name: Setup ssl certkey
+  delegate_to: localhost
+  netscaler_ssl_certkey:
+    nitro_user: nsroot
+    nitro_pass: nsroot
+    nsip: 172.18.0.2
+
+    certkey: certirificate_1
+    cert: server.crt
+    key: server.key
+    expirymonitor: enabled
+    notificationperiod: 30
+    inform: PEM
+    password: False
+    passplain: somesecret
+
+
+RETURN VALUES:
+
+loglines:
+    description: list of logged messages by the module
+    returned: always
+    type: list
+    sample: "['message 1', 'message 2']"
+
+msg:
+    description: Message detailing the failure reason
+    returned: failure
+    type: str
+    sample: "Action does not exist"
+
+diff:
+    description: List of differences between the actual configured object and the configuration specified in the module
+    returned: failure
+    type: dict
+    sample: "{ 'targetlbvserver': 'difference. ours: (str) server1 other: (str) server2' }"
+

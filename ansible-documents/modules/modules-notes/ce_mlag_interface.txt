@@ -1,0 +1,126 @@
+> CE_MLAG_INTERFACE    (/usr/lib/python2.7/dist-packages/ansible/modules/network/cloudengine/ce_mlag_interface.py)
+
+        Manages MLAG interface attributes on HUAWEI CloudEngine switches.
+
+  * This module is maintained by The Ansible Community
+OPTIONS (= is mandatory):
+
+- dfs_group_id
+        ID of a DFS group.The value is 1.
+        [Default: present]
+
+- eth_trunk_id
+        Name of the local M-LAG interface. The value is ranging from 0 to 511.
+        [Default: (null)]
+
+- interface
+        Name of the interface that enters the Error-Down state when the peer-link fails. The value is a string of 1 to 63 characters.
+        [Default: (null)]
+
+- mlag_error_down
+        Configure the interface on the slave device to enter the Error-Down state.
+        (Choices: enable, disable)[Default: (null)]
+
+- mlag_id
+        ID of the M-LAG. The value is an integer that ranges from 1 to 2048.
+        [Default: (null)]
+
+- mlag_priority_id
+        M-LAG global LACP system priority. The value is an integer ranging from 0 to 65535. The default value is 32768.
+        [Default: (null)]
+
+- mlag_system_id
+        M-LAG global LACP system MAC address. The value is a string of 0 to 255 characters. The default value is the MAC address of the
+        Ethernet port of MPU.
+        [Default: (null)]
+
+- state
+        Specify desired state of the resource.
+        (Choices: present, absent)[Default: present]
+
+
+AUTHOR: Li Yanfeng (@QijunPan)
+        METADATA:
+          status:
+          - preview
+          supported_by: community
+        
+
+EXAMPLES:
+
+- name: mlag interface module test
+  hosts: cloudengine
+  connection: local
+  gather_facts: no
+  vars:
+    cli:
+      host: "{{ inventory_hostname }}"
+      port: "{{ ansible_ssh_port }}"
+      username: "{{ username }}"
+      password: "{{ password }}"
+      transport: cli
+
+  tasks:
+
+  - name: Set interface mlag error down
+    ce_mlag_interface:
+      interface: 10GE2/0/1
+      mlag_error_down: enable
+      provider: "{{ cli }}"
+  - name: Create mlag
+    ce_mlag_interface:
+      eth_trunk_id: 1
+      dfs_group_id: 1
+      mlag_id: 4
+      provider: "{{ cli }}"
+  - name: Set mlag global attribute
+    ce_mlag_interface:
+      mlag_system_id: 0020-1409-0407
+      mlag_priority_id: 5
+      provider: "{{ cli }}"
+  - name: Set mlag interface attribute
+    ce_mlag_interface:
+      eth_trunk_id: 1
+      mlag_system_id: 0020-1409-0400
+      mlag_priority_id: 3
+      provider: "{{ cli }}"
+
+
+RETURN VALUES:
+
+changed:
+    description: check to see if a change was made on the device
+    returned: always
+    type: bool
+    sample: true
+proposed:
+    description: k/v pairs of parameters passed into module
+    returned: always
+    type: dict
+    sample: { "interface": "eth-trunk1",
+              "mlag_error_down": "disable",
+              "state": "present"
+            }
+existing:
+    description: k/v pairs of existing aaa server
+    returned: always
+    type: dict
+    sample: {   "mlagErrorDownInfos": [
+                {
+                    "dfsgroupId": "1",
+                    "portName": "Eth-Trunk1"
+                }
+              ]
+            }
+end_state:
+    description: k/v pairs of aaa params after module execution
+    returned: always
+    type: dict
+    sample: {}
+updates:
+    description: command sent to the device
+    returned: always
+    type: list
+    sample: { "interface eth-trunk1",
+              "undo m-lag unpaired-port suspend"}
+

@@ -1,0 +1,48 @@
+EXAMPLES:
+
+- name: create simple infoblox nameserver group
+  nios_nsgroup:
+    name: my-simple-group
+    comment: "this is a simple nameserver group"
+    grid_primary:
+      - name: infoblox-test.example.com
+    state: present
+    provider:
+      host: "{{ inventory_hostname_short }}"
+      username: admin
+      password: admin
+  connection: local
+
+- name: create infoblox nameserver group with external primaries
+  nios_nsgroup:
+    name: my-example-group
+    use_external_primary: true
+    comment: "this is my example nameserver group"
+    external_primaries: "{{ ext_nameservers }}"
+    grid_secondaries:
+      - name: infoblox-test.example.com
+        lead: True
+        preferred_primaries: "{{ ext_nameservers }}"
+    state: present
+    provider:
+      host: "{{ inventory_hostname_short }}"
+      username: admin
+      password: admin
+  connection: local
+
+- name: delete infoblox nameserver group
+  nios_nsgroup:
+    name: my-simple-group
+    comment: "this is a simple nameserver group"
+    grid_primary:
+      - name: infoblox-test.example.com
+    state: absent
+    provider:
+      host: "{{ inventory_hostname_short }}"
+      username: admin
+      password: admin
+  connection: local
+
+
+RETURN VALUES:
+ # 

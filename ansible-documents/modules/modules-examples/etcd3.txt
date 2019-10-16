@@ -1,0 +1,40 @@
+EXAMPLES:
+
+# Store a value "bar" under the key "foo" for a cluster located "http://localhost:2379"
+- etcd3:
+    key: "foo"
+    value: "baz3"
+    host: "localhost"
+    port: 2379
+    state: "present"
+
+# Authenticate using user/password combination with a timeout of 10 seconds
+- etcd3:
+    key: "foo"
+    value: "baz3"
+    state: "present"
+    user: "someone"
+    password: "password123"
+    timeout: 10
+
+# Authenticate using TLS certificates
+- etcd3:
+    key: "foo"
+    value: "baz3"
+    state: "present"
+    ca_cert: "/etc/ssl/certs/CA_CERT.pem"
+    client_cert: "/etc/ssl/certs/cert.crt"
+    client_key: "/etc/ssl/private/key.pem"
+
+
+RETURN VALUES:
+
+key:
+    description: The key that was queried
+    returned: always
+    type: str
+old_value:
+    description: The previous value in the cluster
+    returned: always
+    type: str
+

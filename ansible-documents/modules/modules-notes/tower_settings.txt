@@ -1,0 +1,80 @@
+> TOWER_SETTINGS    (/usr/lib/python2.7/dist-packages/ansible/modules/web_infrastructure/ansible_tower/tower_settings.py)
+
+        Modify Ansible Tower settings. See https://www.ansible.com/tower for an overview.
+
+  * This module is maintained by The Ansible Community
+OPTIONS (= is mandatory):
+
+= name
+        Name of setting to modify
+
+
+- tower_config_file
+        Path to the Tower config file.
+        [Default: (null)]
+        type: path
+
+- tower_host
+        URL to your Tower instance.
+        [Default: (null)]
+        type: str
+
+- tower_password
+        Password for your Tower instance.
+        [Default: (null)]
+        type: str
+
+- tower_username
+        Username for your Tower instance.
+        [Default: (null)]
+        type: str
+
+- validate_certs
+        Whether to allow insecure connections to Tower.
+        If `no', SSL certificates will not be validated.
+        This should only be used on personally controlled sites using self-signed certificates.
+        (Aliases: tower_verify_ssl)[Default: (null)]
+        type: bool
+
+= value
+        Value to be modified for given setting.
+
+
+
+NOTES:
+      * If no `config_file' is provided we will attempt to use the tower-cli library defaults to find your Tower host information.
+      * `config_file' should contain Tower configuration in the following format host=hostname username=username password=password
+
+
+REQUIREMENTS:  ansible-tower-cli >= 3.0.2
+
+AUTHOR: Nikhil Jain (@jainnikhil30)
+        METADATA:
+          status:
+          - preview
+          supported_by: community
+        
+
+EXAMPLES:
+
+- name: Set the value of AWX_PROOT_BASE_PATH
+  tower_settings:
+    name: AWX_PROOT_BASE_PATH
+    value: "/tmp"
+  register: testing_settings
+
+- name: Set the value of AWX_PROOT_SHOW_PATHS
+  tower_settings:
+    name: "AWX_PROOT_SHOW_PATHS"
+    value: "'/var/lib/awx/projects/', '/tmp'"
+  register: testing_settings
+
+- name: Set the LDAP Auth Bind Password
+  tower_settings:
+    name: "AUTH_LDAP_BIND_PASSWORD"
+    value: "Password"
+  no_log: true
+
+
+RETURN VALUES:
+ # 

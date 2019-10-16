@@ -1,0 +1,147 @@
+> MERAKI_CONFIG_TEMPLATE    (/usr/lib/python2.7/dist-packages/ansible/modules/network/meraki/meraki_config_template.py)
+
+        Allows for querying, deleting, binding, and unbinding of configuration templates.
+
+  * This module is maintained by The Ansible Community
+OPTIONS (= is mandatory):
+
+- auth_key
+        Authentication key provided by the dashboard. Required if environmental variable `MERAKI_KEY' is not set.
+        [Default: (null)]
+        type: str
+
+- auto_bind
+        Optional boolean indicating whether the network's switches should automatically bind to profiles of the same model.
+        This option only affects switch networks and switch templates.
+        Auto-bind is not valid unless the switch template has at least one profile and has at most one profile per switch model.
+        [Default: (null)]
+        type: bool
+
+- config_template
+        Name of the configuration template within an organization to manipulate.
+        (Aliases: name)[Default: (null)]
+
+- host
+        Hostname for Meraki dashboard.
+        Only useful for internal Meraki developers.
+        [Default: api.meraki.com]
+        type: str
+
+- net_id
+        ID of the network to bind or unbind configuration template to.
+        [Default: (null)]
+
+- net_name
+        Name of the network to bind or unbind configuration template to.
+        [Default: (null)]
+
+- org_id
+        ID of organization associated to a configuration template.
+        [Default: (null)]
+        type: int
+
+- org_name
+        Name of organization containing the configuration template.
+        (Aliases: organization)[Default: (null)]
+        type: str
+
+- output_level
+        Set amount of debug output during module execution.
+        (Choices: debug, normal)[Default: normal]
+        type: str
+
+- state
+        Specifies whether configuration template information should be queried, modified, or deleted.
+        (Choices: absent, query, present)[Default: query]
+
+- timeout
+        Time to timeout for HTTP requests.
+        [Default: 30]
+        type: int
+
+- use_https
+        If `no', it will use HTTP. Otherwise it will use HTTPS.
+        Only useful for internal Meraki developers.
+        [Default: True]
+        type: bool
+
+- use_proxy
+        If `no', it will not use a proxy, even if one is defined in an environment variable on the target hosts.
+        [Default: (null)]
+        type: bool
+
+- validate_certs
+        Whether to validate HTTP certificates.
+        [Default: True]
+        type: bool
+
+
+NOTES:
+      * Module is not idempotent as the Meraki API is limited in what information it provides about configuration templates.
+      * Meraki's API does not support creating new configuration templates.
+      * To use the configuration template, simply pass its ID via `net_id' parameters in Meraki modules.
+      * More information about the Meraki API can be found at https://dashboard.meraki.com/api_docs.
+      * Some of the options are likely only used for developers within Meraki.
+
+
+AUTHOR: Kevin Breit (@kbreit)
+        METADATA:
+          status:
+          - preview
+          supported_by: community
+        
+
+EXAMPLES:
+
+- name: Query configuration templates
+  meraki_config_template:
+    auth_key: abc12345
+    org_name: YourOrg
+    state: query
+  delegate_to: localhost
+
+- name: Bind a template from a network
+  meraki_config_template:
+    auth_key: abc123
+    state: present
+    org_name: YourOrg
+    net_name: YourNet
+    config_template: DevConfigTemplate
+  delegate_to: localhost
+
+- name: Unbind a template from a network
+  meraki_config_template:
+    auth_key: abc123
+    state: absent
+    org_name: YourOrg
+    net_name: YourNet
+    config_template: DevConfigTemplate
+  delegate_to: localhost
+
+- name: Delete a configuration template
+  meraki_config_template:
+    auth_key: abc123
+    state: absent
+    org_name: YourOrg
+    config_template: DevConfigTemplate
+  delegate_to: localhost
+
+
+RETURN VALUES:
+
+data:
+    description: Information about queried object.
+    returned: success
+    type: complex
+    contains:
+        id:
+          description: Unique identification number of organization
+          returned: success
+          type: int
+          sample: L_2930418
+        name:
+          description: Name of configuration template
+          returned: success
+          type: str
+          sample: YourTemplate
+

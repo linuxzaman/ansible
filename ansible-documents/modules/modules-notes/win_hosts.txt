@@ -1,0 +1,99 @@
+> WIN_HOSTS    (/usr/lib/python2.7/dist-packages/ansible/modules/windows/win_hosts.py)
+
+        Manages hosts file entries on Windows. Maps IPv4 or IPv6 addresses to canonical names Adds, removes, or sets cname records for ip
+        and hostname pairs Modifies %windir%\system32\drivers\etc\hosts.
+
+  * This module is maintained by The Ansible Community
+OPTIONS (= is mandatory):
+
+- action
+        Controls the behavior of `aliases'.
+        Only applicable when `state=present'.
+        If `add', each alias in `aliases' will be added to the host entry.
+        If `set', each alias in `aliases' will be added to the host entry, and other aliases will be removed from the entry.
+        (Choices: add, remove, set)[Default: set]
+
+- aliases
+        A list of additional names (cname records) for the host entry.
+        Only applicable when `state=present'.
+        [Default: (null)]
+
+- canonical_name
+        A canonical name for the host entry.
+        required for `state=present'.
+        [Default: (null)]
+
+- ip_address
+        The ip address for the host entry.
+        Can be either IPv4 (A record) or IPv6 (AAAA record).
+        Required for `state=present'.
+        [Default: (null)]
+
+- state
+        Whether the entry should be present or absent.
+        If only `canonical_name' is provided when `state=absent', then all hosts entries with the canonical name of `canonical_name' will
+        be removed.
+        If only `ip_address' is provided when `state=absent', then all hosts entries with the ip address of `ip_address' will be removed.
+        If `ip_address' and `canonical_name' are both omitted when `state=absent', then all hosts entries will be removed.
+        (Choices: absent, present)[Default: present]
+
+
+NOTES:
+      * Each canonical name can only be mapped to one IPv4 and one IPv6 address. If `canonical_name' is provided with
+        `state=present' and is found to be mapped to another IP address that is the same type as, but unique from `ip_address',
+        then `canonical_name' and all `aliases' will be removed from the entry and added to an entry with the provided IP address.
+      * Each alias can only be mapped to one canonical name. If `aliases' is provided with `state=present' and an alias is found to
+        be mapped to another canonical name, then the alias will be removed from the entry and added to or removed from (based on
+        `action') an entry with the provided canonical name.
+      * See also [win_template], [win_file], [win_copy]
+
+
+AUTHOR: Micah Hunsberger (@mhunsber)
+        METADATA:
+          status:
+          - preview
+          supported_by: community
+        
+
+EXAMPLES:
+
+- name: Add 127.0.0.1 as an A record for localhost
+  win_hosts:
+    state: present
+    canonical_name: localhost
+    ip_address: 127.0.0.1
+
+- name: Add ::1 as an AAAA record for localhost
+  win_environment:
+    state: present
+    canonical_name: localhost
+    ip_address: '::1'
+
+- name: Remove 'bar' and 'zed' from the list of aliases for foo (192.168.1.100)
+  win_hosts:
+    state: present
+    canoncial_name: foo
+    ip_address: 192.168.1.100
+    action: remove
+    aliases:
+      - bar
+      - zed
+
+- name: Remove hosts entries with canonical name 'bar'
+  win_hosts:
+    state: absent
+    canonical_name: bar
+
+- name: Remove 10.2.0.1 from the list of hosts
+  win_hosts:
+    state: absent
+    ip_address: 10.2.0.1
+
+- name: Ensure all name resolution is handled by DNS
+  win_hosts:
+    state: absent
+
+
+RETURN VALUES:
+
+

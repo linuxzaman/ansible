@@ -1,0 +1,122 @@
+> NA_ONTAP_CLUSTER    (/usr/lib/python2.7/dist-packages/ansible/modules/storage/netapp/na_ontap_cluster.py)
+
+        Create or join or apply licenses to ONTAP clusters Cluster join can be performed using only one of the parameters, either
+        cluster_name or cluster_ip_address
+
+  * This module is maintained by an Ansible Partner
+OPTIONS (= is mandatory):
+
+- cluster_ip_address
+        IP address of cluster to be joined
+        [Default: (null)]
+
+- cluster_name
+        The name of the cluster to manage.
+        [Default: (null)]
+
+= hostname
+        The hostname or IP address of the ONTAP instance.
+
+        type: str
+
+- http_port
+        Override the default port (80 or 443) with this port
+        [Default: (null)]
+        type: int
+
+- https
+        Enable and disable https
+        [Default: False]
+        type: bool
+
+- license_code
+        License code to be applied to the cluster
+        [Default: (null)]
+
+- license_package
+        License package name of the license to be removed
+        [Default: (null)]
+
+- node_serial_number
+        Serial number of the cluster node
+        [Default: (null)]
+
+- ontapi
+        The ontap api version to use
+        [Default: (null)]
+        type: int
+
+= password
+        Password for the specified user.
+        (Aliases: pass)
+        type: str
+
+- state
+        Whether the specified cluster should exist or not.
+        (Choices: present)[Default: present]
+
+= username
+        This can be a Cluster-scoped or SVM-scoped account, depending on whether a Cluster-level or SVM-level API is required. For more
+        information, please read the documentation https://mysupport.netapp.com/NOW/download/software/nmsdk/9.4/.
+        (Aliases: user)
+        type: str
+
+- validate_certs
+        If set to `no', the SSL certificates will not be validated.
+        This should only set to `False' used on personally controlled sites using self-signed certificates.
+        [Default: True]
+        type: bool
+
+
+NOTES:
+      * The modules prefixed with na\\_ontap are built to support the ONTAP storage platform.
+
+
+REQUIREMENTS:  A physical or virtual clustered Data ONTAP system. The modules support Data ONTAP 9.1 and onward, Ansible 2.6, Python2
+        netapp-lib (2017.10.30) or later. Install using 'pip install netapp-lib', Python3 netapp-lib (2018.11.13) or
+        later. Install using 'pip install netapp-lib', To enable http on the cluster you must run the following commands
+        'set -privilege advanced;' 'system services web modify -http-enabled true;'
+
+AUTHOR: NetApp Ansible Team (@carchi8py) <ng-ansibleteam@netapp.com>
+        METADATA:
+          status:
+          - preview
+          supported_by: certified
+        
+
+EXAMPLES:
+
+- name: Create cluster
+      na_ontap_cluster:
+        state: present
+        cluster_name: new_cluster
+        hostname: "{{ netapp_hostname }}"
+        username: "{{ netapp_username }}"
+        password: "{{ netapp_password }}"
+    - name: Add license from cluster
+      na_ontap_cluster:
+        state: present
+        cluster_name: FPaaS-A300-01
+        license_code: SGHLQDBBVAAAAAAAAAAAAAAAAAAA
+        hostname: "{{ netapp_hostname }}"
+        username: "{{ netapp_username }}"
+        password: "{{ netapp_password }}"
+    - name: Join cluster
+      na_ontap_cluster:
+        state: present
+        cluster_ip_address: 10.61.184.181
+        hostname: "{{ netapp_hostname }}"
+        username: "{{ netapp_username }}"
+        password: "{{ netapp_password }}"
+    - name: Join cluster
+      na_ontap_cluster:
+        state: present
+        cluster_name: FPaaS-A300-01
+        hostname: "{{ netapp_hostname }}"
+        username: "{{ netapp_username }}"
+        password: "{{ netapp_password }}"
+
+
+RETURN VALUES:
+
+

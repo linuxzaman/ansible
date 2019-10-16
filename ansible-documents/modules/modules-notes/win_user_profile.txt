@@ -1,0 +1,101 @@
+> WIN_USER_PROFILE    (/usr/lib/python2.7/dist-packages/ansible/modules/windows/win_user_profile.py)
+
+        Used to create or remove user profiles on a Windows host. This can be used to create a profile before a user logs on or delete a
+        profile when removing a user account. A profile can be created for both a local or domain account.
+
+  * This module is maintained by The Ansible Community
+OPTIONS (= is mandatory):
+
+- name
+        Specifies the base name for the profile path.
+        When `state' is `present' this is used to create the profile for `username' at a specific path within the profile directory.
+        This cannot be used to specify a path outside of the profile directory but rather it specifies a folder(s) within this directory.
+        If a profile for another user already exists at the same path, then a 3 digit incremental number is appended by Windows
+        automatically.
+        When `state' is `absent' and `username' is not set, then the module will remove all profiles that point to the profile path
+        derived by this value.
+        This is useful if the account no longer exists but the profile still remains.
+        [Default: (null)]
+        type: str
+
+- remove_multiple
+        When `state' is `absent' and the value for `name' matches multiple profiles the module will fail.
+        Set this value to `yes' to force the module to delete all the profiles found.
+        [Default: False]
+        type: bool
+
+- state
+        Will ensure the profile exists when set to `present'.
+        When creating a profile the `username' option must be set to a valid account.
+        Will remove the profile(s) when set to `absent'.
+        When removing a profile either `username' must be set to a valid account, or `name' is set to the profile's base name.
+        (Choices: absent, present)[Default: present]
+        type: str
+
+- username
+        The account name of security identifier (SID) for the profile.
+        This must be set when `state' is `present' and must be a valid account or the SID of a valid account.
+        When `state' is `absent' then this must still be a valid account number but the SID can be a deleted user's SID.
+        [Default: (null)]
+
+
+SEE ALSO:
+      * Module win_user
+           The official documentation on the win_user module.
+           https://docs.ansible.com/ansible/latest/modules/win_user_module.html
+      * Module win_domain_user
+           The official documentation on the win_domain_user module.
+           https://docs.ansible.com/ansible/latest/modules/win_domain_user_module.html
+
+
+AUTHOR: Jordan Borean (@jborean93)
+        METADATA:
+          status:
+          - preview
+          supported_by: community
+        
+
+EXAMPLES:
+
+- name: Create a profile for an account
+  win_user_profile:
+    username: ansible-account
+    state: present
+
+- name: Create a profile for an account at C:\Users\ansible
+  win_user_profile:
+    username: ansible-account
+    name: ansible
+    state: present
+
+- name: Remove a profile for a still valid account
+  win_user_profile:
+    username: ansible-account
+    state: absent
+
+- name: Remove a profile for a deleted account
+  win_user_profile:
+    name: ansible
+    state: absent
+
+- name: Remove a profile for a deleted account based on the SID
+  win_user_profile:
+    username: S-1-5-21-3233007181-2234767541-1895602582-1305
+    state: absent
+
+- name: Remove multiple profiles that exist at the basename path
+  win_user_profile:
+    name: ansible
+    state: absent
+    remove_multiple: yes
+
+
+RETURN VALUES:
+
+path:
+  description: The full path to the profile for the account. This will be null
+    if C(state=absent) and no profile was deleted.
+  returned: always
+  type: str
+  sample: C:\Users\ansible
+

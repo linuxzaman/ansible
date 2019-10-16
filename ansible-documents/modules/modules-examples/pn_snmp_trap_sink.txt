@@ -1,0 +1,38 @@
+EXAMPLES:
+
+- name: snmp trap sink functionality
+  pn_snmp_trap_sink:
+    pn_cliswitch: "sw01"
+    state: "present"
+    pn_community: "foo"
+    pn_type: "TRAP_TYPE_V2_INFORM"
+    pn_dest_host: "192.168.67.8"
+
+- name: snmp trap sink functionality
+  pn_snmp_trap_sink:
+    pn_cliswitch: "sw01"
+    state: "absent"
+    pn_community: "foo"
+    pn_type: "TRAP_TYPE_V2_INFORM"
+    pn_dest_host: "192.168.67.8"
+
+
+RETURN VALUES:
+
+command:
+  description: the CLI command run on the target node.
+  returned: always
+  type: str
+stdout:
+  description: set of responses from the snmp-trap-sink command.
+  returned: always
+  type: list
+stderr:
+  description: set of error responses from the snmp-trap-sink command.
+  returned: on error
+  type: list
+changed:
+  description: indicates whether the CLI caused changes on the target.
+  returned: always
+  type: bool
+

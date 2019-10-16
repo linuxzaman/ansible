@@ -1,0 +1,86 @@
+EXAMPLES:
+
+- name: configure link aggregation
+  junos_linkagg:
+    name: ae11
+    members:
+      - ge-0/0/5
+      - ge-0/0/6
+      - ge-0/0/7
+    lacp: active
+    device_count: 4
+    state: present
+
+- name: delete link aggregation
+  junos_linkagg:
+    name: ae11
+    members:
+      - ge-0/0/5
+      - ge-0/0/6
+      - ge-0/0/7
+    lacp: active
+    device_count: 4
+    state: delete
+
+- name: deactivate link aggregation
+  junos_linkagg:
+    name: ae11
+    members:
+      - ge-0/0/5
+      - ge-0/0/6
+      - ge-0/0/7
+    lacp: active
+    device_count: 4
+    state: present
+    active: False
+
+- name: Activate link aggregation
+  junos_linkagg:
+    name: ae11
+    members:
+      - ge-0/0/5
+      - ge-0/0/6
+      - ge-0/0/7
+    lacp: active
+    device_count: 4
+    state: present
+    active: True
+
+- name: Disable link aggregation
+  junos_linkagg:
+    name: ae11
+    state: down
+
+- name: Enable link aggregation
+  junos_linkagg:
+    name: ae11
+    state: up
+
+
+RETURN VALUES:
+
+diff:
+  description: Configuration difference before and after applying change.
+  returned: when configuration is changed and diff option is enabled.
+  type: str
+  sample: >
+            [edit interfaces]
+            +   ge-0/0/6 {
+            +       ether-options {
+            +           802.3ad ae0;
+            +       }
+            +   }
+            [edit interfaces ge-0/0/7]
+            +   ether-options {
+            +       802.3ad ae0;
+            +   }
+            [edit interfaces]
+            +   ae0 {
+            +       description "configured by junos_linkagg";
+            +       aggregated-ether-options {
+            +           lacp {
+            +               active;
+            +           }
+            +       }
+            +   }
+

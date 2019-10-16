@@ -1,0 +1,150 @@
+> NA_ONTAP_AUTOSUPPORT    (/usr/lib/python2.7/dist-packages/ansible/modules/storage/netapp/na_ontap_autosupport.py)
+
+        Enable/Disable Autosupport
+
+  * This module is maintained by an Ansible Partner
+OPTIONS (= is mandatory):
+
+- from_address
+        specify the e-mail address from which the node sends AutoSupport messages
+        [Default: (null)]
+        version_added: 2.8
+        
+
+= hostname
+        The hostname or IP address of the ONTAP instance.
+
+        type: str
+
+- hostname_in_subject
+        Specify whether the hostname of the node is included in the subject line of the AutoSupport message.
+        [Default: (null)]
+        type: bool
+        version_added: 2.8
+        
+
+- http_port
+        Override the default port (80 or 443) with this port
+        [Default: (null)]
+        type: int
+
+- https
+        Enable and disable https
+        [Default: False]
+        type: bool
+
+- mail_hosts
+        List of mail server(s) used to deliver AutoSupport messages via SMTP.
+        Both host names and IP addresses may be used as valid input.
+        [Default: (null)]
+
+= node_name
+        The name of the filer that owns the AutoSupport Configuration.
+
+
+- noteto
+        Specifies up to five recipients of short AutoSupport e-mail messages.
+        [Default: (null)]
+
+- ontapi
+        The ontap api version to use
+        [Default: (null)]
+        type: int
+
+- partner_addresses
+        Specifies up to five partner vendor recipients of full AutoSupport e-mail messages.
+        [Default: (null)]
+        version_added: 2.8
+        
+
+= password
+        Password for the specified user.
+        (Aliases: pass)
+        type: str
+
+- post_url
+        The URL used to deliver AutoSupport messages via HTTP POST
+        [Default: (null)]
+
+- proxy_url
+        specify an HTTP or HTTPS proxy if the 'transport' parameter is set to HTTP or HTTPS and your organization uses a proxy
+        [Default: (null)]
+        version_added: 2.8
+        
+
+- state
+        Specifies whether the AutoSupport daemon is present or absent.
+        When this setting is absent, delivery of all AutoSupport messages is turned off.
+        (Choices: present, absent)[Default: present]
+
+- support
+        Specifies whether AutoSupport notification to technical support is enabled.
+        [Default: (null)]
+        type: bool
+
+- to_addresses
+        Specifies up to five recipients of full AutoSupport e-mail messages.
+        [Default: (null)]
+        version_added: 2.8
+        
+
+- transport
+        The name of the transport protocol used to deliver AutoSupport messages
+        (Choices: http, https, smtp)[Default: (null)]
+
+= username
+        This can be a Cluster-scoped or SVM-scoped account, depending on whether a Cluster-level or SVM-level API is required. For more
+        information, please read the documentation https://mysupport.netapp.com/NOW/download/software/nmsdk/9.4/.
+        (Aliases: user)
+        type: str
+
+- validate_certs
+        If set to `no', the SSL certificates will not be validated.
+        This should only set to `False' used on personally controlled sites using self-signed certificates.
+        [Default: True]
+        type: bool
+
+
+NOTES:
+      * The modules prefixed with na\\_ontap are built to support the ONTAP storage platform.
+
+
+REQUIREMENTS:  A physical or virtual clustered Data ONTAP system. The modules support Data ONTAP 9.1 and onward, Ansible 2.6, Python2
+        netapp-lib (2017.10.30) or later. Install using 'pip install netapp-lib', Python3 netapp-lib (2018.11.13) or
+        later. Install using 'pip install netapp-lib', To enable http on the cluster you must run the following commands
+        'set -privilege advanced;' 'system services web modify -http-enabled true;'
+
+AUTHOR: NetApp Ansible Team (@carchi8py) <ng-ansibleteam@netapp.com>
+        METADATA:
+          status:
+          - preview
+          supported_by: certified
+        
+
+EXAMPLES:
+
+- name: Enable autosupport
+      na_ontap_autosupport:
+        hostname: "{{ hostname }}"
+        username: "{{ username }}"
+        password: "{{ password }}"
+        state: present
+        node_name: test
+        transport: https
+        noteto: abc@def.com,def@ghi.com
+        mail_hosts: 1.2.3.4,5.6.7.8
+        support: False
+        post_url: url/1.0/post
+
+    - name: Disable autosupport
+      na_ontap_autosupport:
+        hostname: "{{ hostname }}"
+        username: "{{ username }}"
+        password: "{{ password }}"
+        state: absent
+        node_name: test
+
+
+RETURN VALUES:
+
+

@@ -1,0 +1,385 @@
+> EC2_AMI    (/usr/lib/python2.7/dist-packages/ansible/modules/cloud/amazon/ec2_ami.py)
+
+        Registers or deregisters ec2 images.
+
+  * This module is maintained by The Ansible Community
+OPTIONS (= is mandatory):
+
+- architecture
+        The target architecture of the image to register
+        [Default: (null)]
+        version_added: 2.3
+
+- aws_access_key
+        AWS access key. If not set then the value of the AWS_ACCESS_KEY_ID, AWS_ACCESS_KEY or EC2_ACCESS_KEY environment variable is
+        used.
+        (Aliases: ec2_access_key, access_key)[Default: (null)]
+        type: str
+
+- aws_secret_key
+        AWS secret key. If not set then the value of the AWS_SECRET_ACCESS_KEY, AWS_SECRET_KEY, or EC2_SECRET_KEY environment variable is
+        used.
+        (Aliases: ec2_secret_key, secret_key)[Default: (null)]
+        type: str
+
+- billing_products
+        A list of valid billing codes. To be used with valid accounts by aws marketplace vendors.
+        [Default: (null)]
+        version_added: 2.5
+
+- debug_botocore_endpoint_logs
+        Use a botocore.endpoint logger to parse the unique (rather than total) "resource:action" API calls made during a task, outputing
+        the set to the resource_actions key in the task results. Use the aws_resource_action callback to output to total list made during
+        a playbook. The ANSIBLE_DEBUG_BOTOCORE_LOGS environment variable may also be used.
+        [Default: no]
+        type: bool
+        version_added: 2.8
+
+- delete_snapshot
+        Delete snapshots when deregistering the AMI.
+        [Default: no]
+        type: bool
+
+- description
+        Human-readable string describing the contents and purpose of the AMI.
+        [Default: (null)]
+
+- device_mapping
+        List of device hashes/dictionaries with custom configurations (same block-device-mapping parameters).
+        Valid properties include: device_name, volume_type, size/volume_size (in GiB), delete_on_termination (boolean), no_device
+        (boolean), snapshot_id, iops (for io1 volume_type), encrypted
+        [Default: (null)]
+        version_added: 2.0
+
+- ec2_url
+        Url to use to connect to EC2 or your Eucalyptus cloud (by default the module will use EC2 endpoints). Ignored for modules where
+        region is required. Must be specified for all other modules if region is not used. If not set then the value of the EC2_URL
+        environment variable, if any, is used.
+        [Default: (null)]
+        type: str
+
+- enhanced_networking
+        A boolean representing whether enhanced networking with ENA is enabled or not.
+        [Default: (null)]
+        type: bool
+        version_added: 2.5
+
+- image_id
+        Image ID to be deregistered.
+        [Default: (null)]
+
+- image_location
+        The s3 location of an image to use for the AMI.
+        [Default: (null)]
+        version_added: 2.5
+
+- instance_id
+        Instance ID to create the AMI from.
+        [Default: (null)]
+
+- kernel_id
+        The target kernel id of the image to register.
+        [Default: (null)]
+        version_added: 2.3
+
+- launch_permissions
+        Users and groups that should be able to launch the AMI. Expects dictionary with a key of user_ids and/or group_names. user_ids
+        should be a list of account ids. group_name should be a list of groups, "all" is the only acceptable value currently.
+        You must pass all desired launch permissions if you wish to modify existing launch permissions (passing just groups will remove
+        all users)
+        [Default: (null)]
+        version_added: 2.0
+
+- name
+        The name of the new AMI.
+        [Default: (null)]
+
+- no_reboot
+        Flag indicating that the bundling process should not attempt to shutdown the instance before bundling. If this flag is True, the
+        responsibility of maintaining file system integrity is left to the owner of the instance.
+        [Default: False]
+        type: bool
+
+- profile
+        Uses a boto profile. Only works with boto >= 2.24.0.
+        [Default: (null)]
+        type: str
+        version_added: 1.6
+
+- purge_tags
+        Whether to remove existing tags that aren't passed in the `tags' parameter
+        [Default: no]
+        type: bool
+        version_added: 2.5
+
+- ramdisk_id
+        The ID of the RAM disk.
+        [Default: (null)]
+        version_added: 2.5
+
+- region
+        The AWS region to use. If not specified then the value of the AWS_REGION or EC2_REGION environment variable, if any, is used. See
+        http://docs.aws.amazon.com/general/latest/gr/rande.html#ec2_region
+        (Aliases: aws_region, ec2_region)[Default: (null)]
+        type: str
+
+- root_device_name
+        The root device name of the image to register.
+        [Default: (null)]
+        version_added: 2.3
+
+- security_token
+        AWS STS security token. If not set then the value of the AWS_SECURITY_TOKEN or EC2_SECURITY_TOKEN environment variable is used.
+        (Aliases: access_token)[Default: (null)]
+        type: str
+        version_added: 1.6
+
+- sriov_net_support
+        Set to simple to enable enhanced networking with the Intel 82599 Virtual Function interface for the AMI and any instances that
+        you launch from the AMI.
+        [Default: (null)]
+        version_added: 2.5
+
+- state
+        Register or deregister an AMI.
+        (Choices: absent, present)[Default: present]
+
+- tags
+        A dictionary of tags to add to the new image; '{"key":"value"}' and '{"key":"value","key":"value"}'
+        [Default: (null)]
+        version_added: 2.0
+
+- validate_certs
+        When set to "no", SSL certificates will not be validated for boto versions >= 2.6.0.
+        [Default: True]
+        type: bool
+        version_added: 1.5
+
+- virtualization_type
+        The virtualization type of the image to register.
+        [Default: (null)]
+        version_added: 2.3
+
+- wait
+        Wait for the AMI to be in state 'available' before returning.
+        [Default: no]
+        type: bool
+
+- wait_timeout
+        How long before wait gives up, in seconds.
+        [Default: 900]
+
+
+NOTES:
+      * If parameters are not set within the module, the following environment variables can be used in decreasing order of
+        precedence `AWS_URL' or `EC2_URL', `AWS_ACCESS_KEY_ID' or `AWS_ACCESS_KEY' or `EC2_ACCESS_KEY', `AWS_SECRET_ACCESS_KEY' or
+        `AWS_SECRET_KEY' or `EC2_SECRET_KEY', `AWS_SECURITY_TOKEN' or `EC2_SECURITY_TOKEN', `AWS_REGION' or `EC2_REGION'
+      * Ansible uses the boto configuration file (typically ~/.boto) if no credentials are provided. See
+        https://boto.readthedocs.io/en/latest/boto_config_tut.html
+      * `AWS_REGION' or `EC2_REGION' can be typically be used to specify the AWS region, when required, but this can also be
+        configured in the boto config file
+
+
+REQUIREMENTS:  python >= 2.6, boto
+
+AUTHOR: Evan Duffield (@scicoin-project) <eduffield@iacquire.com>, Constantin Bugneac (@Constantin07) <constantin.bugneac@endava.com>, Ross Williams (@gunzy83) <gunzy83au@gmail.com>, Willem van Ketwich (@wilvk) <willvk@gmail.com>
+        METADATA:
+          status:
+          - stableinterface
+          supported_by: community
+        
+
+EXAMPLES:
+
+# Note: These examples do not set authentication details, see the AWS Guide for details.
+
+# Basic AMI Creation
+- ec2_ami:
+    instance_id: i-xxxxxx
+    wait: yes
+    name: newtest
+    tags:
+      Name: newtest
+      Service: TestService
+
+# Basic AMI Creation, without waiting
+- ec2_ami:
+    instance_id: i-xxxxxx
+    wait: no
+    name: newtest
+
+# AMI Registration from EBS Snapshot
+- ec2_ami:
+    name: newtest
+    state: present
+    architecture: x86_64
+    virtualization_type: hvm
+    root_device_name: /dev/xvda
+    device_mapping:
+      - device_name: /dev/xvda
+        volume_size: 8
+        snapshot_id: snap-xxxxxxxx
+        delete_on_termination: true
+        volume_type: gp2
+
+# AMI Creation, with a custom root-device size and another EBS attached
+- ec2_ami:
+    instance_id: i-xxxxxx
+    name: newtest
+    device_mapping:
+        - device_name: /dev/sda1
+          size: XXX
+          delete_on_termination: true
+          volume_type: gp2
+        - device_name: /dev/sdb
+          size: YYY
+          delete_on_termination: false
+          volume_type: gp2
+
+# AMI Creation, excluding a volume attached at /dev/sdb
+- ec2_ami:
+    instance_id: i-xxxxxx
+    name: newtest
+    device_mapping:
+        - device_name: /dev/sda1
+          size: XXX
+          delete_on_termination: true
+          volume_type: gp2
+        - device_name: /dev/sdb
+          no_device: yes
+
+# Deregister/Delete AMI (keep associated snapshots)
+- ec2_ami:
+    image_id: "{{ instance.image_id }}"
+    delete_snapshot: False
+    state: absent
+
+# Deregister AMI (delete associated snapshots too)
+- ec2_ami:
+    image_id: "{{ instance.image_id }}"
+    delete_snapshot: True
+    state: absent
+
+# Update AMI Launch Permissions, making it public
+- ec2_ami:
+    image_id: "{{ instance.image_id }}"
+    state: present
+    launch_permissions:
+      group_names: ['all']
+
+# Allow AMI to be launched by another account
+- ec2_ami:
+    image_id: "{{ instance.image_id }}"
+    state: present
+    launch_permissions:
+      user_ids: ['123456789012']
+
+
+RETURN VALUES:
+
+architecture:
+    description: architecture of image
+    returned: when AMI is created or already exists
+    type: str
+    sample: "x86_64"
+block_device_mapping:
+    description: block device mapping associated with image
+    returned: when AMI is created or already exists
+    type: dict
+    sample: {
+        "/dev/sda1": {
+            "delete_on_termination": true,
+            "encrypted": false,
+            "size": 10,
+            "snapshot_id": "snap-1a03b80e7",
+            "volume_type": "standard"
+        }
+    }
+creationDate:
+    description: creation date of image
+    returned: when AMI is created or already exists
+    type: str
+    sample: "2015-10-15T22:43:44.000Z"
+description:
+    description: description of image
+    returned: when AMI is created or already exists
+    type: str
+    sample: "nat-server"
+hypervisor:
+    description: type of hypervisor
+    returned: when AMI is created or already exists
+    type: str
+    sample: "xen"
+image_id:
+    description: id of the image
+    returned: when AMI is created or already exists
+    type: str
+    sample: "ami-1234abcd"
+is_public:
+    description: whether image is public
+    returned: when AMI is created or already exists
+    type: bool
+    sample: false
+launch_permission:
+    description: permissions allowing other accounts to access the AMI
+    returned: when AMI is created or already exists
+    type: list
+    sample:
+      - group: "all"
+location:
+    description: location of image
+    returned: when AMI is created or already exists
+    type: str
+    sample: "315210894379/nat-server"
+name:
+    description: ami name of image
+    returned: when AMI is created or already exists
+    type: str
+    sample: "nat-server"
+ownerId:
+    description: owner of image
+    returned: when AMI is created or already exists
+    type: str
+    sample: "435210894375"
+platform:
+    description: platform of image
+    returned: when AMI is created or already exists
+    type: str
+    sample: null
+root_device_name:
+    description: root device name of image
+    returned: when AMI is created or already exists
+    type: str
+    sample: "/dev/sda1"
+root_device_type:
+    description: root device type of image
+    returned: when AMI is created or already exists
+    type: str
+    sample: "ebs"
+state:
+    description: state of image
+    returned: when AMI is created or already exists
+    type: str
+    sample: "available"
+tags:
+    description: a dictionary of tags assigned to image
+    returned: when AMI is created or already exists
+    type: dict
+    sample: {
+        "Env": "devel",
+        "Name": "nat-server"
+    }
+virtualization_type:
+    description: image virtualization type
+    returned: when AMI is created or already exists
+    type: str
+    sample: "hvm"
+snapshots_deleted:
+    description: a list of snapshot ids deleted after deregistering image
+    returned: after AMI is deregistered, if 'delete_snapshot' is set to 'yes'
+    type: list
+    sample: [
+        "snap-fbcccb8f",
+        "snap-cfe7cdb4"
+    ]
+

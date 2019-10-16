@@ -1,0 +1,47 @@
+EXAMPLES:
+
+- name: Install the foo service
+  win_nssm:
+    name: foo
+    application: C:\windows\foo.exe
+
+# This will yield the following command: C:\windows\foo.exe bar "true"
+- name: Install the Consul service with a list of parameters
+  win_nssm:
+    name: Consul
+    application: C:\consul\consul.exe
+    arguments:
+      - agent
+      - -config-dir=C:\consul\config
+
+# This is strictly equivalent to the previous example
+- name: Install the Consul service with an arbitrary string of parameters
+  win_nssm:
+    name: Consul
+    application: C:\consul\consul.exe
+    arguments: agent -config-dir=C:\consul\config
+
+
+# Install the foo service, and then configure and start it with win_service
+- name: Install the foo service, redirecting stdout and stderr to the same file
+  win_nssm:
+    name: foo
+    application: C:\windows\foo.exe
+    stdout_file: C:\windows\foo.log
+    stderr_file: C:\windows\foo.log
+
+- name: Configure and start the foo service using win_service
+  win_service:
+    name: foo
+    dependencies: [ adf, tcpip ]
+    user: foouser
+    password: secret
+    start_mode: manual
+    state: started
+
+- name: Remove the foo service
+  win_nssm:
+    name: foo
+    state: absent
+
+

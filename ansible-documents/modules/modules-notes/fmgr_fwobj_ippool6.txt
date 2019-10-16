@@ -1,0 +1,91 @@
+> FMGR_FWOBJ_IPPOOL6    (/usr/lib/python2.7/dist-packages/ansible/modules/network/fortimanager/fmgr_fwobj_ippool6.py)
+
+        Allows users to add/edit/delete IPv6 Pool Objects.
+
+  * This module is maintained by The Ansible Community
+OPTIONS (= is mandatory):
+
+- adom
+        The ADOM the configuration should belong to.
+        [Default: root]
+
+- comments
+        Comment.
+        [Default: (null)]
+
+- dynamic_mapping
+        EXPERTS ONLY! KNOWLEDGE OF FMGR JSON API IS REQUIRED!
+        List of multiple child objects to be added. Expects a list of dictionaries.
+        Dictionaries must use FortiManager API parameters, not the ansible ones listed below.
+        If submitted, all other prefixed sub-parameters ARE IGNORED.
+        This object is MUTUALLY EXCLUSIVE with its options.
+        We expect that you know what you are doing with these list parameters, and are leveraging the JSON API Guide.
+        WHEN IN DOUBT, USE THE SUB OPTIONS BELOW INSTEAD TO CREATE OBJECTS WITH MULTIPLE TASKS
+        [Default: (null)]
+
+- dynamic_mapping_comments
+        Dynamic Mapping clone of original suffixed parameter.
+        [Default: (null)]
+
+- dynamic_mapping_endip
+        Dynamic Mapping clone of original suffixed parameter.
+        [Default: (null)]
+
+- dynamic_mapping_startip
+        Dynamic Mapping clone of original suffixed parameter.
+        [Default: (null)]
+
+- endip
+        Final IPv6 address (inclusive) in the range for the address pool.
+        [Default: (null)]
+
+- mode
+        Sets one of three modes for managing the object.
+        Allows use of soft-adds instead of overwriting existing values
+        (Choices: add, set, delete, update)[Default: add]
+
+- name
+        IPv6 IP pool name.
+        [Default: (null)]
+
+- startip
+        First IPv6 address (inclusive) in the range for the address pool.
+        [Default: (null)]
+
+
+NOTES:
+      * Full Documentation at https://ftnt-ansible-docs.readthedocs.io/en/latest/.
+
+
+AUTHOR: Luke Weighall (@lweighall), Andrew Welsh (@Ghilli3), Jim Huber (@p4r4n0y1ng)
+        METADATA:
+          status:
+          - preview
+          supported_by: community
+        
+
+EXAMPLES:
+
+- name: ADD FMGR_FIREWALL_IPPOOL6
+  fmgr_firewall_ippool6:
+    mode: "add"
+    adom: "ansible"
+    startip:
+    name: "IPv6 IPPool"
+    endip:
+    comments: "Created by Ansible"
+
+- name: DELETE FMGR_FIREWALL_IPPOOL6
+  fmgr_firewall_ippool6:
+    mode: "delete"
+    adom: "ansible"
+    name: "IPv6 IPPool"
+
+
+RETURN VALUES:
+
+api_result:
+  description: full API response, includes status code and message
+  returned: always
+  type: str
+

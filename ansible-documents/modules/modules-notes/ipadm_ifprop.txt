@@ -1,0 +1,83 @@
+> IPADM_IFPROP    (/usr/lib/python2.7/dist-packages/ansible/modules/network/illumos/ipadm_ifprop.py)
+
+        Modify IP interface properties on Solaris/illumos systems.
+
+  * This module is maintained by The Ansible Community
+OPTIONS (= is mandatory):
+
+= interface
+        Specifies the IP interface we want to manage.
+        (Aliases: nic)
+
+= property
+        Specifies the name of the property we want to manage.
+        (Aliases: name)
+
+= protocol
+        Specifies the procotol for which we want to manage properties.
+
+
+- state
+        Set or reset the property value.
+        (Choices: present, absent, reset)[Default: present]
+
+- temporary
+        Specifies that the property value is temporary. Temporary property values do not persist across reboots.
+        [Default: False]
+        type: bool
+
+- value
+        Specifies the value we want to set for the property.
+        [Default: (null)]
+
+
+AUTHOR: Adam Števko (@xen0l)
+        METADATA:
+          status:
+          - preview
+          supported_by: community
+        
+
+EXAMPLES:
+
+- name: Allow forwarding of IPv4 packets on network interface e1000g0
+  ipadm_ifprop: protocol=ipv4 property=forwarding value=on interface=e1000g0
+
+- name: Temporarily reset IPv4 forwarding property on network interface e1000g0
+  ipadm_ifprop: protocol=ipv4 interface=e1000g0  temporary=true property=forwarding state=reset
+
+- name: Configure IPv6 metric on network interface e1000g0
+  ipadm_ifprop: protocol=ipv6 nic=e1000g0 name=metric value=100
+
+- name: Set IPv6 MTU on network interface bge0
+  ipadm_ifprop: interface=bge0 name=mtu value=1280 protocol=ipv6
+
+
+RETURN VALUES:
+
+protocol:
+    description: property's protocol
+    returned: always
+    type: str
+    sample: ipv4
+property:
+    description: property's name
+    returned: always
+    type: str
+    sample: mtu
+interface:
+    description: interface name we want to set property on
+    returned: always
+    type: str
+    sample: e1000g0
+state:
+    description: state of the target
+    returned: always
+    type: str
+    sample: present
+value:
+    description: property's value
+    returned: when value is provided
+    type: str
+    sample: 1280
+

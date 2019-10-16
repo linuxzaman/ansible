@@ -1,0 +1,64 @@
+EXAMPLES:
+
+- name: Link status test
+  hosts: cloudengine
+  connection: local
+  gather_facts: no
+  vars:
+    cli:
+      host: "{{ inventory_hostname }}"
+      port: "{{ ansible_ssh_port }}"
+      username: "{{ username }}"
+      password: "{{ password }}"
+      transport: cli
+
+  tasks:
+
+  - name: Get specified interface link status information
+    ce_link_status:
+      interface: 40GE1/0/1
+      provider: "{{ cli }}"
+
+  - name: Get specified interface type link status information
+    ce_link_status:
+      interface: 40GE
+      provider: "{{ cli }}"
+
+  - name: Get all interface link status information
+    ce_link_status:
+      interface: all
+      provider: "{{ cli }}"
+
+
+RETURN VALUES:
+
+result:
+    description: Interface link status information
+    returned: always
+    type: dict
+    sample: {
+                "40ge2/0/8": {
+                    "Current IPv4 state": "down",
+                    "Current IPv6 state": "down",
+                    "Current link state": "up",
+                    "Current physical state": "up",
+                    "Inbound broadcast(pkts)": "0",
+                    "Inbound drop(pkts)": "0",
+                    "Inbound error(pkts)": "0",
+                    "Inbound multicast(pkts)": "20151",
+                    "Inbound octets(bytes)": "7314813",
+                    "Inbound rate(byte/sec)": "11",
+                    "Inbound rate(pkts/sec)": "0",
+                    "Inbound unicast(pkts)": "0",
+                    "Outbound broadcast(pkts)": "1",
+                    "Outbound drop(pkts)": "0",
+                    "Outbound error(pkts)": "0",
+                    "Outbound multicast(pkts)": "20152",
+                    "Outbound octets(bytes)": "7235021",
+                    "Outbound rate(byte/sec)": "11",
+                    "Outbound rate(pkts/sec)": "0",
+                    "Outbound unicast(pkts)": "0",
+                    "Speed": "40GE"
+                }
+            }
+

@@ -1,0 +1,71 @@
+EXAMPLES:
+
+- name: configure interface
+  slxos_interface:
+      name: Ethernet 0/2
+      description: test-interface
+      speed: 1000
+      mtu: 9216
+
+- name: remove interface
+  slxos_interface:
+    name: Loopback 9
+    state: absent
+
+- name: make interface up
+  slxos_interface:
+    name: Ethernet 0/2
+    enabled: True
+
+- name: make interface down
+  slxos_interface:
+    name: Ethernet 0/2
+    enabled: False
+
+- name: Check intent arguments
+  slxos_interface:
+    name: Ethernet 0/2
+    state: up
+    tx_rate: ge(0)
+    rx_rate: le(0)
+
+- name: Check neighbors intent arguments
+  slxos_interface:
+    name: Ethernet 0/41
+    neighbors:
+    - port: Ethernet 0/41
+      host: SLX
+
+- name: Config + intent
+  slxos_interface:
+    name: Ethernet 0/2
+    enabled: False
+    state: down
+
+- name: Add interface using aggregate
+  slxos_interface:
+    aggregate:
+    - { name: Ethernet 0/1, mtu: 1548, description: test-interface-1 }
+    - { name: Ethernet 0/2, mtu: 1548, description: test-interface-2 }
+    speed: 10000
+    state: present
+
+- name: Delete interface using aggregate
+  slxos_interface:
+    aggregate:
+    - name: Loopback 9
+    - name: Loopback 10
+    state: absent
+
+
+RETURN VALUES:
+
+commands:
+  description: The list of configuration mode commands to send to the device.
+  returned: always, except for the platforms that use Netconf transport to manage the device.
+  type: list
+  sample:
+  - interface Ethernet 0/2
+  - description test-interface
+  - mtu 1548
+

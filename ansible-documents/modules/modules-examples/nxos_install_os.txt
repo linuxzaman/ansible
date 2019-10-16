@@ -1,0 +1,46 @@
+EXAMPLES:
+
+- name: Install OS on N9k
+  check_mode: no
+  nxos_install_os:
+    system_image_file: nxos.7.0.3.I6.1.bin
+    issu: desired
+
+- name: Wait for device to come back up with new image
+  wait_for:
+    port: 22
+    state: started
+    timeout: 500
+    delay: 60
+    host: "{{ inventory_hostname }}"
+
+- name: Check installed OS for newly installed version
+  nxos_command:
+    commands: ['show version | json']
+    provider: "{{ connection }}"
+  register: output
+- assert:
+    that:
+    - output['stdout'][0]['kickstart_ver_str'] == '7.0(3)I6(1)'
+
+
+RETURN VALUES:
+
+install_state:
+    description: Boot and install information.
+    returned: always
+    type: dict
+    sample: {
+    "install_state": [
+        "Compatibility check is done:",
+        "Module  bootable          Impact  Install-type  Reason",
+        "------  --------  --------------  ------------  ------",
+        "     1       yes  non-disruptive         reset  ",
+        "Images will be upgraded according to following table:",
+        "Module       Image                  Running-Version(pri:alt)           New-Version  Upg-Required",
+        "------  ----------  ----------------------------------------  --------------------  ------------",
+        "     1        nxos                               7.0(3)I6(1)           7.0(3)I7(1)           yes",
+        "     1        bios                        v4.4.0(07/12/2017)    v4.4.0(07/12/2017)            no"
+    ],
+    }
+

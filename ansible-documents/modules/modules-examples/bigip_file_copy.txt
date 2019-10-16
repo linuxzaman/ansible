@@ -1,0 +1,47 @@
+EXAMPLES:
+
+- name: Upload a file as an iFile
+  bigip_file_copy:
+    name: foo
+    source: /path/to/file.txt
+    datastore: ifile
+    provider:
+      password: secret
+      server: lb.mydomain.com
+      user: admin
+  delegate_to: localhost
+
+# Upload a directory of files
+- name: Recursively upload web related files in /var/tmp/project
+  find:
+    paths: /var/tmp/project
+    patterns: "^.*?\\.(?:html|?:css|?:js)$"
+  register: f
+
+- name: Upload a directory of files as a set of iFiles
+  bigip_file_copy:
+    source: "{{ f.path }}"
+    datastore: ifile
+    provider:
+      password: secret
+      server: lb.mydomain.com
+      user: admin
+    loop: f
+  delegate_to: localhost
+# End upload a directory of files
+
+- name: Upload a file to use in an external monitor
+  bigip_file_copy:
+    source: /path/to/files/external.sh
+    datastore: external-monitor
+    provider:
+      password: secret
+      server: lb.mydomain.com
+      user: admin
+  delegate_to: localhost
+
+
+RETURN VALUES:
+
+# only common fields returned
+

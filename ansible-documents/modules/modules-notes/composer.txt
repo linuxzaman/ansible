@@ -1,0 +1,128 @@
+> COMPOSER    (/usr/lib/python2.7/dist-packages/ansible/modules/packaging/language/composer.py)
+
+        Composer is a tool for dependency management in PHP. It allows you to declare the dependent libraries your project needs and it
+        will install them in your project for you.
+
+  * This module is maintained by The Ansible Community
+OPTIONS (= is mandatory):
+
+- apcu_autoloader
+        Uses APCu to cache found/not-found classes
+        (Aliases: apcu-autoloader)[Default: False]
+        type: bool
+        version_added: 2.7
+
+- arguments
+        Composer arguments like required package, version and so on.
+        [Default: (null)]
+        version_added: 2.0
+
+- classmap_authoritative
+        Autoload classes from classmap only.
+        Implicitely enable optimize_autoloader.
+        Recommended especially for production, but can take a bit of time to run.
+        (Aliases: classmap-authoritative)[Default: False]
+        type: bool
+        version_added: 2.7
+
+- command
+        Composer command like "install", "update" and so on.
+        [Default: install]
+        version_added: 1.8
+
+- executable
+        Path to PHP Executable on the remote host, if PHP is not in PATH.
+        (Aliases: php_path)[Default: (null)]
+        version_added: 2.4
+
+- global_command
+        Runs the specified command globally.
+        (Aliases: global-command)[Default: False]
+        type: bool
+        version_added: 2.4
+
+- ignore_platform_reqs
+        Ignore php, hhvm, lib-* and ext-* requirements and force the installation even if the local machine does not fulfill these.
+        (Aliases: ignore-platform-reqs)[Default: False]
+        type: bool
+        version_added: 2.0
+
+- no_dev
+        Disables installation of require-dev packages (see --no-dev).
+        (Aliases: no-dev)[Default: True]
+        type: bool
+
+- no_plugins
+        Disables all plugins ( see --no-plugins ).
+        (Aliases: no-plugins)[Default: False]
+        type: bool
+
+- no_scripts
+        Skips the execution of all scripts defined in composer.json (see --no-scripts).
+        (Aliases: no-scripts)[Default: False]
+        type: bool
+
+- optimize_autoloader
+        Optimize autoloader during autoloader dump (see --optimize-autoloader).
+        Convert PSR-0/4 autoloading to classmap to get a faster autoloader.
+        Recommended especially for production, but can take a bit of time to run.
+        (Aliases: optimize-autoloader)[Default: True]
+        type: bool
+
+- prefer_dist
+        Forces installation from package dist even for dev versions (see --prefer-dist).
+        (Aliases: prefer-dist)[Default: False]
+        type: bool
+
+- prefer_source
+        Forces installation from package sources when possible (see --prefer-source).
+        (Aliases: prefer-source)[Default: False]
+        type: bool
+
+- working_dir
+        Directory of your project (see --working-dir). This is required when the command is not run globally.
+        Will be ignored if `global_command=true'.
+        (Aliases: working-dir)[Default: (null)]
+
+
+NOTES:
+      * Default options that are always appended in each execution are --no-ansi, --no-interaction and --no-progress if available.
+      * We received reports about issues on macOS if composer was installed by Homebrew. Please use the official install method to
+        avoid issues.
+
+
+REQUIREMENTS:  php, composer installed in bin path (recommended /usr/local/bin)
+
+AUTHOR: Dimitrios Tydeas Mengidis (@dmtrs), René Moser (@resmo)
+        METADATA:
+          status:
+          - preview
+          supported_by: community
+        
+
+EXAMPLES:
+
+# Downloads and installs all the libs and dependencies outlined in the /path/to/project/composer.lock
+- composer:
+    command: install
+    working_dir: /path/to/project
+
+- composer:
+    command: require
+    arguments: my/package
+    working_dir: /path/to/project
+
+# Clone project and install with all dependencies
+- composer:
+    command: create-project
+    arguments: package/package /path/to/project ~1.0
+    working_dir: /path/to/project
+    prefer_dist: yes
+
+# Installs package globally
+- composer:
+    command: require
+    global_command: yes
+    arguments: my/package
+
+

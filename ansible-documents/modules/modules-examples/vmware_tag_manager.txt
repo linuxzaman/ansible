@@ -1,0 +1,76 @@
+EXAMPLES:
+
+- name: Add tags to a virtual machine
+  vmware_tag_manager:
+    hostname: '{{ vcenter_hostname }}'
+    username: '{{ vcenter_username }}'
+    password: '{{ vcenter_password }}'
+    validate_certs: no
+    tag_names:
+      - Sample_Tag_0002
+      - Category_0001:Sample_Tag_0003
+    object_name: Fedora_VM
+    object_type: VirtualMachine
+    state: add
+  delegate_to: localhost
+
+- name: Remove a tag from a virtual machine
+  vmware_tag_manager:
+    hostname: '{{ vcenter_hostname }}'
+    username: '{{ vcenter_username }}'
+    password: '{{ vcenter_password }}'
+    validate_certs: no
+    tag_names:
+      - Sample_Tag_0002
+    object_name: Fedora_VM
+    object_type: VirtualMachine
+    state: remove
+  delegate_to: localhost
+
+- name: Add tags to a distributed virtual switch
+  vmware_tag_manager:
+    hostname: '{{ vcenter_hostname }}'
+    username: '{{ vcenter_username }}'
+    password: '{{ vcenter_password }}'
+    validate_certs: no
+    tag_names:
+      - Sample_Tag_0003
+    object_name: Switch_0001
+    object_type: DistributedVirtualSwitch
+    state: add
+  delegate_to: localhost
+
+- name: Add tags to a distributed virtual portgroup
+  vmware_tag_manager:
+    hostname: '{{ vcenter_hostname }}'
+    username: '{{ vcenter_username }}'
+    password: '{{ vcenter_password }}'
+    validate_certs: no
+    tag_names:
+      - Sample_Tag_0004
+    object_name: Switch_0001:Portgroup_0001
+    object_type: DistributedVirtualPortgroup
+    state: add
+  delegate_to: localhost
+
+
+RETURN VALUES:
+
+tag_status:
+    description: metadata about tags related to object configuration
+    returned: on success
+    type: list
+    sample: {
+        "current_tags": [
+            "backup",
+            "security"
+        ],
+        "desired_tags": [
+            "security"
+        ],
+        "previous_tags": [
+            "backup",
+            "security"
+        ]
+    }
+

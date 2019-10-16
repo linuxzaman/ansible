@@ -1,0 +1,150 @@
+> VMWARE_GUEST_CUSTOM_ATTRIBUTES    (/usr/lib/python2.7/dist-packages/ansible/modules/cloud/vmware/vmware_guest_custom_attributes.py)
+
+        This module can be used to add, remove and update custom attributes for the given virtual machine.
+
+  * This module is maintained by The Ansible Community
+OPTIONS (= is mandatory):
+
+- attributes
+        A list of name and value of custom attributes that needs to be manage.
+        Value of custom attribute is not required and will be ignored, if `state' is set to `absent'.
+        [Default: []]
+
+= datacenter
+        Datacenter name where the virtual machine is located in.
+
+
+- folder
+        Absolute path to find an existing guest.
+        This is required parameter, if `name' is supplied and multiple virtual machines with same name are found.
+        [Default: (null)]
+
+- hostname
+        The hostname or IP address of the vSphere vCenter or ESXi server.
+        If the value is not specified in the task, the value of environment variable `VMWARE_HOST' will be used instead.
+        Environment variable support added in Ansible 2.6.
+        [Default: (null)]
+        type: str
+
+= name
+        Name of the virtual machine to work with.
+
+
+- password
+        The password of the vSphere vCenter or ESXi server.
+        If the value is not specified in the task, the value of environment variable `VMWARE_PASSWORD' will be used instead.
+        Environment variable support added in Ansible 2.6.
+        (Aliases: pass, pwd)[Default: (null)]
+        type: str
+
+- port
+        The port number of the vSphere vCenter or ESXi server.
+        If the value is not specified in the task, the value of environment variable `VMWARE_PORT' will be used instead.
+        Environment variable support added in Ansible 2.6.
+        [Default: 443]
+        type: int
+        version_added: 2.5
+
+- state
+        The action to take.
+        If set to `present', then custom attribute is added or updated.
+        If set to `absent', then custom attribute is removed.
+        (Choices: present, absent)[Default: present]
+
+- use_instance_uuid
+        Whether to use the VMWare instance UUID rather than the BIOS UUID.
+        [Default: False]
+        type: bool
+        version_added: 2.8
+
+- username
+        The username of the vSphere vCenter or ESXi server.
+        If the value is not specified in the task, the value of environment variable `VMWARE_USER' will be used instead.
+        Environment variable support added in Ansible 2.6.
+        (Aliases: admin, user)[Default: (null)]
+        type: str
+
+- uuid
+        UUID of the virtual machine to manage if known. This is VMware's unique identifier.
+        This is required parameter, if `name' is not supplied.
+        [Default: (null)]
+
+- validate_certs
+        Allows connection when SSL certificates are not valid. Set to `false' when certificates are not trusted.
+        If the value is not specified in the task, the value of environment variable `VMWARE_VALIDATE_CERTS' will be used instead.
+        Environment variable support added in Ansible 2.6.
+        If set to `yes', please make sure Python >= 2.7.9 is installed on the given machine.
+        [Default: True]
+        type: bool
+
+
+NOTES:
+      * Tested on vSphere 6.5
+
+
+REQUIREMENTS:  python >= 2.6, PyVmomi
+
+AUTHOR: Jimmy Conner (@cigamit), Abhijeet Kasurde (@Akasurde)
+        METADATA:
+          status:
+          - preview
+          supported_by: community
+        
+
+EXAMPLES:
+
+- name: Add virtual machine custom attributes
+  vmware_guest_custom_attributes:
+    hostname: "{{ vcenter_hostname }}"
+    username: "{{ vcenter_username }}"
+    password: "{{ vcenter_password }}"
+    uuid: 421e4592-c069-924d-ce20-7e7533fab926
+    state: present
+    attributes:
+      - name: MyAttribute
+        value: MyValue
+  delegate_to: localhost
+  register: attributes
+
+- name: Add multiple virtual machine custom attributes
+  vmware_guest_custom_attributes:
+    hostname: "{{ vcenter_hostname }}"
+    username: "{{ vcenter_username }}"
+    password: "{{ vcenter_password }}"
+    uuid: 421e4592-c069-924d-ce20-7e7533fab926
+    state: present
+    attributes:
+      - name: MyAttribute
+        value: MyValue
+      - name: MyAttribute2
+        value: MyValue2
+  delegate_to: localhost
+  register: attributes
+
+- name: Remove virtual machine Attribute
+  vmware_guest_custom_attributes:
+    hostname: "{{ vcenter_hostname }}"
+    username: "{{ vcenter_username }}"
+    password: "{{ vcenter_password }}"
+    uuid: 421e4592-c069-924d-ce20-7e7533fab926
+    state: absent
+    attributes:
+      - name: MyAttribute
+  delegate_to: localhost
+  register: attributes
+
+
+RETURN VALUES:
+
+custom_attributes:
+    description: metadata about the virtual machine attributes
+    returned: always
+    type: dict
+    sample: {
+        "mycustom": "my_custom_value",
+        "mycustom_2": "my_custom_value_2",
+        "sample_1": "sample_1_value",
+        "sample_2": "sample_2_value",
+        "sample_3": "sample_3_value"
+    }
+

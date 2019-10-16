@@ -1,0 +1,75 @@
+> PN_VROUTER_PIM_CONFIG    (/usr/lib/python2.7/dist-packages/ansible/modules/network/netvisor/pn_vrouter_pim_config.py)
+
+        This module can be used to modify pim parameters.
+
+  * This module is maintained by The Ansible Community
+OPTIONS (= is mandatory):
+
+- pn_cliswitch
+        Target switch to run the CLI on.
+        [Default: (null)]
+        type: str
+
+- pn_hello_interval
+        hello interval in seconds.
+        [Default: (null)]
+        type: str
+
+- pn_querier_timeout
+        igmp querier timeout in seconds.
+        [Default: (null)]
+        type: str
+
+- pn_query_interval
+        igmp query interval in seconds.
+        [Default: (null)]
+        type: str
+
+- pn_vrouter_name
+        name of service config.
+        [Default: (null)]
+        type: str
+
+= state
+        State the action to perform. Use `update' to modify the vrouter-pim-config.
+        (Choices: update)
+        type: str
+
+
+AUTHOR: Pluribus Networks (@rajaspachipulusu17)
+        METADATA:
+          status:
+          - preview
+          supported_by: community
+        
+
+EXAMPLES:
+
+- name: pim config modify
+  pn_vrouter_pim_config:
+    pn_cliswitch: '192.168.1.1'
+    pn_query_interval: '10'
+    pn_querier_timeout: '30'
+    state: 'update'
+    pn_vrouter_name: 'ansible-spine1-vrouter'
+
+
+RETURN VALUES:
+
+command:
+  description: the CLI command run on the target node.
+  returned: always
+  type: str
+stdout:
+  description: set of responses from the vrouter-pim-config command.
+  returned: always
+  type: list
+stderr:
+  description: set of error responses from the vrouter-pim-config command.
+  returned: on error
+  type: list
+changed:
+  description: indicates whether the CLI caused changes on the target.
+  returned: always
+  type: bool
+

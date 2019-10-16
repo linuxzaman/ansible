@@ -1,0 +1,456 @@
+> AZURE_RM_AUTOSCALE    (/usr/lib/python2.7/dist-packages/ansible/modules/cloud/azure/azure_rm_autoscale.py)
+
+        Create, delete an autoscale setting.
+
+  * This module is maintained by The Ansible Community
+OPTIONS (= is mandatory):
+
+- ad_user
+        Active Directory username. Use when authenticating with an Active Directory user rather than service principal.
+        [Default: (null)]
+        type: str
+
+- adfs_authority_url
+        Azure AD authority url. Use when authenticating with Username/password, and has your own ADFS authority.
+        [Default: (null)]
+        type: str
+        version_added: 2.6
+
+- api_profile
+        Selects an API profile to use when communicating with Azure services. Default value of `latest' is appropriate for public clouds;
+        future values will allow use with Azure Stack.
+        [Default: latest]
+        type: str
+        version_added: 2.5
+
+- append_tags
+        Use to control if tags field is canonical or just appends to existing tags.
+        When canonical, any tags not found in the tags parameter will be removed from the object's metadata.
+        [Default: True]
+        type: bool
+
+- auth_source
+        Controls the source of the credentials to use for authentication.
+        If not specified, ANSIBLE_AZURE_AUTH_SOURCE environment variable will be used and default to `auto' if variable is not defined.
+        `auto' will follow the default precedence of module parameters -> environment variables -> default profile in credential file
+        `~/.azure/credentials'.
+        When set to `cli', the credentials will be sources from the default Azure CLI profile.
+        Can also be set via the `ANSIBLE_AZURE_AUTH_SOURCE' environment variable.
+        When set to `msi', the host machine must be an azure resource with an enabled MSI extension. `subscription_id' or the environment
+        variable `AZURE_SUBSCRIPTION_ID' can be used to identify the subscription ID if the resource is granted access to more than one
+        subscription, otherwise the first subscription is chosen.
+        The `msi' was added in Ansible 2.6.
+        (Choices: auto, cli, credential_file, env, msi)[Default: (null)]
+        type: str
+        version_added: 2.5
+
+- cert_validation_mode
+        Controls the certificate validation behavior for Azure endpoints. By default, all modules will validate the server certificate,
+        but when an HTTPS proxy is in use, or against Azure Stack, it may be necessary to disable this behavior by passing `ignore'. Can
+        also be set via credential file profile or the `AZURE_CERT_VALIDATION' environment variable.
+        (Choices: ignore, validate)[Default: (null)]
+        type: str
+        version_added: 2.5
+
+- client_id
+        Azure client ID. Use when authenticating with a Service Principal.
+        [Default: (null)]
+        type: str
+
+- cloud_environment
+        For cloud environments other than the US public cloud, the environment name (as defined by Azure Python SDK, eg,
+        `AzureChinaCloud', `AzureUSGovernment'), or a metadata discovery endpoint URL (required for Azure Stack). Can also be set via
+        credential file profile or the `AZURE_CLOUD_ENVIRONMENT' environment variable.
+        [Default: AzureCloud]
+        type: str
+        version_added: 2.4
+
+- enabled
+        Specifies whether automatic scaling is enabled for the resource.
+        [Default: True]
+        type: bool
+
+- location
+        location of the resource.
+        [Default: (null)]
+
+= name
+        name of the resource.
+
+
+- notifications
+        The collection of notifications.
+        [Default: (null)]
+        suboptions:
+          custom_emails:
+            description:
+            - The custom e-mails list. This value can be null or empty, in which case this
+              attribute will be ignored.
+          send_to_subscription_administrator:
+            description:
+            - A value indicating whether to send email to subscription administrator.
+            type: bool
+          send_to_subscription_co_administrators:
+            description:
+            - A value indicating whether to send email to subscription co-administrators.
+            type: bool
+          webhooks:
+            description:
+            - The list of webhook notifications service uri.
+        
+
+- password
+        Active Directory user password. Use when authenticating with an Active Directory user rather than service principal.
+        [Default: (null)]
+
+- profile
+        Security profile found in ~/.azure/credentials file.
+        [Default: (null)]
+        type: str
+
+- profiles
+        The collection of automatic scaling profiles that specify different scaling parameters for different time periods.
+        A maximum of 20 profiles can be specified.
+        [Default: (null)]
+        suboptions:
+          count:
+            description:
+            - The number of instances that will be set if metrics are not available for evaluation.
+            - The default is only used if the current instance count is lower than the default.
+            required: true
+          fixed_date_end:
+            description:
+            - The specific date-time end for the profile.
+            - This element is not used if the Recurrence element is used.
+          fixed_date_start:
+            description:
+            - The specific date-time start for the profile.
+            - This element is not used if the Recurrence element is used.
+          fixed_date_timezone:
+            description:
+            - The specific date-time timezone for the profile.
+            - This element is not used if the Recurrence element is used.
+          max_count:
+            description:
+            - The maximum number of instances for the resource.
+            - The actual maximum number of instances is limited by the cores that are available
+              in the subscription.
+          min_count:
+            description:
+            - The minimum number of instances for the resource.
+          name:
+            description:
+            - The name of the profile.
+            required: true
+          recurrence_days:
+            description:
+            - The days of repeating times at which this profile begins.
+            - This element is not used if the FixedDate element is used.
+          recurrence_frequency:
+            choices:
+            - None
+            - Second
+            - Minute
+            - Hour
+            - Day
+            - Week
+            - Month
+            - Year
+            default: None
+            description:
+            - How often the schedule profile should take effect.
+            - If this value is `Week', meaning each week will have the same set of profiles.
+            - This element is not used if the FixedDate element is used.
+          recurrence_hours:
+            description:
+            - The hours of repeating times at which this profile begins.
+            - This element is not used if the FixedDate element is used.
+          recurrence_mins:
+            description:
+            - The mins of repeating times at which this profile begins.
+            - This element is not used if the FixedDate element is used.
+          recurrence_timezone:
+            description:
+            - The timezone of repeating times at which this profile begins.
+            - This element is not used if the FixedDate element is used.
+          rules:
+            description:
+            - The collection of rules that provide the triggers and parameters for the scaling
+              action.
+            - A maximum of 10 rules can be specified.
+            suboptions:
+              cooldown:
+                description:
+                - The amount of time (minutes) to wait since the last scaling action before
+                  this action occurs.
+                - It must be between 1 ~ 10080.
+              direction:
+                choices:
+                - Increase
+                - Decrease
+                description:
+                - Whether the scaling action increases or decreases the number of instances.
+              metric_name:
+                description:
+                - The name of the metric that defines what the rule monitors.
+                required: true
+              metric_resource_uri:
+                description:
+                - The resource identifier of the resource the rule monitors.
+              operator:
+                choices:
+                - Equals
+                - NotEquals
+                - GreaterThan
+                - GreaterThanOrEqual
+                - LessThan
+                - LessThanOrEqual
+                default: GreaterThan
+                description:
+                - The operator that is used to compare the metric data and the threshold.
+              statistic:
+                choices:
+                - Average
+                - Min
+                - Max
+                - Sum
+                default: Average
+                description:
+                - How the metrics from multiple instances are combined.
+              threshold:
+                default: 70
+                description:
+                - The threshold of the metric that triggers the scale action.
+              time_aggregation:
+                choices:
+                - Average
+                - Minimum
+                - Maximum
+                - Total
+                - Count
+                default: Average
+                description:
+                - How the data that is collected should be combined over time.
+              time_grain:
+                description:
+                - The granularity(minutes) of metrics the rule monitors.
+                - Must be one of the predefined values returned from metric definitions for
+                  the metric.
+                - Must be between 1 ~ 720.
+                required: true
+              time_window:
+                description:
+                - The range of time(minutes) in which instance data is collected.
+                - This value must be greater than the delay in metric collection, which can
+                  vary from resource-to-resource.
+                - Must be between 5 ~ 720.
+                required: true
+              type:
+                choices:
+                - PercentChangeCount
+                - ExactCount
+                - ChangeCount
+                description:
+                - The type of action that should occur when the scale rule fires.
+              value:
+                description:
+                - The number of instances that are involved in the scaling action.
+                - This value must be 1 or greater.
+        
+
+= resource_group
+        Resource group of the resource.
+
+
+- secret
+        Azure client secret. Use when authenticating with a Service Principal.
+        [Default: (null)]
+        type: str
+
+- state
+        Assert the state of the virtual network. Use `present' to create or update and `absent' to delete.
+        (Choices: present, absent)[Default: present]
+
+- subscription_id
+        Your Azure subscription Id.
+        [Default: (null)]
+        type: str
+
+- tags
+        Dictionary of string:string pairs to assign as metadata to the object.
+        Metadata tags on the object will be updated with any provided values.
+        To remove tags set append_tags option to false.
+        [Default: (null)]
+        type: dict
+
+- target
+        The identifier of the resource to apply autoscale setting.
+        It could be the resource id string.
+        It also could be a dict contains the `name', `subscription_id', `namespace', `types', `resource_group' of the resource.
+        [Default: (null)]
+
+- tenant
+        Azure tenant ID. Use when authenticating with a Service Principal.
+        [Default: (null)]
+        type: str
+
+
+NOTES:
+      * For authentication with Azure you can pass parameters, set environment variables, use a profile stored in
+        ~/.azure/credentials, or log in before you run your tasks or playbook with `az login'.
+      * Authentication is also possible using a service principal or Active Directory user.
+      * To authenticate via service principal, pass subscription_id, client_id, secret and tenant or set environment variables
+        AZURE_SUBSCRIPTION_ID, AZURE_CLIENT_ID, AZURE_SECRET and AZURE_TENANT.
+      * To authenticate via Active Directory user, pass ad_user and password, or set AZURE_AD_USER and AZURE_PASSWORD in the
+        environment.
+      * Alternatively, credentials can be stored in ~/.azure/credentials. This is an ini file containing a [default] section and
+        the following keys: subscription_id, client_id, secret and tenant or subscription_id, ad_user and password. It is also
+        possible to add additional profiles. Specify the profile by passing profile or setting AZURE_PROFILE in the environment.
+
+
+SEE ALSO:
+      * Sign in with Azure CLI
+           How to authenticate using the `az login' command.
+           https://docs.microsoft.com/en-us/cli/azure/authenticate-azure-cli?view=azure-cli-latest
+
+
+REQUIREMENTS:  python >= 2.7, azure >= 2.0.0
+
+AUTHOR: Yuwei Zhou (@yuwzho)
+        METADATA:
+          status:
+          - preview
+          supported_by: community
+        
+
+EXAMPLES:
+
+- name: Create an auto scale
+  azure_rm_autoscale:
+      target: "/subscriptions/xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx/resourceGroups/myResourceGroup/providers/Microsoft.Compute/virtualMachineScaleSets/myVmss"
+      enabled: true
+      profiles:
+      - count: '1'
+        recurrence_days:
+        - Monday
+        name: Auto created scale condition
+        recurrence_timezone: China Standard Time
+        recurrence_mins:
+        - '0'
+        min_count: '1'
+        max_count: '1'
+        recurrence_frequency: Week
+        recurrence_hours:
+        - '18'
+      name: scale
+      resource_group: myResourceGroup
+
+- name: Create an auto scale with compicated profile
+  azure_rm_autoscale:
+      target: "/subscriptions/xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx/resourceGroups/myResourceGroup/providers/Microsoft.Compute/virtualMachineScaleSets
+               /myVmss"
+      enabled: true
+      profiles:
+      - count: '1'
+        recurrence_days:
+        - Monday
+        name: Auto created scale condition 0
+        rules:
+        - Time_aggregation: Average
+          time_window: 10
+          direction: Increase
+          metric_name: Percentage CPU
+          metric_resource_uri: "/subscriptions/xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx/resourceGroups/myResourceGroup/providers/Microsoft.Compute/virtua
+                                lMachineScaleSets/vmss"
+          value: '1'
+          threshold: 70
+          cooldown: 5
+          time_grain: 1
+          statistic: Average
+          operator: GreaterThan
+          type: ChangeCount
+        max_count: '1'
+        recurrence_mins:
+        - '0'
+        min_count: '1'
+        recurrence_timezone: China Standard Time
+        recurrence_frequency: Week
+        recurrence_hours:
+        - '6'
+      notifications:
+      - email_admin: True
+        email_co_admin: False
+        custom_emails:
+        - yuwzho@microsoft.com
+      name: scale
+      resource_group: myResourceGroup
+
+- name: Delete an Azure Auto Scale Setting
+  azure_rm_autoscale:
+    state: absent
+    resource_group: myResourceGroup
+    name: scale
+
+
+RETURN VALUES:
+
+state:
+    description: Current state of the resource.
+    returned: always
+    type: dict
+    sample: {
+        "changed": false,
+        "enabled": true,
+        "id": "/subscriptions/xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx/resourceGroups/myResourceGroup/providers/microsoft.insights/autoscalesettings/scale",
+        "location": "eastus",
+        "name": "scale",
+        "notifications": [
+            {
+                "custom_emails": [
+                    "yuwzho@microsoft.com"
+                ],
+                "send_to_subscription_administrator": true,
+                "send_to_subscription_co_administrators": false,
+                "webhooks": []
+            }
+        ],
+        "profiles": [
+            {
+                "count": "1",
+                "max_count": "1",
+                "min_count": "1",
+                "name": "Auto created scale condition 0",
+                "recurrence_days": [
+                    "Monday"
+                ],
+                "recurrence_frequency": "Week",
+                "recurrence_hours": [
+                    "6"
+                ],
+                "recurrence_mins": [
+                    "0"
+                ],
+                "recurrence_timezone": "China Standard Time",
+                "rules": [
+                    {
+                        "cooldown": 5.0,
+                        "direction": "Increase",
+                        "metric_name": "Percentage CPU",
+                        "metric_resource_uri": "/subscriptions/xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx/resourceGroups/myResourceGroup/providers/Microsof
+                                                t.Compute/virtualMachineScaleSets/MyVmss",
+                        "operator": "GreaterThan",
+                        "statistic": "Average",
+                        "threshold": 70.0,
+                        "time_aggregation": "Average",
+                        "time_grain": 1.0,
+                        "time_window": 10.0,
+                        "type": "ChangeCount",
+                        "value": "1"
+                    }
+                ]
+            }
+        ],
+        "target": "/subscriptions/xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx/resourceGroups/myResourceGroup/providers/Microsoft.Compute/virtualMachineScale
+                   Sets/myVmss"
+    }
+

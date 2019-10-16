@@ -1,0 +1,59 @@
+> IPIFY_FACTS    (/usr/lib/python2.7/dist-packages/ansible/modules/net_tools/ipify_facts.py)
+
+        If behind NAT and need to know the public IP of your internet gateway.
+
+  * This module is maintained by The Ansible Community
+OPTIONS (= is mandatory):
+
+- api_url
+        URL of the ipify.org API service.
+        `?format=json' will be appended per default.
+        [Default: https://api.ipify.org/]
+        type: str
+
+- timeout
+        HTTP connection timeout in seconds.
+        [Default: 10]
+        type: int
+        version_added: 2.3
+
+- validate_certs
+        When set to `NO', SSL certificates will not be validated.
+        [Default: True]
+        type: bool
+        version_added: 2.4
+
+
+NOTES:
+      * Visit https://www.ipify.org to get more information.
+
+
+AUTHOR: René Moser (@resmo)
+        METADATA:
+          status:
+          - preview
+          supported_by: community
+        
+
+EXAMPLES:
+
+# Gather IP facts from ipify.org
+- name: Get my public IP
+  ipify_facts:
+
+# Gather IP facts from your own ipify service endpoint with a custom timeout
+- name: Get my public IP
+  ipify_facts:
+    api_url: http://api.example.com/ipify
+    timeout: 20
+
+
+RETURN VALUES:
+
+---
+ipify_public_ip:
+  description: Public IP of the internet gateway.
+  returned: success
+  type: str
+  sample: 1.2.3.4
+

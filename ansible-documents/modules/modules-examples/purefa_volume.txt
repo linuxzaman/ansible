@@ -1,0 +1,79 @@
+EXAMPLES:
+
+- name: Create new volume named foo with a QoS limit
+  purefa_volume:
+    name: foo
+    size: 1T
+    qos: 58M
+    fa_url: 10.10.10.2
+    api_token: e31060a7-21fc-e277-6240-25983c6c4592
+    state: present
+
+- name: Extend the size of an existing volume named foo
+  purefa_volume:
+    name: foo
+    size: 2T
+    fa_url: 10.10.10.2
+    api_token: e31060a7-21fc-e277-6240-25983c6c4592
+    state: present
+
+- name: Delete and eradicate volume named foo
+  purefa_volume:
+    name: foo
+    eradicate: yes
+    fa_url: 10.10.10.2
+    api_token: e31060a7-21fc-e277-6240-25983c6c4592
+    state: absent
+
+- name: Create clone of volume bar named foo
+  purefa_volume:
+    name: foo
+    target: bar
+    fa_url: 10.10.10.2
+    api_token: e31060a7-21fc-e277-6240-25983c6c4592
+    state: present
+
+- name: Overwrite volume bar with volume foo
+  purefa_volume:
+    name: foo
+    target: bar
+    overwrite: yes
+    fa_url: 10.10.10.2
+    api_token: e31060a7-21fc-e277-6240-25983c6c4592
+    state: present
+
+- name: Clear volume QoS from volume foo
+  purefa_volume:
+    name: foo
+    qos: 0
+    fa_url: 10.10.10.2
+    api_token: e31060a7-21fc-e277-6240-25983c6c4592
+    state: present
+
+
+RETURN VALUES:
+
+volume:
+    description: A dictionary describing the changed volume.  Only some
+        attributes below will be returned with various actions.
+    type: dict
+    returned: success
+    contains:
+        source:
+            description: Volume name of source volume used for volume copy
+            type: str
+        serial:
+            description: Volume serial number
+            type: str
+            sample: '361019ECACE43D83000120A4'
+        created:
+            description: Volume creation time
+            type: str
+            sample: '2019-03-13T22:49:24Z'
+        name:
+            description: Volume name
+            type: str
+        size:
+            description: Volume size in bytes
+            type: int
+

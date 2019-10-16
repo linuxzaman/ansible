@@ -1,0 +1,75 @@
+> NA_ELEMENTSW_SNAPSHOT_RESTORE    (/usr/lib/python2.7/dist-packages/ansible/modules/storage/netapp/na_elementsw_snapshot_restore.py)
+
+        Element OS Cluster restore snapshot to volume.
+
+  * This module is maintained by an Ansible Partner
+OPTIONS (= is mandatory):
+
+= account_id
+        Account ID or Name of Parent/Source Volume.
+
+
+= dest_volume_name
+        New Name of destination for restoring the snapshot
+
+
+= hostname
+        The hostname or IP address of the SolidFire cluster.
+
+
+= password
+        Password for the specified user.
+        (Aliases: pass)
+
+= src_snapshot_id
+        ID or Name of an existing snapshot.
+
+
+= src_volume_id
+        ID or Name of source active volume.
+
+
+= username
+        Please ensure that the user has the adequate permissions. For more information, please read the official documentation
+        https://mysupport.netapp.com/documentation/docweb/index.html?productID=62636&language=en-US.
+        (Aliases: user)
+
+
+NOTES:
+      * The modules prefixed with na\\_elementsw are built to support the SolidFire storage platform.
+
+
+REQUIREMENTS:  The modules were developed with SolidFire 10.1, solidfire-sdk-python (1.1.0.92) or greater. Install using 'pip install
+        solidfire-sdk-python'
+
+AUTHOR: NetApp Ansible Team (@carchi8py) <ng-ansibleteam@netapp.com>
+        METADATA:
+          status:
+          - preview
+          supported_by: certified
+        
+
+EXAMPLES:
+
+- name: Restore snapshot to volume
+     tags:
+     - elementsw_create_snapshot_restore
+     na_elementsw_snapshot_restore:
+       hostname: "{{ elementsw_hostname }}"
+       username: "{{ elementsw_username }}"
+       password: "{{ elementsw_password }}"
+       account_id: ansible-1
+       src_snapshot_id: snapshot_20171021
+       src_volume_id: volume-playarea
+       dest_volume_name: dest-volume-area
+
+
+RETURN VALUES:
+
+
+msg:
+    description: Success message
+    returned: success
+    type: str
+
+

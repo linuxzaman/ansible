@@ -1,0 +1,39 @@
+EXAMPLES:
+
+- name: "Enable access to tiny flavor to your tenant."
+  os_project_access:
+    cloud: mycloud
+    state: present
+    target_project_id: f0f1f2f3f4f5f67f8f9e0e1
+    resource_name: tiny
+    resource_type: nova_flavor
+
+
+- name: "Disable access to the given flavor to project"
+  os_project_access:
+    cloud: mycloud
+    state: absent
+    target_project_id: f0f1f2f3f4f5f67f8f9e0e1
+    resource_name: tiny
+    resource_type: nova_flavor
+
+
+RETURN VALUES:
+
+flavor:
+    description: Dictionary describing the flavor.
+    returned: On success when I(state) is 'present'
+    type: complex
+    contains:
+        id:
+            description: Flavor ID.
+            returned: success
+            type: str
+            sample: "515256b8-7027-4d73-aa54-4e30a4a4a339"
+        name:
+            description: Flavor name.
+            returned: success
+            type: str
+            sample: "tiny"
+
+

@@ -1,0 +1,140 @@
+EXAMPLES:
+
+- name: Get instance of HDInsight Cluster
+    azure_rm_hdinsightcluster_facts:
+      resource_group: myResourceGroup
+      name: myCluster
+
+  - name: List instances of HDInsight Cluster
+    azure_rm_hdinsightcluster_facts:
+      resource_group: myResourceGroup
+
+
+RETURN VALUES:
+
+clusters:
+    description: A list of dictionaries containing facts for HDInsight Cluster.
+    returned: always
+    type: complex
+    contains:
+        id:
+            description:
+                - The unique resource identifier of the HDInsight Cluster.
+            returned: always
+            type: str
+            sample: "/subscriptions/xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx/resourceGroups/myResourceGroup/providers/Microsoft.HDInsight/clusters/myCluster"
+        resource_group:
+            description:
+                - Name of an Azure resource group.
+            returned: always
+            type: str
+            sample: myResourceGroup
+        name:
+            description:
+                - The name of the HDInsight Cluster.
+            returned: always
+            type: str
+            sample: testaccount
+        location:
+            description:
+                - The location of the resource group to which the resource belongs.
+            returned: always
+            type: str
+            sample: westus
+        cluster_version:
+            description:
+                - The version of the cluster.
+            returned: always
+            type: str
+            sample: 3.6.1000.67
+        os_type:
+            description:
+                - The type of operating system.
+            returned: always
+            type: str
+            sample: linux
+        tier:
+            description:
+                - The cluster tier.
+            returned: always
+            type: str
+            sample: standard
+        cluster_definition:
+            description:
+                - The cluster definition.
+            contains:
+                kind:
+                    description:
+                        - The type of cluster.
+                    returned: always
+                    type: str
+                    sample: spark
+        compute_profile_roles:
+            description:
+                - The list of roles in the cluster.
+            type: list
+            suboptions:
+                name:
+                    description:
+                        - The name of the role.
+                    returned: always
+                    type: str
+                    sample: headnode
+                target_instance_count:
+                    description:
+                        - The instance count of the cluster.
+                    returned: always
+                    type: int
+                    sample: 2
+                vm_size:
+                    description:
+                        - The size of the VM
+                    returned: always
+                    type: str
+                    sample: Standard_D3
+                linux_profile:
+                    description:
+                        - The Linux OS profile.
+                    contains:
+                        username:
+                            description:
+                                - User name
+                            returned: always
+                            type: str
+                            sample: myuser
+        connectivity_endpoints:
+            description:
+                - Cluster's connectivity endpoints.
+            type: list
+            contains:
+                location:
+                    description:
+                        - Endpoint location.
+                    returned: always
+                    type: str
+                    sample: myCluster-ssh.azurehdinsight.net
+                name:
+                    description:
+                        - Endpoint name.
+                    returned: always
+                    type: str
+                    sample: SSH
+                port:
+                    description:
+                        - Endpoint port.
+                    returned: always
+                    type: int
+                    sample: 22
+                protocol:
+                    description:
+                        - Endpoint protocol.
+                    returned: always
+                    type: str
+                    sample: TCP
+        tags:
+            description:
+                - Tags
+            returned: always
+            type: complex
+            sample: {}
+

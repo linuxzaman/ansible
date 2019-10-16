@@ -1,0 +1,240 @@
+> CE_OSPF_VRF    (/usr/lib/python2.7/dist-packages/ansible/modules/network/cloudengine/ce_ospf_vrf.py)
+
+        Manages configuration of an OSPF VPN instance on HUAWEI CloudEngine switches.
+
+  * This module is maintained by The Ansible Community
+OPTIONS (= is mandatory):
+
+- bandwidth
+        Specifies the reference bandwidth used to assign ospf cost. Valid values are an integer, in Mbps, 1 - 2147483648, the default
+        value is 100.
+        [Default: (null)]
+
+- description
+        Specifies the description information of ospf process.
+        [Default: (null)]
+
+- lsaaholdinterval
+        Specifies the hold interval of arrive LSA when use the intelligent timer. Valid value is an integer, in millisecond, from 0 to
+        10000, the default value is 500.
+        [Default: (null)]
+
+- lsaainterval
+        Specifies the interval of arrive LSA when use the general timer. Valid value is an integer, in millisecond, from 0 to 10000.
+        [Default: (null)]
+
+- lsaalflag
+        Specifies the mode of timer to calculate interval of arrive LSA. If set the parameter but not specifies value, the default will
+        be used. If true use general timer. If false use intelligent timer.
+        [Default: no]
+        type: bool
+
+- lsaamaxinterval
+        Specifies the max interval of arrive LSA when use the intelligent timer. Valid value is an integer, in millisecond, from 0 to
+        10000, the default value is 1000.
+        [Default: (null)]
+
+- lsaastartinterval
+        Specifies the start interval of arrive LSA when use the intelligent timer. Valid value is an integer, in millisecond, from 0 to
+        10000, the default value is 500.
+        [Default: (null)]
+
+- lsaoholdinterval
+        Specifies the hold interval of originate LSA . Valid value is an integer, in millisecond, from 0 to 5000, the default value is
+        1000.
+        [Default: (null)]
+
+- lsaointerval
+        Specifies the interval of originate LSA . Valid value is an integer, in second, from 0 to 10, the default value is 5.
+        [Default: (null)]
+
+- lsaointervalflag
+        Specifies whether cancel the interval of LSA originate or not. If set the parameter but noe specifies value, the default will be
+        used. true:cancel the interval of LSA originate, the interval is 0. false:do not cancel the interval of LSA originate.
+        [Default: no]
+        type: bool
+
+- lsaomaxinterval
+        Specifies the max interval of originate LSA . Valid value is an integer, in millisecond, from 1 to 10000, the default value is
+        5000.
+        [Default: (null)]
+
+- lsaostartinterval
+        Specifies the start interval of originate LSA . Valid value is an integer, in millisecond, from 0 to 1000, the default value is
+        500.
+        [Default: (null)]
+
+= ospf
+        The ID of the ospf process. Valid values are an integer, 1 - 4294967295, the default value is 1.
+
+
+- route_id
+        Specifies the ospf private route id,. Valid values are a string, formatted as an IP address (i.e. "10.1.1.1") the length is 0 -
+        20.
+        [Default: (null)]
+
+- spfholdinterval
+        Specifies the hold interval to calculate SPF when use intelligent timer. Valid value is an integer, in millisecond, from 1 to
+        5000, the default value is 200.
+        [Default: (null)]
+
+- spfinterval
+        Specifies the interval to calculate SPF when use second level  timer. Valid value is an integer, in second, from 1 to 10.
+        [Default: (null)]
+
+- spfintervalmi
+        Specifies the interval to calculate SPF when use millisecond level  timer. Valid value is an integer, in millisecond, from 1 to
+        10000.
+        [Default: (null)]
+
+- spfintervaltype
+        Specifies the mode of timer which used to calculate SPF. If set the parameter but noe specifies value, the default will be used.
+        If is intelligent-timer, then use intelligent timer. If is timer, then use second level timer. If is millisecond, then use
+        millisecond level timer.
+        (Choices: intelligent-timer, timer, millisecond)[Default: intelligent-timer]
+
+- spfmaxinterval
+        Specifies the max interval to calculate SPF when use intelligent timer. Valid value is an integer, in millisecond, from 1 to
+        20000, the default value is 5000.
+        [Default: (null)]
+
+- spfstartinterval
+        Specifies the start interval to calculate SPF when use intelligent timer. Valid value is an integer, in millisecond, from 1 to
+        1000, the default value is 50.
+        [Default: (null)]
+
+- state
+        Specify desired state of the resource.
+        (Choices: present, absent)[Default: present]
+
+- vrf
+        Specifies the vpn instance which use ospf,length is 1 - 31. Valid values are a string.
+        [Default: _public_]
+
+
+AUTHOR: Yang yang (@QijunPan)
+        METADATA:
+          status:
+          - preview
+          supported_by: community
+        
+
+EXAMPLES:
+
+- name: ospf vrf module test
+  hosts: cloudengine
+  connection: local
+  gather_facts: no
+  vars:
+    cli:
+      host: "{{ inventory_hostname }}"
+      port: "{{ ansible_ssh_port }}"
+      username: "{{ username }}"
+      password: "{{ password }}"
+      transport: cli
+
+  tasks:
+
+  - name: Configure ospf route id
+    ce_ospf_vrf:
+      ospf: 2
+      route_id: 2.2.2.2
+      lsaointervalflag: False
+      lsaointerval: 2
+      provider: "{{ cli }}"
+
+
+RETURN VALUES:
+
+proposed:
+    description: k/v pairs of parameters passed into module
+    returned: verbose mode
+    type: dict
+    sample: {
+        "bandwidth": "100",
+        "description": null,
+        "lsaaholdinterval": "500",
+        "lsaainterval": null,
+        "lsaamaxinterval": "1000",
+        "lsaastartinterval": "500",
+        "lsaalflag": "False",
+        "lsaoholdinterval": "1000",
+        "lsaointerval": "2",
+        "lsaointervalflag": "False",
+        "lsaomaxinterval": "5000",
+        "lsaostartinterval": "500",
+        "process_id": "2",
+        "route_id": "2.2.2.2",
+        "spfholdinterval": "1000",
+        "spfinterval": null,
+        "spfintervalmi": null,
+        "spfintervaltype": "intelligent-timer",
+        "spfmaxinterval": "10000",
+        "spfstartinterval": "500",
+        "vrf": "_public_"
+    }
+existing:
+    description: k/v pairs of existing configuration
+    returned: verbose mode
+    type: dict
+    sample: {
+                "bandwidthReference": "100",
+                "description": null,
+                "lsaArrivalFlag": "false",
+                "lsaArrivalHoldInterval": "500",
+                "lsaArrivalInterval": null,
+                "lsaArrivalMaxInterval": "1000",
+                "lsaArrivalStartInterval": "500",
+                "lsaOriginateHoldInterval": "1000",
+                "lsaOriginateInterval": "2",
+                "lsaOriginateIntervalFlag": "false",
+                "lsaOriginateMaxInterval": "5000",
+                "lsaOriginateStartInterval": "500",
+                "processId": "2",
+                "routerId": "2.2.2.2",
+                "spfScheduleHoldInterval": "1000",
+                "spfScheduleInterval": null,
+                "spfScheduleIntervalMillisecond": null,
+                "spfScheduleIntervalType": "intelligent-timer",
+                "spfScheduleMaxInterval": "10000",
+                "spfScheduleStartInterval": "500",
+                "vrfName": "_public_"
+            }
+end_state:
+    description: k/v pairs of configuration after module execution
+    returned: verbose mode
+    type: dict
+    sample: {
+                "bandwidthReference": "100",
+                "description": null,
+                "lsaArrivalFlag": "false",
+                "lsaArrivalHoldInterval": "500",
+                "lsaArrivalInterval": null,
+                "lsaArrivalMaxInterval": "1000",
+                "lsaArrivalStartInterval": "500",
+                "lsaOriginateHoldInterval": "1000",
+                "lsaOriginateInterval": "2",
+                "lsaOriginateIntervalFlag": "false",
+                "lsaOriginateMaxInterval": "5000",
+                "lsaOriginateStartInterval": "500",
+                "processId": "2",
+                "routerId": "2.2.2.2",
+                "spfScheduleHoldInterval": "1000",
+                "spfScheduleInterval": null,
+                "spfScheduleIntervalMillisecond": null,
+                "spfScheduleIntervalType": "intelligent-timer",
+                "spfScheduleMaxInterval": "10000",
+                "spfScheduleStartInterval": "500",
+                "vrfName": "_public_"
+            }
+updates:
+    description: commands sent to the device
+    returned: always
+    type: list
+    sample: ["ospf 2"]
+changed:
+    description: check to see if a change was made on the device
+    returned: always
+    type: bool
+    sample: False
+

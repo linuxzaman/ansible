@@ -1,0 +1,35 @@
+> LLDP    (/usr/lib/python2.7/dist-packages/ansible/modules/net_tools/lldp.py)
+
+        Reads data out of lldpctl
+
+  * This module is maintained by The Ansible Community
+NOTES:
+      * Requires lldpd running and lldp enabled on switches
+
+
+REQUIREMENTS:  lldpctl
+
+AUTHOR: Andy Hill (@andyhky)
+        METADATA:
+          status:
+          - preview
+          supported_by: community
+        
+
+EXAMPLES:
+
+# Retrieve switch/port information
+ - name: Gather information from lldp
+   lldp:
+
+ - name: Print each switch/port
+   debug:
+    msg: "{{ lldp[item]['chassis']['name'] }} / {{ lldp[item]['port']['ifname'] }}"
+   with_items: "{{ lldp.keys() }}"
+
+# TASK: [Print each switch/port] ***********************************************************
+# ok: [10.13.0.22] => (item=eth2) => {"item": "eth2", "msg": "switch1.example.com / Gi0/24"}
+# ok: [10.13.0.22] => (item=eth1) => {"item": "eth1", "msg": "switch2.example.com / Gi0/3"}
+# ok: [10.13.0.22] => (item=eth0) => {"item": "eth0", "msg": "switch3.example.com / Gi0/3"}
+
+

@@ -1,0 +1,46 @@
+> BZR    (/usr/lib/python2.7/dist-packages/ansible/modules/source_control/bzr.py)
+
+        Manage `bzr' branches to deploy files or software.
+
+  * This module is maintained by The Ansible Community
+OPTIONS (= is mandatory):
+
+= dest
+        Absolute path of where the branch should be cloned to.
+
+
+- executable
+        Path to bzr executable to use. If not supplied, the normal mechanism for resolving binary paths will be used.
+        [Default: (null)]
+        version_added: 1.4
+
+- force
+        If `yes', any modified files in the working tree will be discarded.  Before 1.9 the default value was `yes'.
+        [Default: no]
+        type: bool
+
+= name
+        SSH or HTTP protocol address of the parent branch.
+        (Aliases: parent)
+
+- version
+        What version of the branch to clone.  This can be the bzr revno or revid.
+        [Default: head]
+
+
+AUTHOR: André Paramés (@andreparames)
+        METADATA:
+          status:
+          - preview
+          supported_by: community
+        
+
+EXAMPLES:
+
+# Example bzr checkout from Ansible Playbooks
+- bzr:
+    name: bzr+ssh://foosball.example.org/path/to/branch
+    dest: /srv/checkout
+    version: 22
+
+

@@ -1,0 +1,108 @@
+EXAMPLES:
+
+- name: Check that you can connect (GET) to a page and it returns a status 200
+  uri:
+    url: http://www.example.com
+
+- name: Check that a page returns a status 200 and fail if the word AWESOME is not in the page contents
+  uri:
+    url: http://www.example.com
+    return_content: yes
+  register: this
+  failed_when: "'AWESOME' not in this.content"
+
+- name: Create a JIRA issue
+  uri:
+    url: https://your.jira.example.com/rest/api/2/issue/
+    user: your_username
+    password: your_pass
+    method: POST
+    body: "{{ lookup('file','issue.json') }}"
+    force_basic_auth: yes
+    status_code: 201
+    body_format: json
+
+- name: Login to a form based webpage, then use the returned cookie to access the app in later tasks
+  uri:
+    url: https://your.form.based.auth.example.com/index.php
+    method: POST
+    body_format: form-urlencoded
+    body:
+      name: your_username
+      password: your_password
+      enter: Sign in
+    status_code: 302
+  register: login
+
+- name: Login to a form based webpage using a list of tuples
+  uri:
+    url: https://your.form.based.auth.example.com/index.php
+    method: POST
+    body_format: form-urlencoded
+    body:
+    - [ name, your_username ]
+    - [ password, your_password ]
+    - [ enter, Sign in ]
+    status_code: 302
+  register: login
+
+- name: Connect to website using a previously stored cookie
+  uri:
+    url: https://your.form.based.auth.example.com/dashboard.php
+    method: GET
+    return_content: yes
+    headers:
+      Cookie: "{{ login.set_cookie }}"
+
+- name: Queue build of a project in Jenkins
+  uri:
+    url: http://{{ jenkins.host }}/job/{{ jenkins.job }}/build?token={{ jenkins.token }}
+    user: "{{ jenkins.user }}"
+    password: "{{ jenkins.password }}"
+    method: GET
+    force_basic_auth: yes
+    status_code: 201
+
+- name: POST from contents of local file
+  uri:
+    url: https://httpbin.org/post
+    method: POST
+    src: file.json
+
+- name: POST from contents of remote file
+  uri:
+    url: https://httpbin.org/post
+    method: POST
+    src: /path/to/my/file.json
+    remote_src: yes
+
+
+RETURN VALUES:
+
+# The return information includes all the HTTP headers in lower-case.
+elapsed:
+  description: The number of seconds that elapsed while performing the download
+  returned: on success
+  type: int
+  sample: 23
+msg:
+  description: The HTTP message from the request
+  returned: always
+  type: str
+  sample: OK (unknown bytes)
+redirected:
+  description: Whether the request was redirected
+  returned: on success
+  type: bool
+  sample: false
+status:
+  description: The HTTP status code from the request
+  returned: always
+  type: int
+  sample: 200
+url:
+  description: The actual URL used for the request
+  returned: always
+  type: str
+  sample: https://www.ansible.com/
+

@@ -1,0 +1,58 @@
+EXAMPLES:
+
+- name: Install the spotify flatpak
+  flatpak:
+    name:  https://s3.amazonaws.com/alexlarsson/spotify-repo/spotify.flatpakref
+    state: present
+
+- name: Install the gedit flatpak package
+  flatpak:
+    name: https://git.gnome.org/browse/gnome-apps-nightly/plain/gedit.flatpakref
+    state: present
+
+- name: Install the gedit package from flathub for current user
+  flatpak:
+    name: org.gnome.gedit
+    state: present
+    method: user
+
+- name: Install the Gnome Calendar flatpak from the gnome remote system-wide
+  flatpak:
+    name: org.gnome.Calendar
+    state: present
+    remote: gnome
+
+- name: Remove the gedit flatpak
+  flatpak:
+    name: org.gnome.gedit
+    state: absent
+
+
+RETURN VALUES:
+
+command:
+  description: The exact flatpak command that was executed
+  returned: When a flatpak command has been executed
+  type: str
+  sample: "/usr/bin/flatpak install --user -y flathub org.gnome.Calculator"
+msg:
+  description: Module error message
+  returned: failure
+  type: str
+  sample: "Executable '/usr/local/bin/flatpak' was not found on the system."
+rc:
+  description: Return code from flatpak binary
+  returned: When a flatpak command has been executed
+  type: int
+  sample: 0
+stderr:
+  description: Error output from flatpak binary
+  returned: When a flatpak command has been executed
+  type: str
+  sample: "error: Error searching remote flathub: Can't find ref org.gnome.KDE"
+stdout:
+  description: Output from flatpak binary
+  returned: When a flatpak command has been executed
+  type: str
+  sample: "org.gnome.Calendar/x86_64/stable\tcurrent\norg.gnome.gitg/x86_64/stable\tcurrent\n"
+

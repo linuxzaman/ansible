@@ -1,0 +1,44 @@
+> ONYX_IGMP_INTERFACE    (/usr/lib/python2.7/dist-packages/ansible/modules/network/onyx/onyx_igmp_interface.py)
+
+        This module provides declarative management of IGMP interface configuration on Mellanox ONYX network devices.
+
+  * This module is maintained by The Ansible Community
+OPTIONS (= is mandatory):
+
+= name
+        interface name that we want to configure IGMP on it
+
+
+- state
+        IGMP Interface state.
+        (Choices: enabled, disabled)[Default: enabled]
+
+
+NOTES:
+      * Tested on ONYX 3.6.8130
+
+
+AUTHOR: Anas Badaha (@anasb)
+        METADATA:
+          status:
+          - preview
+          supported_by: community
+        
+
+EXAMPLES:
+
+- name: configure igmp interfcae
+  onyx_igmp_interface:
+    state: enabled
+    name: Eth1/1
+
+
+RETURN VALUES:
+
+commands:
+  description: The list of configuration mode commands to send to the device.
+  returned: always
+  type: list
+  sample:
+    - interface ethernet 1/1 ip igmp snooping fast-leave
+

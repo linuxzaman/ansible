@@ -1,0 +1,46 @@
+EXAMPLES:
+
+- name: configure configuration
+  aireos_config:
+    lines: sysname testDevice
+
+- name: diff the running-config against a provided config
+  aireos_config:
+    diff_against: intended
+    intended: "{{ lookup('file', 'master.cfg') }}"
+
+- name: load new acl into device
+  aireos_config:
+    lines:
+      - acl create testACL
+      - acl rule protocol testACL 1 any
+      - acl rule direction testACL 3 in
+    before: acl delete testACL
+
+- name: configurable backup path
+  aireos_config:
+    backup: yes
+    lines: sysname testDevice
+    backup_options:
+      filename: backup.cfg
+      dir_path: /home/user
+
+
+RETURN VALUES:
+
+commands:
+  description: The set of commands that will be pushed to the remote device
+  returned: always
+  type: list
+  sample: ['hostname foo', 'vlan 1', 'name default']
+updates:
+  description: The set of commands that will be pushed to the remote device
+  returned: always
+  type: list
+  sample: ['hostname foo', 'vlan 1', 'name default']
+backup_path:
+  description: The full path to the backup file
+  returned: when backup is yes
+  type: str
+  sample: /playbooks/ansible/backup/aireos_config.2016-07-16@22:28:34
+

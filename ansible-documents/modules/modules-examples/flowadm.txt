@@ -1,0 +1,84 @@
+EXAMPLES:
+
+# Limit SSH traffic to 100M via vnic0 interface
+- flowadm:
+    link: vnic0
+    flow: ssh_out
+    transport: tcp
+    local_port: 22
+    maxbw: 100M
+    state: present
+
+# Reset flow properties
+- flowadm:
+    name: dns
+    state: resetted
+
+# Configure policy for EF PHB (DSCP value of 101110 from RFC 2598) with a bandwidth of 500 Mbps and a high priority.
+- flowadm:
+    link: bge0
+    dsfield: '0x2e:0xfc'
+    maxbw: 500M
+    priority: high
+    flow: efphb-flow
+    state: present
+
+
+RETURN VALUES:
+
+name:
+    description: flow name
+    returned: always
+    type: str
+    sample: "http_drop"
+link:
+    description: flow's link
+    returned: if link is defined
+    type: str
+    sample: "vnic0"
+state:
+    description: state of the target
+    returned: always
+    type: str
+    sample: "present"
+temporary:
+    description: flow's persistence
+    returned: always
+    type: bool
+    sample: "True"
+priority:
+    description: flow's priority
+    returned: if priority is defined
+    type: str
+    sample: "low"
+transport:
+    description: flow's transport
+    returned: if transport is defined
+    type: str
+    sample: "tcp"
+maxbw:
+    description: flow's maximum bandwidth
+    returned: if maxbw is defined
+    type: str
+    sample: "100M"
+local_Ip:
+    description: flow's local IP address
+    returned: if local_ip is defined
+    type: str
+    sample: "10.0.0.42"
+local_port:
+    description: flow's local port
+    returned: if local_port is defined
+    type: int
+    sample: 1337
+remote_Ip:
+    description: flow's remote IP address
+    returned: if remote_ip is defined
+    type: str
+    sample: "10.0.0.42"
+dsfield:
+    description: flow's differentiated services value
+    returned: if dsfield is defined
+    type: str
+    sample: "0x2e:0xfc"
+

@@ -1,0 +1,283 @@
+> NETCONF_CONFIG    (/usr/lib/python2.7/dist-packages/ansible/modules/network/netconf/netconf_config.py)
+
+        Netconf is a network management protocol developed and standardized by the IETF. It is documented in RFC 6241. This module allows
+        the user to send a configuration XML file to a netconf device, and detects if there was a configuration change.
+
+  * This module is maintained by The Ansible Network Team
+OPTIONS (= is mandatory):
+
+- backup
+        This argument will cause the module to create a full backup of the current `running-config' from the remote device before any
+        changes are made. If the `backup_options' value is not given, the backup file is written to the `backup' folder in the playbook
+        root directory or role root directory, if playbook is part of an ansible role. If the directory does not exist, it is created.
+        [Default: no]
+        type: bool
+        version_added: 2.7
+
+- backup_options
+        This is a dict object containing configurable options related to backup file path. The value of this option is read only when
+        `backup' is set to `yes', if `backup' is set to `no' this option will be silently ignored.
+        [Default: (null)]
+        suboptions:
+          dir_path:
+            description:
+            - This option provides the path ending with directory name in which the backup
+              configuration file will be stored. If the directory does not exist it will be
+              first created and the filename is either the value of `filename' or default
+              filename as described in `filename' options description. If the path value
+              is not given in that case a `backup' directory will be created in the current
+              working directory and backup configuration will be copied in `filename' within
+              `backup' directory.
+            type: path
+          filename:
+            description:
+            - The filename to be used to store the backup configuration. If the the filename
+              is not given it will be generated based on the hostname, current time and date
+              in format defined by <hostname>_config.<current-date>@<current-time>
+        
+        type: dict
+        version_added: 2.8
+
+- commit
+        This boolean flag controls if the configuration changes should be committed or not after editing the candidate datastore. This
+        option is supported only if remote Netconf server supports :candidate capability. If the value is set to `False' commit won't be
+        issued after edit-config operation and user needs to handle commit or discard-changes explicitly.
+        [Default: True]
+        type: bool
+        version_added: 2.7
+
+- confirm
+        This argument will configure a timeout value for the commit to be confirmed before it is automatically rolled back. If the
+        `confirm_commit' argument is set to False, this argument is silently ignored. If the value of this argument is set to 0, the
+        commit is confirmed immediately. The remote host MUST support :candidate and :confirmed-commit capability for this option to .
+        [Default: 0]
+        version_added: 2.7
+
+- confirm_commit
+        This argument will execute commit operation on remote device. It can be used to confirm a previous commit.
+        [Default: no]
+        type: bool
+        version_added: 2.7
+
+- content
+        The configuration data as defined by the device's data models, the value can be either in xml string format or text format. The
+        format of the configuration should be supported by remote Netconf server
+        (Aliases: xml)[Default: (null)]
+
+- default_operation
+        The default operation for <edit-config> rpc, valid values are `merge', `replace' and `none'. If the default value is merge, the
+        configuration data in the `content' option is merged at the corresponding level in the `target' datastore. If the value is
+        replace the data in the `content' option completely replaces the configuration in the `target' datastore. If the value is none
+        the `target' datastore is unaffected by the configuration in the config option, unless and until the incoming configuration data
+        uses the `operation' operation to request a different operation.
+        (Choices: merge, replace, none)[Default: (null)]
+        version_added: 2.7
+
+- delete
+        It instructs the module to delete the configuration from value mentioned in `target' datastore.
+        [Default: no]
+        type: bool
+        version_added: 2.7
+
+- error_option
+        This option control the netconf server action after a error is occured while editing the configuration. If the value is `stop-on-
+        error' abort the config edit on first error, if value is `continue-on-error' it continues to process configuration data on error,
+        error is recorded and negative response is generated if any errors occur. If value is `rollback-on-error' it rollback to the
+        original configuration in case any error occurs, this requires the remote Netconf server to support the :rollback-on-error
+        capability.
+        (Choices: stop-on-error, continue-on-error, rollback-on-error)[Default: stop-on-error]
+        version_added: 2.7
+
+- format
+        The format of the configuration provided as value of `content'. Accepted values are `xml' and `text' and the given configuration
+        format should be supported by remote Netconf server.
+        (Choices: xml, text)[Default: xml]
+        version_added: 2.7
+
+= host
+        Specifies the DNS host name or address for connecting to the remote device over the specified transport.  The value of host is
+        used as the destination address for the transport.
+
+        type: str
+
+- hostkey_verify
+        If set to `yes', the ssh host key of the device must match a ssh key present on the host if set to `no', the ssh host key of the
+        device is not checked.
+        [Default: True]
+        type: bool
+
+- lock
+        Instructs the module to explicitly lock the datastore specified as `target'. By setting the option value `always' is will
+        explicitly lock the datastore mentioned in `target' option. It the value is `never' it will not lock the `target' datastore. The
+        value `if-supported' lock the `target' datastore only if it is supported by the remote Netconf server.
+        (Choices: never, always, if-supported)[Default: always]
+        version_added: 2.7
+
+- look_for_keys
+        Enables looking in the usual locations for the ssh keys (e.g. :file:`~/.ssh/id_*`)
+        [Default: True]
+        type: bool
+
+- password
+        Specifies the password to use to authenticate the connection to the remote device.   This value is used to authenticate the SSH
+        session. If the value is not specified in the task, the value of environment variable `ANSIBLE_NET_PASSWORD' will be used
+        instead.
+        [Default: (null)]
+        type: str
+
+- port
+        Specifies the port to use when building the connection to the remote device.  The port value will default to port 830.
+        [Default: 830]
+        type: int
+
+- save
+        The `save' argument instructs the module to save the configuration in `target' datastore to the startup-config if changed and if
+        :startup capability is supported by Netconf server.
+        [Default: False]
+        type: bool
+        version_added: 2.4
+
+- source_datastore
+        Name of the configuration datastore to use as the source to copy the configuration to the datastore mentioned by `target' option.
+        The values can be either `running', `candidate', `startup' or a remote URL
+        (Aliases: source)[Default: (null)]
+        version_added: 2.7
+
+- src
+        Specifies the source path to the xml file that contains the configuration or configuration template to load. The path to the
+        source file can either be the full path on the Ansible control host or a relative path from the playbook or role root directory.
+        This argument is mutually exclusive with `xml'.
+        [Default: (null)]
+        version_added: 2.4
+
+- ssh_keyfile
+        Specifies the SSH key to use to authenticate the connection to the remote device.   This value is the path to the key used to
+        authenticate the SSH session. If the value is not specified in the task, the value of environment variable
+        `ANSIBLE_NET_SSH_KEYFILE' will be used instead.
+        [Default: (null)]
+        type: path
+
+- target
+        Name of the configuration datastore to be edited. - auto, uses candidate and fallback to running - candidate, edit <candidate/>
+        datastore and then commit - running, edit <running/> datastore directly
+        (Aliases: datastore)[Default: auto]
+        version_added: 2.4
+
+- timeout
+        Specifies the timeout in seconds for communicating with the network device for either connecting or sending commands.  If the
+        timeout is exceeded before the operation is completed, the module will error.
+        [Default: 10]
+        type: int
+
+- username
+        Configures the username to use to authenticate the connection to the remote device.  This value is used to authenticate the SSH
+        session. If the value is not specified in the task, the value of environment variable `ANSIBLE_NET_USERNAME' will be used
+        instead.
+        [Default: (null)]
+        type: str
+
+- validate
+        This boolean flag if set validates the content of datastore given in `target' option. For this option to work remote Netconf
+        server shoule support :validate capability.
+        [Default: False]
+        type: bool
+        version_added: 2.7
+
+
+NOTES:
+      * This module requires the netconf system service be enabled on the remote device being managed.
+      * This module supports devices with and without the candidate and confirmed-commit capabilities. It will always use the safer
+        feature.
+      * This module supports the use of connection=netconf
+      * For information on using netconf see the :ref:`Platform Options guide using Netconf<netconf_enabled_platform_options>`
+      * For more information on using Ansible to manage network devices see the :ref:`Ansible Network Guide <network_guide>`
+      * This module is supported on `ansible_network_os' network platforms. See the :ref:`Network Platform Options
+        <platform_options>` for details.
+
+
+REQUIREMENTS:  ncclient
+
+AUTHOR: Leandro Lisboa Penz (@lpenz)
+        METADATA:
+          status:
+          - preview
+          supported_by: network
+        
+
+EXAMPLES:
+
+- name: use lookup filter to provide xml configuration
+  netconf_config:
+    content: "{{ lookup('file', './config.xml') }}"
+
+- name: set ntp server in the device
+  netconf_config:
+    content: |
+        <config xmlns:xc="urn:ietf:params:xml:ns:netconf:base:1.0">
+            <system xmlns="urn:ietf:params:xml:ns:yang:ietf-system">
+                <ntp>
+                    <enabled>true</enabled>
+                    <server>
+                        <name>ntp1</name>
+                        <udp><address>127.0.0.1</address></udp>
+                    </server>
+                </ntp>
+            </system>
+        </config>
+
+- name: wipe ntp configuration
+  netconf_config:
+    content: |
+        <config xmlns:xc="urn:ietf:params:xml:ns:netconf:base:1.0">
+            <system xmlns="urn:ietf:params:xml:ns:yang:ietf-system">
+                <ntp>
+                    <enabled>false</enabled>
+                    <server operation="remove">
+                        <name>ntp1</name>
+                    </server>
+                </ntp>
+            </system>
+        </config>
+
+- name: configure interface while providing different private key file path (for connection=netconf)
+  netconf_config:
+    backup: yes
+  register: backup_junos_location
+  vars:
+    ansible_private_key_file: /home/admin/.ssh/newprivatekeyfile
+
+- name: configurable backup path
+  netconf_config:
+    backup: yes
+    backup_options:
+      filename: backup.cfg
+      dir_path: /home/user
+
+
+RETURN VALUES:
+
+server_capabilities:
+    description: list of capabilities of the server
+    returned: success
+    type: list
+    sample: ['urn:ietf:params:netconf:base:1.1','urn:ietf:params:netconf:capability:confirmed-commit:1.0','urn:ietf:params:netconf:capability:candidate:1.0']
+backup_path:
+  description: The full path to the backup file
+  returned: when backup is yes
+  type: str
+  sample: /playbooks/ansible/backup/config.2016-07-16@22:28:34
+diff:
+  description: If --diff option in enabled while running, the before and after configuration change are
+               returned as part of before and after key.
+  returned: when diff is enabled
+  type: dict
+  sample:
+    "after": "<rpc-reply>
+<data>
+<configuration>
+<version>17.3R1.10</version>...<--snip-->"
+    "before": "<rpc-reply>
+<data>
+<configuration>
+ <version>17.3R1.10</version>...<--snip-->"
+

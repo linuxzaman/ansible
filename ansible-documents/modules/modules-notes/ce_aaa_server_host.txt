@@ -1,0 +1,227 @@
+> CE_AAA_SERVER_HOST    (/usr/lib/python2.7/dist-packages/ansible/modules/network/cloudengine/ce_aaa_server_host.py)
+
+        Manages AAA server host configuration on HUAWEI CloudEngine switches.
+
+  * This module is maintained by The Ansible Community
+OPTIONS (= is mandatory):
+
+- hwtacacs_is_public_net
+        Set the public-net.
+        [Default: no]
+        type: bool
+
+- hwtacacs_is_secondary_server
+        Whether the server is secondary.
+        [Default: no]
+        type: bool
+
+- hwtacacs_server_host_name
+        Hwtacacs server host name.
+        [Default: (null)]
+
+- hwtacacs_server_ip
+        Server IPv4 address. Must be a valid unicast IP address. The value is a string of 0 to 255 characters, in dotted decimal
+        notation.
+        [Default: (null)]
+
+- hwtacacs_server_ipv6
+        Server IPv6 address. Must be a valid unicast IP address. The total length is 128 bits.
+        [Default: (null)]
+
+- hwtacacs_server_type
+        Hwtacacs server type.
+        (Choices: Authentication, Authorization, Accounting, Common)[Default: (null)]
+
+- hwtacacs_template
+        Name of a HWTACACS template. The value is a string of 1 to 32 case-insensitive characters.
+        [Default: (null)]
+
+- hwtacacs_vpn_name
+        VPN instance name.
+        [Default: (null)]
+
+- local_ftp_dir
+        FTP user directory. The value is a string of 1 to 255 characters.
+        [Default: (null)]
+
+- local_password
+        Login password of a user. The password can contain letters, numbers, and special characters. The value is a string of 1 to 255
+        characters.
+        [Default: (null)]
+
+- local_service_type
+        The type of local user login through, such as ftp ssh snmp telnet.
+        [Default: (null)]
+
+- local_user_group
+        Name of the user group where the user belongs. The user inherits all the rights of the user group. The value is a string of 1 to
+        32 characters.
+        [Default: (null)]
+
+- local_user_level
+        Login level of a local user. The value is an integer ranging from 0 to 15.
+        [Default: (null)]
+
+- local_user_name
+        Name of a local user. The value is a string of 1 to 253 characters.
+        [Default: (null)]
+
+- radius_group_name
+        RADIUS server group's name. The value is a string of 1 to 32 case-insensitive characters.
+        [Default: (null)]
+
+- radius_server_ip
+        IPv4 address of configured server. The value is a string of 0 to 255 characters, in dotted decimal notation.
+        [Default: (null)]
+
+- radius_server_ipv6
+        IPv6 address of configured server. The total length is 128 bits.
+        [Default: (null)]
+
+- radius_server_mode
+        Configured primary or secondary server for a particular server.
+        (Choices: Secondary-server, Primary-server)[Default: (null)]
+
+- radius_server_name
+        Hostname of configured server. The value is a string of 0 to 255 case-sensitive characters.
+        [Default: (null)]
+
+- radius_server_port
+        Configured server port for a particular server. The value is an integer ranging from 1 to 65535.
+        [Default: (null)]
+
+- radius_server_type
+        Type of Radius Server.
+        (Choices: Authentication, Accounting)[Default: (null)]
+
+- radius_vpn_name
+        Set VPN instance. The value is a string of 1 to 31 case-sensitive characters.
+        [Default: (null)]
+
+- state
+        Specify desired state of the resource.
+        (Choices: present, absent)[Default: present]
+
+
+AUTHOR: wangdezhuang (@QijunPan)
+        METADATA:
+          status:
+          - preview
+          supported_by: community
+        
+
+EXAMPLES:
+
+- name: AAA server host test
+  hosts: cloudengine
+  connection: local
+  gather_facts: no
+  vars:
+    cli:
+      host: "{{ inventory_hostname }}"
+      port: "{{ ansible_ssh_port }}"
+      username: "{{ username }}"
+      password: "{{ password }}"
+      transport: cli
+
+  tasks:
+
+  - name: "Config local user when use local scheme"
+    ce_aaa_server_host:
+      state: present
+      local_user_name: user1
+      local_password: 123456
+      provider: "{{ cli }}"
+
+  - name: "Undo local user when use local scheme"
+    ce_aaa_server_host:
+      state: absent
+      local_user_name: user1
+      local_password: 123456
+      provider: "{{ cli }}"
+
+  - name: "Config radius server ip"
+    ce_aaa_server_host:
+      state: present
+      radius_group_name: group1
+      radius_server_type: Authentication
+      radius_server_ip: 10.1.10.1
+      radius_server_port: 2000
+      radius_server_mode: Primary-server
+      radius_vpn_name: _public_
+      provider: "{{ cli }}"
+
+  - name: "Undo radius server ip"
+    ce_aaa_server_host:
+      state: absent
+      radius_group_name: group1
+      radius_server_type: Authentication
+      radius_server_ip: 10.1.10.1
+      radius_server_port: 2000
+      radius_server_mode: Primary-server
+      radius_vpn_name: _public_
+      provider: "{{ cli }}"
+
+  - name: "Config hwtacacs server ip"
+    ce_aaa_server_host:
+      state: present
+      hwtacacs_template: template
+      hwtacacs_server_ip: 10.10.10.10
+      hwtacacs_server_type: Authorization
+      hwtacacs_vpn_name: _public_
+      provider: "{{ cli }}"
+
+  - name: "Undo hwtacacs server ip"
+    ce_aaa_server_host:
+      state: absent
+      hwtacacs_template: template
+      hwtacacs_server_ip: 10.10.10.10
+      hwtacacs_server_type: Authorization
+      hwtacacs_vpn_name: _public_
+      provider: "{{ cli }}"
+
+
+RETURN VALUES:
+
+changed:
+    description: check to see if a change was made on the device
+    returned: always
+    type: bool
+    sample: true
+proposed:
+    description: k/v pairs of parameters passed into module
+    returned: always
+    type: dict
+    sample: {"hwtacacs_is_public_net": "false",
+             "hwtacacs_is_secondary_server": "false",
+             "hwtacacs_server_ip": "10.135.182.157",
+             "hwtacacs_server_type": "Authorization",
+             "hwtacacs_template": "wdz",
+             "hwtacacs_vpn_name": "_public_",
+             "local_password": "******",
+             "state": "present"}
+existing:
+    description: k/v pairs of existing aaa server host
+    returned: always
+    type: dict
+    sample: {"radius server ipv4": []}
+end_state:
+    description: k/v pairs of aaa params after module execution
+    returned: always
+    type: dict
+    sample: {"radius server ipv4": [
+             [
+                "10.1.10.1",
+                "Authentication",
+                "2000",
+                "Primary-server",
+                "_public_"
+              ]
+             ]}
+updates:
+    description: command sent to the device
+    returned: always
+    type: list
+    sample: ["hwtacacs server template test",
+             "hwtacacs server authorization 10.135.182.157 vpn-instance test_vpn public-net"]
+

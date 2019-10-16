@@ -1,0 +1,139 @@
+> NA_CDOT_LICENSE    (/usr/lib/python2.7/dist-packages/ansible/modules/storage/netapp/_na_cdot_license.py)
+
+        Add or remove licenses on NetApp ONTAP.
+
+DEPRECATED: 
+
+	Reason: Updated modules released with increased functionality
+	Will be removed in: Ansible 2.11
+	Alternatives: Use M(na_ontap_license) instead.
+
+
+  * This module is maintained by The Ansible Community
+OPTIONS (= is mandatory):
+
+= hostname
+        The hostname or IP address of the ONTAP instance.
+
+
+- licenses
+        List of licenses to add or remove.
+        Please note that trying to remove a non-existent license will throw an error.
+        [Default: (null)]
+        suboptions:
+          base:
+            description:
+            - Cluster Base License
+          cdmi:
+            description:
+            - CDMI License
+          cifs:
+            description:
+            - CIFS License
+          fcp:
+            description:
+            - FCP License
+          flexclone:
+            description:
+            - FlexClone License
+          iscsi:
+            description:
+            - iSCSI License
+          nfs:
+            description:
+            - NFS License
+          snaplock:
+            description:
+            - SnapLock License
+          snapmanagersuite:
+            description:
+            - SnapManagerSuite License
+          snapmirror:
+            description:
+            - SnapMirror License
+          snapprotectapps:
+            description:
+            - SnapProtectApp License
+          snaprestore:
+            description:
+            - SnapRestore License
+          snapvault:
+            description:
+            - SnapVault License
+          v_storageattach:
+            description:
+            - Virtual Attached Storage License
+        
+
+= password
+        Password for the specified user.
+        (Aliases: pass)
+
+- remove_expired
+        Remove licenses that have expired in the cluster.
+        [Default: (null)]
+        type: bool
+
+- remove_unused
+        Remove licenses that have no controller affiliation in the cluster.
+        [Default: (null)]
+        type: bool
+
+- serial_number
+        Serial number of the node associated with the license.
+        This parameter is used primarily when removing license for a specific service.
+        If this parameter is not provided, the cluster serial number is used by default.
+        [Default: (null)]
+
+= username
+        This can be a Cluster-scoped or SVM-scoped account, depending on whether a Cluster-level or SVM-level API is required. For more
+        information, please read the documentation https://mysupport.netapp.com/NOW/download/software/nmsdk/9.4/.
+        (Aliases: user)
+
+
+NOTES:
+      * The modules prefixed with na\\_cdot are built to support the ONTAP storage platform.
+
+
+REQUIREMENTS:  A physical or virtual clustered Data ONTAP system. The modules were developed with Clustered Data ONTAP 8.3, Ansible
+        2.2, netapp-lib (2015.9.25). Install using 'pip install netapp-lib'
+
+AUTHOR: Sumit Kumar (@timuster) <sumit4@netapp.com>
+        METADATA:
+          status:
+          - deprecated
+          supported_by: community
+        
+
+EXAMPLES:
+
+- name: Add licenses
+  na_cdot_license:
+    hostname: "{{ netapp_hostname }}"
+    username: "{{ netapp_username }}"
+    password: "{{ netapp_password }}"
+    serial_number: #################
+    licenses:
+      nfs: #################
+      cifs: #################
+      iscsi: #################
+      fcp: #################
+      snaprestore: #################
+      flexclone: #################
+
+- name: Remove licenses
+  na_cdot_license:
+    hostname: "{{ netapp_hostname }}"
+    username: "{{ netapp_username }}"
+    password: "{{ netapp_password }}"
+    remove_unused: false
+    remove_expired: true
+    serial_number: #################
+    licenses:
+      nfs: remove
+
+
+RETURN VALUES:
+
+
+

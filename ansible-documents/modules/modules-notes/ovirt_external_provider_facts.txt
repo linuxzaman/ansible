@@ -1,0 +1,101 @@
+> OVIRT_EXTERNAL_PROVIDER_FACTS    (/usr/lib/python2.7/dist-packages/ansible/modules/cloud/ovirt/ovirt_external_provider_facts.py)
+
+        Retrieve facts about one or more oVirt/RHV external providers.
+
+  * This module is maintained by The Ansible Community
+OPTIONS (= is mandatory):
+
+= auth
+        Dictionary with values needed to create HTTP/HTTPS connection to oVirt:
+        `username'[`required'] - The name of the user, something like `admin@internal'. Default value is set by `OVIRT_USERNAME'
+        environment variable.
+        `password'[`required'] - The password of the user. Default value is set by `OVIRT_PASSWORD' environment variable.
+        `url'- A string containing the API URL of the server, usually something like ``https://server.example.com/ovirt-engine/api'`.
+        Default value is set by `OVIRT_URL' environment variable. Either `url' or `hostname' is required.
+        `hostname' - A string containing the hostname of the server, usually something like ``server.example.com'`. Default value is set
+        by `OVIRT_HOSTNAME' environment variable. Either `url' or `hostname' is required.
+        `token' - Token to be used instead of login with username/password. Default value is set by `OVIRT_TOKEN' environment variable.
+        `insecure' - A boolean flag that indicates if the server TLS certificate and host name should be checked.
+        `ca_file' - A PEM file containing the trusted CA certificates. The certificate presented by the server will be verified using
+        these CA certificates. If ``ca_file'` parameter is not set, system wide CA certificate store is used. Default value is set by
+        `OVIRT_CAFILE' environment variable.
+        `kerberos' - A boolean flag indicating if Kerberos authentication should be used instead of the default basic authentication.
+        `headers' - Dictionary of HTTP headers to be added to each API call.
+
+        type: dict
+
+- fetch_nested
+        If `yes' the module will fetch additional data from the API.
+        It will fetch IDs of the VMs disks, snapshots, etc. User can configure to fetch other attributes of the nested entities by
+        specifying `nested_attributes'.
+        [Default: (null)]
+        type: bool
+        version_added: 2.3
+
+- name
+        Name of the external provider, can be used as glob expression.
+        [Default: (null)]
+
+- nested_attributes
+        Specifies list of the attributes which should be fetched from the API.
+        This parameter apply only when `fetch_nested' is `true'.
+        [Default: (null)]
+        type: list
+        version_added: 2.3
+
+= type
+        Type of the external provider.
+        (Choices: os_image, os_network, os_volume, foreman)
+
+
+NOTES:
+      * This module creates a new top-level `ovirt_external_providers' fact, which contains a list of external_providers.
+      * In order to use this module you have to install oVirt Python SDK. To ensure it's installed with correct version you can
+        create the following task: pip: name=ovirt-engine-sdk-python version=4.3.0
+
+
+REQUIREMENTS:  python >= 2.7, ovirt-engine-sdk-python >= 4.3.0
+
+AUTHOR: Ondra Machacek (@machacekondra)
+        METADATA:
+          status:
+          - preview
+          supported_by: community
+        
+
+EXAMPLES:
+
+# Examples don't contain auth parameter for simplicity,
+# look at ovirt_auth module to see how to reuse authentication:
+
+# Gather facts about all image external providers named C<glance>:
+- ovirt_external_provider_facts:
+    type: os_image
+    name: glance
+- debug:
+    var: ovirt_external_providers
+
+
+RETURN VALUES:
+
+external_host_providers:
+    description: "List of dictionaries of all the external_host_provider attributes. External provider attributes can be found on your oVirt/RHV instance
+                  at following url: http://ovirt.github.io/ovirt-engine-api-model/master/#types/external_host_provider."
+    returned: "On success and if parameter 'type: foreman' is used."
+    type: list
+openstack_image_providers:
+    description: "List of dictionaries of all the openstack_image_provider attributes. External provider attributes can be found on your oVirt/RHV instance
+                  at following url: http://ovirt.github.io/ovirt-engine-api-model/master/#types/openstack_image_provider."
+    returned: "On success and if parameter 'type: os_image' is used."
+    type: list
+openstack_volume_providers:
+    description: "List of dictionaries of all the openstack_volume_provider attributes. External provider attributes can be found on your oVirt/RHV instance
+                  at following url: http://ovirt.github.io/ovirt-engine-api-model/master/#types/openstack_volume_provider."
+    returned: "On success and if parameter 'type: os_volume' is used."
+    type: list
+openstack_network_providers:
+    description: "List of dictionaries of all the openstack_network_provider attributes. External provider attributes can be found on your oVirt/RHV instance
+                  at following url: http://ovirt.github.io/ovirt-engine-api-model/master/#types/openstack_network_provider."
+    returned: "On success and if parameter 'type: os_network' is used."
+    type: list
+

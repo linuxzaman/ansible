@@ -1,0 +1,63 @@
+EXAMPLES:
+
+# Note: These examples do not set authentication details, see the AWS Guide for details.
+
+# Create an AWS Glue connection
+- aws_glue_connection:
+    name: my-glue-connection
+    connection_properties:
+      JDBC_CONNECTION_URL: jdbc:mysql://mydb:3306/databasename
+      USERNAME: my-username
+      PASSWORD: my-password
+    state: present
+
+# Delete an AWS Glue connection
+- aws_glue_connection:
+    name: my-glue-connection
+    state: absent
+
+
+RETURN VALUES:
+
+connection_properties:
+    description: A dict of key-value pairs used as parameters for this connection.
+    returned: when state is present
+    type: dict
+    sample: {'JDBC_CONNECTION_URL':'jdbc:mysql://mydb:3306/databasename','USERNAME':'x','PASSWORD':'y'}
+connection_type:
+    description: The type of the connection.
+    returned: when state is present
+    type: str
+    sample: JDBC
+creation_time:
+    description: The time this connection definition was created.
+    returned: when state is present
+    type: str
+    sample: "2018-04-21T05:19:58.326000+00:00"
+description:
+    description: Description of the job being defined.
+    returned: when state is present
+    type: str
+    sample: My first Glue job
+last_updated_time:
+    description: The last time this connection definition was updated.
+    returned: when state is present
+    type: str
+    sample: "2018-04-21T05:19:58.326000+00:00"
+match_criteria:
+    description: A list of criteria that can be used in selecting this connection.
+    returned: when state is present
+    type: list
+    sample: []
+name:
+    description: The name of the connection definition.
+    returned: when state is present
+    type: str
+    sample: my-glue-connection
+physical_connection_requirements:
+    description: A dict of physical connection requirements, such as VPC and SecurityGroup,
+                 needed for making this connection successfully.
+    returned: when state is present
+    type: dict
+    sample: {'subnet-id':'subnet-aabbccddee'}
+

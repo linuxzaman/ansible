@@ -1,0 +1,222 @@
+> OS_IRONIC    (/usr/lib/python2.7/dist-packages/ansible/modules/cloud/openstack/os_ironic.py)
+
+        Create or Remove Ironic nodes from OpenStack.
+
+  * This module is maintained by The Ansible Community
+OPTIONS (= is mandatory):
+
+- api_timeout
+        How long should the socket layer wait before timing out for API calls. If this is omitted, nothing will be passed to the requests
+        library.
+        [Default: (null)]
+        type: int
+
+- auth
+        Dictionary containing auth information as needed by the cloud's auth plugin strategy. For the default `password' plugin, this
+        would contain `auth_url', `username', `password', `project_name' and any information about domains (for example,
+        `os_user_domain_name' or `os_project_domain_name') if the cloud supports them. For other plugins, this param will need to contain
+        whatever parameters that auth plugin requires. This parameter is not needed if a named cloud is provided or OpenStack OS_*
+        environment variables are present.
+        [Default: (null)]
+        type: dict
+
+- auth_type
+        Name of the auth plugin to use. If the cloud uses something other than password authentication, the name of the plugin should be
+        indicated here and the contents of the `auth' parameter should be updated accordingly.
+        [Default: (null)]
+        type: str
+
+- availability_zone
+        Ignored. Present for backwards compatibility
+        [Default: (null)]
+
+- ca_cert
+        A path to a CA Cert bundle that can be used as part of verifying SSL API requests.
+        (Aliases: cacert)[Default: (null)]
+        type: str
+
+- chassis_uuid
+        Associate the node with a pre-defined chassis.
+        [Default: (null)]
+
+- client_cert
+        A path to a client certificate to use as part of the SSL transaction.
+        (Aliases: cert)[Default: (null)]
+        type: str
+
+- client_key
+        A path to a client key to use as part of the SSL transaction.
+        (Aliases: key)[Default: (null)]
+        type: str
+
+- cloud
+        Named cloud or cloud config to operate against. If `cloud' is a string, it references a named cloud config as defined in an
+        OpenStack clouds.yaml file. Provides default values for `auth' and `auth_type'. This parameter is not needed if `auth' is
+        provided or if OpenStack OS_* environment variables are present. If `cloud' is a dict, it contains a complete cloud configuration
+        like would be in a section of clouds.yaml.
+        [Default: (null)]
+        type: raw
+
+= driver
+        The name of the Ironic Driver to use with this node.
+
+
+- driver_info
+        Information for this server's driver. Will vary based on which driver is in use. Any sub-field which is populated will be
+        validated during creation.
+        [Default: (null)]
+        suboptions:
+          console:
+            description:
+            - Information necessary to connect to this server's serial console.  Not all drivers
+              support this.
+          deploy:
+            description:
+            - Information necessary to deploy this server directly, without using Nova. THIS
+              IS NOT RECOMMENDED.
+          management:
+            description:
+            - Information necessary to interact with this server's management interface. May
+              be shared by power_info in some cases.
+            required: true
+          power:
+            description:
+            - Information necessary to turn this server on / off. This often includes such
+              things as IPMI username, password, and IP address.
+            required: true
+        
+
+- interface
+        Endpoint URL type to fetch from the service catalog.
+        (Aliases: endpoint_type)(Choices: admin, internal, public)[Default: public]
+        type: str
+        version_added: 2.3
+
+- ironic_url
+        If noauth mode is utilized, this is required to be set to the endpoint URL for the Ironic API.  Use with "auth" and "auth_type"
+        settings set to None.
+        [Default: (null)]
+
+- name
+        unique name identifier to be given to the resource.
+        [Default: (null)]
+
+= nics
+        A list of network interface cards, eg, " - mac: aa:bb:cc:aa:bb:cc"
+
+
+- properties
+        Definition of the physical characteristics of this server, used for scheduling purposes
+        [Default: (null)]
+        suboptions:
+          capabilities:
+            default: ''
+            description:
+            - special capabilities for the node, such as boot_option, node_role etc (see https://docs.openstack.org/ironic/latest/install/advanced.html
+              for more information)
+            version_added: '2.8'
+          cpu_arch:
+            default: x86_64
+            description:
+            - CPU architecture (x86_64, i686, ...)
+          cpus:
+            default: 1
+            description:
+            - Number of CPU cores this machine has
+          disk_size:
+            default: 1
+            description:
+            - size of first storage device in this machine (typically /dev/sda), in GB
+          ram:
+            default: 1
+            description:
+            - amount of RAM this machine has, in MB
+          root_device:
+            default: ''
+            description:
+            - Root disk device hints for deployment. (see https://docs.openstack.org/ironic/latest/install/include/root-device-hints.html
+              for allowed hints)
+            version_added: '2.8'
+        
+
+- region_name
+        Name of the region.
+        [Default: (null)]
+        type: str
+
+- skip_update_of_driver_password
+        Allows the code that would assert changes to nodes to skip the update if the change is a single line consisting of the password
+        field.  As of Kilo, by default, passwords are always masked to API requests, which means the logic as a result always attempts to
+        re-assert the password field.
+        [Default: no]
+        type: bool
+
+- state
+        Indicates desired state of the resource
+        (Choices: present, absent)[Default: present]
+
+- timeout
+        How long should ansible wait for the requested resource.
+        [Default: 180]
+        type: int
+
+- uuid
+        globally unique identifier (UUID) to be given to the resource. Will be auto-generated if not specified, and name is specified.
+        Definition of a UUID will always take precedence to a name value.
+        [Default: (null)]
+
+- validate_certs
+        Whether or not SSL API requests should be verified.
+        Before Ansible 2.3 this defaulted to `yes'.
+        (Aliases: verify)[Default: False]
+        type: bool
+
+- wait
+        Should ansible wait until the requested resource is complete.
+        [Default: True]
+        type: bool
+
+
+NOTES:
+      * The standard OpenStack environment variables, such as `OS_USERNAME' may be used instead of providing explicit values.
+      * Auth information is driven by openstacksdk, which means that values can come from a yaml config file in
+        /etc/ansible/openstack.yaml, /etc/openstack/clouds.yaml or ~/.config/openstack/clouds.yaml, then from standard environment
+        variables, then finally by explicit parameters in plays. More information can be found at
+        https://docs.openstack.org/openstacksdk/
+
+
+REQUIREMENTS:  jsonpatch, openstacksdk, python >= 2.7
+
+AUTHOR: Monty Taylor (@emonty)
+        METADATA:
+          status:
+          - preview
+          supported_by: community
+        
+
+EXAMPLES:
+
+# Enroll a node with some basic properties and driver info
+- os_ironic:
+    cloud: "devstack"
+    driver: "pxe_ipmitool"
+    uuid: "00000000-0000-0000-0000-000000000002"
+    properties:
+      cpus: 2
+      cpu_arch: "x86_64"
+      ram: 8192
+      disk_size: 64
+      capabilities: "boot_option:local"
+      root_device:
+        wwn: "0x4000cca77fc4dba1"
+    nics:
+      - mac: "aa:bb:cc:aa:bb:cc"
+      - mac: "dd:ee:ff:dd:ee:ff"
+    driver_info:
+      power:
+        ipmi_address: "1.2.3.4"
+        ipmi_username: "admin"
+        ipmi_password: "adminpass"
+    chassis_uuid: "00000000-0000-0000-0000-000000000001"
+
+

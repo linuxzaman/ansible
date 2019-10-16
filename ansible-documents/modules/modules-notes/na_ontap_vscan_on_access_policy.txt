@@ -1,0 +1,143 @@
+> NA_ONTAP_VSCAN_ON_ACCESS_POLICY    (/usr/lib/python2.7/dist-packages/ansible/modules/storage/netapp/na_ontap_vscan_on_access_policy.py)
+
+        Configure on access policy for Vscan (virus scan)
+
+  * This module is maintained by an Ansible Partner
+OPTIONS (= is mandatory):
+
+- file_ext_to_exclude
+        File extensions for which On-Access scanning must not be performed.
+        [Default: (null)]
+
+- file_ext_to_include
+        File extensions for which On-Access scanning is considered. The default value is '*', which means that all files are considered
+        for scanning except
+        those which are excluded from scanning.
+        [Default: (null)]
+
+- filters
+        A list of filters which can be used to define the scope of the On-Access policy more precisely. The filters can be added in any
+        order. Possible values
+        scan_ro_volume  Enable scans for read-only volume,
+        scan_execute_access  Scan only files opened with execute-access (CIFS only)
+        [Default: (null)]
+
+= hostname
+        The hostname or IP address of the ONTAP instance.
+
+        type: str
+
+- http_port
+        Override the default port (80 or 443) with this port
+        [Default: (null)]
+        type: int
+
+- https
+        Enable and disable https
+        [Default: False]
+        type: bool
+
+- is_scan_mandatory
+        Specifies whether access to a file is allowed if there are no external virus-scanning servers available for virus scanning. It is
+        true if not provided at the time of creating a policy.
+        [Default: (null)]
+        type: bool
+
+- max_file_size
+        Max file-size (in bytes) allowed for scanning. The default value of 2147483648 (2GB) is taken if not provided at the time of
+        creating a policy.
+        [Default: (null)]
+
+- ontapi
+        The ontap api version to use
+        [Default: (null)]
+        type: int
+
+= password
+        Password for the specified user.
+        (Aliases: pass)
+        type: str
+
+- paths_to_exclude
+        File paths for which On-Access scanning must not be performed.
+        [Default: (null)]
+
+= policy_name
+        The name of the policy
+
+
+- scan_files_with_no_ext
+        Specifies whether files without any extension are considered for scanning or not.
+        [Default: True]
+
+- state
+        Whether a Vscan on Access policy is present or not
+        (Choices: present, absent)[Default: present]
+
+= username
+        This can be a Cluster-scoped or SVM-scoped account, depending on whether a Cluster-level or SVM-level API is required. For more
+        information, please read the documentation https://mysupport.netapp.com/NOW/download/software/nmsdk/9.4/.
+        (Aliases: user)
+        type: str
+
+- validate_certs
+        If set to `no', the SSL certificates will not be validated.
+        This should only set to `False' used on personally controlled sites using self-signed certificates.
+        [Default: True]
+        type: bool
+
+= vserver
+        the name of the data vserver to use.
+
+
+
+NOTES:
+      * The modules prefixed with na\\_ontap are built to support the ONTAP storage platform.
+
+
+REQUIREMENTS:  A physical or virtual clustered Data ONTAP system. The modules support Data ONTAP 9.1 and onward, Ansible 2.6, Python2
+        netapp-lib (2017.10.30) or later. Install using 'pip install netapp-lib', Python3 netapp-lib (2018.11.13) or
+        later. Install using 'pip install netapp-lib', To enable http on the cluster you must run the following commands
+        'set -privilege advanced;' 'system services web modify -http-enabled true;'
+
+AUTHOR: NetApp Ansible Team (@carchi8py) <ng-ansibleteam@netapp.com>
+        METADATA:
+          status:
+          - preview
+          supported_by: certified
+        
+
+EXAMPLES:
+
+- name: Create Vscan On Access Policy
+      na_ontap_vscan_on_access_policy:
+        state: present
+        username: '{{ netapp_username }}'
+        password: '{{ netapp_password }}'
+        hostname: '{{ netapp_hostname }}'
+        vserver: carchi-vsim2
+        policy_name: carchi_policy
+        file_ext_to_exclude: ['exe', 'yml']
+    - name: modify Vscan on Access Policy
+      na_ontap_vscan_on_access_policy:
+        state: present
+        username: '{{ netapp_username }}'
+        password: '{{ netapp_password }}'
+        hostname: '{{ netapp_hostname }}'
+        vserver: carchi-vsim2
+        policy_name: carchi_policy
+        file_ext_to_exclude: ['exe', 'yml', 'py']
+    - name: Delete On Access Policy
+      na_ontap_vscan_on_access_policy:
+        state: absent
+        username: '{{ netapp_username }}'
+        password: '{{ netapp_password }}'
+        hostname: '{{ netapp_hostname }}'
+        vserver: carchi-vsim2
+        policy_name: carchi_policy
+
+
+RETURN VALUES:
+
+
+

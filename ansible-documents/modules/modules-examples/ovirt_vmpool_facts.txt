@@ -1,0 +1,20 @@
+EXAMPLES:
+
+# Examples don't contain auth parameter for simplicity,
+# look at ovirt_auth module to see how to reuse authentication:
+
+# Gather facts about all vm pools which names start with C(centos):
+- ovirt_vmpool_facts:
+    pattern: name=centos*
+- debug:
+    var: ovirt_vmpools
+
+
+RETURN VALUES:
+
+ovirt_vm_pools:
+    description: "List of dictionaries describing the vmpools. Vm pool attributes are mapped to dictionary keys,
+                  all vmpools attributes can be found at following url: http://ovirt.github.io/ovirt-engine-api-model/master/#types/vm_pool."
+    returned: On success.
+    type: list
+

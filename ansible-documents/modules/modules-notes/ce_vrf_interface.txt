@@ -1,0 +1,103 @@
+> CE_VRF_INTERFACE    (/usr/lib/python2.7/dist-packages/ansible/modules/network/cloudengine/ce_vrf_interface.py)
+
+        Manages interface specific VPN configuration of HUAWEI CloudEngine switches.
+
+  * This module is maintained by The Ansible Community
+OPTIONS (= is mandatory):
+
+- state
+        Manage the state of the resource.
+        (Choices: present, absent)[Default: present]
+
+= vpn_interface
+        An interface that can binding VPN instance, i.e. 40GE1/0/22, Vlanif10. Must be fully qualified interface name. Interface types,
+        such as 10GE, 40GE, 100GE, LoopBack, MEth, Tunnel, Vlanif....
+
+
+= vrf
+        VPN instance, the length of vrf name is 1 ~ 31, i.e. "test", but can not be `_public_'.
+
+
+
+NOTES:
+      * Ensure that a VPN instance has been created and the IPv4 address family has been enabled for the VPN instance.
+
+
+AUTHOR: Zhijin Zhou (@QijunPan)
+        METADATA:
+          status:
+          - preview
+          supported_by: community
+        
+
+EXAMPLES:
+
+- name: VRF interface test
+  hosts: cloudengine
+  connection: local
+  gather_facts: no
+  vars:
+    cli:
+      host: "{{ inventory_hostname }}"
+      port: "{{ ansible_ssh_port }}"
+      username: "{{ username }}"
+      password: "{{ password }}"
+      transport: cli
+
+  tasks:
+
+  - name: "Configure a VPN instance for the interface"
+    ce_vrf_interface:
+      vpn_interface: 40GE1/0/2
+      vrf: test
+      state: present
+      provider: "{{ cli }}"
+
+  - name: "Disable the association between a VPN instance and an interface"
+    ce_vrf_interface:
+      vpn_interface: 40GE1/0/2
+      vrf: test
+      state: absent
+      provider: "{{ cli }}"
+
+
+RETURN VALUES:
+
+proposed:
+    description: k/v pairs of parameters passed into module
+    returned: verbose mode
+    type: dict
+    sample: {
+                "state": "present",
+                "vpn_interface": "40GE2/0/17",
+                "vrf": "jss"
+             }
+existing:
+    description: k/v pairs of existing attributes on the interface
+    returned: verbose mode
+    type: dict
+    sample: {
+                "vpn_interface": "40GE2/0/17",
+                "vrf": null
+            }
+end_state:
+    description: k/v pairs of end attributes on the interface
+    returned: verbose mode
+    type: dict
+    sample: {
+                "vpn_interface": "40GE2/0/17",
+                "vrf": "jss"
+            }
+updates:
+    description: command list sent to the device
+    returned: always
+    type: list
+    sample: [
+                "ip binding vpn-instance jss",
+            ]
+changed:
+    description: check to see if a change was made on the device
+    returned: always
+    type: bool
+    sample: true
+

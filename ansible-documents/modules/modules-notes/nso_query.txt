@@ -1,0 +1,71 @@
+> NSO_QUERY    (/usr/lib/python2.7/dist-packages/ansible/modules/network/nso/nso_query.py)
+
+        This module provides support for querying data from Cisco NSO using XPath.
+
+  * This module is maintained by an Ansible Partner
+OPTIONS (= is mandatory):
+
+= fields
+        List of fields to select from matching nodes.
+
+
+= password
+        NSO password
+
+        type: str
+
+- timeout
+        JSON-RPC request timeout in seconds
+        [Default: 300]
+        type: int
+        version_added: 2.6
+
+= url
+        NSO JSON-RPC URL, http://localhost:8080/jsonrpc
+
+        type: str
+
+= username
+        NSO username
+
+        type: str
+
+- validate_certs
+        When set to true, validates the SSL certificate of NSO when using SSL
+        [Default: False]
+        type: bool
+
+= xpath
+        XPath selection relative to the root.
+
+
+
+REQUIREMENTS:  Cisco NSO version 3.4 or higher.
+
+AUTHOR: Claes Nästén (@cnasten)
+        METADATA:
+          status:
+          - preview
+          supported_by: certified
+        
+
+EXAMPLES:
+
+- name: Select device name and description
+  nso_query:
+    url: http://localhost:8080/jsonrpc
+    username: username
+    password: password
+    xpath: /ncs:devices/device
+    fields:
+    - name
+    - description
+
+
+RETURN VALUES:
+
+output:
+  description: Value of matching nodes
+  returned: success
+  type: list
+

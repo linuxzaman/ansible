@@ -1,0 +1,105 @@
+> PN_ROLE    (/usr/lib/python2.7/dist-packages/ansible/modules/network/netvisor/pn_role.py)
+
+        This module can be used to create, delete and modify user roles.
+
+  * This module is maintained by The Ansible Community
+OPTIONS (= is mandatory):
+
+- pn_access
+        type of access.
+        (Choices: read-only, read-write)[Default: (null)]
+        type: str
+
+- pn_cliswitch
+        Target switch to run the CLI on.
+        [Default: (null)]
+        type: str
+
+- pn_delete_from_users
+        delete from users.
+        [Default: (null)]
+        type: bool
+
+= pn_name
+        role name.
+
+        type: str
+
+- pn_running_config
+        display running configuration of switch.
+        [Default: (null)]
+        type: bool
+
+- pn_scope
+        local or fabric.
+        (Choices: local, fabric)[Default: (null)]
+        type: str
+
+- pn_shell
+        allow shell command.
+        [Default: (null)]
+        type: bool
+
+- pn_sudo
+        allow sudo from shell.
+        [Default: (null)]
+        type: bool
+
+= state
+        State the action to perform. Use `present' to create role and `absent' to delete role and `update' to modify role.
+        (Choices: present, absent, update)
+        type: str
+
+
+AUTHOR: Pluribus Networks (@rajaspachipulusu17)
+        METADATA:
+          status:
+          - preview
+          supported_by: community
+        
+
+EXAMPLES:
+
+- name: Role create
+  pn_role:
+    pn_cliswitch: 'sw01'
+    state: 'present'
+    pn_name: 'foo'
+    pn_scope: 'local'
+    pn_access: 'read-only'
+
+- name: Role delete
+  pn_role:
+    pn_cliswitch: 'sw01'
+    state: 'absent'
+    pn_name: 'foo'
+
+- name: Role modify
+  pn_role:
+    pn_cliswitch: 'sw01'
+    state: 'update'
+    pn_name: 'foo'
+    pn_access: 'read-write'
+    pn_sudo: true
+    pn_shell: true
+
+
+RETURN VALUES:
+
+command:
+  description: the CLI command run on the target node.
+  returned: always
+  type: str
+stdout:
+  description: set of responses from the role command.
+  returned: always
+  type: list
+stderr:
+  description: set of error responses from the role command.
+  returned: on error
+  type: list
+changed:
+  description: indicates whether the CLI caused changes on the target.
+  returned: always
+  type: bool
+

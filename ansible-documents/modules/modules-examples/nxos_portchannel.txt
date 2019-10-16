@@ -1,0 +1,21 @@
+EXAMPLES:
+
+# Ensure port-channel99 is created, add two members, and set to mode on
+- nxos_portchannel:
+    group: 99
+    members: ['Ethernet1/1','Ethernet1/2']
+    mode: 'active'
+    state: present
+
+
+RETURN VALUES:
+
+commands:
+    description: command sent to the device
+    returned: always
+    type: list
+    sample: ["interface Ethernet2/6", "no channel-group 12",
+             "interface Ethernet2/5", "no channel-group 12",
+             "interface Ethernet2/6", "channel-group 12 mode on",
+             "interface Ethernet2/5", "channel-group 12 mode on"]
+

@@ -1,0 +1,127 @@
+> VYOS_SYSTEM    (/usr/lib/python2.7/dist-packages/ansible/modules/network/vyos/vyos_system.py)
+
+        Runs one or more commands on remote devices running VyOS. This module can also be introspected to validate key parameters before
+        returning successfully.
+
+  * This module is maintained by The Ansible Network Team
+OPTIONS (= is mandatory):
+
+- domain_name
+        The new domain name to apply to the device.
+        [Default: (null)]
+
+- domain_search
+        A list of domain names to search. Mutually exclusive with `name_server'
+        [Default: (null)]
+
+- host_name
+        Configure the device hostname parameter. This option takes an ASCII string value.
+        [Default: (null)]
+
+- name_servers
+        A list of name servers to use with the device. Mutually exclusive with `domain_search'
+        (Aliases: name_server)[Default: (null)]
+
+- provider
+        *Deprecated*
+        Starting with Ansible 2.5 we recommend using `connection: network_cli'.
+        For more information please see the L(Network Guide, ../network/getting_started/network_differences.html#multiple-communication-
+        protocols).
+        HORIZONTALLINE
+        A dict object containing connection details.
+        [Default: (null)]
+        suboptions:
+          host:
+            description:
+            - Specifies the DNS host name or address for connecting to the remote device over
+              the specified transport.  The value of host is used as the destination address
+              for the transport.
+            required: true
+            type: str
+          password:
+            description:
+            - Specifies the password to use to authenticate the connection to the remote device.   This
+              value is used to authenticate the SSH session. If the value is not specified
+              in the task, the value of environment variable `ANSIBLE_NET_PASSWORD' will
+              be used instead.
+            type: str
+          port:
+            default: 22
+            description:
+            - Specifies the port to use when building the connection to the remote device.
+            type: int
+          ssh_keyfile:
+            description:
+            - Specifies the SSH key to use to authenticate the connection to the remote device.   This
+              value is the path to the key used to authenticate the SSH session. If the value
+              is not specified in the task, the value of environment variable `ANSIBLE_NET_SSH_KEYFILE'
+              will be used instead.
+            type: path
+          timeout:
+            default: 10
+            description:
+            - Specifies the timeout in seconds for communicating with the network device for
+              either connecting or sending commands.  If the timeout is exceeded before the
+              operation is completed, the module will error.
+            type: int
+          username:
+            description:
+            - Configures the username to use to authenticate the connection to the remote
+              device.  This value is used to authenticate the SSH session. If the value is
+              not specified in the task, the value of environment variable `ANSIBLE_NET_USERNAME'
+              will be used instead.
+            type: str
+        
+        type: dict
+
+- state
+        Whether to apply (`present') or remove (`absent') the settings.
+        (Choices: present, absent)[Default: present]
+
+
+NOTES:
+      * Tested against VYOS 1.1.7
+      * For more information on using Ansible to manage network devices see the :ref:`Ansible Network Guide <network_guide>`
+
+
+AUTHOR: Nathaniel Case (@qalthos)
+        METADATA:
+          status:
+          - preview
+          supported_by: network
+        
+
+EXAMPLES:
+
+- name: configure hostname and domain-name
+  vyos_system:
+    host_name: vyos01
+    domain_name: test.example.com
+
+- name: remove all configuration
+  vyos_system:
+    state: absent
+
+- name: configure name servers
+  vyos_system:
+    name_servers
+      - 8.8.8.8
+      - 8.8.4.4
+
+- name: configure domain search suffixes
+  vyos_system:
+    domain_search:
+      - sub1.example.com
+      - sub2.example.com
+
+
+RETURN VALUES:
+
+commands:
+  description: The list of configuration mode commands to send to the device
+  returned: always
+  type: list
+  sample:
+    - set system hostname vyos01
+    - set system domain-name foo.example.com
+

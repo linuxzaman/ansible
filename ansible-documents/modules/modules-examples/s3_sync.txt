@@ -1,0 +1,97 @@
+EXAMPLES:
+
+- name: basic upload
+  s3_sync:
+    bucket: tedder
+    file_root: roles/s3/files/
+
+- name: all the options
+  s3_sync:
+    bucket: tedder
+    file_root: roles/s3/files
+    mime_map:
+      .yml: application/text
+      .json: application/text
+    key_prefix: config_files/web
+    file_change_strategy: force
+    permission: public-read
+    cache_control: "public, max-age=31536000"
+    include: "*"
+    exclude: "*.txt,.*"
+
+
+RETURN VALUES:
+
+filelist_initial:
+  description: file listing (dicts) from inital globbing
+  returned: always
+  type: list
+  sample: [{
+                "bytes": 151,
+                "chopped_path": "policy.json",
+                "fullpath": "roles/cf/files/policy.json",
+                "modified_epoch": 1477416706
+           }]
+filelist_local_etag:
+  description: file listing (dicts) including calculated local etag
+  returned: always
+  type: list
+  sample: [{
+                "bytes": 151,
+                "chopped_path": "policy.json",
+                "fullpath": "roles/cf/files/policy.json",
+                "mime_type": "application/json",
+                "modified_epoch": 1477416706,
+                "s3_path": "s3sync/policy.json"
+           }]
+filelist_s3:
+  description: file listing (dicts) including information about previously-uploaded versions
+  returned: always
+  type: list
+  sample: [{
+                "bytes": 151,
+                "chopped_path": "policy.json",
+                "fullpath": "roles/cf/files/policy.json",
+                "mime_type": "application/json",
+                "modified_epoch": 1477416706,
+                "s3_path": "s3sync/policy.json"
+           }]
+filelist_typed:
+  description: file listing (dicts) with calculated or overridden mime types
+  returned: always
+  type: list
+  sample: [{
+                "bytes": 151,
+                "chopped_path": "policy.json",
+                "fullpath": "roles/cf/files/policy.json",
+                "mime_type": "application/json",
+                "modified_epoch": 1477416706
+           }]
+filelist_actionable:
+  description: file listing (dicts) of files that will be uploaded after the strategy decision
+  returned: always
+  type: list
+  sample: [{
+                "bytes": 151,
+                "chopped_path": "policy.json",
+                "fullpath": "roles/cf/files/policy.json",
+                "mime_type": "application/json",
+                "modified_epoch": 1477931256,
+                "s3_path": "s3sync/policy.json",
+                "whysize": "151 / 151",
+                "whytime": "1477931256 / 1477929260"
+           }]
+uploaded:
+  description: file listing (dicts) of files that were actually uploaded
+  returned: always
+  type: list
+  sample: [{
+                "bytes": 151,
+                "chopped_path": "policy.json",
+                "fullpath": "roles/cf/files/policy.json",
+                "s3_path": "s3sync/policy.json",
+                "whysize": "151 / 151",
+                "whytime": "1477931637 / 1477931489"
+           }]
+
+

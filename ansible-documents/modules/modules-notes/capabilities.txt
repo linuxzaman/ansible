@@ -1,0 +1,52 @@
+> CAPABILITIES    (/usr/lib/python2.7/dist-packages/ansible/modules/system/capabilities.py)
+
+        This module manipulates files privileges using the Linux capabilities(7) system.
+
+  * This module is maintained by The Ansible Community
+OPTIONS (= is mandatory):
+
+= capability
+        Desired capability to set (with operator and flags, if state is `present') or remove (if state is `absent')
+        (Aliases: cap)
+        type: str
+
+= path
+        Specifies the path to the file to be managed.
+        (Aliases: key)
+        type: str
+
+- state
+        Whether the entry should be present or absent in the file's capabilities.
+        (Choices: absent, present)[Default: present]
+        type: str
+
+
+NOTES:
+      * The capabilities system will automatically transform operators and flags into the effective set, so for example,
+        `cap_foo=ep' will probably become `cap_foo+ep'.
+      * This module does not attempt to determine the final operator and flags to compare, so you will want to ensure that your
+        capabilities argument matches the final capabilities.
+
+
+AUTHOR: Nate Coraor (@natefoo)
+        METADATA:
+          status:
+          - preview
+          supported_by: community
+        
+
+EXAMPLES:
+
+- name: Set cap_sys_chroot+ep on /foo
+  capabilities:
+    path: /foo
+    capability: cap_sys_chroot+ep
+    state: present
+
+- name: Remove cap_net_bind_service from /bar
+  capabilities:
+    path: /bar
+    capability: cap_net_bind_service
+    state: absent
+
+

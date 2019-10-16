@@ -1,0 +1,67 @@
+EXAMPLES:
+
+- name: Check whether an account with the given account key exists
+  acme_account_info:
+    account_key_src: /etc/pki/cert/private/account.key
+    register: account_data
+- name: Verify that account exists
+  assert:
+    that:
+      - account_data.exists
+- name: Print account URI
+  debug: var=account_data.account_uri
+- name: Print account contacts
+  debug: var=account_data.account.contact
+
+- name: Check whether the account exists and is accessible with the given account key
+  acme_account_info:
+    account_key_content: "{{ acme_account_key }}"
+    account_uri: "{{ acme_account_uri }}"
+    register: account_data
+- name: Verify that account exists
+  assert:
+    that:
+      - account_data.exists
+- name: Print account contacts
+  debug: var=account_data.account.contact
+
+
+RETURN VALUES:
+
+exists:
+  description: Whether the account exists.
+  returned: always
+  type: bool
+
+account_uri:
+  description: ACME account URI, or None if account does not exist.
+  returned: always
+  type: str
+
+account:
+  description: The account information, as retrieved from the ACME server.
+  returned: if account exists
+  type: complex
+  contains:
+    contact:
+      description: the challenge resource that must be created for validation
+      returned: always
+      type: list
+      sample: "['mailto:me@example.com', 'tel:00123456789']"
+    status:
+      description: the account's status
+      returned: always
+      type: str
+      choices: ['valid', 'deactivated', 'revoked']
+      sample: valid
+    orders:
+      description: a URL where a list of orders can be retrieved for this account
+      returned: always
+      type: str
+      sample: https://example.ca/account/1/orders
+    public_account_key:
+      description: the public account key as a L(JSON Web Key,https://tools.ietf.org/html/rfc7517).
+      returned: always
+      type: str
+      sample: https://example.ca/account/1/orders
+

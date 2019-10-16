@@ -1,0 +1,70 @@
+EXAMPLES:
+
+- name: configure hostname and domain-name (default vrf=default)
+  iosxr_system:
+    hostname: iosxr01
+    domain_name: test.example.com
+    domain-search:
+      - ansible.com
+      - redhat.com
+      - cisco.com
+- name: remove configuration
+  iosxr_system:
+    hostname: iosxr01
+    domain_name: test.example.com
+    domain-search:
+      - ansible.com
+      - redhat.com
+      - cisco.com
+    state: absent
+- name: configure hostname and domain-name with vrf
+  iosxr_system:
+    hostname: iosxr01
+    vrf: nondefault
+    domain_name: test.example.com
+    domain-search:
+      - ansible.com
+      - redhat.com
+      - cisco.com
+- name: configure DNS lookup sources
+  iosxr_system:
+    lookup_source: MgmtEth0/0/CPU0/0
+    lookup_enabled: True
+- name: configure name servers
+  iosxr_system:
+    name_servers:
+      - 8.8.8.8
+      - 8.8.4.4
+
+
+RETURN VALUES:
+
+commands:
+  description: The list of configuration mode commands to send to the device
+  returned: always
+  type: list
+  sample:
+    - hostname iosxr01
+    - ip domain-name test.example.com
+xml:
+  description: NetConf rpc xml sent to device with transport C(netconf)
+  returned: always (empty list when no xml rpc to send)
+  type: list
+  version_added: 2.5
+  sample:
+    - '<config xmlns:xc="urn:ietf:params:xml:ns:netconf:base:1.0">
+    <ip-domain xmlns="http://cisco.com/ns/yang/Cisco-IOS-XR-ip-domain-cfg">
+    <vrfs>
+    <vrf>
+    <vrf-name>default</vrf-name>
+    <lists>
+    <list xc:operation="merge">
+    <order>0</order>
+    <list-name>redhat.com</list-name>
+    </list>
+    </lists>
+    </vrf>
+    </vrfs>
+    </ip-domain>
+    </config>'
+

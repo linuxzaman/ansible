@@ -1,0 +1,166 @@
+> ACME_ACCOUNT_INFO    (/usr/lib/python2.7/dist-packages/ansible/modules/crypto/acme/acme_account_info.py)
+
+        Allows to retrieve information on accounts a CA supporting the L(ACME protocol,https://tools.ietf.org/html/rfc8555), such as
+        L(Let's Encrypt,https://letsencrypt.org/). This module only works with the ACME v2 protocol.
+
+  * This module is maintained by The Ansible Community
+OPTIONS (= is mandatory):
+
+- account_key_content
+        Content of the ACME account RSA or Elliptic Curve key.
+        Mutually exclusive with `account_key_src'.
+        Required if `account_key_src' is not used.
+        `Warning': the content will be written into a temporary file, which will be deleted by Ansible when the module completes. Since
+        this is an important private key — it can be used to change the account key, or to revoke your certificates without knowing their
+        private keys —, this might not be acceptable.
+        In case `cryptography' is used, the content is not written into a temporary file. It can still happen that it is written to disk
+        by Ansible in the process of moving the module with its argument to the node where it is executed.
+        [Default: (null)]
+        type: str
+        version_added: 2.5
+
+- account_key_src
+        Path to a file containing the ACME account RSA or Elliptic Curve key.
+        RSA keys can be created with `openssl genrsa ...'. Elliptic curve keys can be created with `openssl ecparam -genkey ...'. Any
+        other tool creating private keys in PEM format can be used as well.
+        Mutually exclusive with `account_key_content'.
+        Required if `account_key_content' is not used.
+        (Aliases: account_key)[Default: (null)]
+        type: path
+
+- account_uri
+        If specified, assumes that the account URI is as given. If the account key does not match this account, or an account with this
+        URI does not exist, the module fails.
+        [Default: (null)]
+        type: str
+        version_added: 2.7
+
+- acme_directory
+        The ACME directory to use. This is the entry point URL to access CA server API.
+        For safety reasons the default is set to the Let's Encrypt staging server (for the ACME v1 protocol). This will create
+        technically correct, but untrusted certificates.
+        For Let's Encrypt, all staging endpoints can be found here: https://letsencrypt.org/docs/staging-environment/
+        For Let's Encrypt, the production directory URL for ACME v1 is https://acme-v01.api.letsencrypt.org/directory, and the production
+        directory URL for ACME v2 is https://acme-v02.api.letsencrypt.org/directory.
+        `Warning': So far, the module has only been tested against Let's Encrypt (staging and production) and against the L(Pebble
+        testing server,https://github.com/letsencrypt/Pebble).
+        [Default: https://acme-staging.api.letsencrypt.org/directory]
+        type: str
+
+- acme_version
+        The ACME version of the endpoint.
+        Must be 1 for the classic Let's Encrypt ACME endpoint, or 2 for the new standardized ACME v2 endpoint.
+        (Choices: 1, 2)[Default: 1]
+        type: int
+        version_added: 2.5
+
+- select_crypto_backend
+        Determines which crypto backend to use.
+        The default choice is `auto', which tries to use `cryptography' if available, and falls back to `openssl'.
+        If set to `openssl', will try to use the `openssl' binary.
+        If set to `cryptography', will try to use the L(cryptography,https://cryptography.io/) library.
+        (Choices: auto, cryptography, openssl)[Default: auto]
+        type: str
+        version_added: 2.7
+
+- validate_certs
+        Whether calls to the ACME directory will validate TLS certificates.
+        `Warning': Should `only ever' be set to `no' for testing purposes, for example when testing against a local Pebble server.
+        [Default: True]
+        type: bool
+        version_added: 2.5
+
+
+NOTES:
+      * The [acme_account] module allows to modify, create and delete ACME accounts.
+      * This module was called `acme_account_facts' before Ansible 2.8. The usage did not change.
+      * If a new enough version of the `cryptography' library is available (see Requirements for details), it will be used instead
+        of the `openssl' binary. This can be explicitly disabled or enabled with the `select_crypto_backend' option. Note that
+        using the `openssl' binary will be slower and less secure, as private key contents always have to be stored on disk (see
+        `account_key_content').
+      * Although the defaults are chosen so that the module can be used with the L(Let's Encrypt,https://letsencrypt.org/) CA, the
+        module can in principle be used with any CA providing an ACME endpoint.
+
+
+SEE ALSO:
+      * Module acme_account
+        Allows to create, modify or delete an ACME account.
+           https://docs.ansible.com/ansible/latest/modules/acme_account_module.html
+
+
+REQUIREMENTS:  python >= 2.6, either openssl or L(cryptography,https://cryptography.io/) >= 1.5
+
+AUTHOR: Felix Fontein (@felixfontein)
+        METADATA:
+          status:
+          - preview
+          supported_by: community
+        
+
+EXAMPLES:
+
+- name: Check whether an account with the given account key exists
+  acme_account_info:
+    account_key_src: /etc/pki/cert/private/account.key
+    register: account_data
+- name: Verify that account exists
+  assert:
+    that:
+      - account_data.exists
+- name: Print account URI
+  debug: var=account_data.account_uri
+- name: Print account contacts
+  debug: var=account_data.account.contact
+
+- name: Check whether the account exists and is accessible with the given account key
+  acme_account_info:
+    account_key_content: "{{ acme_account_key }}"
+    account_uri: "{{ acme_account_uri }}"
+    register: account_data
+- name: Verify that account exists
+  assert:
+    that:
+      - account_data.exists
+- name: Print account contacts
+  debug: var=account_data.account.contact
+
+
+RETURN VALUES:
+
+exists:
+  description: Whether the account exists.
+  returned: always
+  type: bool
+
+account_uri:
+  description: ACME account URI, or None if account does not exist.
+  returned: always
+  type: str
+
+account:
+  description: The account information, as retrieved from the ACME server.
+  returned: if account exists
+  type: complex
+  contains:
+    contact:
+      description: the challenge resource that must be created for validation
+      returned: always
+      type: list
+      sample: "['mailto:me@example.com', 'tel:00123456789']"
+    status:
+      description: the account's status
+      returned: always
+      type: str
+      choices: ['valid', 'deactivated', 'revoked']
+      sample: valid
+    orders:
+      description: a URL where a list of orders can be retrieved for this account
+      returned: always
+      type: str
+      sample: https://example.ca/account/1/orders
+    public_account_key:
+      description: the public account key as a L(JSON Web Key,https://tools.ietf.org/html/rfc7517).
+      returned: always
+      type: str
+      sample: https://example.ca/account/1/orders
+

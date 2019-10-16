@@ -1,0 +1,62 @@
+> PUREFB_S3ACC    (/usr/lib/python2.7/dist-packages/ansible/modules/storage/purestorage/purefb_s3acc.py)
+
+        Create or delete object store accounts on a Pure Stoage FlashBlade.
+
+  * This module is maintained by The Ansible Community
+OPTIONS (= is mandatory):
+
+- api_token
+        FlashBlade API token for admin privileged user.
+        [Default: (null)]
+        type: str
+
+- fb_url
+        FlashBlade management IP address or Hostname.
+        [Default: (null)]
+        type: str
+
+- name
+        The name of object store account
+        [Default: (null)]
+        type: str
+
+- state
+        Create or delete object store account
+        (Choices: absent, present)[Default: present]
+        type: str
+
+
+NOTES:
+      * This module requires the `purity_fb' Python library
+      * You must set `PUREFB_URL' and `PUREFB_API' environment variables if `fb_url' and `api_token' arguments are not passed to
+        the module directly
+
+
+REQUIREMENTS:  python >= 2.7, purity_fb >= 1.1
+
+AUTHOR: Pure Storage Ansible Team (@sdodsley) <pure-ansible-team@purestorage.com>
+        METADATA:
+          status:
+          - preview
+          supported_by: community
+        
+
+EXAMPLES:
+
+- name: Crrate object store account foo
+  purefb_s3acc:
+    name: foo
+    fb_url: 10.10.10.2
+    api_token: e31060a7-21fc-e277-6240-25983c6c4592
+
+- name: Delete object store account foo
+  purefb_s3acc:
+    name: foo
+    state: absent
+    fb_url: 10.10.10.2
+    api_token: e31060a7-21fc-e277-6240-25983c6c4592
+
+
+RETURN VALUES:
+
+

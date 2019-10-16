@@ -1,0 +1,157 @@
+> UTM_CA_HOST_KEY_CERT    (/usr/lib/python2.7/dist-packages/ansible/modules/web_infrastructure/sophos_utm/utm_ca_host_key_cert.py)
+
+        Create, update or destroy a ca host_key_cert entry in SOPHOS UTM. This module needs to have the REST Ability of the UTM to be
+        activated.
+
+  * This module is maintained by The Ansible Community
+OPTIONS (= is mandatory):
+
+= ca
+        A reference to an existing utm_ca_signing_ca or utm_ca_verification_ca object.
+
+
+= certificate
+        The certificate in PEM format.
+
+
+- comment
+        Optional comment string.
+        [Default: (null)]
+
+- encrypted
+        Optionally enable encryption.
+        [Default: False]
+        type: bool
+
+- headers
+        A dictionary of additional headers to be sent to POST and PUT requests.
+        Is needed for some modules
+        [Default: (null)]
+        type: dict
+
+- key
+        Optional private key in PEM format.
+        [Default: (null)]
+
+= meta
+        A reference to an existing utm_ca_meta_x509 object.
+
+
+= name
+        The name of the object. Will be used to identify the entry.
+
+
+- state
+        The desired state of the object.
+        `present' will create or update an object
+        `absent' will delete an object if it was present
+        (Choices: absent, present)[Default: present]
+        type: str
+
+= utm_host
+        The REST Endpoint of the Sophos UTM.
+
+        type: str
+
+- utm_port
+        The port of the REST interface.
+        [Default: 4444]
+        type: int
+
+- utm_protocol
+        The protocol of the REST Endpoint.
+        (Choices: http, https)[Default: https]
+        type: str
+
+= utm_token
+        The token used to identify at the REST-API. See https://www.sophos.com/en-us/medialibrary/PDFs/documentation/UTMonAWS/Sophos-UTM-
+        RESTful-API.pdf?la=en, Chapter 2.4.2.
+
+        type: str
+
+- validate_certs
+        Whether the REST interface's ssl certificate should be verified or not.
+        [Default: True]
+        type: bool
+
+
+AUTHOR: Stephan Schwarz (@stearz)
+        METADATA:
+          status:
+          - preview
+          supported_by: community
+        
+
+EXAMPLES:
+
+# Create a ca_host_key_cert entry
+- name: utm ca_host_key_cert
+  utm_ca_host_key_cert:
+    utm_host: sophos.host.name
+    utm_token: abcdefghijklmno1234
+    name: TestHostKeyCertEntry
+    ca: REF_ca/signing_ca_OBJECT_STRING
+    meta: REF_ca/meta_x509_OBJECT_STRING
+    certificate: |
+      --- BEGIN CERTIFICATE ---
+      . . .
+       . . .
+      . . .
+      --- END CERTIFICATE ---
+    state: present
+
+# Remove a ca_host_key_cert entry
+- name: utm ca_host_key_cert
+  utm_ca_host_key_cert:
+    utm_host: sophos.host.name
+    utm_token: abcdefghijklmno1234
+    name: TestHostKeyCertEntry
+    state: absent
+
+# Read a ca_host_key_cert entry
+- name: utm ca_host_key_cert
+  utm_ca_host_key_cert:
+    utm_host: sophos.host.name
+    utm_token: abcdefghijklmno1234
+    name: TestHostKeyCertEntry
+    state: info
+
+
+RETURN VALUES:
+
+result:
+    description: The utm object that was created
+    returned: success
+    type: complex
+    contains:
+        _ref:
+            description: The reference name of the object
+            type: string
+        _locked:
+            description: Whether or not the object is currently locked
+            type: boolean
+        _type:
+            description: The type of the object
+            type: string
+        name:
+            description: The name of the object
+            type: string
+        ca:
+            description: A reference to an existing utm_ca_signing_ca or utm_ca_verification_ca object.
+            type: string
+        meta:
+            description: A reference to an existing utm_ca_meta_x509 object.
+            type: string
+        certificate:
+            description: The certificate in PEM format
+            type: string
+        comment:
+            description: Comment string (may be empty string)
+            type: string
+        encrypted:
+            description: If encryption is enabled
+            type: bool
+        key:
+            description: Private key in PEM format (may be empty string)
+            type: string
+

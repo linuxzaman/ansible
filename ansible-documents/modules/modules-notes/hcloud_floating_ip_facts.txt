@@ -1,0 +1,95 @@
+> HCLOUD_FLOATING_IP_FACTS    (/usr/lib/python2.7/dist-packages/ansible/modules/cloud/hcloud/hcloud_floating_ip_facts.py)
+
+        Gather facts about your Hetzner Cloud Floating IPs.
+
+  * This module is maintained by The Ansible Community
+OPTIONS (= is mandatory):
+
+= api_token
+        This is the API Token for the Hetzner Cloud.
+
+        type: str
+
+- endpoint
+        This is the API Endpoint for the Hetzner Cloud.
+        [Default: https://api.hetzner.cloud/v1]
+        type: str
+
+- id
+        The ID of the Floating IP you want to get.
+        [Default: (null)]
+        type: int
+
+- label_selector
+        The label selector for the Floating IP you want to get.
+        [Default: (null)]
+        type: str
+
+
+SEE ALSO:
+      * Documentation for Hetzner Cloud API
+           Complete reference for the Hetzner Cloud API.
+           https://docs.hetzner.cloud/
+
+
+REQUIREMENTS:  hcloud-python >= 1.0.0
+
+AUTHOR: Lukas Kaemmerling (@lkaemmerling)
+        METADATA:
+          status:
+          - preview
+          supported_by: community
+        
+
+EXAMPLES:
+
+- name: Gather hcloud Floating ip facts
+  local_action:
+    module: hcloud_floating_ip_facts
+- name: Print the gathered facts
+  debug:
+    var: ansible_facts.hcloud_floating_ip_facts
+
+
+RETURN VALUES:
+
+hcloud_floating_ip_facts:
+    description: The Floating ip facts as list
+    returned: always
+    type: complex
+    contains:
+        id:
+            description: Numeric identifier of the Floating IP
+            returned: always
+            type: int
+            sample: 1937415
+        description:
+            description: Description of the Floating IP
+            returned: always
+            type: str
+            sample: Falkenstein DC 8
+        ip:
+            description: IP address of the Floating IP
+            returned: always
+            type: str
+            sample: 131.232.99.1
+        type:
+            description: Type of the Floating IP
+            returned: always
+            type: str
+            sample: ipv4
+        server:
+            description: Name of the server where the Floating IP is assigned to.
+            returned: always
+            type: str
+            sample: my-server
+        home_location:
+            description: Location the Floating IP was created in
+            returned: always
+            type: str
+            sample: fsn1
+        labels:
+            description: User-defined labels (key-value pairs)
+            returned: always
+            type: dict
+

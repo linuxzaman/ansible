@@ -1,0 +1,73 @@
+> PANOS_CERT_GEN_SSH    (/usr/lib/python2.7/dist-packages/ansible/modules/network/panos/_panos_cert_gen_ssh.py)
+
+        This module generates a self-signed certificate that can be used by GlobalProtect client, SSL connector, or otherwise. Root
+        certificate must be preset on the system first. This module depends on paramiko for ssh.
+
+DEPRECATED: 
+
+	Reason: Consolidating code base.
+	Will be removed in: Ansible 2.12
+	Alternatives: Use U(https://galaxy.ansible.com/PaloAltoNetworks/paloaltonetworks) instead.
+
+
+  * This module is maintained by The Ansible Community
+OPTIONS (= is mandatory):
+
+= cert_cn
+        Certificate CN (common name) embedded in the certificate signature.
+
+
+= cert_friendly_name
+        Human friendly certificate name (not CN but just a friendly name).
+
+
+= ip_address
+        IP address (or hostname) of PAN-OS device being configured.
+
+
+= key_filename
+        Location of the filename that is used for the auth. Either `key_filename' or `password' is required.
+
+
+= password
+        Password credentials to use for auth. Either `key_filename' or `password' is required.
+
+
+- rsa_nbits
+        Number of bits used by the RSA algorithm for the certificate generation.
+        [Default: 2048]
+
+= signed_by
+        Undersigning authority (CA) that MUST already be presents on the device.
+
+
+
+NOTES:
+      * Checkmode is not supported.
+
+
+REQUIREMENTS:  paramiko
+
+AUTHOR: Luigi Mori (@jtschichold), Ivan Bojer (@ivanbojer)
+        METADATA:
+          status:
+          - deprecated
+          supported_by: community
+        
+
+EXAMPLES:
+
+# Generates a new self-signed certificate using ssh
+- name: generate self signed certificate
+  panos_cert_gen_ssh:
+    ip_address: "192.168.1.1"
+    password: "paloalto"
+    cert_cn: "1.1.1.1"
+    cert_friendly_name: "test123"
+    signed_by: "root-ca"
+
+
+RETURN VALUES:
+
+# Default return values
+

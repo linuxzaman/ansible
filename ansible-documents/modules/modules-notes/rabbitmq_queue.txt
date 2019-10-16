@@ -1,0 +1,131 @@
+> RABBITMQ_QUEUE    (/usr/lib/python2.7/dist-packages/ansible/modules/messaging/rabbitmq/rabbitmq_queue.py)
+
+        This module uses rabbitMQ Rest API to create/delete queues
+
+  * This module is maintained by The Ansible Community
+OPTIONS (= is mandatory):
+
+- arguments
+        extra arguments for queue. If defined this argument is a key/value dictionary
+        [Default: {}]
+
+- auto_delete
+        if the queue should delete itself after all queues/queues unbound from it
+        [Default: no]
+        type: bool
+
+- auto_expires
+        How long a queue can be unused before it is automatically deleted (milliseconds)
+        [Default: forever]
+
+- ca_cert
+        CA certificate to verify SSL connection to management API.
+        (Aliases: cacert)[Default: (null)]
+        type: path
+        version_added: 2.3
+
+- client_cert
+        Client certificate to send on SSL connections to management API.
+        (Aliases: cert)[Default: (null)]
+        type: path
+        version_added: 2.3
+
+- client_key
+        Private key matching the client certificate.
+        (Aliases: key)[Default: (null)]
+        type: path
+        version_added: 2.3
+
+- dead_letter_exchange
+        Optional name of an exchange to which messages will be republished if they
+        are rejected or expire
+        [Default: (null)]
+
+- dead_letter_routing_key
+        Optional replacement routing key to use when a message is dead-lettered.
+        Original routing key will be used if unset
+        [Default: (null)]
+
+- durable
+        whether queue is durable or not
+        [Default: yes]
+        type: bool
+
+- login_host
+        RabbitMQ host for connection.
+        [Default: localhost]
+        type: str
+
+- login_password
+        RabbitMQ password for connection.
+        [Default: (null)]
+        type: str
+
+- login_port
+        RabbitMQ management API port.
+        [Default: 15672]
+        type: str
+
+- login_protocol
+        RabbitMQ management API protocol.
+        (Choices: http, https)[Default: http]
+        type: str
+        version_added: 2.3
+
+- login_user
+        RabbitMQ user for connection.
+        [Default: guest]
+        type: str
+
+- max_length
+        How many messages can the queue contain before it starts rejecting
+        [Default: no limit]
+
+- max_priority
+        Maximum number of priority levels for the queue to support.
+        If not set, the queue will not support message priorities.
+        Larger numbers indicate higher priority.
+        [Default: (null)]
+        version_added: 2.4
+
+- message_ttl
+        How long a message can live in queue before it is discarded (milliseconds)
+        [Default: forever]
+
+= name
+        Name of the queue
+
+
+- state
+        Whether the queue should be present or absent
+        (Choices: present, absent)[Default: present]
+
+- vhost
+        RabbitMQ virtual host.
+        [Default: /]
+        type: str
+
+
+REQUIREMENTS:  requests >= 1.0.0
+
+AUTHOR: Manuel Sousa (@manuel-sousa)
+        METADATA:
+          status:
+          - preview
+          supported_by: community
+        
+
+EXAMPLES:
+
+# Create a queue
+- rabbitmq_queue:
+    name: myQueue
+
+# Create a queue on remote host
+- rabbitmq_queue:
+    name: myRemoteQueue
+    login_user: user
+    login_password: secret
+    login_host: remote.example.org
+
+

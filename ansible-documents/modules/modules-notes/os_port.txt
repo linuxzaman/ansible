@@ -1,0 +1,285 @@
+> OS_PORT    (/usr/lib/python2.7/dist-packages/ansible/modules/cloud/openstack/os_port.py)
+
+        Add, Update or Remove ports from an OpenStack cloud. A `state' of 'present' will ensure the port is created or updated if
+        required.
+
+  * This module is maintained by The Ansible Community
+OPTIONS (= is mandatory):
+
+- admin_state_up
+        Sets admin state.
+        [Default: (null)]
+        type: bool
+
+- allowed_address_pairs
+        Allowed address pairs list.  Allowed address pairs are supported with dictionary structure. e.g.  allowed_address_pairs: -
+        ip_address: 10.1.0.12 mac_address: ab:cd:ef:12:34:56 - ip_address: ...
+        [Default: (null)]
+
+- api_timeout
+        How long should the socket layer wait before timing out for API calls. If this is omitted, nothing will be passed to the requests
+        library.
+        [Default: (null)]
+        type: int
+
+- auth
+        Dictionary containing auth information as needed by the cloud's auth plugin strategy. For the default `password' plugin, this
+        would contain `auth_url', `username', `password', `project_name' and any information about domains (for example,
+        `os_user_domain_name' or `os_project_domain_name') if the cloud supports them. For other plugins, this param will need to contain
+        whatever parameters that auth plugin requires. This parameter is not needed if a named cloud is provided or OpenStack OS_*
+        environment variables are present.
+        [Default: (null)]
+        type: dict
+
+- auth_type
+        Name of the auth plugin to use. If the cloud uses something other than password authentication, the name of the plugin should be
+        indicated here and the contents of the `auth' parameter should be updated accordingly.
+        [Default: (null)]
+        type: str
+
+- availability_zone
+        Ignored. Present for backwards compatibility
+        [Default: (null)]
+
+- ca_cert
+        A path to a CA Cert bundle that can be used as part of verifying SSL API requests.
+        (Aliases: cacert)[Default: (null)]
+        type: str
+
+- client_cert
+        A path to a client certificate to use as part of the SSL transaction.
+        (Aliases: cert)[Default: (null)]
+        type: str
+
+- client_key
+        A path to a client key to use as part of the SSL transaction.
+        (Aliases: key)[Default: (null)]
+        type: str
+
+- cloud
+        Named cloud or cloud config to operate against. If `cloud' is a string, it references a named cloud config as defined in an
+        OpenStack clouds.yaml file. Provides default values for `auth' and `auth_type'. This parameter is not needed if `auth' is
+        provided or if OpenStack OS_* environment variables are present. If `cloud' is a dict, it contains a complete cloud configuration
+        like would be in a section of clouds.yaml.
+        [Default: (null)]
+        type: raw
+
+- device_id
+        Device ID of device using this port.
+        [Default: (null)]
+
+- device_owner
+        The ID of the entity that uses this port.
+        [Default: (null)]
+
+- extra_dhcp_opts
+        Extra dhcp options to be assigned to this port.  Extra options are supported with dictionary structure. e.g.  extra_dhcp_opts: -
+        opt_name: opt name1 opt_value: value1 - opt_name: ...
+        [Default: (null)]
+
+- fixed_ips
+        Desired IP and/or subnet for this port.  Subnet is referenced by subnet_id and IP is referenced by ip_address.
+        [Default: (null)]
+
+- interface
+        Endpoint URL type to fetch from the service catalog.
+        (Aliases: endpoint_type)(Choices: admin, internal, public)[Default: public]
+        type: str
+        version_added: 2.3
+
+- mac_address
+        MAC address of this port.
+        [Default: (null)]
+
+- name
+        Name that has to be given to the port.
+        [Default: (null)]
+
+= network
+        Network ID or name this port belongs to.
+
+
+- no_security_groups
+        Do not associate a security group with this port.
+        [Default: no]
+        type: bool
+
+- port_security_enabled
+        Whether to enable or disable the port security on the network.
+        [Default: (null)]
+        type: bool
+        version_added: 2.8
+
+- region_name
+        Name of the region.
+        [Default: (null)]
+        type: str
+
+- security_groups
+        Security group(s) ID(s) or name(s) associated with the port (comma separated string or YAML list)
+        [Default: (null)]
+
+- state
+        Should the resource be present or absent.
+        (Choices: present, absent)[Default: present]
+
+- timeout
+        How long should ansible wait for the requested resource.
+        [Default: 180]
+        type: int
+
+- validate_certs
+        Whether or not SSL API requests should be verified.
+        Before Ansible 2.3 this defaulted to `yes'.
+        (Aliases: verify)[Default: False]
+        type: bool
+
+- vnic_type
+        The type of the port that should be created
+        (Choices: normal, direct, direct-physical, macvtap, baremetal, virtio-forwarder)[Default: (null)]
+        version_added: 2.8
+
+- wait
+        Should ansible wait until the requested resource is complete.
+        [Default: True]
+        type: bool
+
+
+NOTES:
+      * The standard OpenStack environment variables, such as `OS_USERNAME' may be used instead of providing explicit values.
+      * Auth information is driven by openstacksdk, which means that values can come from a yaml config file in
+        /etc/ansible/openstack.yaml, /etc/openstack/clouds.yaml or ~/.config/openstack/clouds.yaml, then from standard environment
+        variables, then finally by explicit parameters in plays. More information can be found at
+        https://docs.openstack.org/openstacksdk/
+
+
+REQUIREMENTS:  python >= 2.7, openstacksdk
+
+AUTHOR: Davide Agnello (@dagnello)
+        METADATA:
+          status:
+          - preview
+          supported_by: community
+        
+
+EXAMPLES:
+
+# Create a port
+- os_port:
+    state: present
+    auth:
+      auth_url: https://identity.example.com
+      username: admin
+      password: admin
+      project_name: admin
+    name: port1
+    network: foo
+
+# Create a port with a static IP
+- os_port:
+    state: present
+    auth:
+      auth_url: https://identity.example.com
+      username: admin
+      password: admin
+      project_name: admin
+    name: port1
+    network: foo
+    fixed_ips:
+      - ip_address: 10.1.0.21
+
+# Create a port with No security groups
+- os_port:
+    state: present
+    auth:
+      auth_url: https://identity.example.com
+      username: admin
+      password: admin
+      project_name: admin
+    name: port1
+    network: foo
+    no_security_groups: True
+
+# Update the existing 'port1' port with multiple security groups (version 1)
+- os_port:
+    state: present
+    auth:
+      auth_url: https://identity.example.com
+      username: admin
+      password: admin
+      project_name: admin
+    name: port1
+    security_groups: 1496e8c7-4918-482a-9172-f4f00fc4a3a5,057d4bdf-6d4d-472...
+
+# Update the existing 'port1' port with multiple security groups (version 2)
+- os_port:
+    state: present
+    auth:
+      auth_url: https://identity.example.com
+      username: admin
+      password: admin
+      project_name: admin
+    name: port1
+    security_groups:
+      - 1496e8c7-4918-482a-9172-f4f00fc4a3a5
+      - 057d4bdf-6d4d-472...
+
+# Create port of type 'direct'
+- os_port:
+    state: present
+    auth:
+      auth_url: https://identity.example.com
+      username: admin
+      password: admin
+      project_name: admin
+    name: port1
+    vnic_type: direct
+
+
+RETURN VALUES:
+
+id:
+    description: Unique UUID.
+    returned: success
+    type: str
+name:
+    description: Name given to the port.
+    returned: success
+    type: str
+network_id:
+    description: Network ID this port belongs in.
+    returned: success
+    type: str
+security_groups:
+    description: Security group(s) associated with this port.
+    returned: success
+    type: list
+status:
+    description: Port's status.
+    returned: success
+    type: str
+fixed_ips:
+    description: Fixed ip(s) associated with this port.
+    returned: success
+    type: list
+tenant_id:
+    description: Tenant id associated with this port.
+    returned: success
+    type: str
+allowed_address_pairs:
+    description: Allowed address pairs with this port.
+    returned: success
+    type: list
+admin_state_up:
+    description: Admin state up flag for this port.
+    returned: success
+    type: bool
+vnic_type:
+    description: Type of the created port
+    returned: success
+    type: str
+port_security_enabled:
+    description: Port security state on the network.
+    returned: success
+    type: bool
+

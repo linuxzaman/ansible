@@ -1,0 +1,140 @@
+> VMWARE_RESOURCE_POOL    (/usr/lib/python2.7/dist-packages/ansible/modules/cloud/vmware/vmware_resource_pool.py)
+
+        This module can be used to add/remove a resource pool to/from vCenter
+
+  * This module is maintained by The Ansible Community
+OPTIONS (= is mandatory):
+
+= cluster
+        Name of the cluster to add the host.
+
+
+- cpu_expandable_reservations
+        In a resource pool with an expandable reservation, the reservation on a resource pool can grow beyond the specified value.
+        [Default: True]
+        type: bool
+
+- cpu_limit
+        The utilization of a virtual machine/resource pool will not exceed this limit, even if there are available resources.
+        The default value -1 indicates no limit.
+        [Default: -1]
+
+- cpu_reservation
+        Amount of resource that is guaranteed available to the virtual machine or resource pool.
+        [Default: 0]
+
+- cpu_shares
+        Memory shares are used in case of resource contention.
+        (Choices: high, custom, low, normal)[Default: normal]
+
+= datacenter
+        Name of the datacenter to add the host.
+
+
+- hostname
+        The hostname or IP address of the vSphere vCenter or ESXi server.
+        If the value is not specified in the task, the value of environment variable `VMWARE_HOST' will be used instead.
+        Environment variable support added in Ansible 2.6.
+        [Default: (null)]
+        type: str
+
+- mem_expandable_reservations
+        In a resource pool with an expandable reservation, the reservation on a resource pool can grow beyond the specified value.
+        [Default: True]
+        type: bool
+
+- mem_limit
+        The utilization of a virtual machine/resource pool will not exceed this limit, even if there are available resources.
+        The default value -1 indicates no limit.
+        [Default: -1]
+
+- mem_reservation
+        Amount of resource that is guaranteed available to the virtual machine or resource pool.
+        [Default: 0]
+
+- mem_shares
+        Memory shares are used in case of resource contention.
+        (Choices: high, custom, low, normal)[Default: normal]
+
+- password
+        The password of the vSphere vCenter or ESXi server.
+        If the value is not specified in the task, the value of environment variable `VMWARE_PASSWORD' will be used instead.
+        Environment variable support added in Ansible 2.6.
+        (Aliases: pass, pwd)[Default: (null)]
+        type: str
+
+- port
+        The port number of the vSphere vCenter or ESXi server.
+        If the value is not specified in the task, the value of environment variable `VMWARE_PORT' will be used instead.
+        Environment variable support added in Ansible 2.6.
+        [Default: 443]
+        type: int
+        version_added: 2.5
+
+= resource_pool
+        Resource pool name to manage.
+
+
+- state
+        Add or remove the resource pool
+        (Choices: present, absent)[Default: present]
+
+- username
+        The username of the vSphere vCenter or ESXi server.
+        If the value is not specified in the task, the value of environment variable `VMWARE_USER' will be used instead.
+        Environment variable support added in Ansible 2.6.
+        (Aliases: admin, user)[Default: (null)]
+        type: str
+
+- validate_certs
+        Allows connection when SSL certificates are not valid. Set to `false' when certificates are not trusted.
+        If the value is not specified in the task, the value of environment variable `VMWARE_VALIDATE_CERTS' will be used instead.
+        Environment variable support added in Ansible 2.6.
+        If set to `yes', please make sure Python >= 2.7.9 is installed on the given machine.
+        [Default: True]
+        type: bool
+
+
+NOTES:
+      * Tested on vSphere 6.5
+
+
+REQUIREMENTS:  python >= 2.6, PyVmomi
+
+AUTHOR: Davis Phillips (@dav1x)
+        METADATA:
+          status:
+          - preview
+          supported_by: community
+        
+
+EXAMPLES:
+
+- name: Add resource pool to vCenter
+  vmware_resource_pool:
+    hostname: '{{ vcenter_hostname }}'
+    username: '{{ vcenter_username }}'
+    password: '{{ vcenter_password }}'
+    datacenter: '{{ datacenter_name }}'
+    cluster: '{{ cluster_name }}'
+    resource_pool: '{{ resource_pool_name }}'
+    mem_shares: normal
+    mem_limit: -1
+    mem_reservation: 0
+    mem_expandable_reservations: yes
+    cpu_shares: normal
+    cpu_limit: -1
+    cpu_reservation: 0
+    cpu_expandable_reservations: yes
+    state: present
+  delegate_to: localhost
+
+
+RETURN VALUES:
+
+instance:
+    description: metadata about the new resource pool
+    returned: always
+    type: dict
+    sample: None
+

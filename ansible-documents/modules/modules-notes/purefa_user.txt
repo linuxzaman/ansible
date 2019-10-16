@@ -1,0 +1,109 @@
+> PUREFA_USER    (/usr/lib/python2.7/dist-packages/ansible/modules/storage/purestorage/purefa_user.py)
+
+        Create, modify or delete local users on a Pure Stoage FlashArray.
+
+  * This module is maintained by The Ansible Community
+OPTIONS (= is mandatory):
+
+- api
+        Define whether to create an API token for this user
+        Token can be exposed using the `debug' module
+        [Default: False]
+        type: bool
+
+= api_token
+        FlashArray API token for admin privileged user.
+
+        type: str
+
+= fa_url
+        FlashArray management IPv4 address or Hostname.
+
+        type: str
+
+- name
+        The name of the local user account
+        [Default: (null)]
+        type: str
+
+- old_password
+        If changing an existing password, you must provide the old password for security
+        [Default: (null)]
+        type: str
+
+- password
+        Password for the local user.
+        [Default: (null)]
+        type: str
+
+- role
+        Sets the local user's access level to the array
+        (Choices: readonly, storage_admin, array_admin)[Default: (null)]
+        type: str
+
+- state
+        Create, delete or update local user account
+        (Choices: absent, present)[Default: present]
+        type: str
+
+
+NOTES:
+      * This module requires the `purestorage' Python library
+      * You must set `PUREFA_URL' and `PUREFA_API' environment variables if `fa_url' and `api_token' arguments are not passed to
+        the module directly
+
+
+REQUIREMENTS:  python >= 2.7, purestorage
+
+AUTHOR: Pure Storage Ansible Team (@sdodsley) <pure-ansible-team@purestorage.com>
+        METADATA:
+          status:
+          - preview
+          supported_by: community
+        
+
+EXAMPLES:
+
+- name: Create new user ansible with API token
+  purefa_user:
+    name: ansible
+    password: apassword
+    role: storage_admin
+    api: true
+    fb_url: 10.10.10.2
+    api_token: e31060a7-21fc-e277-6240-25983c6c4592
+
+  debug:
+    msg: "API Token: {{ ansible_facts['api_token'] }}"
+
+- name: Change role type for existing user
+  purefa_user:
+    name: ansible
+    role: array_admin
+    state: update
+    fb_url: 10.10.10.2
+    api_token: e31060a7-21fc-e277-6240-25983c6c4592
+
+- name: Change password type for existing user (NOT IDEMPOTENT)
+  purefa_user:
+    name: ansible
+    password: anewpassword
+    old_password: apassword
+    fb_url: 10.10.10.2
+    api_token: e31060a7-21fc-e277-6240-25983c6c4592
+
+- name: Change API token for existing user
+  purefa_user:
+    name: ansible
+    api: true
+    state: update
+    fb_url: 10.10.10.2
+    api_token: e31060a7-21fc-e277-6240-25983c6c4592
+
+  debug:
+    msg: "API Token: {{ ansible_facts['user_api'] }}"
+
+
+RETURN VALUES:
+
+

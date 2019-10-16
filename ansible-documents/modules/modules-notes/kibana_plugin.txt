@@ -1,0 +1,100 @@
+> KIBANA_PLUGIN    (/usr/lib/python2.7/dist-packages/ansible/modules/database/misc/kibana_plugin.py)
+
+        This module can be used to manage Kibana plugins.
+
+  * This module is maintained by The Ansible Community
+OPTIONS (= is mandatory):
+
+- force
+        Delete and re-install the plugin. Can be useful for plugins update.
+        [Default: no]
+        type: bool
+
+= name
+        Name of the plugin to install.
+
+
+- plugin_bin
+        Location of the Kibana binary.
+        [Default: /opt/kibana/bin/kibana]
+
+- plugin_dir
+        Your configured plugin directory specified in Kibana.
+        [Default: /opt/kibana/installedPlugins/]
+
+- state
+        Desired state of a plugin.
+        (Choices: present, absent)[Default: present]
+
+- timeout
+        Timeout setting: 30s, 1m, 1h etc.
+        [Default: 1m]
+
+- url
+        Set exact URL to download the plugin from.
+        For local file, prefix its absolute path with file://
+        [Default: (null)]
+
+- version
+        Version of the plugin to be installed.
+        If plugin exists with previous version, plugin will NOT be updated unless `force' is set to yes.
+        [Default: (null)]
+
+
+AUTHOR: Thierno IB. BARRY (@barryib)
+        METADATA:
+          status:
+          - preview
+          supported_by: community
+        
+
+EXAMPLES:
+
+- name: Install Elasticsearch head plugin
+  kibana_plugin:
+    state: present
+    name: elasticsearch/marvel
+
+- name: Install specific version of a plugin
+  kibana_plugin:
+    state: present
+    name: elasticsearch/marvel
+    version: '2.3.3'
+
+- name: Uninstall Elasticsearch head plugin
+  kibana_plugin:
+    state: absent
+    name: elasticsearch/marvel
+
+
+RETURN VALUES:
+
+cmd:
+    description: the launched command during plugin management (install / remove)
+    returned: success
+    type: str
+name:
+    description: the plugin name to install or remove
+    returned: success
+    type: str
+url:
+    description: the url from where the plugin is installed from
+    returned: success
+    type: str
+timeout:
+    description: the timeout for plugin download
+    returned: success
+    type: str
+stdout:
+    description: the command stdout
+    returned: success
+    type: str
+stderr:
+    description: the command stderr
+    returned: success
+    type: str
+state:
+    description: the state for the managed plugin
+    returned: success
+    type: str
+

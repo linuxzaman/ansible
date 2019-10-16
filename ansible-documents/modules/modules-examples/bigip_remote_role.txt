@@ -1,0 +1,53 @@
+EXAMPLES:
+
+- name: Create a remote role
+  bigip_remote_role:
+    name: foo
+    group_name: ldap_group
+    line_order: 1
+    attribute_string: memberOf=cn=ldap_group,cn=ldap.group,ou=ldap
+    remote_access: enabled
+    assigned_role: administrator
+    partition_access: all
+    terminal_access: none
+    state: present
+    provider:
+      password: secret
+      server: lb.mydomain.com
+      user: admin
+  delegate_to: localhost
+
+
+RETURN VALUES:
+
+attribute_string:
+  description: The new attribute string of the resource.
+  returned: changed
+  type: str
+  sample: "memberOf=cn=ldap_group,cn=ldap.group,ou=ldap"
+terminal_access:
+  description: The terminal setting of the remote role.
+  returned: changed
+  type: str
+  sample: tmsh
+line_order:
+  description: Order of the remote role for LDAP and Active Directory servers.
+  returned: changed
+  type: int
+  sample: 1000
+assigned_role:
+  description: System role that this remote role is associated with.
+  returned: changed
+  type: str
+  sample: administrator
+partition_access:
+  description: Partition that the role has access to.
+  returned: changed
+  type: str
+  sample: all
+remote_access:
+  description: Whether remote access is allowed or not.
+  returned: changed
+  type: bool
+  sample: no
+

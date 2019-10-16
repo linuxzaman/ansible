@@ -1,0 +1,42 @@
+EXAMPLES:
+
+- name: create snmp vacm
+  pn_snmp_vacm:
+    pn_cliswitch: "sw01"
+    state: "present"
+    pn_user_name: "foo"
+    pn_user_type: "rouser"
+
+- name: update snmp vacm
+  pn_snmp_vacm:
+    pn_cliswitch: "sw01"
+    state: "update"
+    pn_user_name: "foo"
+    pn_user_type: "rwuser"
+
+- name: delete snmp vacm
+  pn_snmp_vacm:
+    pn_cliswitch: "sw01"
+    state: "absent"
+    pn_user_name: "foo"
+
+
+RETURN VALUES:
+
+command:
+  description: the CLI command run on the target node.
+  returned: always
+  type: str
+stdout:
+  description: set of responses from the snmp-vacm command.
+  returned: always
+  type: list
+stderr:
+  description: set of error responses from the snmp-vacm command.
+  returned: on error
+  type: list
+changed:
+  description: indicates whether the CLI caused changes on the target.
+  returned: always
+  type: bool
+

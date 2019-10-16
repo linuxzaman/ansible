@@ -1,0 +1,91 @@
+EXAMPLES:
+
+# Note: These examples do not set authentication details, see the AWS Guide for details.
+
+# Get a summary of distributions
+- cloudfront_facts:
+    summary: true
+
+# Get information about a distribution
+- cloudfront_facts:
+    distribution: true
+    distribution_id: my-cloudfront-distribution-id
+
+# Get information about a distribution using the CNAME of the cloudfront distribution.
+- cloudfront_facts:
+    distribution: true
+    domain_name_alias: www.my-website.com
+
+# Facts are published in ansible_facts['cloudfront'][<distribution_name>]
+- debug:
+    msg: "{{ ansible_facts['cloudfront']['my-cloudfront-distribution-id'] }}"
+
+- debug:
+    msg: "{{ ansible_facts['cloudfront']['www.my-website.com'] }}"
+
+# Get all information about an invalidation for a distribution.
+- cloudfront_facts:
+    invalidation: true
+    distribution_id: my-cloudfront-distribution-id
+    invalidation_id: my-cloudfront-invalidation-id
+
+# Get all information about a cloudfront origin access identity.
+- cloudfront_facts:
+    origin_access_identity: true
+    origin_access_identity_id: my-cloudfront-origin-access-identity-id
+
+# Get all information about lists not requiring parameters (ie. list_origin_access_identities, list_distributions, list_streaming_distributions)
+- cloudfront_facts:
+    origin_access_identity: true
+    origin_access_identity_id: my-cloudfront-origin-access-identity-id
+
+# Get all information about lists not requiring parameters (ie. list_origin_access_identities, list_distributions, list_streaming_distributions)
+- cloudfront_facts:
+    all_lists: true
+
+
+RETURN VALUES:
+
+origin_access_identity:
+    description: Describes the origin access identity information. Requires I(origin_access_identity_id) to be set.
+    returned: only if I(origin_access_identity) is true
+    type: dict
+origin_access_identity_configuration:
+    description: Describes the origin access identity information configuration information. Requires I(origin_access_identity_id) to be set.
+    returned: only if I(origin_access_identity_configuration) is true
+    type: dict
+distribution:
+    description: >
+      Facts about a cloudfront distribution. Requires I(distribution_id) or I(domain_name_alias)
+      to be specified. Requires I(origin_access_identity_id) to be set.
+    returned: only if distribution is true
+    type: dict
+distribution_config:
+    description: >
+      Facts about a cloudfront distribution's config. Requires I(distribution_id) or I(domain_name_alias)
+      to be specified.
+    returned: only if I(distribution_config) is true
+    type: dict
+invalidation:
+    description: >
+      Describes the invalidation information for the distribution. Requires
+      I(invalidation_id) to be specified and either I(distribution_id) or I(domain_name_alias.)
+    returned: only if invalidation is true
+    type: dict
+streaming_distribution:
+    description: >
+      Describes the streaming information for the distribution. Requires
+      I(distribution_id) or I(domain_name_alias) to be specified.
+    returned: only if I(streaming_distribution) is true
+    type: dict
+streaming_distribution_config:
+    description: >
+      Describes the streaming configuration information for the distribution.
+      Requires I(distribution_id) or I(domain_name_alias) to be specified.
+    returned: only if I(streaming_distribution_config) is true
+    type: dict
+summary:
+    description: Gives a summary of distributions, streaming distributions and origin access identities.
+    returned: as default or if summary is true
+    type: dict
+

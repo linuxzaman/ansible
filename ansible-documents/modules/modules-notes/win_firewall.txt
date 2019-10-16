@@ -1,0 +1,70 @@
+> WIN_FIREWALL    (/usr/lib/python2.7/dist-packages/ansible/modules/windows/win_firewall.py)
+
+        Enable or Disable Windows Firewall profiles.
+
+  * This module is maintained by The Ansible Community
+OPTIONS (= is mandatory):
+
+- profiles
+        Specify one or more profiles to change.
+        (Choices: Domain, Private, Public)[Default: [u'Domain', u'Private', u'Public']]
+        type: list
+
+- state
+        Set state of firewall for given profile.
+        (Choices: disabled, enabled)[Default: (null)]
+        type: str
+
+
+SEE ALSO:
+      * Module win_firewall_rule
+           The official documentation on the win_firewall_rule module.
+           https://docs.ansible.com/ansible/latest/modules/win_firewall_rule_module.html
+
+
+REQUIREMENTS:  This module requires Windows Management Framework 5 or later.
+
+AUTHOR: Michael Eaton (@michaeldeaton)
+        METADATA:
+          status:
+          - preview
+          supported_by: community
+        
+
+EXAMPLES:
+
+- name: Enable firewall for Domain, Public and Private profiles
+  win_firewall:
+    state: enabled
+    profiles:
+    - Domain
+    - Private
+    - Public
+  tags: enable_firewall
+
+- name: Disable Domain firewall
+  win_firewall:
+    state: disabled
+    profiles:
+    - Domain
+  tags: disable_firewall
+
+
+RETURN VALUES:
+
+enabled:
+    description: Current firewall status for chosen profile (after any potential change).
+    returned: always
+    type: bool
+    sample: true
+profiles:
+    description: Chosen profile.
+    returned: always
+    type: str
+    sample: Domain
+state:
+    description: Desired state of the given firewall profile(s).
+    returned: always
+    type: list
+    sample: enabled
+

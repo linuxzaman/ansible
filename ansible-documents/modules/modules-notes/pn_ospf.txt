@@ -1,0 +1,85 @@
+> PN_OSPF    (/usr/lib/python2.7/dist-packages/ansible/modules/network/netvisor/_pn_ospf.py)
+
+        Execute vrouter-ospf-add, vrouter-ospf-remove command. This command adds/removes Open Shortest Path First(OSPF) routing protocol
+        to a virtual router(vRouter) service.
+
+DEPRECATED: 
+
+	Reason: Doesn't support latest Pluribus Networks netvisor
+	Will be removed in: Ansible 2.12
+	Alternatives: Latest modules will be pushed in Ansible future versions.
+
+
+  * This module is maintained by The Ansible Community
+OPTIONS (= is mandatory):
+
+- pn_clipassword
+        Provide login password if user is not root.
+        [Default: (null)]
+
+- pn_cliswitch
+        Target switch to run the CLI on.
+        [Default: local]
+
+- pn_cliusername
+        Provide login username if user is not root.
+        [Default: (null)]
+
+= pn_network_ip
+        Specify the network IP (IPv4 or IPv6) address.
+
+
+- pn_ospf_area
+        Stub area number for the configuration. Required for vrouter-ospf-add.
+        [Default: (null)]
+
+= pn_vrouter_name
+        Specify the name of the vRouter.
+
+
+= state
+        Assert the state of the ospf. Use 'present' to add ospf and 'absent' to remove ospf.
+        (Choices: present, absent)[Default: present]
+
+
+AUTHOR: Pluribus Networks (@amitsi)
+        METADATA:
+          status:
+          - deprecated
+          supported_by: community
+        
+
+EXAMPLES:
+
+- name: "Add OSPF to vrouter"
+  pn_ospf:
+    state: present
+    pn_vrouter_name: name-string
+    pn_network_ip: 192.168.11.2/24
+    pn_ospf_area: 1.0.0.0
+
+- name: "Remove OSPF from vrouter"
+  pn_ospf:
+    state: absent
+    pn_vrouter_name: name-string
+
+
+RETURN VALUES:
+
+command:
+  description: The CLI command run on the target node(s).
+  returned: always
+  type: str
+stdout:
+  description: The set of responses from the ospf command.
+  returned: always
+  type: list
+stderr:
+  description: The set of error responses from the ospf command.
+  returned: on error
+  type: list
+changed:
+  description: Indicates whether the CLI caused changes on the target.
+  returned: always
+  type: bool
+

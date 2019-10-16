@@ -1,0 +1,83 @@
+> FMGR_DEVICE    (/usr/lib/python2.7/dist-packages/ansible/modules/network/fortimanager/fmgr_device.py)
+
+        Add or remove a device or list of devices from FortiManager Device Manager using JSON RPC API.
+
+  * This module is maintained by The Ansible Community
+OPTIONS (= is mandatory):
+
+= adom
+        The ADOM the configuration should belong to.
+        [Default: root]
+
+- blind_add
+        When adding a device, module will check if it exists, and skip if it does.
+        If enabled, this option will stop the module from checking if it already exists, and blindly add the device.
+        (Choices: enable, disable)[Default: disable]
+
+- device_ip
+        The IP of the device being added to FortiManager. Supports both IPv4 and IPv6.
+        [Default: (null)]
+
+- device_password
+        The password of the device being added to FortiManager.
+        [Default: (null)]
+
+- device_serial
+        The serial number of the device being added to FortiManager.
+        [Default: (null)]
+
+- device_unique_name
+        The desired "friendly" name of the device being added to FortiManager.
+        [Default: (null)]
+
+- device_username
+        The username of the device being added to FortiManager.
+        [Default: (null)]
+
+- mode
+        The desired mode of the specified object.
+        (Choices: add, delete)[Default: add]
+
+
+NOTES:
+      * Full Documentation at https://ftnt-ansible-docs.readthedocs.io/en/latest/.
+
+
+AUTHOR: Luke Weighall (@lweighall), Andrew Welsh (@Ghilli3), Jim Huber (@p4r4n0y1ng)
+        METADATA:
+          status:
+          - preview
+          supported_by: community
+        
+
+EXAMPLES:
+
+- name: DISCOVER AND ADD DEVICE FGT1
+  fmgr_device:
+    adom: "root"
+    device_username: "admin"
+    device_password: "admin"
+    device_ip: "10.10.24.201"
+    device_unique_name: "FGT1"
+    device_serial: "FGVM000000117994"
+    mode: "add"
+    blind_add: "enable"
+
+- name: DISCOVER AND ADD DEVICE FGT2
+  fmgr_device:
+    adom: "root"
+    device_username: "admin"
+    device_password: "admin"
+    device_ip: "10.10.24.202"
+    device_unique_name: "FGT2"
+    device_serial: "FGVM000000117992"
+    mode: "delete"
+
+
+RETURN VALUES:
+
+api_result:
+  description: full API response, includes status code and message
+  returned: always
+  type: str
+

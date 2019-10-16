@@ -1,0 +1,214 @@
+> BIGIP_PROFILE_PERSISTENCE_SRC_ADDR    (/usr/lib/python2.7/dist-packages/ansible/modules/network/f5/bigip_profile_persistence_src_addr.py)
+
+        Manages source address persistence profiles.
+
+  * This module is maintained by an Ansible Partner
+OPTIONS (= is mandatory):
+
+- entry_timeout
+        Specifies the duration of the persistence entries.
+        When creating a new profile, if this parameter is not specified, the default is provided by the parent profile.
+        To specify an indefinite timeout, use the value `indefinite'.
+        If specifying a numeric timeout, the value must be between `1' and `4294967295'.
+        [Default: (null)]
+        type: str
+
+- hash_algorithm
+        Specifies the algorithm the system uses for hash persistence load balancing. The hash result is the input for the algorithm.
+        When `default', specifies that the system uses the index of pool members to obtain the hash result for the input to the
+        algorithm.
+        When `carp', specifies that the system uses the Cache Array Routing Protocol (CARP) to obtain the hash result for the input to
+        the algorithm.
+        When creating a new profile, if this parameter is not specified, the default is provided by the parent profile.
+        (Choices: default, carp)[Default: (null)]
+        type: str
+
+- match_across_pools
+        When `yes', specifies that the system can use any pool that contains this persistence record.
+        When creating a new profile, if this parameter is not specified, the default is provided by the parent profile.
+        [Default: (null)]
+        type: bool
+
+- match_across_services
+        When `yes', specifies that all persistent connections from a client IP address that go to the same virtual IP address also go to
+        the same node.
+        When creating a new profile, if this parameter is not specified, the default is provided by the parent profile.
+        [Default: (null)]
+        type: bool
+
+- match_across_virtuals
+        When `yes', specifies that all persistent connections from the same client IP address go to the same node.
+        When creating a new profile, if this parameter is not specified, the default is provided by the parent profile.
+        [Default: (null)]
+        type: bool
+
+= name
+        Specifies the name of the profile.
+
+        type: str
+
+- override_connection_limit
+        When `yes', specifies that the system allows you to specify that pool member connection limits will be overridden for persisted
+        clients.
+        Per-virtual connection limits remain hard limits and are not overridden.
+        [Default: (null)]
+        type: bool
+
+- parent
+        Specifies the profile from which this profile inherits settings.
+        When creating a new profile, if this parameter is not specified, the default is the system-supplied `source_addr' profile.
+        [Default: (null)]
+        type: str
+
+- partition
+        Device partition to manage resources on.
+        [Default: Common]
+        type: str
+
+= password
+        The password for the user account used to connect to the BIG-IP.
+        You may omit this option by setting the environment variable `F5_PASSWORD'.
+        (Aliases: pass, pwd)
+        type: str
+
+- provider
+        A dict object containing connection details.
+        [Default: (null)]
+        suboptions:
+          password:
+            aliases:
+            - pass
+            - pwd
+            description:
+            - The password for the user account used to connect to the BIG-IP.
+            - You may omit this option by setting the environment variable `F5_PASSWORD'.
+            required: true
+            type: str
+          server:
+            description:
+            - The BIG-IP host.
+            - You may omit this option by setting the environment variable `F5_SERVER'.
+            required: true
+            type: str
+          server_port:
+            default: 443
+            description:
+            - The BIG-IP server port.
+            - You may omit this option by setting the environment variable `F5_SERVER_PORT'.
+            type: int
+          ssh_keyfile:
+            description:
+            - Specifies the SSH keyfile to use to authenticate the connection to the remote
+              device.  This argument is only used for `cli' transports.
+            - You may omit this option by setting the environment variable `ANSIBLE_NET_SSH_KEYFILE'.
+            type: path
+          timeout:
+            default: 10
+            description:
+            - Specifies the timeout in seconds for communicating with the network device for
+              either connecting or sending commands.  If the timeout is exceeded before the
+              operation is completed, the module will error.
+            type: int
+          transport:
+            choices:
+            - cli
+            - rest
+            default: rest
+            description:
+            - Configures the transport connection to use when connecting to the remote device.
+            type: str
+          user:
+            description:
+            - The username to connect to the BIG-IP with. This user must have administrative
+              privileges on the device.
+            - You may omit this option by setting the environment variable `F5_USER'.
+            required: true
+            type: str
+          validate_certs:
+            default: true
+            description:
+            - If `no', SSL certificates are not validated. Use this only on personally controlled
+              sites using self-signed certificates.
+            - You may omit this option by setting the environment variable `F5_VALIDATE_CERTS'.
+            type: bool
+        
+        type: dict
+        version_added: 2.5
+
+= server
+        The BIG-IP host.
+        You may omit this option by setting the environment variable `F5_SERVER'.
+
+        type: str
+
+- server_port
+        The BIG-IP server port.
+        You may omit this option by setting the environment variable `F5_SERVER_PORT'.
+        [Default: 443]
+        type: int
+        version_added: 2.2
+
+- state
+        When `present', ensures that the profile exists.
+        When `absent', ensures the profile is removed.
+        (Choices: present, absent)[Default: present]
+        type: str
+
+= user
+        The username to connect to the BIG-IP with. This user must have administrative privileges on the device.
+        You may omit this option by setting the environment variable `F5_USER'.
+
+        type: str
+
+- validate_certs
+        If `no', SSL certificates are not validated. Use this only on personally controlled sites using self-signed certificates.
+        You may omit this option by setting the environment variable `F5_VALIDATE_CERTS'.
+        [Default: True]
+        type: bool
+        version_added: 2.0
+
+
+NOTES:
+      * For more information on using Ansible to manage F5 Networks devices see https://www.ansible.com/integrations/networks/f5.
+      * Requires BIG-IP software version >= 12.
+      * The F5 modules only manipulate the running configuration of the F5 product. To ensure that BIG-IP specific configuration
+        persists to disk, be sure to include at least one task that uses the [bigip_config] module to save the running
+        configuration. Refer to the module's documentation for the correct usage of the module to save your running configuration.
+
+
+AUTHOR: Tim Rupp (@caphrim007)
+        METADATA:
+          status:
+          - preview
+          supported_by: certified
+        
+
+EXAMPLES:
+
+- name: Create a profile
+  bigip_profile_persistence_src_addr:
+    name: foo
+    state: present
+    hash_algorithm: carp
+    match_across_services: yes
+    match_across_virtuals: yes
+    provider:
+      password: secret
+      server: lb.mydomain.com
+      user: admin
+  delegate_to: localhost
+
+
+RETURN VALUES:
+
+param1:
+  description: The new param1 value of the resource.
+  returned: changed
+  type: bool
+  sample: true
+param2:
+  description: The new param2 value of the resource.
+  returned: changed
+  type: str
+  sample: Foo is bar
+

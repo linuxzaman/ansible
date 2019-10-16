@@ -1,0 +1,150 @@
+EXAMPLES:
+
+- name: netstream global module test
+  hosts: cloudengine
+  connection: local
+  gather_facts: no
+  vars:
+    cli:
+      host: "{{ inventory_hostname }}"
+      port: "{{ ansible_ssh_port }}"
+      username: "{{ username }}"
+      password: "{{ password }}"
+      transport: cli
+
+  tasks:
+
+  - name: Configure a netstream sampler at interface 10ge1/0/2, direction is outbound,interval is 30.
+    ce_netstream_global:
+      interface: 10ge1/0/2
+      type: ip
+      sampler_interval: 30
+      sampler_direction: outbound
+      state: present
+      provider: "{{ cli }}"
+  - name: Configure a netstream flexible statistic at interface 10ge1/0/2, record is test1, type is ip.
+    ce_netstream_global:
+      type: ip
+      interface: 10ge1/0/2
+      statistics_record: test1
+      provider: "{{ cli }}"
+  - name: Set the vxlan index-switch to 32.
+    ce_netstream_global:
+      type: vxlan
+      interface: all
+      index_switch: 32
+      provider: "{{ cli }}"
+
+
+RETURN VALUES:
+
+proposed:
+    description: k/v pairs of parameters passed into module
+    returned: verbose mode
+    type: dict
+    sample: {"index_switch": "16",
+        "interface": "10ge1/0/2",
+        "state": "present",
+        "statistics_record": "test",
+        "type": "vxlan"}
+existing:
+    description: k/v pairs of existing configuration
+    returned: verbose mode
+    type: dict
+    sample: {"flexible_statistic": [
+            {
+                "interface": "10ge1/0/2",
+                "statistics_record": [],
+                "type": "ip"
+            },
+            {
+                "interface": "10ge1/0/2",
+                "statistics_record": [],
+                "type": "vxlan"
+            }
+        ],
+        "index-switch": [
+            {
+                "index-switch": "16",
+                "type": "ip"
+            },
+            {
+                "index-switch": "16",
+                "type": "vxlan"
+            }
+        ],
+        "ip_record": [
+            "test",
+            "test1"
+        ],
+        "sampler": [
+            {
+                "interface": "all",
+                "sampler_direction": "null",
+                "sampler_interval": "null"
+            }
+        ],
+        "statistic": [
+            {
+                "interface": "10ge1/0/2",
+                "statistics_direction": [],
+                "type": "null"
+            }
+        ],
+        "vxlan_record": [
+            "test"
+        ]}
+end_state:
+    description: k/v pairs of configuration after module execution
+    returned: verbose mode
+    type: dict
+    sample: {"flexible_statistic": [
+            {
+                "interface": "10ge1/0/2",
+                "statistics_record": [],
+                "type": "ip"
+            },
+            {
+                "interface": "10ge1/0/2",
+                "statistics_record": [
+                    "test"
+                ],
+                "type": "vxlan"
+            }
+        ],
+        "index-switch": [
+            {
+                "index-switch": "16",
+                "type": "ip"
+            },
+            {
+                "index-switch": "16",
+                "type": "vxlan"
+            }
+        ],
+        "sampler": [
+            {
+                "interface": "all",
+                "sampler_direction": "null",
+                "sampler_interval": "null"
+            }
+        ],
+        "statistic": [
+            {
+                "interface": "10ge1/0/2",
+                "statistics_direction": [],
+                "type": "null"
+            }
+        ]}
+updates:
+    description: commands sent to the device
+    returned: always
+    type: list
+    sample: ["interface 10ge1/0/2",
+        "netstream record test vxlan inner-ip"]
+changed:
+    description: check to see if a change was made on the device
+    returned: always
+    type: bool
+    sample: true
+

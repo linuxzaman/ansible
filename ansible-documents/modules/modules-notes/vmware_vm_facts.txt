@@ -1,0 +1,161 @@
+> VMWARE_VM_FACTS    (/usr/lib/python2.7/dist-packages/ansible/modules/cloud/vmware/vmware_vm_facts.py)
+
+        Return basic facts pertaining to a vSphere or ESXi virtual machine guest. Cluster name as fact is added in version 2.7.
+
+  * This module is maintained by The Ansible Community
+OPTIONS (= is mandatory):
+
+- hostname
+        The hostname or IP address of the vSphere vCenter or ESXi server.
+        If the value is not specified in the task, the value of environment variable `VMWARE_HOST' will be used instead.
+        Environment variable support added in Ansible 2.6.
+        [Default: (null)]
+        type: str
+
+- password
+        The password of the vSphere vCenter or ESXi server.
+        If the value is not specified in the task, the value of environment variable `VMWARE_PASSWORD' will be used instead.
+        Environment variable support added in Ansible 2.6.
+        (Aliases: pass, pwd)[Default: (null)]
+        type: str
+
+- port
+        The port number of the vSphere vCenter or ESXi server.
+        If the value is not specified in the task, the value of environment variable `VMWARE_PORT' will be used instead.
+        Environment variable support added in Ansible 2.6.
+        [Default: 443]
+        type: int
+        version_added: 2.5
+
+- show_attribute
+        Attributes related to VM guest shown in facts only when this is set `true'.
+        [Default: False]
+        type: bool
+        version_added: 2.8
+        
+
+- username
+        The username of the vSphere vCenter or ESXi server.
+        If the value is not specified in the task, the value of environment variable `VMWARE_USER' will be used instead.
+        Environment variable support added in Ansible 2.6.
+        (Aliases: admin, user)[Default: (null)]
+        type: str
+
+- validate_certs
+        Allows connection when SSL certificates are not valid. Set to `false' when certificates are not trusted.
+        If the value is not specified in the task, the value of environment variable `VMWARE_VALIDATE_CERTS' will be used instead.
+        Environment variable support added in Ansible 2.6.
+        If set to `yes', please make sure Python >= 2.7.9 is installed on the given machine.
+        [Default: True]
+        type: bool
+
+- vm_type
+        If set to `vm', then facts are gathered for virtual machines only.
+        If set to `template', then facts are gathered for virtual machine templates only.
+        If set to `all', then facts are gathered for all virtual machines and virtual machine templates.
+        (Choices: all, vm, template)[Default: all]
+        type: str
+        version_added: 2.5
+        
+
+
+NOTES:
+      * Tested on ESXi 6.7, vSphere 5.5 and vSphere 6.5
+      * From 2.8 and onwards, facts are returned as list of dict instead of dict.
+
+
+REQUIREMENTS:  python >= 2.6, PyVmomi
+
+AUTHOR: Joseph Callen (@jcpowermac), Abhijeet Kasurde (@Akasurde), Fedor Vompe (@sumkincpp)
+        METADATA:
+          status:
+          - preview
+          supported_by: community
+        
+
+EXAMPLES:
+
+- name: Gather all registered virtual machines
+  vmware_vm_facts:
+    hostname: '{{ vcenter_hostname }}'
+    username: '{{ vcenter_username }}'
+    password: '{{ vcenter_password }}'
+  delegate_to: localhost
+  register: vmfacts
+
+- debug:
+    var: vmfacts.virtual_machines
+
+- name: Gather only registered virtual machine templates
+  vmware_vm_facts:
+    hostname: '{{ vcenter_hostname }}'
+    username: '{{ vcenter_username }}'
+    password: '{{ vcenter_password }}'
+    vm_type: template
+  delegate_to: localhost
+  register: template_facts
+
+- debug:
+    var: template_facts.virtual_machines
+
+- name: Gather only registered virtual machines
+  vmware_vm_facts:
+    hostname: '{{ vcenter_hostname }}'
+    username: '{{ vcenter_username }}'
+    password: '{{ vcenter_password }}'
+    vm_type: vm
+  delegate_to: localhost
+  register: vm_facts
+
+- debug:
+    var: vm_facts.virtual_machines
+
+- name: Get UUID from given VM Name
+  vmware_vm_facts:
+    hostname: '{{ vcenter_hostname }}'
+    username: '{{ vcenter_username }}'
+    password: '{{ vcenter_password }}'
+    vm_type: vm
+  delegate_to: localhost
+  register: vm_facts
+
+- debug:
+    msg: "{{ item.uuid }}"
+  with_items:
+    - "{{ vm_facts.virtual_machines | json_query(query) }}"
+  vars:
+    query: "[?guest_name=='DC0_H0_VM0']"
+
+
+RETURN VALUES:
+
+virtual_machines:
+  description: list of dictionary of virtual machines and their facts
+  returned: success
+  type: list
+  sample: [
+    {
+        "guest_name": "ubuntu_t",
+        "cluster": null,
+        "esxi_hostname": "10.76.33.226",
+        "guest_fullname": "Ubuntu Linux (64-bit)",
+        "ip_address": "",
+        "mac_address": [
+            "00:50:56:87:a5:9a"
+        ],
+        "power_state": "poweredOff",
+        "uuid": "4207072c-edd8-3bd5-64dc-903fd3a0db04",
+        "vm_network": {
+            "00:50:56:87:a5:9a": {
+              "ipv4": [
+                "10.76.33.228"
+              ],
+              "ipv6": []
+            }
+        },
+        "attributes": {
+            "job": "backup-prepare"
+        }
+    }
+  ]
+

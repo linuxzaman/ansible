@@ -1,0 +1,116 @@
+> DIGITAL_OCEAN_BLOCK_STORAGE    (/usr/lib/python2.7/dist-packages/ansible/modules/cloud/digital_ocean/digital_ocean_block_storage.py)
+
+        Create/destroy Block Storage volume in DigitalOcean, or attach/detach Block Storage volume to a droplet.
+
+  * This module is maintained by The Ansible Community
+OPTIONS (= is mandatory):
+
+- block_size
+        The size of the Block Storage volume in gigabytes. Required when command=create and state=present. If snapshot_id is included,
+        this will be ignored.
+        [Default: (null)]
+
+= command
+        Which operation do you want to perform.
+        (Choices: create, attach)
+
+- description
+        Description of the Block Storage volume.
+        [Default: (null)]
+
+- droplet_id
+        The droplet id you want to operate on. Required when command=attach.
+        [Default: (null)]
+
+- oauth_token
+        DigitalOcean OAuth token.
+        There are several other environment variables which can be used to provide this value.
+        i.e., - 'DO_API_TOKEN', 'DO_API_KEY', 'DO_OAUTH_TOKEN' and 'OAUTH_TOKEN'
+        (Aliases: api_token)[Default: (null)]
+        type: str
+
+= region
+        The slug of the region where your Block Storage volume should be located in. If snapshot_id is included, this will be ignored.
+
+
+- snapshot_id
+        The snapshot id you would like the Block Storage volume created with. If included, region and block_size will be ignored and
+        changed to null.
+        [Default: (null)]
+        version_added: 2.5
+
+= state
+        Indicate desired state of the target.
+        (Choices: present, absent)
+
+- timeout
+        The timeout in seconds used for polling DigitalOcean's API.
+        [Default: 30]
+        type: int
+
+- validate_certs
+        If set to `no', the SSL certificates will not be validated.
+        This should only set to `no' used on personally controlled sites using self-signed certificates.
+        [Default: True]
+        type: bool
+
+= volume_name
+        The name of the Block Storage volume.
+
+
+
+NOTES:
+      * Two environment variables can be used, DO_API_KEY and DO_API_TOKEN. They both refer to the v2 token.
+      * If snapshot_id is used, region and block_size will be ignored and changed to null.
+
+
+AUTHOR: Harnek Sidhu (@harneksidhu)
+        METADATA:
+          status:
+          - preview
+          supported_by: community
+        
+
+EXAMPLES:
+
+# Create new Block Storage
+- digital_ocean_block_storage:
+    state: present
+    command: create
+    api_token: <TOKEN>
+    region: nyc1
+    block_size: 10
+    volume_name: nyc1-block-storage
+# Delete Block Storage
+- digital_ocean_block_storage:
+    state: absent
+    command: create
+    api_token: <TOKEN>
+    region: nyc1
+    volume_name: nyc1-block-storage
+# Attach Block Storage to a Droplet
+- digital_ocean_block_storage:
+    state: present
+    command: attach
+    api_token: <TOKEN>
+    volume_name: nyc1-block-storage
+    region: nyc1
+    droplet_id: <ID>
+# Detach Block Storage from a Droplet
+- digital_ocean_block_storage:
+    state: absent
+    command: attach
+    api_token: <TOKEN>
+    volume_name: nyc1-block-storage
+    region: nyc1
+    droplet_id: <ID>
+
+
+RETURN VALUES:
+
+id:
+    description: Unique identifier of a Block Storage volume returned during creation.
+    returned: changed
+    type: str
+    sample: "69b25d9a-494c-12e6-a5af-001f53126b44"
+

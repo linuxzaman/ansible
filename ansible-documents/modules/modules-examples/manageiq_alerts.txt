@@ -1,0 +1,64 @@
+EXAMPLES:
+
+- name: Add an alert with a "hash expression" to ManageIQ
+  manageiq_alerts:
+    state: present
+    description: Test Alert 01
+    options:
+      notifications:
+        email:
+          to: ["example@example.com"]
+          from: "example@example.com"
+    resource_type: ContainerNode
+    expression:
+        eval_method: hostd_log_threshold
+        mode: internal
+        options: {}
+    enabled: true
+    manageiq_connection:
+      url: 'http://127.0.0.1:3000'
+      username: 'admin'
+      password: 'smartvm'
+      validate_certs: False
+
+- name: Add an alert with a "miq expression" to ManageIQ
+  manageiq_alerts:
+    state: present
+    description: Test Alert 02
+    options:
+      notifications:
+        email:
+          to: ["example@example.com"]
+          from: "example@example.com"
+    resource_type: Vm
+    expression_type: miq
+    expression:
+        and:
+          - CONTAINS:
+              tag: Vm.managed-environment
+              value: prod
+          - not:
+            CONTAINS:
+              tag: Vm.host.managed-environment
+              value: prod
+    enabled: true
+    manageiq_connection:
+      url: 'http://127.0.0.1:3000'
+      username: 'admin'
+      password: 'smartvm'
+      validate_certs: False
+
+- name: Delete an alert from ManageIQ
+  manageiq_alerts:
+    state: absent
+    description: Test Alert 01
+    manageiq_connection:
+      url: 'http://127.0.0.1:3000'
+      username: 'admin'
+      password: 'smartvm'
+      validate_certs: False
+
+
+RETURN VALUES:
+
+

@@ -1,0 +1,44 @@
+EXAMPLES:
+
+- name: Create a profile for an account
+  win_user_profile:
+    username: ansible-account
+    state: present
+
+- name: Create a profile for an account at C:\Users\ansible
+  win_user_profile:
+    username: ansible-account
+    name: ansible
+    state: present
+
+- name: Remove a profile for a still valid account
+  win_user_profile:
+    username: ansible-account
+    state: absent
+
+- name: Remove a profile for a deleted account
+  win_user_profile:
+    name: ansible
+    state: absent
+
+- name: Remove a profile for a deleted account based on the SID
+  win_user_profile:
+    username: S-1-5-21-3233007181-2234767541-1895602582-1305
+    state: absent
+
+- name: Remove multiple profiles that exist at the basename path
+  win_user_profile:
+    name: ansible
+    state: absent
+    remove_multiple: yes
+
+
+RETURN VALUES:
+
+path:
+  description: The full path to the profile for the account. This will be null
+    if C(state=absent) and no profile was deleted.
+  returned: always
+  type: str
+  sample: C:\Users\ansible
+

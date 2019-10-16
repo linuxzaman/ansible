@@ -1,0 +1,241 @@
+> AZURE_RM_PUBLICIPADDRESS_FACTS    (/usr/lib/python2.7/dist-packages/ansible/modules/cloud/azure/azure_rm_publicipaddress_facts.py)
+
+        Get facts for a specific public IP or all public IPs within a resource group.
+
+  * This module is maintained by The Ansible Community
+OPTIONS (= is mandatory):
+
+- ad_user
+        Active Directory username. Use when authenticating with an Active Directory user rather than service principal.
+        [Default: (null)]
+        type: str
+
+- adfs_authority_url
+        Azure AD authority url. Use when authenticating with Username/password, and has your own ADFS authority.
+        [Default: (null)]
+        type: str
+        version_added: 2.6
+
+- api_profile
+        Selects an API profile to use when communicating with Azure services. Default value of `latest' is appropriate for public clouds;
+        future values will allow use with Azure Stack.
+        [Default: latest]
+        type: str
+        version_added: 2.5
+
+- auth_source
+        Controls the source of the credentials to use for authentication.
+        If not specified, ANSIBLE_AZURE_AUTH_SOURCE environment variable will be used and default to `auto' if variable is not defined.
+        `auto' will follow the default precedence of module parameters -> environment variables -> default profile in credential file
+        `~/.azure/credentials'.
+        When set to `cli', the credentials will be sources from the default Azure CLI profile.
+        Can also be set via the `ANSIBLE_AZURE_AUTH_SOURCE' environment variable.
+        When set to `msi', the host machine must be an azure resource with an enabled MSI extension. `subscription_id' or the environment
+        variable `AZURE_SUBSCRIPTION_ID' can be used to identify the subscription ID if the resource is granted access to more than one
+        subscription, otherwise the first subscription is chosen.
+        The `msi' was added in Ansible 2.6.
+        (Choices: auto, cli, credential_file, env, msi)[Default: (null)]
+        type: str
+        version_added: 2.5
+
+- cert_validation_mode
+        Controls the certificate validation behavior for Azure endpoints. By default, all modules will validate the server certificate,
+        but when an HTTPS proxy is in use, or against Azure Stack, it may be necessary to disable this behavior by passing `ignore'. Can
+        also be set via credential file profile or the `AZURE_CERT_VALIDATION' environment variable.
+        (Choices: ignore, validate)[Default: (null)]
+        type: str
+        version_added: 2.5
+
+- client_id
+        Azure client ID. Use when authenticating with a Service Principal.
+        [Default: (null)]
+        type: str
+
+- cloud_environment
+        For cloud environments other than the US public cloud, the environment name (as defined by Azure Python SDK, eg,
+        `AzureChinaCloud', `AzureUSGovernment'), or a metadata discovery endpoint URL (required for Azure Stack). Can also be set via
+        credential file profile or the `AZURE_CLOUD_ENVIRONMENT' environment variable.
+        [Default: AzureCloud]
+        type: str
+        version_added: 2.4
+
+- name
+        Only show results for a specific Public IP.
+        [Default: (null)]
+
+- password
+        Active Directory user password. Use when authenticating with an Active Directory user rather than service principal.
+        [Default: (null)]
+
+- profile
+        Security profile found in ~/.azure/credentials file.
+        [Default: (null)]
+        type: str
+
+- resource_group
+        Limit results by resource group. Required when using name parameter.
+        [Default: (null)]
+
+- secret
+        Azure client secret. Use when authenticating with a Service Principal.
+        [Default: (null)]
+        type: str
+
+- subscription_id
+        Your Azure subscription Id.
+        [Default: (null)]
+        type: str
+
+- tags
+        Limit results by providing a list of tags. Format tags as 'key' or 'key:value'.
+        [Default: (null)]
+
+- tenant
+        Azure tenant ID. Use when authenticating with a Service Principal.
+        [Default: (null)]
+        type: str
+
+
+NOTES:
+      * For authentication with Azure you can pass parameters, set environment variables, use a profile stored in
+        ~/.azure/credentials, or log in before you run your tasks or playbook with `az login'.
+      * Authentication is also possible using a service principal or Active Directory user.
+      * To authenticate via service principal, pass subscription_id, client_id, secret and tenant or set environment variables
+        AZURE_SUBSCRIPTION_ID, AZURE_CLIENT_ID, AZURE_SECRET and AZURE_TENANT.
+      * To authenticate via Active Directory user, pass ad_user and password, or set AZURE_AD_USER and AZURE_PASSWORD in the
+        environment.
+      * Alternatively, credentials can be stored in ~/.azure/credentials. This is an ini file containing a [default] section and
+        the following keys: subscription_id, client_id, secret and tenant or subscription_id, ad_user and password. It is also
+        possible to add additional profiles. Specify the profile by passing profile or setting AZURE_PROFILE in the environment.
+
+
+SEE ALSO:
+      * Sign in with Azure CLI
+           How to authenticate using the `az login' command.
+           https://docs.microsoft.com/en-us/cli/azure/authenticate-azure-cli?view=azure-cli-latest
+
+
+REQUIREMENTS:  python >= 2.7, azure >= 2.0.0
+
+AUTHOR: Chris Houseknecht (@chouseknecht), Matt Davis (@nitzmahone)
+        METADATA:
+          status:
+          - preview
+          supported_by: community
+        
+
+EXAMPLES:
+
+- name: Get facts for one Public IP
+      azure_rm_publicipaddress_facts:
+        resource_group: myResourceGroup
+        name: publicip001
+
+    - name: Get facts for all Public IPs within a resource groups
+      azure_rm_publicipaddress_facts:
+        resource_group: myResourceGroup
+
+
+RETURN VALUES:
+
+azure_publicipaddresses:
+    description:
+        - List of public IP address dicts.
+        - Please note that this option will be deprecated in 2.10 when curated format will become the only supported format.
+    returned: always
+    type: list
+    example: [{
+        "etag": 'W/"a31a6d7d-cb18-40a5-b16d-9f4a36c1b18a"',
+        "id": "/subscriptions/xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx/resourceGroup/myResourceGroup/providers/Microsoft.Network/publicIPAddresses/pip2001",
+        "location": "eastus2",
+        "name": "pip2001",
+        "properties": {
+            "idleTimeoutInMinutes": 4,
+            "provisioningState": "Succeeded",
+            "publicIPAllocationMethod": "Dynamic",
+            "resourceGuid": "29de82f4-a7da-440e-bd3d-9cabb79af95a"
+        },
+        "type": "Microsoft.Network/publicIPAddresses"
+    }]
+publicipaddresses:
+    description:
+        - List of publicipaddress
+        - Contains the detail which matches azure_rm_publicipaddress parameters.
+        - Returned when the format parameter set to curated.
+    returned: always
+    type: complex
+    contains:
+        id:
+            description:
+                - Resource ID.
+            returned: always
+            type: str
+        name:
+            description:
+                - Name of the public ip address.
+            returned: always
+            type: str
+        type:
+            description:
+                - Resource type.
+            returned: always
+            type: str
+        location:
+            description:
+                - Resource location.
+            returned: always
+            type: str
+        tags:
+            description:
+                - Resource tags.
+            returned: always
+            type: complex
+        allocation_method:
+            description:
+                - The public IP allocation method.
+                - Possible values are 'static' and 'dynamic'.
+            returned: always
+            type: str
+        version:
+            description:
+                - The public IP address version.
+                - Possible values are 'ipv4' and 'ipv6'.
+            returned: always
+            type: str
+        dns_settings:
+            description:
+                - The FQDN of the DNS record associated with the public IP address.
+            returned: always
+            type: complex
+        ip_tags:
+            description:
+                - The list of tags associated with the public IP address.
+            returned: always
+            type: complex
+        ip_address:
+            description:
+                - The Public IP Prefix this Public IP Address should be allocated from.
+            returned: always
+            type: str
+        idle_timeout:
+            description:
+                - The idle timeout of the public IP address.
+            returned: always
+            type: int
+        provisioning_state:
+            description:
+                - he provisioning state of the PublicIP resource.
+                - Possible values are 'Updating', 'Deleting', and 'Failed'.
+            returned: always
+            type: str
+        etag:
+            description:
+                - A unique read-only string that changes whenever the resource is updated.
+            returned: always
+            type: str
+        sku:
+            description:
+                - The public IP address SKU.
+            returned: always
+            type: str
+

@@ -1,0 +1,40 @@
+> OS_CLIENT_CONFIG    (/usr/lib/python2.7/dist-packages/ansible/modules/cloud/openstack/os_client_config.py)
+
+        Get `openstack' client config data from clouds.yaml or environment
+
+  * This module is maintained by The Ansible Community
+OPTIONS (= is mandatory):
+
+- clouds
+        List of clouds to limit the return list to. No value means return information on all configured clouds
+        [Default: []]
+
+
+NOTES:
+      * Facts are placed in the `openstack.clouds' variable.
+
+
+REQUIREMENTS:  os-client-config
+
+AUTHOR: Monty Taylor (@emonty)
+        METADATA:
+          status:
+          - preview
+          supported_by: community
+        
+
+EXAMPLES:
+
+- name: Get list of clouds that do not support security groups
+  os_client_config:
+
+- debug:
+    var: "{{ item }}"
+  with_items: "{{ openstack.clouds | rejectattr('secgroup_source', 'none') | list }}"
+
+- name: Get the information back just about the mordred cloud
+  os_client_config:
+    clouds:
+      - mordred
+
+

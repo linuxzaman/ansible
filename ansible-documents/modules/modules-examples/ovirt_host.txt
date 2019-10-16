@@ -1,0 +1,115 @@
+EXAMPLES:
+
+# Examples don't contain auth parameter for simplicity,
+# look at ovirt_auth module to see how to reuse authentication:
+
+# Add host with username/password supporting SR-IOV.
+# Note that override_iptables is false by default in oVirt/RHV:
+- ovirt_host:
+    cluster: Default
+    name: myhost
+    address: 10.34.61.145
+    password: secret
+    override_iptables: true
+    kernel_params:
+      - intel_iommu=on
+
+# Add host using public key
+- ovirt_host:
+    public_key: true
+    cluster: Default
+    name: myhost2
+    address: 10.34.61.145
+    override_iptables: true
+
+# Deploy hosted engine host
+- ovirt_host:
+    cluster: Default
+    name: myhost2
+    password: secret
+    address: 10.34.61.145
+    override_iptables: true
+    hosted_engine: deploy
+
+# Maintenance
+- ovirt_host:
+    state: maintenance
+    name: myhost
+
+# Restart host using power management:
+- ovirt_host:
+    state: restarted
+    name: myhost
+
+# Upgrade host
+- ovirt_host:
+    state: upgraded
+    name: myhost
+
+# discover iscsi targets
+- ovirt_host:
+    state: iscsidiscover
+    name: myhost
+    iscsi:
+      username: iscsi_user
+      password: secret
+      address: 10.34.61.145
+      port: 3260
+
+
+# login to iscsi targets
+- ovirt_host:
+    state: iscsilogin
+    name: myhost
+    iscsi:
+      username: iscsi_user
+      password: secret
+      address: 10.34.61.145
+      target: "iqn.2015-07.com.mlipchuk2.redhat:444"
+      port: 3260
+
+
+# Reinstall host using public key
+- ovirt_host:
+    state: reinstalled
+    name: myhost
+    public_key: true
+
+# Remove host
+- ovirt_host:
+    state: absent
+    name: myhost
+    force: True
+
+# Retry removing host when failed (https://bugzilla.redhat.com/show_bug.cgi?id=1719271)
+- ovirt_host:
+    state: absent
+    name: myhost
+  register: result
+  until: not result.failed
+  retries: 6
+  delay: 20
+
+# Change host Name
+- ovirt_host:
+    id: 00000000-0000-0000-0000-000000000000
+    name: "new host name"
+
+
+RETURN VALUES:
+
+id:
+    description: ID of the host which is managed
+    returned: On success if host is found.
+    type: str
+    sample: 7de90f31-222c-436c-a1ca-7e655bd5b60c
+host:
+    description: "Dictionary of all the host attributes. Host attributes can be found on your oVirt/RHV instance
+                  at following url: http://ovirt.github.io/ovirt-engine-api-model/master/#types/host."
+    returned: On success if host is found.
+    type: dict
+iscsi_targets:
+    description: "List of host iscsi targets"
+    returned: On success if host is found and state is iscsidiscover.
+    type: list
+

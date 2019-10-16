@@ -1,0 +1,85 @@
+> VERTICA_SCHEMA    (/usr/lib/python2.7/dist-packages/ansible/modules/database/vertica/vertica_schema.py)
+
+        Adds or removes Vertica database schema and, optionally, roles with schema access privileges. A schema will not be removed until
+        all the objects have been dropped. In such a situation, if the module tries to remove the schema it will fail and only remove
+        roles created for the schema if they have no dependencies.
+
+  * This module is maintained by The Ansible Community
+OPTIONS (= is mandatory):
+
+- cluster
+        Name of the Vertica cluster.
+        [Default: localhost]
+
+- create_roles
+        Comma separated list of roles to create and grant usage and create access to the schema.
+        (Aliases: create_role)[Default: (null)]
+
+- db
+        Name of the Vertica database.
+        [Default: (null)]
+
+- login_password
+        The password used to authenticate with.
+        [Default: (null)]
+
+- login_user
+        The username used to authenticate with.
+        [Default: dbadmin]
+
+= name
+        Name of the schema to add or remove.
+
+
+- owner
+        Name of the user to set as owner of the schema.
+        [Default: (null)]
+
+- port
+        Vertica cluster port to connect to.
+        [Default: 5433]
+
+- state
+        Whether to create `present', or drop `absent' a schema.
+        (Choices: present, absent)[Default: present]
+
+- usage_roles
+        Comma separated list of roles to create and grant usage access to the schema.
+        (Aliases: usage_role)[Default: (null)]
+
+
+NOTES:
+      * The default authentication assumes that you are either logging in as or sudo'ing to the `dbadmin' account on the host.
+      * This module uses `pyodbc', a Python ODBC database adapter. You must ensure that `unixODBC' and `pyodbc' is installed on the
+        host and properly configured.
+      * Configuring `unixODBC' for Vertica requires `Driver = /opt/vertica/lib64/libverticaodbc.so' to be added to the `Vertica'
+        section of either `/etc/odbcinst.ini' or `$HOME/.odbcinst.ini' and both `ErrorMessagesPath = /opt/vertica/lib64' and
+        `DriverManagerEncoding = UTF-16' to be added to the `Driver' section of either `/etc/vertica.ini' or `$HOME/.vertica.ini'.
+
+
+REQUIREMENTS:  unixODBC, pyodbc
+
+AUTHOR: Dariusz Owczarek (@dareko)
+        METADATA:
+          status:
+          - preview
+          supported_by: community
+        
+
+EXAMPLES:
+
+- name: creating a new vertica schema
+  vertica_schema: name=schema_name db=db_name state=present
+
+- name: creating a new schema with specific schema owner
+  vertica_schema: name=schema_name owner=dbowner db=db_name state=present
+
+- name: creating a new schema with roles
+  vertica_schema:
+    name=schema_name
+    create_roles=schema_name_all
+    usage_roles=schema_name_ro,schema_name_rw
+    db=db_name
+    state=present
+
+

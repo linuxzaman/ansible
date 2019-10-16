@@ -1,0 +1,99 @@
+EXAMPLES:
+
+- name: Create btree index if not exists test_idx concurrently covering columns id and name of table products
+  postgresql_idx:
+    db: acme
+    table: products
+    columns: id,name
+    name: test_idx
+
+- name: Create btree index test_idx concurrently with tablespace called ssd and storage parameter
+  postgresql_idx:
+    db: acme
+    table: products
+    columns:
+    - id
+    - name
+    idxname: test_idx
+    tablespace: ssd
+    storage_params:
+    - fillfactor=90
+
+- name: Create gist index test_gist_idx concurrently on column geo_data of table map
+  postgresql_idx:
+    db: somedb
+    table: map
+    idxtype: gist
+    columns: geo_data
+    idxname: test_gist_idx
+
+# Note: for the example below pg_trgm extension must be installed for gin_trgm_ops
+- name: Create gin index gin0_idx not concurrently on column comment of table test
+  postgresql_idx:
+    idxname: gin0_idx
+    table: test
+    columns: comment gin_trgm_ops
+    concurrent: no
+    idxtype: gin
+
+- name: Drop btree test_idx concurrently
+  postgresql_idx:
+    db: mydb
+    idxname: test_idx
+    state: absent
+
+- name: Drop test_idx cascade
+  postgresql_idx:
+    db: mydb
+    idxname: test_idx
+    state: absent
+    cascade: yes
+    concurrent: no
+
+- name: Create btree index test_idx concurrently on columns id,comment where column id > 1
+  postgresql_idx:
+    db: mydb
+    table: test
+    columns: id,comment
+    idxname: test_idx
+    cond: id > 1
+
+
+RETURN VALUES:
+
+name:
+  description: Index name.
+  returned: always
+  type: str
+  sample: 'foo_idx'
+state:
+  description: Index state.
+  returned: always
+  type: str
+  sample: 'present'
+schema:
+  description: Schema where index exists.
+  returned: always
+  type: str
+  sample: 'public'
+tablespace:
+  description: Tablespace where index exists.
+  returned: always
+  type: str
+  sample: 'ssd'
+query:
+  description: Query that was tried to be executed.
+  returned: always
+  type: str
+  sample: 'CREATE INDEX CONCURRENTLY foo_idx ON test_table USING BTREE (id)'
+storage_params:
+  description: Index storage parameters.
+  returned: always
+  type: list
+  sample: [ "fillfactor=90" ]
+valid:
+  description: Index validity.
+  returned: always
+  type: bool
+  sample: true
+

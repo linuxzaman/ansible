@@ -1,0 +1,74 @@
+EXAMPLES:
+
+- name: Create a basic server
+  hcloud_server:
+    name: my-server
+    server_type: cx11
+    image: ubuntu-18.04
+    state: present
+
+- name: Create a basic server with ssh key
+  hcloud_server:
+    name: my-server
+    server_type: cx11
+    image: ubuntu-18.04
+    location: fsn1
+    ssh_keys:
+      - me@myorganisation
+    state: present
+
+- name: Resize an existing server
+  hcloud_server:
+    name: my-server
+    server_type: cx21
+    keep_disk: yes
+    state: present
+
+- name: Ensure the server is absent (remove if needed)
+  hcloud_server:
+    name: my-server
+    state: absent
+
+- name: Ensure the server is started
+  hcloud_server:
+    name: my-server
+    state: started
+
+- name: Ensure the server is stopped
+  hcloud_server:
+    name: my-server
+    state: stopped
+
+- name: Ensure the server is restarted
+  hcloud_server:
+    name: my-server
+    state: restarted
+
+- name: Ensure the server is rebuild
+  hcloud_server:
+    name: my-server
+    image: ubuntu-18.04
+    state: rebuild
+
+
+RETURN VALUES:
+
+hcloud_server:
+    description: The server instance
+    returned: Always
+    type: dict
+    sample: {
+        "backup_window": null,
+        "datacenter": "nbg1-dc3",
+        "id": 1937415,
+        "image": "ubuntu-18.04",
+        "ipv4_address": "116.203.104.109",
+        "ipv6": "2a01:4f8:1c1c:c140::/64",
+        "labels": {},
+        "location": "nbg1",
+        "name": "mein-server-2",
+        "rescue_enabled": false,
+        "server_type": "cx11",
+        "status": "running"
+    }
+

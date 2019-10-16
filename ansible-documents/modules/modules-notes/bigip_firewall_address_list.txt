@@ -1,0 +1,251 @@
+> BIGIP_FIREWALL_ADDRESS_LIST    (/usr/lib/python2.7/dist-packages/ansible/modules/network/f5/bigip_firewall_address_list.py)
+
+        Manages the AFM address lists on a BIG-IP. This module can be used to add and remove address list entries.
+
+  * This module is maintained by an Ansible Partner
+OPTIONS (= is mandatory):
+
+- address_lists
+        Simple list of existing address lists to add to this list. Address lists can be specified in either their fully qualified name
+        (/Common/foo) or their short name (foo). If a short name is used, the `partition' argument will automatically be prepended to the
+        short name.
+        [Default: (null)]
+        type: list
+
+- address_ranges
+        A list of address ranges where the range starts with a port number, is followed by a dash (-) and then a second number.
+        If the first address is greater than the second number, the numbers will be reversed so-as to be properly formatted. ie,
+        `2.2.2.2-1.1.1'. would become `1.1.1.1-2.2.2.2'.
+        [Default: (null)]
+        type: list
+
+- addresses
+        Individual addresses that you want to add to the list. These addresses differ from ranges, and lists of lists such as what can be
+        used in `address_ranges' and `address_lists' respectively.
+        This list can also include networks that have CIDR notation.
+        [Default: (null)]
+        type: list
+
+- description
+        Description of the address list
+        [Default: (null)]
+        type: str
+
+- fqdns
+        A list of fully qualified domain names (FQDNs).
+        An FQDN has at least one decimal point in it, separating the host from the domain.
+        To add FQDNs to a list requires that a global FQDN resolver be configured. At the moment, this must either be done via
+        `bigip_command', or, in the GUI of BIG-IP. If using `bigip_command', this can be done with `tmsh modify security firewall global-
+        fqdn-policy FOO' where `FOO' is a DNS resolver configured at `tmsh create net dns-resolver FOO'.
+        [Default: (null)]
+        type: list
+
+- geo_locations
+        List of geolocations specified by their `country' and `region'.
+        [Default: (null)]
+        suboptions:
+          country:
+            choices:
+            - Any valid 2 character ISO country code.
+            - Any valid country name.
+            description:
+            - The country name, or code, of the geolocation to use.
+            - In addition to the country full names, you may also specify their abbreviated
+              form, such as `US' instead of `United States'.
+            - Valid country codes can be found here https://countrycode.org/.
+            required: true
+            type: str
+          region:
+            description:
+            - Region name of the country to use.
+            type: str
+        
+        type: list
+
+= name
+        Specifies the name of the address list.
+
+        type: str
+
+- partition
+        Device partition to manage resources on.
+        [Default: Common]
+        type: str
+
+= password
+        The password for the user account used to connect to the BIG-IP.
+        You may omit this option by setting the environment variable `F5_PASSWORD'.
+        (Aliases: pass, pwd)
+        type: str
+
+- provider
+        A dict object containing connection details.
+        [Default: (null)]
+        suboptions:
+          password:
+            aliases:
+            - pass
+            - pwd
+            description:
+            - The password for the user account used to connect to the BIG-IP.
+            - You may omit this option by setting the environment variable `F5_PASSWORD'.
+            required: true
+            type: str
+          server:
+            description:
+            - The BIG-IP host.
+            - You may omit this option by setting the environment variable `F5_SERVER'.
+            required: true
+            type: str
+          server_port:
+            default: 443
+            description:
+            - The BIG-IP server port.
+            - You may omit this option by setting the environment variable `F5_SERVER_PORT'.
+            type: int
+          ssh_keyfile:
+            description:
+            - Specifies the SSH keyfile to use to authenticate the connection to the remote
+              device.  This argument is only used for `cli' transports.
+            - You may omit this option by setting the environment variable `ANSIBLE_NET_SSH_KEYFILE'.
+            type: path
+          timeout:
+            default: 10
+            description:
+            - Specifies the timeout in seconds for communicating with the network device for
+              either connecting or sending commands.  If the timeout is exceeded before the
+              operation is completed, the module will error.
+            type: int
+          transport:
+            choices:
+            - cli
+            - rest
+            default: rest
+            description:
+            - Configures the transport connection to use when connecting to the remote device.
+            type: str
+          user:
+            description:
+            - The username to connect to the BIG-IP with. This user must have administrative
+              privileges on the device.
+            - You may omit this option by setting the environment variable `F5_USER'.
+            required: true
+            type: str
+          validate_certs:
+            default: true
+            description:
+            - If `no', SSL certificates are not validated. Use this only on personally controlled
+              sites using self-signed certificates.
+            - You may omit this option by setting the environment variable `F5_VALIDATE_CERTS'.
+            type: bool
+        
+        type: dict
+        version_added: 2.5
+
+= server
+        The BIG-IP host.
+        You may omit this option by setting the environment variable `F5_SERVER'.
+
+        type: str
+
+- server_port
+        The BIG-IP server port.
+        You may omit this option by setting the environment variable `F5_SERVER_PORT'.
+        [Default: 443]
+        type: int
+        version_added: 2.2
+
+- state
+        When `present', ensures that the address list and entries exists.
+        When `absent', ensures the address list is removed.
+        (Choices: present, absent)[Default: present]
+        type: str
+
+= user
+        The username to connect to the BIG-IP with. This user must have administrative privileges on the device.
+        You may omit this option by setting the environment variable `F5_USER'.
+
+        type: str
+
+- validate_certs
+        If `no', SSL certificates are not validated. Use this only on personally controlled sites using self-signed certificates.
+        You may omit this option by setting the environment variable `F5_VALIDATE_CERTS'.
+        [Default: True]
+        type: bool
+        version_added: 2.0
+
+
+NOTES:
+      * For more information on using Ansible to manage F5 Networks devices see https://www.ansible.com/integrations/networks/f5.
+      * Requires BIG-IP software version >= 12.
+      * The F5 modules only manipulate the running configuration of the F5 product. To ensure that BIG-IP specific configuration
+        persists to disk, be sure to include at least one task that uses the [bigip_config] module to save the running
+        configuration. Refer to the module's documentation for the correct usage of the module to save your running configuration.
+
+
+AUTHOR: Tim Rupp (@caphrim007), Wojciech Wypior (@wojtek0806)
+        METADATA:
+          status:
+          - preview
+          supported_by: certified
+        
+
+EXAMPLES:
+
+- name: Create an address list
+  bigip_firewall_address_list:
+    name: foo
+    addresses:
+      - 3.3.3.3
+      - 4.4.4.4
+      - 5.5.5.5
+    provider:
+      password: secret
+      server: lb.mydomain.com
+      user: admin
+  delegate_to: localhost
+
+
+RETURN VALUES:
+
+description:
+  description: The new description of the address list.
+  returned: changed
+  type: str
+  sample: My address list
+addresses:
+  description: The new list of addresses applied to the address list.
+  returned: changed
+  type: list
+  sample: [1.1.1.1, 2.2.2.2]
+address_ranges:
+  description: The new list of address ranges applied to the address list.
+  returned: changed
+  type: list
+  sample: [1.1.1.1-2.2.2.2, 3.3.3.3-4.4.4.4]
+address_lists:
+  description: The new list of address list names applied to the address list.
+  returned: changed
+  type: list
+  sample: [/Common/list1, /Common/list2]
+fqdns:
+  description: The new list of FQDN names applied to the address list.
+  returned: changed
+  type: list
+  sample: [google.com, mit.edu]
+geo_locations:
+  description: The new list of geo locations applied to the address list.
+  returned: changed
+  type: complex
+  contains:
+    country:
+      description: Country of the geo location.
+      returned: changed
+      type: str
+      sample: US
+    region:
+      description: Region of the geo location.
+      returned: changed
+      type: str
+      sample: California
+

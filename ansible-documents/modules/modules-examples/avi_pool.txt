@@ -1,0 +1,42 @@
+EXAMPLES:
+
+- name: Create a Pool with two servers and HTTP monitor
+  avi_pool:
+    controller: 10.10.1.20
+    username: avi_user
+    password: avi_password
+    name: testpool1
+    description: testpool1
+    state: present
+    health_monitor_refs:
+        - '/api/healthmonitor?name=System-HTTP'
+    servers:
+        - ip:
+            addr: 10.10.2.20
+            type: V4
+        - ip:
+            addr: 10.10.2.21
+            type: V4
+
+- name: Patch pool with a single server using patch op and avi_credentials
+  avi_pool:
+    avi_api_update_method: patch
+    avi_api_patch_op: delete
+    avi_credentials: "{{avi_credentials}}"
+    name: test-pool
+    servers:
+      - ip:
+        addr: 10.90.64.13
+        type: 'V4'
+  register: pool
+  when:
+    - state | default("present") == "present"
+
+
+RETURN VALUES:
+
+obj:
+    description: Pool (api/pool) object
+    returned: success, changed
+    type: dict
+

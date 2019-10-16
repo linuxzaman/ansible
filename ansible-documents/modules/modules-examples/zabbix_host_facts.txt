@@ -1,0 +1,39 @@
+EXAMPLES:
+
+- name: Get host info
+  local_action:
+    module: zabbix_host_facts
+    server_url: http://monitor.example.com
+    login_user: username
+    login_password: password
+    host_name: ExampleHost
+    host_ip: 127.0.0.1
+    timeout: 10
+    exact_match: no
+    remove_duplicate: yes
+
+- name: Reduce host inventory information to provided keys
+  local_action:
+    module: zabbix_host_facts
+    server_url: http://monitor.example.com
+    login_user: username
+    login_password: password
+    host_name: ExampleHost
+    host_inventory:
+      - os
+      - tag
+    host_ip: 127.0.0.1
+    timeout: 10
+    exact_match: no
+    remove_duplicate: yes
+
+
+RETURN VALUES:
+
+---
+hosts:
+  description: List of Zabbix hosts. See https://www.zabbix.com/documentation/3.4/manual/api/reference/host/get for list of host values.
+  returned: success
+  type: dict
+  sample: [ { "available": "1", "description": "", "disable_until": "0", "error": "", "flags": "0", "groups": ["1"], "host": "Host A", ... } ]
+

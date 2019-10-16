@@ -1,0 +1,139 @@
+> AVI_GSLBSERVICE_PATCH_MEMBER    (/usr/lib/python2.7/dist-packages/ansible/modules/network/avi/avi_gslbservice_patch_member.py)
+
+        This module can be used for calling any resources defined in Avi REST API. https://avinetworks.com/ This module is useful for
+        invoking HTTP Patch methods and accessing resources that do not have an REST object associated with them.
+
+  * This module is maintained by The Ansible Community
+OPTIONS (= is mandatory):
+
+- api_context
+        Avi API context that includes current session ID and CSRF Token.
+        This allows user to perform single login and re-use the session.
+        [Default: (null)]
+        type: dict
+        version_added: 2.5
+
+- api_version
+        Avi API version of to use for Avi API and objects.
+        [Default: 16.4.4]
+        type: str
+
+- avi_credentials
+        Avi Credentials dictionary which can be used in lieu of enumerating Avi Controller login details.
+        [Default: (null)]
+        type: dict
+        version_added: 2.5
+
+- controller
+        IP address or hostname of the controller. The default value is the environment variable `AVI_CONTROLLER'.
+        [Default: ]
+        type: str
+
+- data
+        HTTP body of GSLB Service Member in YAML or JSON format.
+        [Default: (null)]
+
+= name
+        Name of the GSLB Service
+
+
+- params
+        Query parameters passed to the HTTP API.
+        [Default: (null)]
+
+- password
+        Password of Avi user in Avi controller. The default value is the environment variable `AVI_PASSWORD'.
+        [Default: ]
+        type: str
+
+- state
+        The state that should be applied to the member. Member is
+        identified using field member.ip.addr.
+        (Choices: absent, present)[Default: present]
+
+- tenant
+        Name of tenant used for all Avi API calls and context of object.
+        [Default: admin]
+        type: str
+
+- tenant_uuid
+        UUID of tenant used for all Avi API calls and context of object.
+        [Default: ]
+        type: str
+
+- username
+        Username used for accessing Avi controller. The default value is the environment variable `AVI_USERNAME'.
+        [Default: ]
+        type: str
+
+
+NOTES:
+      * For more information on using Ansible to manage Avi Network devices see https://www.ansible.com/ansible-avi-networks.
+
+
+REQUIREMENTS:  avisdk
+
+AUTHOR: Gaurav Rastogi (@grastogi23) <grastogi@avinetworks.com>
+        METADATA:
+          status:
+          - preview
+          supported_by: community
+        
+
+EXAMPLES:
+
+- name: Patch GSLB Service to add a new member and group
+    avi_gslbservice_patch_member:
+      controller: "{{ controller }}"
+      username: "{{ username }}"
+      password: "{{ password }}"
+      name: gs-3
+      api_version: 17.2.1
+      data:
+        group:
+          name: newfoo
+          priority: 60
+          members:
+            - enabled: true
+              ip:
+                addr:  10.30.10.66
+                type: V4
+              ratio: 3
+  - name: Patch GSLB Service to delete an existing member
+    avi_gslbservice_patch_member:
+      controller: "{{ controller }}"
+      username: "{{ username }}"
+      password: "{{ password }}"
+      name: gs-3
+      state: absent
+      api_version: 17.2.1
+      data:
+        group:
+          name: newfoo
+          members:
+            - enabled: true
+              ip:
+                addr:  10.30.10.68
+                type: V4
+              ratio: 3
+  - name: Update priority of GSLB Service Pool
+    avi_gslbservice_patch_member:
+      controller: ""
+      username: ""
+      password: ""
+      name: gs-3
+      state: present
+      api_version: 17.2.1
+      data:
+        group:
+          name: newfoo
+          priority: 42
+
+
+RETURN VALUES:
+
+obj:
+    description: Avi REST resource
+    returned: success, changed
+    type: dict
+

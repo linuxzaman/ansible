@@ -1,0 +1,53 @@
+> APT_RPM    (/usr/lib/python2.7/dist-packages/ansible/modules/packaging/os/apt_rpm.py)
+
+        Manages packages with `apt-rpm'. Both low-level (`rpm') and high-level (`apt-get') package manager binaries required.
+
+  * This module is maintained by The Ansible Community
+OPTIONS (= is mandatory):
+
+= pkg
+        name of package to install, upgrade or remove.
+
+
+- state
+        Indicates the desired package state.
+        (Choices: absent, present)[Default: present]
+
+- update_cache
+        update the package database first `apt-get update'.
+        [Default: no]
+        type: bool
+
+
+AUTHOR: Evgenii Terechkov (@evgkrsk)
+        METADATA:
+          status:
+          - preview
+          supported_by: community
+        
+
+EXAMPLES:
+
+- name: Install package foo
+  apt_rpm:
+    pkg: foo
+    state: present
+
+- name: Remove package foo
+  apt_rpm:
+    pkg: foo
+    state: absent
+
+- name: Remove packages foo and bar
+  apt_rpm:
+    pkg: foo,bar
+    state: absent
+
+# bar will be the updated if a newer version exists
+- name: Update the package database and install bar
+  apt_rpm:
+    name: bar
+    state: present
+    update_cache: yes
+
+

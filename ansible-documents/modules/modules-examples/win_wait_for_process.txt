@@ -1,0 +1,45 @@
+EXAMPLES:
+
+- name: Wait 300 seconds for all Oracle VirtualBox processes to stop. (VBoxHeadless, VirtualBox, VBoxSVC)
+  win_wait_for_process:
+    process_name_pattern: 'v(irtual)?box(headless|svc)?'
+    state: absent
+    timeout: 500
+
+- name: Wait 300 seconds for 3 instances of cmd to start, waiting 5 seconds between each check
+  win_wait_for_process:
+    process_name_exact: cmd
+    state: present
+    timeout: 500
+    sleep: 5
+    process_min_count: 3
+
+
+RETURN VALUES:
+
+elapsed:
+  description: The elapsed seconds between the start of poll and the end of the module.
+  returned: always
+  type: float
+  sample: 3.14159265
+matched_processes:
+  description: List of matched processes (either stopped or started).
+  returned: always
+  type: complex
+  contains:
+    name:
+      description: The name of the matched process.
+      returned: always
+      type: str
+      sample: svchost
+    owner:
+      description: The owner of the matched process.
+      returned: when supported by PowerShell
+      type: str
+      sample: NT AUTHORITY\SYSTEM
+    pid:
+      description: The PID of the matched process.
+      returned: always
+      type: int
+      sample: 7908
+

@@ -1,0 +1,107 @@
+> RABBITMQ_BINDING    (/usr/lib/python2.7/dist-packages/ansible/modules/messaging/rabbitmq/rabbitmq_binding.py)
+
+        This module uses rabbitMQ REST APIs to create / delete bindings.
+
+  * This module is maintained by The Ansible Community
+OPTIONS (= is mandatory):
+
+- arguments
+        extra arguments for exchange. If defined this argument is a key/value dictionary
+        [Default: {}]
+
+- ca_cert
+        CA certificate to verify SSL connection to management API.
+        (Aliases: cacert)[Default: (null)]
+        type: path
+        version_added: 2.3
+
+- client_cert
+        Client certificate to send on SSL connections to management API.
+        (Aliases: cert)[Default: (null)]
+        type: path
+        version_added: 2.3
+
+- client_key
+        Private key matching the client certificate.
+        (Aliases: key)[Default: (null)]
+        type: path
+        version_added: 2.3
+
+= destination
+        destination exchange or queue for the binding.
+        (Aliases: dst, dest)
+
+= destination_type
+        Either queue or exchange.
+        (Aliases: type, dest_type)(Choices: queue, exchange)
+
+- login_host
+        RabbitMQ host for connection.
+        [Default: localhost]
+        type: str
+
+- login_password
+        RabbitMQ password for connection.
+        [Default: (null)]
+        type: str
+
+- login_port
+        RabbitMQ management API port.
+        [Default: 15672]
+        type: str
+
+- login_protocol
+        RabbitMQ management API protocol.
+        (Choices: http, https)[Default: http]
+        type: str
+        version_added: 2.3
+
+- login_user
+        RabbitMQ user for connection.
+        [Default: guest]
+        type: str
+
+= name
+        source exchange to create binding on.
+        (Aliases: src, source)
+
+- routing_key
+        routing key for the binding.
+        [Default: #]
+
+- state
+        Whether the bindings should be present or absent.
+        (Choices: present, absent)[Default: present]
+
+- vhost
+        RabbitMQ virtual host.
+        [Default: /]
+        type: str
+
+
+REQUIREMENTS:  requests >= 1.0.0
+
+AUTHOR: Manuel Sousa (@manuel-sousa)
+        METADATA:
+          status:
+          - preview
+          supported_by: community
+        
+
+EXAMPLES:
+
+# Bind myQueue to directExchange with routing key info
+- rabbitmq_binding:
+    name: directExchange
+    destination: myQueue
+    type: queue
+    routing_key: info
+
+# Bind directExchange to topicExchange with routing key *.info
+- rabbitmq_binding:
+    name: topicExchange
+    destination: topicExchange
+    type: exchange
+    routing_key: '*.info'
+
+

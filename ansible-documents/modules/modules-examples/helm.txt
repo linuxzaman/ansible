@@ -1,0 +1,47 @@
+EXAMPLES:
+
+- name: Install helm chart
+  helm:
+    host: localhost
+    chart:
+      name: memcached
+      version: 0.4.0
+      source:
+        type: repo
+        location: https://kubernetes-charts.storage.googleapis.com
+    state: present
+    name: my-memcached
+    namespace: default
+
+- name: Uninstall helm chart
+  helm:
+    host: localhost
+    state: absent
+    name: my-memcached
+
+- name: Install helm chart from a git repo
+  helm:
+    host: localhost
+    chart:
+      source:
+        type: git
+        location: https://github.com/user/helm-chart.git
+    state: present
+    name: my-example
+    namespace: default
+
+- name: Install helm chart from a git repo specifying path
+  helm:
+    host: localhost
+    chart:
+      source:
+        type: git
+        location: https://github.com/helm/charts.git
+        path: stable/memcached
+    state: present
+    name: my-memcached
+    namespace: default
+
+
+RETURN VALUES:
+ # 

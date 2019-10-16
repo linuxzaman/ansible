@@ -1,0 +1,336 @@
+> FORTIOS_EXTENDER_CONTROLLER_EXTENDER    (/usr/lib/python2.7/dist-packages/ansible/modules/network/fortios/fortios_extender_controller_extender.py)
+
+        This module is able to configure a FortiGate or FortiOS by allowing the user to configure extender_controller feature and
+        extender category. Examples includes all options and need to be adjusted to datasources before usage. Tested with FOS v6.0.2
+
+  * This module is maintained by The Ansible Community
+OPTIONS (= is mandatory):
+
+- extender_controller_extender
+        Extender controller configuration.
+        [Default: None]
+        suboptions:
+          aaa-shared-secret:
+            description:
+            - AAA shared secret.
+          access-point-name:
+            description:
+            - Access point name(APN).
+          admin:
+            choices:
+            - disable
+            - discovered
+            - enable
+            description:
+            - FortiExtender Administration (enable or disable).
+          at-dial-script:
+            description:
+            - Initialization AT commands specific to the MODEM.
+          billing-start-day:
+            description:
+            - Billing start day.
+          cdma-aaa-spi:
+            description:
+            - CDMA AAA SPI.
+          cdma-ha-spi:
+            description:
+            - CDMA HA SPI.
+          cdma-nai:
+            description:
+            - NAI for CDMA MODEMS.
+          conn-status:
+            description:
+            - Connection status.
+          description:
+            description:
+            - Description.
+          dial-mode:
+            choices:
+            - dial-on-demand
+            - always-connect
+            description:
+            - Dial mode (dial-on-demand or always-connect).
+          dial-status:
+            description:
+            - Dial status.
+          ext-name:
+            description:
+            - FortiExtender name.
+          ha-shared-secret:
+            description:
+            - HA shared secret.
+          id:
+            description:
+            - FortiExtender serial number.
+            required: true
+          ifname:
+            description:
+            - FortiExtender interface name.
+          initiated-update:
+            choices:
+            - enable
+            - disable
+            description:
+            - Allow/disallow network initiated updates to the MODEM.
+          mode:
+            choices:
+            - standalone
+            - redundant
+            description:
+            - FortiExtender mode.
+          modem-passwd:
+            description:
+            - MODEM password.
+          modem-type:
+            choices:
+            - cdma
+            - gsm/lte
+            - wimax
+            description:
+            - MODEM type (CDMA, GSM/LTE or WIMAX).
+          multi-mode:
+            choices:
+            - auto
+            - auto-3g
+            - force-lte
+            - force-3g
+            - force-2g
+            description:
+            - MODEM mode of operation(3G,LTE,etc).
+          ppp-auth-protocol:
+            choices:
+            - auto
+            - pap
+            - chap
+            description:
+            - PPP authentication protocol (PAP,CHAP or auto).
+          ppp-echo-request:
+            choices:
+            - enable
+            - disable
+            description:
+            - Enable/disable PPP echo request.
+          ppp-password:
+            description:
+            - PPP password.
+          ppp-username:
+            description:
+            - PPP username.
+          primary-ha:
+            description:
+            - Primary HA.
+          quota-limit-mb:
+            description:
+            - Monthly quota limit (MB).
+          redial:
+            choices:
+            - none
+            - 1
+            - 2
+            - 3
+            - 4
+            - 5
+            - 6
+            - 7
+            - 8
+            - 9
+            - 10
+            description:
+            - Number of redials allowed based on failed attempts.
+          redundant-intf:
+            description:
+            - Redundant interface.
+          roaming:
+            choices:
+            - enable
+            - disable
+            description:
+            - Enable/disable MODEM roaming.
+          role:
+            choices:
+            - none
+            - primary
+            - secondary
+            description:
+            - FortiExtender work role(Primary, Secondary, None).
+          secondary-ha:
+            description:
+            - Secondary HA.
+          sim-pin:
+            description:
+            - SIM PIN.
+          state:
+            choices:
+            - present
+            - absent
+            description:
+            - Indicates whether to create or remove the object
+          vdom:
+            description:
+            - VDOM
+          wimax-auth-protocol:
+            choices:
+            - tls
+            - ttls
+            description:
+            - WiMax authentication protocol(TLS or TTLS).
+          wimax-carrier:
+            description:
+            - WiMax carrier.
+          wimax-realm:
+            description:
+            - WiMax realm.
+        
+
+= host
+        FortiOS or FortiGate ip address.
+
+
+- https
+        Indicates if the requests towards FortiGate must use HTTPS protocol
+        [Default: False]
+        type: bool
+
+- password
+        FortiOS or FortiGate password.
+        [Default: ]
+
+= username
+        FortiOS or FortiGate username.
+
+
+- vdom
+        Virtual domain, among those defined previously. A vdom is a virtual instance of the FortiGate that can be configured and used as
+        a different unit.
+        [Default: root]
+
+
+NOTES:
+      * Requires fortiosapi library developed by Fortinet
+      * Run as a local_action in your playbook
+
+
+REQUIREMENTS:  fortiosapi>=0.9.8
+
+AUTHOR: Miguel Angel Munoz (@mamunozgonzalez), Nicolas Thomas (@thomnico)
+        METADATA:
+          status:
+          - preview
+          supported_by: community
+        
+
+EXAMPLES:
+
+- hosts: localhost
+  vars:
+   host: "192.168.122.40"
+   username: "admin"
+   password: ""
+   vdom: "root"
+  tasks:
+  - name: Extender controller configuration.
+    fortios_extender_controller_extender:
+      host:  "{{ host }}"
+      username: "{{ username }}"
+      password: "{{ password }}"
+      vdom:  "{{ vdom }}"
+      extender_controller_extender:
+        state: "present"
+        aaa-shared-secret: "<your_own_value>"
+        access-point-name: "<your_own_value>"
+        admin: "disable"
+        at-dial-script: "<your_own_value>"
+        billing-start-day: "7"
+        cdma-aaa-spi: "<your_own_value>"
+        cdma-ha-spi: "<your_own_value>"
+        cdma-nai: "<your_own_value>"
+        conn-status: "11"
+        description: "<your_own_value>"
+        dial-mode: "dial-on-demand"
+        dial-status: "14"
+        ext-name: "<your_own_value>"
+        ha-shared-secret: "<your_own_value>"
+        id:  "17"
+        ifname: "<your_own_value>"
+        initiated-update: "enable"
+        mode: "standalone"
+        modem-passwd: "<your_own_value>"
+        modem-type: "cdma"
+        multi-mode: "auto"
+        ppp-auth-protocol: "auto"
+        ppp-echo-request: "enable"
+        ppp-password: "<your_own_value>"
+        ppp-username: "<your_own_value>"
+        primary-ha: "<your_own_value>"
+        quota-limit-mb: "29"
+        redial: "none"
+        redundant-intf: "<your_own_value>"
+        roaming: "enable"
+        role: "none"
+        secondary-ha: "<your_own_value>"
+        sim-pin: "<your_own_value>"
+        vdom: "36"
+        wimax-auth-protocol: "tls"
+        wimax-carrier: "<your_own_value>"
+        wimax-realm: "<your_own_value>"
+
+
+RETURN VALUES:
+
+build:
+  description: Build number of the fortigate image
+  returned: always
+  type: str
+  sample: '1547'
+http_method:
+  description: Last method used to provision the content into FortiGate
+  returned: always
+  type: str
+  sample: 'PUT'
+http_status:
+  description: Last result given by FortiGate on last operation applied
+  returned: always
+  type: str
+  sample: "200"
+mkey:
+  description: Master key (id) used in the last call to FortiGate
+  returned: success
+  type: str
+  sample: "id"
+name:
+  description: Name of the table used to fulfill the request
+  returned: always
+  type: str
+  sample: "urlfilter"
+path:
+  description: Path of the table used to fulfill the request
+  returned: always
+  type: str
+  sample: "webfilter"
+revision:
+  description: Internal revision number
+  returned: always
+  type: str
+  sample: "17.0.2.10658"
+serial:
+  description: Serial number of the unit
+  returned: always
+  type: str
+  sample: "FGVMEVYYQT3AB5352"
+status:
+  description: Indication of the operation's result
+  returned: always
+  type: str
+  sample: "success"
+vdom:
+  description: Virtual domain used
+  returned: always
+  type: str
+  sample: "root"
+version:
+  description: Version of the FortiGate
+  returned: always
+  type: str
+  sample: "v5.6.3"
+
+

@@ -1,0 +1,88 @@
+> OPENVSWITCH_PORT    (/usr/lib/python2.7/dist-packages/ansible/modules/network/ovs/openvswitch_port.py)
+
+        Manage Open vSwitch ports
+
+  * This module is maintained by The Ansible Network Team
+OPTIONS (= is mandatory):
+
+= bridge
+        Name of bridge to manage
+
+
+- external_ids
+        Dictionary of external_ids applied to a port.
+        [Default: {}]
+        version_added: 2.0
+        
+
+= port
+        Name of port to manage on the bridge
+
+
+- set
+        Set a single property on a port.
+        [Default: (null)]
+        version_added: 2.0
+        
+
+- state
+        Whether the port should exist
+        (Choices: present, absent)[Default: present]
+
+- tag
+        VLAN tag for this port. Must be a value between 0 and 4095.
+        [Default: (null)]
+        version_added: 2.2
+        
+
+- timeout
+        How long to wait for ovs-vswitchd to respond
+        [Default: 5]
+
+
+REQUIREMENTS:  ovs-vsctl
+
+AUTHOR: David Stygstra (@stygstra)
+        METADATA:
+          status:
+          - preview
+          supported_by: network
+        
+
+EXAMPLES:
+
+# Creates port eth2 on bridge br-ex
+- openvswitch_port:
+    bridge: br-ex
+    port: eth2
+    state: present
+
+# Creates port eth6
+- openvswitch_port:
+    bridge: bridge-loop
+    port: eth6
+    state: present
+    set: Interface eth6
+
+# Creates port vlan10 with tag 10 on bridge br-ex
+- openvswitch_port:
+    bridge: br-ex
+    port: vlan10
+    tag: 10
+    state: present
+    set: Interface vlan10
+
+# Assign interface id server1-vifeth6 and mac address 00:00:5E:00:53:23
+# to port vifeth6 and setup port to be managed by a controller.
+- openvswitch_port:
+    bridge: br-int
+    port: vifeth6
+    state: present
+  args:
+    external_ids:
+      iface-id: '{{ inventory_hostname }}-vifeth6'
+      attached-mac: '00:00:5E:00:53:23'
+      vm-id: '{{ inventory_hostname }}'
+      iface-status: active
+
+

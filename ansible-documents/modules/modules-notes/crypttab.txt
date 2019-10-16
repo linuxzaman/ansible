@@ -1,0 +1,67 @@
+> CRYPTTAB    (/usr/lib/python2.7/dist-packages/ansible/modules/system/crypttab.py)
+
+        Control Linux encrypted block devices that are set up during system boot in `/etc/crypttab'.
+
+  * This module is maintained by The Ansible Community
+OPTIONS (= is mandatory):
+
+- backing_device
+        Path to the underlying block device or file, or the UUID of a block-device prefixed with `UUID='.
+        [Default: (null)]
+        type: str
+
+= name
+        Name of the encrypted block device as it appears in the `/etc/crypttab' file, or optionally prefixed with `/dev/mapper/', as it
+        appears in the filesystem. `/dev/mapper/' will be stripped from `name'.
+
+        type: str
+
+- opts
+        A comma-delimited list of options. See `crypttab(5' ) for details.
+        [Default: (null)]
+        type: str
+
+- password
+        Encryption password, the path to a file containing the password, or `-' or unset if the password should be entered at boot.
+        [Default: (null)]
+        type: path
+
+- path
+        Path to file to use instead of `/etc/crypttab'.
+        This might be useful in a chroot environment.
+        [Default: /etc/crypttab]
+        type: path
+
+= state
+        Use `present' to add a line to `/etc/crypttab' or update its definition if already present.
+        Use `absent' to remove a line with matching `name'.
+        Use `opts_present' to add options to those already present; options with different values will be updated.
+        Use `opts_absent' to remove options from the existing set.
+        (Choices: absent, opts_absent, opts_present, present)
+        type: str
+
+
+AUTHOR: Steve (@groks)
+        METADATA:
+          status:
+          - preview
+          supported_by: community
+        
+
+EXAMPLES:
+
+- name: Set the options explicitly a device which must already exist
+  crypttab:
+    name: luks-home
+    state: present
+    opts: discard,cipher=aes-cbc-essiv:sha256
+
+- name: Add the 'discard' option to any existing options for all devices
+  crypttab:
+    name: '{{ item.device }}'
+    state: opts_present
+    opts: discard
+  loop: '{{ ansible_mounts }}'
+  when: "'/dev/mapper/luks-' in {{ item.device }}"
+
+

@@ -1,0 +1,29 @@
+EXAMPLES:
+
+---
+- name: Set cluster Online
+  hosts: localhost
+  gather_facts: no
+  tasks:
+  - name: Get cluster state
+    pacemaker_cluster:
+      state: online
+
+
+RETURN VALUES:
+
+changed:
+    description: True if the cluster state has changed
+    type: bool
+    returned: always
+out:
+    description: The output of the current state of the cluster. It return a
+                 list of the nodes state.
+    type: str
+    sample: 'out: [["  overcloud-controller-0", " Online"]]}'
+    returned: always
+rc:
+    description: exit code of the module
+    type: bool
+    returned: always
+

@@ -1,0 +1,80 @@
+EXAMPLES:
+
+# Note: These examples do not set authentication details, see the AWS Guide for details.
+
+# Basic listing example
+- ecs_service_facts:
+    cluster: test-cluster
+    service: console-test-service
+    details: true
+
+# Basic listing example
+- ecs_service_facts:
+    cluster: test-cluster
+
+
+RETURN VALUES:
+
+services:
+    description: When details is false, returns an array of service ARNs, otherwise an array of complex objects as described below.
+    returned: success
+    type: complex
+    contains:
+        clusterArn:
+            description: The Amazon Resource Name (ARN) of the of the cluster that hosts the service.
+            returned: always
+            type: str
+        desiredCount:
+            description: The desired number of instantiations of the task definition to keep running on the service.
+            returned: always
+            type: int
+        loadBalancers:
+            description: A list of load balancer objects
+            returned: always
+            type: complex
+            contains:
+                loadBalancerName:
+                    description: the name
+                    returned: always
+                    type: str
+                containerName:
+                    description: The name of the container to associate with the load balancer.
+                    returned: always
+                    type: str
+                containerPort:
+                    description: The port on the container to associate with the load balancer.
+                    returned: always
+                    type: int
+        pendingCount:
+            description: The number of tasks in the cluster that are in the PENDING state.
+            returned: always
+            type: int
+        runningCount:
+            description: The number of tasks in the cluster that are in the RUNNING state.
+            returned: always
+            type: int
+        serviceArn:
+            description: The Amazon Resource Name (ARN) that identifies the service. The ARN contains the arn:aws:ecs namespace, followed by the region of the service, the AWS account ID of the service owner, the service namespace, and then the service name. For example, arn:aws:ecs:region :012345678910 :service/my-service .
+            returned: always
+            type: str
+        serviceName:
+            description: A user-generated string used to identify the service
+            returned: always
+            type: str
+        status:
+            description: The valid values are ACTIVE, DRAINING, or INACTIVE.
+            returned: always
+            type: str
+        taskDefinition:
+            description: The ARN of a task definition to use for tasks in the service.
+            returned: always
+            type: str
+        deployments:
+            description: list of service deployments
+            returned: always
+            type: list of complex
+        events:
+            description: list of service events
+            returned: when events is true
+            type: list of complex
+

@@ -1,0 +1,156 @@
+> JAVA_CERT    (/usr/lib/python2.7/dist-packages/ansible/modules/system/java_cert.py)
+
+        This is a wrapper module around keytool, which can be used to import/remove certificates from a given java keystore.
+
+  * This module is maintained by The Ansible Community
+OPTIONS (= is mandatory):
+
+- cert_alias
+        Imported certificate alias.
+        The alias is used when checking for the presence of a certificate in the keystore.
+        [Default: (null)]
+        type: str
+
+- cert_path
+        Local path to load certificate from.
+        One of `cert_url' or `cert_path' is required to load certificate.
+        [Default: (null)]
+        type: path
+
+- cert_port
+        Port to connect to URL.
+        This will be used to create server URL:PORT.
+        [Default: 443]
+        type: int
+
+- cert_url
+        Basic URL to fetch SSL certificate from.
+        One of `cert_url' or `cert_path' is required to load certificate.
+        [Default: (null)]
+        type: str
+
+- executable
+        Path to keytool binary if not used we search in PATH for it.
+        [Default: keytool]
+        type: str
+
+- keystore_create
+        Create keystore if it does not exist.
+        [Default: (null)]
+        type: bool
+
+= keystore_pass
+        Keystore password.
+
+        type: str
+
+- keystore_path
+        Path to keystore.
+        [Default: (null)]
+        type: path
+
+- keystore_type
+        Keystore type (JCEKS, JKS).
+        [Default: (null)]
+        type: str
+        version_added: 2.8
+
+- pkcs12_alias
+        Alias in the PKCS12 keystore.
+        [Default: (null)]
+        type: str
+        version_added: 2.4
+
+- pkcs12_password
+        Password for importing from PKCS12 keystore.
+        [Default: ]
+        type: str
+        version_added: 2.4
+
+- pkcs12_path
+        Local path to load PKCS12 keystore from.
+        [Default: (null)]
+        type: path
+        version_added: 2.4
+
+- state
+        Defines action which can be either certificate import or removal.
+        (Choices: absent, present)[Default: present]
+        type: str
+
+
+AUTHOR: Adam Hamsik (@haad)
+        METADATA:
+          status:
+          - preview
+          supported_by: community
+        
+
+EXAMPLES:
+
+- name: Import SSL certificate from google.com to a given cacerts keystore
+  java_cert:
+    cert_url: google.com
+    cert_port: 443
+    keystore_path: /usr/lib/jvm/jre7/lib/security/cacerts
+    keystore_pass: changeit
+    state: present
+
+- name: Remove certificate with given alias from a keystore
+  java_cert:
+    cert_url: google.com
+    keystore_path: /usr/lib/jvm/jre7/lib/security/cacerts
+    keystore_pass: changeit
+    executable: /usr/lib/jvm/jre7/bin/keytool
+    state: absent
+
+- name: Import SSL certificate from google.com to a keystore, create it if it doesn't exist
+  java_cert:
+    cert_url: google.com
+    keystore_path: /tmp/cacerts
+    keystore_pass: changeit
+    keystore_create: yes
+    state: present
+
+- name: Import a pkcs12 keystore with a specified alias, create it if it doesn't exist
+  java_cert:
+    pkcs12_path: "/tmp/importkeystore.p12"
+    cert_alias: default
+    keystore_path: /opt/wildfly/standalone/configuration/defaultkeystore.jks
+    keystore_pass: changeit
+    keystore_create: yes
+    state: present
+
+- name: Import SSL certificate to JCEKS keystore
+  java_cert:
+    pkcs12_path: "/tmp/importkeystore.p12"
+    pkcs12_alias: default
+    pkcs12_password: somepass
+    cert_alias: default
+    keystore_path: /opt/someapp/security/keystore.jceks
+    keystore_type: "JCEKS"
+    keystore_pass: changeit
+    keystore_create: yes
+    state: present
+
+
+RETURN VALUES:
+
+msg:
+  description: Output from stdout of keytool command after execution of given command.
+  returned: success
+  type: str
+  sample: "Module require existing keystore at keystore_path '/tmp/test/cacerts'"
+
+rc:
+  description: Keytool command execution return value.
+  returned: success
+  type: int
+  sample: "0"
+
+cmd:
+  description: Executed command to get action done.
+  returned: success
+  type: str
+  sample: "keytool -importcert -noprompt -keystore"
+

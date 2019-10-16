@@ -1,0 +1,21 @@
+EXAMPLES:
+
+---
+- name: Ensure the required NuGet package provider version is installed
+  win_shell: Find-PackageProvider -Name Nuget -ForceBootstrap -IncludeDependencies -Force
+
+- name: Add a PowerShell module and register a repository
+  win_psrepository:
+    name: MyRepository
+    source: https://myrepo.com
+    state: present
+
+- name: Remove a PowerShell repository
+  win_psrepository:
+    name: MyRepository
+    state: absent
+
+
+RETURN VALUES:
+
+

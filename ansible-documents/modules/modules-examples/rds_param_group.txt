@@ -1,0 +1,47 @@
+EXAMPLES:
+
+# Add or change a parameter group, in this case setting auto_increment_increment to 42 * 1024
+- rds_param_group:
+      state: present
+      name: norwegian-blue
+      description: 'My Fancy Ex Parrot Group'
+      engine: 'mysql5.6'
+      params:
+          auto_increment_increment: "42K"
+      tags:
+          Environment: production
+          Application: parrot
+
+# Remove a parameter group
+- rds_param_group:
+      state: absent
+      name: norwegian-blue
+
+
+RETURN VALUES:
+
+db_parameter_group_name:
+    description: Name of DB parameter group
+    type: str
+    returned: when state is present
+db_parameter_group_family:
+    description: DB parameter group family that this DB parameter group is compatible with.
+    type: str
+    returned: when state is present
+db_parameter_group_arn:
+    description: ARN of the DB parameter group
+    type: str
+    returned: when state is present
+description:
+    description: description of the DB parameter group
+    type: str
+    returned: when state is present
+errors:
+    description: list of errors from attempting to modify parameters that are not modifiable
+    type: list
+    returned: when state is present
+tags:
+    description: dictionary of tags
+    type: dict
+    returned: when state is present
+

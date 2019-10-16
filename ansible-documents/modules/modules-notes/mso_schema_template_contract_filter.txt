@@ -1,0 +1,203 @@
+> MSO_SCHEMA_TEMPLATE_CONTRACT_FILTER    (/usr/lib/python2.7/dist-packages/ansible/modules/network/aci/mso_schema_template_contract_filter.py)
+
+        Manage contract filters in schema templates on Cisco ACI Multi-Site.
+
+  * This module is maintained by The Ansible Community
+OPTIONS (= is mandatory):
+
+= contract
+        The name of the contract to manage.
+
+        type: str
+
+- contract_display_name
+        The name as displayed on the MSO web interface.
+        This defaults to the contract name when unset on creation.
+        [Default: (null)]
+        type: str
+
+- contract_filter_type
+        The type of filters defined in this contract.
+        This defaults to `both-way' when unset on creation.
+        (Choices: both-way, one-way)[Default: (null)]
+        type: str
+
+- contract_scope
+        The scope of the contract.
+        This defaults to `vrf' when unset on creation.
+        (Choices: application-profile, global, tenant, vrf)[Default: (null)]
+        type: str
+
+- filter
+        The filter to associate with this contract.
+        (Aliases: name)[Default: (null)]
+        type: str
+
+- filter_directives
+        A list of filter directives.
+        (Choices: log, none)[Default: (null)]
+        type: list
+
+- filter_schema
+        The schema name in which the filter is located.
+        [Default: (null)]
+        type: str
+
+- filter_template
+        The template name in which the filter is located.
+        [Default: (null)]
+        type: str
+
+- filter_type
+        The type of filter to manage.
+        (Aliases: type)(Choices: both-way, consumer-to-provider, provider-to-consumer)[Default: both-way]
+        type: str
+
+= host
+        IP Address or hostname of the ACI Multi Site Orchestrator host.
+        (Aliases: hostname)
+        type: str
+
+- output_level
+        Influence the output of this ACI module.
+        `normal' means the standard output, incl. `current' dict
+        `info' adds informational output, incl. `previous', `proposed' and `sent' dicts
+        `debug' adds debugging output, incl. `filter_string', `method', `response', `status' and `url' information
+        (Choices: debug, info, normal)[Default: normal]
+        type: str
+
+= password
+        The password to use for authentication.
+        This option is mutual exclusive with `private_key'. If `private_key' is provided too, it will be used instead.
+
+        type: str
+
+- port
+        Port number to be used for the REST connection.
+        The default value depends on parameter `use_ssl`.
+        [Default: (null)]
+        type: int
+
+= schema
+        The name of the schema.
+
+        type: str
+
+- state
+        Use `present' or `absent' for adding or removing.
+        Use `query' for listing an object or multiple objects.
+        (Choices: absent, present, query)[Default: present]
+        type: str
+
+= template
+        The name of the template.
+
+        type: str
+
+- timeout
+        The socket level timeout in seconds.
+        [Default: 30]
+        type: int
+
+- use_proxy
+        If `no', it will not use a proxy, even if one is defined in an environment variable on the target hosts.
+        [Default: True]
+        type: bool
+
+- use_ssl
+        If `no', an HTTP connection will be used instead of the default HTTPS connection.
+        [Default: True]
+        type: bool
+
+- username
+        The username to use for authentication.
+        [Default: admin]
+        type: str
+
+- validate_certs
+        If `no', SSL certificates will not be validated.
+        This should only set to `no' when used on personally controlled sites using self-signed certificates.
+        [Default: True]
+        type: bool
+
+
+NOTES:
+      * Due to restrictions of the MSO REST API this module creates contracts when needed, and removes them when the last filter
+        has been removed.
+      * Due to restrictions of the MSO REST API concurrent modifications to contract filters can be dangerous and corrupt data.
+      * Please read the :ref:`aci_guide` for more detailed information on how to manage your ACI infrastructure using Ansible.
+      * This module was written to support ACI Multi Site Orchestrator v2.1 or newer. Some or all functionality may not work on
+        earlier versions.
+
+
+SEE ALSO:
+      * Module mso_schema_template_filter_entry
+           The official documentation on the mso_schema_template_filter_entry module.
+           https://docs.ansible.com/ansible/latest/modules/mso_schema_template_filter_entry_module.html
+
+
+REQUIREMENTS:  Multi Site Orchestrator v2.1 or newer
+
+AUTHOR: Dag Wieers (@dagwieers)
+        METADATA:
+          status:
+          - preview
+          supported_by: community
+        
+
+EXAMPLES:
+
+- name: Add a new contract filter
+  mso_schema_template_contract_filter:
+    host: mso_host
+    username: admin
+    password: SomeSecretPassword
+    schema: Schema 1
+    template: Template 1
+    contract: Contract 1
+    scope: global
+    filter: Filter 1
+    state: present
+  delegate_to: localhost
+
+- name: Remove a contract filter
+  mso_schema_template_contract_filter:
+    host: mso_host
+    username: admin
+    password: SomeSecretPassword
+    schema: Schema 1
+    template: Template 1
+    contract: Contract 1
+    filter: Filter 1
+    state: absent
+  delegate_to: localhost
+
+- name: Query a specific contract filter
+  mso_schema_template_contract_filter:
+    host: mso_host
+    username: admin
+    password: SomeSecretPassword
+    schema: Schema 1
+    template: Template 1
+    contract: Contract 1
+    filter: Filter 1
+    state: query
+  delegate_to: localhost
+  register: query_result
+
+- name: Query all contract filters
+  mso_schema_template_contract_filter:
+    host: mso_host
+    username: admin
+    password: SomeSecretPassword
+    schema: Schema 1
+    template: Template 1
+    contract: Contract 1
+    state: query
+  delegate_to: localhost
+  register: query_result
+
+
+RETURN VALUES:
+
+

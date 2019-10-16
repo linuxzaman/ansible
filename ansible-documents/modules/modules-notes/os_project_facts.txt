@@ -1,0 +1,174 @@
+> OS_PROJECT_FACTS    (/usr/lib/python2.7/dist-packages/ansible/modules/cloud/openstack/os_project_facts.py)
+
+        Retrieve facts about a one or more OpenStack projects
+
+  * This module is maintained by The Ansible Community
+OPTIONS (= is mandatory):
+
+- api_timeout
+        How long should the socket layer wait before timing out for API calls. If this is omitted, nothing will be passed to the requests
+        library.
+        [Default: (null)]
+        type: int
+
+- auth
+        Dictionary containing auth information as needed by the cloud's auth plugin strategy. For the default `password' plugin, this
+        would contain `auth_url', `username', `password', `project_name' and any information about domains (for example,
+        `os_user_domain_name' or `os_project_domain_name') if the cloud supports them. For other plugins, this param will need to contain
+        whatever parameters that auth plugin requires. This parameter is not needed if a named cloud is provided or OpenStack OS_*
+        environment variables are present.
+        [Default: (null)]
+        type: dict
+
+- auth_type
+        Name of the auth plugin to use. If the cloud uses something other than password authentication, the name of the plugin should be
+        indicated here and the contents of the `auth' parameter should be updated accordingly.
+        [Default: (null)]
+        type: str
+
+- availability_zone
+        Ignored. Present for backwards compatibility
+        [Default: (null)]
+
+- ca_cert
+        A path to a CA Cert bundle that can be used as part of verifying SSL API requests.
+        (Aliases: cacert)[Default: (null)]
+        type: str
+
+- client_cert
+        A path to a client certificate to use as part of the SSL transaction.
+        (Aliases: cert)[Default: (null)]
+        type: str
+
+- client_key
+        A path to a client key to use as part of the SSL transaction.
+        (Aliases: key)[Default: (null)]
+        type: str
+
+- cloud
+        Named cloud or cloud config to operate against. If `cloud' is a string, it references a named cloud config as defined in an
+        OpenStack clouds.yaml file. Provides default values for `auth' and `auth_type'. This parameter is not needed if `auth' is
+        provided or if OpenStack OS_* environment variables are present. If `cloud' is a dict, it contains a complete cloud configuration
+        like would be in a section of clouds.yaml.
+        [Default: (null)]
+        type: raw
+
+- domain
+        Name or ID of the domain containing the project if the cloud supports domains
+        [Default: (null)]
+
+- filters
+        A dictionary of meta data to use for further filtering.  Elements of this dictionary may be additional dictionaries.
+        [Default: (null)]
+
+- interface
+        Endpoint URL type to fetch from the service catalog.
+        (Aliases: endpoint_type)(Choices: admin, internal, public)[Default: public]
+        type: str
+        version_added: 2.3
+
+= name
+        Name or ID of the project
+
+
+- region_name
+        Name of the region.
+        [Default: (null)]
+        type: str
+
+- timeout
+        How long should ansible wait for the requested resource.
+        [Default: 180]
+        type: int
+
+- validate_certs
+        Whether or not SSL API requests should be verified.
+        Before Ansible 2.3 this defaulted to `yes'.
+        (Aliases: verify)[Default: False]
+        type: bool
+
+- wait
+        Should ansible wait until the requested resource is complete.
+        [Default: True]
+        type: bool
+
+
+NOTES:
+      * The standard OpenStack environment variables, such as `OS_USERNAME' may be used instead of providing explicit values.
+      * Auth information is driven by openstacksdk, which means that values can come from a yaml config file in
+        /etc/ansible/openstack.yaml, /etc/openstack/clouds.yaml or ~/.config/openstack/clouds.yaml, then from standard environment
+        variables, then finally by explicit parameters in plays. More information can be found at
+        https://docs.openstack.org/openstacksdk/
+
+
+REQUIREMENTS:  openstacksdk, python >= 2.7
+
+AUTHOR: Ricardo Carrillo Cruz (@rcarrillocruz)
+        METADATA:
+          status:
+          - preview
+          supported_by: community
+        
+
+EXAMPLES:
+
+# Gather facts about previously created projects
+- os_project_facts:
+    cloud: awesomecloud
+- debug:
+    var: openstack_projects
+
+# Gather facts about a previously created project by name
+- os_project_facts:
+    cloud: awesomecloud
+    name: demoproject
+- debug:
+    var: openstack_projects
+
+# Gather facts about a previously created project in a specific domain
+- os_project_facts:
+    cloud: awesomecloud
+    name: demoproject
+    domain: admindomain
+- debug:
+    var: openstack_projects
+
+# Gather facts about a previously created project in a specific domain with filter
+- os_project_facts:
+    cloud: awesomecloud
+    name: demoproject
+    domain: admindomain
+    filters:
+      enabled: False
+- debug:
+    var: openstack_projects
+
+
+RETURN VALUES:
+
+openstack_projects:
+    description: has all the OpenStack facts about projects
+    returned: always, but can be null
+    type: complex
+    contains:
+        id:
+            description: Unique UUID.
+            returned: success
+            type: str
+        name:
+            description: Name given to the project.
+            returned: success
+            type: str
+        description:
+            description: Description of the project
+            returned: success
+            type: str
+        enabled:
+            description: Flag to indicate if the project is enabled
+            returned: success
+            type: bool
+        domain_id:
+            description: Domain ID containing the project (keystone v3 clouds only)
+            returned: success
+            type: bool
+

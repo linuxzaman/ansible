@@ -1,0 +1,53 @@
+EXAMPLES:
+
+- name: Defragment all local volumes (in parallel)
+  win_defrag:
+    parallel: yes
+
+- name: 'Defragment all local volumes, except C: and D:'
+  win_defrag:
+    exclude_volumes: [ C, D ]
+
+- name: 'Defragment volume D: with normal priority'
+  win_defrag:
+    include_volumes: D
+    priority: normal
+
+- name: Consolidate free space (useful when reducing volumes)
+  win_defrag:
+    freespace_consolidation: yes
+
+
+RETURN VALUES:
+
+cmd:
+    description: The complete command line used by the module.
+    returned: always
+    type: str
+    sample: defrag.exe /C /V
+rc:
+    description: The return code for the command.
+    returned: always
+    type: int
+    sample: 0
+stdout:
+    description: The standard output from the command.
+    returned: always
+    type: str
+    sample: Success.
+stderr:
+    description: The error output from the command.
+    returned: always
+    type: str
+    sample:
+msg:
+    description: Possible error message on failure.
+    returned: failed
+    type: str
+    sample: Command 'defrag.exe' not found in $env:PATH.
+changed:
+    description: Whether or not any changes were made.
+    returned: always
+    type: bool
+    sample: true
+

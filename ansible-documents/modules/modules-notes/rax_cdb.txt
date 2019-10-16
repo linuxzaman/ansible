@@ -1,0 +1,141 @@
+> RAX_CDB    (/usr/lib/python2.7/dist-packages/ansible/modules/cloud/rackspace/rax_cdb.py)
+
+        creates / deletes or resize a Rackspace Cloud Databases instance and optionally waits for it to be 'running'. The name option
+        needs to be unique since it's used to identify the instance.
+
+  * This module is maintained by The Ansible Community
+OPTIONS (= is mandatory):
+
+- api_key
+        Rackspace API key, overrides `credentials'.
+        (Aliases: password)[Default: (null)]
+        type: str
+
+- auth_endpoint
+        The URI of the authentication service.
+        [Default: https://identity.api.rackspacecloud.com/v2.0/]
+        version_added: 1.5
+
+- cdb_type
+        type of instance (i.e. MySQL, MariaDB, Percona)
+        (Aliases: type)[Default: MySQL]
+        version_added: 2.0
+
+- cdb_version
+        version of database (MySQL supports 5.1 and 5.6, MariaDB supports 10, Percona supports 5.6)
+        (Aliases: version)(Choices: 5.1, 5.6, 10)[Default: (null)]
+        version_added: 2.0
+
+- credentials
+        File to find the Rackspace credentials in. Ignored if `api_key' and `username' are provided.
+        (Aliases: creds_file)[Default: (null)]
+        type: path
+
+- env
+        Environment as configured in `~/.pyrax.cfg', see https://github.com/rackspace/pyrax/blob/master/docs/getting_started.md#pyrax-
+        configuration.
+        [Default: (null)]
+        type: str
+        version_added: 1.5
+
+- flavor
+        flavor to use for the instance 1 to 6 (i.e. 512MB to 16GB)
+        [Default: 1]
+
+- identity_type
+        Authentication mechanism to use, such as rackspace or keystone.
+        [Default: rackspace]
+        version_added: 1.5
+
+- name
+        Name of the databases server instance
+        [Default: (null)]
+
+- region
+        Region to create an instance in.
+        [Default: DFW]
+        type: str
+
+- state
+        Indicate desired state of the resource
+        (Choices: present, absent)[Default: present]
+
+- tenant_id
+        The tenant ID used for authentication.
+        [Default: (null)]
+        version_added: 1.5
+
+- tenant_name
+        The tenant name used for authentication.
+        [Default: (null)]
+        version_added: 1.5
+
+- username
+        Rackspace username, overrides `credentials'.
+        [Default: (null)]
+        type: str
+
+- validate_certs
+        Whether or not to require SSL validation of API endpoints.
+        (Aliases: verify_ssl)[Default: (null)]
+        type: bool
+        version_added: 1.5
+
+- volume
+        Volume size of the database 1-150GB
+        [Default: 2]
+
+- wait
+        wait for the instance to be in state 'running' before returning
+        [Default: no]
+        type: bool
+
+- wait_timeout
+        how long before wait gives up, in seconds
+        [Default: 300]
+
+
+NOTES:
+      * The following environment variables can be used, `RAX_USERNAME', `RAX_API_KEY', `RAX_CREDS_FILE', `RAX_CREDENTIALS',
+        `RAX_REGION'.
+      * `RAX_CREDENTIALS' and `RAX_CREDS_FILE' points to a credentials file appropriate for pyrax. See
+        https://github.com/rackspace/pyrax/blob/master/docs/getting_started.md#authenticating
+      * `RAX_USERNAME' and `RAX_API_KEY' obviate the use of a credentials file
+      * `RAX_REGION' defines a Rackspace Public Cloud region (DFW, ORD, LON, ...)
+      * The following environment variables can be used, `RAX_USERNAME', `RAX_API_KEY', `RAX_CREDS_FILE', `RAX_CREDENTIALS',
+        `RAX_REGION'.
+      * `RAX_CREDENTIALS' and `RAX_CREDS_FILE' points to a credentials file appropriate for pyrax. See
+        https://github.com/rackspace/pyrax/blob/master/docs/getting_started.md#authenticating
+      * `RAX_USERNAME' and `RAX_API_KEY' obviate the use of a credentials file
+      * `RAX_REGION' defines a Rackspace Public Cloud region (DFW, ORD, LON, ...)
+
+
+REQUIREMENTS:  pyrax, python >= 2.6
+
+AUTHOR: Simon JAILLET (@jails)
+        METADATA:
+          status:
+          - preview
+          supported_by: community
+        
+
+EXAMPLES:
+
+- name: Build a Cloud Databases
+  gather_facts: False
+  tasks:
+    - name: Server build request
+      local_action:
+        module: rax_cdb
+        credentials: ~/.raxpub
+        region: IAD
+        name: db-server1
+        flavor: 1
+        volume: 2
+        cdb_type: MySQL
+        cdb_version: 5.6
+        wait: yes
+        state: present
+      register: rax_db_server
+
+

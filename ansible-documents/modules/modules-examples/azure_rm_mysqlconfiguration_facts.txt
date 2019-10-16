@@ -1,0 +1,53 @@
+EXAMPLES:
+
+- name: Get specific setting of MySQL Server
+    azure_rm_mysqlconfiguration_facts:
+      resource_group: myResourceGroup
+      server_name: testmysqlserver
+      name: deadlock_timeout
+
+  - name: Get all settings of MySQL Server
+    azure_rm_mysqlconfiguration_facts:
+      resource_group: myResourceGroup
+      server_name: server_name
+
+
+RETURN VALUES:
+
+settings:
+    description: A list of dictionaries containing MySQL Server settings.
+    returned: always
+    type: complex
+    contains:
+        id:
+            description:
+                - Setting resource ID
+            returned: always
+            type: str
+            sample: "/subscriptions/xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx/resourceGroups/myResourceGroup/providers/Microsoft.DBforMySQL/servers/testmysqlser
+                     ver/configurations/deadlock_timeout"
+        name:
+            description:
+                - Setting name.
+            returned: always
+            type: str
+            sample: deadlock_timeout
+        value:
+            description:
+                - Setting value.
+            returned: always
+            type: raw
+            sample: 1000
+        description:
+            description:
+                - Description of the configuration.
+            returned: always
+            type: str
+            sample: Deadlock timeout.
+        source:
+            description:
+                - Source of the configuration.
+            returned: always
+            type: str
+            sample: system-default
+

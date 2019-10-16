@@ -1,0 +1,44 @@
+EXAMPLES:
+
+# Create a project
+- os_project:
+    cloud: mycloud
+    endpoint_type: admin
+    state: present
+    name: demoproject
+    description: demodescription
+    domain_id: demoid
+    enabled: True
+
+# Delete a project
+- os_project:
+    cloud: mycloud
+    endpoint_type: admin
+    state: absent
+    name: demoproject
+
+
+RETURN VALUES:
+
+project:
+    description: Dictionary describing the project.
+    returned: On success when I(state) is 'present'
+    type: complex
+    contains:
+        id:
+            description: Project ID
+            type: str
+            sample: "f59382db809c43139982ca4189404650"
+        name:
+            description: Project name
+            type: str
+            sample: "demoproject"
+        description:
+            description: Project description
+            type: str
+            sample: "demodescription"
+        enabled:
+            description: Boolean to indicate if project is enabled
+            type: bool
+            sample: True
+

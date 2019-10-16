@@ -1,0 +1,68 @@
+> NEWRELIC_DEPLOYMENT    (/usr/lib/python2.7/dist-packages/ansible/modules/monitoring/newrelic_deployment.py)
+
+        Notify newrelic about app deployments (see https://docs.newrelic.com/docs/apm/new-relic-apm/maintenance/deployment-
+        notifications#api)
+
+  * This module is maintained by The Ansible Community
+OPTIONS (= is mandatory):
+
+- app_name
+        (one of app_name or application_id are required) The value of app_name in the newrelic.yml file used by the application
+        [Default: (null)]
+
+- application_id
+        (one of app_name or application_id are required) The application id, found in the URL when viewing the application in RPM
+        [Default: (null)]
+
+- appname
+        Name of the application
+        [Default: (null)]
+
+- changelog
+        A list of changes for this deployment
+        [Default: (null)]
+
+- description
+        Text annotation for the deployment - notes for you
+        [Default: (null)]
+
+- environment
+        The environment for this deployment
+        [Default: (null)]
+
+- revision
+        A revision number (e.g., git commit SHA)
+        [Default: (null)]
+
+= token
+        API token, to place in the x-api-key header.
+
+
+- user
+        The name of the user/process that triggered this deployment
+        [Default: (null)]
+
+- validate_certs
+        If `no', SSL certificates will not be validated. This should only be used on personally controlled sites using self-signed
+        certificates.
+        [Default: yes]
+        type: bool
+        version_added: 1.5.1
+
+
+AUTHOR: Matt Coddington (@mcodd)
+        METADATA:
+          status:
+          - preview
+          supported_by: community
+        
+
+EXAMPLES:
+
+- newrelic_deployment:
+    token: AAAAAA
+    app_name: myapp
+    user: ansible deployment
+    revision: '1.0'
+
+

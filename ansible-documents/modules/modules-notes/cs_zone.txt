@@ -1,0 +1,279 @@
+> CS_ZONE    (/usr/lib/python2.7/dist-packages/ansible/modules/cloud/cloudstack/cs_zone.py)
+
+        Create, update and remove zones.
+
+  * This module is maintained by The Ansible Community
+OPTIONS (= is mandatory):
+
+- api_http_method
+        HTTP method used to query the API endpoint.
+        If not given, the `CLOUDSTACK_METHOD' env variable is considered.
+        As the last option, the value is taken from the ini config file, also see the notes.
+        Fallback value is `get' if not specified.
+        (Choices: get, post)[Default: (null)]
+        type: str
+
+- api_key
+        API key of the CloudStack API.
+        If not given, the `CLOUDSTACK_KEY' env variable is considered.
+        As the last option, the value is taken from the ini config file, also see the notes.
+        [Default: (null)]
+        type: str
+
+- api_region
+        Name of the ini section in the `cloustack.ini' file.
+        If not given, the `CLOUDSTACK_REGION' env variable is considered.
+        [Default: cloudstack]
+        type: str
+
+- api_secret
+        Secret key of the CloudStack API.
+        If not set, the `CLOUDSTACK_SECRET' env variable is considered.
+        As the last option, the value is taken from the ini config file, also see the notes.
+        [Default: (null)]
+        type: str
+
+- api_timeout
+        HTTP timeout in seconds.
+        If not given, the `CLOUDSTACK_TIMEOUT' env variable is considered.
+        As the last option, the value is taken from the ini config file, also see the notes.
+        Fallback value is 10 seconds if not specified.
+        [Default: (null)]
+        type: int
+
+- api_url
+        URL of the CloudStack API e.g. https://cloud.example.com/client/api.
+        If not given, the `CLOUDSTACK_ENDPOINT' env variable is considered.
+        As the last option, the value is taken from the ini config file, also see the notes.
+        [Default: (null)]
+        type: str
+
+- dhcp_provider
+        DHCP provider for the Zone.
+        [Default: (null)]
+        type: str
+
+- dns1
+        First DNS for the zone.
+        Required if `state=present'
+        [Default: (null)]
+        type: str
+
+- dns1_ipv6
+        First DNS for IPv6 for the zone.
+        [Default: (null)]
+        type: str
+
+- dns2
+        Second DNS for the zone.
+        [Default: (null)]
+        type: str
+
+- dns2_ipv6
+        Second DNS for IPv6 for the zone.
+        [Default: (null)]
+        type: str
+
+- domain
+        Domain the zone is related to.
+        Zone is a public zone if not set.
+        [Default: (null)]
+        type: str
+
+- guest_cidr_address
+        Guest CIDR address for the zone.
+        [Default: (null)]
+        type: str
+
+- id
+        uuid of the existing zone.
+        [Default: (null)]
+        type: str
+
+- internal_dns1
+        First internal DNS for the zone.
+        If not set `dns1' will be used on `state=present'.
+        [Default: (null)]
+        type: str
+
+- internal_dns2
+        Second internal DNS for the zone.
+        [Default: (null)]
+        type: str
+
+- local_storage_enabled
+        Whether to enable local storage for the zone or not..
+        [Default: (null)]
+        type: bool
+
+= name
+        Name of the zone.
+
+        type: str
+
+- network_domain
+        Network domain for the zone.
+        [Default: (null)]
+        type: str
+
+- network_type
+        Network type of the zone.
+        (Choices: Basic, Advanced)[Default: Basic]
+        type: str
+
+- securitygroups_enabled
+        Whether the zone is security group enabled or not.
+        [Default: (null)]
+        type: bool
+
+- state
+        State of the zone.
+        (Choices: present, enabled, disabled, absent)[Default: present]
+        type: str
+
+
+NOTES:
+      * Ansible uses the `cs' library's configuration method if credentials are not provided by the arguments `api_url', `api_key',
+        `api_secret'. Configuration is read from several locations, in the following order. The `CLOUDSTACK_ENDPOINT',
+        `CLOUDSTACK_KEY', `CLOUDSTACK_SECRET' and `CLOUDSTACK_METHOD'. `CLOUDSTACK_TIMEOUT' environment variables. A
+        `CLOUDSTACK_CONFIG' environment variable pointing to an `.ini' file. A `cloudstack.ini' file in the current working
+        directory. A `.cloudstack.ini' file in the users home directory. Optionally multiple credentials and endpoints can be
+        specified using ini sections in `cloudstack.ini'. Use the argument `api_region' to select the section name, default section
+        is `cloudstack'. See https://github.com/exoscale/cs for more information.
+      * A detailed guide about cloudstack modules can be found in the L(CloudStack Cloud
+        Guide,../scenario_guides/guide_cloudstack.html).
+      * This module supports check mode.
+
+
+REQUIREMENTS:  python >= 2.6, cs >= 0.6.10
+
+AUTHOR: René Moser (@resmo)
+        METADATA:
+          status:
+          - stableinterface
+          supported_by: community
+        
+
+EXAMPLES:
+
+- name: Ensure a zone is present
+  cs_zone:
+    name: ch-zrh-ix-01
+    dns1: 8.8.8.8
+    dns2: 8.8.4.4
+    network_type: basic
+  delegate_to: localhost
+
+- name: Ensure a zone is disabled
+  cs_zone:
+    name: ch-zrh-ix-01
+    state: disabled
+  delegate_to: localhost
+
+- name: Ensure a zone is enabled
+  cs_zone:
+    name: ch-zrh-ix-01
+    state: enabled
+  delegate_to: localhost
+
+- name: Ensure a zone is absent
+  cs_zone:
+    name: ch-zrh-ix-01
+    state: absent
+  delegate_to: localhost
+
+
+RETURN VALUES:
+
+---
+id:
+  description: UUID of the zone.
+  returned: success
+  type: str
+  sample: 04589590-ac63-4ffc-93f5-b698b8ac38b6
+name:
+  description: Name of the zone.
+  returned: success
+  type: str
+  sample: zone01
+dns1:
+  description: First DNS for the zone.
+  returned: success
+  type: str
+  sample: 8.8.8.8
+dns2:
+  description: Second DNS for the zone.
+  returned: success
+  type: str
+  sample: 8.8.4.4
+internal_dns1:
+  description: First internal DNS for the zone.
+  returned: success
+  type: str
+  sample: 8.8.8.8
+internal_dns2:
+  description: Second internal DNS for the zone.
+  returned: success
+  type: str
+  sample: 8.8.4.4
+dns1_ipv6:
+  description: First IPv6 DNS for the zone.
+  returned: success
+  type: str
+  sample: "2001:4860:4860::8888"
+dns2_ipv6:
+  description: Second IPv6 DNS for the zone.
+  returned: success
+  type: str
+  sample: "2001:4860:4860::8844"
+allocation_state:
+  description: State of the zone.
+  returned: success
+  type: str
+  sample: Enabled
+domain:
+  description: Domain the zone is related to.
+  returned: success
+  type: str
+  sample: ROOT
+network_domain:
+  description: Network domain for the zone.
+  returned: success
+  type: str
+  sample: example.com
+network_type:
+  description: Network type for the zone.
+  returned: success
+  type: str
+  sample: basic
+local_storage_enabled:
+  description: Local storage offering enabled.
+  returned: success
+  type: bool
+  sample: false
+securitygroups_enabled:
+  description: Security groups support is enabled.
+  returned: success
+  type: bool
+  sample: false
+guest_cidr_address:
+  description: Guest CIDR address for the zone
+  returned: success
+  type: str
+  sample: 10.1.1.0/24
+dhcp_provider:
+  description: DHCP provider for the zone
+  returned: success
+  type: str
+  sample: VirtualRouter
+zone_token:
+  description: Zone token
+  returned: success
+  type: str
+  sample: ccb0a60c-79c8-3230-ab8b-8bdbe8c45bb7
+tags:
+  description: List of resource tags associated with the zone.
+  returned: success
+  type: dict
+  sample: [ { "key": "foo", "value": "bar" } ]
+

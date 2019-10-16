@@ -1,0 +1,147 @@
+> GITHUB_DEPLOY_KEY    (/usr/lib/python2.7/dist-packages/ansible/modules/source_control/github_deploy_key.py)
+
+        Adds or removes deploy keys for GitHub repositories. Supports authentication using username and password, username and password
+        and 2-factor authentication code (OTP), OAuth2 token, or personal access token.
+
+  * This module is maintained by The Ansible Community
+OPTIONS (= is mandatory):
+
+- force
+        If `true', forcefully adds the deploy key by deleting any existing deploy key with the same public key or title.
+        [Default: no]
+        type: bool
+
+= key
+        The SSH public key to add to the repository as a deploy key.
+
+
+= name
+        The name for the deploy key.
+        (Aliases: title, label)
+
+- otp
+        The 6 digit One Time Password for 2-Factor Authentication. Required together with `username' and `password'.
+        (Aliases: 2fa_token)[Default: (null)]
+
+= owner
+        The name of the individual account or organization that owns the GitHub repository.
+        (Aliases: account, organization)
+
+- password
+        The password to authenticate with. A personal access token can be used here in place of a password.
+        [Default: (null)]
+
+- read_only
+        If `true', the deploy key will only be able to read repository contents. Otherwise, the deploy key will be able to read and
+        write.
+        [Default: yes]
+        type: bool
+
+= repo
+        The name of the GitHub repository.
+        (Aliases: repository)
+
+- state
+        The state of the deploy key.
+        (Choices: present, absent)[Default: present]
+
+- token
+        The OAuth2 token or personal access token to authenticate with. Mutually exclusive with `password'.
+        [Default: (null)]
+
+- username
+        The username to authenticate with.
+        [Default: (null)]
+
+
+NOTES:
+      * Refer to GitHub's API documentation here: https://developer.github.com/v3/repos/keys/.
+
+
+REQUIREMENTS:  python-requests
+
+AUTHOR: Ali (@bincyber)
+        METADATA:
+          status:
+          - preview
+          supported_by: community
+        
+
+EXAMPLES:
+
+# add a new read-only deploy key to a GitHub repository using basic authentication
+- github_deploy_key:
+    owner: "johndoe"
+    repo: "example"
+    name: "new-deploy-key"
+    key: "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQDAwXxn7kIMNWzcDfou..."
+    read_only: yes
+    username: "johndoe"
+    password: "supersecretpassword"
+
+# remove an existing deploy key from a GitHub repository
+- github_deploy_key:
+    owner: "johndoe"
+    repository: "example"
+    name: "new-deploy-key"
+    key: "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQDAwXxn7kIMNWzcDfou..."
+    force: yes
+    username: "johndoe"
+    password: "supersecretpassword"
+    state: absent
+
+# add a new deploy key to a GitHub repository, replace an existing key, use an OAuth2 token to authenticate
+- github_deploy_key:
+    owner: "johndoe"
+    repository: "example"
+    name: "new-deploy-key"
+    key: "{{ lookup('file', '~/.ssh/github.pub') }}"
+    force: yes
+    token: "ABAQDAwXxn7kIMNWzcDfo..."
+
+# re-add a deploy key to a GitHub repository but with a different name
+- github_deploy_key:
+    owner: "johndoe"
+    repository: "example"
+    name: "replace-deploy-key"
+    key: "{{ lookup('file', '~/.ssh/github.pub') }}"
+    username: "johndoe"
+    password: "supersecretpassword"
+
+# add a new deploy key to a GitHub repository using 2FA
+- github_deploy_key:
+    owner: "johndoe"
+    repo: "example"
+    name: "new-deploy-key-2"
+    key: "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQDAwXxn7kIMNWzcDfou..."
+    username: "johndoe"
+    password: "supersecretpassword"
+    otp: 123456
+
+
+RETURN VALUES:
+
+msg:
+    description: the status message describing what occurred
+    returned: always
+    type: str
+    sample: "Deploy key added successfully"
+
+http_status_code:
+    description: the HTTP status code returned by the GitHub API
+    returned: failed
+    type: int
+    sample: 400
+
+error:
+    description: the error message returned by the GitHub API
+    returned: failed
+    type: str
+    sample: "key is already in use"
+
+id:
+    description: the key identifier assigned by GitHub for the deploy key
+    returned: changed
+    type: int
+    sample: 24381901
+

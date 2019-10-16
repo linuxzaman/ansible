@@ -1,0 +1,121 @@
+EXAMPLES:
+
+- name: NTP AUTH test
+  hosts: cloudengine
+  connection: local
+  gather_facts: no
+  vars:
+    cli:
+      host: "{{ inventory_hostname }}"
+      port: "{{ ansible_ssh_port }}"
+      username: "{{ username }}"
+      password: "{{ password }}"
+      transport: cli
+
+  tasks:
+
+  - name: "Configure ntp authentication key-id"
+    ce_ntp_auth:
+      key_id: 32
+      auth_mode: md5
+      auth_pwd: 11111111111111111111111
+      provider: "{{ cli }}"
+
+  - name: "Configure ntp authentication key-id and trusted authentication keyid"
+    ce_ntp_auth:
+      key_id: 32
+      auth_mode: md5
+      auth_pwd: 11111111111111111111111
+      trusted_key: enable
+      provider: "{{ cli }}"
+
+  - name: "Configure ntp authentication key-id and authentication enable"
+    ce_ntp_auth:
+      key_id: 32
+      auth_mode: md5
+      auth_pwd: 11111111111111111111111
+      authentication: enable
+      provider: "{{ cli }}"
+
+  - name: "Unconfigure ntp authentication key-id and trusted authentication keyid"
+    ce_ntp_auth:
+      key_id: 32
+      state: absent
+      provider: "{{ cli }}"
+
+  - name: "Unconfigure ntp authentication key-id and authentication enable"
+    ce_ntp_auth:
+      key_id: 32
+      authentication: enable
+      state: absent
+      provider: "{{ cli }}"
+
+
+RETURN VALUES:
+
+proposed:
+    description: k/v pairs of parameters passed into module
+    returned: always
+    type: dict
+    sample: {
+                "auth_type": "text",
+                "authentication": "enable",
+                "key_id": "32",
+                "auth_pwd": "1111",
+                "auth_mode": "md5",
+                "trusted_key": "enable",
+                "state": "present"
+            }
+existing:
+    description: k/v pairs of existing ntp authentication
+    returned: always
+    type: dict
+    sample: {
+                "authentication": "off",
+                "authentication-keyid": [
+                    {
+                        "auth_mode": "md5",
+                        "key_id": "1",
+                        "trusted_key": "disable"
+                    }
+                ]
+            }
+end_state:
+    description: k/v pairs of ntp authentication after module execution
+    returned: always
+    type: dict
+    sample: {
+                "authentication": "off",
+                "authentication-keyid": [
+                    {
+                        "auth_mode": "md5",
+                        "key_id": "1",
+                        "trusted_key": "disable"
+                    },
+                    {
+                        "auth_mode": "md5",
+                        "key_id": "32",
+                        "trusted_key": "enable"
+                    }
+                ]
+            }
+state:
+    description: state as sent in from the playbook
+    returned: always
+    type: str
+    sample: "present"
+updates:
+    description: command sent to the device
+    returned: always
+    type: list
+    sample: [
+                "ntp authentication-key 32 md5 1111",
+                "ntp trusted-key 32",
+                "ntp authentication enable"
+            ]
+changed:
+    description: check to see if a change was made on the device
+    returned: always
+    type: bool
+    sample: true
+

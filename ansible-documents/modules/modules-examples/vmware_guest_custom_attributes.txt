@@ -1,0 +1,57 @@
+EXAMPLES:
+
+- name: Add virtual machine custom attributes
+  vmware_guest_custom_attributes:
+    hostname: "{{ vcenter_hostname }}"
+    username: "{{ vcenter_username }}"
+    password: "{{ vcenter_password }}"
+    uuid: 421e4592-c069-924d-ce20-7e7533fab926
+    state: present
+    attributes:
+      - name: MyAttribute
+        value: MyValue
+  delegate_to: localhost
+  register: attributes
+
+- name: Add multiple virtual machine custom attributes
+  vmware_guest_custom_attributes:
+    hostname: "{{ vcenter_hostname }}"
+    username: "{{ vcenter_username }}"
+    password: "{{ vcenter_password }}"
+    uuid: 421e4592-c069-924d-ce20-7e7533fab926
+    state: present
+    attributes:
+      - name: MyAttribute
+        value: MyValue
+      - name: MyAttribute2
+        value: MyValue2
+  delegate_to: localhost
+  register: attributes
+
+- name: Remove virtual machine Attribute
+  vmware_guest_custom_attributes:
+    hostname: "{{ vcenter_hostname }}"
+    username: "{{ vcenter_username }}"
+    password: "{{ vcenter_password }}"
+    uuid: 421e4592-c069-924d-ce20-7e7533fab926
+    state: absent
+    attributes:
+      - name: MyAttribute
+  delegate_to: localhost
+  register: attributes
+
+
+RETURN VALUES:
+
+custom_attributes:
+    description: metadata about the virtual machine attributes
+    returned: always
+    type: dict
+    sample: {
+        "mycustom": "my_custom_value",
+        "mycustom_2": "my_custom_value_2",
+        "sample_1": "sample_1_value",
+        "sample_2": "sample_2_value",
+        "sample_3": "sample_3_value"
+    }
+

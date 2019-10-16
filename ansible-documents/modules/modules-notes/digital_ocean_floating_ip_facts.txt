@@ -1,0 +1,86 @@
+> DIGITAL_OCEAN_FLOATING_IP_FACTS    (/usr/lib/python2.7/dist-packages/ansible/modules/cloud/digital_ocean/digital_ocean_floating_ip_facts.py)
+
+        This module can be used to fetch DigitalOcean Floating IPs facts.
+
+  * This module is maintained by The Ansible Community
+OPTIONS (= is mandatory):
+
+- oauth_token
+        DigitalOcean OAuth token.
+        There are several other environment variables which can be used to provide this value.
+        i.e., - 'DO_API_TOKEN', 'DO_API_KEY', 'DO_OAUTH_TOKEN' and 'OAUTH_TOKEN'
+        (Aliases: api_token)[Default: (null)]
+        type: str
+
+- timeout
+        The timeout in seconds used for polling DigitalOcean's API.
+        [Default: 30]
+        type: int
+
+- validate_certs
+        If set to `no', the SSL certificates will not be validated.
+        This should only set to `no' used on personally controlled sites using self-signed certificates.
+        [Default: True]
+        type: bool
+
+
+NOTES:
+      * Version 2 of DigitalOcean API is used.
+
+
+REQUIREMENTS:  python >= 2.6
+
+AUTHOR: Patrick Marques (@pmarques)
+        METADATA:
+          status:
+          - preview
+          supported_by: community
+        
+
+EXAMPLES:
+
+- name: "Gather facts about all Floating IPs"
+  digital_ocean_floating_ip_facts:
+  register: result
+
+- name: "List of current floating ips"
+  debug: var=result.floating_ips
+
+
+RETURN VALUES:
+
+# Digital Ocean API info https://developers.digitalocean.com/documentation/v2/#floating-ips
+floating_ips:
+    description: a DigitalOcean Floating IP resource
+    returned: success and no resource constraint
+    type: list
+    sample: [
+      {
+        "ip": "45.55.96.47",
+        "droplet": null,
+        "region": {
+          "name": "New York 3",
+          "slug": "nyc3",
+          "sizes": [
+            "512mb",
+            "1gb",
+            "2gb",
+            "4gb",
+            "8gb",
+            "16gb",
+            "32gb",
+            "48gb",
+            "64gb"
+          ],
+          "features": [
+            "private_networking",
+            "backups",
+            "ipv6",
+            "metadata"
+          ],
+          "available": true
+        },
+        "locked": false
+      }
+    ]
+

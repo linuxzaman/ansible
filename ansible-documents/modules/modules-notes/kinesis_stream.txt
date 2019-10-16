@@ -1,0 +1,226 @@
+> KINESIS_STREAM    (/usr/lib/python2.7/dist-packages/ansible/modules/cloud/amazon/kinesis_stream.py)
+
+        Create or Delete a Kinesis Stream. Update the retention period of a Kinesis Stream. Update Tags on a Kinesis Stream.
+        Enable/disable server side encryption on a Kinesis Stream.
+
+  * This module is maintained by The Ansible Community
+OPTIONS (= is mandatory):
+
+- aws_access_key
+        AWS access key. If not set then the value of the AWS_ACCESS_KEY_ID, AWS_ACCESS_KEY or EC2_ACCESS_KEY environment variable is
+        used.
+        (Aliases: ec2_access_key, access_key)[Default: (null)]
+        type: str
+
+- aws_secret_key
+        AWS secret key. If not set then the value of the AWS_SECRET_ACCESS_KEY, AWS_SECRET_KEY, or EC2_SECRET_KEY environment variable is
+        used.
+        (Aliases: ec2_secret_key, secret_key)[Default: (null)]
+        type: str
+
+- debug_botocore_endpoint_logs
+        Use a botocore.endpoint logger to parse the unique (rather than total) "resource:action" API calls made during a task, outputing
+        the set to the resource_actions key in the task results. Use the aws_resource_action callback to output to total list made during
+        a playbook. The ANSIBLE_DEBUG_BOTOCORE_LOGS environment variable may also be used.
+        [Default: no]
+        type: bool
+        version_added: 2.8
+
+- ec2_url
+        Url to use to connect to EC2 or your Eucalyptus cloud (by default the module will use EC2 endpoints). Ignored for modules where
+        region is required. Must be specified for all other modules if region is not used. If not set then the value of the EC2_URL
+        environment variable, if any, is used.
+        [Default: (null)]
+        type: str
+
+- encryption_state
+        Enable or Disable encryption on the Kinesis Stream.
+        (Choices: enabled, disabled)[Default: (null)]
+        version_added: 2.5
+
+- encryption_type
+        The type of encryption.
+        [Default: KMS]
+        version_added: 2.5
+
+- key_id
+        The GUID or alias for the KMS key.
+        [Default: (null)]
+        version_added: 2.5
+
+= name
+        The name of the Kinesis Stream you are managing.
+
+
+- profile
+        Uses a boto profile. Only works with boto >= 2.24.0.
+        [Default: (null)]
+        type: str
+        version_added: 1.6
+
+- region
+        The AWS region to use. If not specified then the value of the AWS_REGION or EC2_REGION environment variable, if any, is used. See
+        http://docs.aws.amazon.com/general/latest/gr/rande.html#ec2_region
+        (Aliases: aws_region, ec2_region)[Default: (null)]
+        type: str
+
+- retention_period
+        The default retention period is 24 hours and can not be less than 24 hours.
+        The retention period can be modified during any point in time.
+        [Default: (null)]
+
+- security_token
+        AWS STS security token. If not set then the value of the AWS_SECURITY_TOKEN or EC2_SECURITY_TOKEN environment variable is used.
+        (Aliases: access_token)[Default: (null)]
+        type: str
+        version_added: 1.6
+
+- shards
+        The number of shards you want to have with this stream.
+        This is required when state == present
+        [Default: (null)]
+
+- state
+        Create or Delete the Kinesis Stream.
+        (Choices: present, absent)[Default: present]
+
+- tags
+        A dictionary of resource tags of the form: { tag1: value1, tag2: value2 }.
+        (Aliases: resource_tags)[Default: (null)]
+
+- validate_certs
+        When set to "no", SSL certificates will not be validated for boto versions >= 2.6.0.
+        [Default: True]
+        type: bool
+        version_added: 1.5
+
+- wait
+        Wait for operation to complete before returning.
+        [Default: True]
+        type: bool
+
+- wait_timeout
+        How many seconds to wait for an operation to complete before timing out.
+        [Default: 300]
+
+
+NOTES:
+      * If parameters are not set within the module, the following environment variables can be used in decreasing order of
+        precedence `AWS_URL' or `EC2_URL', `AWS_ACCESS_KEY_ID' or `AWS_ACCESS_KEY' or `EC2_ACCESS_KEY', `AWS_SECRET_ACCESS_KEY' or
+        `AWS_SECRET_KEY' or `EC2_SECRET_KEY', `AWS_SECURITY_TOKEN' or `EC2_SECURITY_TOKEN', `AWS_REGION' or `EC2_REGION'
+      * Ansible uses the boto configuration file (typically ~/.boto) if no credentials are provided. See
+        https://boto.readthedocs.io/en/latest/boto_config_tut.html
+      * `AWS_REGION' or `EC2_REGION' can be typically be used to specify the AWS region, when required, but this can also be
+        configured in the boto config file
+
+
+REQUIREMENTS:  boto, boto3, python >= 2.6
+
+AUTHOR: Allen Sanabria (@linuxdynasty)
+        METADATA:
+          status:
+          - preview
+          supported_by: community
+        
+
+EXAMPLES:
+
+# Note: These examples do not set authentication details, see the AWS Guide for details.
+
+# Basic creation example:
+- name: Set up Kinesis Stream with 10 shards and wait for the stream to become ACTIVE
+  kinesis_stream:
+    name: test-stream
+    shards: 10
+    wait: yes
+    wait_timeout: 600
+  register: test_stream
+
+# Basic creation example with tags:
+- name: Set up Kinesis Stream with 10 shards, tag the environment, and wait for the stream to become ACTIVE
+  kinesis_stream:
+    name: test-stream
+    shards: 10
+    tags:
+      Env: development
+    wait: yes
+    wait_timeout: 600
+  register: test_stream
+
+# Basic creation example with tags and increase the retention period from the default 24 hours to 48 hours:
+- name: Set up Kinesis Stream with 10 shards, tag the environment, increase the retention period and wait for the stream to become ACTIVE
+  kinesis_stream:
+    name: test-stream
+    retention_period: 48
+    shards: 10
+    tags:
+      Env: development
+    wait: yes
+    wait_timeout: 600
+  register: test_stream
+
+# Basic delete example:
+- name: Delete Kinesis Stream test-stream and wait for it to finish deleting.
+  kinesis_stream:
+    name: test-stream
+    state: absent
+    wait: yes
+    wait_timeout: 600
+  register: test_stream
+
+# Basic enable encryption example:
+- name: Encrypt Kinesis Stream test-stream.
+  kinesis_stream:
+    name: test-stream
+    state: present
+    encryption_state: enabled
+    encryption_type: KMS
+    key_id: alias/aws/kinesis
+    wait: yes
+    wait_timeout: 600
+  register: test_stream
+
+# Basic disable encryption example:
+- name: Encrypt Kinesis Stream test-stream.
+  kinesis_stream:
+    name: test-stream
+    state: present
+    encryption_state: disabled
+    encryption_type: KMS
+    key_id: alias/aws/kinesis
+    wait: yes
+    wait_timeout: 600
+  register: test_stream
+
+
+RETURN VALUES:
+
+stream_name:
+  description: The name of the Kinesis Stream.
+  returned: when state == present.
+  type: str
+  sample: "test-stream"
+stream_arn:
+  description: The amazon resource identifier
+  returned: when state == present.
+  type: str
+  sample: "arn:aws:kinesis:east-side:123456789:stream/test-stream"
+stream_status:
+  description: The current state of the Kinesis Stream.
+  returned: when state == present.
+  type: str
+  sample: "ACTIVE"
+retention_period_hours:
+  description: Number of hours messages will be kept for a Kinesis Stream.
+  returned: when state == present.
+  type: int
+  sample: 24
+tags:
+  description: Dictionary containing all the tags associated with the Kinesis stream.
+  returned: when state == present.
+  type: dict
+  sample: {
+      "Name": "Splunk",
+      "Env": "development"
+  }
+

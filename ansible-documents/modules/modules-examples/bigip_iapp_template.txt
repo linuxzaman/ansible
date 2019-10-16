@@ -1,0 +1,38 @@
+EXAMPLES:
+
+- name: Add the iApp contained in template iapp.tmpl
+  bigip_iapp_template:
+    content: "{{ lookup('template', 'iapp.tmpl') }}"
+    state: present
+    provider:
+      user: admin
+      password: secret
+      server: lb.mydomain.com
+  delegate_to: localhost
+
+- name: Update a template in place
+  bigip_iapp_template:
+    content: "{{ lookup('template', 'iapp-new.tmpl') }}"
+    state: present
+    provider:
+      user: admin
+      password: secret
+      server: lb.mydomain.com
+  delegate_to: localhost
+
+- name: Update a template in place that has existing services created from it.
+  bigip_iapp_template:
+    content: "{{ lookup('template', 'iapp-new.tmpl') }}"
+    force: yes
+    state: present
+    provider:
+      user: admin
+      password: secret
+      server: lb.mydomain.com
+  delegate_to: localhost
+
+
+RETURN VALUES:
+
+# only common fields returned
+

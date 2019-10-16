@@ -1,0 +1,78 @@
+> WIN_DOTNET_NGEN    (/usr/lib/python2.7/dist-packages/ansible/modules/windows/win_dotnet_ngen.py)
+
+        After .NET framework is installed/updated, Windows will probably want to recompile things to optimise for the host. This happens
+        via scheduled task, usually at some inopportune time. This module allows you to run this task on your own schedule, so you incur
+        the CPU hit at some more convenient and controlled time. http://blogs.msdn.com/b/dotnet/archive/2013/08/06/wondering-why-
+        mscorsvw-exe-has-high-cpu-usage-you-can-speed-it-up.aspx
+
+  * This module is maintained by The Ansible Community
+NOTES:
+      * There are in fact two scheduled tasks for ngen but they have no triggers so aren't a problem.
+      * There's no way to test if they've been completed.
+      * The stdout is quite likely to be several megabytes.
+
+
+AUTHOR: Peter Mounce (@petemounce)
+        METADATA:
+          status:
+          - preview
+          supported_by: community
+        
+
+EXAMPLES:
+
+- name: Run ngen tasks
+  win_dotnet_ngen:
+
+
+RETURN VALUES:
+
+dotnet_ngen_update_exit_code:
+  description: The exit code after running the 32-bit ngen.exe update /force
+    command.
+  returned: 32-bit ngen executable exists
+  type: int
+  sample: 0
+dotnet_ngen_update_output:
+  description: The stdout after running the 32-bit ngen.exe update /force
+    command.
+  returned: 32-bit ngen executable exists
+  type: str
+  sample: sample output
+dotnet_ngen_eqi_exit_code:
+  description: The exit code after running the 32-bit ngen.exe
+    executeQueuedItems command.
+  returned: 32-bit ngen executable exists
+  type: int
+  sample: 0
+dotnet_ngen_eqi_output:
+  description: The stdout after running the 32-bit ngen.exe executeQueuedItems
+    command.
+  returned: 32-bit ngen executable exists
+  type: str
+  sample: sample output
+dotnet_ngen64_update_exit_code:
+  description: The exit code after running the 64-bit ngen.exe update /force
+    command.
+  returned: 64-bit ngen executable exists
+  type: int
+  sample: 0
+dotnet_ngen64_update_output:
+  description: The stdout after running the 64-bit ngen.exe update /force
+    command.
+  returned: 64-bit ngen executable exists
+  type: str
+  sample: sample output
+dotnet_ngen64_eqi_exit_code:
+  description: The exit code after running the 64-bit ngen.exe
+    executeQueuedItems command.
+  returned: 64-bit ngen executable exists
+  type: int
+  sample: 0
+dotnet_ngen64_eqi_output:
+  description: The stdout after running the 64-bit ngen.exe executeQueuedItems
+    command.
+  returned: 64-bit ngen executable exists
+  type: str
+  sample: sample output
+

@@ -1,0 +1,38 @@
+EXAMPLES:
+
+---
+- name: Collect all facts from the device
+  onyx_facts:
+    gather_subset: all
+- name: Collect only the interfaces facts
+  onyx_facts:
+    gather_subset:
+      - interfaces
+- name: Do not collect version facts
+  onyx_facts:
+    gather_subset:
+      - "!version"
+
+
+RETURN VALUES:
+
+ansible_net_gather_subset:
+  description: The list of fact subsets collected from the device
+  returned: always
+  type: list
+# version
+ansible_net_version:
+  description: A hash of all curently running system image information
+  returned: when version is configured or when no gather_subset is provided
+  type: dict
+# modules
+ansible_net_modules:
+  description: A hash of all modules on the systeme with status
+  returned: when modules is configured
+  type: dict
+# interfaces
+ansible_net_interfaces:
+  description: A hash of all interfaces running on the system
+  returned: when interfaces is configured
+  type: dict
+

@@ -1,0 +1,58 @@
+> WAKEONLAN    (/usr/lib/python2.7/dist-packages/ansible/modules/remote_management/wakeonlan.py)
+
+        The `wakeonlan' module sends magic Wake-on-LAN (WoL) broadcast packets.
+
+  * This module is maintained by The Ansible Community
+OPTIONS (= is mandatory):
+
+- broadcast
+        Network broadcast address to use for broadcasting magic Wake-on-LAN packet.
+        [Default: 255.255.255.255]
+
+= mac
+        MAC address to send Wake-on-LAN broadcast packet for.
+
+
+- port
+        UDP port to use for magic Wake-on-LAN packet.
+        [Default: 7]
+
+
+NOTES:
+      * This module sends a magic packet, without knowing whether it worked
+      * Only works if the target system was properly configured for Wake-on-LAN (in the BIOS and/or the OS)
+      * Some BIOSes have a different (configurable) Wake-on-LAN boot order (i.e. PXE first).
+
+
+SEE ALSO:
+      * Module win_wakeonlan
+           The official documentation on the win_wakeonlan module.
+           https://docs.ansible.com/ansible/latest/modules/win_wakeonlan_module.html
+
+
+AUTHOR: Dag Wieers (@dagwieers)
+        METADATA:
+          status:
+          - preview
+          supported_by: community
+        
+TODO: Add arping support to check whether the system is up (before and after), Enable check-mode support (when we have arping support), Does not have SecureOn password support
+
+EXAMPLES:
+
+- name: Send a magic Wake-on-LAN packet to 00:00:5E:00:53:66
+  wakeonlan:
+    mac: '00:00:5E:00:53:66'
+    broadcast: 192.0.2.23
+  delegate_to: localhost
+
+- wakeonlan:
+    mac: 00:00:5E:00:53:66
+    port: 9
+  delegate_to: localhost
+
+
+RETURN VALUES:
+
+# Default return values
+

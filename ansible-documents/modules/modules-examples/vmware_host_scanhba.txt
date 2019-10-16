@@ -1,0 +1,42 @@
+EXAMPLES:
+
+- name: Recan HBA's for a given ESXi host and refresh storage system objects
+  vmware_host_scanhba:
+      hostname: '{{ vcenter_hostname }}'
+      username: '{{ vcenter_username }}'
+      password: '{{ vcenter_password }}'
+      esxi_hostname: '{{ inventory_hostname }}'
+      refresh_storage: true
+  delegate_to: localhost
+
+- name: Rescan HBA's for a given cluster - all found hosts will be scanned
+  vmware_host_scanhba:
+      hostname: '{{ vcenter_hostname }}'
+      username: '{{ vcenter_username }}'
+      password: '{{ vcenter_password }}'
+      esxi_hostname: '{{ inventory_hostname }}'
+      refresh_storage: true
+  delegate_to: localhost
+
+- name: Recan HBA's for a given ESXi host and don't refresh storage system objects
+  vmware_host_scanhba:
+      hostname: '{{ vcenter_hostname }}'
+      username: '{{ vcenter_username }}'
+      password: '{{ vcenter_password }}'
+      esxi_hostname: '{{ inventory_hostname }}'
+  delegate_to: localhost
+
+
+RETURN VALUES:
+
+result:
+    description: return confirmation of requested host and updated / refreshed storage system
+    returned: always
+    type: dict
+    sample: {
+        "esxi01.example.com": {
+            "rescaned_hba": "true",
+            "refreshed_storage": "true"
+        }
+    }
+

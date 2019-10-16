@@ -1,0 +1,85 @@
+EXAMPLES:
+
+- name: Ensure ipv4 address is configured on Ethernet1/32
+  nxos_ip_interface:
+    interface: Ethernet1/32
+    transport: nxapi
+    version: v4
+    state: present
+    addr: 20.20.20.20
+    mask: 24
+
+- name: Ensure ipv6 address is configured on Ethernet1/31
+  nxos_ip_interface:
+    interface: Ethernet1/31
+    transport: cli
+    version: v6
+    state: present
+    addr: '2001::db8:800:200c:cccb'
+    mask: 64
+
+- name: Ensure ipv4 address is configured with tag
+  nxos_ip_interface:
+    interface: Ethernet1/32
+    transport: nxapi
+    version: v4
+    state: present
+    tag: 100
+    addr: 20.20.20.20
+    mask: 24
+
+- name: Ensure ipv4 address is configured on sub-intf with dot1q encapsulation
+  nxos_ip_interface:
+    interface: Ethernet1/32.10
+    transport: nxapi
+    version: v4
+    state: present
+    dot1q: 10
+    addr: 20.20.20.20
+    mask: 24
+
+- name: Configure ipv4 address as secondary if needed
+  nxos_ip_interface:
+    interface: Ethernet1/32
+    transport: nxapi
+    version: v4
+    state: present
+    allow_secondary: true
+    addr: 21.21.21.21
+    mask: 24
+
+
+RETURN VALUES:
+
+proposed:
+    description: k/v pairs of parameters passed into module
+    returned: always
+    type: dict
+    sample: {"addr": "20.20.20.20", "allow_secondary": true,
+            "interface": "Ethernet1/32", "mask": "24", "tag": 100}
+existing:
+    description: k/v pairs of existing IP attributes on the interface
+    returned: always
+    type: dict
+    sample: {"addresses": [{"addr": "11.11.11.11", "mask": 17, "tag": 101, "secondary": false}],
+            "interface": "ethernet1/32", "prefixes": ["11.11.0.0/17"],
+            "type": "ethernet", "vrf": "default"}
+end_state:
+    description: k/v pairs of IP attributes after module execution
+    returned: always
+    type: dict
+    sample: {"addresses": [{"addr": "11.11.11.11", "mask": 17, "tag": 101, "secondary": false},
+                           {"addr": "20.20.20.20", "mask": 24, "tag": 100, "secondary": true}],
+            "interface": "ethernet1/32", "prefixes": ["11.11.0.0/17", "20.20.20.0/24"],
+            "type": "ethernet", "vrf": "default"}
+commands:
+    description: commands sent to the device
+    returned: always
+    type: list
+    sample: ["interface ethernet1/32", "ip address 20.20.20.20/24 secondary tag 100"]
+changed:
+    description: check to see if a change was made on the device
+    returned: always
+    type: bool
+    sample: true
+

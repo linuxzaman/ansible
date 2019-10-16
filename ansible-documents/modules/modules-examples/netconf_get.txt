@@ -1,0 +1,77 @@
+EXAMPLES:
+
+- name: Get running configuration and state data
+  netconf_get:
+
+- name: Get configuration and state data from startup datastore
+  netconf_get:
+    source: startup
+
+- name: Get system configuration data from running datastore state (junos)
+  netconf_get:
+    source: running
+    filter: <configuration><system></system></configuration>
+
+- name: Get configuration and state data in JSON format
+  netconf_get:
+    display: json
+
+- name: get schema list using subtree w/ namespaces
+  netconf_get:
+    display: json
+    filter: <netconf-state xmlns="urn:ietf:params:xml:ns:yang:ietf-netconf-monitoring"><schemas><schema/></schemas></netconf-state>
+    lock: never
+
+- name: get schema list using xpath
+  netconf_get:
+    display: xml
+    filter: /netconf-state/schemas/schema
+
+- name: get interface confiugration with filter (iosxr)
+  netconf_get:
+    display: pretty
+    filter: <interface-configurations xmlns="http://cisco.com/ns/yang/Cisco-IOS-XR-ifmgr-cfg"></interface-configurations>
+    lock: if-supported
+
+- name: Get system configuration data from running datastore state (junos)
+  netconf_get:
+    source: running
+    filter: <configuration><system></system></configuration>
+    lock: if-supported
+
+- name: Get complete configuration data from running datastore (SROS)
+  netconf_get:
+    source: running
+    filter: <configure xmlns="urn:nokia.com:sros:ns:yang:sr:conf"/>
+
+- name: Get complete state data (SROS)
+  netconf_get:
+    filter: <state xmlns="urn:nokia.com:sros:ns:yang:sr:state"/>
+
+
+RETURN VALUES:
+
+stdout:
+  description: The raw XML string containing configuration or state data
+               received from the underlying ncclient library.
+  returned: always apart from low-level errors (such as action plugin)
+  type: str
+  sample: '...'
+stdout_lines:
+  description: The value of stdout split into a list
+  returned: always apart from low-level errors (such as action plugin)
+  type: list
+  sample: ['...', '...']
+output:
+  description: Based on the value of display option will return either the set of
+               transformed XML to JSON format from the RPC response with type dict
+               or pretty XML string response (human-readable) or response with
+               namespace removed from XML string.
+  returned: when the display format is selected as JSON it is returned as dict type, if the
+            display format is xml or pretty pretty it is retured as a string apart from low-level
+            errors (such as action plugin).
+  type: complex
+  contains:
+    formatted_output:
+      - Contains formatted response received from remote host as per the value in display format.
+

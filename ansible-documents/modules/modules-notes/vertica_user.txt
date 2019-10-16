@@ -1,0 +1,98 @@
+> VERTICA_USER    (/usr/lib/python2.7/dist-packages/ansible/modules/database/vertica/vertica_user.py)
+
+        Adds or removes Vertica database user and, optionally, assigns roles. A user will not be removed until all the dependencies have
+        been dropped. In such a situation, if the module tries to remove the user it will fail and only remove roles granted to the user.
+
+  * This module is maintained by The Ansible Community
+OPTIONS (= is mandatory):
+
+- cluster
+        Name of the Vertica cluster.
+        [Default: localhost]
+
+- db
+        Name of the Vertica database.
+        [Default: (null)]
+
+- expired
+        Sets the user's password expiration.
+        [Default: (null)]
+        type: bool
+
+- ldap
+        Set to true if users are authenticated via LDAP.
+        The user will be created with password expired and set to `$ldap$'.
+        [Default: (null)]
+        type: bool
+
+- login_password
+        The password used to authenticate with.
+        [Default: (null)]
+
+- login_user
+        The username used to authenticate with.
+        [Default: dbadmin]
+
+= name
+        Name of the user to add or remove.
+
+
+- password
+        The user's password encrypted by the MD5 algorithm.
+        The password must be generated with the format `"md5" + md5[password + username]', resulting in a total of 35 characters. An easy
+        way to do this is by querying the Vertica database with select 'md5'||md5('<user_password><user_name>').
+        [Default: (null)]
+
+- port
+        Vertica cluster port to connect to.
+        [Default: 5433]
+
+- profile
+        Sets the user's profile.
+        [Default: (null)]
+
+- resource_pool
+        Sets the user's resource pool.
+        [Default: (null)]
+
+- roles
+        Comma separated list of roles to assign to the user.
+        (Aliases: role)[Default: (null)]
+
+- state
+        Whether to create `present', drop `absent' or lock `locked' a user.
+        (Choices: present, absent, locked)[Default: present]
+
+
+NOTES:
+      * The default authentication assumes that you are either logging in as or sudo'ing to the `dbadmin' account on the host.
+      * This module uses `pyodbc', a Python ODBC database adapter. You must ensure that `unixODBC' and `pyodbc' is installed on the
+        host and properly configured.
+      * Configuring `unixODBC' for Vertica requires `Driver = /opt/vertica/lib64/libverticaodbc.so' to be added to the `Vertica'
+        section of either `/etc/odbcinst.ini' or `$HOME/.odbcinst.ini' and both `ErrorMessagesPath = /opt/vertica/lib64' and
+        `DriverManagerEncoding = UTF-16' to be added to the `Driver' section of either `/etc/vertica.ini' or `$HOME/.vertica.ini'.
+
+
+REQUIREMENTS:  unixODBC, pyodbc
+
+AUTHOR: Dariusz Owczarek (@dareko)
+        METADATA:
+          status:
+          - preview
+          supported_by: community
+        
+
+EXAMPLES:
+
+- name: creating a new vertica user with password
+  vertica_user: name=user_name password=md5<encrypted_password> db=db_name state=present
+
+- name: creating a new vertica user authenticated via ldap with roles assigned
+  vertica_user:
+    name=user_name
+    ldap=true
+    db=db_name
+    roles=schema_name_ro
+    state=present
+
+

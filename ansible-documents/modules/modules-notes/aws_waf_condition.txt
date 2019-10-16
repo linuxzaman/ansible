@@ -1,0 +1,373 @@
+> AWS_WAF_CONDITION    (/usr/lib/python2.7/dist-packages/ansible/modules/cloud/amazon/aws_waf_condition.py)
+
+        Read the AWS documentation for WAF https://aws.amazon.com/documentation/waf/
+
+  * This module is maintained by The Ansible Community
+OPTIONS (= is mandatory):
+
+- aws_access_key
+        AWS access key. If not set then the value of the AWS_ACCESS_KEY_ID, AWS_ACCESS_KEY or EC2_ACCESS_KEY environment variable is
+        used.
+        (Aliases: ec2_access_key, access_key)[Default: (null)]
+        type: str
+
+- aws_secret_key
+        AWS secret key. If not set then the value of the AWS_SECRET_ACCESS_KEY, AWS_SECRET_KEY, or EC2_SECRET_KEY environment variable is
+        used.
+        (Aliases: ec2_secret_key, secret_key)[Default: (null)]
+        type: str
+
+- debug_botocore_endpoint_logs
+        Use a botocore.endpoint logger to parse the unique (rather than total) "resource:action" API calls made during a task, outputing
+        the set to the resource_actions key in the task results. Use the aws_resource_action callback to output to total list made during
+        a playbook. The ANSIBLE_DEBUG_BOTOCORE_LOGS environment variable may also be used.
+        [Default: no]
+        type: bool
+        version_added: 2.8
+
+- ec2_url
+        Url to use to connect to EC2 or your Eucalyptus cloud (by default the module will use EC2 endpoints). Ignored for modules where
+        region is required. Must be specified for all other modules if region is not used. If not set then the value of the EC2_URL
+        environment variable, if any, is used.
+        [Default: (null)]
+        type: str
+
+- filters
+        A list of the filters against which to match.
+        For `type'=`byte', valid keys are `field_to_match', `position', `header', `transformation'.
+        For `type'=`geo', the only valid key is `country'.
+        For `type'=`ip', the only valid key is `ip_address'.
+        For `type'=`regex', valid keys are `field_to_match', `transformation' and `regex_pattern'.
+        For `type'=`size', valid keys are `field_to_match', `transformation', `comparison' and `size'.
+        For `type'=`sql', valid keys are `field_to_match' and `transformation'.
+        For `type'=`xss', valid keys are `field_to_match' and `transformation'.
+        `field_to_match' can be one of `uri', `query_string', `header' `method' and `body'.
+        If `field_to_match' is `header', then `header' must also be specified.
+        `transformation' can be one of `none', `compress_white_space', `html_entity_decode', `lowercase', `cmd_line', `url_decode'.
+        `position', can be one of `exactly', `starts_with', `ends_with', `contains', `contains_word'.
+        `comparison' can be one of `EQ', `NE', `LE', `LT', `GE', `GT'.
+        `target_string' is a maximum of 50 bytes.
+        `regex_pattern' is a dict with a `name' key and `regex_strings' list of strings to match.
+        [Default: (null)]
+
+= name
+        Name of the Web Application Firewall condition to manage.
+
+
+- profile
+        Uses a boto profile. Only works with boto >= 2.24.0.
+        [Default: (null)]
+        type: str
+        version_added: 1.6
+
+- purge_filters
+        Whether to remove existing filters from a condition if not passed in `filters'.
+        [Default: False]
+        type: bool
+
+- region
+        The AWS region to use. If not specified then the value of the AWS_REGION or EC2_REGION environment variable, if any, is used. See
+        http://docs.aws.amazon.com/general/latest/gr/rande.html#ec2_region
+        (Aliases: aws_region, ec2_region)[Default: (null)]
+        type: str
+
+- security_token
+        AWS STS security token. If not set then the value of the AWS_SECURITY_TOKEN or EC2_SECURITY_TOKEN environment variable is used.
+        (Aliases: access_token)[Default: (null)]
+        type: str
+        version_added: 1.6
+
+- state
+        Whether the condition should be `present' or `absent'.
+        (Choices: present, absent)[Default: present]
+
+- type
+        the type of matching to perform.
+        (Choices: byte, geo, ip, regex, size, sql, xss)[Default: (null)]
+
+- validate_certs
+        When set to "no", SSL certificates will not be validated for boto versions >= 2.6.0.
+        [Default: True]
+        type: bool
+        version_added: 1.5
+
+
+NOTES:
+      * If parameters are not set within the module, the following environment variables can be used in decreasing order of
+        precedence `AWS_URL' or `EC2_URL', `AWS_ACCESS_KEY_ID' or `AWS_ACCESS_KEY' or `EC2_ACCESS_KEY', `AWS_SECRET_ACCESS_KEY' or
+        `AWS_SECRET_KEY' or `EC2_SECRET_KEY', `AWS_SECURITY_TOKEN' or `EC2_SECURITY_TOKEN', `AWS_REGION' or `EC2_REGION'
+      * Ansible uses the boto configuration file (typically ~/.boto) if no credentials are provided. See
+        https://boto.readthedocs.io/en/latest/boto_config_tut.html
+      * `AWS_REGION' or `EC2_REGION' can be typically be used to specify the AWS region, when required, but this can also be
+        configured in the boto config file
+
+
+REQUIREMENTS:  python >= 2.6, boto
+
+AUTHOR: Will Thames (@willthames), Mike Mochan (@mmochan)
+        METADATA:
+          status:
+          - preview
+          supported_by: community
+        
+
+EXAMPLES:
+
+- name: create WAF byte condition
+    aws_waf_condition:
+      name: my_byte_condition
+      filters:
+      - field_to_match: header
+        position: STARTS_WITH
+        target_string: Hello
+        header: Content-type
+      type: byte
+
+  - name: create WAF geo condition
+    aws_waf_condition:
+      name: my_geo_condition
+      filters:
+        - country: US
+        - country: AU
+        - country: AT
+      type: geo
+
+  - name: create IP address condition
+    aws_waf_condition:
+      name: "{{ resource_prefix }}_ip_condition"
+      filters:
+        - ip_address: "10.0.0.0/8"
+        - ip_address: "192.168.0.0/24"
+      type: ip
+
+  - name: create WAF regex condition
+    aws_waf_condition:
+      name: my_regex_condition
+      filters:
+        - field_to_match: query_string
+          regex_pattern:
+            name: greetings
+            regex_strings:
+              - '[hH]ello'
+              - '^Hi there'
+              - '.*Good Day to You'
+      type: regex
+
+  - name: create WAF size condition
+    aws_waf_condition:
+      name: my_size_condition
+      filters:
+        - field_to_match: query_string
+          size: 300
+          comparison: GT
+      type: size
+
+  - name: create WAF sql injection condition
+    aws_waf_condition:
+      name: my_sql_condition
+      filters:
+        - field_to_match: query_string
+          transformation: url_decode
+      type: sql
+
+  - name: create WAF xss condition
+    aws_waf_condition:
+      name: my_xss_condition
+      filters:
+        - field_to_match: query_string
+          transformation: url_decode
+      type: xss
+
+
+RETURN VALUES:
+
+condition:
+  description: condition returned by operation
+  returned: always
+  type: complex
+  contains:
+    condition_id:
+      description: type-agnostic ID for the condition
+      returned: when state is present
+      type: str
+      sample: dd74b1ff-8c06-4a4f-897a-6b23605de413
+    byte_match_set_id:
+      description: ID for byte match set
+      returned: always
+      type: str
+      sample: c4882c96-837b-44a2-a762-4ea87dbf812b
+    byte_match_tuples:
+      description: list of byte match tuples
+      returned: always
+      type: complex
+      contains:
+        field_to_match:
+          description: Field to match
+          returned: always
+          type: complex
+          contains:
+            data:
+              description: Which specific header (if type is header)
+              type: str
+              sample: content-type
+            type:
+              description: Type of field
+              type: str
+              sample: HEADER
+        positional_constraint:
+          description: Position in the field to match
+          type: str
+          sample: STARTS_WITH
+        target_string:
+          description: String to look for
+          type: str
+          sample: Hello
+        text_transformation:
+          description: Transformation to apply to the field before matching
+          type: str
+          sample: NONE
+    geo_match_constraints:
+      description: List of geographical constraints
+      returned: when type is geo and state is present
+      type: complex
+      contains:
+        type:
+          description: Type of geo constraint
+          type: str
+          sample: Country
+        value:
+          description: Value of geo constraint (typically a country code)
+          type: str
+          sample: AT
+    geo_match_set_id:
+      description: ID of the geo match set
+      returned: when type is geo and state is present
+      type: str
+      sample: dd74b1ff-8c06-4a4f-897a-6b23605de413
+    ip_set_descriptors:
+      description: list of IP address filters
+      returned: when type is ip and state is present
+      type: complex
+      contains:
+        type:
+          description: Type of IP address (IPV4 or IPV6)
+          returned: always
+          type: str
+          sample: IPV4
+        value:
+          description: IP address
+          returned: always
+          type: str
+          sample: 10.0.0.0/8
+    ip_set_id:
+      description: ID of condition
+      returned: when type is ip and state is present
+      type: str
+      sample: 78ad334a-3535-4036-85e6-8e11e745217b
+    name:
+      description: Name of condition
+      returned: when state is present
+      type: str
+      sample: my_waf_condition
+    regex_match_set_id:
+      description: ID of the regex match set
+      returned: when type is regex and state is present
+      type: str
+      sample: 5ea3f6a8-3cd3-488b-b637-17b79ce7089c
+    regex_match_tuples:
+      description: List of regex matches
+      returned: when type is regex and state is present
+      type: complex
+      contains:
+        field_to_match:
+          description: Field on which the regex match is applied
+          type: complex
+          contains:
+            type:
+              description: The field name
+              returned: when type is regex and state is present
+              type: str
+              sample: QUERY_STRING
+        regex_pattern_set_id:
+          description: ID of the regex pattern
+          type: str
+          sample: 6fdf7f2d-9091-445c-aef2-98f3c051ac9e
+        text_transformation:
+          description: transformation applied to the text before matching
+          type: str
+          sample: NONE
+    size_constraint_set_id:
+      description: ID of the size constraint set
+      returned: when type is size and state is present
+      type: str
+      sample: de84b4b3-578b-447e-a9a0-0db35c995656
+    size_constraints:
+      description: List of size constraints to apply
+      returned: when type is size and state is present
+      type: complex
+      contains:
+        comparison_operator:
+          description: Comparison operator to apply
+          type: str
+          sample: GT
+        field_to_match:
+          description: Field on which the size constraint is applied
+          type: complex
+          contains:
+            type:
+              description: Field name
+              type: str
+              sample: QUERY_STRING
+        size:
+          description: size to compare against the field
+          type: int
+          sample: 300
+        text_transformation:
+          description: transformation applied to the text before matching
+          type: str
+          sample: NONE
+    sql_injection_match_set_id:
+      description: ID of the SQL injection match set
+      returned: when type is sql and state is present
+      type: str
+      sample: de84b4b3-578b-447e-a9a0-0db35c995656
+    sql_injection_match_tuples:
+      description: List of SQL injection match sets
+      returned: when type is sql and state is present
+      type: complex
+      contains:
+        field_to_match:
+          description: Field on which the SQL injection match is applied
+          type: complex
+          contains:
+            type:
+              description: Field name
+              type: str
+              sample: QUERY_STRING
+        text_transformation:
+          description: transformation applied to the text before matching
+          type: str
+          sample: URL_DECODE
+    xss_match_set_id:
+      description: ID of the XSS match set
+      returned: when type is xss and state is present
+      type: str
+      sample: de84b4b3-578b-447e-a9a0-0db35c995656
+    xss_match_tuples:
+      description: List of XSS match sets
+      returned: when type is xss and state is present
+      type: complex
+      contains:
+        field_to_match:
+          description: Field on which the XSS match is applied
+          type: complex
+          contains:
+            type:
+              description: Field name
+              type: str
+              sample: QUERY_STRING
+        text_transformation:
+          description: transformation applied to the text before matching
+          type: str
+          sample: URL_DECODE
+

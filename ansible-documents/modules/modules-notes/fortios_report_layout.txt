@@ -1,0 +1,498 @@
+> FORTIOS_REPORT_LAYOUT    (/usr/lib/python2.7/dist-packages/ansible/modules/network/fortios/fortios_report_layout.py)
+
+        This module is able to configure a FortiGate or FortiOS by allowing the user to set and modify report feature and layout
+        category. Examples include all parameters and values need to be adjusted to datasources before usage. Tested with FOS v6.0.2
+
+  * This module is maintained by The Ansible Community
+OPTIONS (= is mandatory):
+
+= host
+        FortiOS or FortiGate ip address.
+
+
+- https
+        Indicates if the requests towards FortiGate must use HTTPS protocol
+        [Default: True]
+        type: bool
+
+- password
+        FortiOS or FortiGate password.
+        [Default: ]
+
+- report_layout
+        Report layout configuration.
+        [Default: None]
+        suboptions:
+          body-item:
+            description:
+            - Configure report body item.
+            suboptions:
+              chart:
+                description:
+                - Report item chart name.
+              chart-options:
+                choices:
+                - include-no-data
+                - hide-title
+                - show-caption
+                description:
+                - Report chart options.
+              column:
+                description:
+                - Report section column number.
+              content:
+                description:
+                - Report item text content.
+              description:
+                description:
+                - Description.
+              drill-down-items:
+                description:
+                - Control how drill down charts are shown.
+              drill-down-types:
+                description:
+                - Control whether keys from the parent being combined or not.
+              hide:
+                choices:
+                - enable
+                - disable
+                description:
+                - Enable/disable hide item in report.
+              id:
+                description:
+                - Report item ID.
+                required: true
+              img-src:
+                description:
+                - Report item image file name.
+              list:
+                description:
+                - Configure report list item.
+                suboptions:
+                  content:
+                    description:
+                    - List entry content.
+                  id:
+                    description:
+                    - List entry ID.
+                    required: true
+              list-component:
+                choices:
+                - bullet
+                - numbered
+                description:
+                - Report item list component.
+              misc-component:
+                choices:
+                - hline
+                - page-break
+                - column-break
+                - section-start
+                description:
+                - Report item miscellaneous component.
+              parameters:
+                description:
+                - Parameters.
+                suboptions:
+                  id:
+                    description:
+                    - ID.
+                    required: true
+                  name:
+                    description:
+                    - Field name that match field of parameters defined in dataset.
+                  value:
+                    description:
+                    - Value to replace corresponding field of parameters defined in dataset.
+              style:
+                description:
+                - Report item style.
+              table-caption-style:
+                description:
+                - Table chart caption style.
+              table-column-widths:
+                description:
+                - Report item table column widths.
+              table-even-row-style:
+                description:
+                - Table chart even row style.
+              table-head-style:
+                description:
+                - Table chart head style.
+              table-odd-row-style:
+                description:
+                - Table chart odd row style.
+              text-component:
+                choices:
+                - text
+                - heading1
+                - heading2
+                - heading3
+                description:
+                - Report item text component.
+              title:
+                description:
+                - Report section title.
+              top-n:
+                description:
+                - Value of top.
+              type:
+                choices:
+                - text
+                - image
+                - chart
+                - misc
+                description:
+                - Report item type.
+          cutoff-option:
+            choices:
+            - run-time
+            - custom
+            description:
+            - Cutoff-option is either run-time or custom.
+          cutoff-time:
+            description:
+            - Custom cutoff time to generate report [hh:mm].
+          day:
+            choices:
+            - sunday
+            - monday
+            - tuesday
+            - wednesday
+            - thursday
+            - friday
+            - saturday
+            description:
+            - Schedule days of week to generate report.
+          description:
+            description:
+            - Description.
+          email-recipients:
+            description:
+            - Email recipients for generated reports.
+          email-send:
+            choices:
+            - enable
+            - disable
+            description:
+            - Enable/disable sending emails after reports are generated.
+          format:
+            choices:
+            - pdf
+            description:
+            - Report format.
+          max-pdf-report:
+            description:
+            - Maximum number of PDF reports to keep at one time (oldest report is overwritten).
+          name:
+            description:
+            - Report layout name.
+            required: true
+          options:
+            choices:
+            - include-table-of-content
+            - auto-numbering-heading
+            - view-chart-as-heading
+            - show-html-navbar-before-heading
+            - dummy-option
+            description:
+            - Report layout options.
+          page:
+            description:
+            - Configure report page.
+            suboptions:
+              column-break-before:
+                choices:
+                - heading1
+                - heading2
+                - heading3
+                description:
+                - Report page auto column break before heading.
+              footer:
+                description:
+                - Configure report page footer.
+                suboptions:
+                  footer-item:
+                    description:
+                    - Configure report footer item.
+                    suboptions:
+                      content:
+                        description:
+                        - Report item text content.
+                      description:
+                        description:
+                        - Description.
+                      id:
+                        description:
+                        - Report item ID.
+                        required: true
+                      img-src:
+                        description:
+                        - Report item image file name.
+                      style:
+                        description:
+                        - Report item style.
+                      type:
+                        choices:
+                        - text
+                        - image
+                        description:
+                        - Report item type.
+                  style:
+                    description:
+                    - Report footer style.
+              header:
+                description:
+                - Configure report page header.
+                suboptions:
+                  header-item:
+                    description:
+                    - Configure report header item.
+                    suboptions:
+                      content:
+                        description:
+                        - Report item text content.
+                      description:
+                        description:
+                        - Description.
+                      id:
+                        description:
+                        - Report item ID.
+                        required: true
+                      img-src:
+                        description:
+                        - Report item image file name.
+                      style:
+                        description:
+                        - Report item style.
+                      type:
+                        choices:
+                        - text
+                        - image
+                        description:
+                        - Report item type.
+                  style:
+                    description:
+                    - Report header style.
+              options:
+                choices:
+                - header-on-first-page
+                - footer-on-first-page
+                description:
+                - Report page options.
+              page-break-before:
+                choices:
+                - heading1
+                - heading2
+                - heading3
+                description:
+                - Report page auto page break before heading.
+              paper:
+                choices:
+                - a4
+                - letter
+                description:
+                - Report page paper.
+          schedule-type:
+            choices:
+            - demand
+            - daily
+            - weekly
+            description:
+            - Report schedule type.
+          state:
+            choices:
+            - present
+            - absent
+            description:
+            - Indicates whether to create or remove the object
+          style-theme:
+            description:
+            - Report style theme.
+          subtitle:
+            description:
+            - Report subtitle.
+          time:
+            description:
+            - Schedule time to generate report [hh:mm].
+          title:
+            description:
+            - Report title.
+        
+
+= username
+        FortiOS or FortiGate username.
+
+
+- vdom
+        Virtual domain, among those defined previously. A vdom is a virtual instance of the FortiGate that can be configured and used as
+        a different unit.
+        [Default: root]
+
+
+NOTES:
+      * Requires fortiosapi library developed by Fortinet
+      * Run as a local_action in your playbook
+
+
+REQUIREMENTS:  fortiosapi>=0.9.8
+
+AUTHOR: Miguel Angel Munoz (@mamunozgonzalez), Nicolas Thomas (@thomnico)
+        METADATA:
+          status:
+          - preview
+          supported_by: community
+        
+
+EXAMPLES:
+
+- hosts: localhost
+  vars:
+   host: "192.168.122.40"
+   username: "admin"
+   password: ""
+   vdom: "root"
+  tasks:
+  - name: Report layout configuration.
+    fortios_report_layout:
+      host:  "{{ host }}"
+      username: "{{ username }}"
+      password: "{{ password }}"
+      vdom:  "{{ vdom }}"
+      https: "False"
+      report_layout:
+        state: "present"
+        body-item:
+         -
+            chart: "<your_own_value>"
+            chart-options: "include-no-data"
+            column: "6"
+            content: "<your_own_value>"
+            description: "<your_own_value>"
+            drill-down-items: "<your_own_value>"
+            drill-down-types: "<your_own_value>"
+            hide: "enable"
+            id:  "12"
+            img-src: "<your_own_value>"
+            list:
+             -
+                content: "<your_own_value>"
+                id:  "16"
+            list-component: "bullet"
+            misc-component: "hline"
+            parameters:
+             -
+                id:  "20"
+                name: "default_name_21"
+                value: "<your_own_value>"
+            style: "<your_own_value>"
+            table-caption-style: "<your_own_value>"
+            table-column-widths: "<your_own_value>"
+            table-even-row-style: "<your_own_value>"
+            table-head-style: "<your_own_value>"
+            table-odd-row-style: "<your_own_value>"
+            text-component: "text"
+            title: "<your_own_value>"
+            top-n: "31"
+            type: "text"
+        cutoff-option: "run-time"
+        cutoff-time: "<your_own_value>"
+        day: "sunday"
+        description: "<your_own_value>"
+        email-recipients: "<your_own_value>"
+        email-send: "enable"
+        format: "pdf"
+        max-pdf-report: "40"
+        name: "default_name_41"
+        options: "include-table-of-content"
+        page:
+            column-break-before: "heading1"
+            footer:
+                footer-item:
+                 -
+                    content: "<your_own_value>"
+                    description: "<your_own_value>"
+                    id:  "49"
+                    img-src: "<your_own_value>"
+                    style: "<your_own_value>"
+                    type: "text"
+                style: "<your_own_value>"
+            header:
+                header-item:
+                 -
+                    content: "<your_own_value>"
+                    description: "<your_own_value>"
+                    id:  "58"
+                    img-src: "<your_own_value>"
+                    style: "<your_own_value>"
+                    type: "text"
+                style: "<your_own_value>"
+            options: "header-on-first-page"
+            page-break-before: "heading1"
+            paper: "a4"
+        schedule-type: "demand"
+        style-theme: "<your_own_value>"
+        subtitle: "<your_own_value>"
+        time: "<your_own_value>"
+        title: "<your_own_value>"
+
+
+RETURN VALUES:
+
+build:
+  description: Build number of the fortigate image
+  returned: always
+  type: str
+  sample: '1547'
+http_method:
+  description: Last method used to provision the content into FortiGate
+  returned: always
+  type: str
+  sample: 'PUT'
+http_status:
+  description: Last result given by FortiGate on last operation applied
+  returned: always
+  type: str
+  sample: "200"
+mkey:
+  description: Master key (id) used in the last call to FortiGate
+  returned: success
+  type: str
+  sample: "id"
+name:
+  description: Name of the table used to fulfill the request
+  returned: always
+  type: str
+  sample: "urlfilter"
+path:
+  description: Path of the table used to fulfill the request
+  returned: always
+  type: str
+  sample: "webfilter"
+revision:
+  description: Internal revision number
+  returned: always
+  type: str
+  sample: "17.0.2.10658"
+serial:
+  description: Serial number of the unit
+  returned: always
+  type: str
+  sample: "FGVMEVYYQT3AB5352"
+status:
+  description: Indication of the operation's result
+  returned: always
+  type: str
+  sample: "success"
+vdom:
+  description: Virtual domain used
+  returned: always
+  type: str
+  sample: "root"
+version:
+  description: Version of the FortiGate
+  returned: always
+  type: str
+  sample: "v5.6.3"
+
+

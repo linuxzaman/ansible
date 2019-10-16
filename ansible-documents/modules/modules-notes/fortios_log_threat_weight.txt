@@ -1,0 +1,422 @@
+> FORTIOS_LOG_THREAT_WEIGHT    (/usr/lib/python2.7/dist-packages/ansible/modules/network/fortios/fortios_log_threat_weight.py)
+
+        This module is able to configure a FortiGate or FortiOS by allowing the user to set and modify log feature and threat_weight
+        category. Examples include all parameters and values need to be adjusted to datasources before usage. Tested with FOS v6.0.2
+
+  * This module is maintained by The Ansible Community
+OPTIONS (= is mandatory):
+
+= host
+        FortiOS or FortiGate ip address.
+
+
+- https
+        Indicates if the requests towards FortiGate must use HTTPS protocol
+        [Default: True]
+        type: bool
+
+- log_threat_weight
+        Configure threat weight settings.
+        [Default: None]
+        suboptions:
+          application:
+            description:
+            - Application-control threat weight settings.
+            suboptions:
+              category:
+                description:
+                - Application category.
+              id:
+                description:
+                - Entry ID.
+                required: true
+              level:
+                choices:
+                - disable
+                - low
+                - medium
+                - high
+                - critical
+                description:
+                - Threat weight score for Application events.
+          blocked-connection:
+            choices:
+            - disable
+            - low
+            - medium
+            - high
+            - critical
+            description:
+            - Threat weight score for blocked connections.
+          failed-connection:
+            choices:
+            - disable
+            - low
+            - medium
+            - high
+            - critical
+            description:
+            - Threat weight score for failed connections.
+          geolocation:
+            description:
+            - Geolocation-based threat weight settings.
+            suboptions:
+              country:
+                description:
+                - Country code.
+              id:
+                description:
+                - Entry ID.
+                required: true
+              level:
+                choices:
+                - disable
+                - low
+                - medium
+                - high
+                - critical
+                description:
+                - Threat weight score for Geolocation-based events.
+          ips:
+            description:
+            - IPS threat weight settings.
+            suboptions:
+              critical-severity:
+                choices:
+                - disable
+                - low
+                - medium
+                - high
+                - critical
+                description:
+                - Threat weight score for IPS critical severity events.
+              high-severity:
+                choices:
+                - disable
+                - low
+                - medium
+                - high
+                - critical
+                description:
+                - Threat weight score for IPS high severity events.
+              info-severity:
+                choices:
+                - disable
+                - low
+                - medium
+                - high
+                - critical
+                description:
+                - Threat weight score for IPS info severity events.
+              low-severity:
+                choices:
+                - disable
+                - low
+                - medium
+                - high
+                - critical
+                description:
+                - Threat weight score for IPS low severity events.
+              medium-severity:
+                choices:
+                - disable
+                - low
+                - medium
+                - high
+                - critical
+                description:
+                - Threat weight score for IPS medium severity events.
+          level:
+            description:
+            - Score mapping for threat weight levels.
+            suboptions:
+              critical:
+                description:
+                - Critical level score value (1 - 100).
+              high:
+                description:
+                - High level score value (1 - 100).
+              low:
+                description:
+                - Low level score value (1 - 100).
+              medium:
+                description:
+                - Medium level score value (1 - 100).
+          malware:
+            description:
+            - Anti-virus malware threat weight settings.
+            suboptions:
+              botnet-connection:
+                choices:
+                - disable
+                - low
+                - medium
+                - high
+                - critical
+                description:
+                - Threat weight score for detected botnet connections.
+              command-blocked:
+                choices:
+                - disable
+                - low
+                - medium
+                - high
+                - critical
+                description:
+                - Threat weight score for blocked command detected.
+              mimefragmented:
+                choices:
+                - disable
+                - low
+                - medium
+                - high
+                - critical
+                description:
+                - Threat weight score for mimefragmented detected.
+              oversized:
+                choices:
+                - disable
+                - low
+                - medium
+                - high
+                - critical
+                description:
+                - Threat weight score for oversized file detected.
+              switch-proto:
+                choices:
+                - disable
+                - low
+                - medium
+                - high
+                - critical
+                description:
+                - Threat weight score for switch proto detected.
+              virus-blocked:
+                choices:
+                - disable
+                - low
+                - medium
+                - high
+                - critical
+                description:
+                - Threat weight score for virus (blocked) detected.
+              virus-file-type-executable:
+                choices:
+                - disable
+                - low
+                - medium
+                - high
+                - critical
+                description:
+                - Threat weight score for virus (filetype executable) detected.
+              virus-infected:
+                choices:
+                - disable
+                - low
+                - medium
+                - high
+                - critical
+                description:
+                - Threat weight score for virus (infected) detected.
+              virus-outbreak-prevention:
+                choices:
+                - disable
+                - low
+                - medium
+                - high
+                - critical
+                description:
+                - Threat weight score for virus (outbreak prevention) event.
+              virus-scan-error:
+                choices:
+                - disable
+                - low
+                - medium
+                - high
+                - critical
+                description:
+                - Threat weight score for virus (scan error) detected.
+          status:
+            choices:
+            - enable
+            - disable
+            description:
+            - Enable/disable the threat weight feature.
+          url-block-detected:
+            choices:
+            - disable
+            - low
+            - medium
+            - high
+            - critical
+            description:
+            - Threat weight score for URL blocking.
+          web:
+            description:
+            - Web filtering threat weight settings.
+            suboptions:
+              category:
+                description:
+                - Threat weight score for web category filtering matches.
+              id:
+                description:
+                - Entry ID.
+                required: true
+              level:
+                choices:
+                - disable
+                - low
+                - medium
+                - high
+                - critical
+                description:
+                - Threat weight score for web category filtering matches.
+        
+
+- password
+        FortiOS or FortiGate password.
+        [Default: ]
+
+= username
+        FortiOS or FortiGate username.
+
+
+- vdom
+        Virtual domain, among those defined previously. A vdom is a virtual instance of the FortiGate that can be configured and used as
+        a different unit.
+        [Default: root]
+
+
+NOTES:
+      * Requires fortiosapi library developed by Fortinet
+      * Run as a local_action in your playbook
+
+
+REQUIREMENTS:  fortiosapi>=0.9.8
+
+AUTHOR: Miguel Angel Munoz (@mamunozgonzalez), Nicolas Thomas (@thomnico)
+        METADATA:
+          status:
+          - preview
+          supported_by: community
+        
+
+EXAMPLES:
+
+- hosts: localhost
+  vars:
+   host: "192.168.122.40"
+   username: "admin"
+   password: ""
+   vdom: "root"
+  tasks:
+  - name: Configure threat weight settings.
+    fortios_log_threat_weight:
+      host:  "{{ host }}"
+      username: "{{ username }}"
+      password: "{{ password }}"
+      vdom:  "{{ vdom }}"
+      https: "False"
+      log_threat_weight:
+        application:
+         -
+            category: "4"
+            id:  "5"
+            level: "disable"
+        blocked-connection: "disable"
+        failed-connection: "disable"
+        geolocation:
+         -
+            country: "<your_own_value>"
+            id:  "11"
+            level: "disable"
+        ips:
+            critical-severity: "disable"
+            high-severity: "disable"
+            info-severity: "disable"
+            low-severity: "disable"
+            medium-severity: "disable"
+        level:
+            critical: "20"
+            high: "21"
+            low: "22"
+            medium: "23"
+        malware:
+            botnet-connection: "disable"
+            command-blocked: "disable"
+            mimefragmented: "disable"
+            oversized: "disable"
+            switch-proto: "disable"
+            virus-blocked: "disable"
+            virus-file-type-executable: "disable"
+            virus-infected: "disable"
+            virus-outbreak-prevention: "disable"
+            virus-scan-error: "disable"
+        status: "enable"
+        url-block-detected: "disable"
+        web:
+         -
+            category: "38"
+            id:  "39"
+            level: "disable"
+
+
+RETURN VALUES:
+
+build:
+  description: Build number of the fortigate image
+  returned: always
+  type: str
+  sample: '1547'
+http_method:
+  description: Last method used to provision the content into FortiGate
+  returned: always
+  type: str
+  sample: 'PUT'
+http_status:
+  description: Last result given by FortiGate on last operation applied
+  returned: always
+  type: str
+  sample: "200"
+mkey:
+  description: Master key (id) used in the last call to FortiGate
+  returned: success
+  type: str
+  sample: "id"
+name:
+  description: Name of the table used to fulfill the request
+  returned: always
+  type: str
+  sample: "urlfilter"
+path:
+  description: Path of the table used to fulfill the request
+  returned: always
+  type: str
+  sample: "webfilter"
+revision:
+  description: Internal revision number
+  returned: always
+  type: str
+  sample: "17.0.2.10658"
+serial:
+  description: Serial number of the unit
+  returned: always
+  type: str
+  sample: "FGVMEVYYQT3AB5352"
+status:
+  description: Indication of the operation's result
+  returned: always
+  type: str
+  sample: "success"
+vdom:
+  description: Virtual domain used
+  returned: always
+  type: str
+  sample: "root"
+version:
+  description: Version of the FortiGate
+  returned: always
+  type: str
+  sample: "v5.6.3"
+
+

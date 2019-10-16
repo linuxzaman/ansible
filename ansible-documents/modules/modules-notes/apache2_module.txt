@@ -1,0 +1,93 @@
+> APACHE2_MODULE    (/usr/lib/python2.7/dist-packages/ansible/modules/web_infrastructure/apache2_module.py)
+
+        Enables or disables a specified module of the Apache2 webserver.
+
+  * This module is maintained by The Ansible Community
+OPTIONS (= is mandatory):
+
+- force
+        Force disabling of default modules and override Debian warnings.
+        [Default: False]
+        type: bool
+        version_added: 2.1
+
+- identifier
+        Identifier of the module as listed by `apache2ctl -M'. This is optional and usually determined automatically by the common
+        convention of appending `_module' to `name' as well as custom exception for popular modules.
+        [Default: (null)]
+        version_added: 2.5
+
+- ignore_configcheck
+        Ignore configuration checks about inconsistent module configuration. Especially for mpm_* modules.
+        [Default: False]
+        type: bool
+        version_added: 2.3
+
+= name
+        Name of the module to enable/disable as given to `a2enmod/a2dismod'.
+
+
+- state
+        Desired state of the module.
+        (Choices: present, absent)[Default: present]
+
+
+REQUIREMENTS:  a2enmod, a2dismod
+
+AUTHOR: Christian Berendt (@berendt), Ralf Hertel (@n0trax), Robin Roth (@robinro)
+        METADATA:
+          status:
+          - preview
+          supported_by: community
+        
+
+EXAMPLES:
+
+# enables the Apache2 module "wsgi"
+- apache2_module:
+    state: present
+    name: wsgi
+# disables the Apache2 module "wsgi"
+- apache2_module:
+    state: absent
+    name: wsgi
+# disable default modules for Debian
+- apache2_module:
+    state: absent
+    name: autoindex
+    force: True
+# disable mpm_worker and ignore warnings about missing mpm module
+- apache2_module:
+    state: absent
+    name: mpm_worker
+    ignore_configcheck: True
+# enable dump_io module, which is identified as dumpio_module inside apache2
+- apache2_module:
+    state: present
+    name: dump_io
+    identifier: dumpio_module
+
+
+RETURN VALUES:
+
+result:
+    description: message about action taken
+    returned: always
+    type: str
+warnings:
+    description: list of warning messages
+    returned: when needed
+    type: list
+rc:
+    description: return code of underlying command
+    returned: failed
+    type: int
+stdout:
+    description: stdout of underlying command
+    returned: failed
+    type: str
+stderr:
+    description: stderr of underlying command
+    returned: failed
+    type: str
+

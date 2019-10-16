@@ -1,0 +1,78 @@
+> INSTALLP    (/usr/lib/python2.7/dist-packages/ansible/modules/packaging/os/installp.py)
+
+        Manage packages using 'installp' on AIX
+
+  * This module is maintained by The Ansible Community
+OPTIONS (= is mandatory):
+
+- accept_license
+        Whether to accept the license for the package(s).
+        [Default: False]
+        type: bool
+
+= name
+        One or more packages to install or remove.
+        Use `all' to install all packages available on informed `repository_path'.
+        (Aliases: pkg)
+        type: list
+
+- repository_path
+        Path with AIX packages (required to install).
+        [Default: (null)]
+        type: path
+
+- state
+        Whether the package needs to be present on or absent from the system.
+        (Choices: absent, present)[Default: present]
+        type: str
+
+
+NOTES:
+      * If the package is already installed, even the package/fileset is new, the module will not install it.
+
+
+AUTHOR: Kairo Araujo (@kairoaraujo)
+        METADATA:
+          status:
+          - preview
+          supported_by: community
+        
+
+EXAMPLES:
+
+- name: Install package foo
+  installp:
+    name: foo
+    repository_path: /repository/AIX71/installp/base
+    package_license: yes
+    state: present
+
+- name: Install bos.sysmgt that includes bos.sysmgt.nim.master, bos.sysmgt.nim.spot
+  installp:
+    name: bos.sysmgt
+    repository_path: /repository/AIX71/installp/base
+    package_license: yes
+    state: present
+
+- name: Install bos.sysmgt.nim.master only
+  installp:
+    name: bos.sysmgt.nim.master
+    repository_path: /repository/AIX71/installp/base
+    package_license: yes
+    state: present
+
+- name: Install bos.sysmgt.nim.master and bos.sysmgt.nim.spot
+  installp:
+    name: bos.sysmgt.nim.master, bos.sysmgt.nim.spot
+    repository_path: /repository/AIX71/installp/base
+    package_license: yes
+    state: present
+
+- name: Remove packages bos.sysmgt.nim.master
+  installp:
+    name: bos.sysmgt.nim.master
+    state: absent
+
+
+RETURN VALUES:
+ # 

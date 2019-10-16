@@ -1,0 +1,62 @@
+EXAMPLES:
+
+- name: Create HTTPS Monitor
+  bigip_monitor_https:
+    name: my_http_monitor
+    state: present
+    ip: 10.10.10.10
+    provider:
+      server: lb.mydomain.com
+      user: admin
+      password: secret
+  delegate_to: localhost
+
+- name: Remove HTTPS Monitor
+  bigip_monitor_https:
+    name: my_http_monitor
+    state: absent
+    provider:
+      server: lb.mydomain.com
+      user: admin
+      password: secret
+  delegate_to: localhost
+
+
+RETURN VALUES:
+
+parent:
+  description: New parent template of the monitor.
+  returned: changed
+  type: str
+  sample: https
+ip:
+  description: The new IP of IP/port definition.
+  returned: changed
+  type: str
+  sample: 10.12.13.14
+interval:
+  description: The new interval in which to run the monitor check.
+  returned: changed
+  type: int
+  sample: 2
+description:
+  description: The description of the monitor.
+  returned: changed
+  type: str
+  sample: Important Monitor
+timeout:
+  description: The new timeout in which the remote system must respond to the monitor.
+  returned: changed
+  type: int
+  sample: 10
+time_until_up:
+  description: The new time in which to mark a system as up after first successful response.
+  returned: changed
+  type: int
+  sample: 2
+up_interval:
+  description: Interval for the system to use to perform the health check when a resource is up.
+  returned: changed
+  type: int
+  sample: 0
+

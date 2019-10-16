@@ -1,0 +1,26 @@
+EXAMPLES:
+
+- name: Create a partition with drive letter D and size 5 GiB
+  win_partition:
+    drive_letter: D
+    partition_size: 5 GiB
+    disk_number: 1
+
+- name: Resize previously created partition to it's maximum size and change it's drive letter to E
+  win_partition:
+    drive_letter: E
+    partition_size: -1
+    partition_number: 1
+    disk_number: 1
+
+- name: Delete partition
+  win_partition:
+    disk_number: 1
+    partition_number: 1
+    state: absent
+
+
+RETURN VALUES:
+
+#
+

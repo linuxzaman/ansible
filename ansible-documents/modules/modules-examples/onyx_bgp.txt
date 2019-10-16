@@ -1,0 +1,28 @@
+EXAMPLES:
+
+- name: configure bgp
+  onyx_bgp:
+    as_number: 320
+    router_id: 10.3.3.3
+    neighbors:
+      - remote_as: 321
+        neighbor: 10.3.3.4
+    purge: True
+    state: present
+    networks:
+      - 172.16.1.0/24
+
+
+RETURN VALUES:
+
+commands:
+  description: The list of configuration mode commands to send to the device.
+  returned: always
+  type: list
+  sample:
+    - router bgp 172
+    - exit
+    - router bgp 172 router-id 2.3.4.5 force
+    - router bgp 172 neighbor 2.3.4.6 remote-as 173
+    - router bgp 172 network 172.16.1.0 /24
+

@@ -1,0 +1,163 @@
+> AVI_AUTHPROFILE    (/usr/lib/python2.7/dist-packages/ansible/modules/network/avi/avi_authprofile.py)
+
+        This module is used to configure AuthProfile object more examples at https://github.com/avinetworks/devops
+
+  * This module is maintained by The Ansible Community
+OPTIONS (= is mandatory):
+
+- api_context
+        Avi API context that includes current session ID and CSRF Token.
+        This allows user to perform single login and re-use the session.
+        [Default: (null)]
+        type: dict
+        version_added: 2.5
+
+- api_version
+        Avi API version of to use for Avi API and objects.
+        [Default: 16.4.4]
+        type: str
+
+- avi_api_patch_op
+        Patch operation to use when using avi_api_update_method as patch.
+        (Choices: add, replace, delete)[Default: (null)]
+        version_added: 2.5
+
+- avi_api_update_method
+        Default method for object update is HTTP PUT.
+        Setting to patch will override that behavior to use HTTP PATCH.
+        (Choices: put, patch)[Default: put]
+        version_added: 2.5
+
+- avi_credentials
+        Avi Credentials dictionary which can be used in lieu of enumerating Avi Controller login details.
+        [Default: (null)]
+        type: dict
+        version_added: 2.5
+
+- controller
+        IP address or hostname of the controller. The default value is the environment variable `AVI_CONTROLLER'.
+        [Default: ]
+        type: str
+
+- description
+        User defined description for the object.
+        [Default: (null)]
+
+- http
+        Http user authentication params.
+        [Default: (null)]
+
+- ldap
+        Ldap server and directory settings.
+        [Default: (null)]
+
+= name
+        Name of the auth profile.
+
+
+- password
+        Password of Avi user in Avi controller. The default value is the environment variable `AVI_PASSWORD'.
+        [Default: ]
+        type: str
+
+- saml
+        Saml settings.
+        Field introduced in 17.2.3.
+        [Default: (null)]
+        version_added: 2.5
+
+- state
+        The state that should be applied on the entity.
+        (Choices: absent, present)[Default: present]
+
+- tacacs_plus
+        Tacacs+ settings.
+        [Default: (null)]
+
+- tenant
+        Name of tenant used for all Avi API calls and context of object.
+        [Default: admin]
+        type: str
+
+- tenant_ref
+        It is a reference to an object of type tenant.
+        [Default: (null)]
+
+- tenant_uuid
+        UUID of tenant used for all Avi API calls and context of object.
+        [Default: ]
+        type: str
+
+= type
+        Type of the auth profile.
+        Enum options - AUTH_PROFILE_LDAP, AUTH_PROFILE_TACACS_PLUS, AUTH_PROFILE_SAML.
+
+
+- url
+        Avi controller URL of the object.
+        [Default: (null)]
+
+- username
+        Username used for accessing Avi controller. The default value is the environment variable `AVI_USERNAME'.
+        [Default: ]
+        type: str
+
+- uuid
+        Uuid of the auth profile.
+        [Default: (null)]
+
+
+NOTES:
+      * For more information on using Ansible to manage Avi Network devices see https://www.ansible.com/ansible-avi-networks.
+
+
+REQUIREMENTS:  avisdk
+
+AUTHOR: Gaurav Rastogi (@grastogi23) <grastogi@avinetworks.com>
+        METADATA:
+          status:
+          - preview
+          supported_by: community
+        
+
+EXAMPLES:
+
+- name: Create user authorization profile based on the LDAP
+    avi_authprofile:
+      controller: '{{ controller }}'
+      password: '{{ password }}'
+      username: '{{ username }}'
+      http:
+        cache_expiration_time: 5
+        group_member_is_full_dn: false
+      ldap:
+        base_dn: dc=avi,dc=local
+        bind_as_administrator: true
+        port: 389
+        security_mode: AUTH_LDAP_SECURE_NONE
+        server:
+        - 10.10.0.100
+        settings:
+          admin_bind_dn: user@avi.local
+          group_filter: (objectClass=*)
+          group_member_attribute: member
+          group_member_is_full_dn: true
+          group_search_dn: dc=avi,dc=local
+          group_search_scope: AUTH_LDAP_SCOPE_SUBTREE
+          ignore_referrals: true
+          password: password
+          user_id_attribute: samAccountname
+          user_search_dn: dc=avi,dc=local
+          user_search_scope: AUTH_LDAP_SCOPE_ONE
+      name: ProdAuth
+      tenant_ref: admin
+      type: AUTH_PROFILE_LDAP
+
+
+RETURN VALUES:
+
+obj:
+    description: AuthProfile (api/authprofile) object
+    returned: success, changed
+    type: dict
+

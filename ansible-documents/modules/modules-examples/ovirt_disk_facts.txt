@@ -1,0 +1,20 @@
+EXAMPLES:
+
+# Examples don't contain auth parameter for simplicity,
+# look at ovirt_auth module to see how to reuse authentication:
+
+# Gather facts about all Disks which names start with C(centos)
+- ovirt_disk_facts:
+    pattern: name=centos*
+- debug:
+    var: ovirt_disks
+
+
+RETURN VALUES:
+
+ovirt_disks:
+    description: "List of dictionaries describing the Disks. Disk attributes are mapped to dictionary keys,
+                  all Disks attributes can be found at following url: http://ovirt.github.io/ovirt-engine-api-model/master/#types/disk."
+    returned: On success.
+    type: list
+

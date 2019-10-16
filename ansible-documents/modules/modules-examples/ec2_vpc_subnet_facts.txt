@@ -1,0 +1,113 @@
+EXAMPLES:
+
+# Note: These examples do not set authentication details, see the AWS Guide for details.
+
+# Gather facts about all VPC subnets
+- ec2_vpc_subnet_facts:
+
+# Gather facts about a particular VPC subnet using ID
+- ec2_vpc_subnet_facts:
+    subnet_ids: subnet-00112233
+
+# Gather facts about any VPC subnet with a tag key Name and value Example
+- ec2_vpc_subnet_facts:
+    filters:
+      "tag:Name": Example
+
+# Gather facts about any VPC subnet within VPC with ID vpc-abcdef00
+- ec2_vpc_subnet_facts:
+    filters:
+      vpc-id: vpc-abcdef00
+
+# Gather facts about a set of VPC subnets, publicA, publicB and publicC within a
+# VPC with ID vpc-abcdef00 and then use the jinja map function to return the
+# subnet_ids as a list.
+
+- ec2_vpc_subnet_facts:
+    filters:
+      vpc-id: vpc-abcdef00
+      "tag:Name": "{{ item }}"
+  loop:
+    - publicA
+    - publicB
+    - publicC
+  register: subnet_facts
+
+- set_fact:
+    subnet_ids: "{{ subnet_facts.subnets|map(attribute='id')|list }}"
+
+
+RETURN VALUES:
+
+subnets:
+    description: Returns an array of complex objects as described below.
+    returned: success
+    type: complex
+    contains:
+        subnet_id:
+            description: The ID of the Subnet.
+            returned: always
+            type: str
+        id:
+            description: The ID of the Subnet (for backwards compatibility).
+            returned: always
+            type: str
+        vpc_id:
+            description: The ID of the VPC .
+            returned: always
+            type: str
+        state:
+            description: The state of the subnet.
+            returned: always
+            type: str
+        tags:
+            description: A dict of tags associated with the Subnet.
+            returned: always
+            type: dict
+        map_public_ip_on_launch:
+            description: True/False depending on attribute setting for public IP mapping.
+            returned: always
+            type: bool
+        default_for_az:
+            description: True if this is the default subnet for AZ.
+            returned: always
+            type: bool
+        cidr_block:
+            description: The IPv4 CIDR block assigned to the subnet.
+            returned: always
+            type: str
+        available_ip_address_count:
+            description: Count of available IPs in subnet.
+            returned: always
+            type: str
+        availability_zone:
+            description: The availability zone where the subnet exists.
+            returned: always
+            type: str
+        assign_ipv6_address_on_creation:
+            description: True/False depending on attribute setting for IPv6 address assignment.
+            returned: always
+            type: bool
+        ipv6_cidr_block_association_set:
+            description: An array of IPv6 cidr block association set information.
+            returned: always
+            type: complex
+            contains:
+                association_id:
+                    description: The association ID
+                    returned: always
+                    type: str
+                ipv6_cidr_block:
+                    description: The IPv6 CIDR block that is associated with the subnet.
+                    returned: always
+                    type: str
+                ipv6_cidr_block_state:
+                    description: A hash/dict that contains a single item. The state of the cidr block association.
+                    returned: always
+                    type: dict
+                    contains:
+                        state:
+                            description: The CIDR block association state.
+                            returned: always
+                            type: str
+

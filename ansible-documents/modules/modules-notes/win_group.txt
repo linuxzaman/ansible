@@ -1,0 +1,56 @@
+> WIN_GROUP    (/usr/lib/python2.7/dist-packages/ansible/modules/windows/win_group.py)
+
+        Add and remove local groups. For non-Windows targets, please use the [group] module instead.
+
+  * This module is maintained by The Ansible Core Team
+OPTIONS (= is mandatory):
+
+- description
+        Description of the group.
+        [Default: (null)]
+        type: str
+
+= name
+        Name of the group.
+
+        type: str
+
+- state
+        Create or remove the group.
+        (Choices: absent, present)[Default: present]
+        type: str
+
+
+SEE ALSO:
+      * Module group
+           The official documentation on the group module.
+           https://docs.ansible.com/ansible/latest/modules/group_module.html
+      * Module win_domain_group
+           The official documentation on the win_domain_group module.
+           https://docs.ansible.com/ansible/latest/modules/win_domain_group_module.html
+      * Module win_group_membership
+           The official documentation on the win_group_membership module.
+           https://docs.ansible.com/ansible/latest/modules/win_group_membership_module.html
+
+
+AUTHOR: Chris Hoffman (@chrishoffman)
+        METADATA:
+          status:
+          - stableinterface
+          supported_by: core
+        
+
+EXAMPLES:
+
+- name: Create a new group
+  win_group:
+    name: deploy
+    description: Deploy Group
+    state: present
+
+- name: Remove a group
+  win_group:
+    name: deploy
+    state: absent
+
+

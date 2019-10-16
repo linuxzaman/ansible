@@ -1,0 +1,83 @@
+EXAMPLES:
+
+- name: Create a network
+  docker_network:
+    name: network_one
+
+- name: Remove all but selected list of containers
+  docker_network:
+    name: network_one
+    connected:
+      - container_a
+      - container_b
+      - container_c
+
+- name: Remove a single container
+  docker_network:
+    name: network_one
+    connected: "{{ fulllist|difference(['container_a']) }}"
+
+- name: Add a container to a network, leaving existing containers connected
+  docker_network:
+    name: network_one
+    connected:
+      - container_a
+    appends: yes
+
+- name: Create a network with driver options
+  docker_network:
+    name: network_two
+    driver_options:
+      com.docker.network.bridge.name: net2
+
+- name: Create a network with custom IPAM config
+  docker_network:
+    name: network_three
+    ipam_config:
+      - subnet: 172.3.27.0/24
+        gateway: 172.3.27.2
+        iprange: 172.3.27.0/26
+        aux_addresses:
+          host1: 172.3.27.3
+          host2: 172.3.27.4
+
+- name: Create a network with labels
+  docker_network:
+    name: network_four
+    labels:
+      key1: value1
+      key2: value2
+
+- name: Create a network with IPv6 IPAM config
+  docker_network:
+    name: network_ipv6_one
+    enable_ipv6: yes
+    ipam_config:
+      - subnet: fdd1:ac8c:0557:7ce1::/64
+
+- name: Create a network with IPv6 and custom IPv4 IPAM config
+  docker_network:
+    name: network_ipv6_two
+    enable_ipv6: yes
+    ipam_config:
+      - subnet: 172.4.27.0/24
+      - subnet: fdd1:ac8c:0557:7ce2::/64
+
+- name: Delete a network, disconnecting all containers
+  docker_network:
+    name: network_one
+    state: absent
+    force: yes
+
+
+RETURN VALUES:
+
+network:
+    description:
+    - Network inspection results for the affected network.
+    - Note that facts are part of the registered vars since Ansible 2.8. For compatibility reasons, the facts
+      are also accessible directly as C(docker_network). Note that the returned fact will be removed in Ansible 2.12.
+    returned: success
+    type: dict
+    sample: {}
+

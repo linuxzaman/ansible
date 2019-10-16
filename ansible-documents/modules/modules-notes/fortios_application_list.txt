@@ -1,0 +1,394 @@
+> FORTIOS_APPLICATION_LIST    (/usr/lib/python2.7/dist-packages/ansible/modules/network/fortios/fortios_application_list.py)
+
+        This module is able to configure a FortiGate or FortiOS by allowing the user to configure application feature and list category.
+        Examples includes all options and need to be adjusted to datasources before usage. Tested with FOS v6.0.2
+
+  * This module is maintained by The Ansible Community
+OPTIONS (= is mandatory):
+
+- application_list
+        Configure application control lists.
+        [Default: None]
+        suboptions:
+          app-replacemsg:
+            choices:
+            - disable
+            - enable
+            description:
+            - Enable/disable replacement messages for blocked applications.
+          comment:
+            description:
+            - comments
+          deep-app-inspection:
+            choices:
+            - disable
+            - enable
+            description:
+            - Enable/disable deep application inspection.
+          entries:
+            description:
+            - Application list entries.
+            suboptions:
+              action:
+                choices:
+                - pass
+                - block
+                - reset
+                description:
+                - Pass or block traffic, or reset connection for traffic from this application.
+              application:
+                description:
+                - ID of allowed applications.
+                suboptions:
+                  id:
+                    description:
+                    - Application IDs.
+                    required: true
+              behavior:
+                description:
+                - Application behavior filter.
+              category:
+                description:
+                - Category ID list.
+                suboptions:
+                  id:
+                    description:
+                    - Application category ID.
+                    required: true
+              id:
+                description:
+                - Entry ID.
+                required: true
+              log:
+                choices:
+                - disable
+                - enable
+                description:
+                - Enable/disable logging for this application list.
+              log-packet:
+                choices:
+                - disable
+                - enable
+                description:
+                - Enable/disable packet logging.
+              parameters:
+                description:
+                - Application parameters.
+                suboptions:
+                  id:
+                    description:
+                    - Parameter ID.
+                    required: true
+                  value:
+                    description:
+                    - Parameter value.
+              per-ip-shaper:
+                description:
+                - Per-IP traffic shaper. Source firewall.shaper.per-ip-shaper.name.
+              popularity:
+                choices:
+                - 1
+                - 2
+                - 3
+                - 4
+                - 5
+                description:
+                - Application popularity filter (1 - 5, from least to most popular).
+              protocols:
+                description:
+                - Application protocol filter.
+              quarantine:
+                choices:
+                - none
+                - attacker
+                description:
+                - Quarantine method.
+              quarantine-expiry:
+                description:
+                - Duration of quarantine. (Format
+              quarantine-log:
+                choices:
+                - disable
+                - enable
+                description:
+                - Enable/disable quarantine logging.
+              rate-count:
+                description:
+                - Count of the rate.
+              rate-duration:
+                description:
+                - Duration (sec) of the rate.
+              rate-mode:
+                choices:
+                - periodical
+                - continuous
+                description:
+                - Rate limit mode.
+              rate-track:
+                choices:
+                - none
+                - src-ip
+                - dest-ip
+                - dhcp-client-mac
+                - dns-domain
+                description:
+                - Track the packet protocol field.
+              risk:
+                description:
+                - Risk, or impact, of allowing traffic from this application to occur (1 -
+                  5; Low, Elevated, Medium, High, and Critical).
+                suboptions:
+                  level:
+                    description:
+                    - Risk, or impact, of allowing traffic from this application to occur
+                      (1 - 5; Low, Elevated, Medium, High, and Critical).
+                    required: true
+              session-ttl:
+                description:
+                - Session TTL (0 = default).
+              shaper:
+                description:
+                - Traffic shaper. Source firewall.shaper.traffic-shaper.name.
+              shaper-reverse:
+                description:
+                - Reverse traffic shaper. Source firewall.shaper.traffic-shaper.name.
+              sub-category:
+                description:
+                - Application Sub-category ID list.
+                suboptions:
+                  id:
+                    description:
+                    - Application sub-category ID.
+                    required: true
+              technology:
+                description:
+                - Application technology filter.
+              vendor:
+                description:
+                - Application vendor filter.
+          extended-log:
+            choices:
+            - enable
+            - disable
+            description:
+            - Enable/disable extended logging.
+          name:
+            description:
+            - List name.
+            required: true
+          options:
+            choices:
+            - allow-dns
+            - allow-icmp
+            - allow-http
+            - allow-ssl
+            - allow-quic
+            description:
+            - Basic application protocol signatures allowed by default.
+          other-application-action:
+            choices:
+            - pass
+            - block
+            description:
+            - Action for other applications.
+          other-application-log:
+            choices:
+            - disable
+            - enable
+            description:
+            - Enable/disable logging for other applications.
+          p2p-black-list:
+            choices:
+            - skype
+            - edonkey
+            - bittorrent
+            description:
+            - P2P applications to be black listed.
+          replacemsg-group:
+            description:
+            - Replacement message group. Source system.replacemsg-group.name.
+          state:
+            choices:
+            - present
+            - absent
+            description:
+            - Indicates whether to create or remove the object
+          unknown-application-action:
+            choices:
+            - pass
+            - block
+            description:
+            - Pass or block traffic from unknown applications.
+          unknown-application-log:
+            choices:
+            - disable
+            - enable
+            description:
+            - Enable/disable logging for unknown applications.
+        
+
+= host
+        FortiOS or FortiGate ip address.
+
+
+- https
+        Indicates if the requests towards FortiGate must use HTTPS protocol
+        [Default: False]
+        type: bool
+
+- password
+        FortiOS or FortiGate password.
+        [Default: ]
+
+= username
+        FortiOS or FortiGate username.
+
+
+- vdom
+        Virtual domain, among those defined previously. A vdom is a virtual instance of the FortiGate that can be configured and used as
+        a different unit.
+        [Default: root]
+
+
+NOTES:
+      * Requires fortiosapi library developed by Fortinet
+      * Run as a local_action in your playbook
+
+
+REQUIREMENTS:  fortiosapi>=0.9.8
+
+AUTHOR: Miguel Angel Munoz (@mamunozgonzalez), Nicolas Thomas (@thomnico)
+        METADATA:
+          status:
+          - preview
+          supported_by: community
+        
+
+EXAMPLES:
+
+- hosts: localhost
+  vars:
+   host: "192.168.122.40"
+   username: "admin"
+   password: ""
+   vdom: "root"
+  tasks:
+  - name: Configure application control lists.
+    fortios_application_list:
+      host:  "{{  host }}"
+      username: "{{ username }}"
+      password: "{{ password }}"
+      vdom:  "{{  vdom }}"
+      application_list:
+        state: "present"
+        app-replacemsg: "disable"
+        comment: "comments"
+        deep-app-inspection: "disable"
+        entries:
+         -
+            action: "pass"
+            application:
+             -
+                id:  "9"
+            behavior: "<your_own_value>"
+            category:
+             -
+                id:  "12"
+            id:  "13"
+            log: "disable"
+            log-packet: "disable"
+            parameters:
+             -
+                id:  "17"
+                value: "<your_own_value>"
+            per-ip-shaper: "<your_own_value> (source firewall.shaper.per-ip-shaper.name)"
+            popularity: "1"
+            protocols: "<your_own_value>"
+            quarantine: "none"
+            quarantine-expiry: "<your_own_value>"
+            quarantine-log: "disable"
+            rate-count: "25"
+            rate-duration: "26"
+            rate-mode: "periodical"
+            rate-track: "none"
+            risk:
+             -
+                level: "30"
+            session-ttl: "31"
+            shaper: "<your_own_value> (source firewall.shaper.traffic-shaper.name)"
+            shaper-reverse: "<your_own_value> (source firewall.shaper.traffic-shaper.name)"
+            sub-category:
+             -
+                id:  "35"
+            technology: "<your_own_value>"
+            vendor: "<your_own_value>"
+        extended-log: "enable"
+        name: "default_name_39"
+        options: "allow-dns"
+        other-application-action: "pass"
+        other-application-log: "disable"
+        p2p-black-list: "skype"
+        replacemsg-group: "<your_own_value> (source system.replacemsg-group.name)"
+        unknown-application-action: "pass"
+        unknown-application-log: "disable"
+
+
+RETURN VALUES:
+
+build:
+  description: Build number of the fortigate image
+  returned: always
+  type: str
+  sample: '1547'
+http_method:
+  description: Last method used to provision the content into FortiGate
+  returned: always
+  type: str
+  sample: 'PUT'
+http_status:
+  description: Last result given by FortiGate on last operation applied
+  returned: always
+  type: str
+  sample: "200"
+mkey:
+  description: Master key (id) used in the last call to FortiGate
+  returned: success
+  type: str
+  sample: "key1"
+name:
+  description: Name of the table used to fulfill the request
+  returned: always
+  type: str
+  sample: "urlfilter"
+path:
+  description: Path of the table used to fulfill the request
+  returned: always
+  type: str
+  sample: "webfilter"
+revision:
+  description: Internal revision number
+  returned: always
+  type: str
+  sample: "17.0.2.10658"
+serial:
+  description: Serial number of the unit
+  returned: always
+  type: str
+  sample: "FGVMEVYYQT3AB5352"
+status:
+  description: Indication of the operation's result
+  returned: always
+  type: str
+  sample: "success"
+vdom:
+  description: Virtual domain used
+  returned: always
+  type: str
+  sample: "root"
+version:
+  description: Version of the FortiGate
+  returned: always
+  type: str
+  sample: "v5.6.3"
+
+

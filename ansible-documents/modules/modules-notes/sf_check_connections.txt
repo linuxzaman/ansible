@@ -1,0 +1,70 @@
+> SF_CHECK_CONNECTIONS    (/usr/lib/python2.7/dist-packages/ansible/modules/storage/netapp/_sf_check_connections.py)
+
+        Used to test the management connection to the cluster. The test pings the MVIP and SVIP, and executes a simple API method to
+        verify connectivity.
+
+DEPRECATED: 
+
+	Reason: This Module has been replaced
+	Will be removed in: Ansible 2.11
+	Alternatives: please use M(na_elementsw_check_connections)
+
+
+  * This module is maintained by The Ansible Community
+OPTIONS (= is mandatory):
+
+= hostname
+        The hostname or IP address of the SolidFire cluster.
+
+
+- mvip
+        Optionally, use to test connection of a different MVIP.
+        This is not needed to test the connection to the target cluster.
+        [Default: (null)]
+
+= password
+        Password for the specified user.
+        (Aliases: pass)
+
+- skip
+        Skip checking connection to SVIP or MVIP.
+        (Choices: svip, mvip)[Default: (null)]
+
+- svip
+        Optionally, use to test connection of a different SVIP.
+        This is not needed to test the connection to the target cluster.
+        [Default: (null)]
+
+= username
+        Please ensure that the user has the adequate permissions. For more information, please read the official documentation
+        https://mysupport.netapp.com/documentation/docweb/index.html?productID=62636&language=en-US.
+        (Aliases: user)
+
+
+NOTES:
+      * The modules prefixed with na\\_elementsw are built to support the SolidFire storage platform.
+
+
+REQUIREMENTS:  The modules were developed with SolidFire 10.1, solidfire-sdk-python (1.1.0.92) or greater. Install using 'pip install
+        solidfire-sdk-python'
+
+AUTHOR: Sumit Kumar (@timuster) <sumit4@netapp.com>
+        METADATA:
+          status:
+          - deprecated
+          supported_by: community
+        
+
+EXAMPLES:
+
+- name: Check connections to MVIP and SVIP
+     sf_check_connections:
+       hostname: "{{ solidfire_hostname }}"
+       username: "{{ solidfire_username }}"
+       password: "{{ solidfire_password }}"
+
+
+RETURN VALUES:
+
+
+

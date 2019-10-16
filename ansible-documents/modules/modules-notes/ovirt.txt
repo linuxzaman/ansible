@@ -1,0 +1,198 @@
+> OVIRT    (/usr/lib/python2.7/dist-packages/ansible/modules/cloud/misc/ovirt.py)
+
+        This module only supports oVirt/RHEV version 3. A newer module [ovirt_vm] supports oVirt/RHV version 4. Allows you to create new
+        instances, either from scratch or an image, in addition to deleting or stopping instances on the oVirt/RHEV platform.
+
+  * This module is maintained by The Ansible Community
+OPTIONS (= is mandatory):
+
+- disk_alloc
+        Define whether disk is thin or preallocated.
+        (Choices: preallocated, thin)[Default: thin]
+
+- disk_int
+        Interface type of the disk.
+        (Choices: ide, virtio)[Default: virtio]
+
+- image
+        The template to use for the instance.
+        [Default: (null)]
+
+- instance_cores
+        Define the instance's number of cores.
+        (Aliases: vmcores)[Default: 1]
+
+- instance_cpus
+        The instance's number of CPUs.
+        (Aliases: vmcpus)[Default: 1]
+
+- instance_disksize
+        Size of the instance's disk in GB.
+        (Aliases: vm_disksize)[Default: (null)]
+
+- instance_dns
+        Define the instance's Primary DNS server.
+        (Aliases: dns)[Default: (null)]
+        version_added: 2.1
+
+- instance_domain
+        Define the instance's Domain.
+        (Aliases: domain)[Default: (null)]
+        version_added: 2.1
+
+- instance_hostname
+        Define the instance's Hostname.
+        (Aliases: hostname)[Default: (null)]
+        version_added: 2.1
+
+- instance_ip
+        Define the instance's IP.
+        (Aliases: ip)[Default: (null)]
+        version_added: 2.1
+
+- instance_key
+        Define the instance's Authorized key.
+        (Aliases: key)[Default: (null)]
+        version_added: 2.1
+
+- instance_mem
+        The instance's amount of memory in MB.
+        (Aliases: vmmem)[Default: (null)]
+
+= instance_name
+        The name of the instance to use.
+        (Aliases: vmname)
+
+- instance_netmask
+        Define the instance's Netmask.
+        (Aliases: netmask)[Default: (null)]
+        version_added: 2.1
+
+- instance_network
+        The logical network the machine should belong to.
+        (Aliases: vmnetwork)[Default: rhevm]
+
+- instance_nic
+        The name of the network interface in oVirt/RHEV.
+        (Aliases: vmnic)[Default: (null)]
+
+- instance_os
+        Type of Operating System.
+        (Aliases: vmos)[Default: (null)]
+
+- instance_rootpw
+        Define the instance's Root password.
+        (Aliases: rootpw)[Default: (null)]
+        version_added: 2.1
+
+- instance_type
+        Define whether the instance is a server, desktop or high_performance.
+        `high_performance' is supported since Ansible 2.5 and oVirt/RHV 4.2.
+        (Aliases: vmtype)(Choices: desktop, server, high_performance)[Default: server]
+
+= password
+        Password of the user to authenticate with.
+
+
+- region
+        The oVirt/RHEV datacenter where you want to deploy to.
+        [Default: (null)]
+
+- resource_type
+        Whether you want to deploy an image or create an instance from scratch.
+        (Choices: new, template)[Default: (null)]
+
+- sdomain
+        The Storage Domain where you want to create the instance's disk on.
+        [Default: (null)]
+
+- state
+        Create, terminate or remove instances.
+        (Choices: absent, present, restarted, shutdown, started)[Default: present]
+
+= url
+        The url of the oVirt instance.
+
+
+= user
+        The user to authenticate with.
+
+
+- zone
+        Deploy the image to this oVirt cluster.
+        [Default: (null)]
+
+
+REQUIREMENTS:  ovirt-engine-sdk-python
+
+AUTHOR: Vincent Van der Kussen (@vincentvdk)
+        METADATA:
+          status:
+          - preview
+          supported_by: community
+        
+
+EXAMPLES:
+
+- name: Basic example to provision from image
+  ovirt:
+    user: admin@internal
+    url: https://ovirt.example.com
+    instance_name: ansiblevm04
+    password: secret
+    image: centos_64
+    zone: cluster01
+    resource_type: template
+
+- name: Full example to create new instance from scratch
+  ovirt:
+    instance_name: testansible
+    resource_type: new
+    instance_type: server
+    user: admin@internal
+    password: secret
+    url: https://ovirt.example.com
+    instance_disksize: 10
+    zone: cluster01
+    region: datacenter1
+    instance_cpus: 1
+    instance_nic: nic1
+    instance_network: rhevm
+    instance_mem: 1000
+    disk_alloc: thin
+    sdomain: FIBER01
+    instance_cores: 1
+    instance_os: rhel_6x64
+    disk_int: virtio
+
+- name: Stopping an existing instance
+  ovirt:
+    instance_name: testansible
+    state: stopped
+    user: admin@internal
+    password: secret
+    url: https://ovirt.example.com
+
+- name: Start an existing instance
+  ovirt:
+    instance_name: testansible
+    state: started
+    user: admin@internal
+    password: secret
+    url: https://ovirt.example.com
+
+- name: Start an instance with cloud init information
+  ovirt:
+    instance_name: testansible
+    state: started
+    user: admin@internal
+    password: secret
+    url: https://ovirt.example.com
+    hostname: testansible
+    domain: ansible.local
+    ip: 192.0.2.100
+    netmask: 255.255.255.0
+    gateway: 192.0.2.1
+    rootpw: bigsecret
+
+

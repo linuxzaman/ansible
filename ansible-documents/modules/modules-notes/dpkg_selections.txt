@@ -1,0 +1,35 @@
+> DPKG_SELECTIONS    (/usr/lib/python2.7/dist-packages/ansible/modules/packaging/os/dpkg_selections.py)
+
+        Change dpkg package selection state via --get-selections and --set-selections.
+
+  * This module is maintained by The Ansible Community
+OPTIONS (= is mandatory):
+
+= name
+        Name of the package
+
+
+= selection
+        The selection state to set the package to.
+        (Choices: install, hold, deinstall, purge)
+
+
+NOTES:
+      * This module won't cause any packages to be installed/removed/purged, use the `apt' module for that.
+
+
+AUTHOR: Brian Brazil (@brian-brazil)  <brian.brazil@boxever.com>
+        METADATA:
+          status:
+          - preview
+          supported_by: community
+        
+
+EXAMPLES:
+
+# Prevent python from being upgraded.
+- dpkg_selections:
+    name: python
+    selection: hold
+
+

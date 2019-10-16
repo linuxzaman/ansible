@@ -1,0 +1,104 @@
+> NEXMO    (/usr/lib/python2.7/dist-packages/ansible/modules/notification/nexmo.py)
+
+        Send a SMS message via nexmo
+
+  * This module is maintained by The Ansible Community
+OPTIONS (= is mandatory):
+
+= api_key
+        Nexmo API Key
+
+
+= api_secret
+        Nexmo API Secret
+
+
+- client_cert
+        PEM formatted certificate chain file to be used for SSL client authentication.
+        This file can also include the key as well, and if the key is included, `client_key' is not required.
+        [Default: (null)]
+        type: path
+
+- client_key
+        PEM formatted file that contains your private key to be used for SSL client authentication.
+        If `client_cert' contains both the certificate and key, this option is not required.
+        [Default: (null)]
+        type: path
+
+= dest
+        Phone number(s) to send SMS message to
+
+
+- force
+        If `yes' do not get a cached copy.
+        (Aliases: thirsty)[Default: False]
+        type: bool
+
+- force_basic_auth
+        Credentials specified with `url_username' and `url_password' should be passed in HTTP Header.
+        [Default: False]
+        type: bool
+
+- http_agent
+        Header to identify as, generally appears in web server logs.
+        [Default: ansible-httpget]
+        type: str
+
+= msg
+        Message to text to send. Messages longer than 160 characters will be split into multiple messages
+
+
+= src
+        Nexmo Number to send from
+
+
+- url
+        HTTP, HTTPS, or FTP URL in the form (http|https|ftp)://[user[:pass]]@host.domain[:port]/path
+        [Default: (null)]
+        type: str
+
+- url_password
+        The password for use in HTTP basic authentication.
+        If the `url_username' parameter is not specified, the `url_password' parameter will not be used.
+        [Default: (null)]
+        type: str
+
+- url_username
+        The username for use in HTTP basic authentication.
+        This parameter can be used without `url_password' for sites that allow empty passwords
+        [Default: (null)]
+        type: str
+
+- use_proxy
+        If `no', it will not use a proxy, even if one is defined in an environment variable on the target hosts.
+        [Default: True]
+        type: bool
+
+- validate_certs
+        If `no', SSL certificates will not be validated. This should only be used on personally controlled sites using self-signed
+        certificates.
+        [Default: yes]
+        type: bool
+
+
+AUTHOR: Matt Martz (@sivel)
+        METADATA:
+          status:
+          - preview
+          supported_by: community
+        
+
+EXAMPLES:
+
+- name: Send notification message via Nexmo
+  nexmo:
+    api_key: 640c8a53
+    api_secret: 0ce239a6
+    src: 12345678901
+    dest:
+      - 10987654321
+      - 16789012345
+    msg: '{{ inventory_hostname }} completed'
+  delegate_to: localhost
+
+

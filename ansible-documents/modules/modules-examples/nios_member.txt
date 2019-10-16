@@ -1,0 +1,75 @@
+EXAMPLES:
+
+- name: add a member to the grid with IPv4 address
+  nios_member:
+    host_name: member01.localdomain
+    vip_setting:
+      - address: 192.168.1.100
+        subnet_mask: 255.255.255.0
+        gateway: 192.168.1.1
+    config_addr_type: IPV4
+    platform: VNIOS
+    comment: "Created by Ansible"
+    state: present
+    provider:
+      host: "{{ inventory_hostname_short }}"
+      username: admin
+      password: admin
+  connection: local
+- name: add a HA member to the grid
+  nios_member:
+    host_name: memberha.localdomain
+    vip_setting:
+      - address: 192.168.1.100
+        subnet_mask: 255.255.255.0
+        gateway: 192.168.1.1
+    config_addr_type: IPV4
+    platform: VNIOS
+    enable_ha: true
+    router_id: 150
+    node_info:
+      - lan_ha_port_setting:
+         - ha_ip_address: 192.168.1.70
+           mgmt_lan: 192.168.1.80
+      - lan_ha_port_setting:
+         - ha_ip_address: 192.168.1.71
+           mgmt_lan: 192.168.1.81
+    comment: "Created by Ansible"
+    state: present
+    provider:
+      host: "{{ inventory_hostname_short }}"
+      username: admin
+      password: admin
+  connection: local
+- name: update the member with pre-provisioning details specified
+  nios_member:
+    name: member01.localdomain
+    pre_provisioning:
+      - hardware_info:
+         - hwmodel: IB-VM-820
+           hwtype: IB-VNIOS
+        licenses:
+         - dns
+         - dhcp
+         - enterprise
+         - vnios
+    comment: "Updated by Ansible"
+    state: present
+    provider:
+      host: "{{ inventory_hostname_short }}"
+      username: admin
+      password: admin
+  connection: local
+- name: remove the member
+  nios_member:
+    name: member01.localdomain
+    state: absent
+    provider:
+      host: "{{ inventory_hostname_short }}"
+      username: admin
+      password: admin
+  connection: local
+
+
+RETURN VALUES:
+ # 

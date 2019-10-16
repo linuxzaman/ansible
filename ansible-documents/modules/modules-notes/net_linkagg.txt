@@ -1,0 +1,91 @@
+> NET_LINKAGG    (/usr/lib/python2.7/dist-packages/ansible/modules/network/interface/net_linkagg.py)
+
+        This module provides declarative management of link aggregation groups on network devices.
+
+  * This module is maintained by The Ansible Network Team
+  * note: This module has a corresponding action plugin.
+
+OPTIONS (= is mandatory):
+
+- aggregate
+        List of link aggregation definitions.
+        [Default: (null)]
+
+= members
+        List of members interfaces of the link aggregation group. The value can be single interface or list of interfaces.
+
+
+- min_links
+        Minimum members that should be up before bringing up the link aggregation group.
+        [Default: (null)]
+
+- mode
+        Mode of the link aggregation group. A value of `on' will enable LACP. `active' configures the link to actively information about
+        the state of the link, or it can be configured in `passive' mode ie. send link state information only when received them from
+        another link.
+        (Choices: on, active, passive)[Default: True]
+
+= name
+        Name of the link aggregation group.
+
+
+- purge
+        Purge link aggregation groups not defined in the `aggregate' parameter.
+        [Default: False]
+
+- state
+        State of the link aggregation group.
+        (Choices: present, absent, up, down)[Default: present]
+
+
+NOTES:
+      * This module is supported on `ansible_network_os' network platforms. See the :ref:`Network Platform Options
+        <platform_options>` for details.
+
+
+AUTHOR: Ricardo Carrillo Cruz (@rcarrillocruz)
+        METADATA:
+          status:
+          - preview
+          supported_by: network
+        
+
+EXAMPLES:
+
+- name: configure link aggregation group
+  net_linkagg:
+    name: bond0
+    members:
+      - eth0
+      - eth1
+
+- name: remove configuration
+  net_linkagg:
+    name: bond0
+    state: absent
+
+- name: Create aggregate of linkagg definitions
+  net_linkagg:
+    aggregate:
+        - { name: bond0, members: [eth1] }
+        - { name: bond1, members: [eth2] }
+
+- name: Remove aggregate of linkagg definitions
+  net_linkagg:
+    aggregate:
+      - name: bond0
+      - name: bond1
+    state: absent
+
+
+RETURN VALUES:
+
+commands:
+  description: The list of configuration mode commands to send to the device
+  returned: always, except for the platforms that use Netconf transport to manage the device.
+  type: list
+  sample:
+    - set interfaces bonding bond0
+    - set interfaces ethernet eth0 bond-group 'bond0'
+    - set interfaces ethernet eth1 bond-group 'bond0'
+

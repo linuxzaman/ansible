@@ -1,0 +1,144 @@
+> A10_SERVER_AXAPI3    (/usr/lib/python2.7/dist-packages/ansible/modules/network/a10/a10_server_axapi3.py)
+
+        Manage SLB (Server Load Balancer) server objects on A10 Networks devices via aXAPIv3.
+
+  * This module is maintained by The Ansible Community
+OPTIONS (= is mandatory):
+
+- client_cert
+        PEM formatted certificate chain file to be used for SSL client authentication.
+        This file can also include the key as well, and if the key is included, `client_key' is not required.
+        [Default: (null)]
+        type: path
+
+- client_key
+        PEM formatted file that contains your private key to be used for SSL client authentication.
+        If `client_cert' contains both the certificate and key, this option is not required.
+        [Default: (null)]
+        type: path
+
+- force
+        If `yes' do not get a cached copy.
+        (Aliases: thirsty)[Default: False]
+        type: bool
+
+- force_basic_auth
+        Credentials specified with `url_username' and `url_password' should be passed in HTTP Header.
+        [Default: False]
+        type: bool
+
+= host
+        Hostname or IP of the A10 Networks device.
+
+        type: str
+
+- http_agent
+        Header to identify as, generally appears in web server logs.
+        [Default: ansible-httpget]
+        type: str
+
+- operation
+        Create, Update or Remove SLB server. For create and update operation, we use the IP address and server name specified in the POST
+        message. For delete operation, we use the server name in the request URI.
+        (Choices: create, update, remove)[Default: create]
+
+= password
+        Password for the `username' account.
+        (Aliases: pass, pwd)
+        type: str
+
+= server_ip
+        The SLB (Server Load Balancer) server IPv4 address.
+        (Aliases: ip, address)
+
+= server_name
+        The SLB (Server Load Balancer) server name.
+        (Aliases: server)
+
+- server_ports
+        A list of ports to create for the server. Each list item should be a dictionary which specifies the `port:' and `protocol:'.
+        (Aliases: port)[Default: (null)]
+
+- server_status
+        The SLB (Server Load Balancer) virtual server status.
+        (Aliases: action)(Choices: enable, disable)[Default: enable]
+
+- url
+        HTTP, HTTPS, or FTP URL in the form (http|https|ftp)://[user[:pass]]@host.domain[:port]/path
+        [Default: (null)]
+        type: str
+
+- url_password
+        The password for use in HTTP basic authentication.
+        If the `url_username' parameter is not specified, the `url_password' parameter will not be used.
+        [Default: (null)]
+        type: str
+
+- url_username
+        The username for use in HTTP basic authentication.
+        This parameter can be used without `url_password' for sites that allow empty passwords
+        [Default: (null)]
+        type: str
+
+- use_proxy
+        If `no', it will not use a proxy, even if one is defined in an environment variable on the target hosts.
+        [Default: True]
+        type: bool
+
+= username
+        An account with administrator privileges.
+        (Aliases: admin, user)
+        type: str
+
+- validate_certs
+        If `no', SSL certificates will not be validated. This should only be used on personally controlled devices using self-signed
+        certificates.
+        [Default: yes]
+        type: bool
+        version_added: 2.2
+
+- write_config
+        If `yes', any changes will cause a write of the running configuration to non-volatile memory. This will save `all' configuration
+        changes, including those that may have been made manually or through other modules, so care should be taken when specifying
+        `yes'.
+        [Default: False]
+        type: bool
+        version_added: 2.2
+
+
+NOTES:
+      * Requires A10 Networks aXAPI 2.1.
+
+
+AUTHOR: Eric Chou (@ericchou) based on previous work by Mischa Peters (@mischapeters)
+        METADATA:
+          status:
+          - preview
+          supported_by: community
+        
+
+EXAMPLES:
+
+# Create a new server
+- a10_server:
+    host: a10.mydomain.com
+    username: myadmin
+    password: mypassword
+    server: test
+    server_ip: 1.1.1.100
+    validate_certs: false
+    server_status: enable
+    write_config: yes
+    operation: create
+    server_ports:
+      - port-number: 8080
+        protocol: tcp
+        action: enable
+      - port-number: 8443
+        protocol: TCP
+
+
+RETURN VALUES:
+
+#
+

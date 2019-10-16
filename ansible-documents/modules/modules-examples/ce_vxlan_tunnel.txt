@@ -1,0 +1,56 @@
+EXAMPLES:
+
+- name: vxlan tunnel module test
+  hosts: ce128
+  connection: local
+  gather_facts: no
+  vars:
+    cli:
+      host: "{{ inventory_hostname }}"
+      port: "{{ ansible_ssh_port }}"
+      username: "{{ username }}"
+      password: "{{ password }}"
+      transport: cli
+
+  tasks:
+
+  - name: Make sure nve_name is exist, ensure vni_id and protocol_type is configured on Nve1 interface.
+    ce_vxlan_tunnel:
+      nve_name: Nve1
+      vni_id: 100
+      protocol_type: bgp
+      state: present
+      provider: "{{ cli }}"
+
+
+RETURN VALUES:
+
+proposed:
+    description: k/v pairs of parameters passed into module
+    returned: always
+    type: dict
+    sample: {nve_interface_name": "Nve1", nve_mode": "mode-l2", "source_ip": "0.0.0.0"}
+existing:
+    description:
+        - k/v pairs of existing rollback
+    returned: always
+    type: dict
+    sample: {nve_interface_name": "Nve1", nve_mode": "mode-l3", "source_ip": "0.0.0.0"}
+
+updates:
+    description: command sent to the device
+    returned: always
+    type: list
+    sample: ["interface Nve1",
+             "mode l3"]
+changed:
+    description: check to see if a change was made on the device
+    returned: always
+    type: bool
+    sample: true
+end_state:
+    description: k/v pairs of configuration after module execution
+    returned: always
+    type: dict
+    sample: {nve_interface_name": "Nve1", nve_mode": "mode-l3", "source_ip": "0.0.0.0"}
+

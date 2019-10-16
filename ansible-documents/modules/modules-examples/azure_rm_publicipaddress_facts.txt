@@ -1,0 +1,115 @@
+EXAMPLES:
+
+- name: Get facts for one Public IP
+      azure_rm_publicipaddress_facts:
+        resource_group: myResourceGroup
+        name: publicip001
+
+    - name: Get facts for all Public IPs within a resource groups
+      azure_rm_publicipaddress_facts:
+        resource_group: myResourceGroup
+
+
+RETURN VALUES:
+
+azure_publicipaddresses:
+    description:
+        - List of public IP address dicts.
+        - Please note that this option will be deprecated in 2.10 when curated format will become the only supported format.
+    returned: always
+    type: list
+    example: [{
+        "etag": 'W/"a31a6d7d-cb18-40a5-b16d-9f4a36c1b18a"',
+        "id": "/subscriptions/xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx/resourceGroup/myResourceGroup/providers/Microsoft.Network/publicIPAddresses/pip2001",
+        "location": "eastus2",
+        "name": "pip2001",
+        "properties": {
+            "idleTimeoutInMinutes": 4,
+            "provisioningState": "Succeeded",
+            "publicIPAllocationMethod": "Dynamic",
+            "resourceGuid": "29de82f4-a7da-440e-bd3d-9cabb79af95a"
+        },
+        "type": "Microsoft.Network/publicIPAddresses"
+    }]
+publicipaddresses:
+    description:
+        - List of publicipaddress
+        - Contains the detail which matches azure_rm_publicipaddress parameters.
+        - Returned when the format parameter set to curated.
+    returned: always
+    type: complex
+    contains:
+        id:
+            description:
+                - Resource ID.
+            returned: always
+            type: str
+        name:
+            description:
+                - Name of the public ip address.
+            returned: always
+            type: str
+        type:
+            description:
+                - Resource type.
+            returned: always
+            type: str
+        location:
+            description:
+                - Resource location.
+            returned: always
+            type: str
+        tags:
+            description:
+                - Resource tags.
+            returned: always
+            type: complex
+        allocation_method:
+            description:
+                - The public IP allocation method.
+                - Possible values are 'static' and 'dynamic'.
+            returned: always
+            type: str
+        version:
+            description:
+                - The public IP address version.
+                - Possible values are 'ipv4' and 'ipv6'.
+            returned: always
+            type: str
+        dns_settings:
+            description:
+                - The FQDN of the DNS record associated with the public IP address.
+            returned: always
+            type: complex
+        ip_tags:
+            description:
+                - The list of tags associated with the public IP address.
+            returned: always
+            type: complex
+        ip_address:
+            description:
+                - The Public IP Prefix this Public IP Address should be allocated from.
+            returned: always
+            type: str
+        idle_timeout:
+            description:
+                - The idle timeout of the public IP address.
+            returned: always
+            type: int
+        provisioning_state:
+            description:
+                - he provisioning state of the PublicIP resource.
+                - Possible values are 'Updating', 'Deleting', and 'Failed'.
+            returned: always
+            type: str
+        etag:
+            description:
+                - A unique read-only string that changes whenever the resource is updated.
+            returned: always
+            type: str
+        sku:
+            description:
+                - The public IP address SKU.
+            returned: always
+            type: str
+

@@ -1,0 +1,68 @@
+EXAMPLES:
+
+- name: Create a GTM pool
+  bigip_gtm_pool:
+    name: my_pool
+    provider:
+      user: admin
+      password: secret
+      server: lb.mydomain.com
+  delegate_to: localhost
+
+- name: Disable pool
+  bigip_gtm_pool:
+    state: disabled
+    name: my_pool
+    provider:
+      user: admin
+      password: secret
+      server: lb.mydomain.com
+  delegate_to: localhost
+
+
+RETURN VALUES:
+
+preferred_lb_method:
+  description: New preferred load balancing method for the pool.
+  returned: changed
+  type: str
+  sample: topology
+alternate_lb_method:
+  description: New alternate load balancing method for the pool.
+  returned: changed
+  type: str
+  sample: drop-packet
+fallback_lb_method:
+  description: New fallback load balancing method for the pool.
+  returned: changed
+  type: str
+  sample: fewest-hops
+fallback_ip:
+  description: New fallback IP used when load balacing using the C(fallback_ip) method.
+  returned: changed
+  type: str
+  sample: 10.10.10.10
+monitors:
+  description: The new list of monitors for the resource.
+  returned: changed
+  type: list
+  sample: ['/Common/monitor1', '/Common/monitor2']
+members:
+  description: List of members in the pool.
+  returned: changed
+  type: complex
+  contains:
+    server:
+      description: The name of the server portion of the member.
+      returned: changed
+      type: str
+    virtual_server:
+      description: The name of the virtual server portion of the member.
+      returned: changed
+      type: str
+max_answers_returned:
+  description: The new Maximum Answers Returned value.
+  returned: changed
+  type: int
+  sample: 25
+

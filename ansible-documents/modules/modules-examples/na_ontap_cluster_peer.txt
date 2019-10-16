@@ -1,0 +1,27 @@
+EXAMPLES:
+
+- name: Create cluster peer
+      na_ontap_cluster_peer:
+        state: present
+        source_intercluster_lifs: 1.2.3.4,1.2.3.5
+        dest_intercluster_lifs: 1.2.3.6,1.2.3.7
+        passphrase: XXXX
+        hostname: "{{ netapp_hostname }}"
+        username: "{{ netapp_username }}"
+        password: "{{ netapp_password }}"
+        dest_hostname: "{{ dest_netapp_hostname }}"
+
+    - name: Delete cluster peer
+      na_ontap_cluster_peer:
+        state: absent
+        source_cluster_name: test-source-cluster
+        dest_cluster_name: test-dest-cluster
+        hostname: "{{ netapp_hostname }}"
+        username: "{{ netapp_username }}"
+        password: "{{ netapp_password }}"
+        dest_hostname: "{{ dest_netapp_hostname }}"
+
+
+RETURN VALUES:
+
+

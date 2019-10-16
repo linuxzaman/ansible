@@ -1,0 +1,34 @@
+EXAMPLES:
+
+- name: configure hostname and domain-name
+  nxos_system:
+    hostname: nxos01
+    domain_name: test.example.com
+
+- name: remove configuration
+  nxos_system:
+    state: absent
+
+- name: configure name servers
+  nxos_system:
+    name_servers:
+      - 8.8.8.8
+      - 8.8.4.4
+
+- name: configure name servers with VRF support
+  nxos_system:
+    name_servers:
+      - { server: 8.8.8.8, vrf: mgmt }
+      - { server: 8.8.4.4, vrf: mgmt }
+
+
+RETURN VALUES:
+
+commands:
+  description: The list of configuration mode commands to send to the device
+  returned: always
+  type: list
+  sample:
+    - hostname nxos01
+    - ip domain-name test.example.com
+

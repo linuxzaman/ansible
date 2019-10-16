@@ -1,0 +1,63 @@
+EXAMPLES:
+
+- name: Create a subnet
+      azure_rm_subnet:
+        resource_group: myResourceGroup
+        virtual_network_name: myVirtualNetwork
+        name: mySubnet
+        address_prefix_cidr: "10.1.0.0/24"
+
+    - name: Create a subnet refer nsg from other resource group
+      azure_rm_subnet:
+        resource_group: myResourceGroup
+        virtual_network_name: myVirtualNetwork
+        name: mySubnet
+        address_prefix_cidr: "10.1.0.0/16"
+        security_group:
+          name: secgroupfoo
+          resource_group: mySecondResourceGroup
+        route_table: route
+
+    - name: Delete a subnet
+      azure_rm_subnet:
+        resource_group: myResourceGroup
+        virtual_network_name: myVirtualNetwork
+        name: mySubnet
+        state: absent
+
+
+RETURN VALUES:
+
+state:
+    description: Current state of the subnet.
+    returned: success
+    type: complex
+    contains:
+        address_prefix:
+          description: IP address CIDR.
+          type: str
+          example: "10.1.0.0/16"
+        id:
+          description: Subnet resource path.
+          type: str
+          example: "/subscriptions/xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx/resourceGroup/myResourceGroup/providers/Microsoft.Network/virtualNetworks/myVirtualNetwork/subnets/mySubnet"
+        name:
+          description: Subnet name.
+          type: str
+          example: "foobar"
+        network_security_group:
+          type: complex
+          contains:
+            id:
+              description: Security group resource identifier.
+              type: str
+              example: "/subscriptions/xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx/resourceGroup/myResourceGroup/providers/Microsoft.Network/networkSecurityGroups/secgroupfoo"
+            name:
+              description: Name of the security group.
+              type: str
+              example: "secgroupfoo"
+        provisioning_state:
+          description: Success or failure of the provisioning event.
+          type: str
+          example: "Succeeded"
+

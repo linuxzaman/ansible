@@ -1,0 +1,44 @@
+EXAMPLES:
+
+- name: create cpu class
+  pn_cpu_class:
+    pn_cliswitch: 'sw01'
+    state: 'present'
+    pn_name: 'icmp'
+    pn_rate_limit: '1000'
+    pn_scope: 'local'
+
+- name: delete cpu class
+  pn_cpu_class:
+    pn_cliswitch: 'sw01'
+    state: 'absent'
+    pn_name: 'icmp'
+
+
+- name: modify cpu class
+  pn_cpu_class:
+    pn_cliswitch: 'sw01'
+    state: 'update'
+    pn_name: 'icmp'
+    pn_rate_limit: '2000'
+
+
+RETURN VALUES:
+
+command:
+  description: the CLI command run on the target node.
+  returned: always
+  type: str
+stdout:
+  description: set of responses from the cpu-class command.
+  returned: always
+  type: list
+stderr:
+  description: set of error responses from the cpu-class command.
+  returned: on error
+  type: list
+changed:
+  description: indicates whether the CLI caused changes on the target.
+  returned: always
+  type: bool
+

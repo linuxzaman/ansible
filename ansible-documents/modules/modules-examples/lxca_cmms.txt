@@ -1,0 +1,48 @@
+EXAMPLES:
+
+# get all cmms info
+- name: get nodess data from LXCA
+  lxca_cmms:
+    login_user: USERID
+    login_password: Password
+    auth_url: "https://10.243.15.168"
+
+# get specific cmms info by uuid
+- name: get nodes data from LXCA
+  lxca_cmms:
+    login_user: USERID
+    login_password: Password
+    auth_url: "https://10.243.15.168"
+    uuid: "3C737AA5E31640CE949B10C129A8B01F"
+    command_options: cmms_by_uuid
+
+# get specific cmms info by chassis uuid
+- name: get nodes data from LXCA
+  lxca_cmms:
+    login_user: USERID
+    login_password: Password
+    auth_url: "https://10.243.15.168"
+    chassis: "3C737AA5E31640CE949B10C129A8B01F"
+    command_options: cmms_by_chassis_uuid
+
+
+RETURN VALUES:
+
+result:
+    description: cmms detail from lxca
+    returned: success
+    type: dict
+    sample:
+      cmmList:
+        - machineType: ''
+          model: ''
+          type: 'CMM'
+          uuid: '118D2C88C8FD11E4947B6EAE8B4BDCDF'
+          # bunch of properties
+        - machineType: ''
+          model: ''
+          type: 'CMM'
+          uuid: '223D2C88C8FD11E4947B6EAE8B4BDCDF'
+          # bunch of properties
+        # Multiple cmms details
+

@@ -1,0 +1,55 @@
+EXAMPLES:
+
+# Examples don't contain auth parameter for simplicity,
+# look at ovirt_auth module to see how to reuse authentication:
+
+# Create(if not exists) and assign tag to vms vm1 and vm2:
+- ovirt_tag:
+    name: mytag
+    vms:
+      - vm1
+      - vm2
+
+# Attach a tag to VM 'vm3', keeping the rest already attached tags on VM:
+- ovirt_tag:
+    name: mytag
+    state: attached
+    vms:
+      - vm3
+
+# Detach a tag from VM 'vm3', keeping the rest already attached tags on VM:
+- ovirt_tag:
+    name: mytag
+    state: detached
+    vms:
+      - vm3
+
+# To detach all VMs from tag:
+- ovirt_tag:
+    name: mytag
+    vms: []
+
+# Remove tag
+- ovirt_tag:
+    state: absent
+    name: mytag
+
+# Change Tag Name
+- ovirt_tag:
+    id: 00000000-0000-0000-0000-000000000000
+    name: "new_tag_name"
+
+
+RETURN VALUES:
+
+id:
+    description: ID of the tag which is managed
+    returned: On success if tag is found.
+    type: str
+    sample: 7de90f31-222c-436c-a1ca-7e655bd5b60c
+tag:
+    description: "Dictionary of all the tag attributes. Tag attributes can be found on your oVirt/RHV instance
+                  at following url: http://ovirt.github.io/ovirt-engine-api-model/master/#types/tag."
+    returned: On success if tag is found.
+    type: dict
+
